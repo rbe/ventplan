@@ -36,7 +36,7 @@ projektSpeichernAlsAction = action(
 		enabled: true,
 		name: "Projekt speichern als...",
 		mnemonic: "A",
-		accelerator: shortcut("A"),
+		accelerator: shortcut("shift S"),
 		smallIcon: imageIcon("/menu/projektspeichern.png"),
 		closure: {}
 	)
