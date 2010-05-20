@@ -3,3 +3,4 @@ glob:._*
 glob:dist
 glob:build
 glob:target
+glob:staging
