@@ -1,0 +1,1003 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<project title="Projekt 1 - EFH">
+    <component name="" type="com.westaflex.component.ProjectInternalFrame">
+    <component name="" type="javax.swing.JRootPane">
+    <component name="null.glassPane" type="javax.swing.JPanel"/>
+    <component name="null.layeredPane" type="javax.swing.JLayeredPane">
+    <component name="null.contentPane" type="javax.swing.JPanel">
+    <component name="" type="com.westaflex.component.WiderstandsbeiwerteInternalFrame">
+    <component name="" type="javax.swing.JRootPane">
+    <component name="null.glassPane" type="javax.swing.JPanel"/>
+    <component name="null.layeredPane" type="javax.swing.JLayeredPane">
+    <component name="null.contentPane" type="javax.swing.JPanel">
+    <component name="" type="javax.swing.JScrollPane">
+        <component name="" type="javax.swing.JViewport">
+            <component name="widerstandsbeiwerteTabelleTable" type="javax.swing.JTable">
+                <tablemodel columns="3" rows="3" selected-row="-1" type="javax.swing.table.DefaultTableModel">
+                    <column-header>
+                        <column cell-editor="com.westaflex.component.WiderstandsbeiwerteInternalFrame$MyCellEditor" index="0" name="Anzahl"/>
+                        <column cell-editor="javax.swing.JTable$GenericEditor" index="1" name="Bezeichnung"/>
+                        <column cell-editor="javax.swing.JTable$GenericEditor" index="2" name="Widerstandswert"/>
+                    </column-header>
+                    <rowdata column="0" row="0">0</rowdata>
+                    <rowdata column="1" row="0">Kr&#252;mmer flach</rowdata>
+                    <rowdata column="2" row="0">0.45</rowdata>
+                    <rowdata column="0" row="1">0</rowdata>
+                    <rowdata column="1" row="1">Kr&#252;mmer hoch</rowdata>
+                    <rowdata column="2" row="1">0.41</rowdata>
+                    <rowdata column="0" row="2">0</rowdata>
+                    <rowdata column="1" row="2">AZ Trennung w3/w1 = 0,4</rowdata>
+                    <rowdata column="2" row="2">7.0</rowdata>
+                </tablemodel>
+            </component>
+        </component>
+        <component name="" type="javax.swing.JViewport"/>
+        </component>
+        <component name="widerstandsbeiweriteSummeAllerWiderstandeWertLabel" type="javax.swing.JLabel" value="0,00"/>
+            <component name="" type="javax.swing.JPanel"/>
+            </component>
+        </component>
+    </component>
+    <component name="" type="com.sun.java.swing.plaf.windows.WindowsInternalFrameTitlePane"/>
+    </component>
+    <component name="" type="com.westaflex.component.WiderstandsbeiwerteInternalFrame">
+    <component name="" type="javax.swing.JRootPane">
+    <component name="null.glassPane" type="javax.swing.JPanel"/>
+    <component name="null.layeredPane" type="javax.swing.JLayeredPane">
+    <component name="null.contentPane" type="javax.swing.JPanel">
+    <component name="" type="javax.swing.JScrollPane">
+        <component name="" type="javax.swing.JViewport">
+            <component name="widerstandsbeiwerteTabelleTable" type="javax.swing.JTable">
+                <tablemodel columns="3" rows="3" selected-row="-1" type="javax.swing.table.DefaultTableModel">
+                    <column-header>
+                        <column cell-editor="com.westaflex.component.WiderstandsbeiwerteInternalFrame$MyCellEditor" index="0" name="Anzahl"/>
+                        <column cell-editor="javax.swing.JTable$GenericEditor" index="1" name="Bezeichnung"/>
+                        <column cell-editor="javax.swing.JTable$GenericEditor" index="2" name="Widerstandswert"/>
+                    </column-header>
+                    <rowdata column="0" row="0">0</rowdata>
+                    <rowdata column="1" row="0">Kr&#252;mmer flach</rowdata>
+                    <rowdata column="2" row="0">0.45</rowdata>
+                    <rowdata column="0" row="1">0</rowdata>
+                    <rowdata column="1" row="1">Kr&#252;mmer hoch</rowdata>
+                    <rowdata column="2" row="1">0.41</rowdata>
+                    <rowdata column="0" row="2">0</rowdata>
+                    <rowdata column="1" row="2">AZ Trennung w3/w1 = 0,4</rowdata>
+                    <rowdata column="2" row="2">7.0</rowdata>
+                </tablemodel>
+            </component>
+        </component>
+        <component name="" type="javax.swing.JViewport"/>
+        </component>
+        <component name="widerstandsbeiweriteSummeAllerWiderstandeWertLabel" type="javax.swing.JLabel" value="0,00"/>
+            <component name="" type="javax.swing.JPanel"/>
+            </component>
+        </component>
+    </component>
+    <component name="" type="com.sun.java.swing.plaf.windows.WindowsInternalFrameTitlePane"/>
+    </component>
+    <component name="" type="javax.swing.JTabbedPane">
+    <component name="" type="javax.swing.JPanel">
+    <component name="" type="javax.swing.JPanel">
+    <component name="" type="javax.swing.JScrollPane">
+    <component name="" type="javax.swing.JViewport">
+        <component name="adNotizenTextArea" type="com.westaflex.component.classes.SeeTextArea" value="Was wollen wir trinken, 7 Tage lang, was wollen wir trinken, so ein Durst!!!"/>
+        </component>
+    </component>
+    <component name="adBauvorhabenTextField" type="com.westaflex.component.classes.SeeTextField" value="EFH"/>
+    </component>
+    <component name="adGrosshandelPanel" type="javax.swing.JPanel">
+    <component name="ghAnsprechpartnerTextField" type="com.westaflex.component.classes.SeeTextField" value="Herr Stukemeier"/>
+    <component name="ghFaxTextField" type="com.westaflex.component.classes.SeeTextField" value="(0 52 41) 401-200"/>
+    <component name="ghFirma2TextField" type="com.westaflex.component.classes.SeeTextField" value=""/>
+    <component name="ghFirma1TextField" type="com.westaflex.component.classes.SeeTextField" value="Westaflexwerk GmbH"/>
+    <component name="ghStrasseTextfield" type="com.westaflex.component.classes.SeeTextField" value="Thadd&#228;usstr. 5"/>
+    <component name="ghPlzOrtTextField" type="com.westaflex.component.classes.SeeTextField" value="33334 G&#252;tersloh"/>
+    <component name="ghTelefonTextField" type="com.westaflex.component.classes.SeeTextField" value="(0 52 41) 401-0"/>
+    </component>
+    <component name="aufuehrendefirma" type="javax.swing.JPanel">
+    <component name="afAnsprechpartnerTextField" type="com.westaflex.component.classes.SeeTextField" value="Herr Seebass"/>
+    <component name="afFaxTextField" type="com.westaflex.component.classes.SeeTextField" value="05402/985/351"/>
+    <component name="afTelefonTextField" type="com.westaflex.component.classes.SeeTextField" value="05402/985-350"/>
+    <component name="afPlzOrtTextField" type="com.westaflex.component.classes.SeeTextField" value="49143 Bissendorf"/>
+    <component name="afFirma1TextField" type="com.westaflex.component.classes.SeeTextField" value="snap-consulting gmbh"/>
+    <component name="afFirma2TextField" type="com.westaflex.component.classes.SeeTextField" value="IT-Beratung"/>
+        <component name="afStrasseTextfield" type="com.westaflex.component.classes.SeeTextField" value="Spichernstr. 3"/>
+        </component>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="" type="javax.swing.JPanel">
+    <component name="gsKellergeschossRadioButton" type="com.westaflex.component.classes.SeeRadioButton" value="false"/>
+    <component name="gsErdgeschossRadioButton" type="com.westaflex.component.classes.SeeRadioButton" value="true"/>
+    <component name="gsObergeschossRadioButton" type="com.westaflex.component.classes.SeeRadioButton" value="false"/>
+    <component name="gsDachgeschossRadioButton" type="com.westaflex.component.classes.SeeRadioButton" value="false"/>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="lzTellerventileCheckbox" type="com.westaflex.component.classes.SeeCheckBox" value="true"/>
+    <component name="lzSchlitzauslassCheckbox" type="com.westaflex.component.classes.SeeCheckBox" value="false"/>
+    <component name="lzFussbodenAuslassCheckbox" type="com.westaflex.component.classes.SeeCheckBox" value="true"/>
+    <component name="lzSockelquellauslassCheckbox" type="com.westaflex.component.classes.SeeCheckBox" value="false"/>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="lkAufputzCheckbox" type="com.westaflex.component.classes.SeeCheckBox" value="false"/>
+    <component name="lkDaemmschichtCheckbox" type="com.westaflex.component.classes.SeeCheckBox" value="true"/>
+    <component name="lkDeckeCheckbox" type="com.westaflex.component.classes.SeeCheckBox" value="true"/>
+    <component name="lkSpitzbodenCheckbox" type="com.westaflex.component.classes.SeeCheckBox" value="false"/>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="laTellerventileCheckbox" type="com.westaflex.component.classes.SeeCheckBox" value="true"/>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="personenanzahlSpinner" type="com.westaflex.component.classes.SeeSpinner" value="5">
+        <spinnermodel>
+            <item value="5"/>
+        </spinnermodel>
+    </component>
+    <component name="mindestaussenluftrateWertLabel" type="javax.swing.JLabel" value="150"/>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="asDachdurchfuehrungCheckbox" type="com.westaflex.component.classes.SeeCheckBox" value="true"/>
+    <component name="asWandCheckbox" type="com.westaflex.component.classes.SeeCheckBox" value="true"/>
+    <component name="asErdwaermetauscherCheckbox" type="com.westaflex.component.classes.SeeCheckBox" value="true"/>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="flDachdurchfuehrungRadioButton" type="com.westaflex.component.classes.SeeRadioButton" value="false"/>
+    <component name="flWandRadioButton" type="com.westaflex.component.classes.SeeRadioButton" value="true"/>
+        <component name="flLichtschachtRadioButton" type="com.westaflex.component.classes.SeeRadioButton" value="false"/>
+        </component>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="" type="javax.swing.JPanel">
+    <component name="wfBezeichnungCombobox" type="javax.swing.JComboBox">
+        <comboboxmodel selected-item="Essen">
+            <item index="0">Wohnen</item>
+            <item index="1">Essen</item>
+            <item index="2">Eltern</item>
+            <item index="3">Schlafen</item>
+            <item index="4">Arbeiten</item>
+            <item index="5">Kind 1</item>
+            <item index="6">Kind 2</item>
+            <item index="7">K&#252;che</item>
+            <item index="8">Bad</item>
+            <item index="9">WC</item>
+            <item index="10">HWR</item>
+            <item index="11">Abstellraum</item>
+            <item index="12">Flur</item>
+            <item index="13">Diele</item>
+        </comboboxmodel>
+    </component>
+    <component name="wfGeschossCombobox" type="javax.swing.JComboBox">
+        <comboboxmodel selected-item="EG">
+            <item index="0">KG</item>
+            <item index="1">EG</item>
+            <item index="2">OG</item>
+            <item index="3">SB</item>
+        </comboboxmodel>
+    </component>
+    <component name="wfBelueftungCombobox" type="javax.swing.JComboBox">
+        <comboboxmodel selected-item="ZU">
+            <item index="0">ZU</item>
+            <item index="1">AB</item>
+            <item index="2">&#220;B</item>
+        </comboboxmodel>
+    </component>
+    <component name="wfFlaecheTextField" type="javax.swing.JTextField" value="15"/>
+    <component name="wfHoeheTextField" type="javax.swing.JTextField" value="2,50"/>
+    </component>
+    <component name="" type="javax.swing.JScrollPane">
+        <component name="" type="javax.swing.JViewport">
+            <component name="wfTabelleTable" type="com.westaflex.component.classes.SeeTable">
+                <tablemodel columns="5" rows="2" selected-row="-1" type="javax.swing.table.DefaultTableModel">
+                    <column-header>
+                        <column cell-editor="javax.swing.JTable$GenericEditor" index="0" name="Bezeichnung"/>
+                        <column cell-editor="javax.swing.JTable$GenericEditor" index="1" name="Geschoss"/>
+                        <column cell-editor="javax.swing.JTable$GenericEditor" index="2" name="Bel&#252;ftung"/>
+                        <column cell-editor="javax.swing.JTable$GenericEditor" index="3" name="Fl&#228;che (m&#178;)"/>
+                        <column cell-editor="javax.swing.JTable$GenericEditor" index="4" name="H&#246;he (m)"/>
+                    </column-header>
+                    <rowdata column="0" row="0">Wohnen</rowdata>
+                    <rowdata column="1" row="0">EG</rowdata>
+                    <rowdata column="2" row="0">ZU</rowdata>
+                    <rowdata column="3" row="0">35,00</rowdata>
+                    <rowdata column="4" row="0">2,50</rowdata>
+                    <rowdata column="0" row="1">Essen</rowdata>
+                    <rowdata column="1" row="1">EG</rowdata>
+                    <rowdata column="2" row="1">ZU</rowdata>
+                    <rowdata column="3" row="1">15,00</rowdata>
+                    <rowdata column="4" row="1">2,50</rowdata>
+                </tablemodel>
+            </component>
+        </component>
+        <component name="" type="javax.swing.JViewport"/>
+        </component>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="" type="javax.swing.JScrollPane">
+    <component name="" type="javax.swing.JViewport">
+        <component name="lmeTabelleTable" type="com.westaflex.component.classes.SeeTable">
+            <tablemodel columns="9" rows="2" selected-row="1" type="javax.swing.table.DefaultTableModel">
+                <column-header>
+                    <column cell-editor="javax.swing.JTable$GenericEditor" index="0" name="Bezeichnung"/>
+                    <column cell-editor="javax.swing.JTable$GenericEditor" index="1" name="Bel&#252;ftung"/>
+                    <column cell-editor="javax.swing.JTable$GenericEditor" index="2" name="Volumen (m&#179;)"/>
+                    <column cell-editor="javax.swing.JTable$GenericEditor" index="3" name="Luftwechsel (1/h)"/>
+                    <column cell-editor="javax.swing.JTable$GenericEditor" index="4" name="Anzahl Ventile"/>
+                    <column cell-editor="javax.swing.JTable$GenericEditor" index="5" name="Luftmenge je Ventil"/>
+                    <column cell-editor="javax.swing.JTable$GenericEditor" index="6" name="SOLL-Luftmenge"/>
+                    <column cell-editor="javax.swing.JTable$GenericEditor" index="7" name="IST-Luftmenge"/>
+                    <column cell-editor="javax.swing.JTable$GenericEditor" index="8" name="Ventil-Bezeichnung"/>
+                </column-header>
+                <rowdata column="0" row="0">Wohnen</rowdata>
+                <rowdata column="1" row="0">ZU</rowdata>
+                <rowdata column="2" row="0">87,50</rowdata>
+                <rowdata column="3" row="0">1,03</rowdata>
+                <rowdata column="4" row="0">3,00</rowdata>
+                <rowdata column="5" row="0">30,00</rowdata>
+                <rowdata column="6" row="0">43,75</rowdata>
+                <rowdata column="7" row="0">90,0</rowdata>
+                <rowdata column="8" row="0">100FILTAB</rowdata>
+                <rowdata column="0" row="1">Essen</rowdata>
+                <rowdata column="1" row="1">ZU</rowdata>
+                <rowdata column="2" row="1">37,50</rowdata>
+                <rowdata column="3" row="1">10,67</rowdata>
+                <rowdata column="4" row="1">12,00</rowdata>
+                <rowdata column="5" row="1">33,33</rowdata>
+                <rowdata column="6" row="1">18,75</rowdata>
+                <rowdata column="7" row="1">400,0</rowdata>
+                <rowdata column="8" row="1">100URH</rowdata>
+            </tablemodel>
+        </component>
+    </component>
+    <component name="" type="javax.swing.JViewport"/>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="lmeSollLuftmengeTextField" type="javax.swing.JTextField" value="43,75"/>
+    <component name="lmeIstLuftmengeTextField" type="javax.swing.JTextField" value="90,00"/>
+        <component name="lmeTypenbezeichnungCombobox" type="javax.swing.JComboBox">
+            <comboboxmodel selected-item="100FILTAB">
+                <item index="0">100URH</item>
+                <item index="1">125URH</item>
+                <item index="2">100FILTAB</item>
+                <item index="3">125FILTAB</item>
+                <item index="4">100ULAE</item>
+                <item index="5">125ULAE</item>
+                <item index="6">100ULC</item>
+                <item index="7">100ULE</item>
+                <item index="8">100ALSQ</item>
+                <item index="9">100ALQ</item>
+            </comboboxmodel>
+        </component>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="lmeSummeAbluftmengeWertLabel" type="com.westaflex.component.classes.SeeLabel" value="0,00"/>
+    <component name="lmeGebaeudeluftwechselWertLabel" type="com.westaflex.component.classes.SeeLabel" value="3,92"/>
+    <component name="lmeGesamtvolumenWertLabel" type="com.westaflex.component.classes.SeeLabel" value="125,00"/>
+    <component name="lmeSummeZuluftmengeWertLabel" type="com.westaflex.component.classes.SeeLabel" value="490,00"/>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="lmeAbSummeWertLabel" type="com.westaflex.component.classes.SeeLabel" value="0.00"/>
+    <component name="lmeZuSummeWertLabel" type="com.westaflex.component.classes.SeeLabel" value="490.00"/>
+    <component name="lmeUebSummeWertLabel" type="com.westaflex.component.classes.SeeLabel" value="0.00"/>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="lmePartylueftungWertLabel" type="com.westaflex.component.classes.SeeLabel" value="150"/>
+    <component name="lmeBedarfslueftungWertLabel" type="com.westaflex.component.classes.SeeLabel" value="90"/>
+    <component name="lmeGrundlueftungWertLabel" type="com.westaflex.component.classes.SeeLabel" value="90"/>
+    <component name="lmeBedarfslueftungCodierungWertLabel" type="com.westaflex.component.classes.SeeLabel" value="0001"/>
+    <component name="lmeZentralgeraetCombobox" type="javax.swing.JComboBox">
+        <comboboxmodel selected-item="CF-A Stufe 90">
+            <item index="0">CF-A Stufe 90</item>
+            <item index="1">CF-A Stufe 115</item>
+            <item index="2">CF-A Stufe 125</item>
+            <item index="3">CF-A Stufe 135</item>
+            <item index="4">CF-A Stufe 150</item>
+            <item index="5">CF-A Stufe 160</item>
+            <item index="6">CF-A Stufe 175</item>
+            <item index="7">CF-A Stufe 190</item>
+            <item index="8">CF-A Stufe 205</item>
+            <item index="9">CF-A Stufe 225</item>
+            <item index="10">CF-A Stufe 235</item>
+            <item index="11">CF-A Stufe 245</item>
+            <item index="12">CF-A Stufe 260</item>
+            <item index="13">CF-D Stufe 90</item>
+            <item index="14">CF-D Stufe 115</item>
+            <item index="15">CF-D Stufe 125</item>
+            <item index="16">CF-D Stufe 135</item>
+            <item index="17">CF-D Stufe 150</item>
+            <item index="18">CF-D Stufe 160</item>
+            <item index="19">CF-D Stufe 175</item>
+            <item index="20">CF-D Stufe 190</item>
+            <item index="21">CF-D Stufe 205</item>
+            <item index="22">CF-D Stufe 225</item>
+            <item index="23">CF-D Stufe 235</item>
+            <item index="24">CF-D Stufe 245</item>
+            <item index="25">CF-D Stufe 260</item>
+            <item index="26">WAC Stufe 90</item>
+            <item index="27">WAC Stufe 105</item>
+            <item index="28">WAC Stufe 120</item>
+            <item index="29">WAC Stufe 140</item>
+            <item index="30">WAC Stufe 150</item>
+            <item index="31">WAC Stufe 170</item>
+            <item index="32">WAC Stufe 190</item>
+            <item index="33">WAC Stufe 205</item>
+            <item index="34">WAC Stufe 225</item>
+            <item index="35">WAC Stufe 235</item>
+            <item index="36">WAC Stufe 250</item>
+            <item index="37">WAC Stufe 270</item>
+            <item index="38">WAC Stufe 285</item>
+            <item index="39">WAC Stufe 300</item>
+        </comboboxmodel>
+    </component>
+    <component name="lmePartylueftungCodierungWertLabel" type="com.westaflex.component.classes.SeeLabel" value="0010"/>
+        <component name="lmeGrundlueftungCodierungWertLabel" type="com.westaflex.component.classes.SeeLabel" value="0001"/>
+        </component>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="" type="javax.swing.JTabbedPane">
+    <component name="" type="javax.swing.JPanel">
+    <component name="abZuRaumbezeichnungComboBox" type="com.westaflex.component.classes.SeeComboBox">
+        <comboboxmodel selected-item="Wohnen">
+            <item index="0">Wohnen</item>
+            <item index="1">Essen</item>
+            <item index="2">Eltern</item>
+            <item index="3">Schlafen</item>
+            <item index="4">Arbeiten</item>
+            <item index="5">Kind 1</item>
+            <item index="6">Kind 2</item>
+        </comboboxmodel>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="abZuRaumabsorptionTextField" type="com.westaflex.component.classes.SeeTextField" value="1"/>
+    <component name="abZuSchallleistungspegelZuluftstutzenComboBox" type="com.westaflex.component.classes.SeeComboBox">
+        <comboboxmodel selected-item="ZU 150">
+            <item index="0">ZU 90</item>
+            <item index="1">ZU 115</item>
+            <item index="2">ZU 125</item>
+            <item index="3">ZU 135</item>
+            <item index="4">ZU 150</item>
+            <item index="5">ZU 160</item>
+            <item index="6">ZU 175</item>
+            <item index="7">ZU 190</item>
+            <item index="8">ZU 205</item>
+            <item index="9">ZU 225</item>
+            <item index="10">ZU 235</item>
+            <item index="11">ZU 245</item>
+            <item index="12">ZU 260</item>
+        </comboboxmodel>
+    </component>
+    <component name="abZuKanalnetzComboBox" type="com.westaflex.component.classes.SeeComboBox">
+        <comboboxmodel selected-item="50 Pa">
+            <item index="0">10 Pa</item>
+            <item index="1">15 Pa</item>
+            <item index="2">20 Pa</item>
+            <item index="3">25 Pa</item>
+            <item index="4">30 Pa</item>
+            <item index="5">40 Pa</item>
+            <item index="6">50 Pa</item>
+            <item index="7">60 Pa</item>
+            <item index="8">70 Pa</item>
+            <item index="9">80 Pa</item>
+            <item index="10">90 Pa</item>
+            <item index="11">100 Pa</item>
+        </comboboxmodel>
+    </component>
+    <component name="abZuFilterverschmutzungComboBox" type="com.westaflex.component.classes.SeeComboBox">
+        <comboboxmodel selected-item="20 Pa">
+            <item index="0">10 Pa</item>
+            <item index="1">15 Pa</item>
+            <item index="2">20 Pa</item>
+            <item index="3">25 Pa</item>
+            <item index="4">30 Pa</item>
+            <item index="5">40 Pa</item>
+            <item index="6">50 Pa</item>
+            <item index="7">60 Pa</item>
+            <item index="8">70 Pa</item>
+            <item index="9">80 Pa</item>
+            <item index="10">90 Pa</item>
+            <item index="11">100 Pa</item>
+        </comboboxmodel>
+    </component>
+    <component name="abZuHauptschalldaempfer1ComboBox" type="com.westaflex.component.classes.SeeComboBox">
+        <comboboxmodel selected-item="Qsilent DN150, 1000">
+            <item index="0">Qsilent S100, 0500</item>
+            <item index="1">Qsilent S125, 0500</item>
+            <item index="2">Qsilent S150, 0500</item>
+            <item index="3">Qsilent S100, 1000</item>
+            <item index="4">Qsilent S125, 1000</item>
+            <item index="5">Qsilent S150, 1000</item>
+            <item index="6">Qsilent DN100, 0500</item>
+            <item index="7">Qsilent DN125, 0500</item>
+            <item index="8">Qsilent DN150, 0500</item>
+            <item index="9">Qsilent DN100, 1000</item>
+            <item index="10">Qsilent DN125, 1000</item>
+            <item index="11">Qsilent DN150, 1000</item>
+            <item index="12">Wsilent DN100/150, 0500</item>
+            <item index="13">Wsilent DN125/224, 0500</item>
+            <item index="14">Wsilent DN150/250, 0500</item>
+            <item index="15">Wsilent DN200/300, 0500</item>
+            <item index="16">Wsilent DN100/150, 1000</item>
+            <item index="17">Wsilent DN125/224, 1000</item>
+            <item index="18">Wsilent DN150/250, 1000</item>
+            <item index="19">Wsilent DN200/300, 1000</item>
+            <item index="20">Qsilent S100, -BH 60mm-</item>
+            <item index="21">ohne</item>
+        </comboboxmodel>
+    </component>
+    <component name="abZuHauptschalldaempfer2ComboBox" type="com.westaflex.component.classes.SeeComboBox">
+        <comboboxmodel selected-item="ohne">
+            <item index="0">Qsilent S100, 0500</item>
+            <item index="1">Qsilent S125, 0500</item>
+            <item index="2">Qsilent S150, 0500</item>
+            <item index="3">Qsilent S100, 1000</item>
+            <item index="4">Qsilent S125, 1000</item>
+            <item index="5">Qsilent S150, 1000</item>
+            <item index="6">Qsilent DN100, 0500</item>
+            <item index="7">Qsilent DN125, 0500</item>
+            <item index="8">Qsilent DN150, 0500</item>
+            <item index="9">Qsilent DN100, 1000</item>
+            <item index="10">Qsilent DN125, 1000</item>
+            <item index="11">Qsilent DN150, 1000</item>
+            <item index="12">Wsilent DN100/150, 0500</item>
+            <item index="13">Wsilent DN125/224, 0500</item>
+            <item index="14">Wsilent DN150/250, 0500</item>
+            <item index="15">Wsilent DN200/300, 0500</item>
+            <item index="16">Wsilent DN100/150, 1000</item>
+            <item index="17">Wsilent DN125/224, 1000</item>
+            <item index="18">Wsilent DN150/250, 1000</item>
+            <item index="19">Wsilent DN200/300, 1000</item>
+            <item index="20">Qsilent S100, -BH 60mm-</item>
+            <item index="21">ohne</item>
+        </comboboxmodel>
+    </component>
+    <component name="abZuEinfuegungswertLuftdurchlassComboBox" type="com.westaflex.component.classes.SeeComboBox">
+        <comboboxmodel selected-item="100SQAQ">
+            <item index="0">125ULAE</item>
+            <item index="1">100ULAE</item>
+            <item index="2">100ULC</item>
+            <item index="3">100ULE</item>
+            <item index="4">100ALSQ</item>
+            <item index="5">100ALFQ</item>
+            <item index="6">100SQAQ</item>
+        </comboboxmodel>
+    </component>
+    <component name="abZuLaengsdaempfungKanalComboBox" type="com.westaflex.component.classes.SeeComboBox">
+        <comboboxmodel selected-item="Quadroflex verz.">
+            <item index="0">Quadroflex verz.</item>
+            <item index="1">Quadroflex ALU</item>
+            <item index="2">Quadrofix verz.</item>
+            <item index="3">Quadrofix ALU</item>
+            <item index="4">Westerfix verz.</item>
+            <item index="5">Westerfix ALU</item>
+            <item index="6">Compact ALU</item>
+        </comboboxmodel>
+    </component>
+    <component name="abZuLaengsdaempfungKanalTextField" type="com.westaflex.component.classes.SeeTextField" value="12"/>
+    <component name="abZuLuftverteilerkastenTextField" type="com.westaflex.component.classes.SeeTextField" value="1"/>
+    <component name="abZuAnzahlUmlenkungenTextField" type="com.westaflex.component.classes.SeeTextField" value="5"/>
+        <component name="abZuSchalldaempferVentilComboBox" type="com.westaflex.component.classes.SeeComboBox">
+            <comboboxmodel selected-item="ohne">
+                <item index="0">Qsilent S100, 0500</item>
+                <item index="1">Qsilent S125, 0500</item>
+                <item index="2">Qsilent S150, 0500</item>
+                <item index="3">Qsilent S100, 1000</item>
+                <item index="4">Qsilent S125, 1000</item>
+                <item index="5">Qsilent S150, 1000</item>
+                <item index="6">Qsilent DN100, 0500</item>
+                <item index="7">Qsilent DN125, 0500</item>
+                <item index="8">Qsilent DN150, 0500</item>
+                <item index="9">Qsilent DN100, 1000</item>
+                <item index="10">Qsilent DN125, 1000</item>
+                <item index="11">Qsilent DN150, 1000</item>
+                <item index="12">Wsilent DN100/150, 0500</item>
+                <item index="13">Wsilent DN125/224, 0500</item>
+                <item index="14">Wsilent DN150/250, 0500</item>
+                <item index="15">Wsilent DN200/300, 0500</item>
+                <item index="16">Wsilent DN100/150, 1000</item>
+                <item index="17">Wsilent DN125/224, 1000</item>
+                <item index="18">Wsilent DN150/250, 1000</item>
+                <item index="19">Wsilent DN200/300, 1000</item>
+                <item index="20">Qsilent S100, -BH 60mm-</item>
+                <item index="21">ohne</item>
+            </comboboxmodel>
+        </component>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="" type="javax.swing.JScrollPane">
+    <component name="" type="javax.swing.JViewport">
+        <component name="abZuTabelleTable" type="com.westaflex.component.classes.SeeTable">
+            <tablemodel columns="6" rows="13" selected-row="-1" type="javax.swing.table.DefaultTableModel">
+                <column-header>
+                    <column cell-editor="javax.swing.JTable$GenericEditor" index="0" name="125"/>
+                    <column cell-editor="javax.swing.JTable$GenericEditor" index="1" name="250"/>
+                    <column cell-editor="javax.swing.JTable$GenericEditor" index="2" name="500"/>
+                    <column cell-editor="javax.swing.JTable$GenericEditor" index="3" name="1000"/>
+                    <column cell-editor="javax.swing.JTable$GenericEditor" index="4" name="2000"/>
+                    <column cell-editor="javax.swing.JTable$GenericEditor" index="5" name="4000"/>
+                </column-header>
+                <rowdata column="0" row="0">62,0</rowdata>
+                <rowdata column="1" row="0">64,0</rowdata>
+                <rowdata column="2" row="0">63,0</rowdata>
+                <rowdata column="3" row="0">60,0</rowdata>
+                <rowdata column="4" row="0">49,0</rowdata>
+                <rowdata column="5" row="0">48,0</rowdata>
+                <rowdata column="0" row="1">4,9</rowdata>
+                <rowdata column="1" row="1">4,9</rowdata>
+                <rowdata column="2" row="1">4,9</rowdata>
+                <rowdata column="3" row="1">4,9</rowdata>
+                <rowdata column="4" row="1">4,9</rowdata>
+                <rowdata column="5" row="1">4,9</rowdata>
+                <rowdata column="0" row="2">2,1</rowdata>
+                <rowdata column="1" row="2">2,1</rowdata>
+                <rowdata column="2" row="2">2,1</rowdata>
+                <rowdata column="3" row="2">2,1</rowdata>
+                <rowdata column="4" row="2">2,1</rowdata>
+                <rowdata column="5" row="2">2,1</rowdata>
+                <rowdata column="0" row="3">0,0</rowdata>
+                <rowdata column="1" row="3">0,0</rowdata>
+                <rowdata column="2" row="3">0,0</rowdata>
+                <rowdata column="3" row="3">0,0</rowdata>
+                <rowdata column="4" row="3">0,0</rowdata>
+                <rowdata column="5" row="3">0,0</rowdata>
+                <rowdata column="0" row="4">0,0</rowdata>
+                <rowdata column="1" row="4">0,0</rowdata>
+                <rowdata column="2" row="4">0,0</rowdata>
+                <rowdata column="3" row="4">0,0</rowdata>
+                <rowdata column="4" row="4">0,0</rowdata>
+                <rowdata column="5" row="4">0,0</rowdata>
+                <rowdata column="0" row="5">-4,5</rowdata>
+                <rowdata column="1" row="5">-4,5</rowdata>
+                <rowdata column="2" row="5">-4,5</rowdata>
+                <rowdata column="3" row="5">-4,5</rowdata>
+                <rowdata column="4" row="5">-4,5</rowdata>
+                <rowdata column="5" row="5">-4,5</rowdata>
+                <rowdata column="0" row="6">-3,0</rowdata>
+                <rowdata column="1" row="6">-3,0</rowdata>
+                <rowdata column="2" row="6">-3,0</rowdata>
+                <rowdata column="3" row="6">-3,0</rowdata>
+                <rowdata column="4" row="6">-3,0</rowdata>
+                <rowdata column="5" row="6">-3,0</rowdata>
+                <rowdata column="0" row="7">-8,4</rowdata>
+                <rowdata column="1" row="7">-7,2</rowdata>
+                <rowdata column="2" row="7">-9,6</rowdata>
+                <rowdata column="3" row="7">-9,6</rowdata>
+                <rowdata column="4" row="7">-8,4</rowdata>
+                <rowdata column="5" row="7">-8,4</rowdata>
+                <rowdata column="0" row="8">0,0</rowdata>
+                <rowdata column="1" row="8">0,0</rowdata>
+                <rowdata column="2" row="8">0,0</rowdata>
+                <rowdata column="3" row="8">0,0</rowdata>
+                <rowdata column="4" row="8">0,0</rowdata>
+                <rowdata column="5" row="8">0,0</rowdata>
+                <rowdata column="0" row="9">-7,0</rowdata>
+                <rowdata column="1" row="9">-8,0</rowdata>
+                <rowdata column="2" row="9">-4,0</rowdata>
+                <rowdata column="3" row="9">-7,0</rowdata>
+                <rowdata column="4" row="9">-5,0</rowdata>
+                <rowdata column="5" row="9">-7,0</rowdata>
+                <rowdata column="0" row="10">-4,0</rowdata>
+                <rowdata column="1" row="10">-4,0</rowdata>
+                <rowdata column="2" row="10">-4,0</rowdata>
+                <rowdata column="3" row="10">-4,0</rowdata>
+                <rowdata column="4" row="10">-4,0</rowdata>
+                <rowdata column="5" row="10">-4,0</rowdata>
+                <rowdata column="0" row="11">-16,1</rowdata>
+                <rowdata column="1" row="11">-8,6</rowdata>
+                <rowdata column="2" row="11">-3,2</rowdata>
+                <rowdata column="3" row="11">0,0</rowdata>
+                <rowdata column="4" row="11">1,2</rowdata>
+                <rowdata column="5" row="11">1,00</rowdata>
+                <rowdata column="0" row="12">26,00</rowdata>
+                <rowdata column="1" row="12">35,70</rowdata>
+                <rowdata column="2" row="12">41,70</rowdata>
+                <rowdata column="3" row="12">38,90</rowdata>
+                <rowdata column="4" row="12">32,30</rowdata>
+                <rowdata column="5" row="12">29,10</rowdata>
+            </tablemodel>
+        </component>
+    </component>
+    <component name="" type="javax.swing.JViewport"/>
+    </component>
+    <component name="abZuTabelleDezibelWertLabel" type="com.westaflex.component.classes.SeeLabel" value="64,00"/>
+        <component name="abZuTabelleMittlererSchalldruckpegelWertLabel" type="com.westaflex.component.classes.SeeLabel" value="44,35"/>
+        </component>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="abAbRaumbezeichnungComboBox" type="com.westaflex.component.classes.SeeComboBox">
+        <comboboxmodel selected-item="K&#252;che">
+            <item index="0">K&#252;che</item>
+            <item index="1">Bad</item>
+            <item index="2">WC</item>
+            <item index="3">HWR</item>
+            <item index="4">Abstellraum</item>
+        </comboboxmodel>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="abAbRaumabsorptionTextField" type="com.westaflex.component.classes.SeeTextField" value="0"/>
+    <component name="abAbSchallleistungspegelAbluftstutzenComboBox" type="com.westaflex.component.classes.SeeComboBox">
+        <comboboxmodel selected-item="AB 150">
+            <item index="0">AB 90</item>
+            <item index="1">AB 115</item>
+            <item index="2">AB 125</item>
+            <item index="3">AB 135</item>
+            <item index="4">AB 150</item>
+            <item index="5">AB 160</item>
+            <item index="6">AB 175</item>
+            <item index="7">AB 190</item>
+            <item index="8">AB 205</item>
+            <item index="9">AB 225</item>
+            <item index="10">AB 235</item>
+            <item index="11">AB 245</item>
+            <item index="12">AB 260</item>
+        </comboboxmodel>
+    </component>
+    <component name="abAbKanalnetzComboBox" type="com.westaflex.component.classes.SeeComboBox">
+        <comboboxmodel selected-item="70 Pa">
+            <item index="0">10 Pa</item>
+            <item index="1">15 Pa</item>
+            <item index="2">20 Pa</item>
+            <item index="3">25 Pa</item>
+            <item index="4">30 Pa</item>
+            <item index="5">40 Pa</item>
+            <item index="6">50 Pa</item>
+            <item index="7">60 Pa</item>
+            <item index="8">70 Pa</item>
+            <item index="9">80 Pa</item>
+            <item index="10">90 Pa</item>
+            <item index="11">100 Pa</item>
+        </comboboxmodel>
+    </component>
+    <component name="abAbFilterverschmutzungComboBox" type="com.westaflex.component.classes.SeeComboBox">
+        <comboboxmodel selected-item="20 Pa">
+            <item index="0">10 Pa</item>
+            <item index="1">15 Pa</item>
+            <item index="2">20 Pa</item>
+            <item index="3">25 Pa</item>
+            <item index="4">30 Pa</item>
+            <item index="5">40 Pa</item>
+            <item index="6">50 Pa</item>
+            <item index="7">60 Pa</item>
+            <item index="8">70 Pa</item>
+            <item index="9">80 Pa</item>
+            <item index="10">90 Pa</item>
+            <item index="11">100 Pa</item>
+        </comboboxmodel>
+    </component>
+    <component name="abAbHauptschalldaempfer1ComboBox" type="com.westaflex.component.classes.SeeComboBox">
+        <comboboxmodel selected-item="Qsilent S150, 1000">
+            <item index="0">Qsilent S100, 0500</item>
+            <item index="1">Qsilent S125, 0500</item>
+            <item index="2">Qsilent S150, 0500</item>
+            <item index="3">Qsilent S100, 1000</item>
+            <item index="4">Qsilent S125, 1000</item>
+            <item index="5">Qsilent S150, 1000</item>
+            <item index="6">Qsilent DN100, 0500</item>
+            <item index="7">Qsilent DN125, 0500</item>
+            <item index="8">Qsilent DN150, 0500</item>
+            <item index="9">Qsilent DN100, 1000</item>
+            <item index="10">Qsilent DN125, 1000</item>
+            <item index="11">Qsilent DN150, 1000</item>
+            <item index="12">Wsilent DN100/150, 0500</item>
+            <item index="13">Wsilent DN125/224, 0500</item>
+            <item index="14">Wsilent DN150/250, 0500</item>
+            <item index="15">Wsilent DN200/300, 0500</item>
+            <item index="16">Wsilent DN100/150, 1000</item>
+            <item index="17">Wsilent DN125/224, 1000</item>
+            <item index="18">Wsilent DN150/250, 1000</item>
+            <item index="19">Wsilent DN200/300, 1000</item>
+            <item index="20">Qsilent S100, -BH 60mm-</item>
+            <item index="21">ohne</item>
+        </comboboxmodel>
+    </component>
+    <component name="abAbHauptschalldaempfer2ComboBox" type="com.westaflex.component.classes.SeeComboBox">
+        <comboboxmodel selected-item="ohne">
+            <item index="0">Qsilent S100, 0500</item>
+            <item index="1">Qsilent S125, 0500</item>
+            <item index="2">Qsilent S150, 0500</item>
+            <item index="3">Qsilent S100, 1000</item>
+            <item index="4">Qsilent S125, 1000</item>
+            <item index="5">Qsilent S150, 1000</item>
+            <item index="6">Qsilent DN100, 0500</item>
+            <item index="7">Qsilent DN125, 0500</item>
+            <item index="8">Qsilent DN150, 0500</item>
+            <item index="9">Qsilent DN100, 1000</item>
+            <item index="10">Qsilent DN125, 1000</item>
+            <item index="11">Qsilent DN150, 1000</item>
+            <item index="12">Wsilent DN100/150, 0500</item>
+            <item index="13">Wsilent DN125/224, 0500</item>
+            <item index="14">Wsilent DN150/250, 0500</item>
+            <item index="15">Wsilent DN200/300, 0500</item>
+            <item index="16">Wsilent DN100/150, 1000</item>
+            <item index="17">Wsilent DN125/224, 1000</item>
+            <item index="18">Wsilent DN150/250, 1000</item>
+            <item index="19">Wsilent DN200/300, 1000</item>
+            <item index="20">Qsilent S100, -BH 60mm-</item>
+            <item index="21">ohne</item>
+        </comboboxmodel>
+    </component>
+    <component name="abAbEinfuegungswertLuftdurchlassComboBox" type="com.westaflex.component.classes.SeeComboBox">
+        <comboboxmodel selected-item="125URH">
+            <item index="0">100URH</item>
+            <item index="1">125URH</item>
+            <item index="2">125ULAE</item>
+            <item index="3">100ULAE</item>
+        </comboboxmodel>
+    </component>
+    <component name="abAbLaengsdaempfungKanalComboBox" type="com.westaflex.component.classes.SeeComboBox">
+        <comboboxmodel selected-item="Quadroflex verz.">
+            <item index="0">Quadroflex verz.</item>
+            <item index="1">Quadroflex ALU</item>
+            <item index="2">Quadrofix verz.</item>
+            <item index="3">Quadrofix ALU</item>
+            <item index="4">Westerfix verz.</item>
+            <item index="5">Westerfix ALU</item>
+            <item index="6">Compact ALU</item>
+        </comboboxmodel>
+    </component>
+    <component name="abAbLaengsdaempfungKanalTextField" type="com.westaflex.component.classes.SeeTextField" value="7"/>
+    <component name="abAbLuftverteilerkastenTextField" type="com.westaflex.component.classes.SeeTextField" value="1"/>
+    <component name="abAbAnzahlUmlenkungenTextField" type="com.westaflex.component.classes.SeeTextField" value="4"/>
+        <component name="abAbSchalldaempferVentilComboBox" type="com.westaflex.component.classes.SeeComboBox">
+            <comboboxmodel selected-item="Qsilent S100, -BH 60mm-">
+                <item index="0">Qsilent S100, 0500</item>
+                <item index="1">Qsilent S125, 0500</item>
+                <item index="2">Qsilent S150, 0500</item>
+                <item index="3">Qsilent S100, 1000</item>
+                <item index="4">Qsilent S125, 1000</item>
+                <item index="5">Qsilent S150, 1000</item>
+                <item index="6">Qsilent DN100, 0500</item>
+                <item index="7">Qsilent DN125, 0500</item>
+                <item index="8">Qsilent DN150, 0500</item>
+                <item index="9">Qsilent DN100, 1000</item>
+                <item index="10">Qsilent DN125, 1000</item>
+                <item index="11">Qsilent DN150, 1000</item>
+                <item index="12">Wsilent DN100/150, 0500</item>
+                <item index="13">Wsilent DN125/224, 0500</item>
+                <item index="14">Wsilent DN150/250, 0500</item>
+                <item index="15">Wsilent DN200/300, 0500</item>
+                <item index="16">Wsilent DN100/150, 1000</item>
+                <item index="17">Wsilent DN125/224, 1000</item>
+                <item index="18">Wsilent DN150/250, 1000</item>
+                <item index="19">Wsilent DN200/300, 1000</item>
+                <item index="20">Qsilent S100, -BH 60mm-</item>
+                <item index="21">ohne</item>
+            </comboboxmodel>
+        </component>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+        <component name="" type="javax.swing.JScrollPane">
+            <component name="" type="javax.swing.JViewport">
+                <component name="abAbTabelleTable" type="com.westaflex.component.classes.SeeTable">
+                    <tablemodel columns="6" rows="13" selected-row="-1" type="javax.swing.table.DefaultTableModel">
+                        <column-header>
+                            <column cell-editor="javax.swing.JTable$GenericEditor" index="0" name="125"/>
+                            <column cell-editor="javax.swing.JTable$GenericEditor" index="1" name="250"/>
+                            <column cell-editor="javax.swing.JTable$GenericEditor" index="2" name="500"/>
+                            <column cell-editor="javax.swing.JTable$GenericEditor" index="3" name="1000"/>
+                            <column cell-editor="javax.swing.JTable$GenericEditor" index="4" name="2000"/>
+                            <column cell-editor="javax.swing.JTable$GenericEditor" index="5" name="4000"/>
+                        </column-header>
+                        <rowdata column="0" row="0">54,0</rowdata>
+                        <rowdata column="1" row="0">60,0</rowdata>
+                        <rowdata column="2" row="0">59,0</rowdata>
+                        <rowdata column="3" row="0">55,0</rowdata>
+                        <rowdata column="4" row="0">43,0</rowdata>
+                        <rowdata column="5" row="0">42,0</rowdata>
+                        <rowdata column="0" row="1">6,7</rowdata>
+                        <rowdata column="1" row="1">6,7</rowdata>
+                        <rowdata column="2" row="1">6,7</rowdata>
+                        <rowdata column="3" row="1">6,7</rowdata>
+                        <rowdata column="4" row="1">6,7</rowdata>
+                        <rowdata column="5" row="1">6,7</rowdata>
+                        <rowdata column="0" row="2">2,1</rowdata>
+                        <rowdata column="1" row="2">2,1</rowdata>
+                        <rowdata column="2" row="2">2,1</rowdata>
+                        <rowdata column="3" row="2">2,1</rowdata>
+                        <rowdata column="4" row="2">2,1</rowdata>
+                        <rowdata column="5" row="2">2,1</rowdata>
+                        <rowdata column="0" row="3">-11,0</rowdata>
+                        <rowdata column="1" row="3">-13,0</rowdata>
+                        <rowdata column="2" row="3">-23,0</rowdata>
+                        <rowdata column="3" row="3">-41,0</rowdata>
+                        <rowdata column="4" row="3">-51,0</rowdata>
+                        <rowdata column="5" row="3">-31,0</rowdata>
+                        <rowdata column="0" row="4">0,0</rowdata>
+                        <rowdata column="1" row="4">0,0</rowdata>
+                        <rowdata column="2" row="4">0,0</rowdata>
+                        <rowdata column="3" row="4">0,0</rowdata>
+                        <rowdata column="4" row="4">0,0</rowdata>
+                        <rowdata column="5" row="4">0,0</rowdata>
+                        <rowdata column="0" row="5">-3,6</rowdata>
+                        <rowdata column="1" row="5">-3,6</rowdata>
+                        <rowdata column="2" row="5">-3,6</rowdata>
+                        <rowdata column="3" row="5">-3,6</rowdata>
+                        <rowdata column="4" row="5">-3,6</rowdata>
+                        <rowdata column="5" row="5">-3,6</rowdata>
+                        <rowdata column="0" row="6">-3,0</rowdata>
+                        <rowdata column="1" row="6">-3,0</rowdata>
+                        <rowdata column="2" row="6">-3,0</rowdata>
+                        <rowdata column="3" row="6">-3,0</rowdata>
+                        <rowdata column="4" row="6">-3,0</rowdata>
+                        <rowdata column="5" row="6">-3,0</rowdata>
+                        <rowdata column="0" row="7">-4,9</rowdata>
+                        <rowdata column="1" row="7">-4,2</rowdata>
+                        <rowdata column="2" row="7">-5,6</rowdata>
+                        <rowdata column="3" row="7">-5,6</rowdata>
+                        <rowdata column="4" row="7">-4,9</rowdata>
+                        <rowdata column="5" row="7">-4,9</rowdata>
+                        <rowdata column="0" row="8">0,0</rowdata>
+                        <rowdata column="1" row="8">0,0</rowdata>
+                        <rowdata column="2" row="8">0,0</rowdata>
+                        <rowdata column="3" row="8">0,0</rowdata>
+                        <rowdata column="4" row="8">0,0</rowdata>
+                        <rowdata column="5" row="8">0,0</rowdata>
+                        <rowdata column="0" row="9">-18,0</rowdata>
+                        <rowdata column="1" row="9">-16,0</rowdata>
+                        <rowdata column="2" row="9">-13,0</rowdata>
+                        <rowdata column="3" row="9">-11,0</rowdata>
+                        <rowdata column="4" row="9">-9,0</rowdata>
+                        <rowdata column="5" row="9">-6,0</rowdata>
+                        <rowdata column="0" row="10"/>
+                        <rowdata column="1" row="10"/>
+                        <rowdata column="2" row="10"/>
+                        <rowdata column="3" row="10"/>
+                        <rowdata column="4" row="10"/>
+                        <rowdata column="5" row="10"/>
+                        <rowdata column="0" row="11">-16,1</rowdata>
+                        <rowdata column="1" row="11">-8,6</rowdata>
+                        <rowdata column="2" row="11">-3,2</rowdata>
+                        <rowdata column="3" row="11">0,0</rowdata>
+                        <rowdata column="4" row="11">1,2</rowdata>
+                        <rowdata column="5" row="11"/>
+                        <rowdata column="0" row="12">6,20</rowdata>
+                        <rowdata column="1" row="12">20,40</rowdata>
+                        <rowdata column="2" row="12">16,40</rowdata>
+                        <rowdata column="3" row="12">-0,40</rowdata>
+                        <rowdata column="4" row="12">-18,50</rowdata>
+                        <rowdata column="5" row="12">2,30</rowdata>
+                    </tablemodel>
+                </component>
+            </component>
+            <component name="" type="javax.swing.JViewport"/>
+            </component>
+            <component name="abAbTabelleMittlererSchalldruckpegelWertLabel" type="com.westaflex.component.classes.SeeLabel" value="21,90"/>
+                <component name="abAbTabelleDezibelWertLabel" type="com.westaflex.component.classes.SeeLabel" value="60,00"/>
+                </component>
+            </component>
+        </component>
+    </component>
+    <component name="" type="javax.swing.JPanel">
+    <component name="" type="javax.swing.JTabbedPane">
+    <component name="" type="javax.swing.JPanel">
+        <component name="" type="javax.swing.JScrollPane">
+            <component name="" type="javax.swing.JViewport">
+                <component name="dvbTeilstreckenTabelleTable" type="com.westaflex.component.classes.SeeTable">
+                    <tablemodel columns="9" rows="2" selected-row="-1" type="javax.swing.table.DefaultTableModel">
+                        <column-header>
+                            <column cell-editor="javax.swing.JTable$GenericEditor" index="0" name="Bel."/>
+                            <column cell-editor="javax.swing.JTable$GenericEditor" index="1" name="Nr."/>
+                            <column cell-editor="javax.swing.JTable$GenericEditor" index="2" name="Luftmenge m&#179;/h"/>
+                            <column cell-editor="javax.swing.JTable$GenericEditor" index="3" name="Kanal"/>
+                            <column cell-editor="javax.swing.JTable$GenericEditor" index="4" name="L&#228;nge (m)"/>
+                            <column cell-editor="javax.swing.JTable$GenericEditor" index="5" name="Geschwindigkeit m/s"/>
+                            <column cell-editor="javax.swing.JTable$GenericEditor" index="6" name="Druckverlust Pa (Rohr)"/>
+                            <column cell-editor="javax.swing.JTable$GenericEditor" index="7" name="Einzelwiderst&#228;nde Zeta"/>
+                            <column cell-editor="javax.swing.JTable$GenericEditor" index="8" name="Einzelwiderst&#228;nde Pa"/>
+                        </column-header>
+                        <rowdata column="0" row="0">ZU</rowdata>
+                        <rowdata column="1" row="0">1</rowdata>
+                        <rowdata column="2" row="0">50,00</rowdata>
+                        <rowdata column="3" row="0">S150 flex</rowdata>
+                        <rowdata column="4" row="0">7,00</rowdata>
+                        <rowdata column="5" row="0">0,99</rowdata>
+                        <rowdata column="6" row="0">1,40</rowdata>
+                        <rowdata column="7" row="0">0,00</rowdata>
+                        <rowdata column="8" row="0">0,00</rowdata>
+                        <rowdata column="0" row="1">AB</rowdata>
+                        <rowdata column="1" row="1">2</rowdata>
+                        <rowdata column="2" row="1">15,00</rowdata>
+                        <rowdata column="3" row="1">S151 flex</rowdata>
+                        <rowdata column="4" row="1">3,00</rowdata>
+                        <rowdata column="5" row="1">0,41</rowdata>
+                        <rowdata column="6" row="1">0,14</rowdata>
+                        <rowdata column="7" row="1">0,00</rowdata>
+                        <rowdata column="8" row="1">0,00</rowdata>
+                    </tablemodel>
+                </component>
+            </component>
+            <component name="" type="javax.swing.JViewport"/>
+            </component>
+            <component name="" type="javax.swing.JPanel">
+                <component name="dvbTeilstreckenBelueftungComboBox" type="javax.swing.JComboBox">
+                    <comboboxmodel selected-item="ZU">
+                        <item index="0">ZU</item>
+                        <item index="1">AB</item>
+                    </comboboxmodel>
+                </component>
+                <component name="dvbTeilstreckenNrTextField" type="javax.swing.JTextField" value=""/>
+                    <component name="dvbTeilstreckenLuftmengeTextField" type="javax.swing.JTextField" value=""/>
+                        <component name="dvbTeilstreckenKanalbezeichnungComboBox" type="javax.swing.JComboBox">
+                            <comboboxmodel selected-item="S150 flex">
+                                <item index="0">S150 flex</item>
+                                <item index="1">S151 flex</item>
+                                <item index="2">S125 flex</item>
+                                <item index="3">S100 flex</item>
+                                <item index="4">S150 fix</item>
+                                <item index="5">S151 fix</item>
+                                <item index="6">S125 fix</item>
+                                <item index="7">S100 fix</item>
+                                <item index="8">DN200 flex</item>
+                                <item index="9">DN150 flex</item>
+                                <item index="10">DN125 flex</item>
+                                <item index="11">DN100 flex</item>
+                                <item index="12">DN200 fix</item>
+                                <item index="13">DN150 fix</item>
+                                <item index="14">DN125 fix</item>
+                                <item index="15">DN100 fix</item>
+                            </comboboxmodel>
+                        </component>
+                        <component name="dvbTeilstreckenLaengeTextField" type="javax.swing.JTextField" value=""/>
+                        </component>
+                    </component>
+                    <component name="" type="javax.swing.JPanel">
+                        <component name="" type="javax.swing.JScrollPane">
+                            <component name="" type="javax.swing.JViewport">
+                                <component name="dvbVentileinstellungTabelleTable" type="com.westaflex.component.classes.SeeTable">
+                                    <tablemodel columns="8" rows="0" selected-row="-1" type="javax.swing.table.DefaultTableModel">
+                                        <column-header>
+                                            <column cell-editor="javax.swing.JTable$GenericEditor" index="0" name="Bel."/>
+                                            <column cell-editor="javax.swing.JTable$GenericEditor" index="1" name="Raum"/>
+                                            <column cell-editor="javax.swing.JTable$GenericEditor" index="2" name="Teilstrecken"/>
+                                            <column cell-editor="javax.swing.JTable$GenericEditor" index="3" name="dP Pa (offen)"/>
+                                            <column cell-editor="javax.swing.JTable$GenericEditor" index="4" name="Gesamt Pa"/>
+                                            <column cell-editor="javax.swing.JTable$GenericEditor" index="5" name="Differenz"/>
+                                            <column cell-editor="javax.swing.JTable$GenericEditor" index="6" name="Abgleich Pa"/>
+                                            <column cell-editor="javax.swing.JTable$GenericEditor" index="7" name="Einstellung"/>
+                                        </column-header>
+                                    </tablemodel>
+                                </component>
+                            </component>
+                            <component name="" type="javax.swing.JViewport"/>
+                            </component>
+                            <component name="" type="javax.swing.JPanel">
+                                <component name="dvbVentileinstellungRaumComboBox" type="javax.swing.JComboBox">
+                                    <comboboxmodel selected-item="Wohnen">
+                                        <item index="0">Wohnen</item>
+                                        <item index="1">Essen</item>
+                                        <item index="2">Eltern</item>
+                                        <item index="3">Schlafen</item>
+                                        <item index="4">Arbeiten</item>
+                                        <item index="5">Kind 1</item>
+                                        <item index="6">Kind 2</item>
+                                        <item index="7">K&#252;che</item>
+                                        <item index="8">Bad</item>
+                                        <item index="9">WC</item>
+                                        <item index="10">HWR</item>
+                                        <item index="11">Abstellraum</item>
+                                        <item index="12">Flur</item>
+                                        <item index="13">Diele</item>
+                                    </comboboxmodel>
+                                </component>
+                                <component name="dvbVentileinstellungTeilstreckenTextField" type="com.westaflex.component.classes.SeeTextField" value="1"/>
+                                    <component name="dvbVentileinstellungVentilbezeichnungComboBox" type="javax.swing.JComboBox">
+                                        <comboboxmodel selected-item="100ULC 180&#176;">
+                                            <item index="0">100ULC 360&#176;</item>
+                                            <item index="1">100ULC 180&#176;</item>
+                                            <item index="2">100ULA 360&#176;</item>
+                                            <item index="3">100ULA 180&#176;</item>
+                                            <item index="4">125ULA 360&#176;</item>
+                                            <item index="5">125ULA 180&#176;</item>
+                                            <item index="6">100ULE</item>
+                                            <item index="7">FBA / WAL</item>
+                                            <item index="8">SLA</item>
+                                        </comboboxmodel>
+                                    </component>
+                                </component>
+                            </component>
+                        </component>
+                    </component>
+                </component>
+            </component>
+        </component>
+    </component>
+    <component name="" type="com.sun.java.swing.plaf.windows.WindowsInternalFrameTitlePane"/>
+    </component>
+</project>

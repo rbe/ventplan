@@ -1,0 +1,5 @@
+glob:.DS_Store
+glob:._*
+glob:dist
+glob:build
+glob:target
