@@ -21,9 +21,19 @@ class ProjektModel {
 	 * 
 	 */
 	@Bindable map = [
-		grosshandel: [:] as ObservableMap,
-		ausfuehrendeFirma: [:] as ObservableMap,
-		gebaeude: [gebaeudeTypEFH: true, gebaeudeLageWindschwach: true, gebaeudeWaermeschutzHoch: true] as ObservableMap,
+		kundendaten: [
+			grosshandel: [:] as ObservableMap,
+			ausfuhrendeFirma: [:] as ObservableMap,
+		] as ObservableMap,
+		gebaude: [
+				typ: [EFH: true] as ObservableMap,
+				lage: [windschwach: true] as ObservableMap,
+				warmeschutz: [hoch: true] as ObservableMap,
+				geometrie: [:] as ObservableMap,
+				luftdichtheit: [kategorieA: true] as ObservableMap,
+				faktorBesondereAnforderungen: 1,
+				geplanteBelegung: [personenanzahl: 0, aussenluftVolumenstromProPerson: 30] as ObservableMap,
+			] as ObservableMap,
 		anlage: [:] as ObservableMap,
 		raum: [:] as ObservableMap,
 		aussenluftVs: [:] as ObservableMap,
