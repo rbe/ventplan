@@ -1,27 +1,28 @@
 package com.westaflex.wac
 
+import com.bensmann.griffon.GriffonHelper as GH
+
 /**
  * 
  */
-@griffon.util.EventPublisher
+//@griffon.util.EventPublisher
 class ProjektController {
 	
 	def model
 	def view
 	def wacCalculationService
 	
+	/**
+	 * Initialize MVC group.
+	 */
 	void mvcGroupInit(Map args) {
 		model.mvcId = args.mvcId
-		// Compute a hash of the map when data is entered. Compare this hash to a previously
-		// stored hash value to see if the data has changed
-		def computeHash = { evt ->
-		} as java.beans.PropertyChangeListener
 		// Add PropertyChangeListener to model
 		model.map.addPropertyChangeListener({ evt ->
 			model.map.each { k, v ->
 				println "${k}: size=${model.map[k].size()} class=${model.map[k].class}"
+				println ""
 			}
-			println ""
 		} as java.beans.PropertyChangeListener)
 		model.map.each { k, v ->
 			println "ProjektController.mvcGroupInit: adding PropertyChangeListener for ${k}"
@@ -33,39 +34,87 @@ class ProjektController {
 	}
 	
 	/**
-	 * Kategorie A
-	def onAnotherEvent = {
-		println "onAnotherEvent"
-		model.map.gebaude.luftdichtheit.with {
-			druckdifferenz = 2.0
-			luftwechsel = 1.0
-			druckexponent = 0.666
-		}
-	}
-	 */
-	
-	/**
 	 * Gebäudedaten - Geometrie
 	 */
-	def berechneGeometrie() {
-		if (model.map.gebaeude.geometrie.wohnflaeche)
-		if (!geoWohnflaecheTextField.getText().isEmpty() && !geoHoeheTextField.getText().isEmpty()) {
-			fFlaeche = ConversionUtil.parseFloatFromComponent(geoWohnflaecheTextField);
-			fHoehe = ConversionUtil.parseFloatFromComponent(geoHoeheTextField);
-			fVol = fFlaeche * fHoehe;
-			setGesamtVolumen(fVol);
-			if (geoGeluefteteflaecheTextField.getText().isEmpty()) {
-				setGelueftetVolumen(fVol);
+	def berechneGeometrie = {
+		def g = model.map.gebaude.geometrie
+		try {
+			// Luftvolumen der Nutzungseinheit = Wohnfläche * mittlere Raumhöhe
+			if (g.wohnflache && g.raumhohe) {
+				g.luftvolumen = g.geluftetesVolumen = GH.sf(wacCalculationService.volumen(GH.pf(g.wohnflache), GH.pf(g.raumhohe)))
+			}
+			// Gelüftetes Volumen = gelüftete Fläche * mittlere Raumhöhe
+			if (g.gelufteteFlache && g.raumhohe) {
+				g.geluftetesVolumen = GH.sf(wacCalculationService.volumen(GH.pf(g.gelufteteFlache), GH.pf(g.raumhohe)))
+			}
+			// Gelüftetes Volumen = Luftvolumen, wenn kein gelüftetes Volumen berechnet
+			if (g.luftvolumen && !g.geluftetesVolumen) {
+				g.geluftetesVolumen = g.luftvolumen
+			}
+		} catch (e) {
+			//e.printStackTrace()
+			g.luftvolumen = g.geluftetesVolumen = "E"
+		}
+		model.map.gebaude.geometrie = g
+	}
+	
+	/**
+	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
+	 */
+	def luftdichtheitKategorieA = {
+		model.map.gebaude.luftdichtheit.with {
+			druckdifferenz = "2,00"
+			luftwechsel = "1,00"
+			druckexponent = "0,666"
+		}
+	}
+	
+	/**
+	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
+	 */
+	def luftdichtheitKategorieB = {
+		model.map.gebaude.luftdichtheit.with {
+			druckdifferenz = "2,00"
+			luftwechsel = "1,50"
+			druckexponent = "0,666"
+		}
+	}
+	
+	/**
+	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
+	 */
+	def luftdichtheitKategorieC = {
+		model.map.gebaude.luftdichtheit.with {
+			druckdifferenz = "2,00"
+			luftwechsel = "2,00"
+			druckexponent = "0,666"
+		}
+	}
+	
+	/**
+	 * Gebäudedaten - Geplante Belegung
+	 */
+	def berechneMindestaussenluftrate = {
+		model.map.gebaude.geplanteBelegung.with {
+			try {
+				mindestaussenluftrate = personenanzahl * aussenluftVsProPerson
+			} catch (e) {
+				mindestaussenluftrate = 0
 			}
 		}
-		if (!geoGeluefteteflaecheTextField.getText().isEmpty() && !geoHoeheTextField.getText().isEmpty()) {
-			fFlaeche = ConversionUtil.parseFloatFromComponent(geoGeluefteteflaecheTextField);
-			fHoehe = ConversionUtil.parseFloatFromComponent(geoHoeheTextField);
-			fVol = fFlaeche * fHoehe;
-			setGelueftetVolumen(fVol);
+	}
+	
+	/**
+	 * Anlagendaten - Energie-Kennzeichen
+	 */
+	def berechneEnergieKennzeichen = {
+		def all = model.map.anlage.energie.with {
+			zuAbluftWarme && bemessung && ruckgewinnung && regelung
 		}
-		if (!geoVolumenTextField.getText().isEmpty() && geoGelueftetesVolumenTextField.getText().isEmpty()) {
-			setGelueftetVolumen(ConversionUtil.parseFloatFromComponent(geoVolumenTextField));
+		if (all) {
+			model.map.anlage.energie.nachricht = "Energiekennzeichen gesetzt!"
+		} else {
+			model.map.anlage.energie.nachricht = " "
 		}
 	}
 	

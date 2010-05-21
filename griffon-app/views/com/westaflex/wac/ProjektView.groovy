@@ -7,45 +7,47 @@ import net.miginfocom.swing.MigLayout
 jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 	panel(id: "projektTab", title: tabName) {
 		borderLayout()
-		jideTabbedPane(id: "datenTabGroup") {
-			// Kundendaten
-			panel(id: "kundenTab", title: "Kundendaten", layout: new MigLayout("fill, wrap 2", "[fill][fill]", "[fill][fill]")) {
-				build(KundendatenView)
-			}
-			// Gebäudedaten
-			print anel(id: "gebaudeTab", title: "Gebäudedaten", layout: new MigLayout("fill, wrap 3", "[fill][fill][fill]", "[fill][fill]")) {
-				build(GebaudedatenView)
-			}
-			// Anlagendaten
-			panel(id: "anlageTab", title: "Anlagedaten") {
-				build(AnlagendatenView)
-			}
-			// Raumdaten
-			panel(id: "raumTab", title: "Raumdaten") {
-				build(RaumdatenView)
-			}
-			// Außenluftvolumenströme
-			panel(id: "aussenluftVsTab", title: "Außenluftvolumenströme") {
-				build(AussenluftVsView)
-			}
-			// Raumvolumenströme
-			panel(id: "raumVsTab", title: "Raumvolumenströme") {
-				build(RaumVsView)
-			}
-			// Druckverlustberechnung
-			panel(id: "druckverlustTab", title: "Druckverlustberechnung") {
-				build(DruckverlustView)
-			}
-			// Akkustikberechnung
-			panel(id: "akkustikTab", title: "Akkustikberechnung") {
-				build(AkkustikView)
+		// Scrollpane
+		jideScrollPane(id: "mainScrollPane") {
+			jideTabbedPane(id: "datenTabGroup") {
+				// Kundendaten
+				panel(id: "kundenTab", title: "Kundendaten", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[fill][fill]")) {
+					build(KundendatenView)
+				}
+				// Gebäudedaten
+				panel(id: "gebaudeTab", title: "Gebäudedaten", layout: new MigLayout("fillx, wrap 3", "[fill][fill][fill]", "[fill][fill]")) {
+					build(GebaudedatenView)
+				}
+				// Anlagendaten
+				panel(id: "anlageTab", title: "Anlagedaten", layout: new MigLayout("fillx, wrap 3", "[fill][fill][fill]", "[fill][fill]")) {
+					build(AnlagendatenView)
+				}
+				// Raumdaten
+				panel(id: "raumTab", title: "Raumdaten") {
+					build(RaumdatenView)
+				}
+				// Außenluftvolumenströme
+				panel(id: "aussenluftVsTab", title: "Außenluftvolumenströme") {
+					build(AussenluftVsView)
+				}
+				// Raumvolumenströme
+				panel(id: "raumVsTab", title: "Raumvolumenströme") {
+					build(RaumVsView)
+				}
+				// Druckverlustberechnung
+				panel(id: "druckverlustTab", title: "Druckverlustberechnung") {
+					build(DruckverlustView)
+				}
+				// Akkustikberechnung
+				panel(id: "akkustikTab", title: "Akkustikberechnung") {
+					build(AkkustikView)
+				}
 			}
 		}
 		hbox(constraints: SOUTH) {
 			button(halloAction)
 		}
 	}
-	
 }
 // Bindings
 build(ProjektBindings)

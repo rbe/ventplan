@@ -1,9 +1,10 @@
 package com.westaflex.wac
 
+import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
 // Großhandel
-panel(border: titledBorder(title: "Kunde 1 (Großhandel)"), layout: new MigLayout("fill, insets 5, gap 5, wrap 2", "[][grow]", "[][]")) {
+panel(id: "kundendatenGrosshandel", border: titledBorder(title: "Kunde 1 (Großhandel)"), layout: new MigLayout("fill, insets 5, gap 5, wrap 2", "[][grow]", "[][]")) {
 	// Row 1
 	label("Firma 1")
 	textField(id: "grosshandelFirma1", constraints: "growx")
@@ -29,8 +30,9 @@ panel(border: titledBorder(title: "Kunde 1 (Großhandel)"), layout: new MigLayou
 	label("Ansprechpartner")
 	textField(id: "grosshandelAnsprechpartner", constraints: "growx")
 }
+GH.recurse(kundendatenGrosshandel, GH.yellowTextField)
 // Ausführende Firma
-panel(border: titledBorder(title: "Kunde 2 (Ausführende Firma)"), layout: new MigLayout("fill, insets 5, gap 5, wrap 2", "[][grow]", "[][]")) {
+panel(id: "kundendatenAusfuhrendeFirma", border: titledBorder(title: "Kunde 2 (Ausführende Firma)"), layout: new MigLayout("fill, insets 5, gap 5, wrap 2", "[][grow]", "[][]")) {
 	// Row 1
 	label("Firma 1")
 	textField(id: "ausfuhrendeFirmaFirma1", constraints: "growx")
@@ -56,16 +58,18 @@ panel(border: titledBorder(title: "Kunde 2 (Ausführende Firma)"), layout: new M
 	label("Ansprechpartner")
 	textField(id: "ausfuhrendeFirmaAnsprechpartner", constraints: "growx")
 }
+GH.recurse(kundendatenAusfuhrendeFirma, GH.yellowTextField)
 // Notizen
-panel(border: titledBorder(title: "Notizen"), constraints: "span", layout: new MigLayout("fill, wrap 2", "[][grow]", "[][grow]")) {
+panel(id: "kundendatenNotizen", border: titledBorder(title: "Notizen"), constraints: "span", layout: new MigLayout("fill, wrap 2", "[][grow]", "[][grow]")) {
 	// Bauvorhaben
 	label("Bauvorhaben")
 	textField(id: "bauvorhaben", constraints: "growx")
 	// Notizen
 	label("Notizen")
-	scrollPane(constraints: "grow") {
+	jideScrollPane(constraints: "grow") {
 		textArea(id: "notizen", constraints: "grow")
 	}
 }
+GH.recurse(kundendatenNotizen, GH.yellowTextField)
 // Bindings
 build(KundendatenBindings)

@@ -32,14 +32,8 @@ application(title: 'WestaWAC 2',
 	menuBar(build(Wac2MenuBar))
 	// Build toolbar
 	toolBar(build(Wac2ToolBar))
-	// Add content in a scroll pane
-	jideScrollPane(id: "mainScrollPane") {
-		// A scroll pane can have only one component
-		panel {
-			borderLayout()
-			widget(build(Wac2MainPane))
-		}
-	}
+	// Content
+	widget(build(Wac2MainPane))
 	// The status bar
 	jxstatusBar(id: "statusBar") {
 		label("statusbar")

@@ -3,21 +3,23 @@ package com.westaflex.wac
 /**
  * 
  */
-@Singleton
+//@Singleton
 class WacCalculationService {
+	
+	static scope = "singleton"
 	
 	/**
 	 * Ermittelt das Volumen aus den vorhandenen Werten:
 	 * Gesamtvolumen = Fläche * Höhe
 	 */
-	def berechneVolumen(flaeche, hoehe) {
-		wohnflaeche * raumHoehe
+	float volumen(float flaeche, float hoehe) {
+		flaeche * hoehe
 	}
 	
 	/**
 	 * Projekt, Gebäudedaten
 	 */
-	def berechneMindestaussenluftRate(personenAnzahl, aussenluftVolumenstrom) {
+	float mindestaussenluftRate(int personenAnzahl, float aussenluftVolumenstrom) {
 		personenAnzahl * aussenluftVolumenstrom
 	}
 	
