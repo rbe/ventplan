@@ -34,7 +34,7 @@ bind(source: model.map.anlage.energie, sourceProperty: "regelung",      target: 
 //
 bind(source: anlageEnergieZuAbluftWarme, sourceProperty: "selected", target: anlageEnergieBemessung,     targetProperty: "enabled")
 bind(source: anlageEnergieZuAbluftWarme, sourceProperty: "selected", target: anlageEnergieRuckgewinnung, targetProperty: "enabled")
-bind(source: anlageEnergieZuAbluftWarme, sourceProperty: "selected", target: anlageEnergieRegelung,      targetProperty: "selected", mutual: true)
+bind(source: anlageEnergieZuAbluftWarme, sourceProperty: "selected", target: anlageEnergieRegelung,      targetProperty: "enabled")
 //
 bind(source: model.map.anlage.energie, sourceProperty: "nachricht",     target: anlageEnergieNachricht,     targetProperty: "text")
 [anlageEnergieZuAbluftWarme, anlageEnergieBemessung, anlageEnergieRuckgewinnung, anlageEnergieRegelung].each {
