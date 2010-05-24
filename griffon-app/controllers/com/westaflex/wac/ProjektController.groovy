@@ -17,7 +17,7 @@ class ProjektController {
 	 */
 	void mvcGroupInit(Map args) {
 		model.mvcId = args.mvcId
-		addPropertyChange(model.map)
+		addMapPropertyChange(model.map)
 	}
 	
 	/**
@@ -28,9 +28,9 @@ class ProjektController {
 	}
 	
 	/**
-	 * Recursively add PropertyChangeListener to the/all nested maps.
+	 * Recursively add PropertyChangeListener to the map itself and all nested maps.
 	 */
-	def addPropertyChange = { map ->
+	def addMapPropertyChange = { map ->
 		map.each { k, v ->
 			if (v instanceof Map) {
 				println "ProjektController.mvcGroupInit: adding PropertyChangeListener for ${k}"
@@ -38,7 +38,7 @@ class ProjektController {
 					dumpPropertyChange.delegate = v
 					dumpPropertyChange(evt, k)
 				} as java.beans.PropertyChangeListener)
-				addPropertyChange(v)
+				addMapPropertyChange(v)
 			}
 		}
 	}
@@ -163,7 +163,7 @@ class ProjektController {
 		def raumWerte = GH.getValuesFromView(view, "raum")
 		// Standard-Werte setzen
 		raumWerte.with {
-			// Übernehme Wert für Bezeichnung vom Typ
+			// Übernehme Wert für Bezeichnung vom Typ?
 			if (!raumBezeichnung) raumBezeichnung = raumTyp
 			// Standard Türspalthöhe ist 10 mm
 			raumTurspaltHohe = "10,00"
@@ -175,7 +175,7 @@ class ProjektController {
 			// Prüfe den Zuluftfaktor, Rückgabe: [übergebener wert, neuer wert]
 			def prufeZuluftfaktor = { float zf ->
 				def minMax = { v, min, max -> if (v < min) { min } else if (v > max) { max } else { v } }
-				def nzf = 0.0f
+				def nzf
 				switch (raumWerte.raumBezeichnung) {
 					case "Wohnzimmer":                                  nzf = minMax(zf, 2.5f, 3.5f); break
 					case ["Kinderzimmer", "Schlafzimmer"]:              nzf = minMax(zf, 1.0f, 3.0f); break
@@ -192,8 +192,14 @@ class ProjektController {
 		}
 		// Update model and set table selection
 		edt {
+			// Raum im Model hinzufügen
 			model.map.raum.raume << raumWerte
-			view.raumTable.changeSelection(view.raumTable.rowCount - 1, 0, false, false)
+			// Raum inkl. Volumen in Raumvolumenströme, Zu-/Abluftventile eintragen
+			// Geometrie berechnen
+			// Raum in Tabelle markieren
+			view.raumTable.with {
+				changeSelection(rowCount - 1, 0, false, false)
+			}
 		}
 		println "raumHinzufugen: raumWerte=${raumWerte}"
 	}
