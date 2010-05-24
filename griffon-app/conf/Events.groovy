@@ -6,25 +6,6 @@ onBootstrapEnd = { app ->
 	def dataSource = new ConfigSlurper().parse(DataSource).dataSource
 	WacModelService.instance.initDataSource(dataSource)
 	//
-	println "onBootstrapEnd: finished"
-}
-
-onStartupStart = { app ->
-	println "onStartupStart: start"
-	// Load data from database
-	/*
-	withSql { sql ->
-		def tmpList = []
-		sql.eachRow("SELECT * FROM persons") {
-			tmpList << [id: it.id,
-				name: it.name,
-				lastname: it.lastname
-			]
-		}
-		edt { model.personsList.addAll(tmpList) }
-	}
-	*/
-	//
 	def toString2 = {
 		def d = delegate
 		if (d) {
@@ -41,7 +22,7 @@ onStartupStart = { app ->
 	Integer.metaClass.toString2 = toString2
 	Long.metaClass.toString2 = toString2
 	Float.metaClass.toString2 = toString2
-	Double.metaClass.toString2 = Float.metaClass.toString2
+	Double.metaClass.toString2 = toString2
 	// String.toFloat2: parse a string with german notation to a float value
 	String.metaClass.toFloat2 = {
 		def d = delegate
@@ -73,6 +54,25 @@ onStartupStart = { app ->
 			map
 		}
 	}
+	//
+	println "onBootstrapEnd: finished"
+}
+
+onStartupStart = { app ->
+	println "onStartupStart: start"
+	// Load data from database
+	/*
+	withSql { sql ->
+		def tmpList = []
+		sql.eachRow("SELECT * FROM persons") {
+			tmpList << [id: it.id,
+				name: it.name,
+				lastname: it.lastname
+			]
+		}
+		edt { model.personsList.addAll(tmpList) }
+	}
+	*/
 	//
 	println "onStartupStart: finished"
 }
