@@ -1,8 +1,5 @@
 package com.westaflex.wac
 
-import ca.odell.glazedlists.*
-import ca.odell.glazedlists.gui.*
-import ca.odell.glazedlists.swing.*
 import groovy.beans.Bindable
 
 /**
@@ -61,8 +58,8 @@ class ProjektModel {
 				geschoss: ["KG", "EG", "OG", "DG", "SB"],
 				luftart: ["ZU", "AB", "ZU/AB", "ÜB"],
 				hohe: "2,50",
-				zuluftfaktor: "3",
-				raume: new SortedList(new BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as EventList
+				zuluftfaktor: "3,00",
+				raume: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList
 			] as ObservableMap,
 		aussenluftVs: [:] as ObservableMap,
 		raumVs: [:] as ObservableMap,
@@ -76,11 +73,11 @@ class ProjektModel {
 	def createRaumTableModel() {
 		def columnNames =   ["Raum",            "Geschoss",     "Luftart",     "Raumfläche (m²)", "Raumhöhe (m)", "Zuluftfaktor",     "Abluftvolumenstrom"]
 		def propertyNames = ["raumBezeichnung", "raumGeschoss", "raumLuftart", "raumFlache",      "raumHohe",     "raumZuluftfaktor", "raumAbluftVs"]
-		new EventTableModel(map.raum.raume, [
+		new ca.odell.glazedlists.swing.EventTableModel(map.raum.raume, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
 				getColumnValue: { object, index -> object."${propertyNames[index]}" }
-			] as TableFormat)
+			] as ca.odell.glazedlists.gui.TableFormat)
 	}
 	
 	/**
