@@ -51,11 +51,11 @@ class ProjektController {
 		try {
 			// Luftvolumen der Nutzungseinheit = Wohnfläche * mittlere Raumhöhe
 			if (g.wohnflache && g.raumhohe) {
-				g.luftvolumen = g.geluftetesVolumen = GH.setFloat(wacCalculationService.volumen(GH.parseFloat(g.wohnflache), GH.parseFloat(g.raumhohe)))
+				g.luftvolumen = g.geluftetesVolumen = wacCalculationService.volumen(g.wohnflache.toFloat2(), g.raumhohe.toFloat2()).toString2()
 			}
 			// Gelüftetes Volumen = gelüftete Fläche * mittlere Raumhöhe
 			if (g.gelufteteFlache && g.raumhohe) {
-				g.geluftetesVolumen = GH.setFloat(wacCalculationService.volumen(GH.parseFloat(g.gelufteteFlache), GH.parseFloat(g.raumhohe)))
+				g.geluftetesVolumen = wacCalculationService.volumen(g.gelufteteFlache.toFloat2(), g.raumhohe.toFloat2()).toFloat2()
 			}
 			// Gelüftetes Volumen = Luftvolumen, wenn kein gelüftetes Volumen berechnet
 			if (g.luftvolumen && !g.geluftetesVolumen) {
@@ -161,7 +161,7 @@ class ProjektController {
 	 */
 	def raumHinzufugen = {
 		def raumWerte = GH.getValuesFromView(view, "raum")
-		//
+		// Standard-Werte setzen
 		raumWerte.with {
 			// Übernehme Wert für Bezeichnung vom Typ
 			if (!raumBezeichnung) raumBezeichnung = raumTyp
@@ -172,21 +172,15 @@ class ProjektController {
 		}
 		// Überstrom-Raum
 		if (raumWerte.raumLuftart == "ÜB") {
-			// Prüfe den Zuluftfaktor, Rückgabe: [wert, neuer wert]
+			// Prüfe den Zuluftfaktor, Rückgabe: [übergebener wert, neuer wert]
 			def prufeZuluftfaktor = { float zf ->
+				def minMax = { v, min, max -> if (v < min) { min } else if (v > max) { max } else { v } }
 				def nzf = 0.0f
 				switch (raumWerte.raumBezeichnung) {
-					case "Wohnzimmer":
-						if (zf < 2.5f) nzf = 2.5f else if (zf > 3.5f) nzf = 3.5f
-						break
-					case ["Kinderzimmer", "Schlafzimmer"]:
-						if (zf < 1.0f) nzf = 1.0f else if (zf > 3.0f) nzf = 3.0f
-						break
-					case ["Esszimmer", "Arbeitszimmer", "Gästezimmer"]:
-						if (zf < 1.0f) nzf = 1.0f else if (zf > 2.0f) nzf = 2.0f
-						break
-					default:
-						nzf = zf
+					case "Wohnzimmer":                                  nzf = minMax(zf, 2.5f, 3.5f); break
+					case ["Kinderzimmer", "Schlafzimmer"]:              nzf = minMax(zf, 1.0f, 3.0f); break
+					case ["Esszimmer", "Arbeitszimmer", "Gästezimmer"]: nzf = minMax(zf, 1.0f, 2.0f); break
+					default: nzf = zf
 				}
 				[zf, nzf]
 			}
@@ -196,7 +190,7 @@ class ProjektController {
 			}
 			raumWerte.raumZuluftfaktor = neuerZuluftfaktor.toString2()
 		}
-		// Update model
+		// Update model and set table selection
 		edt {
 			model.map.raum.raume << raumWerte
 			view.raumTable.changeSelection(view.raumTable.rowCount - 1, 0, false, false)
