@@ -27,7 +27,7 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 					build(RaumdatenView)
 				}
 				// Außenluftvolumenströme
-				panel(id: "aussenluftVsTab", title: "Außenluftvolumenströme") {
+				panel(id: "aussenluftVsTab", title: "Außenluftvolumenströme", layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
 					build(AussenluftVsView)
 				}
 				// Raumvolumenströme
