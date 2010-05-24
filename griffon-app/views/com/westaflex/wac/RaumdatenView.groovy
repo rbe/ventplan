@@ -23,14 +23,13 @@ panel(id: "raumPanel") {
 		textField(id: "raumHohe")
 		textField(id: "raumZuluftfaktor")
 		textField(id: "raumAbluftVs")
-		button(id: "raumHinzufugen", text: "Hinzufügen")
+		// Hinzufügen-Button aktivieren, wenn Fläche eingegeben wurde
+		button(id: "raumHinzufugen", text: "Hinzufügen", enabled: bind { !raumFlache.text.isEmpty() })
 	}
 	// Tabelle aller Räume
 	panel(id: "raumTabelle", constraints: CENTER, layout: new MigLayout("fill", "[fill]")) {
 		jideScrollPane() {
 			table(id: "raumTable", model: model.createRaumTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-				//tableFormat = defaultTableFormat(columnNames: ["Raum", "Geschoss", "Luftart", "Raumfläche (m²)", "Raumhöhe (m)", "Zuluftfaktor", "Abluftvolumenstrom"])
-				//eventTableModel(source: model.map.raum.raume, format: tableFormat)
 			}
 		}
 	}
@@ -42,7 +41,7 @@ panel(id: "raumPanel") {
 	}
 }
 GH.recurse(raumEingabePanel, GH.yellowTextField)
-[raumFlache, raumHohe, raumAbluftVs].each {
+[raumFlache, raumHohe, raumZuluftfaktor, raumAbluftVs].each {
 	GH.floatTextField(it)
 	GH.rightAlignTextField(it)
 }
