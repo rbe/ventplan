@@ -26,46 +26,6 @@ class GriffonHelper {
 	}
 	
 	/**
-	 * Intelligently parse a float.
-	 */
-	def static parseFloat = { f ->
-		def r = 0.0f
-		if (f) {
-			f = f.replaceAll(",", ".")
-			//try {
-				r = Float.parseFloat(f)
-			//} catch (e) {
-			//	println "pf(${f.inspect()}): EXCEPTION=${e}"
-			//}
-		}
-		r
-	}
-	
-	/**
-	 * Get a float as formatted text.
-	 */
-	def static setFloat = { f ->
-		def r = 0.0f
-		if (f) {
-			//try {
-				r = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
-					minimumFractionDigits = 2
-					maximumFractionDigits = 2
-					format(f)
-				}
-			//} catch (e) {
-			//	println "sf(${f.inspect()}): EXCEPTION=${e}"
-			//}
-		}
-		r
-	}
-	
-	/**
-	 * Composition: sf o pf.
-	 */
-	def static spf = { f -> sf(pf(f)) }
-	
-	/**
 	 * 
 	 */
 	def static floatTextField = { component ->
@@ -74,15 +34,7 @@ class GriffonHelper {
 			component.addFocusListener({ evt ->
 				if (evt.id == java.awt.event.FocusEvent.FOCUS_LOST) {
 					if (component.text) {
-						try {
-							def f = Float.parseFloat(component.text?.replaceAll(",", "."))
-							component.text = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
-								minimumFractionDigits = 2
-								format(f)
-							}
-						} catch (e) {
-							println "floatTextField: component=${component}): EXCEPTION=${e}"
-						}
+						component.text = component.text.toFloat2().toString2()
 					}
 				}
 			} as java.awt.event.FocusListener)
