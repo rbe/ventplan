@@ -1,5 +1,8 @@
 package com.westaflex.wac
 
+import ca.odell.glazedlists.*
+import ca.odell.glazedlists.gui.*
+import ca.odell.glazedlists.swing.*
 import groovy.beans.Bindable
 
 /**
@@ -49,19 +52,34 @@ class ProjektModel {
 				zuluft: [:] as ObservableMap,
 				abluft: [:] as ObservableMap,
 				fortluft: [dach: true] as ObservableMap,
-				energie: [zuAbluftWarme: true] as ObservableMap,
-				hygiene: [:] as ObservableMap,
-				ruckschlag: [:] as ObservableMap,
-				schallschutz: [:] as ObservableMap,
-				feuerstatte: [:] as ObservableMap,
-				kzLuftung: "ZuAbLS-Z-WE-WÜT-0-0-0-0-0",
+				energie: [zuAbluftWarme: true, nachricht: " "] as ObservableMap,
+				hygiene: [nachricht: " "] as ObservableMap,
+				kennzeichnungLuftungsanlage: "ZuAbLS-Z-WE-WÜT-0-0-0-0-0",
 			] as ObservableMap,
-		raum: [:] as ObservableMap,
+		raum: [
+				typ: ["Wohnzimmer", "Kinderzimmer", "Schlafzimmer", "Esszimmer", "Arbeitszimmer", "Gästezimmer", "Hausarbeitsraum", "Kellerraum", "WC", "Küche", "Kochnische", "Bad mit/ohne WC", "Duschraum", "Sauna", "Flur", "Diele"],
+				geschoss: ["KG", "EG", "OG", "DG", "SB"],
+				luftart: ["ZU", "AB", "ZU/AB", "ÜB"],
+				raume: new SortedList(new BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as EventList
+			] as ObservableMap,
 		aussenluftVs: [:] as ObservableMap,
 		raumVs: [:] as ObservableMap,
 		druckverlust: [:] as ObservableMap,
 		akkustik: [:] as ObservableMap
 	] as ObservableMap
+	
+	/**
+	 * Raum - TableModel
+	 */
+	def createRaumTableModel() {
+		def columnNames =   ["Raum",            "Geschoss",     "Luftart",     "Raumfläche (m²)", "Raumhöhe (m)", "Zuluftfaktor",     "Abluftvolumenstrom"]
+		def propertyNames = ["raumBezeichnung", "raumGeschoss", "raumLuftart", "raumFlache",      "raumHohe",     "raumZuluftfaktor", "raumAbluftVs"]
+		new EventTableModel(map.raum.raume, [
+				getColumnCount: { columnNames.size() },
+				getColumnName:  { index -> columnNames[index] },
+				getColumnValue: { object, index -> object."${propertyNames[index]}" }
+			] as TableFormat)
+	}
 	
 	/**
 	 * Compute a hash of the map when data is entered. Compare this hash to a previously

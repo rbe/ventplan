@@ -8,7 +8,7 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 	panel(id: "projektTab", title: tabName) {
 		borderLayout()
 		// Scrollpane
-		jideScrollPane(id: "mainScrollPane") {
+		jideScrollPane() {
 			jideTabbedPane(id: "datenTabGroup") {
 				// Kundendaten
 				panel(id: "kundenTab", title: "Kundendaten", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[fill][fill]")) {
@@ -23,7 +23,7 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 					build(AnlagendatenView)
 				}
 				// Raumdaten
-				panel(id: "raumTab", title: "Raumdaten") {
+				panel(id: "raumTab", title: "Raumdaten", layout: new MigLayout("fillx")) {
 					build(RaumdatenView)
 				}
 				// Außenluftvolumenströme

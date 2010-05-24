@@ -28,7 +28,7 @@ class GriffonHelper {
 	/**
 	 * Intelligently parse a float.
 	 */
-	def static pf = { f ->
+	def static parseFloat = { f ->
 		def r = 0.0f
 		if (f) {
 			f = f.replaceAll(",", ".")
@@ -44,7 +44,7 @@ class GriffonHelper {
 	/**
 	 * Get a float as formatted text.
 	 */
-	def static sf = { f ->
+	def static setFloat = { f ->
 		def r = 0.0f
 		if (f) {
 			//try {
@@ -109,6 +109,25 @@ class GriffonHelper {
 		if (component instanceof javax.swing.JTextField) {
 			component.horizontalAlignment = javax.swing.JTextField.RIGHT
 		}
+	}
+	
+	/**
+	 * Get all values from components as a map.
+	 */
+	def static getValuesFromView = { view, prefix ->
+		def map = [:]
+		view.binding.variables.each { k, v ->
+			if (k.startsWith(prefix)) {
+				if (v instanceof javax.swing.JTextField) {
+					//println "getValuesFromView: JTextField: ${k}"
+					map["${k}"] = v.text
+				} else if (v instanceof javax.swing.JComboBox) {
+					//println "getValuesFromView: JComboBox: ${k}"
+					map["${k}"] = v.selectedItem
+				}
+			}
+		}
+		map
 	}
 	
 }

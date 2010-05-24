@@ -45,11 +45,16 @@ bind(source: model.map.anlage.hygiene, sourceProperty: "ausfuhrung",         tar
 bind(source: model.map.anlage.hygiene, sourceProperty: "filterung",          target: anlageHygieneFilterung,          targetProperty: "selected", mutual: true)
 bind(source: model.map.anlage.hygiene, sourceProperty: "keineVerschmutzung", target: anlageHygieneKeineVerschmutzung, targetProperty: "selected", mutual: true)
 bind(source: model.map.anlage.hygiene, sourceProperty: "dichtheitsklasseB",  target: anlageHygieneDichtheitsklasseB,  targetProperty: "selected", mutual: true)
-// Anlagendaten - Rückschlagkappe
-bind(source: model.map.anlage, sourceProperty: "ruckschlagKappe", target: anlageRuckschlagKappe, targetProperty: "selected", mutual: true)
-// Anlagendaten - Schallschutz-Kennzeichnung
-bind(source: model.map.anlage, sourceProperty: "schallschutz", target: anlageSchallschutz, targetProperty: "selected", mutual: true)
-// Anlagendaten - Feuerstätten-Kennzeichnung
-bind(source: model.map.anlage, sourceProperty: "feuerstatte", target: anlageFeuerstatte, targetProperty: "selected", mutual: true)
-// Anlagendaten - Kennzeichnung der Lüftungsanlage
-bind(source: model.map.anlage, sourceProperty: "kennzeichnung", target: anlageKennzeichnung, targetProperty: "text")
+//
+bind(source: model.map.anlage.hygiene, sourceProperty: "nachricht",     target: anlageHygieneNachricht,     targetProperty: "text")
+[anlageHygieneAusfuhrung, anlageHygieneFilterung, anlageHygieneKeineVerschmutzung, anlageHygieneDichtheitsklasseB].each {
+	it.actionPerformed = controller.berechneHygieneKennzeichen
+}
+// Anlagendaten - Rückschlagkappe, Schallschutz-Kennzeichnung, Feuerstätten-Kennzeichnung, Kennzeichnung der Lüftungsanlage
+bind(source: model.map.anlage, sourceProperty: "ruckschlagKappe",             target: anlageRuckschlagKappe,             targetProperty: "selected", mutual: true)
+bind(source: model.map.anlage, sourceProperty: "schallschutz",                target: anlageSchallschutz,                targetProperty: "selected", mutual: true)
+bind(source: model.map.anlage, sourceProperty: "feuerstatte",                 target: anlageFeuerstatte,                 targetProperty: "selected", mutual: true)
+bind(source: model.map.anlage, sourceProperty: "kennzeichnungLuftungsanlage", target: anlageKennzeichnungLuftungsanlage, targetProperty: "text")
+[anlageRuckschlagKappe, anlageSchallschutz, anlageFeuerstatte].each {
+	it.actionPerformed = controller.berechneKennzeichenLuftungsanlage
+}

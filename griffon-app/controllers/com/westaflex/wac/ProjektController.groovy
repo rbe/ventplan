@@ -17,19 +17,29 @@ class ProjektController {
 	 */
 	void mvcGroupInit(Map args) {
 		model.mvcId = args.mvcId
-		// Add PropertyChangeListener to model
-		model.map.addPropertyChangeListener({ evt ->
-			model.map.each { k, v ->
-				println "${k}: size=${model.map[k].size()} class=${model.map[k].class}"
-				println ""
+		addPropertyChange(model.map)
+	}
+	
+	/**
+	 * Dump a change
+	 */
+	def dumpPropertyChange = { evt, k ->
+		println "${k}: value changed: ${evt.propertyName}: ${evt.oldValue} -> ${evt.newValue}"
+	}
+	
+	/**
+	 * Recursively add PropertyChangeListener to the/all nested maps.
+	 */
+	def addPropertyChange = { map ->
+		map.each { k, v ->
+			if (v instanceof Map) {
+				println "ProjektController.mvcGroupInit: adding PropertyChangeListener for ${k}"
+				v.addPropertyChangeListener({ evt ->
+					dumpPropertyChange.delegate = v
+					dumpPropertyChange(evt, k)
+				} as java.beans.PropertyChangeListener)
+				addPropertyChange(v)
 			}
-		} as java.beans.PropertyChangeListener)
-		model.map.each { k, v ->
-			println "ProjektController.mvcGroupInit: adding PropertyChangeListener for ${k}"
-			v.addPropertyChangeListener({ evt ->
-				println "${k}: ${model.map[k]}"
-				println ""
-			} as java.beans.PropertyChangeListener)
 		}
 	}
 	
@@ -41,11 +51,11 @@ class ProjektController {
 		try {
 			// Luftvolumen der Nutzungseinheit = Wohnfläche * mittlere Raumhöhe
 			if (g.wohnflache && g.raumhohe) {
-				g.luftvolumen = g.geluftetesVolumen = GH.sf(wacCalculationService.volumen(GH.pf(g.wohnflache), GH.pf(g.raumhohe)))
+				g.luftvolumen = g.geluftetesVolumen = GH.setFloat(wacCalculationService.volumen(GH.parseFloat(g.wohnflache), GH.parseFloat(g.raumhohe)))
 			}
 			// Gelüftetes Volumen = gelüftete Fläche * mittlere Raumhöhe
 			if (g.gelufteteFlache && g.raumhohe) {
-				g.geluftetesVolumen = GH.sf(wacCalculationService.volumen(GH.pf(g.gelufteteFlache), GH.pf(g.raumhohe)))
+				g.geluftetesVolumen = GH.setFloat(wacCalculationService.volumen(GH.parseFloat(g.gelufteteFlache), GH.parseFloat(g.raumhohe)))
 			}
 			// Gelüftetes Volumen = Luftvolumen, wenn kein gelüftetes Volumen berechnet
 			if (g.luftvolumen && !g.geluftetesVolumen) {
@@ -108,14 +118,90 @@ class ProjektController {
 	 * Anlagendaten - Energie-Kennzeichen
 	 */
 	def berechneEnergieKennzeichen = {
-		def all = model.map.anlage.energie.with {
-			zuAbluftWarme && bemessung && ruckgewinnung && regelung
+		model.map.anlage.energie.with {
+			if (zuAbluftWarme && bemessung && ruckgewinnung && regelung) {
+				nachricht = "Energiekennzeichen gesetzt!"
+			} else {
+				nachricht = " "
+			}
 		}
-		if (all) {
-			model.map.anlage.energie.nachricht = "Energiekennzeichen gesetzt!"
-		} else {
-			model.map.anlage.energie.nachricht = " "
+		berechneKennzeichenLuftungsanlage()
+	}
+	
+	/**
+	 * Anlagendaten - Hygiene-Kennzeichen
+	 */
+	def berechneHygieneKennzeichen = {
+		model.map.anlage.hygiene.with {
+			if (ausfuhrung && filterung && keineVerschmutzung && dichtheitsklasseB) {
+				nachricht = "Hygienekennzeichen gesetzt!"
+			} else {
+				nachricht = " "
+			}
 		}
+		berechneKennzeichenLuftungsanlage()
+	}
+	
+	/**
+	 * Anlagendaten - Kennzeichen
+	 */
+	def berechneKennzeichenLuftungsanlage = {
+		def kennzeichen = new StringBuilder("ZuAbLS-Z-")
+		def gebaudeTyp = model.map.gebaude.EFH ? "EFH" : "WE"
+		def energieKz = model.map.anlage.energie.nachricht != " " ? "E" : "0"
+		def hygieneKz = model.map.anlage.hygiene.nachricht != " " ? "H" : "0"
+		def ruckschlag = model.map.anlage.ruckschlagKappe ? "RK" : "0"
+		def schallschutz = model.map.anlage.schallschutz ? "S" : "0"
+		def feuerstatte = model.map.anlage.feuerstatte ? "F" : "0"
+		model.map.anlage.kennzeichnungLuftungsanlage = "ZuAbLS-Z-${gebaudeTyp}-WÜT-${energieKz}-${hygieneKz}-${ruckschlag}-${schallschutz}-${feuerstatte}"
+	}
+	
+	/**
+	 * Raumdaten - Raum anlegen
+	 */
+	def raumHinzufugen = {
+		def raumWerte = GH.getValuesFromView(view, "raum")
+		//
+		raumWerte.with {
+			// Übernehme Wert für Bezeichnung vom Typ
+			if (!raumBezeichnung) raumBezeichnung = raumTyp
+			// Standard Türspalthöhe ist 10 mm
+			raumTurspaltHohe = "10,00"
+			// Raumvolumen
+			raumVolumen = raumFlache * raumHohe
+		}
+		// Überstrom-Raum
+		if (raumWerte.raumLuftart == "ÜB") {
+			// Prüfe den Zuluftfaktor, Rückgabe: [wert, neuer wert]
+			def prufeZuluftfaktor = { float zf ->
+				def nzf = 0.0f
+				switch (raumWerte.raumBezeichnung) {
+					case "Wohnzimmer":
+						if (zf < 2.5f) nzf = 2.5f else if (zf > 3.5f) nzf = 3.5f
+						break
+					case ["Kinderzimmer", "Schlafzimmer"]:
+						if (zf < 1.0f) nzf = 1.0f else if (zf > 3.0f) nzf = 3.0f
+						break
+					case ["Esszimmer", "Arbeitszimmer", "Gästezimmer"]:
+						if (zf < 1.0f) nzf = 1.0f else if (zf > 2.0f) nzf = 2.0f
+						break
+					default:
+						nzf = zf
+				}
+				[zf, nzf]
+			}
+			def (zuluftfaktor, neuerZuluftfaktor) = prufeZuluftfaktor(raumWerte.raumZuluftfaktor.toFloat2())
+			if (zuluftfaktor != neuerZuluftfaktor) {
+				println "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
+			}
+			raumWerte.raumZuluftfaktor = neuerZuluftfaktor.toString2()
+		}
+		// Update model
+		edt {
+			model.map.raum.raume << raumWerte
+			view.raumTable.changeSelection(view.raumTable.rowCount - 1, 0, false, false)
+		}
+		println "raumHinzufugen: raumWerte=${raumWerte}"
 	}
 	
 }
