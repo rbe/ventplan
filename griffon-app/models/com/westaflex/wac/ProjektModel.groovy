@@ -60,6 +60,8 @@ class ProjektModel {
 				typ: ["Wohnzimmer", "Kinderzimmer", "Schlafzimmer", "Esszimmer", "Arbeitszimmer", "Gästezimmer", "Hausarbeitsraum", "Kellerraum", "WC", "Küche", "Kochnische", "Bad mit/ohne WC", "Duschraum", "Sauna", "Flur", "Diele"],
 				geschoss: ["KG", "EG", "OG", "DG", "SB"],
 				luftart: ["ZU", "AB", "ZU/AB", "ÜB"],
+				hohe: "2,50",
+				zuluftfaktor: "3",
 				raume: new SortedList(new BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as EventList
 			] as ObservableMap,
 		aussenluftVs: [:] as ObservableMap,
