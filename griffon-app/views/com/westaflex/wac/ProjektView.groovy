@@ -31,7 +31,7 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 					build(AussenluftVsView)
 				}
 				// Raumvolumenströme
-				panel(id: "raumVsTab", title: "Raumvolumenströme") {
+				panel(id: "raumVsTab", title: "Raumvolumenströme", layout: new MigLayout("fillx")) {
 					build(RaumVsView)
 				}
 				// Druckverlustberechnung

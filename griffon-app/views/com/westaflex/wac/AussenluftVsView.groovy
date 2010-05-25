@@ -84,7 +84,7 @@ panel(id: "aussenluftVsGesamtabluftVsRaume", border: titledBorder(title: "Gesamt
 // personenbezogene Gesamt-Abluftvolumenströme
 panel(id: "aussenluftVsPersonenbezogeneGesamtabluftVs", border: titledBorder(title: "personenbezogene Gesamt-Abluftvolumenströme"), layout: new MigLayout("wrap", "[left]30[right]15[left]30[right]15[left]30[right]15[left]30[right]15[left]", "rel[]rel")) {
 	label("")
-	label("Lüftung zum Feuchteschutz")
+	label(id: "aussenluftVsLuftungZumFeuchteschutzLabel", "Lüftung zum Feuchteschutz")
 	label("")
 	label("Reduzierte Lüftung")
 	label("")
@@ -117,7 +117,7 @@ panel(id: "aussenluftVsPersonenbezogeneGesamtabluftVs", border: titledBorder(tit
 // Gesamt-Luftvolumenstrom für lüftungstechnische Maßnahmen
 panel(id: "aussenluftVsGesamtLuftVsLuftungstechnischeMassnahmen", border: titledBorder(title: "Gesamt-Luftvolumenstrom für lüftungstechnische Maßnahmen"), layout: new MigLayout("wrap", "[left]30[right]15[left]30[right]15[left]30[right]15[left]30[left]", "rel[]rel")) {
 	label("")
-	label("Reduzierte Lüftung")
+	label(id: "aussenluftVsGesamtLuftVsLuftungstechnischeMassnahmenLabel", "Reduzierte Lüftung", size: [aussenluftVsLuftungZumFeuchteschutzLabel.width, aussenluftVsLuftungZumFeuchteschutzLabel.height])
 	label("")
 	label("Nennlüftung")
 	label("")

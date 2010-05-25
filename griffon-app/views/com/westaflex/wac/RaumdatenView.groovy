@@ -39,6 +39,7 @@ panel(id: "raumPanel") {
 		button("Raum bearbeiten")
 		button("Raum kopieren")
 	}
+	
 }
 GH.recurse(raumEingabePanel, GH.yellowTextField)
 [raumFlache, raumHohe, raumZuluftfaktor, raumAbluftVs].each {

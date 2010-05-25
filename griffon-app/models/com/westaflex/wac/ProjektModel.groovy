@@ -62,7 +62,12 @@ class ProjektModel {
 				raume: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList
 			] as ObservableMap,
 		aussenluftVs: [:] as ObservableMap,
-		raumVs: [:] as ObservableMap,
+		raumVs: [
+				raumVsBezeichnungZuluftventile: ["1", "2", "3"],
+				raumVsBezeichnungAbluftventile: ["4", "5", "6"],
+				raumVsVerteilebene: ["7", "8", "9"],
+				raume: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList
+			] as ObservableMap,
 		druckverlust: [:] as ObservableMap,
 		akkustik: [:] as ObservableMap
 	] as ObservableMap
@@ -85,6 +90,34 @@ class ProjektModel {
 	 * stored hash value to see if the data has changed.
 	 */
 	def computeHash = { evt ->
+	}
+	
+	
+	/**
+	 * RaumVs - Zu-/Abluftventile TableModel
+	 */
+	def createRaumVsZuAbluftventileModel() {
+		def columnNames =   ["Raum",              "Luftart",       "Raumvolumen (m³)", "Luftwechsel (l/h)", "Anzahl Abluftventile",      "Abluftmenge je Ventil",     "Volumenstrom (m³/h)", "Anzahl Zuluftventile",       "Bezeichnung Zuluftventile",      "Bezeichnung Abluftventile",      "Verteilebene",       "Zuluftmenge je Ventil"]
+		def propertyNames = ["raumVsBezeichnung", "raumVsLuftart", "raumVsVolumen",    "raumVsLuftwechsel", "raumVsAnzahlAbluftventile", "raumVsAbluftmengeJeVentil", "raumVsVolumenstrom",   "raumVsAnzahlZuluftventile", "raumVsBezeichnungZuluftventile", "raumVsBezeichnungAbluftventile", "raumVsVerteilebene", "raumVsZuluftmengeJeVentil"]
+		new ca.odell.glazedlists.swing.EventTableModel(map.raumVs.raume, [
+				getColumnCount: { columnNames.size() },
+				getColumnName:  { index -> columnNames[index] },
+				getColumnValue: { object, index -> object."${propertyNames[index]}" }
+			] as ca.odell.glazedlists.gui.TableFormat)
+	}
+	
+	
+	/**
+	 * RaumVs - Überströmventile TableModel
+	 */
+	def createRaumVsUberstromventileModel() {
+		def columnNames =   ["Raum",               "Luftart",        "Anzahl Ventile", "Volumenstrom (m³/h)", "Überström-Elemente"]
+		def propertyNames = ["raumVs2Bezeichnung", "raumVs2Luftart", "raumVs2Ventile", "raumVs2Volumenstrom", "raumVs2UberstromElemente"]
+		new ca.odell.glazedlists.swing.EventTableModel(map.raumVs2.raume, [
+				getColumnCount: { columnNames.size() },
+				getColumnName:  { index -> columnNames[index] },
+				getColumnValue: { object, index -> object."${propertyNames[index]}" }
+			] as ca.odell.glazedlists.gui.TableFormat)
 	}
 	
 }
