@@ -23,6 +23,7 @@ onBootstrapEnd = { app ->
 	Long.metaClass.toString2 = toString2
 	Float.metaClass.toString2 = toString2
 	Double.metaClass.toString2 = toString2
+	BigDecimal.metaClass.toString2 = toString2
 	// String.toFloat2: parse a string with german notation to a float value
 	String.metaClass.toFloat2 = {
 		def d = delegate
@@ -30,10 +31,10 @@ onBootstrapEnd = { app ->
 			java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
 				minimumFractionDigits = 2
 				maximumFractionDigits = 2
-				parse(d)
+				parse(d) as Float
 			}
 		} else {
-			0
+			0.0f
 		}
 	}
 	// String.multiply
@@ -45,7 +46,7 @@ onBootstrapEnd = { app ->
 	// Map.flatten
 	Map.metaClass.flatten = { String prefix = '' ->
 		delegate.inject([:]) { map, v ->
-			def kstr = "${prefix${prefix ? '.' : ''}$v.key}" 
+			def kstr = "${prefix${prefix ? '.' : ''}$v.key}"
 			if (v.value instanceof Map) {
 				map += v.value.flatten(kstr)
 			} else {
