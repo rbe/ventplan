@@ -1,7 +1,5 @@
 package com.westaflex.wac
 
-import com.jidesoft.plaf.LookAndFeelFactory
-import com.jidesoft.swing.JideTabbedPane
 import net.miginfocom.swing.MigLayout
 
 jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
@@ -45,7 +43,7 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 			}
 		}
 		hbox(constraints: SOUTH) {
-			button(halloAction)
+			//button("Hier könnte Ihre Werbung stehen!")
 		}
 	}
 }
@@ -54,20 +52,16 @@ build(ProjektBindings)
 //
 // JIDE
 //
-//LookAndFeelFactory.installJideExtension(LookAndFeelFactory.ECLIPSE_STYLE)
 // projektTabGroup
 projektTabGroup.with {
-	setTabColorProvider(JideTabbedPane.ONENOTE_COLOR_PROVIDER)
-	//ColorTheme(JideTabbedPane.COLOR_THEME_WIN2K)
-	//setTabShape(JideTabbedPane.SHAPE_ECLIPSE)
+	setTabColorProvider(com.jidesoft.swing.JideTabbedPane.ONENOTE_COLOR_PROVIDER)
 	setBoldActiveTab(true)
 	setShowCloseButton(true)
 	setShowCloseButtonOnSelectedTab(true)
 }
 // datenTabGroup
 datenTabGroup.with {
-	setTabColorProvider(JideTabbedPane.ONENOTE_COLOR_PROVIDER)
-	//setColorTheme(JideTabbedPane.COLOR_THEME_WIN2K)
-	//setTabShape(JideTabbedPane.SHAPE_ECLIPSE)
+	setTabColorProvider(com.jidesoft.swing.JideTabbedPane.ONENOTE_COLOR_PROVIDER)
 	setBoldActiveTab(true)
+	setShowCloseButton(false)
 }
