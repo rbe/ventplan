@@ -20,24 +20,26 @@ panel(id: "raumPanel") {
 		comboBox(id: "raumGeschoss", items: model.map.raum.geschoss)
 		comboBox(id: "raumLuftart", items: model.map.raum.luftart)
 		textField(id: "raumFlache")
-		textField(id: "raumHohe")
-		textField(id: "raumZuluftfaktor")
-		textField(id: "raumAbluftVs")
+		textField(id: "raumHohe", text: "2,50")
+		textField(id: "raumZuluftfaktor", text: "3,00", editable: bind { raumLuftart.selectedItem != "ÜB" })
+		textField(id: "raumAbluftVs",                   editable: bind { raumLuftart.selectedItem != "ÜB" })
 		// Hinzufügen-Button aktivieren, wenn Fläche eingegeben wurde
-		button(id: "raumHinzufugen", text: "Hinzufügen", enabled: bind { !raumFlache.text.isEmpty() })
+		button(id: "raumHinzufugen", enabled: bind { !raumFlache.text.isEmpty() }, text: "Hinzufügen")
 	}
 	// Tabelle aller Räume
-	panel(id: "raumTabelle", constraints: CENTER, layout: new MigLayout("fill", "[fill]")) {
+	panel(id: "raumTabellePanel", constraints: CENTER, layout: new MigLayout("fill", "[fill]")) {
 		jideScrollPane() {
-			table(id: "raumTable", model: model.createRaumTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+			table(id: "raumTabelle", model: model.createRaumTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
 			}
 		}
 	}
 	// Buttons
 	hbox(constraints: SOUTH) {
-		button("Raum entfernen")
-		button("Raum bearbeiten")
-		button("Raum kopieren")
+		button(id: "raumEntfernen",            enabled: bind { /*raumTabelle.selectedRow > -1*/1 == 1 }, text: "Raum entfernen")
+		button(id: "raumBearbeiten",           enabled: bind { /*raumTabelle.selectedRow > -1*/1 == 1 }, text: "Raum bearbeiten")
+		button(id: "raumKopieren",             enabled: bind { /*raumTabelle.selectedRow > -1*/1 == 1 }, text: "Raum kopieren")
+		button(id: "raumNachObenVerschieben",  enabled: bind { /*raumTabelle.selectedRow > -1*/1 == 1 }, text: "^")
+		button(id: "raumNachUntenVerschieben", enabled: bind { /*raumTabelle.selectedRow > -1*/1 == 1 }, text: "v")
 	}
 	
 }
