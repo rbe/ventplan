@@ -15,10 +15,14 @@ class Wac2Controller {
 	 * 
 	 */
 	def neuesProjekt = { evt = null ->
-		String mvcId = "Projekt " + (view.projektTabGroup.tabCount + 1)
-		def (m, v, c) = createMVCGroup("Projekt", mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
-		// Add new 'Projekt'-model to list of active models
-		model.projekte += m
+		doOutside {
+			String mvcId = "Projekt " + (view.projektTabGroup.tabCount + 1)
+			def (m, v, c) = createMVCGroup("Projekt", mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+			doLater {
+				// Add new 'Projekt'-model to list of active models
+				model.projekte += m
+			}
+		}
 	}
 	
 }
