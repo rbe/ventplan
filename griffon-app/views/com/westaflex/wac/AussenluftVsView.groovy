@@ -5,12 +5,12 @@ import net.miginfocom.swing.MigLayout
 // Notwendigkeit der lüftungstechnischen Maßnahme
 panel(id: "aussenluftVsNotwendigkeitLuftungstechnischeMassnahme", border: titledBorder(title: "Notwendigkeit der lüftungstechnischen Maßnahme"), layout: new MigLayout("wrap", "[left]30[right]15[left]30[left]", "rel[]rel")) {
 	label("Feuchteschutz: Gesamt-Außenluftvolumenstrom")
-	label("15,00")
+	label(id: "aussenluftVsGesamt", text: "  0,00")
 	label("m³/h")
-	label("Lüftungstechnische Maßnahmen erforderlich!")
+	label(id: "aussenluftVsMassnahme", " ", foreground: java.awt.Color.RED)
 	
 	label("Luftvolumenstrom durch Infiltration")
-	label("15,00")
+	label(id: "aussenluftVsInfiltration", text: "  0,00")
 	label("m³/h")
 	label("")
 }
@@ -28,23 +28,23 @@ panel(id: "aussenluftVsGesamtAussenluftVsNutzungseinheit", border: titledBorder(
 	label("")
 	
 	label("Luftvolumenstrom")
-	label("0,00")
+	label(id: "gesamtAvsNE11", text: "  0,00")
 	label("m³/h")
-	label("0,00")
+	label(id: "gesamtAvsNE12", text: "  0,00")
 	label("m³/h")
-	label("0,00")
+	label(id: "gesamtAvsNE13", text: "  0,00")
 	label("m³/h")
-	label("0,00")
+	label(id: "gesamtAvsNE14", text: "  0,00")
 	label("m³/h")
 	
 	label("Luftwechsel")
-	label("0,00")
+	label(id: "gesamtAvsNE21", text: "  0,00")
 	label("l/h")
-	label("0,00")
+	label(id: "gesamtAvsNE22", text: "  0,00")
 	label("l/h")
-	label("0,00")
+	label(id: "gesamtAvsNE23", text: "  0,00")
 	label("l/h")
-	label("0,00")
+	label(id: "gesamtAvsNE24", text: "  0,00")
 	label("l/h")
 }
 
@@ -61,28 +61,28 @@ panel(id: "aussenluftVsGesamtabluftVsRaume", border: titledBorder(title: "Gesamt
 	label("")
 	
 	label("Luftvolumenstrom")
-	label("0,00")
+	label(id: "gesamtAvsR11", text: "  0,00")
 	label("m³/h")
-	label("0,00")
+	label(id: "gesamtAvsR12", text: "  0,00")
 	label("m³/h")
-	label("0,00")
+	label(id: "gesamtAvsR13", text: "  0,00")
 	label("m³/h")
-	label("0,00")
+	label(id: "gesamtAvsR14", text: "  0,00")
 	label("m³/h")
 	
 	label("Luftwechsel")
-	label("0,00")
+	label(id: "gesamtAvsR21", text: "  0,00")
 	label("l/h")
-	label("0,00")
+	label(id: "gesamtAvsR22", text: "  0,00")
 	label("l/h")
-	label("0,00")
+	label(id: "gesamtAvsR23", text: "  0,00")
 	label("l/h")
-	label("0,00")
+	label(id: "gesamtAvsR24", text: "  0,00")
 	label("l/h")
 }
 
 // personenbezogene Gesamt-Abluftvolumenströme
-panel(id: "aussenluftVsPersonenbezogeneGesamtabluftVs", border: titledBorder(title: "personenbezogene Gesamt-Abluftvolumenströme"), layout: new MigLayout("wrap", "[left]30[right]15[left]30[right]15[left]30[right]15[left]30[right]15[left]", "rel[]rel")) {
+panel(id: "aussenluftVsPersonenbezogeneGesamtabluftVs", border: titledBorder(title: "Personenbezogene Gesamt-Abluftvolumenströme"), layout: new MigLayout("wrap", "[left]30[right]15[left]30[right]15[left]30[right]15[left]30[right]15[left]", "rel[]rel")) {
 	label("")
 	label(id: "aussenluftVsLuftungZumFeuchteschutzLabel", "Lüftung zum Feuchteschutz")
 	label("")
@@ -94,23 +94,23 @@ panel(id: "aussenluftVsPersonenbezogeneGesamtabluftVs", border: titledBorder(tit
 	label("")
 	
 	label("Luftvolumenstrom")
-	label("0,00")
+	label(id: "personenGesamtAvs11", text: "  0,00")
 	label("m³/h")
-	label("0,00")
+	label(id: "personenGesamtAvs12", text: "  0,00")
 	label("m³/h")
-	label("0,00")
+	label(id: "personenGesamtAvs13", text: "  0,00")
 	label("m³/h")
-	label("0,00")
+	label(id: "personenGesamtAvs14", text: "  0,00")
 	label("m³/h")
 	
 	label("Luftwechsel")
-	label("0,00")
+	label(id: "personenGesamtAvs21", text: "  0,00")
 	label("l/h")
-	label("0,00")
+	label(id: "personenGesamtAvs22", text: "  0,00")
 	label("l/h")
-	label("0,00")
+	label(id: "personenGesamtAvs23", text: "  0,00")
 	label("l/h")
-	label("0,00")
+	label(id: "personenGesamtAvs24", text: "  0,00")
 	label("l/h")
 }
 
@@ -125,19 +125,23 @@ panel(id: "aussenluftVsGesamtLuftVsLuftungstechnischeMassnahmen", border: titled
 	label("", constraints: "span")
 	
 	label("Luftvolumenstrom")
-	label("0,00")
+	label(id: "gesamtAvsLM11", text: "  0,00")
 	label("m³/h")
-	label("0,00")
+	label(id: "gesamtAvsLM12", text: "  0,00")
 	label("m³/h")
-	label("0,00")
+	label(id: "gesamtAvsLM13", text: "  0,00")
 	label("m³/h")
-	checkBox(id: "aussenluftVsGesamtLuftVsLuftungstechnischeMassnahmenInfiltrationsanteilBerechnen", selected: false, text: "mit Infiltrationsanteil berechnen")
+	checkBox(id: "aussenluftVsGesamtLMMitInfiltrationsanteilBerechnen", selected: false, text: "mit Infiltrationsanteil berechnen")
 	
 	label("Luftwechsel")
-	label("0,00")
+	label(id: "gesamtAvsLM21", text: "  0,00")
 	label("l/h")
-	label("0,00")
+	label(id: "gesamtAvsLM22", text: "  0,00")
 	label("l/h")
-	label("0,00")
+	label(id: "gesamtAvsLM23", text: "  0,00")
 	label("l/h", constraints: "span")
 }
+
+button(text: "Berechnen", actionPerformed: controller.berechneAussenluftVs)
+// Bindings
+build(AussenluftVsBindings)
