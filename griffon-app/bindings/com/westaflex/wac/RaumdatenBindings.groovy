@@ -1,8 +1,12 @@
 package com.westaflex.wac
 
 // Raumdaten - Raum-Eingabe
-// Binding of comboboxes is done in RaumdatenView!
-bind(source: model.map.raum, sourceProperty: "hohe",         target: raumHohe,         targetProperty: "text")
-bind(source: model.map.raum, sourceProperty: "zuluftfaktor", target: raumZuluftfaktor, targetProperty: "text")
-// Raum hinzufügen
+// Binding for items of comboboxes is done in RaumdatenView!
+// Combobox Raumtyp
+raumTyp.actionPerformed = controller.raumTypSelected
+// Raum-Buttons unten
 raumHinzufugen.actionPerformed = controller.raumHinzufugen
+raumEntfernen.actionPerformed = controller.raumEntfernen
+raumKopieren.actionPerformed = controller.raumKopieren
+raumNachObenVerschieben.actionPerformed = controller.raumNachObenVerschieben
+raumNachUntenVerschieben.actionPerformed = controller.raumNachUntenVerschieben
