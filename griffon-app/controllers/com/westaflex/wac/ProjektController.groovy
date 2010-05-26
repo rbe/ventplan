@@ -16,8 +16,18 @@ class ProjektController {
 	 * Initialize MVC group.
 	 */
 	void mvcGroupInit(Map args) {
+		// Save MVC id
 		model.mvcId = args.mvcId
+		// Add PropertyChangeListener to our model.map
 		addMapPropertyChange(model.map)
+		// Räume
+		model.map.raum.raume.addPropertyChangeListener({ evt ->
+			doLater {
+				println "raume,${evt.typeAsString}: ${evt.newValue}"
+				model.syncRaumTableModels()
+				raumEingegeben()
+			}
+		} as java.beans.PropertyChangeListener)
 	}
 	
 	/**
@@ -32,11 +42,12 @@ class ProjektController {
 	 */
 	def addMapPropertyChange = { map ->
 		map.each { k, v ->
-			if (v instanceof Map) {
-				println "ProjektController.mvcGroupInit: adding PropertyChangeListener for ${k}"
+			if (v instanceof ObservableMap) {
+				//println "addMapPropertyChange: adding PropertyChangeListener for ${k}"
 				v.addPropertyChangeListener({ evt ->
 					dumpPropertyChange.delegate = v
 					dumpPropertyChange(evt, k)
+					model.dirty = true
 				} as java.beans.PropertyChangeListener)
 				addMapPropertyChange(v)
 			}
@@ -55,14 +66,14 @@ class ProjektController {
 			}
 			// Gelüftetes Volumen = gelüftete Fläche * mittlere Raumhöhe
 			if (g.gelufteteFlache && g.raumhohe) {
-				g.geluftetesVolumen = wacCalculationService.volumen(g.gelufteteFlache.toFloat2(), g.raumhohe.toFloat2()).toFloat2()
+				g.geluftetesVolumen = wacCalculationService.volumen(g.gelufteteFlache.toFloat2(), g.raumhohe.toFloat2()).toString2()
 			}
 			// Gelüftetes Volumen = Luftvolumen, wenn kein gelüftetes Volumen berechnet
 			if (g.luftvolumen && !g.geluftetesVolumen) {
 				g.geluftetesVolumen = g.luftvolumen
 			}
 		} catch (e) {
-			//e.printStackTrace()
+			e.printStackTrace()
 			g.luftvolumen = g.geluftetesVolumen = "E"
 		}
 		model.map.gebaude.geometrie = g
@@ -157,6 +168,55 @@ class ProjektController {
 	}
 	
 	/**
+	 * Raumdaten - Raumtyp ausgewählt
+	 */
+	def raumTypSelected = {
+		switch (view.raumTyp.selectedIndex) {
+			// Zulufträume
+			case 0..6:
+				view.raumLuftart.selectedItem = "ZU"
+				switch (view.raumTyp.selectedIndex) {
+					case 0..1:
+						view.raumAbluftVs.text = ""
+						view.raumZuluftfaktor.text = "3,00"
+						break
+					case 2..3:
+						view.raumAbluftVs.text = ""
+						view.raumZuluftfaktor.text = "2,00"
+						break
+					case 4..6:
+						view.raumAbluftVs.text = ""
+						view.raumZuluftfaktor.text = "1,50"
+						break
+				}
+				break
+			// Ablufträume
+			case 7..13:
+				view.raumLuftart.selectedItem = "AB"
+				switch (view.raumTyp.selectedIndex) {
+					case 7..9:
+						view.raumZuluftfaktor.text = ""
+						view.raumAbluftVs.text = "25"
+						break
+					case 10..12:
+						view.raumZuluftfaktor.text = ""
+						view.raumAbluftVs.text = "45"
+						break
+					case 13:
+						view.raumZuluftfaktor.text = ""
+						view.raumAbluftVs.text = "100"
+						break
+				}
+				break
+			// Überströmräume
+			default:
+				view.raumLuftart.selectedItem = "ÜB"
+				view.raumZuluftfaktor.text = ""
+				view.raumAbluftVs.text = ""
+		}
+	}
+	
+	/**
 	 * Raumdaten - Raum anlegen
 	 */
 	def raumHinzufugen = {
@@ -169,6 +229,9 @@ class ProjektController {
 			raumTurspaltHohe = "10,00"
 			// Raumvolumen
 			raumVolumen = raumFlache * raumHohe
+			// Raumvolumenströme, Ventile
+			zuabluftVentile = []
+			uberstromVentile = []
 		}
 		// Überstrom-Raum
 		if (raumWerte.raumLuftart == "ÜB") {
@@ -191,17 +254,109 @@ class ProjektController {
 			raumWerte.raumZuluftfaktor = neuerZuluftfaktor.toString2()
 		}
 		// Update model and set table selection
-		edt {
+		doLater {
 			// Raum im Model hinzufügen
-			model.map.raum.raume << raumWerte
-			// Raum inkl. Volumen in Raumvolumenströme, Zu-/Abluftventile eintragen
+			model.map.raum.raume << raumWerte + [position: model.map.raum.raume.size() ?: 0]
 			// Geometrie berechnen
 			// Raum in Tabelle markieren
-			view.raumTable.with {
+			view.raumTabelle.with {
 				changeSelection(rowCount - 1, 0, false, false)
 			}
 		}
-		println "raumHinzufugen: raumWerte=${raumWerte}"
+		//println "raumHinzufugen: raumWerte=${raumWerte}"
+	}
+	
+	/**
+	 * Raumdaten - einen Raum entfernen.
+	 */
+	def raumEntfernen = {
+		// Get selected row
+		def row = view.raumTabelle.selectedRow
+		model.map.raum.raume.remove(row)
+		// Select new row
+		view.raumTabelle.with {
+			if (row == rowCount) row = rowCount - 1
+			else if (row < 0) row = 0
+			changeSelection(row, 0, false, false)
+		}
+	}
+	
+	/**
+	 * Raumdaten - einen Raum kopieren.
+	 */
+	def raumKopieren = {
+		// Get selected row
+		def row = view.raumTabelle.selectedRow
+		// Find room and make a copy
+		def x = model.map.raum.raume.find { it.position == row }.clone()
+		// Set name and position
+		x.raumBezeichnung = "Kopie von ${x.raumBezeichnung}"
+		x.position = model.map.raum.raume.size()
+		// Add to model
+		model.map.raum.raume.add(x)
+		// Select new row
+		view.raumTabelle.with {
+			changeSelection(rowCount - 1, 0, false, false)
+		}
+	}
+	
+	/**
+	 * Raumdaten - einen Raum in der Tabelle nach oben verschieben.
+	 */
+	def raumNachObenVerschieben = {
+		// Get selected row
+		def row = view.raumTabelle.selectedRow
+		if (row > 0) {
+			// Recalculate positions
+			model.map.raum.raume.each {
+				if (it.position == row - 1) it.position += 1
+				else if (it.position == row) it.position -= 1
+			}
+			model.syncRaumTableModels()
+			// Select new row
+			view.raumTabelle.with {
+				changeSelection(row - 1, 0, false, false)
+			}
+		}
+	}
+	
+	/**
+	 * Raumdaten - einen Raum in der Tabelle nach oben verschieben.
+	 */
+	def raumNachUntenVerschieben = {
+		// Get selected row
+		def row = view.raumTabelle.selectedRow
+		if (row < view.raumTabelle.rowCount - 1) {
+			// Recalculate positions
+			model.map.raum.raume.each {
+				if (it.position == row + 1) it.position -= 1
+				else if (it.position == row) it.position += 1
+			}
+			model.syncRaumTableModels()
+			// Select new row
+			view.raumTabelle.with {
+				changeSelection(row + 1, 0, false, false)
+			}
+		}
+	}
+	
+	/**
+	 * Raumdaten - ein Raum wurde angelegt, nun Gebäudedaten - Geometrie ändern
+	 */
+	def raumEingegeben = {
+		model.map.with {
+			// Gebäudedaten - Geometrie: Gesamtfläche berechnen
+			gebaude.geometrie.wohnflache = (raum.raume.sum { it.raumFlache.toFloat2() }).toString2()
+			// Gebäudedaten - Geometrie: Mittlere Raumhöhe berechnen
+			gebaude.geometrie.raumhohe = (raum.raume.sum { it.raumHohe.toFloat2() } / raum.raume.size()).toString2()
+		}
+	}
+	
+	/**
+	 * Außenluftvolumenströme
+	 */
+	def berechneAussenluftVs = {
+		wacCalculationService.aussenluftVs(model.map)
 	}
 	
 }
