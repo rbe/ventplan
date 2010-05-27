@@ -17,7 +17,7 @@ onBootstrapEnd = { app ->
 				format(d)
 			}
 		}
-		//println "toString2(): ${d} -> ${r}"
+		println "toString2(): ${d} -> ${r}"
 		r
 	}
 	// Float, Double.toString2: format a float with german notation
@@ -38,7 +38,7 @@ onBootstrapEnd = { app ->
 				parse(d) as Float
 			}
 		}
-		//println "toFloat2(): ${d} -> ${r}"
+		println "toFloat2(): ${d} -> ${r}"
 		r
 	}
 	// String.multiply
