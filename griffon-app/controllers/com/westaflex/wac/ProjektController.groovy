@@ -173,7 +173,7 @@ class ProjektController {
 	def raumTypSelected = {
 		switch (view.raumTyp.selectedIndex) {
 			// Zulufträume
-			case 0..6:
+			case 0..5:
 				view.raumLuftart.selectedItem = "ZU"
 				switch (view.raumTyp.selectedIndex) {
 					case 0..1:
@@ -191,10 +191,10 @@ class ProjektController {
 				}
 				break
 			// Ablufträume
-			case 7..13:
+			case 6..13:
 				view.raumLuftart.selectedItem = "AB"
 				switch (view.raumTyp.selectedIndex) {
-					case 7..9:
+					case 6..9:
 						view.raumZuluftfaktor.text = ""
 						view.raumAbluftVs.text = "25"
 						break
@@ -209,7 +209,7 @@ class ProjektController {
 				}
 				break
 			// Überströmräume
-			default:
+			case { it > 13 }:
 				view.raumLuftart.selectedItem = "ÜB"
 				view.raumZuluftfaktor.text = ""
 				view.raumAbluftVs.text = ""
@@ -232,6 +232,10 @@ class ProjektController {
 			// Raumvolumenströme, Ventile
 			zuabluftVentile = []
 			uberstromVentile = []
+			// Zuluftfaktor
+			if (!raumZuluftfaktor) raumZuluftfaktor = 0.toString2()
+			// Abluftvolumenstrom
+			if (!raumAbluftVs) raumAbluftVs = 0.toString2()
 		}
 		// Überstrom-Raum
 		if (raumWerte.raumLuftart == "ÜB") {
@@ -341,7 +345,7 @@ class ProjektController {
 	}
 	
 	/**
-	 * Raumdaten - ein Raum wurde angelegt, nun Gebäudedaten - Geometrie ändern
+	 * Raumdaten - ein Raum wurde angelegt, Gebäudedaten - Geometrie ändern
 	 */
 	def raumEingegeben = {
 		model.map.with {
