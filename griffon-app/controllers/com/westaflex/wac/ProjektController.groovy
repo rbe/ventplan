@@ -23,11 +23,16 @@ class ProjektController {
 		// Räume
 		model.map.raum.raume.addPropertyChangeListener({ evt ->
 			doLater {
-				println "raume,${evt.typeAsString}: ${evt.newValue}"
+				println "raum.raume,${evt.typeAsString}: ${evt.newValue}"
 				model.syncRaumTableModels()
 				raumEingegeben()
+				berechneAussenluftVs()
 			}
 		} as java.beans.PropertyChangeListener)
+		// Raumvolumenströme
+		model.tableModels.raumVsZuAbluftventileTabelleTableModel.addListEventListener({ evt ->
+			println "raumVsZuAbluftventileTabelleTableModel,${evt}"
+		} as ca.odell.glazedlists.event.ListEventListener)
 	}
 	
 	/**
