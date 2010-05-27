@@ -15,7 +15,7 @@ onBootstrapEnd = { app ->
 				format(d)
 			}
 		} else {
-			""
+			"0," + "0" * digits
 		}
 	}
 	// Float, Double.toString2: format a float with german notation
