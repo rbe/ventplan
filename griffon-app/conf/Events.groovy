@@ -6,12 +6,12 @@ onBootstrapEnd = { app ->
 	def dataSource = new ConfigSlurper().parse(DataSource).dataSource
 	WacModelService.instance.initDataSource(dataSource)
 	//
-	def toString2 = {
+	def toString2 = { digits = 2 ->
 		def d = delegate
 		if (d) {
 			java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
-				minimumFractionDigits = 2
-				maximumFractionDigits = 2
+				minimumFractionDigits = digits
+				maximumFractionDigits = digits
 				format(d)
 			}
 		} else {
@@ -25,12 +25,12 @@ onBootstrapEnd = { app ->
 	Double.metaClass.toString2 = toString2
 	BigDecimal.metaClass.toString2 = toString2
 	// String.toFloat2: parse a string with german notation to a float value
-	String.metaClass.toFloat2 = {
+	String.metaClass.toFloat2 = { digits = 2 ->
 		def d = delegate
 		if (d) {
 			java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
-				minimumFractionDigits = 2
-				maximumFractionDigits = 2
+				minimumFractionDigits = digits
+				maximumFractionDigits = digits
 				parse(d) as Float
 			}
 		} else {
