@@ -40,7 +40,8 @@ class ProjektModel {
 				faktorBesondereAnforderungen: 1,
 				geplanteBelegung: [
 						personenanzahl: 0,
-						aussenluftVsProPerson: 30
+						aussenluftVsProPerson: 30,
+						mindestaussenluftrate: "0,00"
 					] as ObservableMap,
 			] as ObservableMap,
 		anlage: [
@@ -62,12 +63,17 @@ class ProjektModel {
 				raumVsBezeichnungZuluftventile: ["1", "2", "3"],
 				raumVsBezeichnungAbluftventile: ["4", "5", "6"],
 				raumVsVerteilebene: ["7", "8", "9"],
+				ltmZuluftSumme: "0,00",
+				ltmAbluftSumme: "0,00",
 				// TableModels
 				raumTabelleTableModel: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList,
 				raumVsZuAbluftventileTabelleTableModel: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList,
 				raumVsUberstromventileTabelleTableModel: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList
 			] as ObservableMap,
-		aussenluftVs: [massnahme: " "] as ObservableMap,
+		aussenluftVs: [
+				infiltrationBerechnen: true,
+				massnahme: " "
+			] as ObservableMap,
 		druckverlust: [:] as ObservableMap,
 		akkustik: [:] as ObservableMap
 	] as ObservableMap
@@ -107,7 +113,7 @@ class ProjektModel {
 	 */
 	def createRaumVsZuAbluftventileTableModel() {
 		def columnNames =   ["Raum",            "Luftart",     "Raumvolumen (m³)", "Luftwechsel (1/h)", "Anzahl Abluftventile",    "Abluftmenge je Ventil",   "Volumenstrom (m³/h)", "Anzahl Zuluftventile",    "Bezeichnung Zuluftventile"]
-		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",      "raumLuftwechsel",   "raumAnzahlAbluftventile", "raumAbluftmengeJeVentil", "raumVsProStunde",     "raumAnzahlZuluftventile", "raumBezeichnungZuluftventile"]
+		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",      "raumLuftwechsel",   "raumAnzahlAbluftventile", "raumAbluftmengeJeVentil", "raumVolumenstrom",    "raumAnzahlZuluftventile", "raumBezeichnungZuluftventile"]
 		new ca.odell.glazedlists.swing.EventTableModel(map.raum.raumVsZuAbluftventileTabelleTableModel, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
@@ -116,7 +122,7 @@ class ProjektModel {
 	}
 	
 	/**
-	 * RaumVs - Überströmventile TableModel
+	 * Raumvolumenströme - Überströmventile TableModel
 	 */
 	def createRaumVsUberstromventileTableModel() {
 		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",                "Volumenstrom (m³/h)", "Überström-Elemente"]
