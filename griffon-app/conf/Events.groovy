@@ -8,15 +8,17 @@ onBootstrapEnd = { app ->
 	//
 	def toString2 = { digits = 2 ->
 		def d = delegate
+		def r = "0," + "0" * digits
 		if (d) {
-			java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
+			r = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
 				minimumFractionDigits = digits
 				maximumFractionDigits = digits
+				roundingMode = java.math.RoundingMode.HALF_UP
 				format(d)
 			}
-		} else {
-			"0," + "0" * digits
 		}
+		//println "toString2(): ${d} -> ${r}"
+		r
 	}
 	// Float, Double.toString2: format a float with german notation
 	Integer.metaClass.toString2 = toString2
@@ -27,15 +29,17 @@ onBootstrapEnd = { app ->
 	// String.toFloat2: parse a string with german notation to a float value
 	String.metaClass.toFloat2 = { digits = 2 ->
 		def d = delegate
+		def r = 0.0f
 		if (d) {
-			java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
+			r = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
 				minimumFractionDigits = digits
 				maximumFractionDigits = digits
+				roundingMode = java.math.RoundingMode.HALF_UP
 				parse(d) as Float
 			}
-		} else {
-			0.0f
 		}
+		//println "toFloat2(): ${d} -> ${r}"
+		r
 	}
 	// String.multiply
 	String.metaClass.multiply = { m ->
