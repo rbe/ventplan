@@ -228,7 +228,7 @@ class WacCalculationService {
 					it.raumLuftwechsel = 0.toString2()
 				}
 				// ZU/AB
-				if (it.raumLuftart == "ZU/AB") {
+				if (it.raumLuftart.contains("ZU/AB")) {
 					Float ltmZuluftRaum = Math.round(gesamtAvsLTM * it.raumZuluftfaktor.toFloat2() / gesamtZu)
 					it.raumZuluftVs = ltmZuluftRaum.toString2()
 					it.raumAbluftVs = ltmAbluftRaum.toString2()
