@@ -368,4 +368,14 @@ class ProjektController {
 		wacCalculationService.aussenluftVs(model.map)
 	}
 	
+	/**
+	 * Raumdaten - einen Raum bearbeiten.
+	 */
+	def raumBearbeiten = {
+		// Get selected row
+		def row = view.raumTabelle.selectedRow
+		// Open dialog
+		new RaumdatenDialogView(model.map.raum.raume.get(row))
+	}
+	
 }

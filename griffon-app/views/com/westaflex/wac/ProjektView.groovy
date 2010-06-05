@@ -40,6 +40,11 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 				panel(id: "akustikTab", title: "Akustikberechnung") {
 					build(AkustikView)
 				}
+				
+				// RaumdatenDialogView - Testweise hier...
+				panel(id: "raumdatenDialogTab", title: "RaumdatenDialog Einstellungen") {
+					build(RaumdatenDialogView)
+				}
 			}
 		}
 		hbox(constraints: SOUTH) {

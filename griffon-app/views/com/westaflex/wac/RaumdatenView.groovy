@@ -30,6 +30,7 @@ panel(id: "raumPanel") {
 	panel(id: "raumTabellePanel", constraints: CENTER, layout: new MigLayout("fill", "[fill]")) {
 		jideScrollPane() {
 			table(id: "raumTabelle", model: model.createRaumTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+				
 			}
 		}
 	}
