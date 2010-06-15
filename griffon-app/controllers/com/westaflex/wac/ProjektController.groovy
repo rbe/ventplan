@@ -5,7 +5,7 @@ import com.bensmann.griffon.GriffonHelper as GH
 /**
  * 
  */
-//@griffon.util.EventPublisher
+@griffon.util.EventPublisher
 class ProjektController {
 	
 	def model
@@ -20,26 +20,21 @@ class ProjektController {
 		model.mvcId = args.mvcId
 		// Add PropertyChangeListener to our model.map
 		addMapPropertyChange(model.map)
-		// Räume
-		model.map.raum.raume.addPropertyChangeListener({ evt ->
-			doLater {
-				println "raum.raume,${evt.typeAsString}: ${evt.newValue}"
-				model.syncRaumTableModels()
-				raumEingegeben()
-				berechneAussenluftVs()
-			}
-		} as java.beans.PropertyChangeListener)
-		// Raumvolumenströme
-		model.tableModels.raumVsZuAbluftventileTabelleTableModel.addListEventListener({ evt ->
+		/* Raumvolumenströme
+		model.tableModels.raumeVsZuAbluftventile.addListEventListener({ evt ->
 			println "raumVsZuAbluftventileTabelleTableModel,${evt}"
-		} as ca.odell.glazedlists.event.ListEventListener)
+		} as ca.odell.glazedlists.event.ListEventListener)*/
+		// Setup private event listener
+		def pe = new ProjektEvents(model: model, wacCalculationService: wacCalculationService)
+		addEventListener(pe)
+		pe.addEventListener(this)
 	}
 	
 	/**
 	 * Dump a change
 	 */
 	def dumpPropertyChange = { evt, k ->
-		println "${k}: value changed: ${evt.propertyName}: ${evt.oldValue} -> ${evt.newValue}"
+		println "${k}.${evt.propertyName}: value changed: ${evt.oldValue?.dump()} -> ${evt.newValue?.dump()}"
 	}
 	
 	/**
@@ -63,35 +58,30 @@ class ProjektController {
 	 * Gebäudedaten - Geometrie
 	 */
 	def berechneGeometrie = {
-		def g = model.map.gebaude.geometrie
-		try {
-			// Luftvolumen der Nutzungseinheit = Wohnfläche * mittlere Raumhöhe
-			if (g.wohnflache && g.raumhohe) {
-				g.luftvolumen = g.geluftetesVolumen = wacCalculationService.volumen(g.wohnflache.toFloat2(), g.raumhohe.toFloat2()).toString2()
-			}
-			// Gelüftetes Volumen = gelüftete Fläche * mittlere Raumhöhe
-			if (g.gelufteteFlache && g.raumhohe) {
-				g.geluftetesVolumen = wacCalculationService.volumen(g.gelufteteFlache.toFloat2(), g.raumhohe.toFloat2()).toString2()
-			}
-			// Gelüftetes Volumen = Luftvolumen, wenn kein gelüftetes Volumen berechnet
-			if (g.luftvolumen && !g.geluftetesVolumen) {
-				g.geluftetesVolumen = g.luftvolumen
-			}
-		} catch (e) {
-			e.printStackTrace()
-			g.luftvolumen = g.geluftetesVolumen = "E"
-		}
-		model.map.gebaude.geometrie = g
+		// Read values from view and transfer them into our model
+		def g = [
+			wohnflache: view.gebaudeGeometrieWohnflache.text.toDouble2(),
+			raumhohe: view.gebaudeGeometrieMittlereRaumhohe.text.toDouble2(),
+			gelufteteFlache: view.gebaudeGeometrieGelufteteFlache.text.toDouble2()
+		]
+		model.map.gebaude.geometrie.wohnflache = g.wohnflache
+		model.map.gebaude.geometrie.raumhohe = g.raumhohe
+		model.map.gebaude.geometrie.gelufteteFlache = g.gelufteteFlache
+		//
+		publishEvent "GeometrieEingegeben"
 	}
 	
 	/**
 	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
 	 */
 	def luftdichtheitKategorieA = {
-		model.map.gebaude.luftdichtheit.with {
-			druckdifferenz = "2,00"
-			luftwechsel = "1,00"
-			druckexponent = "0,666"
+		doLater {
+			model.map.gebaude.luftdichtheit.with {
+				druckdifferenz = 2.0f
+				luftwechsel = 1.0f
+				druckexponent = 0.666f
+			}
+			println "luftdichtheitKategorieA: ${model.map.gebaude.luftdichtheit?.dump()}"
 		}
 	}
 	
@@ -99,10 +89,13 @@ class ProjektController {
 	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
 	 */
 	def luftdichtheitKategorieB = {
-		model.map.gebaude.luftdichtheit.with {
-			druckdifferenz = "2,00"
-			luftwechsel = "1,50"
-			druckexponent = "0,666"
+		doLater {
+			model.map.gebaude.luftdichtheit.with {
+				druckdifferenz = 2.0f
+				luftwechsel = 1.5f
+				druckexponent = 0.666f
+			}
+			println "luftdichtheitKategorieB: ${model.map.gebaude.luftdichtheit?.dump()}"
 		}
 	}
 	
@@ -110,10 +103,35 @@ class ProjektController {
 	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
 	 */
 	def luftdichtheitKategorieC = {
-		model.map.gebaude.luftdichtheit.with {
-			druckdifferenz = "2,00"
-			luftwechsel = "2,00"
-			druckexponent = "0,666"
+		doLater {
+			model.map.gebaude.luftdichtheit.with {
+				druckdifferenz = 2.0f
+				luftwechsel = 2.0f
+				druckexponent = 0.666f
+			}
+			println "luftdichtheitKategorieC: ${model.map.gebaude.luftdichtheit?.dump()}"
+		}
+	}
+	
+	/**
+	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
+	 */
+	def speichereLuftdichtheit = {
+		doLater {
+			model.map.gebaude.luftdichtheit.druckdifferenz = view.gebaudeLuftdichtheitDruckdifferenz.text.toDouble2()
+			model.map.gebaude.luftdichtheit.luftwechsel = view.gebaudeLuftdichtheitLuftwechsel.text.toDouble2()
+			model.map.gebaude.luftdichtheit.druckexponent = view.gebaudeLuftdichtheitDruckexponent.text.toDouble2()
+			println "speichereLuftdichtheit: ${model.map.gebaude.luftdichtheit?.dump()}"
+		}
+	}
+	
+	/**
+	 * Gebäudedaten - Faktor für besondere Anforderungen
+	 */
+	def speichereFaktorBesondereAnforderungen = {
+		doLater {
+			model.map.gebaude.faktorBesondereAnforderungen = view.faktorBesondereAnforderungen.text.toDouble2()
+			println "speichereFaktorBesondereAnforderungen: ${model.map.gebaude.faktorBesondereAnforderungen?.dump()}"
 		}
 	}
 	
@@ -121,12 +139,17 @@ class ProjektController {
 	 * Gebäudedaten - Geplante Belegung
 	 */
 	def berechneMindestaussenluftrate = {
-		model.map.gebaude.geplanteBelegung.with {
-			try {
-				mindestaussenluftrate = personenanzahl * aussenluftVsProPerson
-			} catch (e) {
-				mindestaussenluftrate = 0
+		doLater {
+			model.map.gebaude.geplanteBelegung.with {
+				try {
+					mindestaussenluftrate = personenanzahl * aussenluftVsProPerson
+				} catch (e) {
+					// TODO Dialog
+					e.printStackTrace()
+					mindestaussenluftrate = 0.0f
+				}
 			}
+			println "berechneMindestaussenluftrate: ${model.map.gebaude.geplanteBelegung?.dump()}"
 		}
 	}
 	
@@ -134,90 +157,98 @@ class ProjektController {
 	 * Anlagendaten - Energie-Kennzeichen
 	 */
 	def berechneEnergieKennzeichen = {
-		model.map.anlage.energie.with {
-			if (zuAbluftWarme && bemessung && ruckgewinnung && regelung) {
-				nachricht = "Energiekennzeichen gesetzt!"
-			} else {
-				nachricht = " "
+		doLater {
+			model.map.anlage.energie.with {
+				if (zuAbluftWarme && bemessung && ruckgewinnung && regelung) {
+					nachricht = "Energiekennzeichen gesetzt!"
+				} else {
+					nachricht = " "
+				}
 			}
+			berechneKennzeichenLuftungsanlage()
 		}
-		berechneKennzeichenLuftungsanlage()
 	}
 	
 	/**
 	 * Anlagendaten - Hygiene-Kennzeichen
 	 */
 	def berechneHygieneKennzeichen = {
-		model.map.anlage.hygiene.with {
-			if (ausfuhrung && filterung && keineVerschmutzung && dichtheitsklasseB) {
-				nachricht = "Hygienekennzeichen gesetzt!"
-			} else {
-				nachricht = " "
+		doLater {
+			model.map.anlage.hygiene.with {
+				if (ausfuhrung && filterung && keineVerschmutzung && dichtheitsklasseB) {
+					nachricht = "Hygienekennzeichen gesetzt!"
+				} else {
+					nachricht = " "
+				}
 			}
+			berechneKennzeichenLuftungsanlage()
 		}
-		berechneKennzeichenLuftungsanlage()
 	}
 	
 	/**
 	 * Anlagendaten - Kennzeichen
 	 */
 	def berechneKennzeichenLuftungsanlage = {
-		def kennzeichen = new StringBuilder("ZuAbLS-Z-")
-		def gebaudeTyp = model.map.gebaude.EFH ? "EFH" : "WE"
-		def energieKz = model.map.anlage.energie.nachricht != " " ? "E" : "0"
-		def hygieneKz = model.map.anlage.hygiene.nachricht != " " ? "H" : "0"
-		def ruckschlag = model.map.anlage.ruckschlagKappe ? "RK" : "0"
-		def schallschutz = model.map.anlage.schallschutz ? "S" : "0"
-		def feuerstatte = model.map.anlage.feuerstatte ? "F" : "0"
-		model.map.anlage.kennzeichnungLuftungsanlage = "ZuAbLS-Z-${gebaudeTyp}-WÜT-${energieKz}-${hygieneKz}-${ruckschlag}-${schallschutz}-${feuerstatte}"
+		doLater {
+			def kennzeichen = new StringBuilder("ZuAbLS-Z-")
+			def gebaudeTyp = model.map.gebaude.EFH ? "EFH" : "WE"
+			def energieKz = model.map.anlage.energie.nachricht != " " ? "E" : "0"
+			def hygieneKz = model.map.anlage.hygiene.nachricht != " " ? "H" : "0"
+			def ruckschlag = model.map.anlage.ruckschlagKappe ? "RK" : "0"
+			def schallschutz = model.map.anlage.schallschutz ? "S" : "0"
+			def feuerstatte = model.map.anlage.feuerstatte ? "F" : "0"
+			model.map.anlage.kennzeichnungLuftungsanlage = "ZuAbLS-Z-${gebaudeTyp}-WÜT-${energieKz}-${hygieneKz}-${ruckschlag}-${schallschutz}-${feuerstatte}"
+		}
 	}
 	
 	/**
 	 * Raumdaten - Raumtyp ausgewählt
 	 */
 	def raumTypSelected = {
-		switch (view.raumTyp.selectedIndex) {
-			// Zulufträume
-			case 0..5:
-				view.raumLuftart.selectedItem = "ZU"
-				switch (view.raumTyp.selectedIndex) {
-					case 0..1:
-						view.raumAbluftVs.text = ""
-						view.raumZuluftfaktor.text = "3,00"
-						break
-					case 2..3:
-						view.raumAbluftVs.text = ""
-						view.raumZuluftfaktor.text = "2,00"
-						break
-					case 4..6:
-						view.raumAbluftVs.text = ""
-						view.raumZuluftfaktor.text = "1,50"
-						break
-				}
-				break
-			// Ablufträume
-			case 6..13:
-				view.raumLuftart.selectedItem = "AB"
-				switch (view.raumTyp.selectedIndex) {
-					case 6..9:
-						view.raumZuluftfaktor.text = ""
-						view.raumAbluftVs.text = "25"
-						break
-					case 10..12:
-						view.raumZuluftfaktor.text = ""
-						view.raumAbluftVs.text = "45"
-						break
-					case 13:
-						view.raumZuluftfaktor.text = ""
-						view.raumAbluftVs.text = "100"
-						break
-				}
-				break
-			// Überströmräume
-			case { it > 13 }:
-				view.raumLuftart.selectedItem = "ÜB"
-				view.raumZuluftfaktor.text = ""
-				view.raumAbluftVs.text = ""
+		doLater {
+			switch (view.raumTyp.selectedIndex) {
+				// Zulufträume
+				case 0..5:
+					view.raumLuftart.selectedItem = "ZU"
+					switch (view.raumTyp.selectedIndex) {
+						case 0..1:
+							view.raumAbluftVs.text = ""
+							view.raumZuluftfaktor.text = "3,00"
+							break
+						case 2..3:
+							view.raumAbluftVs.text = ""
+							view.raumZuluftfaktor.text = "2,00"
+							break
+						case 4..6:
+							view.raumAbluftVs.text = ""
+							view.raumZuluftfaktor.text = "1,50"
+							break
+					}
+					break
+				// Ablufträume
+				case 6..13:
+					view.raumLuftart.selectedItem = "AB"
+					switch (view.raumTyp.selectedIndex) {
+						case 6..9:
+							view.raumZuluftfaktor.text = ""
+							view.raumAbluftVs.text = "25"
+							break
+						case 10..12:
+							view.raumZuluftfaktor.text = ""
+							view.raumAbluftVs.text = "45"
+							break
+						case 13:
+							view.raumZuluftfaktor.text = ""
+							view.raumAbluftVs.text = "100"
+							break
+					}
+					break
+				// Überströmräume
+				case { it > 13 }:
+					view.raumLuftart.selectedItem = "ÜB"
+					view.raumZuluftfaktor.text = ""
+					view.raumAbluftVs.text = ""
+			}
 		}
 	}
 	
@@ -231,48 +262,44 @@ class ProjektController {
 			// Übernehme Wert für Bezeichnung vom Typ?
 			if (!raumBezeichnung) raumBezeichnung = raumTyp
 			// Standard Türspalthöhe ist 10 mm
-			raumTurspaltHohe = "10,00"
+			raumTurspaltHohe = 10.0f
 			// Raumvolumen
+			raumFlache = raumFlache.toDouble2()
+			raumHohe = raumHohe.toDouble2()
 			raumVolumen = raumFlache * raumHohe
 			// Raumvolumenströme, Ventile
 			zuabluftVentile = []
 			uberstromVentile = []
 			// Zuluftfaktor
-			if (!raumZuluftfaktor) raumZuluftfaktor = 0.toString2()
+			raumZuluftfaktor = raumZuluftfaktor?.toDouble2() ?: 0.0f
+			/*if (!raumZuluftfaktor) raumZuluftfaktor = 0.0f
+			else raumZuluftfaktor = raumZuluftfaktor.toDouble2()*/
 			// Abluftvolumenstrom
-			if (!raumAbluftVs) raumAbluftVs = 0.toString2()
+			raumAbluftVs = raumAbluftVs?.toDouble2() ?: 0.0f
+			/*if (!raumAbluftVs) raumAbluftVs = 0.0f
+			else raumAbluftVs = raumAbluftVs.toDouble2()*/
 		}
 		// Überstrom-Raum
 		if (raumWerte.raumLuftart == "ÜB") {
-			// Prüfe den Zuluftfaktor, Rückgabe: [übergebener wert, neuer wert]
-			def prufeZuluftfaktor = { float zf ->
-				def minMax = { v, min, max -> if (v < min) { min } else if (v > max) { max } else { v } }
-				def nzf
-				switch (raumWerte.raumBezeichnung) {
-					case "Wohnzimmer":                                  nzf = minMax(zf, 2.5f, 3.5f); break
-					case ["Kinderzimmer", "Schlafzimmer"]:              nzf = minMax(zf, 1.0f, 3.0f); break
-					case ["Esszimmer", "Arbeitszimmer", "Gästezimmer"]: nzf = minMax(zf, 1.0f, 2.0f); break
-					default: nzf = zf
-				}
-				[zf, nzf]
-			}
-			def (zuluftfaktor, neuerZuluftfaktor) = prufeZuluftfaktor(raumWerte.raumZuluftfaktor.toFloat2())
+			def (zuluftfaktor, neuerZuluftfaktor) = wacCalculationService.prufeZuluftfaktor(raumWerte.raumZuluftfaktor)
 			if (zuluftfaktor != neuerZuluftfaktor) {
+				// TODO Dialog
 				println "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
 			}
-			raumWerte.raumZuluftfaktor = neuerZuluftfaktor.toString2()
+			raumWerte.raumZuluftfaktor = neuerZuluftfaktor
 		}
 		// Update model and set table selection
 		doLater {
 			// Raum im Model hinzufügen
 			model.map.raum.raume << raumWerte + [position: model.map.raum.raume.size() ?: 0]
-			// Geometrie berechnen
 			// Raum in Tabelle markieren
 			view.raumTabelle.with {
 				changeSelection(rowCount - 1, 0, false, false)
 			}
 		}
 		//println "raumHinzufugen: raumWerte=${raumWerte}"
+		// Berechne alles, was von Räumen abhängt
+		publishEvent "RaumHinzugefugt"
 	}
 	
 	/**
@@ -288,6 +315,8 @@ class ProjektController {
 			else if (row < 0) row = 0
 			changeSelection(row, 0, false, false)
 		}
+		// Berechne alles, was von Räumen abhängt
+		publishEvent "RaumEntfernt"
 	}
 	
 	/**
@@ -307,6 +336,8 @@ class ProjektController {
 		view.raumTabelle.with {
 			changeSelection(rowCount - 1, 0, false, false)
 		}
+		// Berechne alles, was von Räumen abhängt
+		publishEvent "RaumHinzugefugt"
 	}
 	
 	/**
@@ -350,25 +381,6 @@ class ProjektController {
 	}
 	
 	/**
-	 * Raumdaten - ein Raum wurde angelegt, Gebäudedaten - Geometrie ändern
-	 */
-	def raumEingegeben = {
-		model.map.with {
-			// Gebäudedaten - Geometrie: Gesamtfläche berechnen
-			gebaude.geometrie.wohnflache = (raum.raume.sum { it.raumFlache.toFloat2() }).toString2()
-			// Gebäudedaten - Geometrie: Mittlere Raumhöhe berechnen
-			gebaude.geometrie.raumhohe = (raum.raume.sum { it.raumHohe.toFloat2() } / raum.raume.size()).toString2()
-		}
-	}
-	
-	/**
-	 * Außenluftvolumenströme
-	 */
-	def berechneAussenluftVs = {
-		wacCalculationService.aussenluftVs(model.map)
-	}
-	
-	/**
 	 * Raumdaten - einen Raum bearbeiten.
 	 */
 	def raumBearbeiten = {
@@ -376,6 +388,13 @@ class ProjektController {
 		def row = view.raumTabelle.selectedRow
 		// Open dialog
 		new RaumdatenDialogView(model.map.raum.raume.get(row))
+	}
+	
+	/**
+	 * Aussenluftvolumenströme - Mit/ohne Infiltrationsanteil berechnen
+	 */
+	def berechneAussenluftVs = {
+		publishEvent "AussenluftVsBerechnen"
 	}
 	
 }
