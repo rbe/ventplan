@@ -5,46 +5,55 @@ onBootstrapEnd = { app ->
 	// DataSource
 	def dataSource = new ConfigSlurper().parse(DataSource).dataSource
 	WacModelService.instance.initDataSource(dataSource)
-	//
+	// Number -> Formatted String
 	def toString2 = { digits = 2 ->
 		def d = delegate
 		def r = "0," + "0" * digits
-		if (d) {
+		// Check against NaN, Infinity
+		if (d in [Float.NaN, Double.NaN]) {
+			r = "NaN"
+		} else if (d in [Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY]) {
+			r = "Inf"
+		} else if (d) {
 			r = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
 				minimumFractionDigits = digits
 				maximumFractionDigits = digits
-				roundingMode = java.math.RoundingMode.HALF_UP
+				//roundingMode = java.math.RoundingMode.HALF_UP
 				format(d)
 			}
 		}
-		println "toString2(): ${d} -> ${r}"
+		//println "toString2(): ${d?.dump()} -> ${r?.dump()}"
 		r
 	}
-	// Float, Double.toString2: format a float with german notation
+	// Double, Double.toString2: format a float with german notation
 	Integer.metaClass.toString2 = toString2
 	Long.metaClass.toString2 = toString2
 	Float.metaClass.toString2 = toString2
 	Double.metaClass.toString2 = toString2
 	BigDecimal.metaClass.toString2 = toString2
-	// String.toFloat2: parse a string with german notation to a float value
-	String.metaClass.toFloat2 = { digits = 2 ->
+	// String.toDouble2: parse a string with german notation to a float value
+	String.metaClass.toDouble2 = { digits = 2 ->
 		def d = delegate
 		def r = 0.0f
 		if (d) {
 			r = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
 				minimumFractionDigits = digits
 				maximumFractionDigits = digits
-				roundingMode = java.math.RoundingMode.HALF_UP
-				parse(d) as Float
+				//roundingMode = java.math.RoundingMode.HALF_EVEN
+				try {
+					parse(d) as Double
+				} catch (e) {
+					e.printStackTrace()
+				}
 			}
 		}
-		println "toFloat2(): ${d} -> ${r}"
+		//println "toDouble2(): ${d?.dump()} -> ${r?.dump()}"
 		r
 	}
 	// String.multiply
 	String.metaClass.multiply = { m ->
-		def a = delegate.toFloat2()
-		def b = m.toFloat2()
+		def a = delegate.toDouble2()
+		def b = m.toDouble2()
 		delegate = (a * b).toString2()
 	}
 	// Map.flatten
