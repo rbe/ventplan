@@ -1,3 +1,11 @@
+/**
+ * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/models/com/westaflex/wac/ProjektModel.groovy
+ * 
+ * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
+ * Alle Rechte vorbehalten. Nutzungslizenz siehe http://www.bensmann.com/license_de.html
+ * All Rights Reserved. Use is subject to license terms, see http://www.bensmann.com/license_en.html
+ * 
+ */
 package com.westaflex.wac
 
 import groovy.beans.Bindable
@@ -30,18 +38,21 @@ class ProjektModel {
 				typ: [MFH: true] as ObservableMap,
 				lage: [windschwach: true] as ObservableMap,
 				warmeschutz: [hoch: true] as ObservableMap,
-				geometrie: [:] as ObservableMap,
+				geometrie: [:
+						//raumhohe: "0,00",
+						//geluftetesVolumen: "0,00"
+					] as ObservableMap,
 				luftdichtheit: [
 						kategorieA: true,
-						druckdifferenz: "2,00",
-						luftwechsel: "1,00",
-						druckexponent: "0,666"
+						druckdifferenz: 2.0f,
+						luftwechsel: 1.0f,
+						druckexponent: 0.666f
 					] as ObservableMap,
-				faktorBesondereAnforderungen: 1,
+				faktorBesondereAnforderungen: 1.0f,
 				geplanteBelegung: [
-						personenanzahl: 0,
+						personenanzahl: 0.0f,
 						aussenluftVsProPerson: 30,
-						mindestaussenluftrate: "0,00"
+						mindestaussenluftrate: 0.0f
 					] as ObservableMap,
 			] as ObservableMap,
 		anlage: [
@@ -63,8 +74,8 @@ class ProjektModel {
 				raumVsBezeichnungZuluftventile: ["1", "2", "3"],
 				raumVsBezeichnungAbluftventile: ["4", "5", "6"],
 				raumVsVerteilebene: ["7", "8", "9"],
-				ltmZuluftSumme: "0,00",
-				ltmAbluftSumme: "0,00",
+				ltmZuluftSumme: 0.0f,
+				ltmAbluftSumme: 0.0f,
 			] as ObservableMap,
 		aussenluftVs: [
 				infiltrationBerechnen: true,
@@ -76,9 +87,9 @@ class ProjektModel {
 	
 	// TableModels
 	def tableModels = [
-			raumTabelleTableModel: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList,
-			raumVsZuAbluftventileTabelleTableModel: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList,
-			raumVsUberstromventileTabelleTableModel: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList
+			raume: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList,
+			raumeVsZuAbluftventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList,
+			raumeVsUberstromventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList
 		]
 	
 	/**
@@ -86,14 +97,14 @@ class ProjektModel {
 	 */
 	def syncRaumTableModels() {
 		// Raumdaten
-		tableModels.raumTabelleTableModel.clear()
-		tableModels.raumTabelleTableModel.addAll(map.raum.raume)
+		tableModels.raume.clear()
+		tableModels.raume.addAll(map.raum.raume)
 		// Raumvolumentströme - Zu-/Abluftventile
-		tableModels.raumVsZuAbluftventileTabelleTableModel.clear()
-		tableModels.raumVsZuAbluftventileTabelleTableModel.addAll(map.raum.raume)
+		tableModels.raumeVsZuAbluftventile.clear()
+		tableModels.raumeVsZuAbluftventile.addAll(map.raum.raume)
 		// Raumvolumentströme - Überströmventile
-		tableModels.raumVsUberstromventileTabelleTableModel.clear()
-		tableModels.raumVsUberstromventileTabelleTableModel.addAll(map.raum.raume)
+		tableModels.raumeVsUberstromventile.clear()
+		tableModels.raumeVsUberstromventile.addAll(map.raum.raume)
 	}
 	
 	/**
@@ -102,7 +113,7 @@ class ProjektModel {
 	def createRaumTableModel() {
 		def columnNames =   ["Raum",            "Geschoss",     "Luftart",     "Raumfläche (m²)", "Raumhöhe (m)", "Zuluftfaktor",     "Abluftvolumenstrom"]
 		def propertyNames = ["raumBezeichnung", "raumGeschoss", "raumLuftart", "raumFlache",      "raumHohe",     "raumZuluftfaktor", "raumAbluftVs"]
-		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumTabelleTableModel, [
+		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raume, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
 				getColumnValue: { object, index -> object."${propertyNames[index]}" }
@@ -115,7 +126,7 @@ class ProjektModel {
 	def createRaumVsZuAbluftventileTableModel() {
 		def columnNames =   ["Raum",            "Luftart",     "Raumvolumen (m³)", "Luftwechsel (1/h)", "Anzahl Abluftventile",    "Abluftmenge je Ventil",   "Volumenstrom (m³/h)", "Anzahl Zuluftventile",    "Bezeichnung Zuluftventile"]
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",      "raumLuftwechsel",   "raumAnzahlAbluftventile", "raumAbluftmengeJeVentil", "raumVolumenstrom",    "raumAnzahlZuluftventile", "raumBezeichnungZuluftventile"]
-		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumVsZuAbluftventileTabelleTableModel, [
+		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeVsZuAbluftventile, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
 				getColumnValue: { object, index -> object."${propertyNames[index]}" }
@@ -128,7 +139,7 @@ class ProjektModel {
 	def createRaumVsUberstromventileTableModel() {
 		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",                "Volumenstrom (m³/h)", "Überström-Elemente"]
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile",    "raumVolumenstrom",    "raumUberstromElemente"]
-		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumVsUberstromventileTabelleTableModel, [
+		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeVsUberstromventile, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
 				getColumnValue: { object, index -> object."${propertyNames[index]}" }
