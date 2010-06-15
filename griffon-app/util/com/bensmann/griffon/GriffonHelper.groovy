@@ -9,6 +9,7 @@ class GriffonHelper {
 	 * 
 	 */
 	private static final java.awt.Color MY_YELLOW = new java.awt.Color(255, 255, 180)
+	private static final java.awt.Color MY_RED = new java.awt.Color(255, 80, 80)
 	
 	/**
 	 * Apply a closure to a component or recurse component's components.
@@ -21,24 +22,18 @@ class GriffonHelper {
 		try {
 			closure(component)
 		} catch (e) {
-			println "recurse(${component}): EXCEPTION=${e}"
+			e.printStackTrace()
+			println "recurse(${component.class}): EXCEPTION=${e}"
 		}
 	}
 	
 	/**
-	 * 
+	 * Is a float empty? Yes for two cases:
+	 * - no text
+	 * - text is "0,00"
 	 */
-	def static floatTextField = { component ->
-		//println "floatTextField: ${component.class}"
-		if (component instanceof javax.swing.JTextField) {
-			component.addFocusListener({ evt ->
-				if (evt.id == java.awt.event.FocusEvent.FOCUS_LOST) {
-					if (component.text) {
-						component.text = component.text.toFloat2().toString2()
-					}
-				}
-			} as java.awt.event.FocusListener)
-		}
+	def static isEmptyDouble(component) {
+		!component.text || component.text == "0,00"
 	}
 	
 	/**
@@ -46,10 +41,20 @@ class GriffonHelper {
 	 */
 	def static yellowTextField = { component ->
 		//println "yellowTextField: ${component.class}"
-		if (component instanceof javax.swing.JTextField && component.editable) {
-			component.addFocusListener({ evt ->
-				component.background = (evt.id == java.awt.event.FocusEvent.FOCUS_GAINED ? MY_YELLOW : java.awt.Color.WHITE)
-			} as java.awt.event.FocusListener)
+		if (component instanceof javax.swing.JTextField) {
+			// Set yellow background when focused
+			if (component.editable) {
+				component.addFocusListener({ evt ->
+					component.background = (evt.id == java.awt.event.FocusEvent.FOCUS_GAINED ? MY_YELLOW : java.awt.Color.WHITE)
+				} as java.awt.event.FocusListener)
+			}
+			// Set red background when focused
+			else {
+				component.addFocusListener({ evt ->
+					//component.setBorder(evt.id == java.awt.event.FocusEvent.FOCUS_GAINED ? javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED) : null)
+					component.background = (evt.id == java.awt.event.FocusEvent.FOCUS_GAINED ? MY_RED : java.awt.Color.WHITE)
+				} as java.awt.event.FocusListener)
+			}
 		}
 	}
 	
@@ -60,6 +65,61 @@ class GriffonHelper {
 		//println "rightAlignTextField: ${component.class}"
 		if (component instanceof javax.swing.JTextField) {
 			component.horizontalAlignment = javax.swing.JTextField.RIGHT
+		}
+	}
+	
+	/**
+	 * Set behaviour for float TextFields.
+	 */
+	def static floatTextField = { component ->
+		//println "floatTextField: ${component.class}"
+		if (component instanceof javax.swing.JTextField) {
+			// Set yellow background while editing
+			GriffonHelper.yellowTextField(component)
+			// Right align the textfield
+			GriffonHelper.rightAlignTextField(component)
+			// Add focus listener
+			component.addFocusListener({ evt ->
+				if (evt.id == java.awt.event.FocusEvent.FOCUS_GAINED) {
+					// If component is editable and 'is empty', select entire contents for easy editing
+					if (component.editable && isEmptyDouble(component)) {
+						javax.swing.SwingUtilities.invokeLater {
+							//println "floatTextField: selecting all: component.text = " + component.text + " -> isEmptyDouble=" + isEmptyDouble(component)
+							component.selectAll()
+						}
+					}
+				}
+				/* Is done via binding-converter-closure now (see **Binding scripts)
+				if (evt.id == java.awt.event.FocusEvent.FOCUS_LOST) {
+					if (component.text) {
+						javax.swing.SwingUtilities.invokeLater {
+							component.text = component.text.toDouble2().toString2()
+						}
+					}
+				}
+				*/
+			} as java.awt.event.FocusListener)
+		}
+	}
+	
+	/**
+	 * Auto-format a float textfield when focus is lost.
+	 */
+	def static autoformatDoubleTextField = { component ->
+		//println "autoformatDoubleTextField: ${component.class}"
+		if (component instanceof javax.swing.JTextField) {
+			// Right-align
+			GriffonHelper.rightAlignTextField(component)
+			// Add focus listener
+			component.addFocusListener({ evt ->
+				if (evt.id == java.awt.event.FocusEvent.FOCUS_LOST) {
+					if (component.text) {
+						javax.swing.SwingUtilities.invokeLater {
+							component.text = component.text.toDouble2().toString2()
+						}
+					}
+				}
+			} as java.awt.event.FocusListener)
 		}
 	}
 	
@@ -80,6 +140,30 @@ class GriffonHelper {
 			}
 		}
 		map
+	}
+	
+	/**
+	 * 
+	 */
+	def static toString2Converter = { v ->
+		if (v instanceof Number) {
+			println "toStringConverter: ${v?.dump()} -> ${v?.toString2()?.dump()}"
+			v?.toString2()
+		} else {
+			throw new IllegalStateException("You tried to convert a String: ${v?.dump()}")
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	def static toString3Converter = { v ->
+		if (v instanceof Number) {
+			println "toStringConverter: ${v?.dump()} -> ${v?.toString2(3)?.dump()}"
+			v?.toString2(3)
+		} else {
+			throw new IllegalStateException("You tried to convert a String: ${v?.dump()}")
+		}
 	}
 	
 }
