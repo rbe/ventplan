@@ -111,7 +111,5 @@ panel(id: "aussenluftVsGesamtLTM", border: titledBorder(title: "Gesamt-Luftvolum
 	label(id: "gesamtLvsLtmLwNl", text: "  0,00"); label("l/h")
 	label(id: "gesamtLvsLtmLwIl", text: "  0,00"); label("l/h", constraints: "span")
 }
-
-button(text: "Berechnen", actionPerformed: controller.berechneAussenluftVs)
 // Bindings
 build(AussenluftVsBindings)
