@@ -1,3 +1,19 @@
+==============
+A. Generelles
+==============
+
+1. Standard Paket ist: com.westaflex.wac (sofern in dieser Dokumentation nicht anders angegeben)
+
+2. TextFields die Fließkommawerte enthalten:
+	* rechtsbündig ausgerichtet
+	* Hintergrund gelb
+	siehe utils/com.bensmann.griffon.GriffonHelper
+
+
+=================
+B. Projekte, Tabs
+=================
+
 Gebäudedaten
 ============
 
