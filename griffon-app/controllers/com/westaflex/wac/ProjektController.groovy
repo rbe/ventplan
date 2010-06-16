@@ -20,10 +20,12 @@ class ProjektController {
 		model.mvcId = args.mvcId
 		// Add PropertyChangeListener to our model.map
 		addMapPropertyChange(model.map)
-		/* Raumvolumenströme
+		/*
+		// Raumvolumenströme
 		model.tableModels.raumeVsZuAbluftventile.addListEventListener({ evt ->
 			println "raumVsZuAbluftventileTabelleTableModel,${evt}"
-		} as ca.odell.glazedlists.event.ListEventListener)*/
+		} as ca.odell.glazedlists.event.ListEventListener)
+		*/
 		// Setup private event listener
 		def pe = new ProjektEvents(model: model, wacCalculationService: wacCalculationService)
 		addEventListener(pe)
