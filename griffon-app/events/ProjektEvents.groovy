@@ -39,6 +39,7 @@ class ProjektEvents {
 			wacCalculationService.geometrieAusRaumdaten(model.map)
 			wacCalculationService.aussenluftVs(model.map)
 			model.syncRaumTableModels()
+			publishEvent "RaumInTabelleWahlen", [model.map.raum.raume.size() - 1]
 		}
 	}
 	

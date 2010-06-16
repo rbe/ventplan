@@ -293,15 +293,22 @@ class ProjektController {
 		// Update model and set table selection
 		doLater {
 			// Raum im Model hinzufügen
+			//println "raumHinzufugen: raumWerte=${raumWerte}"
 			model.map.raum.raume << raumWerte + [position: model.map.raum.raume.size() ?: 0]
-			// Raum in Tabelle markieren
-			view.raumTabelle.with {
-				changeSelection(rowCount - 1, 0, false, false)
-			}
+			// Berechne alles, was von Räumen abhängt
+			publishEvent "RaumHinzugefugt"
 		}
-		//println "raumHinzufugen: raumWerte=${raumWerte}"
-		// Berechne alles, was von Räumen abhängt
-		publishEvent "RaumHinzugefugt"
+	}
+	
+	/**
+	 * Raum in Tabelle markieren
+	 */
+	def onRaumInTabelleWahlen = { msg ->
+		println "onRaumInTabelleWahlen: msg=${msg}"
+		// Raum in Tabelle markieren
+		view.raumTabelle.with {
+			changeSelection(msg, 0, false, false)
+		}
 	}
 	
 	/**
