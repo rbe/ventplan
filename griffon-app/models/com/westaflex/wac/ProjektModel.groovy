@@ -116,7 +116,7 @@ class ProjektModel {
 		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raume, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
-				getColumnValue: { object, index -> object."${propertyNames[index]}" }
+				getColumnValue: { object, index -> object."${propertyNames[index]}".toString2() }
 			] as ca.odell.glazedlists.gui.TableFormat)
 	}
 	
@@ -129,7 +129,7 @@ class ProjektModel {
 		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeVsZuAbluftventile, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
-				getColumnValue: { object, index -> object."${propertyNames[index]}" }
+				getColumnValue: { object, index -> object."${propertyNames[index]}".toString2() }
 			] as ca.odell.glazedlists.gui.TableFormat)
 	}
 	
@@ -142,7 +142,7 @@ class ProjektModel {
 		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeVsUberstromventile, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
-				getColumnValue: { object, index -> object."${propertyNames[index]}" }
+				getColumnValue: { object, index -> object."${propertyNames[index]}".toString2() }
 			] as ca.odell.glazedlists.gui.TableFormat)
 	}
 	
