@@ -1,0 +1,37 @@
+
+REQUIREMENTS
+============
+
+1. Development
+--------------
+JDK 1.6.0 U20
+Groovy 1.7.x
+Griffon 0.3.1
+	Plugins:
+	glazedlists 0.3
+	jide-builder 0.3
+	spring 0.2
+	swingx-builder 0.1
+	swingxtras-builder 0.2
+	tray-builder 0.3
+
+2. Runtime
+----------
+JDK 1.6.0 U20
+
+
+ARCHITECTURE
+============
+
+1. MVC
+------
+Model: a bindable Map in ProjektModel.groovy
+View: render data, use controller for actions
+Controller: reads data from view, update model, publish events
+Events: perform calculations using a service, update model
+Services: contain business logic
+
+
+HINTS
+=====
+Groovy + Debugging: http://groovy.codehaus.org/Debugging+with+JSwat
