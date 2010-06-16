@@ -147,10 +147,11 @@ class GriffonHelper {
 	 */
 	def static toString2Converter = { v ->
 		if (v instanceof Number) {
-			println "toStringConverter: ${v?.dump()} -> ${v?.toString2()?.dump()}"
-			v?.toString2()
+			def v2 = v?.toString2()
+			println "toStringConverter: ${v?.dump()} -> ${v2?.dump()}"
+			v2
 		} else if (v) {
-			throw new IllegalStateException("You tried to convert a String: ${v?.dump()}")
+			throw new IllegalStateException("toString2Converter: You tried to convert a String: ${v?.dump()}")
 		}
 	}
 	
@@ -159,10 +160,11 @@ class GriffonHelper {
 	 */
 	def static toString3Converter = { v ->
 		if (v instanceof Number) {
-			println "toStringConverter: ${v?.dump()} -> ${v?.toString2(3)?.dump()}"
-			v?.toString2(3)
+			def v3 = v?.toString2(3)
+			println "toStringConverter: ${v?.dump()} -> ${v3?.dump()}"
+			v3
 		} else if (v) {
-			throw new IllegalStateException("You tried to convert a String: ${v?.dump()}")
+			throw new IllegalStateException("toString3Converter: You tried to convert a String: ${v?.dump()}")
 		}
 	}
 	
