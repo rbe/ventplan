@@ -149,7 +149,7 @@ class GriffonHelper {
 		if (v instanceof Number) {
 			println "toStringConverter: ${v?.dump()} -> ${v?.toString2()?.dump()}"
 			v?.toString2()
-		} else {
+		} else if (v) {
 			throw new IllegalStateException("You tried to convert a String: ${v?.dump()}")
 		}
 	}
@@ -161,7 +161,7 @@ class GriffonHelper {
 		if (v instanceof Number) {
 			println "toStringConverter: ${v?.dump()} -> ${v?.toString2(3)?.dump()}"
 			v?.toString2(3)
-		} else {
+		} else if (v) {
 			throw new IllegalStateException("You tried to convert a String: ${v?.dump()}")
 		}
 	}
