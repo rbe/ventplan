@@ -56,6 +56,10 @@ onBootstrapEnd = { app ->
 		def b = m.toDouble2()
 		delegate = (a * b).toString2()
 	}
+	// String.toString2
+	String.metaClass.toString2 = {
+		delegate //.toString()
+	}
 	// Map.flatten
 	Map.metaClass.flatten = { String prefix = '' ->
 		delegate.inject([:]) { map, v ->
