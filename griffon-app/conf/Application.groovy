@@ -10,11 +10,6 @@ mvcGroups {
 		actions = "ProjektActions"
 		view = "com.westaflex.wac.ProjektView"
 	}
-	Kunde {
-		model = "com.westaflex.wac.KundeModel"
-		controller = "com.westaflex.wac.KundeController"
-		view = "com.westaflex.wac.KundeView"
-	}
 	wac2 {
 		model = "Wac2Model"
 		controller = "Wac2Controller"
@@ -23,3 +18,4 @@ mvcGroups {
 	}
 }
 griffon.basic_injection.disable = true
+griffon.gsql.injectInto = ["controller", "service"]
