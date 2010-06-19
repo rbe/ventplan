@@ -1,5 +1,5 @@
 ==============
-A. Generelles
+I. Generelles
 ==============
 
 1. Standard Paket ist: com.westaflex.wac (sofern in dieser Dokumentation nicht anders angegeben)
@@ -10,15 +10,15 @@ A. Generelles
 	siehe utils/com.bensmann.griffon.GriffonHelper
 
 
-=================
-B. Projekte, Tabs
-=================
+==================
+II. Projekte, Tabs
+==================
 
-Gebäudedaten
-============
+A. Gebäudedaten
+---------------
 
 Geometrie
----------
+
 1. Bei Eingabe von Wohnfläche und mittlere Raumhöhe: Luftvolumen und gelüftetes Volumen errechnen
 	TextField, focusLost -> ProjektProjektController.berechneGeometrie
 
@@ -26,7 +26,7 @@ Geometrie
 	TextField, focusLost -> ProjektProjektController.berechneGeometrie
 
 Luftdichtheit der Gebäudehülle
-------------------------------
+
 1. Bei Auswahl einer Kategorie Standardwerte unter Messwerte setzen
 	Radiobox, change -> ProjektProjektController.luftdichtheitKategorie<X>
 
@@ -34,13 +34,13 @@ Luftdichtheit der Gebäudehülle
 	TextField, focusLost -> ProjektProjektController.speichereLuftdichtheit
 
 Geplante Belegung
------------------
+
 1. Mindestaußenluftrate = Personenanzahl * geplante Belegung
 	Spinner, stateChanged -> ProjektProjektController.berechneMindestaussenluftrate
 
 
-Anlagendaten
-============
+B. Anlagendaten
+---------------
 
 1. Auswahl von Energie-Kennzeichen verändert Kennzeichnung der Lüftungsanlage
 	Checkbox, actionPerformed -> ProjektProjektController.berechneEnergieKennzeichen
@@ -53,11 +53,11 @@ Anlagendaten
 	Checkbox, actionPerformed -> ProjektProjektController.berechneKennzeichenLuftungsanlage
 
 
-Raumdaten
-=========
+C. Raumdaten
+------------
 
 Eingabe eines Raumes
---------------------
+
 1. Auswahl des Raumtyps verändert die Voreinstellung für: Luftart, Zuluftfaktor, Abluftvolumenstrom
 	Combobox, actionPerformed -> ProjektProjektController.raumTypSelected
 
@@ -72,11 +72,16 @@ Eingabe eines Raumes
 3. In der Tabelle soll immer der zuletzt hinzugefügte/geänderte Raum selektiert sein
 
 
-Außenluftvolumenströme
-======================
+D. Außenluftvolumenströme
+-------------------------
 
 1. Automatische Berechnung der AVS, wenn:
 	Geometrie geändert wird
 	ein Raum eingegeben, verändert wird
 	aussenluftVsGesamtLtmInfiltrationsanteil.actionPerformed -> ProjektController.berechneAussenluftVs
 
+E. Raumvolumenströme
+--------------------
+
+1. Wenn Daten zu einem Raum (durch Comboboxen in der Tabelle) geändert wurden, wird die Luftmenge neu berechnet
+	-> ProjektController.luftmengeBerechnen

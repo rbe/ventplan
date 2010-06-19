@@ -1,8 +1,8 @@
+===============
+I. REQUIREMENTS
+===============
 
-REQUIREMENTS
-============
-
-1. Development
+A. Development
 --------------
 JDK 1.6.0 U20
 Groovy 1.7.x
@@ -15,23 +15,44 @@ Griffon 0.3.1
 	swingxtras-builder 0.2
 	tray-builder 0.3
 
-2. Runtime
+B. Runtime
 ----------
 JDK 1.6.0 U20
 
+================
+II. ARCHITECTURE
+================
 
-ARCHITECTURE
-============
+A. Application layout
+---------------------
 
-1. MVC
-------
-Model: a bindable Map in ProjektModel.groovy
+			  View
+			^		|
+			|		| uses
+	updates |		|
+			|		v     updates
+			Controller -------------> Model
+			 ^		|                   ^
+			 |		| publishes         |
+			 |		|                   |
+   publishes |		v                   |
+			  Event                     |
+				|                       |
+				|                       |
+				| uses                  | updates
+				v                       |
+			 Service(s) ----------------/
+
+Model: a bindable Map "map" in ProjektModel.groovy
 View: render data, use controller for actions
-Controller: reads data from view, update model, publish events
-Events: perform calculations using a service, update model
-Services: contain business logic
+Controller: reads data from view and updates model, publish events, updates view (maybe directly or on event)
+Events: perform calculations using a service, update model, publish events
+Services: contain business logic, operate on our "model map" (provided as a function parameter)
 
+==========
+III. HINTS
+==========
 
-HINTS
-=====
+A. Development
+--------------
 Groovy + Debugging: http://groovy.codehaus.org/Debugging+with+JSwat
