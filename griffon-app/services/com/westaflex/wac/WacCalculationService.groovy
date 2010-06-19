@@ -1,12 +1,23 @@
+/**
+ * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/services/com/westaflex/wac/WacCalculationService.groovy
+ * 
+ * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
+ * Alle Rechte vorbehalten. Nutzungslizenz siehe http://www.bensmann.com/license_de.html
+ * All Rights Reserved. Use is subject to license terms, see http://www.bensmann.com/license_en.html
+ * 
+ */
 package com.westaflex.wac
 
 /**
  * 
  */
-//@Singleton
+//@Singleton(lazy = true)
 class WacCalculationService {
 	
-	static scope = "singleton"
+	/**
+	 * The WAC model service.
+	 */
+	def wacModelService
 	
 	/**
 	 * Dezimalzahl auf 5 runden.
@@ -51,12 +62,12 @@ class WacCalculationService {
 		map.with {
 			// Gesamtfläche berechnen
 			gebaude.geometrie.wohnflache =
-				(raum.raume.inject(0.0f) { o, n ->
+				(raum.raume.inject(0.0d) { o, n ->
 					o + n.raumFlache
 				})
 			// Mittlere Raumhöhe berechnen
 			gebaude.geometrie.raumhohe =
-				(raum.raume.inject(0.0f) { o, n ->
+				(raum.raume.inject(0.0d) { o, n ->
 					o + n.raumHohe
 				} / raum.raume.size())
 		}
@@ -96,8 +107,9 @@ class WacCalculationService {
 	 * Summe der Fläche aller Räume.
 	 */
 	Double summeRaumFlache(map) {
-		def flache = map.raum.raume.inject(0.0f) { o, n -> o + n.raumFlache }
-		println "summeRaumFlache: ${flache}"
+		def flache = map.raum.raume.inject(0.0d) { o, n -> o + n.raumFlache }
+		//
+		println "summeRaumFlache: ${flache?.dump()}"
 		flache
 	}
 	
@@ -105,26 +117,46 @@ class WacCalculationService {
 	 * Summe der Volumen aller Räume.
 	 */
 	Double summeRaumVolumen(map) {
-		def volumen = map.raum.raume.inject(0.0f) { o, n -> o + n.raumVolumen }
+		def volumen = map.raum.raume.inject(0.0d) { o, n -> o + n.raumVolumen }
+		// Minimum
 		def mittlereRaumhohe = map.gebaude.geometrie.raumhohe
-		if (volumen < 30f * mittlereRaumhohe) volumen = 30.0f * mittlereRaumhohe
+		if (mittlereRaumhohe) {
+			if (volumen < 30.0d * mittlereRaumhohe) volumen = 30.0d * mittlereRaumhohe
+		}
+		//
 		println "summeRaumVolumen: ${volumen?.dump()}"
+		volumen
+	}
+	
+	/**
+	 * Addiere alle Volumen (m³) Spalten aus der Tabelle für Raumvolumenströme (aka Luftmengenermittlung).
+	 */
+	Double summeLuftmengeVolumen(map, luftart = null) {
+		def raume = luftart ? map.raum.raume.grep { it.raumLuftart.contains(luftart) } : map.raum.raume
+		def mittlereRaumhohe = map.gebaude.geometrie.raumhohe
+		def volumen = raume.inject(0.0d) { o, n ->
+			o + n.raumVolumen
+		}
+		// Minimum
+		if (vol < 30.0d * mittlereRaumhohe) volumen = 30.0d * mittlereRaumhohe
+		//
+		println "summeLuftmengeVolumen: ${volumen?.dump()}"
 		volumen
 	}
 	
 	/**
 	 * Prüfe den Zuluftfaktor, Rückgabe: [übergebener wert, neuer wert]
 	 */
-	def prufeZuluftfaktor = { float zf ->
+	def prufeZuluftfaktor(Double zf) {
 		def minMax = { v, min, max ->
 			if (v < min) { min }
 			else if (v > max) { max } else { v }
 		}
-		def nzf
+		Double nzf = 0.0d
 		switch (raumWerte.raumBezeichnung) {
-			case "Wohnzimmer":									nzf = minMax(zf, 2.5f, 3.5f); break
-			case ["Kinderzimmer", "Schlafzimmer"]:				nzf = minMax(zf, 1.0f, 3.0f); break
-			case ["Esszimmer", "Arbeitszimmer", "Gästezimmer"]: nzf = minMax(zf, 1.0f, 2.0f); break
+			case "Wohnzimmer":									nzf = minMax(zf, 2.5d, 3.5d); break
+			case ["Kinderzimmer", "Schlafzimmer"]:				nzf = minMax(zf, 1.0d, 3.0d); break
+			case ["Esszimmer", "Arbeitszimmer", "Gästezimmer"]: nzf = minMax(zf, 1.0d, 2.0d); break
 			default: nzf = zf
 		}
 		[zf, nzf]
@@ -135,7 +167,7 @@ class WacCalculationService {
 	 */
 	Double gesamtAussenluftVs(map) {
 		// Fläche = Geometrie, gelüftetes Volumen / mittlere Raumhöhe
-		def flache = 0.0f
+		def flache = 0.0d
 		def g = map.gebaude.geometrie
 		if (g.geluftetesVolumen && g.raumhohe) {
 			flache = g.geluftetesVolumen / g.raumhohe
@@ -144,15 +176,15 @@ class WacCalculationService {
 		else {
 			flache = summeRaumFlache(map)
 			// Wenn Summe < 30, dann 30
-			if (flache < 30.0f) flache = 30.0f
+			if (flache < 30.0d) flache = 30.0d
 		}
 		//
 		if (flache == Double.NaN) {
 			println "gesamtAussenluftVs: flache=${flache?.dump()}"
-			flache = 30.0f
+			flache = 30.0d
 		}
 		//
-		def r = 0.0f
+		def r = 0.0d
 		if (flache) {
 			r = -0.001 * flache * flache + 1.15 * flache + 20
 		} else {
@@ -171,7 +203,7 @@ class WacCalculationService {
 			else if (niedrig) 0.4f
 			else {
 				println "warmeschutzFaktor: unbekannt, 0.0"
-				0.0f
+				0.0d
 			}
 		}
 		println "warmeschutzFaktor: ${r?.dump()}"
@@ -183,11 +215,11 @@ class WacCalculationService {
 	 */
 	Double diffDruck(map) {
 		def r = map.gebaude.lage.with {
-			if (windschwach) 2.0f
-			else if (windstark) 4.0f
+			if (windschwach) 2.0d
+			else if (windstark) 4.0d
 			else {
 				println "diffDruck: Gebäudelage unbekannt, 0.0"
-				0.0f
+				0.0d
 			}
 		}
 		println "diffDruck: ${r?.dump()}"
@@ -200,9 +232,9 @@ class WacCalculationService {
 	Double infiltration(map, Boolean ventilator) {
 		def m = [
 			sys: 0.6f,
-			inf: 1.0f,
-			n50: 1.0f,
-			druckExpo: 2.0f / 3,
+			inf: 1.0d,
+			n50: 1.0d,
+			druckExpo: 2.0d / 3,
 			diffDruck: diffDruck(map)
 		]
 		//
@@ -220,11 +252,11 @@ class WacCalculationService {
 			m.n50 = map.gebaude.luftdichtheit.luftwechsel
 			m.druckExpo = map.gebaude.luftdichtheit.druckexponent
 		} else {
-			if (map.gebaude.lage.windschwach) m.diffDruck = 2.0f
-			else m.diffDruck = 4.0f
+			if (map.gebaude.lage.windschwach) m.diffDruck = 2.0d
+			else m.diffDruck = 4.0d
 			if (!ventilator && !map.gebaude.typ.MFH) {
-				if (map.gebaude.lage.windschwach) m.diffDruck = 5.0f
-				else m.diffDruck = 7.0f
+				if (map.gebaude.lage.windschwach) m.diffDruck = 5.0d
+				else m.diffDruck = 7.0d
 			}
 		}
 		//
@@ -245,7 +277,7 @@ class WacCalculationService {
 			if (wirk && volumen && n50 && diffDruck && druckExpo) {
 				wirk * volumen * n50 * Math.pow(diffDruck / 50, druckExpo)
 			} else {
-				0.0f
+				0.0d
 			}
 		}
 		println "infiltration: ${m?.dump()} -> ${r?.dump()}"
@@ -278,31 +310,31 @@ class WacCalculationService {
 		}
 		// LTM: erste Berechnung für Raumvolumenströme
 		// Summiere Daten aus Raumdaten
-		Double gesamtZu = zuluftRaume(map).inject(0.0f) { o, n ->
+		Double gesamtZuluftfaktor = zuluftRaume(map).inject(0.0d) { o, n ->
 			o + n.raumZuluftfaktor
 		}
-		Double gesamtAb = abluftRaume(map).inject(0.0f) { o, n ->
+		Double gesamtAbluftVs = abluftRaume(map).inject(0.0d) { o, n ->
 			o + n.raumAbluftVs
 		}
 		// Gesamt-Außenluftvolumenstrom bestimmen
 		Double gesamtAussenluft =
 			Math.max(
-					Math.max(gesamtAb, gesamtAussenluftVs(map)),
+					Math.max(gesamtAbluftVs, gesamtAussenluftVs(map)),
 					map.gebaude.geplanteBelegung.mindestaussenluftrate
-				) * (map.gebaude.faktorBesondereAnforderungen ?: 1.0f)
+				) * (map.gebaude.faktorBesondereAnforderungen ?: 1.0d)
 		// Gesamt-Außenluftvolumenstrom für lüftungstechnische Maßnahmen
-		Double gesamtAvsLTM = 0.0f
+		Double gesamtAvsLTM = 0.0d
 		if (map.aussenluftVs.infiltrationBerechnen && b) {
 			gesamtAvsLTM = gesamtAussenluft - infiltration(true)
 		} else {
 			gesamtAvsLTM = gesamtAussenluft
 		}
 		//
-		Double ltmAbluftSumme = 0.0f
-		Double ltmZuluftSumme = 0.0f
+		Double ltmAbluftSumme = 0.0d
+		Double ltmZuluftSumme = 0.0d
 		// Alle Räume, die einen Abluftvolumenstrom > 0 haben...
-		map.raum.raume.grep { it.raumAbluftVs > 0.0f }.each {
-			Double ltmAbluftRaum = Math.round(gesamtAvsLTM / gesamtAb * it.raumAbluftVs)
+		map.raum.raume.grep { it.raumAbluftVs > 0.0d }.each {
+			Double ltmAbluftRaum = Math.round(gesamtAvsLTM / gesamtAbluftVs * it.raumAbluftVs)
 			// Raumvolumenströme berechnen?
 			if (b) {
 				it.raumAbluftVs = it.raumVolumenstrom = ltmAbluftRaum
@@ -313,7 +345,7 @@ class WacCalculationService {
 				}
 				// ZU/AB
 				if (it.raumLuftart.contains("ZU/AB")) {
-					Double ltmZuluftRaum = Math.round(gesamtAvsLTM * it.raumZuluftfaktor / gesamtZu)
+					Double ltmZuluftRaum = Math.round(gesamtAvsLTM * it.raumZuluftfaktor / gesamtZuluftfaktor)
 					it.raumZuluftVs = ltmZuluftRaum
 					it.raumAbluftVs = ltmAbluftRaum
 					if (ltmZuluftRaum > ltmAbluftRaum) {
@@ -331,8 +363,10 @@ class WacCalculationService {
 			map.raum.ltmAbluftSumme = ltmAbluftSumme
 		}
 		// LTM: zweite Berechnung für Raumvolumenströme
-		map.raum.raume.grep { it.raumZuluftfaktor > 0.0f && it.raumLuftart != "ZU/AB" }.each {
-			Double ltmZuluftRaum = Math.round(gesamtAvsLTM * it.raumZuluftfaktor / gesamtZu)
+		map.raum.raume.grep {
+			it.raumZuluftfaktor > 0.0d && it.raumLuftart != "ZU/AB"
+		}.each {
+			Double ltmZuluftRaum = Math.round(gesamtAvsLTM * it.raumZuluftfaktor / gesamtZuluftfaktor)
 			if (b) {
 				it.raumVolumenstrom = ltmZuluftRaum
 				it.raumZuluftVs = ltmZuluftRaum
@@ -363,7 +397,7 @@ class WacCalculationService {
 		//
 		autoLuftmenge(map, false)
 		Double grundluftung = gesamtAvs //gesamtAussenluftVs(map)
-		Double geluftetesVolumen = map.gebaude.geometrie.geluftetesVolumen ?: 0.0f
+		Double geluftetesVolumen = map.gebaude.geometrie.geluftetesVolumen ?: 0.0d
 		Double mindestluftung
 		Double intensivluftung
 		Double feuchteluftung
@@ -380,7 +414,7 @@ class WacCalculationService {
 		map.aussenluftVs.gesamtAvsNeLvsFs = round5(feuchteluftung)
 		map.aussenluftVs.gesamtAvsNeLwFs = (feuchteluftung / geluftetesVolumen)
 		// Ausgabe der Gesamt-Raumabluft-Volumenströme
-		grundluftung = abluftRaume(map).inject(0.0f) { o, n ->
+		grundluftung = abluftRaume(map).inject(0.0d) { o, n ->
 			o + n.raumAbluftVs
 		}
 		map.aussenluftVs.gesamtAvsRaumLvsNl = round5(grundluftung)
@@ -427,136 +461,173 @@ class WacCalculationService {
 	/**
 	 * 
 	 */
-	void luftmengeBerechnen() {
-		float fZuluftMenge = 0f;
-		float fAbluftMenge = 0f;
-		String typ = null;
-		int divisor = 1;
-		float volumen = 0f;
-		float luftwechsel = 0f;
-		int anzahlVentile = 0;
-		float luftmengeJeVentil = 0f;
-		HashMap<String, Integer> hmVol = new HashMap();
-		Integer row = lmeTabelle.getSelectedRow();
-		if (row > -1) {
-			volumen = getLuftmengeVolumen(row);
-			fZuluftMenge = getLuftmengeIstLuftmenge(row);
-			fAbluftMenge = getLuftmengeSollLuftmenge(row);
-			typ = getLuftmengeTypenbezeichnung(row);
-			if (fAbluftMenge > 0) {
-				if (volumen != 0) {
-					luftwechsel = fAbluftMenge / volumen;
-				}
-				setLuftmengeLuftwechsel(row, luftwechsel);
-			} else {
-				if (fZuluftMenge > 0) {
-					if (volumen != 0) {
-						luftwechsel = fZuluftMenge / volumen;
-					}
-					setLuftmengeLuftwechsel(row, luftwechsel);
-				}
-			}
-			if (fZuluftMenge > 0 && typ != null) {
-				if (hmVol.containsKey(typ)) {
-					divisor = hmVol.get(typ);
-				} else {
-					divisor = getMaxVolumenstrom(typ);
-					if (divisor == 0) {
-						divisor = Math.round(fZuluftMenge);
-					}
-					hmVol.put(typ, divisor);
-				}
+	void raumLuftmengeBerechnen(map, raumIndex) {
+		// Raum holen
+		def raum = map.raum.raume[raumIndex]
+		// Überström-Raum?
+		if (raum.raumLuftart == "ÜB") {
+			lmeTableModel.setValueAt(null, i, ANZABLUFTVENTILE);
+			lmeTableModel.setValueAt(null, i, ABLUFTMENGEJEVENTIL);
+			lmeTableModel.setValueAt(null, i, ANZZULUFTVENTILE);
+			lmeTableModel.setValueAt(null, i, ZULUFTMENGEJEVENTIL);
+			lmeTableModel.setValueAt("", i, ZULUFTTYPENBEZEICHNUNG);
+			lmeTableModel.setValueAt("", i, ABLUFTTYPENBEZEICHNUNG)
+		} else {
+			// Luftwechsel berechnen
+			raum.raumLuftwechsel = raum.raumVolumenstrom && raum.raumVolumen ? raum.raumVolumenstrom / raum.raumVolumen : 0.0d
+			//
+			String typ = raum.raumBezeichnungAbluftventile
+			if (raum.raumVolumenstrom > 0 && typ) {
+				Integer divisor = wacModelService.getMaxVolumenstrom(typ) ?: Math.round(raum.raumVolumenstrom)
 				// Anzahl Ventile
-				anzahlVentile = (int) Math.ceil(fZuluftMenge / divisor);
-				JTableUtil.setFormattedFloatInTableCell(lmeTabelle, row, ANZABLUFTVENTILE, anzahlVentile);
+				raum.raumAnzahlAbluftventile = (int) Math.ceil(raum.raumVolumenstrom / divisor)
 				// Luftmenge je Ventile
-				luftmengeJeVentil = fZuluftMenge / anzahlVentile;
-				JTableUtil.setFormattedFloatInTableCell(lmeTabelle, row, ZULUFTMENGEJEVENTIL, luftmengeJeVentil);
-			} else {
-				if (fAbluftMenge > 0 && typ != null) {
-					if (hmVol.containsKey(typ)) {
-						divisor = hmVol.get(typ);
-					} else {
-						divisor = getMaxVolumenstrom(typ);
-						if (divisor == 0) {
-							divisor = Math.round(fAbluftMenge);
-						}
-						hmVol.put(typ, divisor);
-					}
-					// Anzahl Ventile
-					anzahlVentile = (int) Math.ceil(fAbluftMenge / divisor);
-					JTableUtil.setFormattedFloatInTableCell(lmeTabelle, row, ANZABLUFTVENTILE, anzahlVentile);
-					// Luftmenge je Ventile
-					luftmengeJeVentil = fAbluftMenge / anzahlVentile;
-					JTableUtil.setFormattedFloatInTableCell(lmeTabelle, row, ABLUFTMENGEJEVENTIL, luftmengeJeVentil);
-				} else {
-					lmeTableModel.setValueAt(null, row, ANZABLUFTVENTILE);
-					lmeTableModel.setValueAt(null, row, ABLUFTMENGEJEVENTIL);
-				}
+				raum.raumZuluftmengeJeVentil =
+				raum.raumAbluftmengeJeVentil =
+					raum.raumVolumenstrom / raum.raumAnzahlAbluftventile
 			}
 		}
 		//
-		Float vol = 0
-		if (project.getGelueftetVolumen() != 0) {
-			vol = project.getGelueftetVolumen()
-		} else {
-			vol = sumVolumen()
-		}
+		autoLuftmenge(false)
 		//
-		luftmengeAutoBerechnen(false);
-		//
-		Float fGesAU_Luft = 0.0f
-		if (project.getWirkInfiltration()) {
-			fGesAU_Luft = project.round5(project.getVsGrundlueftungWertLabel() + berechneInfiltration(true));
-		} else {
-			fGesAU_Luft = project.getVsGrundlueftungWertLabel();
-		}
+		Double nennluftung = aussenluftVs.gesamtLvsLtmLvsNl ?: 0.0d
+		Double fGesAU_Luft =
+			map.aussenluftVs.infiltrationBerechnen ? round5(nennluftung + infiltration(true)) : nennluftung
+		Double vol = map.gebaude.geometrie.geluftetesVolumen ?: summeLuftmengeVolumen(map)
 		// Setze Ergebnis "Gesamtvolumen"
-		project.setLmeGesamtvolumenWertLabel(vol);
-		project.setLmeGesAussenluftVolumenWertLabel(fGesAU_Luft);
-		project.setLmeGebaeudeluftwechselWertLabel(fGesAU_Luft / vol);
+		map.raum.raumVs.gesamtVolumenNE = vol
+		map.raum.raumVs.gesamtaussenluftVsMitInfiltration = round5(fGesAU_Luft)
+		map.raum.raumVs.luftwechselNE = fGesAU_Luft / vol
+	}
+	
+	/**
+	 * Anzahl der Ventile und Luftmenge pro Ventil aktualisieren
+	 */
+	public void aktualisiereVentile() {
+		int row = 0, divisorZU = 1, divisorAB = 1, anzahlZuluftVentile = 0, anzahlAbluftVentile = 0;
+		String typZU = null;
+		String typAB = null;
+		raeume = project.getRaeume();
+		float abluftmengeJeVentil = 0f, zuluftmengeJeVentil = 0f;
+		float fZuluftMenge = 0f, fAbluftMenge = 0f;
+		HashMap<String, Integer> hmVol = new HashMap();
+		row = lmeTabelle.getRowCount();
+		for (int i = 0; i < row; i++) {
+			fZuluftMenge = getLuftmengeIstLuftmenge(i);
+			try {
+				fZuluftMenge = (Float) raeume.get(i).getRaumItemValue(RaumItem.PROP.ZULUFTVOLUMENSTROM);
+			} catch (Exception e) {
+			}
+			fAbluftMenge = getLuftmengeSollLuftmenge(i);
+			try {
+				fAbluftMenge = (Float) raeume.get(i).getRaumItemValue(RaumItem.PROP.ABLUFTVOLUMENSTROM);
+			} catch (Exception e) {
+			}
+			typZU = getZuluftmengeTypenbezeichnung(i);
+			typAB = getAbluftmengeTypenbezeichnung(i);
+			if (((String) lmeTabelle.getValueAt(i, BELUEFTUNG)).contains("ÜB")) {
+				lmeTableModel.setValueAt(null, i, ANZABLUFTVENTILE);
+				lmeTableModel.setValueAt(null, i, ABLUFTMENGEJEVENTIL);
+				lmeTableModel.setValueAt(null, i, ANZZULUFTVENTILE);
+				lmeTableModel.setValueAt(null, i, ZULUFTMENGEJEVENTIL);
+				lmeTableModel.setValueAt("", i, ZULUFTTYPENBEZEICHNUNG);
+				lmeTableModel.setValueAt("", i, ABLUFTTYPENBEZEICHNUNG);
+			} else {
+				if (((String) lmeTabelle.getValueAt(i, BELUEFTUNG)).contains("ZU")) {
+					if (fZuluftMenge > 0 && typZU != null && !typZU.equals("")) {
+						if (hmVol.containsKey(typZU)) {
+							divisorZU = hmVol.get(typZU);
+						} else {
+							divisorZU = getMaxVolumenstrom(typZU);
+							if (divisorZU == 0) {
+								divisorZU = Math.round(fZuluftMenge);
+							}
+							hmVol.put(typZU, divisorZU);
+						}
+						// Anzahl Ventile
+						anzahlZuluftVentile = (int) Math.ceil(fZuluftMenge / divisorZU);
+						JTableUtil.setFormattedFloatInTableCell(lmeTabelle, i, ANZZULUFTVENTILE, anzahlZuluftVentile);
+						// Luftmenge je Ventile
+						zuluftmengeJeVentil = fZuluftMenge / anzahlZuluftVentile;
+						JTableUtil.setFormattedFloatInTableCell(lmeTabelle, i, ZULUFTMENGEJEVENTIL, zuluftmengeJeVentil);
+					}
+					if (!((String) lmeTabelle.getValueAt(i, BELUEFTUNG)).contains("AB")) {
+						lmeTableModel.setValueAt(null, i, ANZABLUFTVENTILE);
+						lmeTableModel.setValueAt("", i, ABLUFTMENGEJEVENTIL);
+						lmeTableModel.setValueAt("", i, ABLUFTTYPENBEZEICHNUNG);
+					}
+				}
+				if (((String) lmeTabelle.getValueAt(i, BELUEFTUNG)).contains("AB")) {
+					if (fAbluftMenge > 0 && typAB != null && !typAB.equals("")) {
+						if (hmVol.containsKey(typAB)) {
+							divisorAB = hmVol.get(typAB);
+						} else {
+							divisorAB = getMaxVolumenstrom(typAB);
+							if (divisorAB == 0) {
+								divisorAB = Math.round(fAbluftMenge);
+							}
+							hmVol.put(typAB, divisorAB);
+						}
+						// Anzahl Ventile
+						anzahlAbluftVentile = (int) Math.ceil(fAbluftMenge / divisorAB);
+						JTableUtil.setFormattedFloatInTableCell(lmeTabelle, i, ANZABLUFTVENTILE, anzahlAbluftVentile);
+						// Luftmenge je Ventile
+						abluftmengeJeVentil = fAbluftMenge / anzahlAbluftVentile;
+						JTableUtil.setFormattedFloatInTableCell(lmeTabelle, i, ABLUFTMENGEJEVENTIL, abluftmengeJeVentil);
+					}
+					if (!((String) lmeTabelle.getValueAt(i, BELUEFTUNG)).contains("ZU")) {
+						lmeTableModel.setValueAt(null, i, ANZZULUFTVENTILE);
+						lmeTableModel.setValueAt("", i, ZULUFTMENGEJEVENTIL);
+						lmeTableModel.setValueAt("", i, ZULUFTTYPENBEZEICHNUNG);
+					}
+//				  } else {
+//					  lmeTableModel.setValueAt(null, i, ANZABLUFTVENTILE);
+//					  lmeTableModel.setValueAt(null, i, ABLUFTMENGEJEVENTIL);
+				}
+			}
+		}
 	}
 	
 	/**
 	 * Zeigt alle (meist errechneten) Komponenten mit ihren akutellen Werten
 	 * an: Luftmenge
 	 */
-	void updateLuftmengeTab(Boolean b) {
-		berechnungen.luftmengeBerechnen();
-		float fZuluftmenge = ConversionUtil.parseFloatFromComponent(lmeSummeZuluftmengeWertLabel);
-		float fAbluftmenge = ConversionUtil.parseFloatFromComponent(lmeSummeAbluftmengeWertLabel);
-		float fGrundlueftung1 = Math.max(fAbluftmenge, fZuluftmenge);
-		float fInfiltration = 0f;
+	void updateLuftmengeTab(map, Boolean b) {
+		berechnungen.luftmengeBerechnen(map)
+		float fZuluftmenge = ConversionUtil.parseFloatFromComponent(lmeSummeZuluftmengeWertLabel)
+		float fAbluftmenge = ConversionUtil.parseFloatFromComponent(lmeSummeAbluftmengeWertLabel)
+		float fGrundlueftung1 = Math.max(fAbluftmenge, fZuluftmenge)
+		float fInfiltration = 0d
 		if (getWirkInfiltration()) {
-			fInfiltration = berechnungen.berechneInfiltration(true);
+			fInfiltration = infiltration(true)
 		}
-		float fGrundlueftung = fGrundlueftung1 - fInfiltration;
-		float fMindestlueftung = 0.7f * fGrundlueftung1 - fInfiltration;
-		float fIntensivlueftung = 1.3f * fGrundlueftung1 - fInfiltration;
-		float fFeuchtelueftung = getWaermeschutz() * fGrundlueftung1 - fInfiltration;
-		float fMinimum = Float.parseFloat(lmeVolumenstromCombobox.getItemAt(0).toString());
+		float fGrundlueftung = fGrundlueftung1 - fInfiltration
+		float fMindestlueftung = 0.7f * fGrundlueftung1 - fInfiltration
+		float fIntensivlueftung = 1.3f * fGrundlueftung1 - fInfiltration
+		float fFeuchtelueftung = getWaermeschutz() * fGrundlueftung1 - fInfiltration
+		float fMinimum = Float.parseFloat(lmeVolumenstromCombobox.getItemAt(0).toString())
 		if (lmeZentralgeraetCombobox.getSelectedItem().toString().contains("400WAC")) {
-			fMinimum = 75;
+			fMinimum = 75
 		}
 		if (fMindestlueftung < fMinimum) {
-			fMindestlueftung = fMinimum;
+			fMindestlueftung = fMinimum
 		}
 		if (fFeuchtelueftung < fMinimum) {
-			fFeuchtelueftung = fMinimum;
+			fFeuchtelueftung = fMinimum
 		}
-		ConversionUtil.setFormattedFloatInComponent(lmeGrundlueftungWertLabel, round5(fGrundlueftung), Locale.GERMAN);
-		ConversionUtil.setFormattedFloatInComponent(lmeMindestlueftungWertLabel, round5(fMindestlueftung), Locale.GERMAN);
-		ConversionUtil.setFormattedFloatInComponent(lmeFeuchteschutzWertLabel, round5(fFeuchtelueftung), Locale.GERMAN);
-		ConversionUtil.setFormattedFloatInComponent(lmeIntensivlueftungWertLabel, round5(fIntensivlueftung), Locale.GERMAN);
-		setGeraeteauswahl(round5(fGrundlueftung));
+		ConversionUtil.setFormattedFloatInComponent(lmeGrundlueftungWertLabel, round5(fGrundlueftung), Locale.GERMAN)
+		ConversionUtil.setFormattedFloatInComponent(lmeMindestlueftungWertLabel, round5(fMindestlueftung), Locale.GERMAN)
+		ConversionUtil.setFormattedFloatInComponent(lmeFeuchteschutzWertLabel, round5(fFeuchtelueftung), Locale.GERMAN)
+		ConversionUtil.setFormattedFloatInComponent(lmeIntensivlueftungWertLabel, round5(fIntensivlueftung), Locale.GERMAN)
+		setGeraeteauswahl(round5(fGrundlueftung))
 		// Versteckte *SummeWertLabel setzen
-		ConversionUtil.setFormattedFloatInComponent(lmeAbSummeWertLabel, berechnungen.sumVolumen("AB"), Locale.GERMAN);
-		ConversionUtil.setFormattedFloatInComponent(lmeZuSummeWertLabel, berechnungen.sumVolumen("ZU"), Locale.GERMAN);
-		ConversionUtil.setFormattedFloatInComponent(lmeUebSummeWertLabel, berechnungen.sumVolumen("ÜB"), Locale.GERMAN);
-		berechnungen.aktualisiereVentile();
-		setSumLTMZuluftmengeWertLabel();
-		setSumLTMAbluftmengeWertLabel();
-		berechnungen.aktualisiereUeberstroemelemente();
+		ConversionUtil.setFormattedFloatInComponent(lmeAbSummeWertLabel, berechnungen.sumVolumen("AB"), Locale.GERMAN)
+		ConversionUtil.setFormattedFloatInComponent(lmeZuSummeWertLabel, berechnungen.sumVolumen("ZU"), Locale.GERMAN)
+		ConversionUtil.setFormattedFloatInComponent(lmeUebSummeWertLabel, berechnungen.sumVolumen("ÜB"), Locale.GERMAN)
+		berechnungen.aktualisiereVentile()
+		setSumLTMZuluftmengeWertLabel()
+		setSumLTMAbluftmengeWertLabel()
+		berechnungen.aktualisiereUeberstroemelemente()
 	}
 	
 }
