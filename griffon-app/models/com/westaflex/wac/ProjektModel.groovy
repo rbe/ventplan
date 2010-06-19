@@ -29,6 +29,11 @@ class ProjektModel {
 	/**
 	 * 
 	 */
+	def meta = [:]
+	
+	/**
+	 * 
+	 */
 	@Bindable map = [
 		kundendaten: [
 			grosshandel: [:] as ObservableMap,
@@ -44,15 +49,15 @@ class ProjektModel {
 					] as ObservableMap,
 				luftdichtheit: [
 						kategorieA: true,
-						druckdifferenz: 2.0f,
-						luftwechsel: 1.0f,
+						druckdifferenz: 2.0d,
+						luftwechsel: 1.0d,
 						druckexponent: 0.666f
 					] as ObservableMap,
-				faktorBesondereAnforderungen: 1.0f,
+				faktorBesondereAnforderungen: 1.0d,
 				geplanteBelegung: [
-						personenanzahl: 0.0f,
+						personenanzahl: 0.0d,
 						aussenluftVsProPerson: 30,
-						mindestaussenluftrate: 0.0f
+						mindestaussenluftrate: 0.0d
 					] as ObservableMap,
 			] as ObservableMap,
 		anlage: [
@@ -74,8 +79,11 @@ class ProjektModel {
 				raumVsBezeichnungZuluftventile: ["1", "2", "3"],
 				raumVsBezeichnungAbluftventile: ["4", "5", "6"],
 				raumVsVerteilebene: ["7", "8", "9"],
-				ltmZuluftSumme: 0.0f,
-				ltmAbluftSumme: 0.0f,
+				ltmZuluftSumme: 0.0d,
+				ltmAbluftSumme: 0.0d,
+				raumVs: [
+					gesamtVolumenNE: 0.0d
+				] as ObservableMap
 			] as ObservableMap,
 		aussenluftVs: [
 				infiltrationBerechnen: true,
@@ -116,7 +124,7 @@ class ProjektModel {
 		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raume, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
-				getColumnValue: { object, index -> object."${propertyNames[index]}".toString2() }
+				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
 			] as ca.odell.glazedlists.gui.TableFormat)
 	}
 	
@@ -124,12 +132,12 @@ class ProjektModel {
 	 * Raumvolumenströme, Zu-/Abluftventile - TableModel
 	 */
 	def createRaumVsZuAbluftventileTableModel() {
-		def columnNames =   ["Raum",            "Luftart",     "Raumvolumen (m³)", "Luftwechsel (1/h)", "Anzahl Abluftventile",    "Abluftmenge je Ventil",   "Volumenstrom (m³/h)", "Anzahl Zuluftventile",    "Bezeichnung Zuluftventile"]
-		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",      "raumLuftwechsel",   "raumAnzahlAbluftventile", "raumAbluftmengeJeVentil", "raumVolumenstrom",    "raumAnzahlZuluftventile", "raumBezeichnungZuluftventile"]
+		def columnNames =   ["Raum",            "Luftart",     "Raumvolumen (m³)", "Luftwechsel (1/h)", "Bezeichnung Abluftventile",    "Anzahl Abluftventile",    "Abluftmenge je Ventil",   "Volumenstrom (m³/h)", "Bezeichnung Zuluftventile",    "Anzahl Zuluftventile",    "Zuluftmenge je Ventil",   "Ventilebene"]
+		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",      "raumLuftwechsel",   "raumBezeichnungAbluftventile", "raumAnzahlAbluftventile", "raumAbluftmengeJeVentil", "raumVolumenstrom",    "raumBezeichnungZuluftventile", "raumAnzahlZuluftventile", "raumZuluftmengeJeVentil", "raumVentilebene"]
 		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeVsZuAbluftventile, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
-				getColumnValue: { object, index -> object."${propertyNames[index]}".toString2() }
+				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
 			] as ca.odell.glazedlists.gui.TableFormat)
 	}
 	
@@ -142,7 +150,7 @@ class ProjektModel {
 		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeVsUberstromventile, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
-				getColumnValue: { object, index -> object."${propertyNames[index]}".toString2() }
+				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
 			] as ca.odell.glazedlists.gui.TableFormat)
 	}
 	
