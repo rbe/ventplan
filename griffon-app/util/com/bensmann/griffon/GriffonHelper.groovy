@@ -1,3 +1,11 @@
+/**
+ * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/util/com/bensmann/griffon/GriffonHelper.groovy
+ * 
+ * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
+ * Alle Rechte vorbehalten. Nutzungslizenz siehe http://www.bensmann.com/license_de.html
+ * All Rights Reserved. Use is subject to license terms, see http://www.bensmann.com/license_en.html
+ * 
+ */
 package com.bensmann.griffon
 
 /**
@@ -28,7 +36,8 @@ class GriffonHelper {
 	}
 	
 	/**
-	 * Is a float empty? Yes for two cases:
+	 * Is a double value in a component 'empty'?
+	 * Yes for two cases:
 	 * - no text
 	 * - text is "0,00"
 	 */
@@ -69,10 +78,10 @@ class GriffonHelper {
 	}
 	
 	/**
-	 * Set behaviour for float TextFields.
+	 * Set behaviour for Double-TextFields.
 	 */
-	def static floatTextField = { component ->
-		//println "floatTextField: ${component.class}"
+	def static doubleTextField = { component ->
+		//println "doubleTextField: ${component.class}"
 		if (component instanceof javax.swing.JTextField) {
 			// Set yellow background while editing
 			GriffonHelper.yellowTextField(component)
@@ -84,7 +93,7 @@ class GriffonHelper {
 					// If component is editable and 'is empty', select entire contents for easy editing
 					if (component.editable && isEmptyDouble(component)) {
 						javax.swing.SwingUtilities.invokeLater {
-							//println "floatTextField: selecting all: component.text = " + component.text + " -> isEmptyDouble=" + isEmptyDouble(component)
+							//println "doubleTextField: selecting all: component.text = " + component.text + " -> isEmptyDouble=" + isEmptyDouble(component)
 							component.selectAll()
 						}
 					}
@@ -103,7 +112,7 @@ class GriffonHelper {
 	}
 	
 	/**
-	 * Auto-format a float textfield when focus is lost.
+	 * Auto-format a Double-textfield when focus is lost.
 	 */
 	def static autoformatDoubleTextField = { component ->
 		//println "autoformatDoubleTextField: ${component.class}"
@@ -148,7 +157,7 @@ class GriffonHelper {
 	def static toString2Converter = { v ->
 		if (v instanceof Number) {
 			def v2 = v?.toString2()
-			println "toStringConverter: ${v?.dump()} -> ${v2?.dump()}"
+			println "toString2Converter: ${v?.dump()} -> ${v2?.dump()}"
 			v2
 		} else if (v) {
 			throw new IllegalStateException("toString2Converter: You tried to convert a String: ${v?.dump()}")
@@ -161,7 +170,7 @@ class GriffonHelper {
 	def static toString3Converter = { v ->
 		if (v instanceof Number) {
 			def v3 = v?.toString2(3)
-			println "toStringConverter: ${v?.dump()} -> ${v3?.dump()}"
+			println "toString3Converter: ${v?.dump()} -> ${v3?.dump()}"
 			v3
 		} else if (v) {
 			throw new IllegalStateException("toString3Converter: You tried to convert a String: ${v?.dump()}")
