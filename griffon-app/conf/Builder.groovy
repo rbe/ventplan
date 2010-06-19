@@ -21,3 +21,5 @@ root.'griffon.builder.swingxtras.SwingxtrasBuilder'.view = '*'
 root.'griffon.builder.jide.JideBuilder'.view = '*'
 
 root.'GlazedlistsGriffonAddon'.addon = true
+
+root.'GsqlGriffonAddon'.addon=true
