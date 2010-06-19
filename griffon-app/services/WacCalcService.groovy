@@ -1,5 +1,0 @@
-class WacCalcService {
-    def serviceMethod() {
-
-    }
-}
