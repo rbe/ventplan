@@ -25,7 +25,7 @@ def buildLayout(tabname) {
 		label("Raumbezeichnung", constraints: "cell 0 0")
 		label("", constraints: "cell 1 0, width 150::200")
 		// TODO: Zentralgerät aus RaumVsView -> raumVsZuAbluftventileZentralgerat
-		label("Zentrales Lüftungsgerät " + raumVsZuAbluftventileZentralgerat.selectedItem, constraints: "cell 2 0")
+		label("Zentrales Lüftungsgerät " + raumVsZentralgerat.selectedItem, constraints: "cell 2 0")
 		label("", constraints: "cell 3 0")
 		
 		comboBox(id: "akustik${tabname}Raumbezeichnung", constraints: "cell 0 1")
@@ -46,7 +46,7 @@ def buildLayout(tabname) {
 		label("Schallleistungspegel Zuluftstutzen", constraints: "cell 0 4")
 		// TODO: Zentralgerät aus RaumVsView -> raumVsZuAbluftventileZentralgerat
 		// TODO: split -> comboBox...???
-		label(raumVsZuAbluftventileZentralgerat.selectedItem, constraints: "cell 1 4")
+		label(raumVsZentralgerat.selectedItem, constraints: "cell 1 4")
 		label("", constraints: "cell 2 4")
 		// TODO: mittelwert der 1. Reihe von der Tabelle?
 		label("", constraints: "cell 3 4")

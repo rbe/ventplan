@@ -48,7 +48,7 @@ panel(id: "gebaudeGeometrie", border: titledBorder(title: "Geometrie"), layout: 
 	label("m³")
 	label("gelüftetes Volumen")
 }
-GH.recurse(gebaudeGeometrie, GH.floatTextField)
+GH.recurse(gebaudeGeometrie, GH.doubleTextField)
 // Luftdichtheit der Gebäudehülle
 panel(id: "gebaudeLuftdichtheit", border: titledBorder(title: "Luftdichtheit der Gebäudehülle"), constraints: "span 2", layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
 	buttonGroup().with {
@@ -76,13 +76,13 @@ panel(id: "gebaudeLuftdichtheit", border: titledBorder(title: "Luftdichtheit der
 		}
 	}
 }
-GH.recurse(gebaudeLuftdichtheit, GH.floatTextField)
+GH.recurse(gebaudeLuftdichtheit, GH.doubleTextField)
 // Besondere Anforderungen
 panel(id: "gebaudeBesondereAnforderungen", border: titledBorder(title: "Besondere Anforderungen", constraints: "span"), layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[fill]")) {
 	textField(id: "faktorBesondereAnforderungen", constraints: "growx")
 	label("Faktor für besondere bauphysikalische oder hygienische Anforderungen")
 }
-GH.floatTextField(faktorBesondereAnforderungen)
+GH.doubleTextField(faktorBesondereAnforderungen)
 // Geplante Belegung
 panel(id: "gebaudeGeplanteBelegung", border: titledBorder(title: "Geplante Belegung", constraints: "span"), layout: new MigLayout("fillx, wrap 4", "[fill][fill]", "[fill]")) {
 	label("Personenanzahl")
@@ -94,6 +94,6 @@ panel(id: "gebaudeGeplanteBelegung", border: titledBorder(title: "Geplante Beleg
 	label(id: "gebaudeGeplanteMindestaussenluftrate", foreground: java.awt.Color.RED, text: "0")
 	label("m³/h", foreground: java.awt.Color.RED)
 }
-GH.floatTextField(gebaudeGeplanteAussenluftVsProPerson)
+GH.doubleTextField(gebaudeGeplanteAussenluftVsProPerson)
 // Bindings
 build(GebaudedatenBindings)
