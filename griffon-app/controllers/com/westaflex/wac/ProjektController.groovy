@@ -1,3 +1,11 @@
+/**
+ * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/controllers/com/westaflex/wac/ProjektController.groovy
+ * 
+ * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
+ * Alle Rechte vorbehalten. Nutzungslizenz siehe http://www.bensmann.com/license_de.html
+ * All Rights Reserved. Use is subject to license terms, see http://www.bensmann.com/license_en.html
+ * 
+ */
 package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
@@ -11,6 +19,7 @@ class ProjektController {
 	def model
 	def view
 	def wacCalculationService
+	def wacModelService
 	
 	/**
 	 * Initialize MVC group.
@@ -26,6 +35,9 @@ class ProjektController {
 			println "raumVsZuAbluftventileTabelleTableModel,${evt}"
 		} as ca.odell.glazedlists.event.ListEventListener)
 		*/
+		// Lookup values from database and put them into our model
+		model.meta.zentralgerat = wacModelService.getZentralgerat()
+		model.meta.volumenstromZentralgerat = wacModelService.getVolumenstromFurZentralgerat(model.meta.zentralgerat[0])
 		// Setup private event listener
 		def pe = new ProjektEvents(model: model, wacCalculationService: wacCalculationService)
 		addEventListener(pe)
@@ -79,8 +91,8 @@ class ProjektController {
 	def luftdichtheitKategorieA = {
 		doLater {
 			model.map.gebaude.luftdichtheit.with {
-				druckdifferenz = 2.0f
-				luftwechsel = 1.0f
+				druckdifferenz = 2.0d
+				luftwechsel = 1.0d
 				druckexponent = 0.666f
 			}
 			println "luftdichtheitKategorieA: ${model.map.gebaude.luftdichtheit?.dump()}"
@@ -93,7 +105,7 @@ class ProjektController {
 	def luftdichtheitKategorieB = {
 		doLater {
 			model.map.gebaude.luftdichtheit.with {
-				druckdifferenz = 2.0f
+				druckdifferenz = 2.0d
 				luftwechsel = 1.5f
 				druckexponent = 0.666f
 			}
@@ -107,8 +119,8 @@ class ProjektController {
 	def luftdichtheitKategorieC = {
 		doLater {
 			model.map.gebaude.luftdichtheit.with {
-				druckdifferenz = 2.0f
-				luftwechsel = 2.0f
+				druckdifferenz = 2.0d
+				luftwechsel = 2.0d
 				druckexponent = 0.666f
 			}
 			println "luftdichtheitKategorieC: ${model.map.gebaude.luftdichtheit?.dump()}"
@@ -148,7 +160,7 @@ class ProjektController {
 				} catch (e) {
 					// TODO Dialog
 					e.printStackTrace()
-					mindestaussenluftrate = 0.0f
+					mindestaussenluftrate = 0.0d
 				}
 			}
 			println "berechneMindestaussenluftrate: ${model.map.gebaude.geplanteBelegung?.dump()}"
@@ -264,7 +276,7 @@ class ProjektController {
 			// Übernehme Wert für Bezeichnung vom Typ?
 			if (!raumBezeichnung) raumBezeichnung = raumTyp
 			// Standard Türspalthöhe ist 10 mm
-			raumTurspaltHohe = 10.0f
+			raumTurspaltHohe = 10.0d
 			// Raumvolumen
 			raumFlache = raumFlache.toDouble2()
 			raumHohe = raumHohe.toDouble2()
@@ -273,12 +285,12 @@ class ProjektController {
 			zuabluftVentile = []
 			uberstromVentile = []
 			// Zuluftfaktor
-			raumZuluftfaktor = raumZuluftfaktor?.toDouble2() ?: 0.0f
-			/*if (!raumZuluftfaktor) raumZuluftfaktor = 0.0f
+			raumZuluftfaktor = raumZuluftfaktor?.toDouble2() ?: 0.0d
+			/*if (!raumZuluftfaktor) raumZuluftfaktor = 0.0d
 			else raumZuluftfaktor = raumZuluftfaktor.toDouble2()*/
 			// Abluftvolumenstrom
-			raumAbluftVs = raumAbluftVs?.toDouble2() ?: 0.0f
-			/*if (!raumAbluftVs) raumAbluftVs = 0.0f
+			raumAbluftVs = raumAbluftVs?.toDouble2() ?: 0.0d
+			/*if (!raumAbluftVs) raumAbluftVs = 0.0d
 			else raumAbluftVs = raumAbluftVs.toDouble2()*/
 		}
 		// Überstrom-Raum
@@ -291,23 +303,23 @@ class ProjektController {
 			raumWerte.raumZuluftfaktor = neuerZuluftfaktor
 		}
 		// Update model and set table selection
-		doLater {
-			// Raum im Model hinzufügen
-			//println "raumHinzufugen: raumWerte=${raumWerte}"
-			model.map.raum.raume << raumWerte + [position: model.map.raum.raume.size() ?: 0]
-			// Berechne alles, was von Räumen abhängt
-			publishEvent "RaumHinzugefugt"
-		}
+		// Raum im Model unten (= position: ...size()) hinzufügen
+		//println "raumHinzufugen: raumWerte=${raumWerte}"
+		model.map.raum.raume << raumWerte + [position: model.map.raum.raume.size() ?: 0]
+		// Berechne alles, was von Räumen abhängt
+		publishEvent "RaumHinzugefugt"
 	}
 	
 	/**
-	 * Raum in Tabelle markieren
+	 * Raum in Tabelle markieren.
 	 */
-	def onRaumInTabelleWahlen = { msg ->
-		println "onRaumInTabelleWahlen: msg=${msg}"
-		// Raum in Tabelle markieren
-		view.raumTabelle.with {
-			changeSelection(msg, 0, false, false)
+	def onRaumInTabelleWahlen = { row ->
+		doLater {
+			println "onRaumInTabelleWahlen: row=${row}"
+			// Raum in Tabelle markieren
+			view.raumTabelle.with {
+				changeSelection(row, 0, false, false)
+			}
 		}
 	}
 	
@@ -400,10 +412,46 @@ class ProjektController {
 	}
 	
 	/**
-	 * Aussenluftvolumenströme - Mit/ohne Infiltrationsanteil berechnen
+	 * Aussenluftvolumenströme - Mit/ohne Infiltrationsanteil berechnen.
 	 */
 	def berechneAussenluftVs = {
 		publishEvent "AussenluftVsBerechnen"
+	}
+	
+	/**
+	 * Raumvolumenströme - Zu/Abluftventile, Luftmenge berechnen.
+	 */
+	def raumZuAbluftventileLuftmengeBerechnen = {
+		def raumIndex = raumVsZuAbluftventileTabelle.selectedRow
+		if (raumIndex > -1) {
+			publishEvent "RaumZuAbluftventileLuftmengeBerechnen", [raumIndex]
+		} else {
+			println "raumZuAbluftventileLuftmengeBerechnen: Kein Raum ausgewählt, es wird nichts berechnet"
+		}
+	}
+	
+	/**
+	 * Raumvolumenströme - Überströmelemente, Luftmenge berechnen.
+	 */
+	def raumUberstromelementeLuftmengeBerechnen = {
+		def raumIndex = raumVsUberstromventileTabelle.selectedRow
+		if (raumIndex > -1) {
+			publishEvent "RaumUberstromelementeLuftmengeBerechnen", [raumIndex]
+		} else {
+			println "raumUberstromelementeLuftmengeBerechnen: Kein Raum ausgewählt, es wird nichts berechnet"
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	def zentralgeratGewahlt = {
+		// TODO Check old and new value
+		doLater {
+			view.raumVsVolumenstrom.removeAllItems()
+			model.meta.volumenstromZentralgerat = wacModelService.getVolumenstromFurZentralgerat(view.raumVsZentralgerat.selectedItem)
+			model.meta.volumenstromZentralgerat.each { view.raumVsVolumenstrom.addItem(it) }
+		}
 	}
 	
 }
