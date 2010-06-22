@@ -4,8 +4,8 @@ import net.miginfocom.swing.MigLayout
 
 // Notwendigkeit der lüftungstechnischen Maßnahme
 panel(id: "aussenluftVsNotwendigkeitLuftungstechnischeMassnahme", border: titledBorder(title: "Notwendigkeit der lüftungstechnischen Maßnahme"), layout: new MigLayout("wrap", "[left]30[right]15[left]30[left]", "rel[]rel")) {
-	label("Feuchteschutz: Gesamt-Außenluftvolumenstrom")
-	label(id: "aussenluftVsGesamt", text: "  0,00")
+	label("Feuchteschutz: Gesamt-Außenluftvolumenstrom", constraints: "width 320px!")
+	label(id: "aussenluftVsGesamt", text: "  0,00", constraints: "width 50px!")
 	label("m³/h")
 	label(id: "aussenluftVsMassnahme", " ", foreground: java.awt.Color.RED)
 	
@@ -17,9 +17,9 @@ panel(id: "aussenluftVsNotwendigkeitLuftungstechnischeMassnahme", border: titled
 
 // Gesamt-Außenluftvolumenströme für Nutzungseinheit
 panel(id: "aussenluftVsGesamtAussenluftVsNutzungseinheit", border: titledBorder(title: "Gesamt-Außenluftvolumenströme für Nutzungseinheit"), layout: new MigLayout("wrap", "[left]30[right]15[left]30[right]15[left]30[right]15[left]30[right]15[left]", "rel[]rel")) {
-	label("")
-	label("Lüftung zum Feuchteschutz")
-	label("")
+        label("", constraints: "width 120px!")
+	label("Lüftung zum Feuchteschutz", constraints: "width 200px!")
+	label("", constraints: "width 50px!")
 	label("Reduzierte Lüftung")
 	label("")
 	label("Nennlüftung")
@@ -28,10 +28,10 @@ panel(id: "aussenluftVsGesamtAussenluftVsNutzungseinheit", border: titledBorder(
 	label("")
 	
 	label("Luftvolumenstrom")
-	label(id: "gesamtAvsNeLvsFs", text: "  0,00"); label("m³/h")
-	label(id: "gesamtAvsNeLvsRl", text: "  0,00"); label("m³/h")
-	label(id: "gesamtAvsNeLvsNl", text: "  0,00"); label("m³/h")
-	label(id: "gesamtAvsNeLvsIl", text: "  0,00"); label("m³/h")
+	label(id: "gesamtAvsNeLvsFs", text: "  0,00", constraints: "width 50px!"); label("m³/h")
+	label(id: "gesamtAvsNeLvsRl", text: "  0,00", constraints: "width 50px!"); label("m³/h")
+	label(id: "gesamtAvsNeLvsNl", text: "  0,00", constraints: "width 50px!"); label("m³/h")
+	label(id: "gesamtAvsNeLvsIl", text: "  0,00", constraints: "width 50px!"); label("m³/h")
 	
 	label("Luftwechsel")
 	label(id: "gesamtAvsNeLwFs", text: "  0,00"); label("l/h")
@@ -42,8 +42,8 @@ panel(id: "aussenluftVsGesamtAussenluftVsNutzungseinheit", border: titledBorder(
 
 // Gesamtabluftvolumenströme der Räume
 panel(id: "aussenluftVsGesamtabluftVsRaume", border: titledBorder(title: "Gesamtabluftvolumenströme der Räume"), layout: new MigLayout("wrap", "[left]30[right]15[left]30[right]15[left]30[right]15[left]30[right]15[left]", "rel[]rel")) {
-	label("")
-	label("Lüftung zum Feuchteschutz")
+	label("", constraints: "width 120px!")
+	label("Lüftung zum Feuchteschutz", constraints: "width 200px!")
 	label("")
 	label("Reduzierte Lüftung")
 	label("")
@@ -52,13 +52,13 @@ panel(id: "aussenluftVsGesamtabluftVsRaume", border: titledBorder(title: "Gesamt
 	label("Intensivlüftung")
 	label("")
 	
-	label("Luftvolumenstrom")
-	label(id: "gesamtAvsRaumLvsFs", text: "  0,00"); label("m³/h")
-	label(id: "gesamtAvsRaumLvsRl", text: "  0,00"); label("m³/h")
-	label(id: "gesamtAvsRaumLvsNl", text: "  0,00"); label("m³/h")
-	label(id: "gesamtAvsRaumLvsIl", text: "  0,00"); label("m³/h")
+	label("Luftvolumenstrom", constraints: "width 120px!")
+	label(id: "gesamtAvsRaumLvsFs", text: "  0,00", constraints: "width 50px!"); label("m³/h")
+	label(id: "gesamtAvsRaumLvsRl", text: "  0,00", constraints: "width 50px!"); label("m³/h")
+	label(id: "gesamtAvsRaumLvsNl", text: "  0,00", constraints: "width 50px!"); label("m³/h")
+	label(id: "gesamtAvsRaumLvsIl", text: "  0,00", constraints: "width 50px!"); label("m³/h")
 	
-	label("Luftwechsel")
+	label("Luftwechsel", constraints: "width 120px!")
 	label(id: "gesamtAvsRaumLwFs", text: "  0,00"); label("l/h")
 	label(id: "gesamtAvsRaumLwRl", text: "  0,00"); label("l/h")
 	label(id: "gesamtAvsRaumLwNl", text: "  0,00"); label("l/h")
@@ -67,8 +67,8 @@ panel(id: "aussenluftVsGesamtabluftVsRaume", border: titledBorder(title: "Gesamt
 
 // personenbezogene Gesamt-Abluftvolumenströme
 panel(id: "aussenluftVsPersonenbezogeneGesamtabluftVs", border: titledBorder(title: "Personenbezogene Gesamt-Abluftvolumenströme"), layout: new MigLayout("wrap", "[left]30[right]15[left]30[right]15[left]30[right]15[left]30[right]15[left]", "rel[]rel")) {
-	label("")
-	label(id: "aussenluftVsLuftungZumFeuchteschutzLabel", "Lüftung zum Feuchteschutz")
+	label("", constraints: "width 120px!")
+	label(id: "aussenluftVsLuftungZumFeuchteschutzLabel", "Lüftung zum Feuchteschutz", constraints: "width 200px!")
 	label("")
 	label("Reduzierte Lüftung")
 	label("")
@@ -77,11 +77,11 @@ panel(id: "aussenluftVsPersonenbezogeneGesamtabluftVs", border: titledBorder(tit
 	label("Intensivlüftung")
 	label("")
 	
-	label("Luftvolumenstrom")
-	label(id: "gesamtAvsPersonLvsFs", text: "  0,00"); label("m³/h")
-	label(id: "gesamtAvsPersonLvsRl", text: "  0,00"); label("m³/h")
-	label(id: "gesamtAvsPersonLvsNl", text: "  0,00"); label("m³/h")
-	label(id: "gesamtAvsPersonLvsIl", text: "  0,00"); label("m³/h")
+	label("Luftvolumenstrom", constraints: "width 120px!")
+	label(id: "gesamtAvsPersonLvsFs", text: "  0,00", constraints: "width 50px!"); label("m³/h")
+	label(id: "gesamtAvsPersonLvsRl", text: "  0,00", constraints: "width 50px!"); label("m³/h")
+	label(id: "gesamtAvsPersonLvsNl", text: "  0,00", constraints: "width 50px!"); label("m³/h")
+	label(id: "gesamtAvsPersonLvsIl", text: "  0,00", constraints: "width 50px!"); label("m³/h")
 	
 	label("Luftwechsel")
 	label(id: "gesamtAvsPersonLwFs", text: "  0,00"); label("l/h")
@@ -92,8 +92,8 @@ panel(id: "aussenluftVsPersonenbezogeneGesamtabluftVs", border: titledBorder(tit
 
 // Gesamt-Luftvolumenstrom für lüftungstechnische Maßnahmen
 panel(id: "aussenluftVsGesamtLTM", border: titledBorder(title: "Gesamt-Luftvolumenstrom für lüftungstechnische Maßnahmen"), layout: new MigLayout("wrap", "[left]30[right]15[left]30[right]15[left]30[right]15[left]30[left]", "rel[]rel")) {
-	label("")
-	label(id: "aussenluftVsGesamtLTMLabel", "Reduzierte Lüftung", size: [aussenluftVsLuftungZumFeuchteschutzLabel.width, aussenluftVsLuftungZumFeuchteschutzLabel.height])
+	label("", constraints: "width 120px!")
+	label(id: "aussenluftVsGesamtLTMLabel", "Reduzierte Lüftung", constraints: "width 200px!")
 	label("")
 	label("Nennlüftung")
 	label("")
@@ -101,9 +101,9 @@ panel(id: "aussenluftVsGesamtLTM", border: titledBorder(title: "Gesamt-Luftvolum
 	label("", constraints: "span")
 	
 	label("Luftvolumenstrom")
-	label(id: "gesamtLvsLtmLvsRl", text: "  0,00"); label("m³/h")
-	label(id: "gesamtLvsLtmLvsNl", text: "  0,00"); label("m³/h")
-	label(id: "gesamtLvsLtmLvsIl", text: "  0,00"); label("m³/h")
+	label(id: "gesamtLvsLtmLvsRl", text: "  0,00", constraints: "width 50px!"); label("m³/h")
+	label(id: "gesamtLvsLtmLvsNl", text: "  0,00", constraints: "width 50px!"); label("m³/h")
+	label(id: "gesamtLvsLtmLvsIl", text: "  0,00", constraints: "width 50px!"); label("m³/h")
 	checkBox(id: "aussenluftVsGesamtLtmInfiltrationsanteil", selected: false, text: "mit Infiltrationsanteil berechnen")
 	
 	label("Luftwechsel")

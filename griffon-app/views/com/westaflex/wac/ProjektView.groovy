@@ -42,9 +42,9 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 				}
 				
 				// RaumdatenDialogView - Testweise hier...
-				panel(id: "raumdatenDialogTab", title: "RaumdatenDialog Einstellungen") {
-					build(RaumdatenDialogView)
-				}
+				//panel(id: "raumdatenDialogTab", title: "RaumdatenDialog Einstellungen") {
+				//	build(RaumdatenDialogView)
+				//}
 			}
 		}
 		hbox(constraints: SOUTH) {

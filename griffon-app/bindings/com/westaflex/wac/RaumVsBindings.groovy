@@ -22,3 +22,5 @@ bind(source: model.map.raum.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsNl", t
 bind(source: model.map.raum.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsIl", target: "raumVsAussenluftVsDerLtmIl", targetProperty: "text", converter: GH.toString2Converter)
 //
 raumVsZentralgerat.actionPerformed = controller.zentralgeratGewahlt
+
+raumVsRaumBearbeiten.actionPerformed = controller.raumBearbeiten
