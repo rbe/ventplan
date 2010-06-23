@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>griffon-app/controllers/com/westaflex/wac/ProjektController.groovy</string>
+	<string>griffon-app/models/com/westaflex/wac/ProjektModel.groovy</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -59,6 +59,16 @@
 			<string>scripts</string>
 		</dict>
 		<dict>
+			<key>expanded</key>
+			<true/>
+			<key>name</key>
+			<string>sql</string>
+			<key>regexFolderFilter</key>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<key>sourceDirectory</key>
+			<string>sql</string>
+		</dict>
+		<dict>
 			<key>name</key>
 			<string>src</string>
 			<key>regexFolderFilter</key>
@@ -105,114 +115,84 @@
 	<integer>322</integer>
 	<key>metaData</key>
 	<dict>
-		<key>doc/NOTIZEN</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>3</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>51</integer>
-		</dict>
-		<key>doc/README</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>5</integer>
-				<key>line</key>
-				<integer>30</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>18</integer>
-		</dict>
-		<key>griffon-app/bindings/com/westaflex/wac/RaumVsBindings.groovy</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>24</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
 		<key>griffon-app/controllers/com/westaflex/wac/ProjektController.groovy</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>49</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>451</integer>
+				<integer>432</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>421</integer>
+			<integer>407</integer>
 		</dict>
 		<key>griffon-app/models/com/westaflex/wac/ProjektModel.groovy</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>line</key>
-				<integer>37</integer>
+				<integer>160</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>25</integer>
+			<integer>144</integer>
 		</dict>
 		<key>griffon-app/services/com/westaflex/wac/WacModelService.groovy</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>2</integer>
+				<integer>3</integer>
 				<key>line</key>
-				<integer>48</integer>
+				<integer>2</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>26</integer>
+			<integer>0</integer>
 		</dict>
-		<key>griffon-app/views/com/westaflex/wac/RaumVsView.groovy</key>
+		<key>griffon-app/views/com/westaflex/wac/ProjektView.groovy</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>2</integer>
+				<integer>0</integer>
 				<key>line</key>
 				<integer>57</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>38</integer>
+			<integer>31</integer>
+		</dict>
+		<key>griffon-app/views/com/westaflex/wac/RaumBearbeitenDialog.groovy</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>138</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>119</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>doc/README</string>
-		<string>doc/NOTIZEN</string>
 		<string>griffon-app/models/com/westaflex/wac/ProjektModel.groovy</string>
-		<string>griffon-app/controllers/com/westaflex/wac/ProjektController.groovy</string>
 		<string>griffon-app/services/com/westaflex/wac/WacModelService.groovy</string>
-		<string>griffon-app/views/com/westaflex/wac/RaumVsView.groovy</string>
-		<string>griffon-app/bindings/com/westaflex/wac/RaumVsBindings.groovy</string>
+		<string>griffon-app/views/com/westaflex/wac/ProjektView.groovy</string>
+		<string>griffon-app/controllers/com/westaflex/wac/ProjektController.groovy</string>
+		<string>griffon-app/views/com/westaflex/wac/RaumBearbeitenDialog.groovy</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<false/>
@@ -233,13 +213,6 @@
 			<true/>
 			<key>subItems</key>
 			<dict>
-				<key>actions</key>
-				<dict>
-					<key>isExpanded</key>
-					<true/>
-					<key>subItems</key>
-					<dict/>
-				</dict>
 				<key>bindings</key>
 				<dict>
 					<key>isExpanded</key>
@@ -347,99 +320,6 @@
 					<key>subItems</key>
 					<dict/>
 				</dict>
-				<key>models</key>
-				<dict>
-					<key>isExpanded</key>
-					<true/>
-					<key>subItems</key>
-					<dict>
-						<key>com</key>
-						<dict>
-							<key>isExpanded</key>
-							<true/>
-							<key>subItems</key>
-							<dict>
-								<key>westaflex</key>
-								<dict>
-									<key>isExpanded</key>
-									<true/>
-									<key>subItems</key>
-									<dict>
-										<key>wac</key>
-										<dict>
-											<key>isExpanded</key>
-											<true/>
-											<key>subItems</key>
-											<dict/>
-										</dict>
-									</dict>
-								</dict>
-							</dict>
-						</dict>
-					</dict>
-				</dict>
-				<key>services</key>
-				<dict>
-					<key>isExpanded</key>
-					<true/>
-					<key>subItems</key>
-					<dict>
-						<key>com</key>
-						<dict>
-							<key>isExpanded</key>
-							<true/>
-							<key>subItems</key>
-							<dict>
-								<key>westaflex</key>
-								<dict>
-									<key>isExpanded</key>
-									<true/>
-									<key>subItems</key>
-									<dict>
-										<key>wac</key>
-										<dict>
-											<key>isExpanded</key>
-											<true/>
-											<key>subItems</key>
-											<dict/>
-										</dict>
-									</dict>
-								</dict>
-							</dict>
-						</dict>
-					</dict>
-				</dict>
-				<key>util</key>
-				<dict>
-					<key>isExpanded</key>
-					<true/>
-					<key>subItems</key>
-					<dict>
-						<key>com</key>
-						<dict>
-							<key>isExpanded</key>
-							<true/>
-							<key>subItems</key>
-							<dict>
-								<key>bensmann</key>
-								<dict>
-									<key>isExpanded</key>
-									<true/>
-									<key>subItems</key>
-									<dict>
-										<key>griffon</key>
-										<dict>
-											<key>isExpanded</key>
-											<true/>
-											<key>subItems</key>
-											<dict/>
-										</dict>
-									</dict>
-								</dict>
-							</dict>
-						</dict>
-					</dict>
-				</dict>
 				<key>views</key>
 				<dict>
 					<key>isExpanded</key>
@@ -472,6 +352,13 @@
 					</dict>
 				</dict>
 			</dict>
+		</dict>
+		<key>sql</key>
+		<dict>
+			<key>isExpanded</key>
+			<true/>
+			<key>subItems</key>
+			<dict/>
 		</dict>
 	</dict>
 	<key>windowFrame</key>
