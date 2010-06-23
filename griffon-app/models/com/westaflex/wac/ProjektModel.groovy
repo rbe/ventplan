@@ -29,7 +29,7 @@ class ProjektModel {
 	/**
 	 * 
 	 */
-	def meta = [
+	@Bindable meta = [
 		raum: [
 				typ: ["Wohnzimmer", "Kinderzimmer", "Schlafzimmer", "Esszimmer", "Arbeitszimmer", "Gästezimmer", "Hausarbeitsraum", "Kellerraum", "WC", "Küche", "Kochnische", "Bad mit/ohne WC", "Duschraum", "Sauna", "Flur", "Diele"],
 				geschoss: ["KG", "EG", "OG", "DG", "SB"],
@@ -37,8 +37,9 @@ class ProjektModel {
 				raumVsBezeichnungZuluftventile: ["1", "2", "3"],
 				raumVsBezeichnungAbluftventile: ["4", "5", "6"],
 				raumVsVerteilebene: ["7", "8", "9"],
-			]
-	]
+			],
+		gewahlterRaum: [:] as ObservableMap
+	] as ObservableMap
 	
 	/**
 	 * 
@@ -81,7 +82,33 @@ class ProjektModel {
 				kennzeichnungLuftungsanlage: "ZuAbLS-Z-WE-WÜT-0-0-0-0-0",
 			] as ObservableMap,
 		raum: [
-				raume: [] as ObservableList,
+				raume: [
+						/*
+						[
+							raumBezeichnung: "",
+							raumLuftart: "",
+							raumGeschoss: "",
+							raumFlache: "",
+							raumHohe: "",
+							raumZuluftfaktor: "",
+							raumAbluftVs: "",
+							raumVolumen: "",
+							raumLuftwechsel: "",
+							raumBezeichnungAbluftventile: "",
+							raumAnzahlAbluftventile: "",
+							raumAbluftmengeJeVentil: "",
+							raumVolumenstrom: "",
+							raumBezeichnungZuluftventile: "",
+							raumAnzahlZuluftventile: "",
+							raumZuluftmengeJeVentil: "",
+							raumVentilebene: ""
+							raumAnzahlUberstromVentile: "",
+							raumVolumenstrom: "",
+							raumUberstromElemente: "",
+							turen: [] as ObservableList
+						]
+						*/
+					] as ObservableList,
 				ltmZuluftSumme: 0.0d,
 				ltmAbluftSumme: 0.0d,
 				raumVs: [
@@ -103,26 +130,27 @@ class ProjektModel {
 			raumeVsUberstromventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList
 		]
 	
-	/**
-	 * Synchronize all Swing table models depending on map.raum.raume.
-	 */
-	def syncRaumTableModels() {
-		// Raumdaten
-		tableModels.raume.clear()
-		tableModels.raume.addAll(map.raum.raume)
-		// Raumvolumentströme - Zu-/Abluftventile
-		tableModels.raumeVsZuAbluftventile.clear()
-		tableModels.raumeVsZuAbluftventile.addAll(map.raum.raume)
-		// Raumvolumentströme - Überströmventile
-		tableModels.raumeVsUberstromventile.clear()
-		tableModels.raumeVsUberstromventile.addAll(map.raum.raume)
+	def w = { t, pos = [] ->
+		pos?.each { t[pos] = '<br/>' }
+		"<html><div align=\"center\">${t}</div></html>" as String
+	}
+	def ws = { t, threshold = 0 ->
+		def n = t
+		if (threshold) {
+			def i = 0
+			n = t.collect { c ->
+				if (i++ > threshold && c == " ") "<br/>"
+				else c
+			}.join()
+		}
+		"<html><div align=\"center\">${n}</div></html>" as String
 	}
 	
 	/**
 	 * Raumdaten - TableModel
 	 */
 	def createRaumTableModel() {
-		def columnNames =   ["Raum",            "Geschoss",     "Luftart",     "Raumfläche (m²)", "Raumhöhe (m)", "Zuluftfaktor",     "Abluftvolumenstrom"]
+		def columnNames =   ['Raum',            "Geschoss",     "Luftart",     "Raumfläche (m²)", "Raumhöhe (m)", "Zuluftfaktor",     "Abluftvolumenstrom"]
 		def propertyNames = ["raumBezeichnung", "raumGeschoss", "raumLuftart", "raumFlache",      "raumHohe",     "raumZuluftfaktor", "raumAbluftVs"]
 		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raume, [
 				getColumnCount: { columnNames.size() },
@@ -135,8 +163,8 @@ class ProjektModel {
 	 * Raumvolumenströme, Zu-/Abluftventile - TableModel
 	 */
 	def createRaumVsZuAbluftventileTableModel() {
-		def columnNames =   ["Raum",            "Luftart",     "Raumvolumen (m³)", "Luftwechsel (1/h)", "Bezeichnung Abluftventile",    "Anzahl Abluftventile",    "Abluftmenge je Ventil",   "Volumenstrom (m³/h)", "Bezeichnung Zuluftventile",    "Anzahl Zuluftventile",    "Zuluftmenge je Ventil",   "Ventilebene"]
-		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",      "raumLuftwechsel",   "raumBezeichnungAbluftventile", "raumAnzahlAbluftventile", "raumAbluftmengeJeVentil", "raumVolumenstrom",    "raumBezeichnungZuluftventile", "raumAnzahlZuluftventile", "raumZuluftmengeJeVentil", "raumVentilebene"]
+		def columnNames =   ["Raum",            "Luftart",     ws("Raumvolumen<br/>(m³)"), ws("Luftwechsel<br/>(1/h)"), ws("Bezeichnung<br/>Abluftventile"),    ws("Anzahl<br/>Abluftventile"),    ws("Abluftmenge<br/>je Ventil"),   ws("Volumenstrom<br/>(m³/h)"), ws("Bezeichnung<br/>Zuluftventile"),    ws("Anzahl<br/>Zuluftventile"),    ws("Zuluftmenge<br/>je Ventil"),   "Ventilebene"]
+		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",              "raumLuftwechsel",           "raumBezeichnungAbluftventile",         "raumAnzahlAbluftventile",         "raumAbluftmengeJeVentil",         "raumVolumenstrom",            "raumBezeichnungZuluftventile",         "raumAnzahlZuluftventile",         "raumZuluftmengeJeVentil",         "raumVentilebene"]
 		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeVsZuAbluftventile, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
@@ -155,6 +183,21 @@ class ProjektModel {
 				getColumnName:  { index -> columnNames[index] },
 				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
 			] as ca.odell.glazedlists.gui.TableFormat)
+	}
+	
+	/**
+	 * Synchronize all Swing table models depending on map.raum.raume.
+	 */
+	def syncRaumTableModels() {
+		// Raumdaten
+		tableModels.raume.clear()
+		tableModels.raume.addAll(map.raum.raume)
+		// Raumvolumentströme - Zu-/Abluftventile
+		tableModels.raumeVsZuAbluftventile.clear()
+		tableModels.raumeVsZuAbluftventile.addAll(map.raum.raume)
+		// Raumvolumentströme - Überströmventile
+		tableModels.raumeVsUberstromventile.clear()
+		tableModels.raumeVsUberstromventile.addAll(map.raum.raume)
 	}
 	
 }
