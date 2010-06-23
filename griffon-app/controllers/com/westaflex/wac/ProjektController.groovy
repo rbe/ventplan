@@ -16,6 +16,7 @@ import com.bensmann.griffon.GriffonHelper as GH
 @griffon.util.EventPublisher
 class ProjektController {
 	
+	def builder
 	def model
 	def view
 	def wacCalculationService
@@ -27,8 +28,10 @@ class ProjektController {
 	void mvcGroupInit(Map args) {
 		// Save MVC id
 		model.mvcId = args.mvcId
+		// Add PropertyChangeListener to our model.meta
+		addMapPropertyChange("meta", model.meta)
 		// Add PropertyChangeListener to our model.map
-		addMapPropertyChange(model.map)
+		addMapPropertyChange("map", model.map)
 		/*
 		// Raumvolumenströme
 		model.tableModels.raumeVsZuAbluftventile.addListEventListener({ evt ->
@@ -47,23 +50,23 @@ class ProjektController {
 	/**
 	 * Dump a change
 	 */
-	def dumpPropertyChange = { evt, k ->
-		println "${k}.${evt.propertyName}: value changed: ${evt.oldValue?.dump()} -> ${evt.newValue?.dump()}"
+	def dumpPropertyChange = { name, evt, k ->
+		println "${name}.${k}.${evt.propertyName}: value changed: ${evt.oldValue?.dump()} -> ${evt.newValue?.dump()}"
 	}
 	
 	/**
 	 * Recursively add PropertyChangeListener to the map itself and all nested maps.
 	 */
-	def addMapPropertyChange = { map ->
+	def addMapPropertyChange = { name, map ->
 		map.each { k, v ->
 			if (v instanceof ObservableMap) {
-				//println "addMapPropertyChange: adding PropertyChangeListener for ${k}"
+				println "addMapPropertyChange: adding PropertyChangeListener to ${name} for ${k}"
 				v.addPropertyChangeListener({ evt ->
 					dumpPropertyChange.delegate = v
-					dumpPropertyChange(evt, k)
+					dumpPropertyChange(name, evt, k)
 					model.dirty = true
 				} as java.beans.PropertyChangeListener)
-				addMapPropertyChange(v)
+				addMapPropertyChange(name, v)
 			}
 		}
 	}
@@ -270,6 +273,7 @@ class ProjektController {
 	 * Raumdaten - Raum anlegen
 	 */
 	def raumHinzufugen = {
+		// TODO holt auch die raumXxx properties aus dem raum dialog!
 		def raumWerte = GH.getValuesFromView(view, "raum")
 		// Standard-Werte setzen
 		raumWerte.with {
@@ -281,17 +285,10 @@ class ProjektController {
 			raumFlache = raumFlache.toDouble2()
 			raumHohe = raumHohe.toDouble2()
 			raumVolumen = raumFlache * raumHohe
-			// Raumvolumenströme, Ventile
-			zuabluftVentile = []
-			uberstromVentile = []
 			// Zuluftfaktor
 			raumZuluftfaktor = raumZuluftfaktor?.toDouble2() ?: 0.0d
-			/*if (!raumZuluftfaktor) raumZuluftfaktor = 0.0d
-			else raumZuluftfaktor = raumZuluftfaktor.toDouble2()*/
 			// Abluftvolumenstrom
 			raumAbluftVs = raumAbluftVs?.toDouble2() ?: 0.0d
-			/*if (!raumAbluftVs) raumAbluftVs = 0.0d
-			else raumAbluftVs = raumAbluftVs.toDouble2()*/
 		}
 		// Überstrom-Raum
 		if (raumWerte.raumLuftart == "ÜB") {
@@ -315,11 +312,27 @@ class ProjektController {
 	 */
 	def onRaumInTabelleWahlen = { row ->
 		doLater {
-			println "onRaumInTabelleWahlen: row=${row}"
-			// Raum in Tabelle markieren
-			view.raumTabelle.with {
-				changeSelection(row, 0, false, false)
+			if (row > -1) {
+				// Raum in Tabelle markieren
+				view.raumTabelle.with {
+					changeSelection(row, 0, false, false)
+				}
+				/* Aktuellen Raum in Metadaten setzen
+				//model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
+				model.map.raum.raume[row].each { k, v ->
+					try {
+						model.meta.gewahlterRaum[k] = v
+					} catch(e) {
+						println "!!!!!!!!!!!!!!!!!!!! ${k}=${v}: ${e}"
+					}
+				}
+				*/
+			} else {
+				// TODO view.raumTabelle.removeSelection?
+				model.meta.gewahlterRaum.removeAll()
 			}
+			//
+			println "onRaumInTabelleWahlen: row=${row} raum=${model.meta.gewahlterRaum?.dump()}"
 		}
 	}
 	
@@ -407,8 +420,21 @@ class ProjektController {
 	def raumBearbeiten = {
 		// Get selected row
 		def row = view.raumTabelle.selectedRow
-		// Open dialog
-		new RaumdatenDialogView(model.map.raum.raume.get(row))
+		if (row > -1) {
+			// Aktuellen Raum in Metadaten setzen
+			//model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
+			model.map.raum.raume[row].each { k, v ->
+				try {
+					model.meta.gewahlterRaum[k] = v
+				} catch(e) {
+					println "!!!!!!!!!!!!!!!!!!!! ${k}=${v}: ${e}"
+				}
+			}
+			view.raumBearbeitenDialog = builder.build(RaumBearbeitenDialog)
+			println view.raumBearbeitenDialog
+			// Show dialog
+			view.raumBearbeitenDialog.visible = true
+		}
 	}
 	
 	/**
