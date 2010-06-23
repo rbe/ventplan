@@ -23,10 +23,10 @@ panel(id: "raumPanel") {
 		label("Raumhöhe (m)")
 		label("Zuluftfaktor")
 		label("Abluftvolumenstrom (m³)", constraints: "wrap")
-		comboBox(id: "raumTyp", items: model.map.raum.typ)
+		comboBox(id: "raumTyp", items: model.meta.raum.typ)
 		textField(id: "raumBezeichnung")
-		comboBox(id: "raumGeschoss", items: model.map.raum.geschoss)
-		comboBox(id: "raumLuftart", items: model.map.raum.luftart)
+		comboBox(id: "raumGeschoss", items: model.meta.raum.geschoss)
+		comboBox(id: "raumLuftart", items: model.meta.raum.luftart)
 		textField(id: "raumFlache")
 		textField(id: "raumHohe", text: "2,50")
 		textField(id: "raumZuluftfaktor", text: "3,00", editable: bind { raumLuftart.selectedItem != "ÜB" })
@@ -38,7 +38,6 @@ panel(id: "raumPanel") {
 	panel(id: "raumTabellePanel", constraints: CENTER, layout: new MigLayout("fill", "[fill]")) {
 		jideScrollPane() {
 			table(id: "raumTabelle", model: model.createRaumTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-				
 			}
 		}
 	}
