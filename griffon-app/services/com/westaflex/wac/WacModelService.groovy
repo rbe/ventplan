@@ -27,7 +27,7 @@ class WacModelService {
 	 */
 	List getZentralgerat() {
 		def r = withSql { sql ->
-			sql.rows("SELECT Artikelnummer FROM artikelstamm WHERE Kategorie = ? AND Gesperrt = ? AND MaxVolumenstrom <> ?", [1, false, 0])
+			sql.rows("SELECT artikelnummer FROM artikelstamm WHERE kategorie = ? AND gesperrt = ? AND maxvolumenstrom <> ? ORDER BY artikelnummer", [1, false, 0])
 		}?.collect {
 			it.Artikelnummer
 		}
@@ -40,7 +40,7 @@ class WacModelService {
 	 */
 	List getVolumenstromFurZentralgerat(String artikel) {
 		def r = withSql { sql ->
-			sql.rows("SELECT DISTINCT Volumenstrom FROM schalleistungspegel WHERE Artikelnummer = ?", [artikel])
+			sql.rows("SELECT DISTINCT volumenstrom FROM schalleistungspegel WHERE artikelnummer = ? ORDER BY volumenstrom", [artikel])
 		}?.collect {
 			it.Volumenstrom
 		}
@@ -86,7 +86,7 @@ class WacModelService {
 		// Lookup from database and store in cache
 		else {
 			def mv = withSql { sql ->
-				sql.firstRow("SELECT MaxVolumenstrom FROM artikelstamm WHERE Artikelnummer = ?", [artikel])
+				sql.firstRow("SELECT maxvolumenstrom FROM artikelstamm WHERE artikelnummer = ? ORDER BY maxvolumenstrom", [artikel])
 			} as Integer
 			maxVolumenstrom[artikel] = ret
 		}
