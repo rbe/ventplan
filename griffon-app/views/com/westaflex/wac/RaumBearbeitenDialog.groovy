@@ -13,7 +13,8 @@ import net.miginfocom.swing.MigLayout
 //import groovy.swing.SwingBuilder
 //import javax.swing.JFrame
 
-dialog(id: "raumBearbeitenDialog", title: "Raum bearbeiten", visible: false) {
+dialog(id: "raumBearbeitenDialog", title: "Raum bearbeiten",
+	visible: false, modal: true, pack: true, locationByPlatform: true) {
 	// RaumdatenDialogView
 	panel(id: "raumBearbeitenTabPanel") {
 		jideTabbedPane(id: "raumBearbeitenTabGroup") {
@@ -29,11 +30,11 @@ dialog(id: "raumBearbeitenDialog", title: "Raum bearbeiten", visible: false) {
 					label(id: "", text: "Raumtyp")
 					label("", constraints: "wrap")
 
-					comboBox(id: "raumBearbeitenRaumGeschoss")
+					comboBox(id: "raumBearbeitenRaumGeschoss", items: model.meta.raum.geschoss, selectedItem: bind { model.meta.gewahlterRaum?.geschoss })
 					button(id: "links", text: " < ")
 					textField(id: "raumBearbeitenRaumnummer", text: "01")
 					button(id: "rechts", text: " > ")
-					textField(id: "raumBearbeitenWohnzimmer", text: "Wohnzimmer")
+					textField(id: "raumBearbeitenBezeichnung", text: "raumbez")
 					comboBox(id: "raumBearbeitenRaumtyp")
 					button(id: "raumdatenDialogRaumButton", text: "...")
 				}
@@ -134,28 +135,23 @@ dialog(id: "raumBearbeitenDialog", title: "Raum bearbeiten", visible: false) {
 		}
 	}
 }
-raumBearbeitenDialog.pack()
+// Bindings
+bean(raumBearbeitenBezeichnung, text: bind(source: model.map.gewahlterRaum, sourceProperty: "raumBezeichnung"))
+//bind(source: model.meta.gewahlterRaum, sourceProperty: "raumBezeichnung", target: "raumBearbeitenBezeichnung", targetProperty: "text")
+
+return raumBearbeitenDialog
 
 /*
 class RaumdatenDialogView {
-
-	SwingBuilder swing 
-
 	public RaumdatenDialogView(def row) { 
-		swing = new SwingBuilder()
+		SwingBuilder swing = new SwingBuilder()
 		swing.frame( title: "GroovyFileViewer", 
 					 defaultCloseOperation: JFrame.DISPOSE_ON_CLOSE, 
 					 pack: false, visible: true, id: "raumdatendialogframe" ) { 
-
 			// TODO: hier einfügen...
-			
 			//button("Click to select a file", constraints: context.SOUTH, actionPerformed: this.&selectFile)           
-					 
-			
 		}
 		swing.frame.size = [800,600]
-		
-		
 	}
 }
 */
