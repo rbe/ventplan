@@ -54,6 +54,8 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 }
 // Bindings
 build(ProjektBindings)
+// Dialogs
+build(RaumBearbeitenDialog)
 //
 // JIDE
 //
