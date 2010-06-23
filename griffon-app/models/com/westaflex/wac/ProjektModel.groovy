@@ -29,7 +29,16 @@ class ProjektModel {
 	/**
 	 * 
 	 */
-	def meta = [:]
+	def meta = [
+		raum: [
+				typ: ["Wohnzimmer", "Kinderzimmer", "Schlafzimmer", "Esszimmer", "Arbeitszimmer", "Gästezimmer", "Hausarbeitsraum", "Kellerraum", "WC", "Küche", "Kochnische", "Bad mit/ohne WC", "Duschraum", "Sauna", "Flur", "Diele"],
+				geschoss: ["KG", "EG", "OG", "DG", "SB"],
+				luftart: ["ZU", "AB", "ZU/AB", "ÜB"],
+				raumVsBezeichnungZuluftventile: ["1", "2", "3"],
+				raumVsBezeichnungAbluftventile: ["4", "5", "6"],
+				raumVsVerteilebene: ["7", "8", "9"],
+			]
+	]
 	
 	/**
 	 * 
@@ -72,13 +81,7 @@ class ProjektModel {
 				kennzeichnungLuftungsanlage: "ZuAbLS-Z-WE-WÜT-0-0-0-0-0",
 			] as ObservableMap,
 		raum: [
-				typ: ["Wohnzimmer", "Kinderzimmer", "Schlafzimmer", "Esszimmer", "Arbeitszimmer", "Gästezimmer", "Hausarbeitsraum", "Kellerraum", "WC", "Küche", "Kochnische", "Bad mit/ohne WC", "Duschraum", "Sauna", "Flur", "Diele"],
-				geschoss: ["KG", "EG", "OG", "DG", "SB"],
-				luftart: ["ZU", "AB", "ZU/AB", "ÜB"],
 				raume: [] as ObservableList,
-				raumVsBezeichnungZuluftventile: ["1", "2", "3"],
-				raumVsBezeichnungAbluftventile: ["4", "5", "6"],
-				raumVsVerteilebene: ["7", "8", "9"],
 				ltmZuluftSumme: 0.0d,
 				ltmAbluftSumme: 0.0d,
 				raumVs: [
