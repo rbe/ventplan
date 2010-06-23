@@ -18,11 +18,6 @@ import org.javanicus.gsql.*
 class WacModelService {
 	
 	/**
-	 * Cache MaxVolumenstrom
-	 */
-	def maxVolumenstrom = [:]
-	
-	/**
 	 * Hole Liste mit Zentralgeräten (Raumvolumenströme).
 	 */
 	List getZentralgerat() {
@@ -78,19 +73,11 @@ class WacModelService {
 	 * 
 	 */
 	Integer getMaxVolumenstrom(String artikel) {
-		Integer ret = 0
-		// Cache?
-		if (maxVolumenstrom.containsKey(artikel)) {
-			ret = maxVolumenstrom[artikel]
+		def r = withSql { sql ->
+			sql.firstRow("SELECT maxvolumenstrom FROM artikelstamm WHERE artikelnummer = ? ORDER BY maxvolumenstrom", [artikel])
 		}
-		// Lookup from database and store in cache
-		else {
-			def mv = withSql { sql ->
-				sql.firstRow("SELECT maxvolumenstrom FROM artikelstamm WHERE artikelnummer = ? ORDER BY maxvolumenstrom", [artikel])
-			} as Integer
-			maxVolumenstrom[artikel] = ret
-		}
-		ret
+		println "getMaxVolumenstrom(${artikel}): ${r?.dump()}"
+		r ? r as Integer : 0
 	}
-
+	
 }
