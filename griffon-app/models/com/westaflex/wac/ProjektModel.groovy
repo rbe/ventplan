@@ -34,9 +34,10 @@ class ProjektModel {
 				typ: ["Wohnzimmer", "Kinderzimmer", "Schlafzimmer", "Esszimmer", "Arbeitszimmer", "Gästezimmer", "Hausarbeitsraum", "Kellerraum", "WC", "Küche", "Kochnische", "Bad mit/ohne WC", "Duschraum", "Sauna", "Flur", "Diele"],
 				geschoss: ["KG", "EG", "OG", "DG", "SB"],
 				luftart: ["ZU", "AB", "ZU/AB", "ÜB"],
-				raumVsBezeichnungZuluftventile: ["1", "2", "3"],
-				raumVsBezeichnungAbluftventile: ["4", "5", "6"],
-				raumVsVerteilebene: ["7", "8", "9"],
+				raumVsBezeichnungZuluftventile: [/* initialized in ProjektController.mvcGroupInit */],
+				raumVsBezeichnungAbluftventile: [/* initialized in ProjektController.mvcGroupInit */],
+				raumVsUberstromelemente: [/* initialized in ProjektController.mvcGroupInit */],
+				raumVsVerteilebene: ["KG", "EG", "OG", "DG", "SB"],
 			],
 		gewahlterRaum: [:] as ObservableMap
 	] as ObservableMap
