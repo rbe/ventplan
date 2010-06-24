@@ -22,10 +22,10 @@ class WacModelService {
 	 */
 	List getZentralgerat() {
 		def r = withSql { sql ->
-			sql.rows("SELECT artikelnummer FROM artikelstamm WHERE kategorie = ? AND gesperrt = ? AND maxvolumenstrom <> ? ORDER BY artikelnummer", [1, false, 0])
-		}?.collect {
-			it.Artikelnummer
-		}
+				sql.rows("SELECT artikelnummer FROM artikelstamm WHERE kategorie = ? AND gesperrt = ? AND maxvolumenstrom <> ? ORDER BY artikelnummer", [1, false, 0])
+			}?.collect {
+				it.artikelnummer
+			}
 		println "getZentralgerat: ${r?.dump()}"
 		r
 	}
@@ -35,47 +35,47 @@ class WacModelService {
 	 */
 	List getVolumenstromFurZentralgerat(String artikel) {
 		def r = withSql { sql ->
-			sql.rows("SELECT DISTINCT volumenstrom FROM schalleistungspegel WHERE artikelnummer = ? ORDER BY volumenstrom", [artikel])
-		}?.collect {
-			it.Volumenstrom
-		}
+				sql.rows("SELECT DISTINCT volumenstrom FROM schalleistungspegel WHERE artikelnummer = ? ORDER BY volumenstrom", [artikel])
+			}?.collect {
+				it.volumenstrom
+			}
 		println "getVolumenstromFurZentralgerat: ${r?.dump()}"
 		r
 	}
 	
 	/**
-	 * 
-	public void setGeraeteauswahl(int fLueftung) {
-		String sSQL = "select Artikelnummer from artikelstamm where Kategorie = 1 and MaxVolumenstrom >= " + fLueftung;
-		if (!bZentralgeraet) {
-			if (lmeZentralgeraetCombobox.getItemCount() > 0) {
-				String[] fVS = WestaDB.getInstance().queryDBResultList(sSQL);
-				if (fVS != null && fVS.length != 0) {
-					lmeZentralgeraetCombobox.setSelectedItem(fVS[0]);
-				}
-			}
-			lmeZentralgeraetComboboxActionPerformed(new java.awt.event.ActionEvent(lmeZentralgeraetCombobox, 0, null));
-			int idx = -1;
-			for (int i = 0; i
-					< lmeVolumenstromCombobox.getItemCount() - 1 && idx < 0; i++) {
-				if (Integer.parseInt(lmeVolumenstromCombobox.getItemAt(i).toString()) >= fLueftung) {
-					idx = i;
-				}
-			}
-			lmeVolumenstromCombobox.setSelectedIndex(idx);
-		}
-		abZuSchallleistungspegelZuluftstutzenComboBox.setModel(lmeVolumenstromCombobox.getModel());
-		abAbSchallleistungspegelAbluftstutzenComboBox.setModel(lmeVolumenstromCombobox.getModel());
-	}
+	 * Hole alle Zu/Abluftventile.
 	 */
+	List getZuAbluftventile() {
+		def r = withSql { sql ->
+				sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust WHERE ausblaswinkel <> ?", [180])
+			}?.collect {
+				it.artikelnummer
+			}
+		println "getZuluftventile: ${r?.dump()}"
+		r
+	}
+	
+	/**
+	 * Hole alle Überströmelemente.
+	 */
+	List getUberstromelemente() {
+		def r = withSql { sql ->
+				sql.rows("SELECT artikelnummer FROM artikelstamm WHERE klasse = ?", [14])
+			}?.collect {
+				it.artikelnummer
+			}
+		println "getUberstromElemente: ${r?.dump()}"
+		r
+	}
 	
 	/**
 	 * 
 	 */
 	Integer getMaxVolumenstrom(String artikel) {
 		def r = withSql { sql ->
-			sql.firstRow("SELECT maxvolumenstrom FROM artikelstamm WHERE artikelnummer = ? ORDER BY maxvolumenstrom", [artikel])
-		}
+				sql.firstRow("SELECT maxvolumenstrom FROM artikelstamm WHERE artikelnummer = ? ORDER BY maxvolumenstrom", [artikel])
+			}
 		println "getMaxVolumenstrom(${artikel}): ${r?.dump()}"
 		r ? r as Integer : 0
 	}
