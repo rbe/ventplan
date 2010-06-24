@@ -19,6 +19,11 @@ B. Runtime
 ----------
 JDK 1.6.0 U20
 
+C. Hints
+--------
+Groovy + Debugging: http://groovy.codehaus.org/Debugging+with+JSwat
+
+
 ================
 II. ARCHITECTURE
 ================
@@ -26,22 +31,23 @@ II. ARCHITECTURE
 A. Application layout
 ---------------------
 
-			  View
-			^		|
-			|		| uses
-	updates |		|
-			|		v     updates
-			Controller -------------> Model
-			 ^		|                   ^
-			 |		| publishes         |
-			 |		|                   |
-   publishes |		v                   |
-			  Event                     |
-				|                       |
-				|                       |
-				| uses                  | updates
-				v                       |
-			 Service(s) ----------------/
+                       updates via (mutual) Bindings
+              View  <-------------------\
+            ^      |                    |
+            |      | uses               |
+    updates |      |                    |
+            |      v     updates        v
+            Controller -------------> Model
+             ^     |                    ^
+             |     | publishes          |
+             |     |                    |
+   publishes |     v                    |
+              Event                     |
+                |                       |
+                |                       |
+                | uses                  |
+                v                       |
+             Service(s) ----------------/  updates
 
 Model: a bindable Map "map" in ProjektModel.groovy
 View: render data, use controller for actions
@@ -49,10 +55,103 @@ Controller: reads data from view and updates model, publish events, updates view
 Events: perform calculations using a service, update model, publish events
 Services: contain business logic, operate on our "model map" (provided as a function parameter)
 
-==========
-III. HINTS
-==========
 
-A. Development
---------------
-Groovy + Debugging: http://groovy.codehaus.org/Debugging+with+JSwat
+===============
+III. Generelles
+===============
+
+1. Standard Paket ist: com.westaflex.wac (sofern in dieser Dokumentation nicht anders angegeben)
+
+2. TextFields die Fließkommawerte enthalten:
+	* werden rechtsbündig ausgerichtet
+	* haben einen gelben Hintergrund
+	siehe utils/com.bensmann.griffon.GriffonHelper.doubleTextField()
+	* müssen via Controller und .toDouble2() in das Model geschrieben werden
+
+3. Controller:
+	* holen Werte aus den Views, sofern diese konvertiert und/oder in das Model übertragen werden müssen
+	* Triggern ein Event, welches die Berechnungen ausführt
+
+==================
+IV. Projekte, Tabs
+==================
+
+A. Gebäudedaten
+---------------
+
+Geometrie
+
+1. Bei Eingabe von Wohnfläche und mittlere Raumhöhe: Luftvolumen und gelüftetes Volumen errechnen
+	TextField, focusLost -> ProjektProjektController.berechneGeometrie
+
+2. Bei Eingabe gelüftete Fläche das gelüftete Volumen berechnen
+	TextField, focusLost -> ProjektProjektController.berechneGeometrie
+
+Luftdichtheit der Gebäudehülle
+
+1. Bei Auswahl einer Kategorie Standardwerte unter Messwerte setzen
+	Radiobox, change -> ProjektProjektController.luftdichtheitKategorie<X>
+
+2. Bei Auswahl Messwerte können diese selbst eingegeben werden
+	TextField, focusLost -> ProjektProjektController.speichereLuftdichtheit
+
+Geplante Belegung
+
+1. Mindestaußenluftrate = Personenanzahl * geplante Belegung
+	Spinner, stateChanged -> ProjektProjektController.berechneMindestaussenluftrate
+
+
+B. Anlagendaten
+---------------
+
+1. Auswahl von Energie-Kennzeichen verändert Kennzeichnung der Lüftungsanlage
+	Checkbox, actionPerformed -> ProjektProjektController.berechneEnergieKennzeichen
+
+2. Auswahl von Hygiene-Kennzeichen verändert Kennzeichnung der Lüftungsanlage
+	Checkbox, actionPerformed -> ProjektProjektController.berechneHygieneKennzeichen
+
+3. Auswahl von Rückschlagkappe, Schallschutz-Kennzeichnung, Feuerstätten-Kennzeichnung
+   verändert Kennzeichnung der Lüftungsanlage
+	Checkbox, actionPerformed -> ProjektProjektController.berechneKennzeichenLuftungsanlage
+
+
+C. Raumdaten
+------------
+
+Eingabe eines Raumes
+
+1. Auswahl des Raumtyps verändert die Voreinstellung für: Luftart, Zuluftfaktor, Abluftvolumenstrom
+	Combobox, actionPerformed -> ProjektProjektController.raumTypGeandert
+
+2. Verändern von Räumen:
+	raumHinzufugen.actionPerformed			 -> ProjektController.raumHinzufugen
+	raumEntfernen.actionPerformed			 -> ProjektController.raumEntfernen
+	raumKopieren.actionPerformed			 -> ProjektController.raumKopieren
+	raumBearbeiten.actionPerformed			 -> ProjektController.raumBearbeiten
+	raumNachObenVerschieben.actionPerformed	 -> ProjektController.raumNachObenVerschieben
+	raumNachUntenVerschieben.actionPerformed -> ProjektController.raumNachUntenVerschieben
+
+3. In der Tabelle soll immer der zuletzt hinzugefügte/geänderte Raum selektiert sein
+
+
+D. Außenluftvolumenströme
+-------------------------
+
+1. Automatische Berechnung der AVS, wenn:
+	Geometrie geändert wird
+	ein Raum eingegeben, verändert wird
+	aussenluftVsGesamtLtmInfiltrationsanteil.actionPerformed -> ProjektController.berechneAussenluftVs
+
+E. Raumvolumenströme
+--------------------
+
+1. Wenn Daten zu einem Raum (durch Comboboxen in der Tabelle) geändert wurden, wird die Luftmenge neu berechnet
+	-> ProjektController.luftmengeBerechnen
+
+
+/*
+// Raumvolumenströme
+model.tableModels.raumeVsZuAbluftventile.addListEventListener({ evt ->
+	println "raumVsZuAbluftventileTabelleTableModel,${evt}"
+} as ca.odell.glazedlists.event.ListEventListener)
+*/
