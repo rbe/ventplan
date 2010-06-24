@@ -30,9 +30,9 @@ panel(id: "raumBearbeitenTabPanel") {
 
 				comboBox(id: "raumBearbeitenRaumGeschoss", items: model.meta.raum.geschoss)
 				button(id: "links", text: " < ")
-				textField(id: "raumBearbeitenRaumnummer", text: "01")
+				textField(id: "raumBearbeitenRaumnummer", text: "")
 				button(id: "rechts", text: " > ")
-				textField(id: "raumBearbeitenBezeichnung", text: "raumbez")
+				textField(id: "raumBearbeitenBezeichnung", text: "")
 				comboBox(id: "raumBearbeitenRaumtyp")
 				button(id: "raumdatenDialogRaumButton", text: "...")
 			}
@@ -131,10 +131,18 @@ panel(id: "raumBearbeitenTabPanel") {
 		}
 
 	}
+	// TODO mmu Button should appear under tabbed pane
+	hbox {
+		button(id: "raumBearbeitenSchliessen", text: "Schliessen")
+	}
+	
 }
+// Format fields
+GH.recurse(raumBearbeitenTabPanel, GH.yellowTextField)
 // Bindings
-bind(source: model.meta.gewahlterRaum, sourceProperty: "raumBezeichnung", target: raumBearbeitenBezeichnung,  targetProperty: "text")
-bind(source: model.meta.gewahlterRaum, sourceProperty: "raumGeschoss",    target: raumBearbeitenRaumGeschoss, targetProperty: "selectedItem")
+build(RaumBearbeitenBindings)
+// Schliessen-Button; binding is done here due to this-reference
+raumBearbeitenSchliessen.actionPerformed = { evt -> this.hide() }
 //
 // JIDE
 //
