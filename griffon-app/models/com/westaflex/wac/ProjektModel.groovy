@@ -37,7 +37,7 @@ class ProjektModel {
 				raumVsBezeichnungZuluftventile: [/* initialized in ProjektController.mvcGroupInit */],
 				raumVsBezeichnungAbluftventile: [/* initialized in ProjektController.mvcGroupInit */],
 				raumVsUberstromelemente: [/* initialized in ProjektController.mvcGroupInit */],
-				raumVsVerteilebene: ["KG", "EG", "OG", "DG", "SB"],
+				raumVsVentilebene: ["KG", "EG", "OG", "DG", "SB"],
 			],
 		gewahlterRaum: [:] as ObservableMap
 	] as ObservableMap
@@ -131,10 +131,9 @@ class ProjektModel {
 			raumeVsUberstromventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList
 		]
 	
-	def w = { t, pos = [] ->
-		pos?.each { t[pos] = '<br/>' }
-		"<html><div align=\"center\">${t}</div></html>" as String
-	}
+	/**
+	 * Wrap text in HTML and substitute every space character with HTML-breaks.
+	 */
 	def ws = { t, threshold = 0 ->
 		def n = t
 		if (threshold) {
