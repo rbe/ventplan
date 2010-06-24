@@ -503,7 +503,7 @@ class WacCalculationService {
 	/**
 	 * Anzahl der Ventile und Luftmenge pro Ventil aktualisieren
 	 */
-	public void aktualisiereVentile() {
+	void aktualisiereVentile() {
 		int row = 0, divisorZU = 1, divisorAB = 1, anzahlZuluftVentile = 0, anzahlAbluftVentile = 0;
 		String typZU = null;
 		String typAB = null;
