@@ -305,7 +305,7 @@ class WacCalculationService {
 	void autoLuftmenge(map, Boolean b) {
 		// LTM erforderlich?
 		if (!ltmErforderlich(map)) {
-			// TODO Fehlermeldung, dialog
+			// TODO rbe Fehlermeldung als Dialog anzeigen
 			println "autoLuftmenge: Es sind keine lüftungstechnischen Maßnahmen notwendig!"
 		}
 		// LTM: erste Berechnung für Raumvolumenströme

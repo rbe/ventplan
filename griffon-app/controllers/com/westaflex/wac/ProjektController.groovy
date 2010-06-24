@@ -294,7 +294,7 @@ class ProjektController {
 				}
 				*/
 			} else {
-				// TODO view.raumTabelle.removeSelection?
+				// TODO mmu view.raumTabelle.removeSelection?
 				model.meta.gewahlterRaum.removeAll()
 			}
 		}
@@ -437,7 +437,7 @@ class ProjektController {
 	 * 
 	 */
 	def zentralgeratGewahlt = {
-		// TODO Check old and new value
+		// TODO Compare old and new value; only change value when old != new
 		doLater {
 			view.raumVsVolumenstrom.removeAllItems()
 			// Hole Volumenströme des Zentralgeräts
