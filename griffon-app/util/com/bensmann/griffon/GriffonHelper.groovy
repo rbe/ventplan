@@ -9,15 +9,81 @@
 package com.bensmann.griffon
 
 /**
- * 
+ * Several helpers for Griffon.
  */
 class GriffonHelper {
 	
 	/**
-	 * 
+	 * Cache for created dialog instances.
+	 */
+	private static dialogCache = [:]
+	
+	/**
+	 * Colors.
 	 */
 	private static final java.awt.Color MY_YELLOW = new java.awt.Color(255, 255, 180)
 	private static final java.awt.Color MY_RED = new java.awt.Color(255, 80, 80)
+	
+	/**
+	 * Establish private EventPublisher relationship between two classes.
+	 */
+	def static tieEventListener = { me, klass, props = [:] ->
+		println "tieEventListener: setting up eventlistener relationship with ${klass}"
+		def el = klass.newInstance(props)
+		me.addEventListener(el)
+		el.addEventListener(me)
+	}
+	
+	/**
+	 * Dump a change.
+	 */
+	def static dumpPropertyChange = { name, evt, k ->
+		println "${name}.${k}.${evt.propertyName}: value changed: ${evt.oldValue?.dump()} -> ${evt.newValue?.dump()}"
+	}
+	
+	/**
+	 * Recursively add PropertyChangeListener to the map itself and all nested maps.
+	 */
+	def static addMapPropertyChange = { name, map, closure = {} ->
+		map.each { k, v ->
+			if (v instanceof ObservableMap) {
+				//println "addMapPropertyChange: adding PropertyChangeListener to ${name} for ${k}"
+				v.addPropertyChangeListener({ evt ->
+					GriffonHelper.dumpPropertyChange.delegate = v
+					GriffonHelper.dumpPropertyChange(name, evt, k)
+					closure()
+				} as java.beans.PropertyChangeListener)
+				GriffonHelper.addMapPropertyChange(name, v)
+			}
+		}
+	}
+	
+	/**
+	 * Show a dialog.
+	 */
+	def static showDialog = { builder, dialogClass, dialogProp = [:] ->
+		def dialog = dialogCache[dialogClass]
+		if (!dialog) {
+			// Properties for dialog
+			def prop = [
+					title: "Ein Dialog",
+					visible: false,
+					modal: true,
+					pack: true,
+					locationByPlatform: true
+				] + dialogProp
+			// Create dialog instance
+			dialog = builder.dialog(prop) {
+					build(dialogClass)
+				}
+			// Cache dialog instance
+			dialogCache[dialogClass] = dialog
+		}
+		// Show dialog
+		dialog.show()
+		// Return dialog instance
+		dialog
+	}
 	
 	/**
 	 * Apply a closure to a component or recurse component's components.
@@ -157,10 +223,10 @@ class GriffonHelper {
 	def static toString2Converter = { v ->
 		if (v instanceof Number) {
 			def v2 = v?.toString2()
-			println "toString2Converter: ${v?.dump()} -> ${v2?.dump()}"
+			//println "toString2Converter: ${v?.dump()} -> ${v2?.dump()}"
 			v2
 		} else if (v) {
-			throw new IllegalStateException("toString2Converter: You tried to convert a String: ${v?.dump()}")
+			throw new IllegalStateException("toString2Converter: You tried to convert a String to a String: ${v?.dump()}")
 		}
 	}
 	
@@ -170,10 +236,10 @@ class GriffonHelper {
 	def static toString3Converter = { v ->
 		if (v instanceof Number) {
 			def v3 = v?.toString2(3)
-			println "toString3Converter: ${v?.dump()} -> ${v3?.dump()}"
+			//println "toString3Converter: ${v?.dump()} -> ${v3?.dump()}"
 			v3
 		} else if (v) {
-			throw new IllegalStateException("toString3Converter: You tried to convert a String: ${v?.dump()}")
+			throw new IllegalStateException("toString3Converter: You tried to convert a String to a String: ${v?.dump()}")
 		}
 	}
 	
