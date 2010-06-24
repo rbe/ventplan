@@ -21,6 +21,7 @@ class ProjektController {
 	def view
 	def wacCalculationService
 	def wacModelService
+	def dialogCache = [:]
 	
 	/**
 	 * Initialize MVC group.
@@ -39,6 +40,10 @@ class ProjektController {
 		} as ca.odell.glazedlists.event.ListEventListener)
 		*/
 		// Lookup values from database and put them into our model
+		model.meta.raumVsBezeichnungZuluftventile =
+			model.meta.raumVsBezeichnungAbluftventile =
+			wacModelService.getZuAbluftventile()
+		model.meta.raumVsUberstromelement = wacModelService.getUberstromelemente()
 		model.meta.zentralgerat = wacModelService.getZentralgerat()
 		model.meta.volumenstromZentralgerat = wacModelService.getVolumenstromFurZentralgerat(model.meta.zentralgerat[0])
 		// Setup private event listener
@@ -60,7 +65,7 @@ class ProjektController {
 	def addMapPropertyChange = { name, map ->
 		map.each { k, v ->
 			if (v instanceof ObservableMap) {
-				println "addMapPropertyChange: adding PropertyChangeListener to ${name} for ${k}"
+				//println "addMapPropertyChange: adding PropertyChangeListener to ${name} for ${k}"
 				v.addPropertyChangeListener({ evt ->
 					dumpPropertyChange.delegate = v
 					dumpPropertyChange(name, evt, k)
@@ -69,6 +74,33 @@ class ProjektController {
 				addMapPropertyChange(name, v)
 			}
 		}
+	}
+	
+	/**
+	 * Show a dialog.
+	 */
+	def showDialog(dialogClass, dialogProp = [:]) {
+		def dialog = dialogCache[dialogClass]
+		if (!dialog) {
+			// Properties for dialog
+			def prop = [
+					title: "Ein Dialog",
+					visible: false,
+					modal: true,
+					pack: true,
+					locationByPlatform: true
+				] + dialogProp
+			// Create dialog instance
+			dialog = builder.dialog(prop) {
+					build(dialogClass)
+				}
+			// Cache dialog instance
+			dialogCache[dialogClass] = dialog
+		}
+		// Show dialog
+		dialog.show()
+		// Return dialog instance
+		dialog
 	}
 	
 	/**
@@ -294,7 +326,7 @@ class ProjektController {
 		if (raumWerte.raumLuftart == "ÜB") {
 			def (zuluftfaktor, neuerZuluftfaktor) = wacCalculationService.prufeZuluftfaktor(raumWerte.raumZuluftfaktor)
 			if (zuluftfaktor != neuerZuluftfaktor) {
-				// TODO Dialog
+				// TODO Dialog ... with Oxbow?
 				println "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
 			}
 			raumWerte.raumZuluftfaktor = neuerZuluftfaktor
@@ -422,18 +454,10 @@ class ProjektController {
 		def row = view.raumTabelle.selectedRow
 		if (row > -1) {
 			// Aktuellen Raum in Metadaten setzen
-			//model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
-			model.map.raum.raume[row].each { k, v ->
-				try {
-					model.meta.gewahlterRaum[k] = v
-				} catch(e) {
-					println "!!!!!!!!!!!!!!!!!!!! ${k}=${v}: ${e}"
-				}
-			}
-			view.raumBearbeitenDialog = builder.build(RaumBearbeitenDialog)
-			println view.raumBearbeitenDialog
-			// Show dialog
-			view.raumBearbeitenDialog.visible = true
+			model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
+			println model.meta.gewahlterRaum
+			// Create new dialog
+			def dialog = showDialog(RaumBearbeitenView)
 		}
 	}
 	
