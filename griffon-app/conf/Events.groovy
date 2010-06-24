@@ -8,6 +8,9 @@
  */
 import com.westaflex.wac.*
 
+/**
+ * 
+ */
 onBootstrapEnd = { app ->
 	def startTime = System.currentTimeMillis()
 	println "Events.onBootstrapEnd: start"
@@ -108,6 +111,9 @@ onStartupStart = { app ->
 	println "Events.onStartupStart: finished in ${stopTime - startTime} ms"
 }
 
+/**
+ * 
+ */
 onStartupEnd = { app ->
 	def startTime = System.currentTimeMillis()
 	println "Events.onStartupEnd: start"
@@ -116,6 +122,9 @@ onStartupEnd = { app ->
 	println "Events.onStartupEnd: finished in ${stopTime - startTime} ms"
 }
 
+/**
+ * 
+ */
 onReadyStart = { app ->
 	def startTime = System.currentTimeMillis()
 	println "Events.onReadyStart: start"
@@ -124,6 +133,9 @@ onReadyStart = { app ->
 	println "Events.onReadyStart: finished in ${stopTime - startTime} ms"
 }
 
+/**
+ * 
+ */
 onReadyEnd = { app ->
 	def startTime = System.currentTimeMillis()
 	println "Events.onReadyEnd: start"
@@ -132,6 +144,9 @@ onReadyEnd = { app ->
 	println "Events.onReadyEnd: finished in ${stopTime - startTime} ms"
 }
 
+/**
+ * 
+ */
 onShutdownStart = { app ->
 	def startTime = System.currentTimeMillis()
 	println "Events.onShutdownStart: start"
@@ -140,14 +155,23 @@ onShutdownStart = { app ->
 	println "Events.onShutdownStart: finished in ${stopTime - startTime} ms"
 }
 
+/**
+ * 
+ */
 onNewInstance = { clazz, type, instance ->
 	println "Events.onNewInstance: clazz=${clazz} type=${type} instance=${instance}"
 }
 
+/**
+ * 
+ */
 onCreateMVCGroup = { mvcId, model, view, controller, mvcType, instances ->
 	println "Events.onCreateMVCGroup: mvcId=${mvcId}"
 }
 
+/**
+ * 
+ */
 onDestroyMVCGroup = { mvcId ->
 	println "Events.onDestroyMVCGroup: mvcId=${mvcId}"
 }
