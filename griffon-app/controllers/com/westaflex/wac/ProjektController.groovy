@@ -47,6 +47,11 @@ class ProjektController {
 		GH.tieEventListener(this, AussenluftVsEvents, props)
 	}
 	
+	Object invokeMethod(String methodName, Object params) {
+		println "invokeMethod: ${methodName}"
+		this."${methodName}"(params)
+	}
+	
 	/**
 	 * Gebäudedaten - Geometrie wurde manuell eingegeben.
 	 */
@@ -256,60 +261,10 @@ class ProjektController {
 	}
 	
 	/**
-	 * 
-	 */
-	def raumInTabelleGewahlt = { /*javax.swing.event.ListSelectionEvent*/evt ->
-		if (!evt.isAdjusting && evt.firstIndex > -1 && evt.lastIndex > -1) {
-			println "raumInTabelleGewahlt: ${evt}"
-			onRaumInTabelleWahlen(evt.lastIndex)
-		}
-	}
-	
-	/**
-	 * Einen bestimmten Raum in allen Tabellen markieren.
-	 */
-	def onRaumInTabelleWahlen = { row ->
-		doLater {
-			if (row > -1) {
-				// Raum in Raumdaten-Tabelle markieren
-				view.raumTabelle.changeSelection(row, 0, false, false)
-				// Raum in Raumvolumenströme-Zu/Abluftventile-Tabelle markieren
-				view.raumVsZuAbluftventileTabelle.changeSelection(row, 0, false, false)
-				// Raum in Raumvolumenströme-Überströmelemente-Tabelle markieren
-				view.raumVsUberstromventileTabelle.changeSelection(row, 0, false, false)
-				// Aktuellen Raum in Metadaten setzen
-				model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
-				/*
-				model.map.raum.raume[row].each { k, v ->
-					try {
-						model.meta.gewahlterRaum[k] = v
-					} catch(e) {
-						println "!!!!!!!!!!!!!!!!!!!! ${k}=${v}: ${e}"
-					}
-				}
-				*/
-			} else {
-				// TODO mmu view.raumTabelle.removeSelection?
-				model.meta.gewahlterRaum.removeAll()
-			}
-		}
-	}
-	
-	/**
 	 * Raumdaten - einen Raum entfernen.
 	 */
 	def raumEntfernen = {
-		// Get selected row
-		def row = view.raumTabelle.selectedRow
-		model.map.raum.raume.remove(row)
-		// Select new row
-		view.raumTabelle.with {
-			if (row == rowCount) row = rowCount - 1
-			else if (row < 0) row = 0
-			changeSelection(row, 0, false, false)
-		}
-		// Berechne alles, was von Räumen abhängt
-		publishEvent "RaumEntfernt"
+		publishEvent "RaumEntfernen", [view.raumTabelle.selectedRow/*model.meta.gewahlterRaum.position*/]
 	}
 	
 	/**
@@ -325,7 +280,7 @@ class ProjektController {
 		x.position = model.map.raum.raume.size()
 		// Add to model
 		model.map.raum.raume.add(x)
-		// Select new row
+		// Select new row TODO publishEvent "RaumInTabelleWahlen"
 		view.raumTabelle.with {
 			changeSelection(rowCount - 1, 0, false, false)
 		}
@@ -345,8 +300,8 @@ class ProjektController {
 				if (it.position == row - 1) it.position += 1
 				else if (it.position == row) it.position -= 1
 			}
-			model.syncRaumTableModels()
-			// Select new row
+			model.resyncRaumTableModels()
+			// Select new row TODO publishEvent "RaumInTabelleWahlen"
 			view.raumTabelle.with {
 				changeSelection(row - 1, 0, false, false)
 			}
@@ -365,8 +320,8 @@ class ProjektController {
 				if (it.position == row + 1) it.position -= 1
 				else if (it.position == row) it.position += 1
 			}
-			model.syncRaumTableModels()
-			// Select new row
+			model.resyncRaumTableModels()
+			// Select new row TODO publishEvent "RaumInTabelleWahlen"
 			view.raumTabelle.with {
 				changeSelection(row + 1, 0, false, false)
 			}
@@ -376,12 +331,13 @@ class ProjektController {
 	/**
 	 * Raumdaten - einen Raum bearbeiten.
 	 */
-	def raumBearbeiten = {
+	def raumBearbeiten = { // TODO Which raumIndex??
 		// Get selected row
 		def row = view.raumTabelle.selectedRow
 		if (row > -1) {
-			// Aktuellen Raum in Metadaten setzen
+			/* Aktuellen Raum in Metadaten setzen WAS ALREADY DONE VIA RaumInTabelleWahlen
 			model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
+			*/
 			// Show dialog
 			def dialog = GH.showDialog(builder, RaumBearbeitenView)
 			println "raumBearbeiten: dialog '${dialog.title}' closed"
@@ -429,10 +385,58 @@ class ProjektController {
 	}
 	
 	/**
+	 * In einer der Raum-Tabellen wurde die Auswahl durch den Benutzer geändert:
+	 * alle anderen Tabellen anpassen.
+	 */
+	def raumInTabelleGewahlt = { /*javax.swing.event.ListSelectionEvent*/evt, table ->
+		if (!evt.isAdjusting && evt.firstIndex > -1 && evt.lastIndex > -1) {
+			def selectedRow = evt.source/*javax.swing.ListSelectionModel*/.leadSelectionIndex
+			println "raumInTabelleGewahlt: ${evt.dump()}, selectedRow=${selectedRow}"
+			onRaumInTabelleWahlen(selectedRow/*evt.lastIndex*/, table)
+		}
+	}
+	
+	/**
+	 * Einen bestimmten Raum in allen Raum-Tabellen markieren.
+	 */
+	def onRaumInTabelleWahlen = { row, table = null ->
+		doLater {
+			def row2 = GH.checkRow(row, view.raumTabelle)
+			println "onRaumInTabelleWahlen: row=${row} -> ${row2}"
+			row = row2
+			if (row > -1) {
+				// Raum in Raumdaten-Tabelle, Raumvolumenströme-Zu/Abluftventile-Tabelle, Raumvolumenströme-Überströmelemente-Tabelle markieren
+				view.with {
+					[raumTabelle, raumVsZuAbluftventileTabelle, raumVsUberstromventileTabelle].each {
+						// Prevent change selection again in table that issued selection event
+						if (table) {
+							println "onRaumInTabelleWahlen: " + (it == table) + "?"
+							if (it == table) return
+						}
+						println "onRaumInTabelleWahlen: changing selection for table ${it}"
+						it.changeSelection(row, 0, false, false)
+					}
+				}
+				// Aktuellen Raum in Metadaten setzen
+				model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
+			} else {
+				// Remove selection in all tables
+				view.with {
+					[raumTabelle, raumVsZuAbluftventileTabelle, raumVsUberstromventileTabelle].each {
+						it.clearSelection()
+					}
+				}
+				// Aktuell gewählten Raum in Metadaten leeren
+				model.meta.gewahlterRaum.removeAll()
+			}
+		}
+	}
+	
+	/**
 	 * 
 	 */
 	def zentralgeratGewahlt = {
-		// TODO Compare old and new value; only change value when old != new
+		// TODO rbe Compare old and new value; only change values when old != new?
 		doLater {
 			view.raumVsVolumenstrom.removeAllItems()
 			// Hole Volumenströme des Zentralgeräts

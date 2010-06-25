@@ -19,8 +19,21 @@ class RaumEvents {
 	def wacCalculationService
 	def wacModelService
 	
+	/**
+	 * Execute code 'later'.
+	 */
 	def doLater = { closure ->
 		javax.swing.SwingUtilities.invokeLater closure
+	}
+	
+	/**
+	 * 
+	 */
+	def syncUI = { closure = {} ->
+		doLater {
+			model.resyncRaumTableModels()
+			closure()
+		}
 	}
 	
 	/**
@@ -56,32 +69,50 @@ class RaumEvents {
 			raumWerte.raumZuluftfaktor = neuerZuluftfaktor
 		}
 		// Raum im Model unten (= position: ...size()) hinzufügen
+		def raum = raumWerte + [position: model.map.raum.raume.size() ?: 0]
 		doLater {
-			model.map.raum.raume << raumWerte + [position: model.map.raum.raume.size() ?: 0]
+			model.addRaum(raum)
+			onRaumHinzugefugt(model.map.raum.raume.size() - 1 ?: 0)
 		}
-		// Berechne alles, was von Räumen abhängt
-		onRaumGeandert()
 	}
 	
 	/**
-	 * Ein Raum wurde hinzugefügt - berechne alles, was von Räumen abhängt.
+	 * Ein Raum wurde hinzugefügt - berechnen und letzen Zeile in Tabellen wählen.
+	 */
+	def onRaumHinzugefugt = { raumIndex ->
+		doLater {
+			println "onRaumHinzugefugt: raumIndex=${raumIndex}"
+			// Neu berechnen
+			onRaumGeandert()
+			// Diesen Raum in allen Tabellen anwählen
+			publishEvent "RaumInTabelleWahlen", [raumIndex]
+		}
+	}
+	
+	/**
+	 * Ein Raum wurde geändert - berechne alles, was von Räumen abhängt.
 	 */
 	def onRaumGeandert = {
 		doLater {
 			println "processing event 'RaumGeandert'"
 			wacCalculationService.geometrieAusRaumdaten(model.map)
 			wacCalculationService.aussenluftVs(model.map)
-			model.syncRaumTableModels()
-			publishEvent "RaumInTabelleWahlen", [model.map.raum.raume.size() - 1]
 		}
 	}
 	
 	/**
 	 * 
 	 */
-	def onRaumEntfernt = {
-		println "processing event 'RaumEntfernt', delegating to 'RaumGeandert'"
-		onRaumGeandert()
+	def onRaumEntfernen = { raumIndex ->
+		doLater {
+			println "onRaumEntfernen: raumIndex=${raumIndex}"
+			// Raum aus Model entfernen
+			model.removeRaum(raumIndex)
+			// Neu berechnen
+			onRaumGeandert()
+			// Einen anderen Raum in allen Tabellen anwählen
+			publishEvent "RaumInTabelleWahlen", [raumIndex]
+		}
 	}
 	
 	/**
@@ -91,7 +122,7 @@ class RaumEvents {
 		doLater {
 			println "onRaumZuAbluftventileLuftmengeBerechnen: Berechne Luftmenge für Raum Nr. ${raumIndex}"
 			wacCalculationService.raumLuftmengeBerechnen(map, raumIndex)
-			model.syncRaumTableModels()
+			model.resyncRaumTableModels()
 		}
 	}
 	
@@ -102,7 +133,7 @@ class RaumEvents {
 		doLater {
 			println "onRaumUberstromelementeLuftmengeBerechnen: Berechne Luftmenge für Raum Nr. ${raumIndex}"
 			wacCalculationService.raumLuftmengeBerechnen(map, raumIndex)
-			model.syncRaumTableModels()
+			model.resyncRaumTableModels()
 		}
 	}
 	
