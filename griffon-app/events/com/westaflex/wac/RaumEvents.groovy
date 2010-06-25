@@ -60,15 +60,15 @@ class RaumEvents {
 			model.map.raum.raume << raumWerte + [position: model.map.raum.raume.size() ?: 0]
 		}
 		// Berechne alles, was von Räumen abhängt
-		onRaumHinzugefugt()
+		onRaumGeandert()
 	}
 	
 	/**
 	 * Ein Raum wurde hinzugefügt - berechne alles, was von Räumen abhängt.
 	 */
-	def onRaumHinzugefugt = {
+	def onRaumGeandert = {
 		doLater {
-			println "processing event 'RaumHinzugefugt'"
+			println "processing event 'RaumGeandert'"
 			wacCalculationService.geometrieAusRaumdaten(model.map)
 			wacCalculationService.aussenluftVs(model.map)
 			model.syncRaumTableModels()
@@ -80,8 +80,8 @@ class RaumEvents {
 	 * 
 	 */
 	def onRaumEntfernt = {
-		println "processing event 'RaumEntfernt', delegating to 'RaumHinzugefugt'"
-		onRaumHinzugefugt()
+		println "processing event 'RaumEntfernt', delegating to 'RaumGeandert'"
+		onRaumGeandert()
 	}
 	
 	/**

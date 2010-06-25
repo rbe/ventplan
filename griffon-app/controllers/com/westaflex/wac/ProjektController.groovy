@@ -335,7 +335,7 @@ class ProjektController {
 			changeSelection(rowCount - 1, 0, false, false)
 		}
 		// Berechne alles, was von Räumen abhängt
-		publishEvent "RaumHinzugefugt"
+		publishEvent "RaumGeandert"
 	}
 	
 	/**
@@ -391,7 +391,7 @@ class ProjektController {
 			def dialog = GH.showDialog(builder, RaumBearbeitenView)
 			println "raumBearbeiten: dialog '${dialog.title}' closed"
 			// Berechne alles, was von Räumen abhängt
-			publishEvent "RaumHinzugefugt"
+			publishEvent "RaumGeandert"
 		}
 	}
 	
