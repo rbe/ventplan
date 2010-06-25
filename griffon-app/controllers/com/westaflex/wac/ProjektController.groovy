@@ -390,10 +390,12 @@ class ProjektController {
 	/**
 	 * In einer der Raum-Tabellen wurde die Auswahl durch den Benutzer geändert:
 	 * alle anderen Tabellen anpassen.
+	 * evt = javax.swing.event.ListSelectionEvent
 	 */
-	def raumInTabelleGewahlt = { /*javax.swing.event.ListSelectionEvent*/evt, table ->
+	def raumInTabelleGewahlt = { evt, table ->
 		if (!evt.isAdjusting && evt.firstIndex > -1 && evt.lastIndex > -1) {
-			def selectedRow = evt.source/*javax.swing.ListSelectionModel*/.leadSelectionIndex
+			// source = javax.swing.ListSelectionModel
+			def selectedRow = evt.source.leadSelectionIndex
 			println "raumInTabelleGewahlt: ${evt.dump()}, selectedRow=${selectedRow}"
 			onRaumInTabelleWahlen(selectedRow/*evt.lastIndex*/, table)
 		}
