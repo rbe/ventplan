@@ -11,76 +11,76 @@ import groovy.ui.Console
 
 neuesProjektAction = action(
 		id: "neuesProjektAction",
-		enabled: true,
 		name: "Neues Projekt",
 		mnemonic: "N",
 		accelerator: shortcut("N"),
 		smallIcon: imageIcon(resource: "/menu/neuesprojekt.png"),
+		enabled: true,
 		closure: controller.neuesProjekt
 	)
 
 projektOeffnenAction = action(
 		id: "projektOeffnenAction",
-		enabled: true,
 		name: "Projekt öffnen",
 		mnemonic: "O",
 		accelerator: shortcut("O"),
 		smallIcon: imageIcon(resource: "/menu/projektoeffnen.png", class: Console),
+		enabled: true,
 		closure: {}
 	)
 
 projektSpeichernAction = action(
 		id: "projektSpeichernAction",
-		enabled: true,
 		name: "Projekt speichern",
 		mnemonic: "S",
 		accelerator: shortcut("S"),
 		smallIcon: imageIcon("/menu/projektspeichern.png"),
+		enabled: bind { model.aktivesProjekt?.model?.map?.dirty == true },
 		closure: {}
 	)
 
 projektSpeichernAlsAction = action(
 		id: "projektSpeichernAlsAction",
-		enabled: true,
 		name: "Projekt speichern als...",
 		mnemonic: "A",
 		accelerator: shortcut("shift S"),
 		smallIcon: imageIcon("/menu/projektspeichern.png"),
+		enabled: bind { model.aktivesProjekt?.model?.map?.dirty == true },
 		closure: {}
 	)
 
 projektSchliessenAction = action(
 		id: "projektSchliessenAction",
-		enabled: true,
 		name: "Projekt schliessen",
 		mnemonic: "W",
 		accelerator: shortcut("W"),
+		enabled: bind { model.aktivesProjekt.model != null },
 		closure: {}
 	)
 
-seitenansichtAction = action(
+projektSeitenansichtAction = action(
 		id: "seitenansichtAction",
-		enabled: true,
 		name: "Seitenansicht",
 		smallIcon: imageIcon("/menu/seitenansicht.png"),
+		enabled: bind { model.aktivesProjekt.model != null },
 		closure: {}
 	)
 
-druckenAction = action(
+projektDruckenAction = action(
 		id: "druckenAction",
-		enabled: true,
 		name: "Drucken",
 		mnemonic: "P",
 		accelerator: shortcut("P"),
 		smallIcon: imageIcon("/menu/drucken.png"),
+		enabled: bind { model.aktivesProjekt.model != null },
 		closure: {}
 	)
 
 exitAction = action(
 		id: "exitAction",
-		enabled: true,
 		name: "WestaWAC beenden",
 		mnemonic: "Q",
 		accelerator: shortcut("Q"),
+		enabled: true,
 		closure: {}
 	)

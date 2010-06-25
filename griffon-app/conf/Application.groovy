@@ -7,7 +7,7 @@ mvcGroups {
 	Projekt {
 		model = "com.westaflex.wac.ProjektModel"
 		controller = "com.westaflex.wac.ProjektController"
-		actions = "ProjektActions"
+		actions = "com.westaflex.wac.ProjektActions"
 		view = "com.westaflex.wac.ProjektView"
 	}
 	wac2 {
