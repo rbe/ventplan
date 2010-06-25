@@ -32,14 +32,8 @@ class ProjektController {
 		GH.addMapPropertyChange("meta", model.meta)
 		// Add PropertyChangeListener to our model.map
 		GH.addMapPropertyChange("map", model.map, { model.dirty = true })
-		// Lookup values from database and put them into our model
-		// TODO rbe Move into Wac2 MVC group as this data is needed for every single project
-		model.meta.raumVsBezeichnungZuluftventile =
-			model.meta.raumVsBezeichnungAbluftventile =
-			wacModelService.getZuAbluftventile()
-		model.meta.raumVsUberstromelement = wacModelService.getUberstromelemente()
-		model.meta.zentralgerat = wacModelService.getZentralgerat()
-		model.meta.volumenstromZentralgerat = wacModelService.getVolumenstromFurZentralgerat(model.meta.zentralgerat[0])
+		// Reference meta values
+		model.meta = app.models['wac2'].meta
 		// Setup private event listener
 		// This properties are used with constructor of the event listener
 		def props = [
@@ -267,6 +261,7 @@ class ProjektController {
 	def raumInTabelleGewahlt = { /*javax.swing.event.ListSelectionEvent*/evt ->
 		if (!evt.isAdjusting && evt.firstIndex > -1 && evt.lastIndex > -1) {
 			println "raumInTabelleGewahlt: ${evt}"
+			onRaumInTabelleWahlen(evt.lastIndex)
 		}
 	}
 	

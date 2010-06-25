@@ -15,8 +15,19 @@ class Wac2Controller {
 	
 	def model
 	def view
+	def wacModelService
 	
 	void mvcGroupInit(Map args) {
+		// Lookup values from database and put them into our model
+		doOutside {
+			model.meta.raumVsBezeichnungZuluftventile =
+				model.meta.raumVsBezeichnungAbluftventile =
+				wacModelService.getZuAbluftventile()
+			model.meta.raumVsUberstromelement = wacModelService.getUberstromelemente()
+			model.meta.zentralgerat = wacModelService.getZentralgerat()
+			model.meta.volumenstromZentralgerat = wacModelService.getVolumenstromFurZentralgerat(model.meta.zentralgerat[0])
+			println model.meta
+		}
 	}
 	
 	/**
