@@ -47,10 +47,13 @@ class ProjektController {
 		GH.tieEventListener(this, AussenluftVsEvents, props)
 	}
 	
+	/**
+	 * Method call interception.
 	Object invokeMethod(String methodName, Object params) {
-		println "invokeMethod: ${methodName}"
-		this."${methodName}"(params)
+		println ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> invokeMethod: ${methodName}"
+		metaClass.invokeMethod(this, methodName, params)
 	}
+	 */
 	
 	/**
 	 * Gebäudedaten - Geometrie wurde manuell eingegeben.
@@ -397,34 +400,35 @@ class ProjektController {
 	}
 	
 	/**
+	 * Execute code with all Raum-tables...
+	 */
+	def withAllRaumTables = { closure ->
+		view.with {
+			[raumTabelle, raumVsZuAbluftventileTabelle, raumVsUberstromventileTabelle].each { t ->
+				closure(t)
+			}
+		}
+	}
+	
+	/**
 	 * Einen bestimmten Raum in allen Raum-Tabellen markieren.
 	 */
 	def onRaumInTabelleWahlen = { row, table = null ->
 		doLater {
 			def row2 = GH.checkRow(row, view.raumTabelle)
-			println "onRaumInTabelleWahlen: row=${row} -> ${row2}"
+			//println "onRaumInTabelleWahlen: row=${row} -> ${row2}"
 			row = row2
 			if (row > -1) {
 				// Raum in Raumdaten-Tabelle, Raumvolumenströme-Zu/Abluftventile-Tabelle, Raumvolumenströme-Überströmelemente-Tabelle markieren
-				view.with {
-					[raumTabelle, raumVsZuAbluftventileTabelle, raumVsUberstromventileTabelle].each {
-						// Prevent change selection again in table that issued selection event
-						if (table) {
-							println "onRaumInTabelleWahlen: " + (it == table) + "?"
-							if (it == table) return
-						}
-						println "onRaumInTabelleWahlen: changing selection for table ${it}"
-						it.changeSelection(row, 0, false, false)
-					}
+				withAllRaumTables { t ->
+					GH.withDisabledListSelectionListeners t, { -> changeSelection(row, 0, false, false) }
 				}
 				// Aktuellen Raum in Metadaten setzen
 				model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
 			} else {
 				// Remove selection in all tables
-				view.with {
-					[raumTabelle, raumVsZuAbluftventileTabelle, raumVsUberstromventileTabelle].each {
-						it.clearSelection()
-					}
+				withAllRaumTables { t ->
+					t.clearSelection()
 				}
 				// Aktuell gewählten Raum in Metadaten leeren
 				model.meta.gewahlterRaum.removeAll()
