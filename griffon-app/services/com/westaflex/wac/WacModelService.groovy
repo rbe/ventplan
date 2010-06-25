@@ -26,7 +26,7 @@ class WacModelService {
 			}?.collect {
 				it.artikelnummer
 			}
-		println "getZentralgerat: ${r?.dump()}"
+		//println "getZentralgerat: ${r?.dump()}"
 		r
 	}
 	
@@ -39,7 +39,7 @@ class WacModelService {
 			}?.collect {
 				it.volumenstrom
 			}
-		println "getVolumenstromFurZentralgerat: ${r?.dump()}"
+		//println "getVolumenstromFurZentralgerat: ${r?.dump()}"
 		r
 	}
 	
@@ -52,7 +52,7 @@ class WacModelService {
 			}?.collect {
 				it.artikelnummer
 			}
-		println "getZuluftventile: ${r?.dump()}"
+		//println "getZuluftventile: ${r?.dump()}"
 		r
 	}
 	
@@ -65,7 +65,7 @@ class WacModelService {
 			}?.collect {
 				it.artikelnummer
 			}
-		println "getUberstromElemente: ${r?.dump()}"
+		//println "getUberstromElemente: ${r?.dump()}"
 		r
 	}
 	
@@ -76,7 +76,7 @@ class WacModelService {
 		def r = withSql { sql ->
 				sql.firstRow("SELECT maxvolumenstrom FROM artikelstamm WHERE artikelnummer = ? ORDER BY maxvolumenstrom", [artikel])
 			}
-		println "getMaxVolumenstrom(${artikel}): ${r?.dump()}"
+		//println "getMaxVolumenstrom(${artikel}): ${r?.dump()}"
 		r ? r as Integer : 0
 	}
 	
