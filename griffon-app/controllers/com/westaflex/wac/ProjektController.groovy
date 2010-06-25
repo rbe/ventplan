@@ -431,7 +431,7 @@ class ProjektController {
 					t.clearSelection()
 				}
 				// Aktuell gewählten Raum in Metadaten leeren
-				model.meta.gewahlterRaum.removeAll()
+				model.meta.gewahlterRaum.clear()
 			}
 		}
 	}
