@@ -21,13 +21,12 @@ class ProjektModel {
 	String mvcId
 	
 	/**
-	 * Was the model changed (since last save)? This is set true by
-	 * a PropertyChangeListener installed in ProjectController.addMapPropertyChange().
+	 * Was the model changed (since last save)? This is set true by a PropertyChangeListener installed in ProjectController.addMapPropertyChangeListener().
 	 */
 	boolean dirty
 	
 	/**
-	 * Meta-data.
+	 * Meta-data: will be initialized by ProjektController.
 	 */
 	@Bindable meta
 	
@@ -179,7 +178,7 @@ class ProjektModel {
 	 * Einen Raum im Model hinzufügen, alle TableModels synchronisieren.
 	 */
 	def addRaum = { raum ->
-		println "addRaum: adding raum=${raum.dump()}"
+		//println "addRaum: adding raum=${raum.dump()}"
 		map.raum.raume << raum
 		// Sync table models
 		[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
@@ -191,14 +190,18 @@ class ProjektModel {
 	 * Einen Raum aus dem Model entfernen, alle TableModels synchronisieren.
 	 */
 	def removeRaum = { raumIndex ->
-		println "removeRaum: removing Raum#${raumIndex}"
+		//println "removeRaum: removing raumIndex=${raumIndex}"
+		/*
 		map.raum.raume.eachWithIndex { r, i ->
 			println "BEFORE raumIndex=${raumIndex} i=${i}: ${r.raumBezeichnung} ${r.position}"
 		}
+		*/
 		map.raum.raume.remove(raumIndex)
+		/*
 		map.raum.raume.eachWithIndex { r, i ->
 			println "AFTER raumIndex=${raumIndex} i=${i}: ${r.raumBezeichnung} ${r.position}"
 		}
+		*/
 		// Sync table models
 		[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
 			it.remove(raumIndex)
@@ -209,7 +212,16 @@ class ProjektModel {
 	 * Synchronize all Swing table models depending on map.raum.raume.
 	 */
 	def resyncRaumTableModels() {
-		println "resyncRaumTableModels"
+		// Räume sortieren, damit die Liste immer der Position des Raums und der Reihenfolge im TableModel entspricht
+		// Nicht zwingend notwendig, da die TableModels bereits nach Position sortieren:
+		// SortedList(new BasicEventList(), { a, b -> a.position <=> b.position } as Comparator)
+		// TODO rbe Following code throws java.lang.IndexOutOfBoundsException: Index: 2, Size: 2
+		//println map.raum.raume.sort { a, b -> a.position <=> b.position }
+		/*
+		map.raum.raume.eachWithIndex { r, i ->
+			println "resyncRaumTableModels: ${r.raumBezeichnung}: i=${i} == position=${r.position}?"
+		}
+		*/
 		// Raumdaten
 		tableModels.raume.clear()
 		tableModels.raume.addAll(map.raum.raume)
