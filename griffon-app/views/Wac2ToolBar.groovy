@@ -6,9 +6,8 @@
  * All Rights Reserved. Use is subject to license terms, see http://www.bensmann.com/license_en.html
  * 
  */
-import javax.swing.SwingConstants
 
-def vertSep = { -> separator(orientation: SwingConstants.VERTICAL) }
+def vertSep = { -> separator(orientation: javax.swing.SwingConstants.VERTICAL) }
 
 toolBar(id: 'toolbar', rollover: true) {
 	button(neuesProjektAction, text: null)
@@ -17,8 +16,8 @@ toolBar(id: 'toolbar', rollover: true) {
 	button(projektSpeichernAction, text: null)
 	button(projektSpeichernAlsAction, text: null)
 	vertSep()
-	button(seitenansichtAction, text: null)
-	button(druckenAction, text: null)
+	button(projektSeitenansichtAction, text: null)
+	button(projektDruckenAction, text: null)
 	/*
 	button(undoAction, text: null)
 	button(redoAction, text: null)
@@ -34,5 +33,3 @@ toolBar(id: 'toolbar', rollover: true) {
 	button(snapshotAction, text: null)
 	*/
 }
-
-//return toolbar

@@ -6,17 +6,12 @@
  * All Rights Reserved. Use is subject to license terms, see http://www.bensmann.com/license_en.html
  * 
  */
-import java.awt.Toolkit
-import javax.swing.WindowConstants
 
-// Build actions
-build(Wac2Actions)
-def screen = Toolkit.getDefaultToolkit().getScreenSize()
+def screen = java.awt.Toolkit.defaultToolkit.screenSize
 
 application(title: 'WestaWAC 2',
 	size: [screen.width as int, screen.height as int],
 	pack: false,
-	//location:[50,50],
 	locationByPlatform: true,
 	iconImage: imageIcon('/griffon-icon-48x48.png').image,
 	iconImages: [
@@ -25,14 +20,14 @@ application(title: 'WestaWAC 2',
 		imageIcon('/griffon-icon-16x16.png').image
 	],
 	// Our window close listener
-	defaultCloseOperation: WindowConstants.DO_NOTHING_ON_CLOSE,
+	defaultCloseOperation: javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE,
 	windowClosing: { evt ->
-		// TODO Ask service if we can close
-		if (true) {
-			println "windowClosing(${evt})"
+		// Ask if we can close
+		if (controller.canClose()) {
 			app.shutdown()
 		} else {
-			println "windowClosing(${evt}): else"
+			println "windowClosing(${evt}): there are unsaved changes"
+			// TODO mmu Show dialog: ask user for save, cancel, quit
 		}
 	}
 ) {
@@ -43,7 +38,7 @@ application(title: 'WestaWAC 2',
 	// Content
 	widget(build(Wac2MainPane))
 	// The status bar
-	jxstatusBar(id: "statusBar") {
-		label("statusbar")
+	jxstatusBar(id: "mainStatusBar") {
+		label(id: "mainStatusBarText", text: bind { model.statusBarText })
 	}
 }
