@@ -415,9 +415,8 @@ class ProjektController {
 	 */
 	def onRaumInTabelleWahlen = { row, table = null ->
 		doLater {
-			def row2 = GH.checkRow(row, view.raumTabelle)
-			//println "onRaumInTabelleWahlen: row=${row} -> ${row2}"
-			row = row2
+			//println "onRaumInTabelleWahlen: row=${row}"
+			row = GH.checkRow(row, view.raumTabelle)
 			if (row > -1) {
 				// Raum in Raumdaten-Tabelle, Raumvolumenströme-Zu/Abluftventile-Tabelle, Raumvolumenströme-Überströmelemente-Tabelle markieren
 				withAllRaumTables { t ->
