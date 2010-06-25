@@ -89,10 +89,28 @@ class GriffonHelper {
 	 * Check row to select in a table.
 	 */
 	def static checkRow = { row, table ->
-		println "checkRow: row=${row}, table=${table}"
+		//println "checkRow: row=${row}, table=${table}"
 		if (0 <= row && row < table.rowCount) return row
 		else if (row < 0) return 0
 		else if (row >= table.rowCount) return table.rowCount - 1
+	}
+	
+	/**
+	 * Execute code with disabled ListSelectionListeners on a table.
+	 * The given table is set as the delegate for the closure.
+	 */
+	def static withDisabledListSelectionListeners = { table, closure ->
+		def lsm = table.selectionModel
+		// Save existing ListSelectionListeners
+		def lsl = lsm.listSelectionListeners
+		lsl.each { lsm.removeListSelectionListener(it) }
+		// Execute closure
+		closure.delegate = table
+		closure()
+		// Re-add ListSelectionListeners
+		lsl.each { lsm.addListSelectionListener(it) }
+		// Repaint, as default decorator is removed
+		table.repaint()
 	}
 	
 	/**
