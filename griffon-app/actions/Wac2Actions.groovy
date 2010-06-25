@@ -35,7 +35,7 @@ projektSpeichernAction = action(
 		mnemonic: "S",
 		accelerator: shortcut("S"),
 		smallIcon: imageIcon("/menu/projektspeichern.png"),
-		enabled: bind { model.aktivesProjekt?.model?.map?.dirty == true },
+		enabled: bind { model.aktivesProjekt?.model?.dirty == true }, // TODO This does not work!
 		closure: {}
 	)
 
@@ -45,7 +45,7 @@ projektSpeichernAlsAction = action(
 		mnemonic: "A",
 		accelerator: shortcut("shift S"),
 		smallIcon: imageIcon("/menu/projektspeichern.png"),
-		enabled: bind { model.aktivesProjekt?.model?.map?.dirty == true },
+		enabled: bind { model.aktivesProjekt?.model?.dirty == true }, // TODO This does not work!
 		closure: {}
 	)
 
