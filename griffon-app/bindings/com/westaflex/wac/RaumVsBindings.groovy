@@ -11,6 +11,14 @@ package com.westaflex.wac
 import com.bensmann.griffon.GriffonHelper as GH
 
 // Raumvolumenströme
+// Add list selection listener to synchronize every table's selection and model.meta.gewahlterRaum
+[raumVsZuAbluftventileTabelle, raumVsUberstromventileTabelle].each {
+	it.selectionModel.addListSelectionListener([
+		valueChanged: { evt ->
+				controller.raumInTabelleGewahlt(evt, it)
+			}
+		] as javax.swing.event.ListSelectionListener)
+}
 // Binding for items of comboboxes is done in RaumVsiew!
 bind(source: model.map.raum.raumVs, sourceProperty: "gesamtVolumenNE",                     target: "raumVsGesamtVolumenNE",                   targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.raum.raumVs, sourceProperty: "luftwechselNE",                       target: "raumVsLuftwechselNE",                     targetProperty: "text", converter: GH.toString2Converter)
@@ -22,5 +30,4 @@ bind(source: model.map.raum.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsNl", t
 bind(source: model.map.raum.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsIl", target: "raumVsAussenluftVsDerLtmIl", targetProperty: "text", converter: GH.toString2Converter)
 //
 raumVsZentralgerat.actionPerformed = controller.zentralgeratGewahlt
-
 raumVsRaumBearbeiten.actionPerformed = controller.raumBearbeiten

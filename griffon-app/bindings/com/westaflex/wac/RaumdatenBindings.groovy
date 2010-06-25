@@ -9,12 +9,14 @@
 package com.westaflex.wac
 
 // Raumdaten - Raum-Eingabe
-// Add list selection listener and synchronize every table's selection and model.meta.gewahlterRaum
-raumTabelle.selectionModel.addListSelectionListener([
-	valueChanged: { evt ->
-			controller.raumInTabelleGewahlt(evt)
-		}
-	] as javax.swing.event.ListSelectionListener)
+// Add list selection listener to synchronize every table's selection and model.meta.gewahlterRaum
+[raumTabelle].each {
+	it.selectionModel.addListSelectionListener([
+		valueChanged: { evt ->
+				controller.raumInTabelleGewahlt(evt, it)
+			}
+		] as javax.swing.event.ListSelectionListener)
+}
 // Binding for items of comboboxes is done in RaumdatenView!
 // Combobox Raumtyp
 raumTyp.actionPerformed = controller.raumTypGeandert
