@@ -22,3 +22,4 @@
  * - UIThreadHelper.instance.executeOutside { // your code }
  * - UIThreadHelper.instance.executeFuture { // your code }
  */
+println "lifecycle.Startup"

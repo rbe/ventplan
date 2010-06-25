@@ -26,5 +26,6 @@
 import groovy.swing.SwingBuilder
 import griffon.util.GriffonPlatformHelper
 
+println "lifecycle.Initialize"
 GriffonPlatformHelper.tweakForNativePlatform(app)
 SwingBuilder.lookAndFeel('mac', 'nimbus', 'gtk', ['metal', [boldFonts: false]])
