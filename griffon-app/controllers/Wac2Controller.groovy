@@ -26,7 +26,6 @@ class Wac2Controller {
 			model.meta.raumVsUberstromelement = wacModelService.getUberstromelemente()
 			model.meta.zentralgerat = wacModelService.getZentralgerat()
 			model.meta.volumenstromZentralgerat = wacModelService.getVolumenstromFurZentralgerat(model.meta.zentralgerat[0])
-			println model.meta
 		}
 	}
 	
