@@ -28,25 +28,25 @@ Groovy + Debugging: http://groovy.codehaus.org/Debugging+with+JSwat
 II. ARCHITECTURE
 ================
 
-A. Application layout
+A. Application Layout
 ---------------------
 
-                       updates via (mutual) Bindings
+                       updates via (mutual) bindings
               View  <-------------------\
-            ^      |                    |
-            |      | uses               |
-    updates |      |                    |
-            |      v     updates        v
+              ^  |                      |
+              |  | uses                 |
+      updates |  |                      |
+              |  v        updates       v
             Controller -------------> Model
-             ^     |                    ^
-             |     | publishes          |
-             |     |                    |
-   publishes |     v                    |
-              Event                     |
-                |                       |
-                |                       |
-                | uses                  |
-                v                       |
+              ^   |                     ^
+              |   | publishes           |
+    publishes |   |                     |
+              |   v                     |
+              Event ------------------->|
+                  |      updates        |
+                  |                     |
+                  | uses                |
+                  v                     |
              Service(s) ----------------/  updates
 
 Model: a bindable Map "map" in ProjektModel.groovy
@@ -82,37 +82,37 @@ A. Gebäudedaten
 Geometrie
 
 1. Bei Eingabe von Wohnfläche und mittlere Raumhöhe: Luftvolumen und gelüftetes Volumen errechnen
-	TextField, focusLost -> ProjektProjektController.berechneGeometrie
+	TextField, focusLost -> ProjektController.berechneGeometrie
 
 2. Bei Eingabe gelüftete Fläche das gelüftete Volumen berechnen
-	TextField, focusLost -> ProjektProjektController.berechneGeometrie
+	TextField, focusLost -> ProjektController.berechneGeometrie
 
 Luftdichtheit der Gebäudehülle
 
 1. Bei Auswahl einer Kategorie Standardwerte unter Messwerte setzen
-	Radiobox, change -> ProjektProjektController.luftdichtheitKategorie<X>
+	Radiobox, change -> ProjektController.luftdichtheitKategorie<X>
 
 2. Bei Auswahl Messwerte können diese selbst eingegeben werden
-	TextField, focusLost -> ProjektProjektController.speichereLuftdichtheit
+	TextField, focusLost -> ProjektController.speichereLuftdichtheit
 
 Geplante Belegung
 
 1. Mindestaußenluftrate = Personenanzahl * geplante Belegung
-	Spinner, stateChanged -> ProjektProjektController.berechneMindestaussenluftrate
+	Spinner, stateChanged -> ProjektController.berechneMindestaussenluftrate
 
 
 B. Anlagendaten
 ---------------
 
 1. Auswahl von Energie-Kennzeichen verändert Kennzeichnung der Lüftungsanlage
-	Checkbox, actionPerformed -> ProjektProjektController.berechneEnergieKennzeichen
+	Checkbox, actionPerformed -> ProjektController.berechneEnergieKennzeichen
 
 2. Auswahl von Hygiene-Kennzeichen verändert Kennzeichnung der Lüftungsanlage
-	Checkbox, actionPerformed -> ProjektProjektController.berechneHygieneKennzeichen
+	Checkbox, actionPerformed -> ProjektController.berechneHygieneKennzeichen
 
 3. Auswahl von Rückschlagkappe, Schallschutz-Kennzeichnung, Feuerstätten-Kennzeichnung
    verändert Kennzeichnung der Lüftungsanlage
-	Checkbox, actionPerformed -> ProjektProjektController.berechneKennzeichenLuftungsanlage
+	Checkbox, actionPerformed -> ProjektController.berechneKennzeichenLuftungsanlage
 
 
 C. Raumdaten
@@ -121,7 +121,7 @@ C. Raumdaten
 Eingabe eines Raumes
 
 1. Auswahl des Raumtyps verändert die Voreinstellung für: Luftart, Zuluftfaktor, Abluftvolumenstrom
-	Combobox, actionPerformed -> ProjektProjektController.raumTypGeandert
+	Combobox, actionPerformed -> ProjektController.raumTypGeandert
 
 2. Verändern von Räumen:
 	raumHinzufugen.actionPerformed			 -> ProjektController.raumHinzufugen
@@ -138,8 +138,8 @@ D. Außenluftvolumenströme
 -------------------------
 
 1. Automatische Berechnung der AVS, wenn:
-	Geometrie geändert wird
-	ein Raum eingegeben, verändert wird
+	* Geometrie geändert wird
+	* ein Raum eingegeben, verändert wird
 	aussenluftVsGesamtLtmInfiltrationsanteil.actionPerformed -> ProjektController.berechneAussenluftVs
 
 E. Raumvolumenströme
