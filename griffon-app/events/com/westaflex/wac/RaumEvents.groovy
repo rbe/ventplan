@@ -1,7 +1,7 @@
 /**
  * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/events/com/westaflex/wac/RaumEvents.groovy
  * 
- * Copyright (C) 1996-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
  * Alle Rechte vorbehalten. Nutzungslizenz siehe http://www.bensmann.com/license_de.html
  * All Rights Reserved. Use is subject to license terms, see http://www.bensmann.com/license_en.html
  * 
@@ -70,6 +70,7 @@ class RaumEvents {
 		}
 		// Raum im Model unten (= position: ...size()) hinzufügen
 		def raum = raumWerte + [position: model.map.raum.raume.size() ?: 0]
+		println "adding raum with position " + raum.position
 		doLater {
 			model.addRaum(raum)
 			onRaumHinzugefugt(model.map.raum.raume.size() - 1 ?: 0)
@@ -101,7 +102,7 @@ class RaumEvents {
 	}
 	
 	/**
-	 * 
+	 * Einen Raum entfernen.
 	 */
 	def onRaumEntfernen = { raumIndex ->
 		doLater {
