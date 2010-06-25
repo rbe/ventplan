@@ -23,17 +23,27 @@ class ProjektController {
 	def wacModelService
 	
 	/**
+	 * User's settings.
+	 */
+	private def prefs = java.util.prefs.Preferences.userNodeForPackage(ProjektController)
+	
+	/**
 	 * Initialize MVC group.
 	 */
 	void mvcGroupInit(Map args) {
 		// Save MVC id
 		model.mvcId = args.mvcId
 		// Add PropertyChangeListener to our model.meta
-		GH.addMapPropertyChange("meta", model.meta)
+		GH.addMapPropertyChangeListener("meta", model.meta)
 		// Add PropertyChangeListener to our model.map
-		GH.addMapPropertyChange("map", model.map, { model.dirty = true })
+		GH.addMapPropertyChangeListener("map", model.map, {
+				if (!model.dirty) {
+					model.dirty = true
+					println "set dirty flag=${model.dirty}"
+				}
+			})
 		// Reference meta values
-		model.meta = app.models['wac2'].meta
+		model.meta = app.models["wac2"].meta
 		// Setup private event listener
 		// This properties are used with constructor of the event listener
 		def props = [
@@ -50,10 +60,24 @@ class ProjektController {
 	/**
 	 * Method call interception.
 	Object invokeMethod(String methodName, Object params) {
-		println ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> invokeMethod: ${methodName}"
+		println "ProjektController.invokeMethod: ${methodName}"
 		metaClass.invokeMethod(this, methodName, params)
 	}
 	 */
+	
+	/**
+	 * Get access to all components of a MVC group by its ID.
+	 */
+	def getMVCGroup(id) {
+		[model: app.models[id], view: app.views[id], controller: app.controllers[id]]
+	}
+	
+	/**
+	 * Can we close? Is there unsaved data -- is our model dirty?
+	 */
+	boolean canClose() {
+		model.dirty == false
+	}
 	
 	/**
 	 * Gebäudedaten - Geometrie wurde manuell eingegeben.
@@ -295,18 +319,18 @@ class ProjektController {
 	 * Raumdaten - einen Raum in der Tabelle nach oben verschieben.
 	 */
 	def raumNachObenVerschieben = {
-		// Get selected row
-		def row = view.raumTabelle.selectedRow
-		if (row > 0) {
-			// Recalculate positions
-			model.map.raum.raume.each {
-				if (it.position == row - 1) it.position += 1
-				else if (it.position == row) it.position -= 1
-			}
-			model.resyncRaumTableModels()
-			// Select new row TODO publishEvent "RaumInTabelleWahlen"
-			view.raumTabelle.with {
-				changeSelection(row - 1, 0, false, false)
+		doLater {
+			// Get selected row
+			def row = view.raumTabelle.selectedRow
+			if (row > 0) {
+				// Recalculate positions
+				model.map.raum.raume.each {
+					if (it.position == row - 1) it.position += 1
+					else if (it.position == row) it.position -= 1
+				}
+				model.resyncRaumTableModels()
+				// Raum anwählen
+				onRaumInTabelleWahlen(row - 1)
 			}
 		}
 	}
@@ -324,10 +348,8 @@ class ProjektController {
 				else if (it.position == row) it.position += 1
 			}
 			model.resyncRaumTableModels()
-			// Select new row TODO publishEvent "RaumInTabelleWahlen"
-			view.raumTabelle.with {
-				changeSelection(row + 1, 0, false, false)
-			}
+			// Raum anwählen
+			onRaumInTabelleWahlen(row - 1)
 		}
 	}
 	
@@ -396,7 +418,7 @@ class ProjektController {
 		if (!evt.isAdjusting && evt.firstIndex > -1 && evt.lastIndex > -1) {
 			// source = javax.swing.ListSelectionModel
 			def selectedRow = evt.source.leadSelectionIndex
-			println "raumInTabelleGewahlt: ${evt.dump()}, selectedRow=${selectedRow}"
+			//println "raumInTabelleGewahlt: ${evt.dump()}, selectedRow=${selectedRow}"
 			onRaumInTabelleWahlen(selectedRow, table)
 		}
 	}
@@ -438,7 +460,7 @@ class ProjektController {
 	}
 	
 	/**
-	 * 
+	 * Raumvolumenströme - Zentralgerät.
 	 */
 	def zentralgeratGewahlt = {
 		// TODO rbe Compare old and new value; only change values when old != new?

@@ -30,17 +30,52 @@ class Wac2Controller {
 	}
 	
 	/**
-	 * 
+	 * Schliessen? Alle Projekte fragen, ob ungesicherte Daten existieren.
+	 */
+	boolean canClose() {
+		model.projekte.inject(true) { o, n ->
+			println "o=${o} n.controller.canClose=${n.controller.canClose()}"
+			o &= n.controller.canClose()
+		}
+	}
+	
+	/**
+	 * Ein neues Projekt erstellen.
 	 */
 	def neuesProjekt = { evt = null ->
 		doOutside {
 			String mvcId = "Projekt " + (view.projektTabGroup.tabCount + 1)
 			def (m, v, c) = createMVCGroup("Projekt", mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
 			doLater {
-				// Add new 'Projekt'-model to list of active models
-				model.projekte += m
+				// Add created MVC group 'Projekt' to list of active projects
+				model.aktivesProjekt.model = m
+				model.aktivesProjekt.view = v
+				model.aktivesProjekt.controller = c
+				model.projekte << model.aktivesProjekt //[model: m, view: v, controller: c]
 			}
 		}
+	}
+	
+	/**
+	 * TODO rbe
+	 */
+	def projektSchliessen = { evt = null ->
+	}
+	
+	/**
+	 * TODO rbe
+	 */
+	def projektLaden = { evt = null ->
+		// Load data
+		// Set dirty-flag in project's model to false
+	}
+	
+	/**
+	 * TODO rbe
+	 */
+	def projektSpeichern = { evt = null ->
+		// Load data
+		// Set dirty-flag in project's model to false
 	}
 	
 }
