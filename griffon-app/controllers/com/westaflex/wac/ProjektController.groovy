@@ -338,7 +338,7 @@ class ProjektController {
 		// Get selected row
 		def row = view.raumTabelle.selectedRow
 		if (row > -1) {
-			/* Aktuellen Raum in Metadaten setzen WAS ALREADY DONE VIA RaumInTabelleWahlen
+			/* Aktuellen Raum in Metadaten setzen -- dies wurde durch RaumInTabelleWahlen bereits erledigt
 			model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
 			*/
 			// Show dialog
@@ -397,7 +397,7 @@ class ProjektController {
 			// source = javax.swing.ListSelectionModel
 			def selectedRow = evt.source.leadSelectionIndex
 			println "raumInTabelleGewahlt: ${evt.dump()}, selectedRow=${selectedRow}"
-			onRaumInTabelleWahlen(selectedRow/*evt.lastIndex*/, table)
+			onRaumInTabelleWahlen(selectedRow, table)
 		}
 	}
 	
