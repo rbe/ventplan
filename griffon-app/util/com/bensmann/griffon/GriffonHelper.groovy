@@ -44,16 +44,16 @@ class GriffonHelper {
 	/**
 	 * Recursively add PropertyChangeListener to the map itself and all nested maps.
 	 */
-	def static addMapPropertyChange = { name, map, closure = {} ->
+	def static addMapPropertyChangeListener = { name, map, closure = {} ->
 		map.each { k, v ->
 			if (v instanceof ObservableMap) {
-				//println "addMapPropertyChange: adding PropertyChangeListener to ${name} for ${k}"
+				//println "addMapPropertyChangeListener: adding PropertyChangeListener to ${name} for ${k}"
 				v.addPropertyChangeListener({ evt ->
 					GriffonHelper.dumpPropertyChange.delegate = v
 					GriffonHelper.dumpPropertyChange(name, evt, k)
 					closure()
 				} as java.beans.PropertyChangeListener)
-				GriffonHelper.addMapPropertyChange(name, v)
+				GriffonHelper.addMapPropertyChangeListener(name, v, closure)
 			}
 		}
 	}
