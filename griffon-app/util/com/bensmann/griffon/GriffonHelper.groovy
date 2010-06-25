@@ -86,6 +86,16 @@ class GriffonHelper {
 	}
 	
 	/**
+	 * Check row to select in a table.
+	 */
+	def static checkRow = { row, table ->
+		println "checkRow: row=${row}, table=${table}"
+		if (0 <= row && row < table.rowCount) return row
+		else if (row < 0) return 0
+		else if (row >= table.rowCount) return table.rowCount - 1
+	}
+	
+	/**
 	 * Apply a closure to a component or recurse component's components.
 	 */
 	def static recurse(component, closure) {
