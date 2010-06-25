@@ -122,6 +122,7 @@ class ProjektModel {
 	
 	/**
 	 * Wrap text in HTML and substitute every space character with HTML-breaks.
+	 * TODO rbe Move into GriffonHelper
 	 */
 	def ws = { t, threshold = 0 ->
 		def n = t
@@ -175,9 +176,40 @@ class ProjektModel {
 	}
 	
 	/**
+	 * Einen Raum im Model hinzufügen, alle TableModels synchronisieren.
+	 */
+	def addRaum = { raum ->
+		println "addRaum: adding raum=${raum.dump()}"
+		map.raum.raume << raum
+		// Sync table models
+		[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
+			it.add(map.raum.raume[raum.position])
+		}
+	}
+	
+	/**
+	 * Einen Raum aus dem Model entfernen, alle TableModels synchronisieren.
+	 */
+	def removeRaum = { raumIndex ->
+		println "removeRaum: removing Raum#${raumIndex}"
+		map.raum.raume.eachWithIndex { r, i ->
+			println "BEFORE raumIndex=${raumIndex} i=${i}: ${r.raumBezeichnung} ${r.position}"
+		}
+		map.raum.raume.remove(raumIndex)
+		map.raum.raume.eachWithIndex { r, i ->
+			println "AFTER raumIndex=${raumIndex} i=${i}: ${r.raumBezeichnung} ${r.position}"
+		}
+		// Sync table models
+		[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
+			it.remove(raumIndex)
+		}
+	}
+	
+	/**
 	 * Synchronize all Swing table models depending on map.raum.raume.
 	 */
-	def syncRaumTableModels() {
+	def resyncRaumTableModels() {
+		println "resyncRaumTableModels"
 		// Raumdaten
 		tableModels.raume.clear()
 		tableModels.raume.addAll(map.raum.raume)
