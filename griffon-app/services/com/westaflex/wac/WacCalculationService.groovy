@@ -59,6 +59,7 @@ class WacCalculationService {
 	 * Gebäudedaten - Geometrie anhand eingegebener Räume berechnen.
 	 */
 	void geometrieAusRaumdaten(map) {
+		// TODO rbe May produce NaN values (when all entered rooms are removed)
 		map.with {
 			// Gesamtfläche berechnen
 			gebaude.geometrie.wohnflache =
