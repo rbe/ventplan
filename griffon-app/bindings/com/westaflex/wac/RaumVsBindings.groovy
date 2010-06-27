@@ -20,14 +20,14 @@ import com.bensmann.griffon.GriffonHelper as GH
 		] as javax.swing.event.ListSelectionListener)
 }
 // Binding for items of comboboxes is done in RaumVsiew!
-bind(source: model.map.raum.raumVs, sourceProperty: "gesamtVolumenNE",                     target: "raumVsGesamtVolumenNE",                   targetProperty: "text", converter: GH.toString2Converter)
-bind(source: model.map.raum.raumVs, sourceProperty: "luftwechselNE",                       target: "raumVsLuftwechselNE",                     targetProperty: "text", converter: GH.toString2Converter)
-bind(source: model.map.raum.raumVs, sourceProperty: "gesamtaussenluftVsMitInfiltration",   target: "raumVsGesamtaussenluftVsMitInfiltration", targetProperty: "text", converter: GH.toString2Converter)
+bind(source: model.map.raum.raumVs, sourceProperty: "gesamtVolumenNE", target: raumVsGesamtVolumenNE, targetProperty: "text", converter: GH.toString2Converter)
+bind(source: model.map.raum.raumVs, sourceProperty: "luftwechselNE", target: raumVsLuftwechselNE, targetProperty: "text", converter: GH.toString2Converter)
+bind(source: model.map.raum.raumVs, sourceProperty: "gesamtaussenluftVsMitInfiltration", target: raumVsGesamtaussenluftVsMitInfiltration, targetProperty: "text", converter: GH.toString2Converter)
 // Aussenluftvolumenstrom der lüftungstechnsichen Maßnahme
 //bind(source: model.map.raum.raumVs, sourceProperty: "", target: "raumVsAussenluftVsDerLtmFs", targetProperty: "text", converter: GH.toString2Converter)
-bind(source: model.map.raum.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsRl", target: "raumVsAussenluftVsDerLtmRl", targetProperty: "text", converter: GH.toString2Converter)
-bind(source: model.map.raum.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsNl", target: "raumVsAussenluftVsDerLtmNl", targetProperty: "text", converter: GH.toString2Converter)
-bind(source: model.map.raum.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsIl", target: "raumVsAussenluftVsDerLtmIl", targetProperty: "text", converter: GH.toString2Converter)
+bind(source: model.map.raum.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsRl", target: raumVsAussenluftVsDerLtmRl, targetProperty: "text", converter: GH.toString2Converter)
+bind(source: model.map.raum.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsNl", target: raumVsAussenluftVsDerLtmNl, targetProperty: "text", converter: GH.toString2Converter)
+bind(source: model.map.raum.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsIl", target: raumVsAussenluftVsDerLtmIl, targetProperty: "text", converter: GH.toString2Converter)
 //
 raumVsZentralgerat.actionPerformed = controller.zentralgeratGewahlt
 raumVsRaumBearbeiten.actionPerformed = controller.raumBearbeiten

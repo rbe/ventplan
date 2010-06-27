@@ -13,6 +13,7 @@ import com.bensmann.griffon.GriffonHelper as GH
 
 // Raum bearbeiten
 // Raum
+bind(source: model.meta.gewahlterRaum, sourceProperty: "raumTyp",    target: raumBearbeitenRaumtyp, targetProperty: "selectedItem", mutual: true)
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumBezeichnung", target: raumBearbeitenBezeichnung,  targetProperty: "text",         mutual: true)
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumGeschoss",    target: raumBearbeitenRaumGeschoss, targetProperty: "selectedItem", mutual: true)
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumNummer",      target: raumBearbeitenRaumnummer,   targetProperty: "text",         mutual: true)

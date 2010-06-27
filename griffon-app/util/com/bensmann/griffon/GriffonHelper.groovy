@@ -63,7 +63,7 @@ class GriffonHelper {
 	 */
 	def static showDialog = { builder, dialogClass, dialogProp = [:] ->
 		def dialog = dialogCache[dialogClass]
-		if (!dialog) {
+		//if (!dialog) {
 			// Properties for dialog
 			def prop = [
 					title: "Ein Dialog",
@@ -77,8 +77,8 @@ class GriffonHelper {
 					build(dialogClass)
 				}
 			// Cache dialog instance
-			dialogCache[dialogClass] = dialog
-		}
+			//dialogCache[dialogClass] = dialog
+		//}
 		// Show dialog
 		dialog.show()
 		// Return dialog instance

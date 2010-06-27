@@ -448,6 +448,7 @@ class ProjektController {
 				}
 				// Aktuellen Raum in Metadaten setzen
 				model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
+                                model.meta.gewahlterRaum.raumNummer = row + 1
 			} else {
 				// Remove selection in all tables
 				withAllRaumTables { t ->

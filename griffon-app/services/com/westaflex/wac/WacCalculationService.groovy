@@ -498,6 +498,7 @@ class WacCalculationService {
 		map.raum.raumVs.gesamtVolumenNE = vol
 		map.raum.raumVs.gesamtaussenluftVsMitInfiltration = round5(fGesAU_Luft)
 		map.raum.raumVs.luftwechselNE = fGesAU_Luft / vol
+
 	}
 	
 	/**

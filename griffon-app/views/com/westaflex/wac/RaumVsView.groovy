@@ -35,38 +35,38 @@ panel(id: "raumVsVentileTabPanel", layout: new MigLayout("fillx", "[left]para[ri
 	}
 	// Informationen
 	label("Gesamtvolumen der Nutzungseinheit", constraints: "cell 0 1")
-	label(id: "raumVsGesamtVolumenNE", text: "0,00", constraints: "cell 1 1")
+	label(id: "raumVsGesamtVolumenNE", constraints: "cell 1 1")
 	label("m³", constraints: "cell 2 1")
 	panel(id: "raumVsAussenluftVsDerLtm", border: titledBorder("Außenluftvolumenstrom der lüftungstechnischen Massnahme"), layout: new MigLayout("fillx, wrap 4", "[left]30[right]10[left]30[left]", "[fill]"), constraints: "cell 3 1 1 5") {
 		label("Feuchteschutz")
-		label(id: "raumVsAussenluftVsDerLtmFs", text: "0,00")
+		label(id: "raumVsAussenluftVsDerLtmFs")
 		label("m³/h")
 		label("Zentralgerät")
 		
 		label("Reduzierte Lüftung")
-		label(id: "raumVsAussenluftVsDerLtmRl", text: "0,00")
+		label(id: "raumVsAussenluftVsDerLtmRl")
 		label("m³/h")
 		comboBox(id: "raumVsZentralgerat", items: model.meta.zentralgerat)
 		
 		label("Nennlüftung")
-		label(id: "raumVsAussenluftVsDerLtmNl", text: "0,00")
+		label(id: "raumVsAussenluftVsDerLtmNl")
 		label("m³/h")
 		label("Volumenstrom")
 		
 		label("Intensivlüftung")
-		label(id: "raumVsAussenluftVsDerLtmIl", text: "0,00")
+		label(id: "raumVsAussenluftVsDerLtmIl")
 		label("m³/h")
 		comboBox(id: "raumVsVolumenstrom", items: model.meta.volumenstromZentralgerat)
 	}
 	button(id: "raumVsRaumBearbeiten", text: "Raum bearbeiten", constraints: "cell 4 1")
 	
 	label("Luftwechsel der Nutzungseinheit", constraints: "cell 0 2")
-	label(id: "raumVsLuftwechselNE", text: "0,00", constraints: "cell 1 2")
+	label(id: "raumVsLuftwechselNE", constraints: "cell 1 2")
 	label("l/h", constraints: "cell 2 2")
 	button(id: "raumVsZuAbluftventileSpeichern", text: "Speichern", constraints: "cell 4 2")
 	
 	label("Gesamtaußenluft-Volumentstrom mit Infiltration", constraints: "cell 0 3")
-	label(id: "raumVsGesamtaussenluftVsMitInfiltration", text: "0,00", constraints: "cell 1 3")
+	label(id: "raumVsGesamtaussenluftVsMitInfiltration", constraints: "cell 1 3")
 	label("m³/h", constraints: "cell 2 3")
 	button(id: "raumVsZuAbluftventileAngebotErstellen", text: "Angebot erstellen", constraints: "cell 4 3")
 }

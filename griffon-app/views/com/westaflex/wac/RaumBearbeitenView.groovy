@@ -10,11 +10,10 @@ package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
-//import groovy.swing.SwingBuilder
-//import javax.swing.JFrame
 
 // RaumdatenDialogView
-panel(id: "raumBearbeitenTabPanel") {
+panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[fill]")) {
+    panel(id: "raumBearbeitenTabSubPanel", constraints: "wrap") {
 	jideTabbedPane(id: "raumBearbeitenTabGroup") {
 
 		// RaumdatenDialog - Details ... , layout: new MigLayout("fillx, wrap 2", "[fill],[fill]")
@@ -30,10 +29,10 @@ panel(id: "raumBearbeitenTabPanel") {
 
 				comboBox(id: "raumBearbeitenRaumGeschoss", items: model.meta.raum.geschoss)
 				button(id: "links", text: " < ")
-				textField(id: "raumBearbeitenRaumnummer", text: "")
+				textField(id: "raumBearbeitenRaumnummer", text: model.meta.raum.s, constraints: "width 50px")
 				button(id: "rechts", text: " > ")
 				textField(id: "raumBearbeitenBezeichnung", text: "")
-				comboBox(id: "raumBearbeitenRaumtyp")
+				comboBox(id: "raumBearbeitenRaumtyp", items: model.meta.raum.typ)
 				button(id: "raumdatenDialogRaumButton", text: "...")
 			}
 
@@ -86,6 +85,7 @@ panel(id: "raumBearbeitenTabPanel") {
 				}
 			}
 
+                        // TODO mmu: make the dialog not sooo big!!!
 			panel(id: "raumBearbeitenTabelle", layout: new MigLayout("fillx", "[left]para[left]para[left]", "[fill]"), constraints: "span") {
 
 				label(text: "Maximale Türspalthöhe [mm]")
@@ -93,8 +93,8 @@ panel(id: "raumBearbeitenTabPanel") {
 				button(id: "raumBearbeitenDetailsTurentfernen", text: "Tür entfernen", constraints: "wrap")
 
 				jideScrollPane() {
-					//table(id: "raumBearbeitenDetailsTabelle", constraints: "span", model: model.createRaumEinstellungenTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-					//}
+					table(id: "raumBearbeitenDetailsTabelle", constraints: "span", model: model.createRaumEinstellungenTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+					}
 				}
 			}
 
@@ -131,10 +131,10 @@ panel(id: "raumBearbeitenTabPanel") {
 		}
 
 	}
-	// TODO mmu Button should appear under tabbed pane
-	hbox {
-		button(id: "raumBearbeitenSchliessen", text: "Schliessen")
-	}
+    }
+    panel(id: "raumBearbeitenSubPanel2") {
+        button(id: "raumBearbeitenSchliessen", text: "Schliessen", )
+    }
 	
 }
 // Format fields

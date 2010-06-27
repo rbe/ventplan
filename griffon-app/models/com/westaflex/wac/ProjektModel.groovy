@@ -116,7 +116,8 @@ class ProjektModel {
 	def tableModels = [
 			raume: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList,
 			raumeVsZuAbluftventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList,
-			raumeVsUberstromventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList
+			raumeVsUberstromventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList,
+                        raumeBearbeitenEinstellungen: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList
 		]
 	
 	/**
@@ -173,6 +174,16 @@ class ProjektModel {
 				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
 			] as ca.odell.glazedlists.gui.TableFormat)
 	}
+
+        def createRaumEinstellungenTableModel() {
+            def columnNames =   ["Raum", "Raumnummer", "Raumtyp", "Geschoss", "Luftart", "Faktor", "Vorgang", "Zuluft", "Abluft", "Duch??", "Duch2???", "Kanalnetz", "Kanalnetz2", "Türhöhe", "Max...?", "Rau..???", "Rau...???", "Rau...???", "Rau...???", "Rau...???"]
+            def propertyNames = ["raumBezeichnung", "raumNummer", "raumTyp", "raumGeschoss", "luftart", "faktor", "vorgang", "zuluft", "abluft", "duch1", "duch2", "kanalnetz", "kanalnetz2", "turhohe", "max1", "raum1", "raum2", "raum3", "raum4", "raum5"]
+            new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeBearbeitenEinstellungen, [
+				getColumnCount: { columnNames.size() },
+				getColumnName:  { index -> columnNames[index] },
+				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
+			] as ca.odell.glazedlists.gui.TableFormat)
+        }
 	
 	/**
 	 * Einen Raum im Model hinzufügen, alle TableModels synchronisieren.
@@ -231,6 +242,8 @@ class ProjektModel {
 		// Raumvolumentströme - Überströmventile
 		tableModels.raumeVsUberstromventile.clear()
 		tableModels.raumeVsUberstromventile.addAll(map.raum.raume)
+
+                tableModels.raumeBearbeiten.addAll(map.raum.raume)
 	}
 	
 }
