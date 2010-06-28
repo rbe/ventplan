@@ -25,6 +25,93 @@ class GriffonHelper {
 	private static final java.awt.Color MY_RED = new java.awt.Color(255, 80, 80)
 	
 	/**
+	 * Number -> Formatted String
+	 */
+	def static toString2 = { digits = 2 ->
+		def d = delegate
+		def r = "0," + "0" * digits
+		// Check against NaN, Infinity
+		if (d in [Float.NaN, Double.NaN]) {
+			r = "NaN"
+		} else if (d in [Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY]) {
+			r = "Inf"
+		} else if (d) {
+			r = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
+				minimumFractionDigits = digits
+				maximumFractionDigits = digits
+				//roundingMode = java.math.RoundingMode.HALF_UP
+				format(d)
+			}
+		}
+		//println "toString2(): ${d?.dump()} -> ${r?.dump()}"
+		r
+	}
+	
+	/**
+	 * Parse a string with german notation to a float value
+	 */
+	def static toDouble2 = { digits = 2 ->
+		def d = delegate
+		def r = 0.0d
+		if (d) {
+			r = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
+				minimumFractionDigits = digits
+				maximumFractionDigits = digits
+				//roundingMode = java.math.RoundingMode.HALF_EVEN
+				try {
+					parse(d) as Double
+				} catch (e) {
+					e.printStackTrace()
+				}
+			}
+		}
+		//println "toDouble2(): ${d?.dump()} -> ${r?.dump()}"
+		r
+	}
+	
+	/**
+	 * Map.flatten
+	 */
+	def installMapFlatten = {
+		Map.metaClass.flatten = { String prefix = '' ->
+			delegate.inject([:]) { map, v ->
+				def kstr = "${prefix${prefix ? '.' : ''}$v.key}"
+				if (v.value instanceof Map) {
+					map += v.value.flatten(kstr)
+				} else {
+					map[kstr] = v.value
+				}
+				map
+			}
+		}
+	}
+	
+	/**
+	 * Recursively add PropertyChangeListener to the map itself and all nested maps.
+	 */
+	def static addMapPropertyChangeListener = { name, map, closure = {} ->
+		// This map
+		println "addMapPropertyChangeListener: adding PropertyChangeListener for ${name}"
+		map.addPropertyChangeListener({ evt ->
+				println "C! ${name}.${evt.propertyName}: ${evt.oldValue?.dump()} -> ${evt.newValue?.dump()}"
+				if (closure) closure()
+			} as java.beans.PropertyChangeListener)
+		// All nested maps
+		map.each { k, v ->
+			if (v instanceof ObservableMap) {
+				/*
+				println "addMapPropertyChangeListener 2: adding PropertyChangeListener for ${name}.${k} (${v})"
+				v.addPropertyChangeListener({ evt ->
+						println "C! ${name}.${k}.${evt.propertyName}: ${evt.oldValue?.dump()} -> ${evt.newValue?.dump()}"
+						closure()
+					} as java.beans.PropertyChangeListener)
+				*/
+				GriffonHelper.addMapPropertyChangeListener("${name}.${k}", v, closure)
+			}
+		}
+	}
+	
+	/**
 	 * Establish private EventPublisher relationship between two classes.
 	 */
 	def static tieEventListener = { me, klass, props = [:] ->
@@ -32,30 +119,6 @@ class GriffonHelper {
 		def el = klass.newInstance(props)
 		me.addEventListener(el)
 		el.addEventListener(me)
-	}
-	
-	/**
-	 * Dump a change.
-	 */
-	def static dumpPropertyChange = { name, evt, k ->
-		println "${name}.${k}.${evt.propertyName}: value changed: ${evt.oldValue?.dump()} -> ${evt.newValue?.dump()}"
-	}
-	
-	/**
-	 * Recursively add PropertyChangeListener to the map itself and all nested maps.
-	 */
-	def static addMapPropertyChangeListener = { name, map, closure = {} ->
-		map.each { k, v ->
-			if (v instanceof ObservableMap) {
-				//println "addMapPropertyChangeListener: adding PropertyChangeListener to ${name} for ${k}"
-				v.addPropertyChangeListener({ evt ->
-					GriffonHelper.dumpPropertyChange.delegate = v
-					GriffonHelper.dumpPropertyChange(name, evt, k)
-					closure()
-				} as java.beans.PropertyChangeListener)
-				GriffonHelper.addMapPropertyChangeListener(name, v, closure)
-			}
-		}
 	}
 	
 	/**
@@ -269,6 +332,21 @@ class GriffonHelper {
 		} else if (v) {
 			throw new IllegalStateException("toString3Converter: You tried to convert a String to a String: ${v?.dump()}")
 		}
+	}
+	
+	/**
+	 * Wrap text in HTML and substitute every space character with HTML-breaks.
+	 */
+	def static ws = { t, threshold = 0 ->
+		def n = t
+		if (threshold) {
+			def i = 0
+			n = t.collect { c ->
+				if (i++ > threshold && c == " ") "<br/>"
+				else c
+			}.join()
+		}
+		"<html><div align=\"center\">${n}</div></html>" as String
 	}
 	
 }

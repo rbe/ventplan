@@ -7,6 +7,7 @@
  * 
  */
 import com.westaflex.wac.*
+import com.bensmann.griffon.GriffonHelper as GH
 
 /**
  * 
@@ -18,50 +19,10 @@ onBootstrapEnd = { app ->
 	def dataSource = new ConfigSlurper().parse(DataSource).dataSource
 	WacModelService.instance.initDataSource(dataSource)
 	*/
-	// Number -> Formatted String
-	def toString2 = { digits = 2 ->
-		def d = delegate
-		def r = "0," + "0" * digits
-		// Check against NaN, Infinity
-		if (d in [Float.NaN, Double.NaN]) {
-			r = "NaN"
-		} else if (d in [Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY]) {
-			r = "Inf"
-		} else if (d) {
-			r = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
-				minimumFractionDigits = digits
-				maximumFractionDigits = digits
-				//roundingMode = java.math.RoundingMode.HALF_UP
-				format(d)
-			}
-		}
-		//println "toString2(): ${d?.dump()} -> ${r?.dump()}"
-		r
-	}
-	// Double, Double.toString2: format a float/double value with german notation
-	Integer.metaClass.toString2 = toString2
-	Long.metaClass.toString2 = toString2
-	Float.metaClass.toString2 = toString2
-	Double.metaClass.toString2 = toString2
-	BigDecimal.metaClass.toString2 = toString2
-	// String.toDouble2: parse a string with german notation to a float value
-	String.metaClass.toDouble2 = { digits = 2 ->
-		def d = delegate
-		def r = 0.0d
-		if (d) {
-			r = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
-				minimumFractionDigits = digits
-				maximumFractionDigits = digits
-				//roundingMode = java.math.RoundingMode.HALF_EVEN
-				try {
-					parse(d) as Double
-				} catch (e) {
-					e.printStackTrace()
-				}
-			}
-		}
-		//println "toDouble2(): ${d?.dump()} -> ${r?.dump()}"
-		r
+	// Add .toDouble2 and .toString2 to all types to have a convenient API
+	[Integer, Long, Float, Double, BigDecimal, String].each {
+		it.metaClass.toDouble2 = GH.toDouble2
+		it.metaClass.toString2 = GH.toString2
 	}
 	// String.multiply
 	String.metaClass.multiply = { m ->
@@ -69,21 +30,9 @@ onBootstrapEnd = { app ->
 		def b = m.toDouble2()
 		delegate = (a * b).toString2()
 	}
-	// String.toString2
+	// Override String.toString2
 	String.metaClass.toString2 = {
 		delegate //.toString()
-	}
-	// Map.flatten
-	Map.metaClass.flatten = { String prefix = '' ->
-		delegate.inject([:]) { map, v ->
-			def kstr = "${prefix${prefix ? '.' : ''}$v.key}"
-			if (v.value instanceof Map) {
-				map += v.value.flatten(kstr)
-			} else {
-				map[kstr] = v.value
-			}
-			map
-		}
 	}
 	//
 	def stopTime = System.currentTimeMillis()
