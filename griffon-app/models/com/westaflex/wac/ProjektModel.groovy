@@ -8,6 +8,7 @@
  */
 package com.westaflex.wac
 
+import com.bensmann.griffon.GriffonHelper as GH
 import groovy.beans.Bindable
 
 /**
@@ -31,9 +32,37 @@ class ProjektModel {
 	@Bindable meta
 	
 	/**
+	 * Template für alle Werte eines Raumes.
+	 */
+	def raumMapTemplate = [
+			raumBezeichnung: "",
+			raumLuftart: "",
+			raumGeschoss: "",
+			raumFlache: 0.0d,
+			raumHohe: 0.0d,
+			raumZuluftfaktor: 0.0d,
+			raumAbluftVs: 0.0d,
+			raumVolumen: 0.0d,
+			raumLuftwechsel: 0.0d,
+			raumVolumenstrom: 0.0d,
+			raumBezeichnungAbluftventile: "",
+			raumAnzahlAbluftventile: "",
+			raumAbluftmengeJeVentil: 0.0d,
+			raumBezeichnungZuluftventile: "",
+			raumAnzahlZuluftventile: 0,
+			raumZuluftmengeJeVentil: 0.0d,
+			raumVentilebene: "",
+			raumAnzahlUberstromVentile: 0d,
+			raumUberstromElemente: 0,
+			raumNummer: "",
+			turen: [] as ObservableList
+		]
+	
+	/**
 	 * Our central model.
 	 */
 	@Bindable map = [
+		dirty: false,
 		kundendaten: [
 			grosshandel: [:] as ObservableMap,
 			ausfuhrendeFirma: [:] as ObservableMap,
@@ -72,31 +101,7 @@ class ProjektModel {
 			] as ObservableMap,
 		raum: [
 				raume: [
-						/*
-						[
-							raumBezeichnung: "",
-							raumLuftart: "",
-							raumGeschoss: "",
-							raumFlache: "",
-							raumHohe: "",
-							raumZuluftfaktor: "",
-							raumAbluftVs: "",
-							raumVolumen: "",
-							raumLuftwechsel: "",
-							raumBezeichnungAbluftventile: "",
-							raumAnzahlAbluftventile: "",
-							raumAbluftmengeJeVentil: "",
-							raumVolumenstrom: "",
-							raumBezeichnungZuluftventile: "",
-							raumAnzahlZuluftventile: "",
-							raumZuluftmengeJeVentil: "",
-							raumVentilebene: ""
-							raumAnzahlUberstromVentile: "",
-							raumVolumenstrom: "",
-							raumUberstromElemente: "",
-							turen: [] as ObservableList
-						]
-						*/
+						/* ProjektModel.raumMapTemplate wird durch Event RaumHinzufugen pro Raum erstellt */
 					] as ObservableList,
 				ltmZuluftSumme: 0.0d,
 				ltmAbluftSumme: 0.0d,
@@ -117,24 +122,13 @@ class ProjektModel {
 			raume: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList,
 			raumeVsZuAbluftventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList,
 			raumeVsUberstromventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList,
-                        raumeBearbeitenEinstellungen: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList
+						raumeBearbeitenEinstellungen: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList
 		]
 	
 	/**
 	 * Wrap text in HTML and substitute every space character with HTML-breaks.
-	 * TODO rbe Move into GriffonHelper
 	 */
-	def ws = { t, threshold = 0 ->
-		def n = t
-		if (threshold) {
-			def i = 0
-			n = t.collect { c ->
-				if (i++ > threshold && c == " ") "<br/>"
-				else c
-			}.join()
-		}
-		"<html><div align=\"center\">${n}</div></html>" as String
-	}
+	def ws = GH.ws
 	
 	/**
 	 * Raumdaten - TableModel
@@ -174,16 +168,19 @@ class ProjektModel {
 				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
 			] as ca.odell.glazedlists.gui.TableFormat)
 	}
-
-        def createRaumEinstellungenTableModel() {
-            def columnNames =   ["Raum", "Raumnummer", "Raumtyp", "Geschoss", "Luftart", "Faktor", "Vorgang", "Zuluft", "Abluft", "Duch??", "Duch2???", "Kanalnetz", "Kanalnetz2", "Türhöhe", "Max...?", "Rau..???", "Rau...???", "Rau...???", "Rau...???", "Rau...???"]
-            def propertyNames = ["raumBezeichnung", "raumNummer", "raumTyp", "raumGeschoss", "luftart", "faktor", "vorgang", "zuluft", "abluft", "duch1", "duch2", "kanalnetz", "kanalnetz2", "turhohe", "max1", "raum1", "raum2", "raum3", "raum4", "raum5"]
-            new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeBearbeitenEinstellungen, [
+	
+	/**
+	 * TODO mmu Documentation?
+	 */
+	def createRaumEinstellungenTableModel() {
+		def columnNames =   ["Raum",            "Raumnummer", "Raumtyp", "Geschoss",     "Luftart", "Faktor", "Vorgang", "Zuluft", "Abluft", "Duch??", "Duch2???", "Kanalnetz", "Kanalnetz2", "Türhöhe", "Max...?", "Rau..???", "Rau...???", "Rau...???", "Rau...???", "Rau...???"]
+		def propertyNames = ["raumBezeichnung", "raumNummer", "raumTyp", "raumGeschoss", "luftart", "faktor", "vorgang", "zuluft", "abluft", "duch1", "duch2", "kanalnetz", "kanalnetz2", "turhohe", "max1", "raum1", "raum2", "raum3", "raum4", "raum5"]
+		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeBearbeitenEinstellungen, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
 				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
 			] as ca.odell.glazedlists.gui.TableFormat)
-        }
+	}
 	
 	/**
 	 * Einen Raum im Model hinzufügen, alle TableModels synchronisieren.
@@ -242,8 +239,10 @@ class ProjektModel {
 		// Raumvolumentströme - Überströmventile
 		tableModels.raumeVsUberstromventile.clear()
 		tableModels.raumeVsUberstromventile.addAll(map.raum.raume)
-
-                tableModels.raumeBearbeiten.addAll(map.raum.raume)
+		// TODO mmu Documentation?
+		// TODO mmu Possible java.lang.NullPointerException: Cannot invoke method addAll() on null object when RaumBearbeitenDialog was not opened before
+		// TODO mmu rbe: Quickfix: added null-safe-operator
+		tableModels.raumeBearbeiten?.addAll(map.raum.raume)
 	}
 	
 }
