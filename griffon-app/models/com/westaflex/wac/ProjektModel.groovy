@@ -133,7 +133,7 @@ class ProjektModel {
 	 * Raumdaten - TableModel
 	 */
 	def createRaumTableModel() {
-		def columnNames =   ['Raum',            "Geschoss",     "Luftart",     "Raumfläche (m²)", "Raumhöhe (m)", "Zuluftfaktor",     "Abluftvolumenstrom"]
+		def columnNames =   ["Raum",            "Geschoss",     "Luftart",     "Raumfläche (m²)", "Raumhöhe (m)", "Zuluftfaktor",     "Abluftvolumenstrom"]
 		def propertyNames = ["raumBezeichnung", "raumGeschoss", "raumLuftart", "raumFlache",      "raumHohe",     "raumZuluftfaktor", "raumAbluftVs"]
 		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raume, [
 				getColumnCount: { columnNames.size() },
@@ -141,20 +141,8 @@ class ProjektModel {
 				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
 			] as ca.odell.glazedlists.gui.TableFormat)
 	}
-	
-	/**
-	 * Raumvolumenströme, Zu-/Abluftventile - TableModel
-	 */
-	def createRaumVsZuAbluftventileTableModel() {
-		def columnNames =   ["Raum",            "Luftart",     ws("Raumvolumen<br/>(m³)"), ws("Luftwechsel<br/>(1/h)"), ws("Bezeichnung<br/>Abluftventile"),    ws("Anzahl<br/>Abluftventile"),    ws("Abluftmenge<br/>je Ventil"),   ws("Volumenstrom<br/>(m³/h)"), ws("Bezeichnung<br/>Zuluftventile"),    ws("Anzahl<br/>Zuluftventile"),    ws("Zuluftmenge<br/>je Ventil"),   "Ventilebene"]
-		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",              "raumLuftwechsel",           "raumBezeichnungAbluftventile",         "raumAnzahlAbluftventile",         "raumAbluftmengeJeVentil",         "raumVolumenstrom",            "raumBezeichnungZuluftventile",         "raumAnzahlZuluftventile",         "raumZuluftmengeJeVentil",         "raumVentilebene"]
-		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeVsZuAbluftventile, [
-				getColumnCount: { columnNames.size() },
-				getColumnName:  { index -> columnNames[index] },
-				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
-			] as ca.odell.glazedlists.gui.TableFormat)
-	}
-	
+
+        
 	/**
 	 * Raumvolumenströme - Überströmventile TableModel
 	 */
@@ -169,7 +157,7 @@ class ProjektModel {
 	}
 	
 	/**
-	 * TODO mmu Documentation?
+	 * RaumBearbeitenView - Zusammenfassung Tab TableModel
 	 */
 	def createRaumEinstellungenTableModel() {
 		def columnNames =   ["Raum",            "Raumnummer", "Raumtyp", "Geschoss",     "Luftart", "Faktor", "Vorgang", "Zuluft", "Abluft", "Duch??", "Duch2???", "Kanalnetz", "Kanalnetz2", "Türhöhe", "Max...?", "Rau..???", "Rau...???", "Rau...???", "Rau...???", "Rau...???"]
@@ -180,7 +168,7 @@ class ProjektModel {
 				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
 			] as ca.odell.glazedlists.gui.TableFormat)
 	}
-	
+
 	/**
 	 * Einen Raum im Model hinzufügen: auch alle TableModels, Comboboxen synchronisieren.
 	 */
@@ -243,5 +231,5 @@ class ProjektModel {
 		// TODO mmu rbe: Quickfix: added null-safe-operator
 		tableModels.raumeBearbeiten?.addAll(map.raum.raume)
 	}
-	
+        
 }

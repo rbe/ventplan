@@ -8,7 +8,23 @@
  */
 package com.westaflex.wac
 
+import com.bensmann.griffon.GriffonHelper as GH
+
 import net.miginfocom.swing.MigLayout
+import javax.swing.DefaultCellEditor
+import javax.swing.JComboBox
+import javax.swing.JFrame
+import javax.swing.JPanel
+import javax.swing.JScrollPane
+import javax.swing.JTable
+import javax.swing.table.AbstractTableModel
+import javax.swing.table.DefaultTableCellRenderer
+import javax.swing.table.TableCellRenderer
+import javax.swing.table.TableColumn
+import javax.swing.event.TableModelListener
+import java.awt.Component
+import java.awt.Dimension
+import java.awt.GridLayout
 
 // Raumvolumenströme
 panel(id: "raumVsVentileTabPanel", layout: new MigLayout("fillx", "[left]para[right]para[left]para[fill]para[left]", "[fill]")) {
@@ -17,18 +33,27 @@ panel(id: "raumVsVentileTabPanel", layout: new MigLayout("fillx", "[left]para[ri
 		// Raumvolumenströme - Zu-/Abluftventile
 		panel(id: "raumVsZuAbluftventileTab", title: "Zu-/Abluftventile") {
 			panel(id: "raumVsZuAbluftventileTabellePanel", constraints: "cell 0 0 5 1", layout: new MigLayout("fillx", "[fill]")) {
-				jideScrollPane() {
-					table(id: "raumVsZuAbluftventileTabelle", model: model.createRaumVsZuAbluftventileTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-					}
-				}
+				//jideScrollPane() {
+                                    //table(id: "raumVsZuAbluftventileTabelle", model: model.myTableModel, selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                                    //}
+                                    //table(id: "raumVsZuAbluftventileTabelle", model: controller.tweakTableModelBuilder(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                                    builder.table(id: "raumVsZuAbluftventileTabelle", selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                                    }
+                                    //setUpColumn(raumVsUberstromventileTabelle, raumVsUberstromventileTabelle.getColumnModel().getColumn(9))
+                                    //setUpColumn(raumVsUberstromventileTabelle, raumVsUberstromventileTabelle.getColumnModel().getColumn(10))
+					//table(id: "raumVsZuAbluftventileTabelle", model: model.createRaumVsZuAbluftventileTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+					//}
+				//}
 			}
 		}
 		// Raumvolumenströme - Überströmventile
 		panel(id: "raumVsUberstromventileTab", title: "Überströmventile") {
 			panel(id: "raumVsUberstromventileTabellePanel", constraints: "cell 0 0 5 1", layout: new MigLayout("fillx", "[fill]")) {
 				jideScrollPane() {
-					table(id: "raumVsUberstromventileTabelle", model: model.createRaumVsUberstromventileTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-					}
+                                    table(id: "raumVsUberstromventileTabelle") {
+                                    }
+					//table(id: "raumVsUberstromventileTabelle", model: model.createRaumVsUberstromventileTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+					//}
 				}
 			}
 		}
@@ -77,3 +102,11 @@ raumVsVentileTabGroup.with {
 }
 // Bindings
 build(RaumVsBindings)
+
+noparent {
+    def raumeVsZuAbluftventile = controller.initTableModelBuilder()
+    raumeVsZuAbluftventile.addTableModelListener({ e ->
+        println "${e.firstRow} ${e.column} ${e.type}"
+    } as javax.swing.event.TableModelListener)
+    raumVsZuAbluftventileTabelle.setModel(raumeVsZuAbluftventile)
+}

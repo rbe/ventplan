@@ -21,7 +21,7 @@ panel(id: "anlageLuftkanalverlegungPanel", border: titledBorder(title: "Luftkana
 	checkBox(id: "anlageLuftkanalverlegungDammschicht", text: "Dämmschicht unter Estrich")
 	checkBox(id: "anlageLuftkanalverlegungDecke",       text: "Decke (abgehängt)")
 	checkBox(id: "anlageLuftkanalverlegungSpitzboden",  text: "Spitzboden")
-	checkBox(id: "anlageLuftkanalverlegungSpitzboden", selected: false, text: "Spitzboden")
+	//checkBox(id: "anlageLuftkanalverlegungSpitzboden", selected: false, text: "Spitzboden")
 }
 
 // Außenluft
@@ -91,7 +91,6 @@ panel(id: "anlageFeuerstattePanel", border: titledBorder(title: "Feuerstätten-K
 // Kennzeichnung der Lüftungsanlage
 panel(id: "anlageKennzeichnungPanel", border: titledBorder(title: "Kennzeichnung der Lüftungsanlage"), constraints: "span", layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
 	label(id: "anlageKennzeichnungLuftungsanlage", foreground: java.awt.Color.RED)
-	label("Test 1231231312")
 }
 // Bindings
 build(AnlagendatenBindings)

@@ -10,6 +10,13 @@ package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
 
+import javax.swing.DefaultCellEditor
+import javax.swing.JComboBox
+import javax.swing.JTable
+import javax.swing.table.AbstractTableModel
+import javax.swing.event.TableModelListener
+import java.awt.Component
+
 /**
  * 
  */
@@ -63,6 +70,24 @@ class ProjektController {
 		GH.tieEventListener(this, GebaudeEvents, props)
 		GH.tieEventListener(this, RaumEvents, props)
 		GH.tieEventListener(this, AussenluftVsEvents, props)
+	}
+
+
+        /**
+	 * Raumvolumenströme, Zu-/Abluftventile - TableModel
+	 */
+	def createRaumVsZuAbluftventileTableModel() {
+		/*
+                def columnNames =   ["Raum",            "Luftart",     ws("Raumvolumen<br/>(m³)"), ws("Luftwechsel<br/>(1/h)"), ws("Bezeichnung<br/>Abluftventile"),    ws("Anzahl<br/>Abluftventile"),    ws("Abluftmenge<br/>je Ventil"),   ws("Volumenstrom<br/>(m³/h)"), ws("Bezeichnung<br/>Zuluftventile"),    ws("Anzahl<br/>Zuluftventile"),    ws("Zuluftmenge<br/>je Ventil"),   "Ventilebene"]
+		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",              "raumLuftwechsel",           "raumBezeichnungAbluftventile",         "raumAnzahlAbluftventile",         "raumAbluftmengeJeVentil",         "raumVolumenstrom",            "raumBezeichnungZuluftventile",         "raumAnzahlZuluftventile",         "raumZuluftmengeJeVentil",         "raumVentilebene"]
+		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeVsZuAbluftventile, [
+				getColumnCount: { columnNames.size() },
+				getColumnName:  { index -> columnNames[index] },
+				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
+			] as ca.odell.glazedlists.gui.TableFormat)
+                */
+
+            
 	}
 	
 	/**
@@ -334,6 +359,15 @@ class ProjektController {
 	def raumHinzufugen = {
 		// Hole Werte für neuen Raum aus der View und füge Raum hinzu
 		publishEvent "RaumHinzufugen", [GH.getValuesFromView(view, "raum")]
+
+                // Neues TableModel setzen !
+                // TODO mmu/rbe: Wann ist das model.map.raum.raume aktualisiert??? Ich brauche es hier!
+                doLater {
+                    def i = model.map.raum.raume.size() - 1 ?: 0
+                    GH.updateTableModel(model.map.raum.raume[i], builder, view.raumVsZuAbluftventileTabelle)
+                    //def raumeVsZuAbluftventile = GH.tweakTableModelBuilder(dataList)
+                    //raumVsZuAbluftventileTabelle.setModel(raumeVsZuAbluftventile)
+                }
 	}
 	
 	/**
@@ -525,6 +559,11 @@ class ProjektController {
 			model.map.anlage.zentralgerat = view.raumVsZentralgerat.selectedItem
 		}
 	}
+
+        def initTableModelBuilder() {
+            def myTableModel = GH.initTableModelBuilder(builder)
+            myTableModel
+        }
 	
 	/**
 	 * Raumvolumenströme - Volumenstrom des Zentralgeräts.

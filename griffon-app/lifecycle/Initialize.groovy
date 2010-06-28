@@ -28,3 +28,16 @@ griffon.util.GriffonPlatformHelper.tweakForNativePlatform(app)
 groovy.swing.SwingBuilder.lookAndFeel('mac', 'nimbus', 'gtk', ['metal', [boldFonts: false]])
 Wac2Splash.instance.setup()
 Wac2Splash.instance.initializing()
+
+
+def splashScreen = SplashScreen.getInstance()
+
+// Setting a splash image
+//URL url = this.class.getResource("mySplash.jpg")
+//splashScreen.setImage(url)
+//
+// Setting Status Text
+// SplashScreen.getInstance().showStatus("Initializing the Controller")
+splashScreen.splash()
+splashScreen.waitForSplash()
+

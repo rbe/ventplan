@@ -86,15 +86,15 @@ panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[f
 			}
 
                         // TODO mmu: make the dialog not sooo big!!!
-			panel(id: "raumBearbeitenTabelle", layout: new MigLayout("fillx", "[left]para[left]para[left]", "[fill]"), constraints: "span") {
+			panel(id: "raumBearbeitenTabelle", layout: new MigLayout("width 800", "[left]para[left]para[left]", "[fill]"), constraints: "span") {
 
 				label(text: "Maximale Türspalthöhe [mm]")
 				textField(id: "raumBearbeitenDetailsTurspalthohe", text: "10.0")
 				button(id: "raumBearbeitenDetailsTurentfernen", text: "Tür entfernen", constraints: "wrap")
 
 				jideScrollPane() {
-					table(id: "raumBearbeitenDetailsTabelle", constraints: "span", model: model.createRaumEinstellungenTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-					}
+					//table(id: "raumBearbeitenDetailsTabelle", constraints: "span, width 800", model: model.createRaumEinstellungenTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+					//}
 				}
 			}
 

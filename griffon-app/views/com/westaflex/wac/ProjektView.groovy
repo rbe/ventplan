@@ -15,7 +15,7 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 	panel(id: "projektTab", title: controller.makeTabTitle()) {
 		borderLayout()
 		// Scrollpane
-		jideScrollPane() {
+		//jideScrollPane() {
 			jideTabbedPane(id: "datenTabGroup") {
 				// Kundendaten
 				panel(id: "kundenTab", title: "Kundendaten", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[fill][fill]")) {
@@ -55,7 +55,7 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 				//	build(RaumdatenDialogView)
 				//}
 			}
-		}
+		//}
 		hbox(constraints: SOUTH) {
 			//button("Hier könnte Ihre Werbung stehen!")
 		}
