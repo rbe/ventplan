@@ -9,6 +9,8 @@
  */
 package com.westaflex.wac
 
+import com.bensmann.griffon.GriffonHelper as GH
+
 /**
  * 
  */
@@ -27,7 +29,7 @@ class RaumEvents {
 	}
 	
 	/**
-	 * 
+	 * TODO rbe What code should be executed to update the UI after actions?
 	 */
 	def syncUI = { closure = {} ->
 		doLater {
@@ -40,7 +42,8 @@ class RaumEvents {
 	 * Einen neuen Raum hinzufügen.
 	 */
 	def onRaumHinzufugen = { raumWerte ->
-		println "processing event 'RaumHinzufugen'"
+		println "processing event 'RaumHinzufugen': raumWerte=${raumWerte.dump()}"
+		raumWerte = model.raumMapTemplate + raumWerte
 		// Standard-Werte setzen
 		raumWerte.with {
 			// Übernehme Wert für Bezeichnung vom Typ?
@@ -69,9 +72,9 @@ class RaumEvents {
 			raumWerte.raumZuluftfaktor = neuerZuluftfaktor
 		}
 		// Raum im Model unten (= position: ...size()) hinzufügen
-		def raum = raumWerte + [position: model.map.raum.raume.size() ?: 0]
-		println "adding raum with position " + raum.position
+		def raum = (raumWerte + [position: model.map.raum.raume.size() ?: 0]) as ObservableMap
 		doLater {
+			println "adding raum " + raum.dump()
 			model.addRaum(raum)
 			onRaumHinzugefugt(model.map.raum.raume.size() - 1 ?: 0)
 		}
@@ -82,22 +85,30 @@ class RaumEvents {
 	 */
 	def onRaumHinzugefugt = { raumIndex ->
 		doLater {
-			println "onRaumHinzugefugt: raumIndex=${raumIndex}"
+			println "processing event 'RaumHinzugefugt': raumIndex=${raumIndex}"
+			// Add PropertyChangeListener to our model.map
+			GH.addMapPropertyChangeListener("map.raum.raume", model.map.raum.raume[raumIndex])
 			// Neu berechnen
-			onRaumGeandert()
-			// Diesen Raum in allen Tabellen anwählen
-			publishEvent "RaumInTabelleWahlen", [raumIndex]
+			onRaumGeandert(raumIndex)
 		}
 	}
 	
 	/**
 	 * Ein Raum wurde geändert - berechne alles, was von Räumen abhängt.
 	 */
-	def onRaumGeandert = {
+	def onRaumGeandert = { raumIndex ->
 		doLater {
-			println "processing event 'RaumGeandert'"
+			println "processing event 'RaumGeandert': raumIndex=${raumIndex}: ${model.map.raum.raume[raumIndex].dump()}"
+			// Gebäude-Geometrie berechnen
 			wacCalculationService.geometrieAusRaumdaten(model.map)
+			// Aussenluftvolumenströme berechnen
 			wacCalculationService.aussenluftVs(model.map)
+			// Luftmenge berechnen
+			wacCalculationService.berechnenRaumLuftmenge(model.map, raumIndex)
+			// Nummern der Räume berechnen
+			wacCalculationService.berechneRaumnummer(model.map)
+			// Diesen Raum in allen Tabellen anwählen
+			publishEvent "RaumInTabelleWahlen", [raumIndex]
 		}
 	}
 	
@@ -110,31 +121,7 @@ class RaumEvents {
 			// Raum aus Model entfernen
 			model.removeRaum(raumIndex)
 			// Neu berechnen
-			onRaumGeandert()
-			// Einen anderen Raum in allen Tabellen anwählen
-			publishEvent "RaumInTabelleWahlen", [raumIndex]
-		}
-	}
-	
-	/**
-	 * 
-	 */
-	def onRaumZuAbluftventileLuftmengeBerechnen = { raumIndex ->
-		doLater {
-			println "onRaumZuAbluftventileLuftmengeBerechnen: Berechne Luftmenge für Raum Nr. ${raumIndex}"
-			wacCalculationService.raumLuftmengeBerechnen(map, raumIndex)
-			model.resyncRaumTableModels()
-		}
-	}
-	
-	/**
-	 * 
-	 */
-	def onRaumUberstromelementeLuftmengeBerechnen = { raumIndex ->
-		doLater {
-			println "onRaumUberstromelementeLuftmengeBerechnen: Berechne Luftmenge für Raum Nr. ${raumIndex}"
-			wacCalculationService.raumLuftmengeBerechnen(map, raumIndex)
-			model.resyncRaumTableModels()
+			onRaumGeandert(raumIndex)
 		}
 	}
 	
