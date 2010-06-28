@@ -101,7 +101,7 @@ class WacCalculationService {
 		// Set calculated values in model
 		map.gebaude.geometrie.geluftetesVolumen = g.geluftetesVolumen
 		map.gebaude.geometrie.luftvolumen = g.luftvolumen
-		println "geometrie: ${map.gebaude.geometrie?.dump()}"
+		//println "geometrie: ${map.gebaude.geometrie?.dump()}"
 	}
 	
 	/**
@@ -109,8 +109,7 @@ class WacCalculationService {
 	 */
 	Double summeRaumFlache(map) {
 		def flache = map.raum.raume.inject(0.0d) { o, n -> o + n.raumFlache }
-		//
-		println "summeRaumFlache: ${flache?.dump()}"
+		//println "summeRaumFlache: ${flache?.dump()}"
 		flache
 	}
 	
@@ -124,8 +123,7 @@ class WacCalculationService {
 		if (mittlereRaumhohe) {
 			if (volumen < 30.0d * mittlereRaumhohe) volumen = 30.0d * mittlereRaumhohe
 		}
-		//
-		println "summeRaumVolumen: ${volumen?.dump()}"
+		//println "summeRaumVolumen: ${volumen?.dump()}"
 		volumen
 	}
 	
@@ -140,9 +138,28 @@ class WacCalculationService {
 		}
 		// Minimum
 		if (vol < 30.0d * mittlereRaumhohe) volumen = 30.0d * mittlereRaumhohe
-		//
-		println "summeLuftmengeVolumen: ${volumen?.dump()}"
+		//println "summeLuftmengeVolumen: ${volumen?.dump()}"
 		volumen
+	}
+	
+	/**
+	 * Eine Raumnummer anhand der Raumdaten erzeugen:
+	 * Sie besteht immer aus drei Ziffern:
+	 * 1. Die erste Ziffer steht für das Geschoß (Keller = 0; Erdgeschoß = 1; usw.).
+	 * 2. Die beiden folgenden Ziffern ergeben sich als fortlaufende Nummer bei 1 angefangen.
+	 *    Beispiel: erster Raum im Erdgeschoß = 101; dritter Raum im Kellergeschoß = 003
+	 */
+	String berechneRaumnummer(map) {
+		// Hole alle Räume pro Geschoss, sortiere nach ihrer Position in der Tabelle und vergebe eine Raumnummer
+		["KG", "EG", "OG", "DG", "SB"].eachWithIndex { geschoss, geschossIndex ->
+			map.raum.raume.grep { raum ->
+					raum.raumGeschoss == geschoss
+				}?.sort { raum ->
+					raum.position
+				}?.eachWithIndex { raum, raumIndex ->
+					raum.raumNummer = String.format("%s%02d", geschossIndex, raumIndex + 1)
+				}
+		}
 	}
 	
 	/**
@@ -181,7 +198,7 @@ class WacCalculationService {
 		}
 		//
 		if (flache == Double.NaN) {
-			println "gesamtAussenluftVs: flache=${flache?.dump()}"
+			//println "gesamtAussenluftVs: flache=${flache?.dump()}"
 			flache = 30.0d
 		}
 		//
@@ -191,7 +208,7 @@ class WacCalculationService {
 		} else {
 			println "gesamtAussenluftVs: Konnte keine Fläche ermitteln"
 		}
-		println "gesamtAussenluftVs: ${r?.dump()}"
+		//println "gesamtAussenluftVs: ${r?.dump()}"
 		r
 	}
 	
@@ -203,11 +220,11 @@ class WacCalculationService {
 			if (hoch) 0.3f
 			else if (niedrig) 0.4f
 			else {
-				println "warmeschutzFaktor: unbekannt, 0.0"
+				//println "warmeschutzFaktor: unbekannt, 0.0"
 				0.0d
 			}
 		}
-		println "warmeschutzFaktor: ${r?.dump()}"
+		//println "warmeschutzFaktor: ${r?.dump()}"
 		r
 	}
 	
@@ -219,11 +236,11 @@ class WacCalculationService {
 			if (windschwach) 2.0d
 			else if (windstark) 4.0d
 			else {
-				println "diffDruck: Gebäudelage unbekannt, 0.0"
+				//println "diffDruck: Gebäudelage unbekannt, 0.0"
 				0.0d
 			}
 		}
-		println "diffDruck: ${r?.dump()}"
+		//println "diffDruck: ${r?.dump()}"
 		r
 	}
 	
@@ -281,7 +298,7 @@ class WacCalculationService {
 				0.0d
 			}
 		}
-		println "infiltration: ${m?.dump()} -> ${r?.dump()}"
+		//println "infiltration: ${m?.dump()} -> ${r?.dump()}"
 		r
 	}
 	
@@ -293,7 +310,7 @@ class WacCalculationService {
 		Double volFL =
 			gesamtAussenluftVs(map) * warmeschutzFaktor(map) * map.gebaude.faktorBesondereAnforderungen
 		def r = volFL > infiltration ? true : false
-		println "ltmErforderlich: ${r?.dump()}"
+		//println "ltmErforderlich: ${r?.dump()}"
 		r
 	}
 	
@@ -462,7 +479,8 @@ class WacCalculationService {
 	/**
 	 * 
 	 */
-	void raumLuftmengeBerechnen(map, raumIndex) {
+	void berechnenRaumLuftmenge(map, raumIndex) {
+		/*
 		// Raum holen
 		def raum = map.raum.raume[raumIndex]
 		// Überström-Raum?
@@ -499,7 +517,7 @@ class WacCalculationService {
 		map.raum.raumVs.gesamtVolumenNE = vol
 		map.raum.raumVs.gesamtaussenluftVsMitInfiltration = round5(fGesAU_Luft)
 		map.raum.raumVs.luftwechselNE = fGesAU_Luft / vol
-
+		*/
 	}
 	
 	/**
