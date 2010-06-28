@@ -33,17 +33,17 @@ class ProjektController {
 	void mvcGroupInit(Map args) {
 		// Save MVC id
 		model.mvcId = args.mvcId
+		// Reference meta values
+		model.meta = app.models["wac2"].meta
 		// Add PropertyChangeListener to our model.meta
 		GH.addMapPropertyChangeListener("meta", model.meta)
 		// Add PropertyChangeListener to our model.map
 		GH.addMapPropertyChangeListener("map", model.map, {
-				if (!model.dirty) {
-					model.dirty = true
-					println "set dirty flag=${model.dirty}"
+				if (!model.map.dirty) {
+					model.map.dirty = true
+					println "set dirty flag=${model.map.dirty}"
 				}
 			})
-		// Reference meta values
-		model.meta = app.models["wac2"].meta
 		// Setup private event listener
 		// This properties are used with constructor of the event listener
 		def props = [
@@ -298,21 +298,19 @@ class ProjektController {
 	 * Raumdaten - einen Raum kopieren.
 	 */
 	def raumKopieren = {
-		// Get selected row
-		def row = view.raumTabelle.selectedRow
-		// Find room and make a copy
-		def x = model.map.raum.raume.find { it.position == row }.clone()
-		// Set name and position
-		x.raumBezeichnung = "Kopie von ${x.raumBezeichnung}"
-		x.position = model.map.raum.raume.size()
-		// Add to model
-		model.map.raum.raume.add(x)
-		// Select new row TODO publishEvent "RaumInTabelleWahlen"
-		view.raumTabelle.with {
-			changeSelection(rowCount - 1, 0, false, false)
+		doLater {
+			// Get selected row
+			def row = view.raumTabelle.selectedRow
+			// Raum anhand seiner Position finden und eine Kopie erzeugen
+			def x = model.map.raum.raume.find { it.position == row }.clone()
+			// Neuen Namen und neue Position (Ende) setzen
+			x.raumBezeichnung = "Kopie von ${x.raumBezeichnung}"
+			x.position = model.map.raum.raume.size()
+			// Raum zum Model hinzufügen
+			model.map.raum.raume.add(x)
+			// Raum hinzugefügt
+			publishEvent "RaumHinzugefugt", [rowCount - 1]
 		}
-		// Berechne alles, was von Räumen abhängt
-		publishEvent "RaumGeandert"
 	}
 	
 	/**
@@ -329,8 +327,8 @@ class ProjektController {
 					else if (it.position == row) it.position -= 1
 				}
 				model.resyncRaumTableModels()
-				// Raum anwählen
-				onRaumInTabelleWahlen(row - 1)
+				// Raum geändert
+				publishEvent "RaumGeandert", [row - 1]
 			}
 		}
 	}
@@ -339,35 +337,37 @@ class ProjektController {
 	 * Raumdaten - einen Raum in der Tabelle nach oben verschieben.
 	 */
 	def raumNachUntenVerschieben = {
-		// Get selected row
-		def row = view.raumTabelle.selectedRow
-		if (row < view.raumTabelle.rowCount - 1) {
-			// Recalculate positions
-			model.map.raum.raume.each {
-				if (it.position == row + 1) it.position -= 1
-				else if (it.position == row) it.position += 1
+		doLater {
+			// Get selected row
+			def row = view.raumTabelle.selectedRow
+			if (row < view.raumTabelle.rowCount - 1) {
+				// Recalculate positions
+				model.map.raum.raume.each {
+					if (it.position == row + 1) it.position -= 1
+					else if (it.position == row) it.position += 1
+				}
+				model.resyncRaumTableModels()
+				// Raum geändert
+				publishEvent "RaumGeandert", [row - 1]
 			}
-			model.resyncRaumTableModels()
-			// Raum anwählen
-			onRaumInTabelleWahlen(row - 1)
 		}
 	}
 	
 	/**
 	 * Raumdaten - einen Raum bearbeiten.
 	 */
-	def raumBearbeiten = { // TODO Which raumIndex??
+	def raumBearbeiten = { // TODO rbe Which raumIndex??
 		// Get selected row
 		def row = view.raumTabelle.selectedRow
 		if (row > -1) {
-			/* Aktuellen Raum in Metadaten setzen -- dies wurde durch RaumInTabelleWahlen bereits erledigt
+			/* Aktuellen Raum in Metadaten setzen -- dies wurde durch das Event RaumInTabelleWahlen bereits erledigt
 			model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
 			*/
 			// Show dialog
 			def dialog = GH.showDialog(builder, RaumBearbeitenView)
 			println "raumBearbeiten: dialog '${dialog.title}' closed"
 			// Berechne alles, was von Räumen abhängt
-			publishEvent "RaumGeandert"
+			publishEvent "RaumGeandert", [row]
 		}
 	}
 	
@@ -375,7 +375,7 @@ class ProjektController {
 	 * Raumvolumenströme - Zu/Abluftventile, Luftmenge berechnen.
 	 */
 	def raumZuAbluftventileLuftmengeBerechnen = {
-		def raumIndex = raumVsZuAbluftventileTabelle.selectedRow
+		def raumIndex = view.raumVsZuAbluftventileTabelle.selectedRow
 		if (raumIndex > -1) {
 			publishEvent "RaumZuAbluftventileLuftmengeBerechnen", [raumIndex]
 		} else {
@@ -387,7 +387,7 @@ class ProjektController {
 	 * Raumvolumenströme - Überströmelemente, Luftmenge berechnen.
 	 */
 	def raumUberstromelementeLuftmengeBerechnen = {
-		def raumIndex = raumVsUberstromventileTabelle.selectedRow
+		def raumIndex = view.raumVsUberstromventileTabelle.selectedRow
 		if (raumIndex > -1) {
 			publishEvent "RaumUberstromelementeLuftmengeBerechnen", [raumIndex]
 		} else {
