@@ -64,13 +64,13 @@ class WacCalculationService {
 			// Gesamtfläche berechnen
 			gebaude.geometrie.wohnflache =
 				(raum.raume.inject(0.0d) { o, n ->
-					o + n.raumFlache
-				})
+						o + n.raumFlache
+					})
 			// Mittlere Raumhöhe berechnen
 			gebaude.geometrie.raumhohe =
 				(raum.raume.inject(0.0d) { o, n ->
-					o + n.raumHohe
-				} / raum.raume.size())
+						o + n.raumHohe
+					} / raum.raume.size())
 		}
 		// Geometrie berechnen...
 		geometrie(map)
@@ -83,17 +83,11 @@ class WacCalculationService {
 		def g = map.gebaude.geometrie
 		try {
 			// Luftvolumen der Nutzungseinheit = Wohnfläche * mittlere Raumhöhe
-			if (g.wohnflache && g.raumhohe) {
-				g.luftvolumen = g.geluftetesVolumen = volumen(g.wohnflache, g.raumhohe)
-			}
+			g.luftvolumen = g.geluftetesVolumen = g.wohnflache && g.raumhohe ? volumen(g.wohnflache, g.raumhohe) : 0.0d
 			// Gelüftetes Volumen = gelüftete Fläche * mittlere Raumhöhe
-			if (g.gelufteteFlache && g.raumhohe) {
-				g.geluftetesVolumen = volumen(g.gelufteteFlache, g.raumhohe)
-			}
+			g.geluftetesVolumen = g.gelufteteFlache && g.raumhohe ? volumen(g.gelufteteFlache, g.raumhohe) : 0.0d
 			// Gelüftetes Volumen = Luftvolumen, wenn kein gelüftetes Volumen berechnet
-			if (g.luftvolumen && !g.geluftetesVolumen) {
-				g.geluftetesVolumen = g.luftvolumen
-			}
+			g.geluftetesVolumen = g.luftvolumen && !g.geluftetesVolumen ? g.luftvolumen : 0.0d
 		} catch (e) {
 			e.printStackTrace()
 			g.luftvolumen = g.geluftetesVolumen = "E"
@@ -131,11 +125,12 @@ class WacCalculationService {
 	 * Addiere alle Volumen (m³) Spalten aus der Tabelle für Raumvolumenströme (aka Luftmengenermittlung).
 	 */
 	Double summeLuftmengeVolumen(map, luftart = null) {
+		// Hole alle Räume mit der entsprechenden Luftart; oder alle
 		def raume = luftart ? map.raum.raume.grep { it.raumLuftart.contains(luftart) } : map.raum.raume
 		def mittlereRaumhohe = map.gebaude.geometrie.raumhohe
 		def volumen = raume.inject(0.0d) { o, n ->
-			o + n.raumVolumen
-		}
+				o + n.raumVolumen
+			}
 		// Minimum
 		if (vol < 30.0d * mittlereRaumhohe) volumen = 30.0d * mittlereRaumhohe
 		//println "summeLuftmengeVolumen: ${volumen?.dump()}"
@@ -323,23 +318,23 @@ class WacCalculationService {
 	void autoLuftmenge(map, Boolean b) {
 		// LTM erforderlich?
 		if (!ltmErforderlich(map)) {
-			// TODO rbe Fehlermeldung als Dialog anzeigen
+			// TODO mmu Information als Dialog anzeigen (Oxbow)
 			println "autoLuftmenge: Es sind keine lüftungstechnischen Maßnahmen notwendig!"
 		}
 		// LTM: erste Berechnung für Raumvolumenströme
 		// Summiere Daten aus Raumdaten
 		Double gesamtZuluftfaktor = zuluftRaume(map).inject(0.0d) { o, n ->
-			o + n.raumZuluftfaktor
-		}
+				o + n.raumZuluftfaktor
+			}
 		Double gesamtAbluftVs = abluftRaume(map).inject(0.0d) { o, n ->
-			o + n.raumAbluftVs
-		}
+				o + n.raumAbluftVs
+			}
 		// Gesamt-Außenluftvolumenstrom bestimmen
 		Double gesamtAussenluft =
-			Math.max(
-					Math.max(gesamtAbluftVs, gesamtAussenluftVs(map)),
-					map.gebaude.geplanteBelegung.mindestaussenluftrate
-				) * (map.gebaude.faktorBesondereAnforderungen ?: 1.0d)
+				Math.max(
+						Math.max(gesamtAbluftVs, gesamtAussenluftVs(map)),
+						map.gebaude.geplanteBelegung.mindestaussenluftrate
+					) * (map.gebaude.faktorBesondereAnforderungen ?: 1.0d)
 		// Gesamt-Außenluftvolumenstrom für lüftungstechnische Maßnahmen
 		Double gesamtAvsLTM = 0.0d
 		if (map.aussenluftVs.infiltrationBerechnen && b) {
