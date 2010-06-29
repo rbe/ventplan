@@ -32,9 +32,9 @@ class GriffonHelper {
 		def r = "0," + "0" * digits
 		// Check against NaN, Infinity
 		if (d in [Float.NaN, Double.NaN]) {
-			r = "NaN"
+			//r = "NaN"
 		} else if (d in [Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY]) {
-			r = "Inf"
+			//r = "Inf"
 		} else if (d) {
 			r = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
 				minimumFractionDigits = digits
@@ -53,7 +53,9 @@ class GriffonHelper {
 	def static toDouble2 = { digits = 2 ->
 		def d = delegate
 		def r = 0.0d
-		if (d) {
+		if (d in ["NaN", "Inf"]) {
+			//r = 0.0d
+		} else if (d) {
 			r = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
 				minimumFractionDigits = digits
 				maximumFractionDigits = digits
@@ -109,6 +111,47 @@ class GriffonHelper {
 				GriffonHelper.addMapPropertyChangeListener("${name}.${k}", v, closure)
 			}
 		}
+	}
+	
+	/**
+	 * 
+	 */
+	def static toString2Converter = { v ->
+		if (v instanceof Number) {
+			def v2 = v?.toString2()
+			//println "toString2Converter: ${v?.dump()} -> ${v2?.dump()}"
+			v2
+		} else if (v) {
+			throw new IllegalStateException("toString2Converter: You tried to convert a String to a String: ${v?.dump()}")
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	def static toString3Converter = { v ->
+		if (v instanceof Number) {
+			def v3 = v?.toString2(3)
+			//println "toString3Converter: ${v?.dump()} -> ${v3?.dump()}"
+			v3
+		} else if (v) {
+			throw new IllegalStateException("toString3Converter: You tried to convert a String to a String: ${v?.dump()}")
+		}
+	}
+	
+	/**
+	 * Wrap text in HTML and substitute every space character with HTML-breaks.
+	 */
+	def static ws = { t, threshold = 0 ->
+		def n = t
+		if (threshold) {
+			def i = 0
+			n = t.collect { c ->
+				if (i++ > threshold && c == " ") "<br/>"
+				else c
+			}.join()
+		}
+		"<html><div align=\"center\">${n}</div></html>" as String
 	}
 	
 	/**
@@ -306,47 +349,6 @@ class GriffonHelper {
 			}
 		}
 		map
-	}
-	
-	/**
-	 * 
-	 */
-	def static toString2Converter = { v ->
-		if (v instanceof Number) {
-			def v2 = v?.toString2()
-			//println "toString2Converter: ${v?.dump()} -> ${v2?.dump()}"
-			v2
-		} else if (v) {
-			throw new IllegalStateException("toString2Converter: You tried to convert a String to a String: ${v?.dump()}")
-		}
-	}
-	
-	/**
-	 * 
-	 */
-	def static toString3Converter = { v ->
-		if (v instanceof Number) {
-			def v3 = v?.toString2(3)
-			//println "toString3Converter: ${v?.dump()} -> ${v3?.dump()}"
-			v3
-		} else if (v) {
-			throw new IllegalStateException("toString3Converter: You tried to convert a String to a String: ${v?.dump()}")
-		}
-	}
-	
-	/**
-	 * Wrap text in HTML and substitute every space character with HTML-breaks.
-	 */
-	def static ws = { t, threshold = 0 ->
-		def n = t
-		if (threshold) {
-			def i = 0
-			n = t.collect { c ->
-				if (i++ > threshold && c == " ") "<br/>"
-				else c
-			}.join()
-		}
-		"<html><div align=\"center\">${n}</div></html>" as String
 	}
 	
 }
