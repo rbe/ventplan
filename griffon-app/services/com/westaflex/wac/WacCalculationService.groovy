@@ -23,7 +23,7 @@ class WacCalculationService {
 	 * Dezimalzahl auf 5 runden.
 	 */
 	private Integer round5(Double factor) {
-		5 * (Math.round(factor / 5))
+		5.0d * (Math.round(factor / 5.0d))
 	}
 	
 	/**
@@ -95,7 +95,7 @@ class WacCalculationService {
 		// Set calculated values in model
 		map.gebaude.geometrie.geluftetesVolumen = g.geluftetesVolumen
 		map.gebaude.geometrie.luftvolumen = g.luftvolumen
-		//println "geometrie: ${map.gebaude.geometrie?.dump()}"
+		println "wacCalclulation: geometrie: ${map.gebaude.geometrie?.dump()}"
 	}
 	
 	/**
@@ -103,7 +103,7 @@ class WacCalculationService {
 	 */
 	Double summeRaumFlache(map) {
 		def flache = map.raum.raume.inject(0.0d) { o, n -> o + n.raumFlache }
-		//println "summeRaumFlache: ${flache?.dump()}"
+		println "wacCalclulation: summeRaumFlache: ${flache?.dump()}"
 		flache
 	}
 	
@@ -117,7 +117,7 @@ class WacCalculationService {
 		if (mittlereRaumhohe) {
 			if (volumen < 30.0d * mittlereRaumhohe) volumen = 30.0d * mittlereRaumhohe
 		}
-		//println "summeRaumVolumen: ${volumen?.dump()}"
+		println "wacCalclulation: summeRaumVolumen: ${volumen?.dump()}"
 		volumen
 	}
 	
@@ -133,7 +133,7 @@ class WacCalculationService {
 			}
 		// Minimum
 		if (vol < 30.0d * mittlereRaumhohe) volumen = 30.0d * mittlereRaumhohe
-		//println "summeLuftmengeVolumen: ${volumen?.dump()}"
+		println "wacCalclulation: summeLuftmengeVolumen: ${volumen?.dump()}"
 		volumen
 	}
 	
@@ -193,7 +193,7 @@ class WacCalculationService {
 		}
 		//
 		if (flache == Double.NaN) {
-			//println "gesamtAussenluftVs: flache=${flache?.dump()}"
+			println "wacCalclulation: gesamtAussenluftVs: flache=${flache?.dump()}"
 			flache = 30.0d
 		}
 		//
@@ -203,7 +203,7 @@ class WacCalculationService {
 		} else {
 			println "gesamtAussenluftVs: Konnte keine Fläche ermitteln"
 		}
-		//println "gesamtAussenluftVs: ${r?.dump()}"
+		println "wacCalclulation: gesamtAussenluftVs: ${r?.dump()}"
 		r
 	}
 	
@@ -215,11 +215,11 @@ class WacCalculationService {
 			if (hoch) 0.3f
 			else if (niedrig) 0.4f
 			else {
-				//println "warmeschutzFaktor: unbekannt, 0.0"
+				println "wacCalclulation: warmeschutzFaktor: unbekannt, 0.0"
 				0.0d
 			}
 		}
-		//println "warmeschutzFaktor: ${r?.dump()}"
+		println "wacCalclulation: warmeschutzFaktor: ${r?.dump()}"
 		r
 	}
 	
@@ -231,11 +231,11 @@ class WacCalculationService {
 			if (windschwach) 2.0d
 			else if (windstark) 4.0d
 			else {
-				//println "diffDruck: Gebäudelage unbekannt, 0.0"
+				println "wacCalclulation: diffDruck: Gebäudelage unbekannt, 0.0"
 				0.0d
 			}
 		}
-		//println "diffDruck: ${r?.dump()}"
+		println "wacCalclulation: diffDruck: ${r?.dump()}"
 		r
 	}
 	
@@ -293,7 +293,7 @@ class WacCalculationService {
 				0.0d
 			}
 		}
-		//println "infiltration: ${m?.dump()} -> ${r?.dump()}"
+		println "wacCalclulation: infiltration: ${m?.dump()} -> ${r?.dump()}"
 		r
 	}
 	
@@ -305,7 +305,7 @@ class WacCalculationService {
 		Double volFL =
 			gesamtAussenluftVs(map) * warmeschutzFaktor(map) * map.gebaude.faktorBesondereAnforderungen
 		def r = volFL > infiltration ? true : false
-		//println "ltmErforderlich: ${r?.dump()}"
+		println "wacCalclulation: ltmErforderlich: ${r?.dump()}"
 		r
 	}
 	
