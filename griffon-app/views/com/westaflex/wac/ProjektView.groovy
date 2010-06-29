@@ -12,7 +12,7 @@ package com.westaflex.wac
 import net.miginfocom.swing.MigLayout
 
 jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
-	panel(id: "projektTab", title: tabName) {
+	panel(id: "projektTab", title: controller.makeTabTitle()) {
 		borderLayout()
 		// Scrollpane
 		jideScrollPane() {
