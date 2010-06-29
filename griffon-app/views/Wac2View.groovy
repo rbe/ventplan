@@ -26,8 +26,8 @@ application(title: 'WestaWAC 2',
 		if (controller.canClose()) {
 			app.shutdown()
 		} else {
-			println "windowClosing(${evt}): there are unsaved changes"
-			// TODO mmu Show dialog: ask user for save, cancel, quit
+			println "windowClosing(${evt.dump()}): there are unsaved changes"
+			// TODO mmu Show dialog: ask user for save all, cancel, quit
 		}
 	}
 ) {
@@ -37,6 +37,10 @@ application(title: 'WestaWAC 2',
 	toolBar(build(Wac2ToolBar))
 	// Content
 	widget(build(Wac2MainPane))
+	// ChangeListener for active tab; tell model about its MVC ID
+	projektTabGroup.addChangeListener({ evt ->
+			controller.projektIndexAktivieren(evt.source.selectedIndex)
+		} as javax.swing.event.ChangeListener)
 	// The status bar
 	jxstatusBar(id: "mainStatusBar") {
 		label(id: "mainStatusBarText", text: bind { model.statusBarText })
