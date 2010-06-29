@@ -22,11 +22,6 @@ class ProjektModel {
 	String mvcId
 	
 	/**
-	 * Was the model changed (since last save)? This is set true by a PropertyChangeListener installed in ProjectController.addMapPropertyChangeListener().
-	 */
-	boolean dirty
-	
-	/**
 	 * Meta-data: will be initialized by ProjektController.
 	 */
 	@Bindable meta
@@ -60,6 +55,7 @@ class ProjektModel {
 	
 	/**
 	 * Our central model.
+	 * dirty: Was the model changed (since last save)? This is set true by a PropertyChangeListener installed in ProjectController.addMapPropertyChangeListener().
 	 */
 	@Bindable map = [
 		dirty: false,
