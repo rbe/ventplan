@@ -22,8 +22,4 @@ bind(source: model.map.kundendaten.ausfuhrendeFirma, sourceProperty: "ansprechpa
 bind(source: model.map.kundendaten, sourceProperty: "bauvorhaben", target: bauvorhaben, targetProperty: "text", mutual: true)
 bind(source: model.map.kundendaten, sourceProperty: "notizen",     target: notizen,     targetProperty: "text", mutual: true)
 // Kundendaten - Bauvorhaben: Update tab title
-bauvorhaben.addCaretListener({ evt ->
-	if (bauvorhaben.text) {
-		projektTabGroup.setTitleAt(projektTabGroup.selectedIndex, "Projekt - ${bauvorhaben.text}")
-	}
-} as javax.swing.event.CaretListener)
+bauvorhaben.addCaretListener({ evt -> controller.setTabTitle() } as javax.swing.event.CaretListener)
