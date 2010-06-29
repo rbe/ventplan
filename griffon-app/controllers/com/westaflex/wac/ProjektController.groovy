@@ -84,7 +84,7 @@ class ProjektController {
 	 * Titel der Tab für dieses Projekt setzen: Bauvorhaben und Sternchen für ungesicherte Änderungen.
 	 */
 	def setTabTitle() {
-		def bauvorhaben = model.map.kundendaten.bauvorhaben/*view.bauvorhaben.text*/
+		def bauvorhaben = model.map.kundendaten.bauvorhaben /*view.bauvorhaben.text*/
 		if (bauvorhaben) {
 			view.projektTabGroup.setTitleAt(view.projektTabGroup.selectedIndex, "Projekt - ${bauvorhaben}${model.map.dirty ? "*" : ""}")
 		} else {
@@ -233,6 +233,15 @@ class ProjektController {
 			model.map.anlage.kennzeichnungLuftungsanlage =
 				"ZuAbLS-Z-${gebaudeTyp}-WÜT-${energieKz}-${hygieneKz}-${ruckschlag}-${schallschutz}-${feuerstatte}"
 		}
+	}
+	
+	/**
+	 * 
+	 */
+	def setRoundingMode = {
+		def rm = java.math.RoundingMode.valueOf(view.aussenluftVsRoundingMode.selectedItem)
+		println "setRoundingMode: setting rounding mode to ${rm.dump()}"
+		GH.ROUNDING_MODE = rm
 	}
 	
 	/**
