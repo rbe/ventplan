@@ -14,6 +14,11 @@ package com.bensmann.griffon
 class GriffonHelper {
 	
 	/**
+	 * Standard rounding mode.
+	 */
+	public static ROUNDING_MODE = java.math.RoundingMode.HALF_UP
+	
+	/**
 	 * Cache for created dialog instances.
 	 */
 	private static dialogCache = [:]
@@ -25,9 +30,9 @@ class GriffonHelper {
 	private static final java.awt.Color MY_RED = new java.awt.Color(255, 80, 80)
 	
 	/**
-	 * Number -> Formatted String
+	 * Number -> Formatted German String
 	 */
-	def static toString2 = { digits = 2 ->
+	def static toString2 = { digits = 2, roundingMode = null ->
 		def d = delegate
 		def r = "0," + "0" * digits
 		// Check against NaN, Infinity
@@ -36,12 +41,11 @@ class GriffonHelper {
 		} else if (d in [Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY]) {
 			//r = "Inf"
 		} else if (d) {
-			r = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
-				minimumFractionDigits = digits
-				maximumFractionDigits = digits
-				//roundingMode = java.math.RoundingMode.HALF_UP
-				format(d)
-			}
+			def nf = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN)
+			nf.minimumFractionDigits = digits
+			nf.maximumFractionDigits = digits
+			if (roundingMode) nf.roundingMode = roundingMode ?: GriffonHelper.ROUNDING_MODE
+			r = nf.format(d)
 		}
 		//println "toString2(): ${d?.dump()} -> ${r?.dump()}"
 		r
@@ -50,21 +54,20 @@ class GriffonHelper {
 	/**
 	 * Parse a string with german notation to a float value
 	 */
-	def static toDouble2 = { digits = 2 ->
+	def static toDouble2 = { digits = 2, roundingMode = null ->
 		def d = delegate
 		def r = 0.0d
 		if (d in ["NaN", "Inf"]) {
 			//r = 0.0d
 		} else if (d) {
-			r = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN).with {
-				minimumFractionDigits = digits
-				maximumFractionDigits = digits
-				//roundingMode = java.math.RoundingMode.HALF_EVEN
-				try {
-					parse(d) as Double
-				} catch (e) {
-					e.printStackTrace()
-				}
+			def nf = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN)
+			nf.minimumFractionDigits = digits
+			nf.maximumFractionDigits = digits
+			if (roundingMode) nf.roundingMode = roundingMode ?: GriffonHelper.ROUNDING_MODE
+			try {
+				r = nf.parse(d) as Double
+			} catch (e) {
+				e.printStackTrace()
 			}
 		}
 		//println "toDouble2(): ${d?.dump()} -> ${r?.dump()}"
