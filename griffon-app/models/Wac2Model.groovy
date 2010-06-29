@@ -38,13 +38,18 @@ class Wac2Model {
 	def statusBarText = "Bereit."
 	
 	/**
-	 * Das derzeit aktive Projekt.
-	 */
-	def aktivesProjekt = [:] as ObservableMap
-	
-	/**
-	 * Alle aktiven Projekte.
+	 * Liste aller offenen Projekte - MVC IDs.
 	 */
 	def projekte = []
+	
+	/**
+	 * Die MVC ID des derzeit aktiven Projekts/der aktive Tab.
+	 */
+	@Bindable def aktivesProjekt
+	
+	/**
+	 * Wurde das Model des aktuellen Projekts geändert?
+	 */
+	@Bindable Boolean aktivesProjektGeandert = false
 	
 }
