@@ -40,8 +40,10 @@ class ProjektController {
 		// Add PropertyChangeListener to our model.map
 		GH.addMapPropertyChangeListener("map", model.map, {
 				if (!model.map.dirty) {
+					// Dirty-flag im eigenen und Wac2Model setzen
 					model.map.dirty = true
-					println "set dirty flag=${model.map.dirty}"
+					app.models["wac2"].aktivesProjektGeandert = true
+					//println "set dirty flag=${model.map.dirty}"
 					setTabTitle()
 				}
 			})
@@ -67,10 +69,30 @@ class ProjektController {
 	 */
 	
 	/**
-	 * Get access to all components of a MVC group by its ID.
+	 * Titel der Tab für dieses Projekt erstellen: Bauvorhaben und Sternchen für ungesicherte Änderungen.
 	 */
-	def getMVCGroup(id) {
-		[model: app.models[id], view: app.views[id], controller: app.controllers[id]]
+	def makeTabTitle = {
+		def title = new StringBuilder()
+		// Bauvorhaben
+		def bauvorhaben = model.map.kundendaten.bauvorhaben /*view.bauvorhaben.text*/
+		if (bauvorhaben) {
+			title << "Projekt - ${bauvorhaben}"
+		} else {
+			title << model.mvcId
+			////title << "${view.projektTabGroup.getTitleAt(view.projektTabGroup.selectedIndex)}"
+		}
+		// MVC ID
+		title << " (${view.mvcId})"
+		// Ungespeicherte Daten?
+		if (model.map.dirty) title << "*"
+		title.toString()
+	}
+	
+	/**
+	 * Titel der Tab für dieses Projekt setzen.
+	 */
+	def setTabTitle() {
+		view.projektTabGroup.setTitleAt(view.projektTabGroup.selectedIndex, makeTabTitle())
 	}
 	
 	/**
@@ -78,19 +100,6 @@ class ProjektController {
 	 */
 	boolean canClose() {
 		model.map.dirty == false
-	}
-	
-	/**
-	 * Titel der Tab für dieses Projekt setzen: Bauvorhaben und Sternchen für ungesicherte Änderungen.
-	 */
-	def setTabTitle() {
-		def bauvorhaben = model.map.kundendaten.bauvorhaben /*view.bauvorhaben.text*/
-		if (bauvorhaben) {
-			view.projektTabGroup.setTitleAt(view.projektTabGroup.selectedIndex, "Projekt - ${bauvorhaben}${model.map.dirty ? "*" : ""}")
-		} else {
-			def title = view.projektTabGroup.getTitleAt(view.projektTabGroup.selectedIndex)
-			view.projektTabGroup.setTitleAt(view.projektTabGroup.selectedIndex, "${title}${model.map.dirty ? "*" : ""}")
-		}
 	}
 	
 	/**
