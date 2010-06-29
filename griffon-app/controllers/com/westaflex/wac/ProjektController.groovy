@@ -42,6 +42,7 @@ class ProjektController {
 				if (!model.map.dirty) {
 					model.map.dirty = true
 					println "set dirty flag=${model.map.dirty}"
+					setTabTitle()
 				}
 			})
 		// Setup private event listener
@@ -76,7 +77,20 @@ class ProjektController {
 	 * Can we close? Is there unsaved data -- is our model dirty?
 	 */
 	boolean canClose() {
-		model.dirty == false
+		model.map.dirty == false
+	}
+	
+	/**
+	 * Titel der Tab für dieses Projekt setzen: Bauvorhaben und Sternchen für ungesicherte Änderungen.
+	 */
+	def setTabTitle() {
+		def bauvorhaben = model.map.kundendaten.bauvorhaben/*view.bauvorhaben.text*/
+		if (bauvorhaben) {
+			view.projektTabGroup.setTitleAt(view.projektTabGroup.selectedIndex, "Projekt - ${bauvorhaben}${model.map.dirty ? "*" : ""}")
+		} else {
+			def title = view.projektTabGroup.getTitleAt(view.projektTabGroup.selectedIndex)
+			view.projektTabGroup.setTitleAt(view.projektTabGroup.selectedIndex, "${title}${model.map.dirty ? "*" : ""}")
+		}
 	}
 	
 	/**
@@ -356,7 +370,7 @@ class ProjektController {
 	/**
 	 * Raumdaten - einen Raum bearbeiten.
 	 */
-	def raumBearbeiten = { // TODO rbe Which raumIndex??
+	def raumBearbeiten = {
 		// Get selected row
 		def row = view.raumTabelle.selectedRow
 		if (row > -1) {
