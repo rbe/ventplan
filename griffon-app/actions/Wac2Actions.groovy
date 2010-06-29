@@ -35,7 +35,7 @@ projektSpeichernAction = action(
 		mnemonic: "S",
 		accelerator: shortcut("S"),
 		smallIcon: imageIcon("/menu/projektspeichern.png"),
-		enabled: bind { model.aktivesProjekt.model != null }, // TODO Bind to model.map.dirty
+		enabled: bind { model.aktivesProjektGeandert },
 		closure: {}
 	)
 
@@ -45,7 +45,7 @@ projektSpeichernAlsAction = action(
 		mnemonic: "A",
 		accelerator: shortcut("shift S"),
 		smallIcon: imageIcon("/menu/projektspeichern.png"),
-		enabled: bind { model.aktivesProjekt.model != null }, // TODO Bind to model.map.dirty
+		enabled: bind { model.aktivesProjektGeandert },
 		closure: {}
 	)
 
@@ -54,15 +54,15 @@ projektSchliessenAction = action(
 		name: "Projekt schliessen",
 		mnemonic: "W",
 		accelerator: shortcut("W"),
-		enabled: bind { model.aktivesProjekt.model != null },
-		closure: {}
+		enabled: bind { model.aktivesProjekt != null },
+		closure: controller.projektSchliessen
 	)
 
 projektSeitenansichtAction = action(
 		id: "seitenansichtAction",
 		name: "Seitenansicht",
 		smallIcon: imageIcon("/menu/seitenansicht.png"),
-		enabled: bind { model.aktivesProjekt.model != null },
+		enabled: bind { model.aktivesProjekt != null },
 		closure: {}
 	)
 
@@ -72,7 +72,7 @@ projektDruckenAction = action(
 		mnemonic: "P",
 		accelerator: shortcut("P"),
 		smallIcon: imageIcon("/menu/drucken.png"),
-		enabled: bind { model.aktivesProjekt.model != null },
+		enabled: bind { model.aktivesProjekt != null },
 		closure: {}
 	)
 
@@ -82,5 +82,5 @@ exitAction = action(
 		mnemonic: "Q",
 		accelerator: shortcut("Q"),
 		enabled: true,
-		closure: {}
+		closure: controller.exitApplication
 	)
