@@ -26,7 +26,7 @@ projektOeffnenAction = action(
 		accelerator: shortcut("O"),
 		smallIcon: imageIcon(resource: "/menu/projektoeffnen.png", class: Console),
 		enabled: true,
-		closure: {}
+		closure: controller.projektOffnen
 	)
 
 projektSpeichernAction = action(
