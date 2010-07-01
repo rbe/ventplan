@@ -8,6 +8,9 @@
  * Created by: rbe
  */
 
+/**
+ * Manage a splash screen.
+ */
 @Singleton
 class Wac2Splash {
 	
@@ -16,30 +19,46 @@ class Wac2Splash {
 	 */
 	def splashScreen = SplashScreen.instance
 	
-	def init = {
+	def setup = {
 		// Set a splash image
 		URL url = this.class.getResource("../resources/splash.png")
 		splashScreen.setImage(url)
-		// Set splash screen status text
-		splashScreen.showStatus("Phase 1/4: Initializing...")
+		splashScreen.showStatus("...")
+		// Show splash screen
 		splashScreen.splash()
 		splashScreen.waitForSplash()
 	}
 	
-	def initialized = {
-		splashScreen.showStatus("Phase 1/4: Initializing... done")
+	def dispose = {
+		splashScreen.dispose()
+	}
+	
+	def initializing = {
+		splashScreen.showStatus("Phase 1/4: Initialisiere...")
 	}
 	
 	def connectingDatabase = {
-		splashScreen.showStatus("Phase 2/4: Connecting database...")
+		splashScreen.showStatus("Phase 2/4: Verbinde zur Datenbank...")
 	}
 	
 	def creatingUI = {
-		splashScreen.showStatus("Phase 3/4: Creating UI...")
+		splashScreen.showStatus("Phase 3/4: Erstelle die Benutzeroberfläche...")
 	}
 	
 	def startingUp = {
-		splashScreen.showStatus("Phase 4/4: Starting up...")
+		splashScreen.showStatus("Phase 4/4: Starte die Applikation...")
+	}
+	
+	def creatingProject = {
+		splashScreen.showStatus("Phase 1/3: Erstelle ein neues Projekt...")
+	}
+	
+	def initializingProject = {
+		splashScreen.showStatus("Phase 2/3: Initialisiere das Projekt...")
+	}
+
+	def creatingUiForProject = {
+		splashScreen.showStatus("Phase 3/3: Erstelle Benutzeroberfläche für das Projekt...")
 	}
 	
 }

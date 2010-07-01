@@ -33,8 +33,6 @@ onBootstrapEnd = { app ->
 	//
 	def stopTime = System.currentTimeMillis()
 	println "Events.onBootstrapEnd: finished in ${stopTime - startTime} ms"
-	// Set splash screen status text
-	Wac2Splash.instance.initialized()
 }
 
 onStartupStart = { app ->
@@ -103,9 +101,8 @@ onShutdownStart = { app ->
  * 
  */
 onNewInstance = { clazz, type, instance ->
-	// This is ignored when SplashScreen was disposed before,
-	// so we can use it for startup phase and ignore it when MVC groups are created
-	Wac2Splash.instance.creatingUI()
+	// Nur Anzeigen, wenn Applikation erstmalig started (see conf/Application, startup groups)
+	if (clazz.name ==~ /Wac2.*/) Wac2Splash.instance.creatingUI()
 	println "Events.onNewInstance: clazz=${clazz} type=${type} instance=${instance}"
 }
 

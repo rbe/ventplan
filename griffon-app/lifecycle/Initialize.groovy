@@ -26,4 +26,5 @@ println "lifecycle.Initialize"
 
 griffon.util.GriffonPlatformHelper.tweakForNativePlatform(app)
 groovy.swing.SwingBuilder.lookAndFeel('mac', 'nimbus', 'gtk', ['metal', [boldFonts: false]])
-Wac2Splash.instance.init()
+Wac2Splash.instance.setup()
+Wac2Splash.instance.initializing()

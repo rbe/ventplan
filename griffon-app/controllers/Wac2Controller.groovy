@@ -62,14 +62,27 @@ class Wac2Controller {
 	 * Ein neues Projekt erstellen.
 	 */
 	def neuesProjekt = { evt = null ->
+		// Splash screen
+		doLater {
+			Wac2Splash.instance.setup()
+			Wac2Splash.instance.creatingProject()
+		}
 		doOutside {
 			String mvcId = "Projekt " + (view.projektTabGroup.tabCount + 1)
 			def (m, v, c) =
 				createMVCGroup("Projekt", mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+			// Splash screen
+			doLater {
+				Wac2Splash.instance.creatingUiForProject()
+			}
 			// MVC ID zur Liste der Projekte hinzufügen
 			model.projekte << mvcId
 			// Projekt aktivieren
 			projektAktivieren(mvcId)
+			// Splash screen
+			doLater {
+				Wac2Splash.instance.dispose()
+			}
 		}
 	}
 	

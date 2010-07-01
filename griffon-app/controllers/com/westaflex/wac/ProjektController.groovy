@@ -31,6 +31,8 @@ class ProjektController {
 	 * Initialize MVC group.
 	 */
 	void mvcGroupInit(Map args) {
+		// Splash screen
+		Wac2Splash.instance.initializingProject()
 		// Save MVC id
 		model.mvcId = args.mvcId
 		// Reference meta values
