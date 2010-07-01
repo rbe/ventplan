@@ -23,3 +23,4 @@
  * - UIThreadHelper.instance.executeFuture { // your code }
  */
 println "lifecycle.Ready"
+SplashScreen.instance.dispose()

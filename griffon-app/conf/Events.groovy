@@ -37,6 +37,8 @@ onBootstrapEnd = { app ->
 	//
 	def stopTime = System.currentTimeMillis()
 	println "Events.onBootstrapEnd: finished in ${stopTime - startTime} ms"
+	// Set splash screen status text
+	SplashScreen.instance.showStatus("Bootstrapping done...")
 }
 
 onStartupStart = { app ->
@@ -58,6 +60,8 @@ onStartupStart = { app ->
 	//
 	def stopTime = System.currentTimeMillis()
 	println "Events.onStartupStart: finished in ${stopTime - startTime} ms"
+	// Set splash screen status text
+	SplashScreen.instance.showStatus("Starting up...")
 }
 
 /**
@@ -69,6 +73,8 @@ onStartupEnd = { app ->
 	//
 	def stopTime = System.currentTimeMillis()
 	println "Events.onStartupEnd: finished in ${stopTime - startTime} ms"
+	// Set splash screen status text
+	SplashScreen.instance.showStatus("Startup done...")
 }
 
 /**
@@ -80,6 +86,8 @@ onReadyStart = { app ->
 	//
 	def stopTime = System.currentTimeMillis()
 	println "Events.onReadyStart: finished in ${stopTime - startTime} ms"
+	// Set splash screen status text
+	SplashScreen.instance.showStatus("onReadyStart...")
 }
 
 /**
@@ -91,6 +99,8 @@ onReadyEnd = { app ->
 	//
 	def stopTime = System.currentTimeMillis()
 	println "Events.onReadyEnd: finished in ${stopTime - startTime} ms"
+	// Set splash screen status text
+	SplashScreen.instance.showStatus("onReadyEnd...")
 }
 
 /**

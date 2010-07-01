@@ -22,10 +22,17 @@
  * - UIThreadHelper.instance.executeOutside { // your code }
  * - UIThreadHelper.instance.executeFuture { // your code }
  */
-
-import groovy.swing.SwingBuilder
-import griffon.util.GriffonPlatformHelper
-
 println "lifecycle.Initialize"
-GriffonPlatformHelper.tweakForNativePlatform(app)
-SwingBuilder.lookAndFeel('mac', 'nimbus', 'gtk', ['metal', [boldFonts: false]])
+
+griffon.util.GriffonPlatformHelper.tweakForNativePlatform(app)
+groovy.swing.SwingBuilder.lookAndFeel('mac', 'nimbus', 'gtk', ['metal', [boldFonts: false]])
+
+// Splash screen
+def splashScreen = SplashScreen.instance
+// Set a splash image
+URL url = this.class.getResource("../resources/splash.png")
+splashScreen.setImage(url)
+// Set splash screen status text
+splashScreen.showStatus("Initializing...")
+splashScreen.splash()
+splashScreen.waitForSplash()

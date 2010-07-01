@@ -23,3 +23,5 @@
  * - UIThreadHelper.instance.executeFuture { // your code }
  */
 println "lifecycle.Startup"
+// Set splash screen status text
+SplashScreen.instance.showStatus("Starting up...")
