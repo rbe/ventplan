@@ -40,12 +40,14 @@ class ProjektController {
 		// Add PropertyChangeListener to our model.meta
 		GH.addMapPropertyChangeListener("meta", model.meta)
 		// Add PropertyChangeListener to our model.map
-		GH.addMapPropertyChangeListener("map", model.map, {
-				if (!model.map.dirty) {
+		GH.addMapPropertyChangeListener("map", model.map, { evt ->
+				// Only set dirty flag, when modified property is not the dirty flag
+				// Used for loading and saving
+				if (evt.propertyName != "dirty" && !model.map.dirty) {
 					// Dirty-flag im eigenen und Wac2Model setzen
 					model.map.dirty = true
 					app.models["wac2"].aktivesProjektGeandert = true
-					//println "set dirty flag=${model.map.dirty}"
+					// Change tab title (show a star)
 					setTabTitle()
 				}
 			})
@@ -76,12 +78,11 @@ class ProjektController {
 	def makeTabTitle = {
 		def title = new StringBuilder()
 		// Bauvorhaben
-		def bauvorhaben = model.map.kundendaten.bauvorhaben /*view.bauvorhaben.text*/
+		def bauvorhaben = model.map.kundendaten.bauvorhaben
 		if (bauvorhaben) {
 			title << "Projekt - ${bauvorhaben}"
 		} else {
 			title << model.mvcId
-			////title << "${view.projektTabGroup.getTitleAt(view.projektTabGroup.selectedIndex)}"
 		}
 		// MVC ID
 		title << " (${view.mvcId})"
