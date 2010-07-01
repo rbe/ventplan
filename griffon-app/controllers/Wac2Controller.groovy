@@ -16,6 +16,7 @@ class Wac2Controller {
 	def model
 	def view
 	def wacModelService
+	def projektModelService
 	
 	void mvcGroupInit(Map args) {
 		// Lookup values from database and put them into our model
@@ -66,22 +67,20 @@ class Wac2Controller {
 		doLater {
 			Wac2Splash.instance.setup()
 			Wac2Splash.instance.creatingProject()
-		}
-		doOutside {
-			String mvcId = "Projekt " + (view.projektTabGroup.tabCount + 1)
-			def (m, v, c) =
-				createMVCGroup("Projekt", mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
-			// Splash screen
-			doLater {
-				Wac2Splash.instance.creatingUiForProject()
-			}
-			// MVC ID zur Liste der Projekte hinzufügen
-			model.projekte << mvcId
-			// Projekt aktivieren
-			projektAktivieren(mvcId)
-			// Splash screen
-			doLater {
-				Wac2Splash.instance.dispose()
+			doOutside {
+				String mvcId = "Projekt " + (view.projektTabGroup.tabCount + 1)
+				def (m, v, c) =
+					createMVCGroup("Projekt", mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+				doLater {
+					// Splash screen
+					Wac2Splash.instance.creatingUiForProject()
+					// MVC ID zur Liste der Projekte hinzufügen
+					model.projekte << mvcId
+					// Projekt aktivieren
+					projektAktivieren(mvcId)
+					// Splash screen
+					Wac2Splash.instance.dispose()
+				}
 			}
 		}
 	}
@@ -150,16 +149,50 @@ class Wac2Controller {
 	/**
 	 * TODO rbe
 	 */
-	def projektLaden = { evt = null ->
-		// Load data
-		// Set dirty-flag in project's model to false
+	def projektOffnen = { evt = null ->
+		// Splash screen
+		doLater {
+			Wac2Splash.instance.setup()
+			Wac2Splash.instance.loadingProject()
+			doOutside {
+				// Load data
+				def document = projektModelService.load("/Users/rbe/wac2.xml")
+				def map = projektModelService.toMap(document)
+				// Set dirty-flag in project's model to false
+				map.dirty = false
+				//
+				String mvcId = "Projekt " + (view.projektTabGroup.tabCount + 1)
+				def (m, v, c) =
+					createMVCGroup("Projekt", mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+				// Recursively copy map
+				m.map.kundendaten.bauvorhaben = map.kundendaten.bauvorhaben
+				m.map.dirty = map.dirty
+				doLater {
+					// Splash screen
+					Wac2Splash.instance.creatingUiForProject()
+					// Update tab title to ensure that no "unsave-data-star" is displayed
+					c.setTabTitle()
+					// Splash screen
+					Wac2Splash.instance.dispose()
+				}
+			}
+		}
 	}
 	
 	/**
 	 * TODO rbe
 	 */
 	def projektSpeichern = { evt = null ->
-		// Load data
+		// Save data
+		// Set dirty-flag in project's model to false
+	}
+	
+	/**
+	 * TODO rbe
+	 */
+	def projektSpeichernAls = { evt = null ->
+		// Open filechooser
+		// Save data
 		// Set dirty-flag in project's model to false
 	}
 	
