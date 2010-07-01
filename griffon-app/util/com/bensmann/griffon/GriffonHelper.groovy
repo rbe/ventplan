@@ -99,7 +99,7 @@ class GriffonHelper {
 		println "addMapPropertyChangeListener: adding PropertyChangeListener for ${name}"
 		map.addPropertyChangeListener({ evt ->
 				println "C! ${name}.${evt.propertyName}: ${evt.oldValue?.dump()} -> ${evt.newValue?.dump()}"
-				if (closure) closure()
+				if (closure) closure(evt)
 			} as java.beans.PropertyChangeListener)
 		// All nested maps
 		map.each { k, v ->
