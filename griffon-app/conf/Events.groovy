@@ -5,8 +5,8 @@
  * Alle Rechte vorbehalten. Nutzungslizenz siehe http://www.bensmann.com/license_de.html
  * All Rights Reserved. Use is subject to license terms, see http://www.bensmann.com/license_en.html
  * 
+ * Created by: rbe
  */
-import com.westaflex.wac.*
 import com.bensmann.griffon.GriffonHelper as GH
 
 /**
@@ -15,10 +15,6 @@ import com.bensmann.griffon.GriffonHelper as GH
 onBootstrapEnd = { app ->
 	def startTime = System.currentTimeMillis()
 	println "Events.onBootstrapEnd: start"
-	/* DataSource
-	def dataSource = new ConfigSlurper().parse(DataSource).dataSource
-	WacModelService.instance.initDataSource(dataSource)
-	*/
 	// Add .toDouble2 and .toString2 to all types to have a convenient API
 	[Integer, Long, Float, Double, BigDecimal, String].each {
 		it.metaClass.toDouble2 = GH.toDouble2
@@ -38,7 +34,7 @@ onBootstrapEnd = { app ->
 	def stopTime = System.currentTimeMillis()
 	println "Events.onBootstrapEnd: finished in ${stopTime - startTime} ms"
 	// Set splash screen status text
-	SplashScreen.instance.showStatus("Initializing... done")
+	Wac2Splash.instance.initialized()
 }
 
 onStartupStart = { app ->
@@ -109,7 +105,7 @@ onShutdownStart = { app ->
 onNewInstance = { clazz, type, instance ->
 	// This is ignored when SplashScreen was disposed before,
 	// so we can use it for startup phase and ignore it when MVC groups are created
-	SplashScreen.instance.showStatus("Creating UI...")
+	Wac2Splash.instance.creatingUI()
 	println "Events.onNewInstance: clazz=${clazz} type=${type} instance=${instance}"
 }
 
@@ -117,9 +113,6 @@ onNewInstance = { clazz, type, instance ->
  * 
  */
 onCreateMVCGroup = { mvcId, model, view, controller, mvcType, instances ->
-	// This is ignored when SplashScreen was disposed before,
-	// so we can use it for startup phase and ignore it when MVC groups are created
-	SplashScreen.instance.showStatus("Creating UI... done")
 	println "Events.onCreateMVCGroup: mvcId=${mvcId}"
 }
 

@@ -24,4 +24,4 @@
  */
 println "lifecycle.Startup"
 // Set splash screen status text
-SplashScreen.instance.showStatus("Starting up...")
+Wac2Splash.instance.startingUp()
