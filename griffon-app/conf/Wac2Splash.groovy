@@ -21,7 +21,7 @@ class Wac2Splash {
 	
 	def setup = {
 		// Set a splash image
-		URL url = this.class.getResource("../resources/splash.png")
+		URL url = Wac2Resource.class.getResource("../resources/splash.png")
 		splashScreen.setImage(url)
 		splashScreen.showStatus("...")
 		// Show splash screen
@@ -59,6 +59,10 @@ class Wac2Splash {
 
 	def creatingUiForProject = {
 		splashScreen.showStatus("Phase 3/3: Erstelle Benutzeroberfläche für das Projekt...")
+	}
+	
+	def loadingProject = {
+		splashScreen.showStatus("Phase 2/3: Lade Daten aus dem Projekt...")
 	}
 	
 }
