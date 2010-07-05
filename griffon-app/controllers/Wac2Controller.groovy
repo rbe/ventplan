@@ -21,15 +21,19 @@ class Wac2Controller {
 	void mvcGroupInit(Map args) {
 		// Lookup values from database and put them into our model
 		doOutside {
-			// Bezeichnungen Ventile
+			// Raumvolumenströme - Bezeichnungen der Zu-/Abluftventile
 			model.meta.raumVsBezeichnungZuluftventile =
 				model.meta.raumVsBezeichnungAbluftventile =
 				wacModelService.getZuAbluftventile()
-			// Überströmelemente
+			// Raumvolumenströme - Überströmelemente
 			model.meta.raumVsUberstromelement = wacModelService.getUberstromelemente()
-			// Zentralgerät + Volumenstrom
+			// Raumvolumenströme - Zentralgerät + Volumenstrom
 			model.meta.zentralgerat = wacModelService.getZentralgerat()
 			model.meta.volumenstromZentralgerat = wacModelService.getVolumenstromFurZentralgerat(model.meta.zentralgerat[0])
+			// Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
+			model.meta.dvbKanalbezeichnung = wacModelService.getDvbKanalbezeichnung()
+			// Druckverlustberechnung - Ventileinstellung - Ventilbezeichnung
+			model.meta.dvbVentileinstellung = wacModelService.getDvbVentileinstellung()
 		}
 	}
 	
@@ -38,6 +42,13 @@ class Wac2Controller {
 	 */
 	def getMVCGroup(id) {
 		[model: app.models[id], view: app.views[id], controller: app.controllers[id]]
+	}
+	
+	/**
+	 * Hole MVC Group des aktiven Projekts.
+	 */
+	def getMvcGroupAktivesProjekt = {
+		getMVCGroup(model.aktivesProjekt)
 	}
 	
 	/**
@@ -97,7 +108,7 @@ class Wac2Controller {
 			try {
 				model.aktivesProjektGeandert = getMVCGroup(mvcId).model?.map.dirty
 			} catch (e) {
-				
+				e.printStackTrace()
 			}
 			println "projektAktivieren: mvcId=${model.aktivesProjekt}"
 		}
@@ -128,7 +139,7 @@ class Wac2Controller {
 	 */
 	def projektSchliessen = { evt = null ->
 		// Projekt zur aktiven Tab finden
-		def mvc = getMVCGroup(model.aktivesProjekt)
+		def mvc = getMvcGroupAktivesProjekt() //getMVCGroup(model.aktivesProjekt)
 		println "projektSchliessen: model.aktivesProjekt=${model.aktivesProjekt} mvc=${mvc}"
 		def canClose = mvc.controller.canClose()
 		if (canClose) {
@@ -184,6 +195,7 @@ class Wac2Controller {
 	 */
 	def projektSpeichern = { evt = null ->
 		// Save data
+		println projektModelService.save(getMvcGroupAktivesProjekt().model.map, null)
 		// Set dirty-flag in project's model to false
 	}
 	
@@ -194,6 +206,18 @@ class Wac2Controller {
 		// Open filechooser
 		// Save data
 		// Set dirty-flag in project's model to false
+	}
+	
+	/**
+	 * TODO rbe
+	 */
+	def projektSeitenansicht = { evt = null ->
+	}
+	
+	/**
+	 * TODO rbe
+	 */
+	def projektDrucken = { evt = null ->
 	}
 	
 }
