@@ -1,81 +1,96 @@
+/**
+ * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/views/com/westaflex/wac/DruckverlustView.groovy
+ * 
+ * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
+ * Alle Rechte vorbehalten. Nutzungslizenz siehe http://www.bensmann.com/license_de.html
+ * All Rights Reserved. Use is subject to license terms, see http://www.bensmann.com/license_en.html
+ * 
+ * Created by: rbe
+ */
 package com.westaflex.wac
 
 import net.miginfocom.swing.MigLayout
 
 // Druckverlustberechnung
-panel(id: "druckverlustTabPanel", layout: new MigLayout("fillx", "[fill]", "[fill]")) {
-	// Tabellen für 
-	jideTabbedPane(id: "druckverlustTabGroup", constraints: "span") {
+panel(id: "dvbTabPanel", layout: new MigLayout("fillx", "[fill]", "[fill]")) {
+	// Tabellen für Druckverlustberechnung
+	jideTabbedPane(id: "dvbTabGroup", constraints: "span") {
+		
 		// Druckverlustberechnung - Kanalnetz
-            panel(id: "druckverlustKanalnetzTab", title: "Kanalnetz", constraints: "grow") {
-            jideScrollPane() {
-              panel(id: "druckverlustKanalnetzPanel", layout: new MigLayout("fillx", "[left,fill]para[left,fill]para[left,fill]para[left,fill]para[left,fill]para[left]para[left]", "[fill]")) {
-			
-                label("Luftart", constraints: "width 100::150")
-                label("Nr. Teilstrecke", constraints: "width 100::150")
-                label("Luftmenge (m³/h)", constraints: "width 100::150")
-                label("Kanalbezeichnung", constraints: "width 100::150")
-                label("Länge (m)", constraints: "width 100::150")
-                label("", constraints: "width 100::150")
-                label("", constraints: "width 100::150, wrap")
-			
-                comboBox(id: "druckverlustKanalnetzLuftart")
-                textField(id: "druckverlustKanalnetzNrTeilstrecke")
-                textField(id: "druckverlustKanalnetzLuftmenge")
-                comboBox(id: "druckverlustKanalnetzKanalbezeichnung")
-                textField(id: "druckverlustKanalnetzLange")
-                button(id: "druckverlustKanalnetzHinzufugen", text: "Hinzufügen")
-                button(id: "druckverlustKanalnetzWiderstandswerte", text: "Widerstandsbeiwerte...")
-			
-			/*
-			panel(id: "druckverlustKanalnetzTabellePanel", constraints: "cell 0 0 7 1", layout: new MigLayout("fillx", "[fill]")) {
-				jideScrollPane() {
-					table(id: "druckverlustKanalnetzTabelle", model: model.createDruckverlustKanalnetzTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+		panel(id: "dvbKanalnetzTab", title: "Kanalnetz", constraints: "grow") {
+			jideScrollPane() {
+				panel(id: "dvbKanalnetzPanel", layout: new MigLayout("fillx", "[left,fill]para[left,fill]para[left,fill]para[left,fill]para[left,fill]para[left]para[left]", "[fill]")) {
+					
+					label("Luftart", constraints: "width 100::150")
+					label("Nr. Teilstrecke", constraints: "width 100::150")
+					label("Luftmenge (m³/h)", constraints: "width 100::150")
+					label("Kanalbezeichnung", constraints: "width 100::150")
+					label("Länge (m)", constraints: "width 100::150")
+					label("", constraints: "width 100::150")
+					label("", constraints: "width 100::150, wrap")
+					
+					comboBox(id: "dvbKanalnetzLuftart", items: ["ZU", "AB"])
+					textField(id: "dvbKanalnetzNrTeilstrecke")
+					textField(id: "dvbKanalnetzLuftmenge")
+					comboBox(id: "dvbKanalnetzKanalbezeichnung", items: model.meta.dvbKanalbezeichnung)
+					textField(id: "dvbKanalnetzLange")
+					button(id: "dvbKanalnetzHinzufugen", text: "Hinzufügen")
+					button(id: "dvbKanalnetzWiderstandswerte", text: "Widerstandsbeiwerte...")
+					
+					/*
+					panel(id: "dvbKanalnetzTabellePanel", constraints: "cell 0 0 7 1", layout: new MigLayout("fillx", "[fill]")) {
+						jideScrollPane() {
+							table(id: "dvbKanalnetzTabelle", model: model.createDruckverlustKanalnetzTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+							}
+						}
 					}
+					*/
+					
+					button(id: "dvbKanalnetzEntfernen", text: "Entfernen")
+					
 				}
 			}
-			*/
-			
-                button(id: "", text: "Entfernen")
-            }
-            }
-          }
-          panel(id: "druckverlustVentileinstellungTab", title: "Ventileinstellung", constraints: "grow") {
-            // Druckverlustberechnung - Ventileinstellung
-            jideScrollPane() {
-            panel(id: "druckverlustVentileinstellungPanel", layout: new MigLayout("fillx", "[left,fill]para[left,fill]para[left,fill]para[left,fill]para[left,fill]para[left,fill]", "[fill]")) {
+		}
 		
-                label("Luftart", constraints: "width 100::150")
-                label("Raum", constraints: "width 100::150")
-                label("Teilstrecken", constraints: "width 100::150")
-                label("", constraints: "width 100::150")
-                label("Ventilbezeichnung", constraints: "width 100::150")
-                label("", constraints: "width 100::150, wrap")
-			
-                comboBox(id: "druckverlustVentileinstellungLuftart")
-                textField(id: "druckverlustVentileinstellungRaum")
-                textField(id: "druckverlustVentileinstellungTeilstrecken")
-                button(id: "druckverlustVentileinstellungAuswahlen", text: "Auswählen")
-                comboBox(id: "druckverlustVentileinstellungVentilbezeichnung")
-                button(id: "druckverlustVentileinstellungHinzufugen", text: "Hinzufügen")
-		
-			/*
-			panel(id: "druckverlustVentileinstellungTabellePanel", constraints: "cell 0 0 6 1", layout: new MigLayout("fillx", "[fill]")) {
-				jideScrollPane() {
-					table(id: "druckverlustVentileinstellungTabelle", model: model.createDruckverlustVentileinstellungTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+		// Druckverlustberechnung - Ventileinstellung
+		panel(id: "dvbVentileinstellungTab", title: "Ventileinstellung", constraints: "grow") {
+			// Druckverlustberechnung - Ventileinstellung
+			jideScrollPane() {
+				panel(id: "dvbVentileinstellungPanel", layout: new MigLayout("fillx", "[left,fill]para[left,fill]para[left,fill]para[left,fill]para[left,fill]para[left,fill]", "[fill]")) {
+					
+					label("Luftart", constraints: "width 100::150")
+					label("Raum", constraints: "width 100::150")
+					label("Teilstrecken", constraints: "width 100::150")
+					label("", constraints: "width 100::150")
+					label("Ventilbezeichnung", constraints: "width 100::150")
+					label("", constraints: "width 100::150, wrap")
+					
+					comboBox(id: "dvbVentileinstellungLuftart", items: ["ZU", "AB", "AU", "FO"])
+					comboBox(id: "dvbVentileinstellungRaum", items: [/* items werden nach RaumHinzufugen aktualisiert */])
+					textField(id: "dvbVentileinstellungTeilstrecken")
+					button(id: "dvbVentileinstellungAuswahlen", text: "Auswählen")
+					comboBox(id: "dvbVentileinstellungVentilbezeichnung", items: model.meta.dvbVentileinstellung)
+					button(id: "dvbVentileinstellungHinzufugen", text: "Hinzufügen")
+					
+					/*
+					panel(id: "dvbVentileinstellungTabellePanel", constraints: "cell 0 0 6 1", layout: new MigLayout("fillx", "[fill]")) {
+						jideScrollPane() {
+							table(id: "dvbVentileinstellungTabelle", model: model.createDruckverlustVentileinstellungTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+							}
+						}
 					}
+					*/
+					
+					button(id: "dvbVentileinstellungEntfernen", text: "Entfernen")
+					
 				}
 			}
-			*/
-			
-                button(id: "", text: "Entfernen")
-            }
-            }
-        }
-    }
+		}
+		
+	}
 }
-// druckverlustTabGroup
-druckverlustTabGroup.with {
+// dvbTabGroup
+dvbTabGroup.with {
 	setTabColorProvider(com.jidesoft.swing.JideTabbedPane.ONENOTE_COLOR_PROVIDER)
 	setBoldActiveTab(true)
 }

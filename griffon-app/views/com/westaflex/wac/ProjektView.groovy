@@ -42,7 +42,7 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 					build(RaumVsView)
 				}
 				// Druckverlustberechnung
-				panel(id: "druckverlustTab", title: "Druckverlustberechnung") {
+				panel(id: "dvbTab", title: "Druckverlustberechnung") {
 					build(DruckverlustView)
 				}
 				// Akkustikberechnung
