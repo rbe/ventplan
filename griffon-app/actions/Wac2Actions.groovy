@@ -36,7 +36,7 @@ projektSpeichernAction = action(
 		accelerator: shortcut("S"),
 		smallIcon: imageIcon("/menu/projektspeichern.png"),
 		enabled: bind { model.aktivesProjektGeandert },
-		closure: {}
+		closure: controller.projektSpeichern
 	)
 
 projektSpeichernAlsAction = action(
@@ -46,7 +46,7 @@ projektSpeichernAlsAction = action(
 		accelerator: shortcut("shift S"),
 		smallIcon: imageIcon("/menu/projektspeichern.png"),
 		enabled: bind { model.aktivesProjektGeandert },
-		closure: {}
+		closure: controller.projektSpeichernAls
 	)
 
 projektSchliessenAction = action(
@@ -63,7 +63,7 @@ projektSeitenansichtAction = action(
 		name: "Seitenansicht",
 		smallIcon: imageIcon("/menu/seitenansicht.png"),
 		enabled: bind { model.aktivesProjekt != null },
-		closure: {}
+		closure: controller.projektSeitenansicht
 	)
 
 projektDruckenAction = action(
@@ -73,7 +73,7 @@ projektDruckenAction = action(
 		accelerator: shortcut("P"),
 		smallIcon: imageIcon("/menu/drucken.png"),
 		enabled: bind { model.aktivesProjekt != null },
-		closure: {}
+		closure: controller.projektDrucken
 	)
 
 exitAction = action(
