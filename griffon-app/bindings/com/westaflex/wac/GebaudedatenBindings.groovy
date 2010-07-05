@@ -1,11 +1,20 @@
+/**
+ * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/bindings/com/westaflex/wac/GebaudedatenBindings.groovy
+ * 
+ * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
+ * Alle Rechte vorbehalten. Nutzungslizenz siehe http://www.bensmann.com/license_de.html
+ * All Rights Reserved. Use is subject to license terms, see http://www.bensmann.com/license_en.html
+ * 
+ * Created by: rbe
+ */
 package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
 
 // Gebäudedaten - Gebäudetyp
-bind(source: model.map.gebaude.typ, sourceProperty: "MFH",        target: gebaudeTypMFH,        targetProperty: "selected", mutual: true)
-bind(source: model.map.gebaude.typ, sourceProperty: "EFH",        target: gebaudeTypEFH,        targetProperty: "selected", mutual: true)
-bind(source: model.map.gebaude.typ, sourceProperty: "Maisonette", target: gebaudeTypMaisonette, targetProperty: "selected", mutual: true)
+bind(source: model.map.gebaude.typ, sourceProperty: "mfh",        target: gebaudeTypMFH,        targetProperty: "selected", mutual: true)
+bind(source: model.map.gebaude.typ, sourceProperty: "efh",        target: gebaudeTypEFH,        targetProperty: "selected", mutual: true)
+bind(source: model.map.gebaude.typ, sourceProperty: "maisonette", target: gebaudeTypMaisonette, targetProperty: "selected", mutual: true)
 // Gebäudedaten - Gebäudelage
 bind(source: model.map.gebaude.lage, sourceProperty: "windschwach", target: gebaudeLageWindschwach, targetProperty: "selected", mutual: true)
 bind(source: model.map.gebaude.lage, sourceProperty: "windstark",   target: gebaudeLageWindstark,   targetProperty: "selected", mutual: true)
