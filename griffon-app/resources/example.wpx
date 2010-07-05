@@ -1,0 +1,98 @@
+<westaflex-wpx>
+	<projekt>
+		<ersteller>
+			<rolle></rolle>
+			<person>
+				<benutzername/>
+				<vorname/>
+				<nachname/>
+				<email/>
+				<tel/>
+				<fax/>
+				<adresse>
+					<name/>
+					<strasse/>
+					<stadt/>
+					<ort/>
+					<postleitzahl/>
+					<land/>
+				</adresse>
+			</person>
+		</ersteller>
+		<erstellt>2010-06-28T08:23:44</erstellt>
+		<bearbeitet>2010-07-01T10:50:21</bearbeitet>
+		<bauvorhaben></bauvorhaben>
+		<gebaude>
+			<!-- MFH EFH MAI -->
+			<gebaudeTyp>mfh</gebaudeTyp>
+			<!-- SCH STA -->
+			<gebaudeLage>SCH</gebaudeLage>
+			<!-- HOC NIE -->
+			<warmeschutz>NIE</warmeschutz>
+			<!-- A B C M-->
+			<luftdichtheit>A</luftdichtheit>
+			<!-- KG EG OG DG SB -->
+			<geratestandort>EG</geratestandort>
+			<besAnfFaktor>1.0</besAnfFaktor>
+			<personenAnzahl>3</personenAnzahl>
+			<personenVolumen>90</personenVolumen>
+			<!-- DAC WAN ERD -->
+			<aussenluft>DAC</aussenluft>
+			<!-- DAC WAN LIC -->
+			<fortluft>DAC</fortluft>
+			<luftkanalverlegung/>
+			<zuluftdurchlasse/>
+			<abluftdurchlasse/>
+			<room>
+				<raumnummer>001</raumnummer>
+				<bezeichnung>Wohnzimmer</bezeichnung>
+				<!-- WOH KIN SLF ESS ARB GAS HAU KEL WC" KUC BAD DUS SAU FLU DIE -->
+				<raumtyp>WOH</raumtyp>
+				<!-- KG EG OG DG SB -->
+				<geschoss>EG</geschoss>
+				<!-- ZU AB ZUA UB -->
+				<luftart>ZU</luftart>
+				<raumflache>25.0</raumflache>
+				<raumhohe>2.50</raumhohe>
+				<tuer>
+					<name>T&#xFC;r</name>
+					<breite>610</breite>
+				</tuer>
+			</room>
+		</gebaude>
+		<firma>
+			<name>Firma name</name>
+			<rolle>Ausfuhrende</rolle>
+			<email></email>
+			<tel></tel>
+			<fax></fax>
+			<adresse>
+				<name/>
+				<strasse/>
+				<stadt/>
+				<ort/>
+				<postleitzahl/>
+				<land/>
+			</adresse>
+			<kontakt>
+				<rolle></rolle>
+				<person>
+					<benutzername/>
+					<vorname/>
+					<nachname/>
+					<email/>
+					<tel/>
+					<fax/>
+					<adresse>
+						<name/>
+						<strasse/>
+						<stadt/>
+						<ort/>
+						<postleitzahl/>
+						<land/>
+					</adresse>
+				</person>
+			</kontakt>
+		</firma>
+	</projekt>
+</westaflex-wpx>
