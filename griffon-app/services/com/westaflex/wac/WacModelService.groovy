@@ -80,4 +80,32 @@ class WacModelService {
 		r ? r as Integer : 0
 	}
 	
+	/**
+	 * 
+	 */
+	List getDvbKanalbezeichnung() {
+		def r = withSql { sql ->
+				sql.rows("SELECT artikelnummer FROM artikelstamm WHERE klasse BETWEEN 4 AND 8")
+			}?.collect {
+				it.artikelnummer
+			}
+		//println "getDvbKanalbezeichnung(): ${r?.dump()}"
+		r
+	}
+	
+	/**
+	 * 
+	 */
+	List getDvbVentileinstellung() {
+		def r = withSql { sql ->
+				sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust WHERE ausblaswinkel <> 180")
+			}?.collect {
+				it.artikelnummer
+			}
+		// Add empty item
+		r << ""
+		//println "getDvbKanalbezeichnung(): ${r?.dump()}"
+		r
+	}
+	
 }
