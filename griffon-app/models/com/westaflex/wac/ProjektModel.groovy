@@ -64,7 +64,7 @@ class ProjektModel {
 			ausfuhrendeFirma: [:] as ObservableMap,
 		] as ObservableMap,
 		gebaude: [
-				typ: [MFH: true] as ObservableMap,
+				typ: [mfh: true] as ObservableMap,
 				lage: [windschwach: true] as ObservableMap,
 				warmeschutz: [hoch: true] as ObservableMap,
 				geometrie: [:
@@ -94,6 +94,8 @@ class ProjektModel {
 				energie: [zuAbluftWarme: true, nachricht: " "] as ObservableMap,
 				hygiene: [nachricht: " "] as ObservableMap,
 				kennzeichnungLuftungsanlage: "ZuAbLS-Z-WE-WÜT-0-0-0-0-0",
+				zentralgerat: "",
+				volumenstromZentralgerat: 0,
 			] as ObservableMap,
 		raum: [
 				raume: [
@@ -109,16 +111,17 @@ class ProjektModel {
 				infiltrationBerechnen: true,
 				massnahme: " "
 			] as ObservableMap,
-		druckverlust: [:] as ObservableMap,
+		dvb: [:] as ObservableMap,
 		akkustik: [:] as ObservableMap
 	] as ObservableMap
 	
 	// TableModels
+	def tmComparator = { a, b -> a.position <=> b.position } as Comparator
 	def tableModels = [
-			raume: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList,
-			raumeVsZuAbluftventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList,
-			raumeVsUberstromventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList,
-						raumeBearbeitenEinstellungen: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), { a, b -> a.position <=> b.position } as Comparator) as ca.odell.glazedlists.EventList
+			raume: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList,
+			raumeVsZuAbluftventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList,
+			raumeVsUberstromventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList,
+			raumeBearbeitenEinstellungen: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList
 		]
 	
 	/**
@@ -179,7 +182,7 @@ class ProjektModel {
 	}
 	
 	/**
-	 * Einen Raum im Model hinzufügen, alle TableModels synchronisieren.
+	 * Einen Raum im Model hinzufügen: auch alle TableModels, Comboboxen synchronisieren.
 	 */
 	def addRaum = { raum ->
 		//println "addRaum: adding raum=${raum.dump()}"
@@ -216,8 +219,8 @@ class ProjektModel {
 	 * Synchronize all Swing table models depending on map.raum.raume.
 	 */
 	def resyncRaumTableModels() {
-		// Räume sortieren, damit die Liste immer der Position des Raums und der Reihenfolge im TableModel entspricht
-		// Nicht zwingend notwendig, da die TableModels bereits nach Position sortieren:
+		// Räume sortieren, damit die Liste immer der Position des Raums und der Reihenfolge im TableModel entspricht:
+		// Nicht zwingend notwendig, da die TableModels bereits über den Comparator nach Position sortieren:
 		// SortedList(new BasicEventList(), { a, b -> a.position <=> b.position } as Comparator)
 		// TODO rbe Following code throws java.lang.IndexOutOfBoundsException: Index: 2, Size: 2
 		//println map.raum.raume.sort { a, b -> a.position <=> b.position }
