@@ -254,9 +254,9 @@ class WacCalculationService {
 		if (ventilator) {
 			m.inf = 0.9f
 			m.n50 = map.gebaude.luftdichtheit.luftwechsel
-			if (map.gebaude.typ.MFH) { m.sys = 0.45f }
+			if (map.gebaude.typ.mfh) { m.sys = 0.45f }
 		} else {
-			if (map.gebaude.typ.MFH) { m.sys = 0.5f }
+			if (map.gebaude.typ.mfh) { m.sys = 0.5f }
 			if (map.gebaude.luftdichtheit != 0) { m.n50 = 1.5f }
 		}
 		//
@@ -267,7 +267,7 @@ class WacCalculationService {
 		} else {
 			if (map.gebaude.lage.windschwach) m.diffDruck = 2.0d
 			else m.diffDruck = 4.0d
-			if (!ventilator && !map.gebaude.typ.MFH) {
+			if (!ventilator && !map.gebaude.typ.mfh) {
 				if (map.gebaude.lage.windschwach) m.diffDruck = 5.0d
 				else m.diffDruck = 7.0d
 			}
