@@ -291,6 +291,13 @@
 						</dict>
 					</dict>
 				</dict>
+				<key>resources</key>
+				<dict>
+					<key>isExpanded</key>
+					<true/>
+					<key>subItems</key>
+					<dict/>
+				</dict>
 				<key>services</key>
 				<dict>
 					<key>isExpanded</key>
