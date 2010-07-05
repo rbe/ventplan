@@ -19,7 +19,11 @@ import com.bensmann.griffon.GriffonHelper as GH
 			}
 		] as javax.swing.event.ListSelectionListener)
 }
+// Comboboxes
 // Binding for items of comboboxes is done in RaumVsiew!
+raumVsZentralgerat.actionPerformed = controller.zentralgeratGewahlt
+raumVsVolumenstrom.actionPerformed = controller.volumenstromZentralgeratGewahlt
+//
 bind(source: model.map.raum.raumVs, sourceProperty: "gesamtVolumenNE", target: raumVsGesamtVolumenNE, targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.raum.raumVs, sourceProperty: "luftwechselNE", target: raumVsLuftwechselNE, targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.raum.raumVs, sourceProperty: "gesamtaussenluftVsMitInfiltration", target: raumVsGesamtaussenluftVsMitInfiltration, targetProperty: "text", converter: GH.toString2Converter)
@@ -29,5 +33,4 @@ bind(source: model.map.raum.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsRl", t
 bind(source: model.map.raum.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsNl", target: raumVsAussenluftVsDerLtmNl, targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.raum.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsIl", target: raumVsAussenluftVsDerLtmIl, targetProperty: "text", converter: GH.toString2Converter)
 //
-raumVsZentralgerat.actionPerformed = controller.zentralgeratGewahlt
 raumVsRaumBearbeiten.actionPerformed = controller.raumBearbeiten
