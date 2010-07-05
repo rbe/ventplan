@@ -37,6 +37,7 @@ class ProjektController {
 		model.mvcId = args.mvcId
 		// Reference meta values
 		model.meta = app.models["wac2"].meta
+		setDefaultValues()
 		// Add PropertyChangeListener to our model.meta
 		GH.addMapPropertyChangeListener("meta", model.meta)
 		// Add PropertyChangeListener to our model.map
@@ -71,6 +72,19 @@ class ProjektController {
 		metaClass.invokeMethod(this, methodName, params)
 	}
 	 */
+	
+	/**
+	 * Setze Standardwerte (meist in Comboboxen).
+	 */
+	def setDefaultValues() {
+		// Raumvolumenströme
+		model.map.anlage.zentralgerat = model.meta.zentralgerat[0]
+		model.map.anlage.volumenstromZentralgerat = model.meta.volumenstromZentralgerat //model.meta.volumenstromZentralgerat[0]
+		// Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
+		model.map.dvb.kanalbezeichnung = model.meta.dvbKanalbezeichnung
+		// Druckverlustberechnung - Ventileinstellung - Ventilbezeichnung
+		model.map.dvb.ventileinstellung = model.meta.dvbVentileinstellung[]
+	}
 	
 	/**
 	 * Titel der Tab für dieses Projekt erstellen: Bauvorhaben und Sternchen für ungesicherte Änderungen.
@@ -236,7 +250,7 @@ class ProjektController {
 	 */
 	def berechneKennzeichenLuftungsanlage = {
 		doLater {
-			def gebaudeTyp = model.map.gebaude.EFH ? "EFH" : "WE"
+			def gebaudeTyp = model.map.gebaude.efh ? "EFH" : "WE"
 			def energieKz = model.map.anlage.energie.nachricht != " " ? "E" : "0"
 			def hygieneKz = model.map.anlage.hygiene.nachricht != " " ? "H" : "0"
 			def ruckschlag = model.map.anlage.ruckschlagKappe ? "RK" : "0"
@@ -400,7 +414,7 @@ class ProjektController {
 			*/
 			// Show dialog
 			def dialog = GH.showDialog(builder, RaumBearbeitenView)
-			println "raumBearbeiten: dialog '${dialog.title}' closed"
+			println "raumBearbeiten: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
 			// Berechne alles, was von Räumen abhängt
 			publishEvent "RaumGeandert", [row]
 		}
@@ -434,14 +448,14 @@ class ProjektController {
 	 * Raum bearbeiten - Luftart ändern.
 	 */
 	def raumBearbeitenLuftartGeandert = {
-		println "raumBearbeitenLuftartGeandert"
+		println "TODO raumBearbeitenLuftartGeandert"
 	}
 	
 	/**
 	 * Raum bearbeiten - Geometrie eingegeben.
 	 */
 	def raumBearbeitenGeometrieGeandert = {
-		println "raumBearbeitenGeometrieGeandert"
+		println "TODO raumBearbeitenGeometrieGeandert"
 	}
 	
 	/**
@@ -503,10 +517,21 @@ class ProjektController {
 		doLater {
 			view.raumVsVolumenstrom.removeAllItems()
 			// Hole Volumenströme des Zentralgeräts
-			model.meta.volumenstromZentralgerat = wacModelService.getVolumenstromFurZentralgerat(view.raumVsZentralgerat.selectedItem)
+			model.meta.volumenstromZentralgerat =
+				wacModelService.getVolumenstromFurZentralgerat(view.raumVsZentralgerat.selectedItem)
 			// Füge Volumenströme in Combobox hinzu
 			model.meta.volumenstromZentralgerat.each { view.raumVsVolumenstrom.addItem(it) }
+			// Im Projekt-Model speichern
+			model.map.anlage.zentralgerat = view.raumVsZentralgerat.selectedItem
 		}
+	}
+	
+	/**
+	 * Raumvolumenströme - Volumenstrom des Zentralgeräts.
+	 */
+	def volumenstromZentralgeratGewahlt = {
+		// Im Projekt-Model speichern
+		model.map.anlage.volumenstromZentralgerat = view.raumVsVolumenstrom.selectedItem.toInteger()
 	}
 	
 }
