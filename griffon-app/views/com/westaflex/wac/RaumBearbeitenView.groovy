@@ -93,7 +93,7 @@ panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[f
 				button(id: "raumBearbeitenDetailsTurentfernen", text: "Tür entfernen", constraints: "wrap")
 
 				jideScrollPane() {
-					//table(id: "raumBearbeitenDetailsTabelle", constraints: "span, width 800", model: model.createRaumEinstellungenTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+					//table(id: "raumBearbeitenDetailsTabelle", constraints: "span, width 800", model: model.createRaumDetailsTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
 					//}
 				}
 			}

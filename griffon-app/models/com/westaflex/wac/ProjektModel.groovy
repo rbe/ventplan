@@ -121,6 +121,7 @@ class ProjektModel {
 			raume: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList,
 			raumeVsZuAbluftventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList,
 			raumeVsUberstromventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList,
+			raumeBearbeitenDetails: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList
 			raumeBearbeitenEinstellungen: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList
 		]
 	
@@ -150,6 +151,19 @@ class ProjektModel {
 		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",                "Volumenstrom (m³/h)", "Überström-Elemente"]
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile",    "raumVolumenstrom",    "raumUberstromElemente"]
 		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeVsUberstromventile, [
+				getColumnCount: { columnNames.size() },
+				getColumnName:  { index -> columnNames[index] },
+				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
+			] as ca.odell.glazedlists.gui.TableFormat)
+	}
+	
+	/**
+	 * RaumBearbeitenView - Details Tab TableModel
+	 */
+	def createRaumDetailsTableModel() {
+		def columnNames =   ["Bezeichnung", "Breite in mm", "Querschnittsfläche in mm²", "Spaltenhöhe in mm", "mit Dichtung"]
+		def propertyNames = ["turBezeichnung", "turBreite", "turQuerschnitt", "turSpaltenhohe", "turDichtung"]
+		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeBearbeitenDetails, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
 				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
