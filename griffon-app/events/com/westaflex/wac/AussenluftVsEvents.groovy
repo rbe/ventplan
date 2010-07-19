@@ -20,10 +20,17 @@ class AussenluftVsEvents {
 	def wacModelService
 	
 	/**
+	 * Execute code 'later'.
+	 */
+	def doLater = { closure ->
+		javax.swing.SwingUtilities.invokeLater closure
+	}
+	
+	/**
 	 * 
 	 */
 	def onAussenluftVsBerechnen = {
-		javax.swing.SwingUtilities.invokeLater {
+		doLater {
 			println "processing event 'AussenluftVsBerechnen'"
 			wacCalculationService.aussenluftVs(model.map)
 		}
