@@ -239,16 +239,42 @@ class GriffonHelper {
 	 */
 	def static withDisabledListSelectionListeners = { table, closure ->
 		def lsm = table.selectionModel
-		// Save existing ListSelectionListeners
+		// Save existing ListSelectionListener(s)
 		def lsl = lsm.listSelectionListeners
-		lsl.each { lsm.removeListSelectionListener(it) }
+		lsl.each {
+				// Will throw UnsupportedOperationException! println "withDisabledListSelectionListeners: removing ${it}"
+				lsm.removeListSelectionListener(it)
+			}
 		// Execute closure
 		closure.delegate = table
 		closure()
-		// Re-add ListSelectionListeners
-		lsl.each { lsm.addListSelectionListener(it) }
-		// Repaint, as default decorator is removed
+		// Re-add ListSelectionListener(s)
+		lsl.each {
+				// Will throw UnsupportedOperationException! println "withDisabledListSelectionListeners: re-adding ${it}"
+				lsm.addListSelectionListener(it)
+			}
+		// Repaint, as default decorator was removed and e.g. table model has changed
 		table.repaint()
+	}
+	
+	/**
+	 * Execute a closure with disabled ActionListener(s).
+	 */
+	def static withDisabledActionListeners = { component, closure ->
+		// Save existing ActionListener(s)
+		def actionListeners = component.actionListeners
+		actionListeners.each {
+			println "withDisabledActionListener: removing ${it}"
+			component.removeActionListener(it)
+		}
+		// Execute closure
+		closure.delegate = component
+		closure()
+		// Re-add ActionListener(s)
+		actionListeners.each {
+				println "withDisabledActionListener: re-adding ${it}"
+				component.addActionListener(it)
+			}
 	}
 	
 	/**
