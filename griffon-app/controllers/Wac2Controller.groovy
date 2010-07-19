@@ -101,11 +101,12 @@ class Wac2Controller {
 	 */
 	def projektAktivieren = { mvcId ->
 		// Anderes Projekt wurde aktiviert
-		if (mvcId != model.aktivesProjekt) {
+		if (mvcId && mvcId != model.aktivesProjekt) {
 			// MVC ID merken
 			model.aktivesProjekt = mvcId
 			// Dirty-flag aus Projekt-Model übernehmen
 			try {
+				println "projektAktivieren: getMVCGroup(mvcId)=" + getMVCGroup(mvcId)
 				model.aktivesProjektGeandert = getMVCGroup(mvcId).model?.map.dirty
 			} catch (e) {
 				e.printStackTrace()
