@@ -20,10 +20,17 @@ class GebaudeEvents {
 	def wacModelService
 	
 	/**
+	 * Execute code 'later'.
+	 */
+	def doLater = { closure ->
+		javax.swing.SwingUtilities.invokeLater closure
+	}
+	
+	/**
 	 * 
 	 */
 	def onGeometrieEingegeben = {
-		javax.swing.SwingUtilities.invokeLater {
+		doLater {
 			println "processing event 'GeometrieEingegeben'"
 			wacCalculationService.geometrie(model.map)
 			wacCalculationService.aussenluftVs(model.map)
