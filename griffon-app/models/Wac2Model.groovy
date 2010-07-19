@@ -24,9 +24,9 @@ class Wac2Model {
 				typ: ["Wohnzimmer", "Kinderzimmer", "Schlafzimmer", "Esszimmer", "Arbeitszimmer", "Gästezimmer", "Hausarbeitsraum", "Kellerraum", "WC", "Küche", "Kochnische", "Bad mit/ohne WC", "Duschraum", "Sauna", "Flur", "Diele"],
 				geschoss: ["KG", "EG", "OG", "DG", "SB"],
 				luftart: ["ZU", "AB", "ZU/AB", "ÜB"],
-				raumVsBezeichnungZuluftventile: [/* initialized in ProjektController.mvcGroupInit */],
-				raumVsBezeichnungAbluftventile: [/* initialized in ProjektController.mvcGroupInit */],
-				raumVsUberstromelemente: [/* initialized in ProjektController.mvcGroupInit */],
+				raumVsBezeichnungZuluftventile: [/* initialized in Wac2Controller.mvcGroupInit */],
+				raumVsBezeichnungAbluftventile: [/* initialized in Wac2Controller.mvcGroupInit */],
+				raumVsUberstromelemente: [/* initialized in Wac2Controller.mvcGroupInit */],
 				raumVsVentilebene: ["KG", "EG", "OG", "DG", "SB"],
 			],
 		gewahlterRaum: [:] as ObservableMap

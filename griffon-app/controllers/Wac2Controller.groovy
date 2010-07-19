@@ -26,10 +26,11 @@ class Wac2Controller {
 				model.meta.raumVsBezeichnungAbluftventile =
 				wacModelService.getZuAbluftventile()
 			// Raumvolumenströme - Überströmelemente
-			model.meta.raumVsUberstromelement = wacModelService.getUberstromelemente()
+			model.meta.raumVsUberstromelemente = wacModelService.getUberstromelemente()
 			// Raumvolumenströme - Zentralgerät + Volumenstrom
 			model.meta.zentralgerat = wacModelService.getZentralgerat()
-			model.meta.volumenstromZentralgerat = wacModelService.getVolumenstromFurZentralgerat(model.meta.zentralgerat[0])
+			model.meta.volumenstromZentralgerat =
+				wacModelService.getVolumenstromFurZentralgerat(model.meta.zentralgerat[0])
 			// Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
 			model.meta.dvbKanalbezeichnung = wacModelService.getDvbKanalbezeichnung()
 			// Druckverlustberechnung - Ventileinstellung - Ventilbezeichnung
