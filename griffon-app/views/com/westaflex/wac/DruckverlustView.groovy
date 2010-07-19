@@ -35,16 +35,14 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fillx", "[fill]", "[fill]")) {
 					comboBox(id: "dvbKanalnetzKanalbezeichnung", items: model.meta.dvbKanalbezeichnung)
 					textField(id: "dvbKanalnetzLange")
 					button(id: "dvbKanalnetzHinzufugen", text: "Hinzufügen")
-					button(id: "dvbKanalnetzWiderstandswerte", text: "Widerstandsbeiwerte...")
+					button(id: "dvbKanalnetzWiderstandswerte", text: "Widerstandsbeiwerte...", constraints: "wrap")
 					
-					/*
-					panel(id: "dvbKanalnetzTabellePanel", constraints: "cell 0 0 7 1", layout: new MigLayout("fillx", "[fill]")) {
+					panel(id: "dvbKanalnetzTabellePanel", constraints: "span", layout: new MigLayout("fillx", "[fill]")) {
 						jideScrollPane() {
-							table(id: "dvbKanalnetzTabelle", model: model.createDruckverlustKanalnetzTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+							table(id: "dvbKanalnetzTabelle", model: model.createDvbKanalnetzTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
 							}
 						}
 					}
-					*/
 					
 					button(id: "dvbKanalnetzEntfernen", text: "Entfernen")
 					
@@ -66,20 +64,18 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fillx", "[fill]", "[fill]")) {
 					label("", constraints: "width 100::150, wrap")
 					
 					comboBox(id: "dvbVentileinstellungLuftart", items: ["ZU", "AB", "AU", "FO"])
-					comboBox(id: "dvbVentileinstellungRaum", items: [/* items werden nach RaumHinzufugen aktualisiert */])
+					comboBox(id: "dvbVentileinstellungRaum", items: model.meta.raum.typ + [/* items werden nach RaumHinzufugen aktualisiert, siehe Ticket#10 */])
 					textField(id: "dvbVentileinstellungTeilstrecken")
 					button(id: "dvbVentileinstellungAuswahlen", text: "Auswählen")
 					comboBox(id: "dvbVentileinstellungVentilbezeichnung", items: model.meta.dvbVentileinstellung)
-					button(id: "dvbVentileinstellungHinzufugen", text: "Hinzufügen")
+					button(id: "dvbVentileinstellungHinzufugen", text: "Hinzufügen", constraints: "wrap")
 					
-					/*
-					panel(id: "dvbVentileinstellungTabellePanel", constraints: "cell 0 0 6 1", layout: new MigLayout("fillx", "[fill]")) {
+					panel(id: "dvbVentileinstellungTabellePanel", constraints: "span", layout: new MigLayout("fillx, filly", "[fill]")) {
 						jideScrollPane() {
-							table(id: "dvbVentileinstellungTabelle", model: model.createDruckverlustVentileinstellungTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+							table(id: "dvbVentileinstellungTabelle", model: model.createDvbVentileinstellungTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
 							}
 						}
 					}
-					*/
 					
 					button(id: "dvbVentileinstellungEntfernen", text: "Entfernen")
 					
