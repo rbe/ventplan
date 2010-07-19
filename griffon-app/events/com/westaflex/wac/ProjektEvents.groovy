@@ -18,4 +18,11 @@ class ProjektEvents {
 	def wacCalculationService
 	def wacModelService
 	
+	/**
+	 * Execute code 'later'.
+	 */
+	def doLater = { closure ->
+		javax.swing.SwingUtilities.invokeLater closure
+	}
+	
 }
