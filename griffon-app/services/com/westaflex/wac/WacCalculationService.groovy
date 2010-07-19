@@ -22,7 +22,7 @@ class WacCalculationService {
 	/**
 	 * Dezimalzahl auf 5 runden.
 	 */
-	private Integer round5(Double factor) {
+	Integer round5(Double factor) {
 		5.0d * (Math.round(factor / 5.0d))
 	}
 	
@@ -486,7 +486,7 @@ class WacCalculationService {
 	 * Berechne das zu verwendende Zentralgerät.
 	 */
 	def berechneZentralgerat(map) {
-		def nl = map.aussenluftVs.gesamtLvsLtmLvsNl
+		def nl = map.aussenluftVs.gesamtLvsLtmLvsNl as Integer
 		String zentralgerat = wacModelService.getZentralgeratFurVolumenstrom(nl)
 		[zentralgerat, nl]
 	}
