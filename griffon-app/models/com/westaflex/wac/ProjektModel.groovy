@@ -95,6 +95,7 @@ class ProjektModel {
 				hygiene: [nachricht: " "] as ObservableMap,
 				kennzeichnungLuftungsanlage: "ZuAbLS-Z-WE-WÜT-0-0-0-0-0",
 				zentralgerat: "",
+				zentralgeratManuell: false,
 				volumenstromZentralgerat: 0,
 			] as ObservableMap,
 		raum: [
