@@ -344,7 +344,9 @@ class ProjektController {
 		def raumWerte = model.raumMapTemplate + GH.getValuesFromView(view, "raum")
 		// Prüfe Toleranzwerte für Zuluftfaktor
 		if (raumWerte.raumLuftart ==~ /ZU.*/) {
-			def (zuluftfaktor, neuerZuluftfaktor) = wacCalculationService.prufeZuluftfaktor(raumWerte.raumZuluftfaktor)
+			def eingegebenerZuluftfaktor = raumWerte.raumZuluftfaktor.toDouble2()
+			def (zuluftfaktor, neuerZuluftfaktor) =
+				wacCalculationService.prufeZuluftfaktor(raumWerte.raumTyp, eingegebenerZuluftfaktor)
 			if (zuluftfaktor != neuerZuluftfaktor) {
 				// TODO mmu Dialog with Oxbow
 				println "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"

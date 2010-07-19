@@ -162,13 +162,13 @@ class WacCalculationService {
 	/**
 	 * Prüfe den Zuluftfaktor, Rückgabe: [übergebener wert, neuer wert]
 	 */
-	def prufeZuluftfaktor(Double zf) {
+	def prufeZuluftfaktor(String raumTyp, Double zf) {
 		def minMax = { v, min, max ->
 			if (v < min) { min }
 			else if (v > max) { max } else { v }
 		}
 		Double nzf = 0.0d
-		switch (raumWerte.raumBezeichnung) {
+		switch (raumTyp) {
 			case "Wohnzimmer":                                  nzf = minMax(zf, 2.5d, 3.5d); break
 			case ["Kinderzimmer", "Schlafzimmer"]:              nzf = minMax(zf, 1.0d, 3.0d); break
 			case ["Esszimmer", "Arbeitszimmer", "Gästezimmer"]: nzf = minMax(zf, 1.0d, 2.0d); break
