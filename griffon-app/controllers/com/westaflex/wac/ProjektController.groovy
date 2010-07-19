@@ -294,15 +294,15 @@ class ProjektController {
 				case 0..5:
 					view.raumLuftart.selectedItem = "ZU"
 					switch (view.raumTyp.selectedIndex) {
-						case 0..1:
+						case 0:
 							view.raumAbluftVs.text = ""
 							view.raumZuluftfaktor.text = "3,00"
 							break
-						case 2..3:
+						case 1..2:
 							view.raumAbluftVs.text = ""
 							view.raumZuluftfaktor.text = "2,00"
 							break
-						case 4..6:
+						case 3..5:
 							view.raumAbluftVs.text = ""
 							view.raumZuluftfaktor.text = "1,50"
 							break
@@ -312,11 +312,11 @@ class ProjektController {
 				case 6..13:
 					view.raumLuftart.selectedItem = "AB"
 					switch (view.raumTyp.selectedIndex) {
-						case 6..9:
+						case 6..8:
 							view.raumZuluftfaktor.text = ""
 							view.raumAbluftVs.text = "25"
 							break
-						case 10..12:
+						case 9..12:
 							view.raumZuluftfaktor.text = ""
 							view.raumAbluftVs.text = "45"
 							break
