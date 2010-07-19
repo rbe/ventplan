@@ -83,6 +83,17 @@ class WacModelService {
 	/**
 	 * 
 	 */
+	String getZentralgeratFurVolumenstrom(Integer luftung) {
+		def r = withSql { sql ->
+				sql.firstRow("SELECT artikelnummer FROM artikelstamm WHERE kategorie = 1 AND maxvolumenstrom >= ?", [lueftung])
+			}
+		println "getZentralgeratForVolumenstrom: ${luftung} -> ${r}"
+		r
+	}
+	
+	/**
+	 * 
+	 */
 	List getDvbKanalbezeichnung() {
 		def r = withSql { sql ->
 				sql.rows("SELECT artikelnummer FROM artikelstamm WHERE klasse BETWEEN 4 AND 8")
