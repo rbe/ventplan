@@ -513,7 +513,7 @@ class ProjektController {
 				}
 				// Aktuellen Raum in Metadaten setzen
 				model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
-                                model.meta.gewahlterRaum.raumNummer = row + 1
+				model.meta.gewahlterRaum.raumNummer = row + 1
 			} else {
 				// Remove selection in all tables
 				withAllRaumTables { t ->
@@ -526,7 +526,7 @@ class ProjektController {
 	}
 	
 	/**
-	 * Raumvolumenströme - Zentralgerät.
+	 * Raumvolumenströme - Zentralgerät: manuelle Auswahl des Zentralgeräts.
 	 */
 	def zentralgeratGewahlt = {
 		// TODO rbe Compare old and new value; only change values when old != new?
@@ -539,8 +539,44 @@ class ProjektController {
 			model.meta.volumenstromZentralgerat.each { view.raumVsVolumenstrom.addItem(it) }
 			// Im Projekt-Model speichern
 			model.map.anlage.zentralgerat = view.raumVsZentralgerat.selectedItem
+			// Merken, dass das Zentralgerät manuell ausgewählt wurde
+			// -> keine automatische Auswahl des Zentralgeräts mehr durchführen
+			model.map.anlage.zentralgeratManuell = true
 		}
 	}
+	
+	/**
+	 * Raumvolumenströme - Zentralgerät: automatische Aktualisierung das Zentralgeräts.
+	 */
+	def onZentralgeratAktualisieren = {
+		doLater {
+			println "onZentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
+			if (!model.map.anlage.zentralgeratManuell) {
+				def (zentralgerat, nl) = wacCalculationService.berechneZentralgerat(model.map)
+				println "onZentralgeratAktualisieren: zentralgerat=${zentralgerat}, nl=${nl}/${wacCalculationService.round5(nl)}"
+				// Aktualisiere Zentralgerät
+				GH.withDisabledActionListeners view.raumVsZentralgerat, {
+					model.map.anlage.zentralgerat =
+						view.raumVsZentralgerat.selectedItem =
+						zentralgerat
+				}
+				// Aktualisiere Volumenstrom
+				GH.withDisabledActionListeners view.raumVsVolumenstrom, {
+					view.raumVsVolumenstrom.removeAllItems()
+					// Hole Volumenströme des Zentralgeräts
+					model.meta.volumenstromZentralgerat =
+						wacModelService.getVolumenstromFurZentralgerat(view.raumVsZentralgerat.selectedItem)
+					// Füge Volumenströme in Combobox hinzu
+					model.meta.volumenstromZentralgerat.each { view.raumVsVolumenstrom.addItem(it) }
+					//
+					model.map.anlage.volumenstromZentralgerat =
+						view.raumVsVolumenstrom.selectedItem =
+						wacCalculationService.round5(nl)
+				}
+			}
+		}
+	}
+	
 
         def initTableModelBuilder() {
             def myTableModel = GH.initTableModelBuilder(builder)
@@ -552,7 +588,7 @@ class ProjektController {
 	 */
 	def volumenstromZentralgeratGewahlt = {
 		// Im Projekt-Model speichern
-		model.map.anlage.volumenstromZentralgerat = view.raumVsVolumenstrom.selectedItem.toInteger()
+		model.map.anlage.volumenstromZentralgerat = view.raumVsVolumenstrom.selectedItem?.toInteger()
 	}
 	
 }
