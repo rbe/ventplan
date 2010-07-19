@@ -104,7 +104,7 @@ class RaumEvents {
 			// Aussenluftvolumenströme berechnen
 			wacCalculationService.aussenluftVs(model.map)
 			// Luftmenge berechnen
-			wacCalculationService.berechnenRaumLuftmenge(model.map, raumIndex)
+			// TODO wacCalculationService.berechnenRaumLuftmenge(model.map, raumIndex)
 			// Nummern der Räume berechnen
 			wacCalculationService.berechneRaumnummer(model.map)
 			// Diesen Raum in allen Tabellen anwählen
