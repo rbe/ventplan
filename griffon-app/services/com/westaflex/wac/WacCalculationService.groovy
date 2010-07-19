@@ -465,21 +465,32 @@ class WacCalculationService {
 		map.aussenluftVs.gesamtLvsLtmLwNl = (grundluftung - infiltration) / geluftetesVolumen
 		mindestluftung = 0.7f * grundluftung - infiltration
 		map.aussenluftVs.gesamtLvsLtmLvsRl = mindestluftung
-		if (map.aussenluftVs.gesamtLvsLtmLvsRl < 50.0d) {
-			map.aussenluftVs.gesamtLvsLtmLvsRl = 50.0d
-		}
 		map.aussenluftVs.gesamtLvsLtmLwRl = mindestluftung / geluftetesVolumen
 		intensivluftung = 1.3f * grundluftung - infiltration
 		map.aussenluftVs.gesamtLvsLtmLvsIl = intensivluftung
 		map.aussenluftVs.gesamtLvsLtmLwIl = intensivluftung / geluftetesVolumen
 		map.aussenluftVs.gesamtLvsLtmLvsFs = wsFaktor * grundluftung - infiltration
-		if (map.aussenluftVs.gesamtLvsLtmLvsFs < 50.0d) {
-			map.aussenluftVs.gesamtLvsLtmLvsFs = 50.0d
-		}
 		// Raumvolumenströme - Gesamtaussenluftvolumentrom mit Infiltration
 		map.raum.raumVs.gesamtaussenluftVsMitInfiltration = grundluftung
 		// Raumvolumenströme - Luftwechsel der Nutzungseinheit
 		map.raum.raumVs.luftwechselNE = grundluftung / map.raum.raumVs.gesamtVolumenNE
+		//
+		setzeAussenluftVsMindestwerte(map)
+	}
+	
+	/**
+	 * 
+	 */
+	def setzeAussenluftVsMindestwerte(map) {
+		def c = { v, min -> v < min ? min : v }
+		// 140WACCF
+		map.aussenluftVs.gesamtLvsLtmLvsRl = c(map.aussenluftVs.gesamtLvsLtmLvsRl, 50.0d)
+		map.aussenluftVs.gesamtLvsLtmLvsFs = c(map.aussenluftVs.gesamtLvsLtmLvsFs, 50.0d)
+		// 400WAC
+		if (map.anlage.zentralgerat == "400WAC") {
+			map.aussenluftVs.gesamtLvsLtmLvsRl = c(map.aussenluftVs.gesamtLvsLtmLvsRl, 75.0d)
+			map.aussenluftVs.gesamtLvsLtmLvsFs = c(map.aussenluftVs.gesamtLvsLtmLvsFs, 75.0d)
+		}
 	}
 	
 	/**
