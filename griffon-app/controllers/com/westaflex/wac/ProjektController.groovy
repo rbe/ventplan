@@ -218,6 +218,7 @@ class ProjektController {
 					mindestaussenluftrate = 0.0d
 				}
 			}
+			publishEvent "AussenluftVsBerechnen"
 		}
 	}
 	
