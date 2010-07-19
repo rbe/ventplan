@@ -48,7 +48,7 @@ class ProjektModel {
 			raumZuluftmengeJeVentil: 0.0d,
 			raumVentilebene: "",
 			raumAnzahlUberstromVentile: 0d,
-			raumUberstromElemente: 0,
+			raumUberstromElement: "",
 			raumNummer: "",
 			turen: [] as ObservableList
 		]
@@ -162,7 +162,7 @@ class ProjektModel {
 	 */
 	def createRaumVsUberstromventileTableModel() {
 		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",                "Volumenstrom (m³/h)", "Überström-Elemente"]
-		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile",    "raumVolumenstrom",    "raumUberstromElemente"]
+		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile",    "raumVolumenstrom",    "raumUberstromElement"]
 		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeVsUberstromventile, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
