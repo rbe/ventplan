@@ -126,7 +126,14 @@ class GriffonHelper {
 	}
 	
 	/**
-	 * 
+	 * Dezimalzahl auf 5 runden.
+	 */
+	def static round5(factor) {
+		5.0d * (Math.round(factor / 5.0d))
+	}
+	
+	/**
+	 * Show number with 2 fraction digits
 	 */
 	def static toString2Converter = { v ->
 		if (v instanceof Number) {
@@ -139,7 +146,20 @@ class GriffonHelper {
 	}
 	
 	/**
-	 * 
+	 * Convert number to rounded value, shown with 2 fraction digits
+	 */
+	def static toString2Round5Converter = { v ->
+		if (v && v instanceof Number) {
+			def v2 = round5(v).toString2()
+			//println "toString2Converter: ${v?.dump()} -> ${v2?.dump()}"
+			v2
+		} else if (v) {
+			throw new IllegalStateException("toString2Converter: You tried to convert a String to a String: ${v?.dump()}")
+		}
+	}
+	
+	/**
+	 * Show number with 3 fraction digits
 	 */
 	def static toString3Converter = { v ->
 		if (v instanceof Number) {
