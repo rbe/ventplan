@@ -482,4 +482,13 @@ class WacCalculationService {
 		map.raum.raumVs.luftwechselNE = grundluftung / map.raum.raumVs.gesamtVolumenNE
 	}
 	
+	/**
+	 * Berechne das zu verwendende Zentralgerät.
+	 */
+	def berechneZentralgerat(map) {
+		def nl = map.aussenluftVs.gesamtLvsLtmLvsNl
+		String zentralgerat = wacModelService.getZentralgeratFurVolumenstrom(nl)
+		[zentralgerat, nl]
+	}
+	
 }
