@@ -341,7 +341,7 @@ class ProjektController {
 	 */
 	def raumHinzufugen = {
 		// Erstelle Model für Raum: Standardwerte überschreiben mit eingegebenen Werten
-		raumWerte = model.raumMapTemplate + GH.getValuesFromView(view, "raum")
+		def raumWerte = model.raumMapTemplate + GH.getValuesFromView(view, "raum")
 		// Prüfe Toleranzwerte für Zuluftfaktor
 		if (raumWerte.raumLuftart ==~ /ZU.*/) {
 			def (zuluftfaktor, neuerZuluftfaktor) = wacCalculationService.prufeZuluftfaktor(raumWerte.raumZuluftfaktor)
