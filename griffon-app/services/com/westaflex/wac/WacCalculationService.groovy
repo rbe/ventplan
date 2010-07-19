@@ -95,6 +95,8 @@ class WacCalculationService {
 		// Set calculated values in model
 		map.gebaude.geometrie.geluftetesVolumen = g.geluftetesVolumen
 		map.gebaude.geometrie.luftvolumen = g.luftvolumen
+		// Raumvolumenströme - Gesamtvolumen der Nutzungseinheit
+		map.raum.raumVs.gesamtVolumenNE = g.luftvolumen
 		println "wacCalclulation: geometrie: ${map.gebaude.geometrie?.dump()}"
 	}
 	
