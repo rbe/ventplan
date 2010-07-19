@@ -107,6 +107,8 @@ class RaumEvents {
 			// TODO wacCalculationService.berechnenRaumLuftmenge(model.map, raumIndex)
 			// Nummern der Räume berechnen
 			wacCalculationService.berechneRaumnummer(model.map)
+			// Zentralgerät bestimmen
+			publishEvent "ZentralgeratAktualisieren"
 			// Diesen Raum in allen Tabellen anwählen
 			publishEvent "RaumInTabelleWahlen", [raumIndex]
 		}
