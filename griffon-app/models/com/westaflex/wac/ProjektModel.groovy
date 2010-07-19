@@ -123,7 +123,9 @@ class ProjektModel {
 			raumeVsZuAbluftventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList,
 			raumeVsUberstromventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList,
 			raumeBearbeitenDetails: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList,
-			raumeBearbeitenEinstellungen: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList
+			raumeBearbeitenEinstellungen: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList,
+			dvbKanalnetz: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList,
+			dvbVentileinstellung: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList
 		]
 	
 	/**
@@ -195,7 +197,33 @@ class ProjektModel {
 				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
 			] as ca.odell.glazedlists.gui.TableFormat)
 	}
-
+	
+	/**
+	 * Druckverlustberechnung - Kanalnetz.
+	 */
+	def createDvbKanalnetzTableModel() {
+		def columnNames =   ["Luftart",    "Teilstrecke",    ws("Luftvolumen-<br/>strom<br/>(m³/h)"), "Kanalbezeichnung",    ws("Kanallänge<br/>(m)"), ws("Geschwindigkeit<br/>(m/s)"), ws("Reibungswiderstand<br/>gerader Kanal<br/>(Pa)"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>(Pa)"), ws("Widerstand<br/>Teilstrecke<br/><(Pa)")]
+		def propertyNames = ["dvbLuftart", "dvbTeilstrecke", "dvbLuftVs",                             "dvbKanalbezeichnung", "dvbKanallange",          "dvbGeschwindigkeit",            "dvbReibungswiderstand",                             "dvbGesamtwiderstandszahl",        "dvbEinzelwiderstannd",                "dvbWiderstandTeilstrecke"]
+		new ca.odell.glazedlists.swing.EventTableModel(tableModels.dvbKanalnetz, [
+				getColumnCount: { columnNames.size() },
+				getColumnName:  { index -> columnNames[index] },
+				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
+			] as ca.odell.glazedlists.gui.TableFormat)
+	}
+	
+	/**
+	 * Druckverlustberechnung - Ventileinstellung.
+	 */
+	def createDvbVentileinstellungTableModel() {
+		def columnNames =   ["Luftart",    "Raum",    "Teilstrecken",    "Ventiltyp",    "dP Pa (offen)", "Gesamt Pa", "Differenz",    "Abgleich Pa", "Einstellung"]
+		def propertyNames = ["dvbLuftart", "dvbRaum", "dvbTeilstrecken", "dvbVentiltyp", "dvbDpOffen",    "dvbGesamt", "dvbDifferenz", "dvbAbgleich", "dvbEinstellung"]
+		new ca.odell.glazedlists.swing.EventTableModel(tableModels.dvbVentileinstellung, [
+				getColumnCount: { columnNames.size() },
+				getColumnName:  { index -> columnNames[index] },
+				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
+			] as ca.odell.glazedlists.gui.TableFormat)
+	}
+	
 	/**
 	 * Einen Raum im Model hinzufügen: auch alle TableModels, Comboboxen synchronisieren.
 	 */
