@@ -70,6 +70,7 @@ class ProjektController {
 		GH.tieEventListener(this, GebaudeEvents, props)
 		GH.tieEventListener(this, RaumEvents, props)
 		GH.tieEventListener(this, AussenluftVsEvents, props)
+		GH.tieEventListener(this, RaumVsEvents, props)
 	}
 	
 	/**
@@ -476,8 +477,8 @@ class ProjektController {
 	
 	/**
 	 * In einer der Raum-Tabellen wurde die Auswahl durch den Benutzer geändert:
-	 * alle anderen Tabellen anpassen.
-	 * evt = javax.swing.event.ListSelectionEvent
+	 * die Auswahl aller anderen Tabellen entsprechend anpassen.
+	 * @param evt javax.swing.event.ListSelectionEvent
 	 */
 	def raumInTabelleGewahlt = { evt, table ->
 		if (!evt.isAdjusting && evt.firstIndex > -1 && evt.lastIndex > -1) {
@@ -489,7 +490,7 @@ class ProjektController {
 	}
 	
 	/**
-	 * Execute code with all Raum-tables...
+	 * Execute code with all "Raum"-tables...
 	 */
 	def withAllRaumTables = { closure ->
 		view.with {
@@ -529,20 +530,17 @@ class ProjektController {
 	 * Raumvolumenströme - Zentralgerät: manuelle Auswahl des Zentralgeräts.
 	 */
 	def zentralgeratGewahlt = {
-		// TODO rbe Compare old and new value; only change values when old != new?
-		doLater {
-			view.raumVsVolumenstrom.removeAllItems()
-			// Hole Volumenströme des Zentralgeräts
-			model.meta.volumenstromZentralgerat =
-				wacModelService.getVolumenstromFurZentralgerat(view.raumVsZentralgerat.selectedItem)
-			// Füge Volumenströme in Combobox hinzu
-			model.meta.volumenstromZentralgerat.each { view.raumVsVolumenstrom.addItem(it) }
-			// Im Projekt-Model speichern
-			model.map.anlage.zentralgerat = view.raumVsZentralgerat.selectedItem
-			// Merken, dass das Zentralgerät manuell ausgewählt wurde
-			// -> keine automatische Auswahl des Zentralgeräts mehr durchführen
-			model.map.anlage.zentralgeratManuell = true
-		}
+		publishEvent "ZentralgeratGewahlt", [view.raumVsZentralgerat.selectedItem]
+	}
+	
+	/**
+	 * Raumvolumenströme - Zentralgerät: das Zentralgerat wurde geändert.
+	 */
+	def onZentralgeratGeandert = {
+		// Volumenströme löschen, werden anhand des Zentralgeräts neu gesetzt
+		view.raumVsVolumenstrom.removeAllItems()
+		// Füge Volumenströme in Combobox hinzu
+		model.meta.volumenstromZentralgerat.each { view.raumVsVolumenstrom.addItem(it) }
 	}
 	
 	/**
