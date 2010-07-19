@@ -13,7 +13,7 @@ import net.miginfocom.swing.MigLayout
 
 // RaumdatenDialogView
 panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[fill]")) {
-    panel(id: "raumBearbeitenTabSubPanel", constraints: "wrap") {
+	panel(id: "raumBearbeitenTabSubPanel", constraints: "wrap") {
 	jideTabbedPane(id: "raumBearbeitenTabGroup") {
 
 		// RaumdatenDialog - Details ... , layout: new MigLayout("fillx, wrap 2", "[fill],[fill]")
@@ -85,7 +85,7 @@ panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[f
 				}
 			}
 
-                        // TODO mmu: make the dialog not sooo big!!!
+						// TODO mmu: make the dialog not sooo big!!!
 			panel(id: "raumBearbeitenTabelle", layout: new MigLayout("width 800", "[left]para[left]para[left]", "[fill]"), constraints: "span") {
 
 				label(text: "Maximale Türspalthöhe [mm]")
@@ -131,18 +131,16 @@ panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[f
 		}
 
 	}
-    }
-    panel(id: "raumBearbeitenSubPanel2") {
-        button(id: "raumBearbeitenSchliessen", text: "Schliessen", )
-    }
+	}
+	panel(id: "raumBearbeitenSubPanel2") {
+		button(id: "raumBearbeitenSchliessen", text: "Schliessen", )
+	}
 	
 }
 // Format fields
 GH.recurse(raumBearbeitenTabPanel, GH.yellowTextField)
 // Bindings
 build(RaumBearbeitenBindings)
-// Schliessen-Button; binding is done here due to this-reference
-raumBearbeitenSchliessen.actionPerformed = { evt -> this.hide() }
 //
 // JIDE
 //
@@ -161,7 +159,7 @@ class RaumdatenDialogView {
 					 defaultCloseOperation: JFrame.DISPOSE_ON_CLOSE, 
 					 pack: false, visible: true, id: "raumdatendialogframe" ) { 
 			// TODO: hier einfügen...
-			//button("Click to select a file", constraints: context.SOUTH, actionPerformed: this.&selectFile)           
+			//button("Click to select a file", constraints: context.SOUTH, actionPerformed: this.&selectFile)			
 		}
 		swing.frame.size = [800,600]
 	}
