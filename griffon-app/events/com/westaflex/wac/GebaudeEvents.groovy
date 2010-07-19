@@ -34,6 +34,8 @@ class GebaudeEvents {
 			println "processing event 'GeometrieEingegeben'"
 			wacCalculationService.geometrie(model.map)
 			wacCalculationService.aussenluftVs(model.map)
+			// Zentralgerät bestimmen
+			publishEvent "ZentralgeratAktualisieren"
 		}
 	}
 	
