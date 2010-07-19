@@ -469,6 +469,10 @@ class WacCalculationService {
 		intensivluftung = 1.3f * grundluftung - infiltration
 		map.aussenluftVs.gesamtLvsLtmLvsIl = intensivluftung
 		map.aussenluftVs.gesamtLvsLtmLwIl = intensivluftung / geluftetesVolumen
+		// Raumvolumenströme - Gesamtaussenluftvolumentrom mit Infiltration
+		map.raum.raumVs.gesamtaussenluftVsMitInfiltration = grundluftung
+		// Raumvolumenströme - Luftwechsel der Nutzungseinheit
+		map.raum.raumVs.luftwechselNE = grundluftung / map.raum.raumVs.gesamtVolumenNE
 	}
 	
 }

@@ -26,9 +26,8 @@ raumVsVolumenstrom.actionPerformed = controller.volumenstromZentralgeratGewahlt
 //
 bind(source: model.map.raum.raumVs, sourceProperty: "gesamtVolumenNE", target: raumVsGesamtVolumenNE, targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.raum.raumVs, sourceProperty: "luftwechselNE", target: raumVsLuftwechselNE, targetProperty: "text", converter: GH.toString2Converter)
-bind(source: model.map.raum.raumVs, sourceProperty: "gesamtaussenluftVsMitInfiltration", target: raumVsGesamtaussenluftVsMitInfiltration, targetProperty: "text", converter: GH.toString2Converter)
+bind(source: model.map.raum.raumVs, sourceProperty: "gesamtaussenluftVsMitInfiltration", target: raumVsGesamtaussenluftVsMitInfiltration, targetProperty: "text", converter: GH.toString2Round5Converter)
 // Aussenluftvolumenstrom der lüftungstechnsichen Maßnahme
-//bind(source: model.map.raum.raumVs, sourceProperty: "", target: "raumVsAussenluftVsDerLtmFs", targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.raum.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsRl", target: raumVsAussenluftVsDerLtmRl, targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.raum.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsNl", target: raumVsAussenluftVsDerLtmNl, targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.raum.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsIl", target: raumVsAussenluftVsDerLtmIl, targetProperty: "text", converter: GH.toString2Converter)
