@@ -44,6 +44,17 @@ class WacModelService {
 	}
 	
 	/**
+	 * 
+	 */
+	String getZentralgeratFurVolumenstrom(Integer luftung) {
+		def r = withSql { sql ->
+				sql.firstRow("SELECT artikelnummer FROM artikelstamm WHERE kategorie = 1 AND maxvolumenstrom >= ?", [luftung])
+			}
+		println "getZentralgeratForVolumenstrom: ${luftung} -> ${r}"
+		r ? r.ARTIKELNUMMER : ""
+	}
+	
+	/**
 	 * Hole alle Zu/Abluftventile.
 	 */
 	List getZuAbluftventile() {
@@ -78,17 +89,6 @@ class WacModelService {
 			}
 		//println "getMaxVolumenstrom(${artikel}): ${r?.dump()}"
 		r ? r as Integer : 0
-	}
-	
-	/**
-	 * 
-	 */
-	String getZentralgeratFurVolumenstrom(Integer luftung) {
-		def r = withSql { sql ->
-				sql.firstRow("SELECT artikelnummer FROM artikelstamm WHERE kategorie = 1 AND maxvolumenstrom >= ?", [lueftung])
-			}
-		println "getZentralgeratForVolumenstrom: ${luftung} -> ${r}"
-		r
 	}
 	
 	/**
