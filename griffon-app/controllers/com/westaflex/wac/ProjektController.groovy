@@ -537,9 +537,8 @@ class ProjektController {
 	 * Raumvolumenströme - Zentralgerät: das Zentralgerat wurde geändert.
 	 */
 	def onZentralgeratGeandert = {
-		// Volumenströme löschen, werden anhand des Zentralgeräts neu gesetzt
+		// Füge Volumenströme des aktuellen Zentralgeräts in Combobox hinzu
 		view.raumVsVolumenstrom.removeAllItems()
-		// Füge Volumenströme in Combobox hinzu
 		model.meta.volumenstromZentralgerat.each { view.raumVsVolumenstrom.addItem(it) }
 	}
 	
