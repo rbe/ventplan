@@ -340,8 +340,19 @@ class ProjektController {
 	 * Raumdaten - Raum anlegen.
 	 */
 	def raumHinzufugen = {
+		// Erstelle Model für Raum: Standardwerte überschreiben mit eingegebenen Werten
+		raumWerte = model.raumMapTemplate + GH.getValuesFromView(view, "raum")
+		// Prüfe Toleranzwerte für Zuluftfaktor
+		if (raumWerte.raumLuftart ==~ /ZU.*/) {
+			def (zuluftfaktor, neuerZuluftfaktor) = wacCalculationService.prufeZuluftfaktor(raumWerte.raumZuluftfaktor)
+			if (zuluftfaktor != neuerZuluftfaktor) {
+				// TODO mmu Dialog with Oxbow
+				println "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
+			}
+			raumWerte.raumZuluftfaktor = neuerZuluftfaktor
+		}
 		// Hole Werte für neuen Raum aus der View und füge Raum hinzu
-		publishEvent "RaumHinzufugen", [GH.getValuesFromView(view, "raum")]
+		publishEvent "RaumHinzufugen", [raumWerte]
 
                 // Neues TableModel setzen !
                 // TODO mmu/rbe: Wann ist das model.map.raum.raume aktualisiert??? Ich brauche es hier!

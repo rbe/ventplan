@@ -43,7 +43,6 @@ class RaumEvents {
 	 */
 	def onRaumHinzufugen = { raumWerte ->
 		println "processing event 'RaumHinzufugen': raumWerte=${raumWerte.dump()}"
-		raumWerte = model.raumMapTemplate + raumWerte
 		// Standard-Werte setzen
 		raumWerte.with {
 			// Übernehme Wert für Bezeichnung vom Typ?
@@ -61,15 +60,6 @@ class RaumEvents {
 			raumAbluftVs = raumAbluftVs?.toDouble2() ?: 0.0d
 			// Standard Türspalthöhe ist 10 mm
 			raumTurspaltHohe = 10.0d
-		}
-		// Überstrom-Raum
-		if (raumWerte.raumLuftart == "ÜB") {
-			def (zuluftfaktor, neuerZuluftfaktor) = wacCalculationService.prufeZuluftfaktor(raumWerte.raumZuluftfaktor)
-			if (zuluftfaktor != neuerZuluftfaktor) {
-				// TODO mmu Dialog with Oxbow
-				println "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
-			}
-			raumWerte.raumZuluftfaktor = neuerZuluftfaktor
 		}
 		// Raum im Model unten (= position: ...size()) hinzufügen
 		def raum = (raumWerte + [position: model.map.raum.raume.size() ?: 0]) as ObservableMap
