@@ -64,7 +64,7 @@ class RaumEvents {
 		// Raum im Model unten (= position: ...size()) hinzufügen
 		def raum = (raumWerte + [position: model.map.raum.raume.size() ?: 0]) as ObservableMap
 		doLater {
-			println "adding raum " + raum.dump()
+			//println "onRaumHinzufugen: adding raum " + raum.dump()
 			model.addRaum(raum)
 			onRaumHinzugefugt(raum.position/*model.map.raum.raume.size() - 1 ?: 0*/)
 		}
