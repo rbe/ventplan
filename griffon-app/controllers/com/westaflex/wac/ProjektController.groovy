@@ -71,6 +71,8 @@ class ProjektController {
 		GH.tieEventListener(this, RaumEvents, props)
 		GH.tieEventListener(this, AussenluftVsEvents, props)
 		GH.tieEventListener(this, RaumVsEvents, props)
+		GH.tieEventListener(this, DvbKanalnetzEvents, props)
+		GH.tieEventListener(this, DvbVentileinstellungEvents, props)
 	}
 	
 	/**
@@ -87,7 +89,7 @@ class ProjektController {
 	def setDefaultValues() {
 		// Raumvolumenströme
 		model.map.anlage.zentralgerat = model.meta.zentralgerat[0]
-		model.map.anlage.volumenstromZentralgerat = model.meta.volumenstromZentralgerat //model.meta.volumenstromZentralgerat[0]
+		model.map.anlage.volumenstromZentralgerat = model.meta.volumenstromZentralgerat
 		// Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
 		model.map.dvb.kanalbezeichnung = model.meta.dvbKanalbezeichnung
 		// Druckverlustberechnung - Ventileinstellung - Ventilbezeichnung
@@ -350,21 +352,23 @@ class ProjektController {
 				wacCalculationService.prufeZuluftfaktor(raumWerte.raumTyp, eingegebenerZuluftfaktor)
 			if (zuluftfaktor != neuerZuluftfaktor) {
 				// TODO mmu Dialog with Oxbow
-				println "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
+				println "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor}" +
+					" (laut Norm-Tolerenz) geändert!"
 			}
 			raumWerte.raumZuluftfaktor = neuerZuluftfaktor
 		}
 		// Hole Werte für neuen Raum aus der View und füge Raum hinzu
 		publishEvent "RaumHinzufugen", [raumWerte]
-
-                // Neues TableModel setzen !
-                // TODO mmu/rbe: Wann ist das model.map.raum.raume aktualisiert??? Ich brauche es hier!
-                doLater {
-                    def i = model.map.raum.raume.size() - 1 ?: 0
-                    GH.updateTableModel(model.map.raum.raume[i], builder, view.raumVsZuAbluftventileTabelle)
-                    //def raumeVsZuAbluftventile = GH.tweakTableModelBuilder(dataList)
-                    //raumVsZuAbluftventileTabelle.setModel(raumeVsZuAbluftventile)
-                }
+		/* TODO mmu remove code if unused!
+		// Neues TableModel setzen !
+		// TODO mmu/rbe: Wann ist das model.map.raum.raume aktualisiert??? Ich brauche es hier!
+		doLater {
+			def i = model.map.raum.raume.size() - 1 ?: 0
+			GH.updateTableModel(model.map.raum.raume[i], builder, view.raumVsZuAbluftventileTabelle)
+			//def raumeVsZuAbluftventile = GH.tweakTableModelBuilder(dataList)
+			//raumVsZuAbluftventileTabelle.setModel(raumeVsZuAbluftventile)
+		}
+		*/
 	}
 	
 	/**
@@ -522,7 +526,8 @@ class ProjektController {
 			//println "onRaumInTabelleWahlen: row=${row}"
 			row = GH.checkRow(row, view.raumTabelle)
 			if (row > -1) {
-				// Raum in Raumdaten-Tabelle, Raumvolumenströme-Zu/Abluftventile-Tabelle, Raumvolumenströme-Überströmelemente-Tabelle markieren
+				// Raum in Raumdaten-Tabelle, Raumvolumenströme-Zu/Abluftventile-Tabelle,
+				// Raumvolumenströme-Überströmelemente-Tabelle markieren
 				withAllRaumTables { t ->
 					GH.withDisabledListSelectionListeners t, { -> changeSelection(row, 0, false, false) }
 				}
@@ -564,7 +569,8 @@ class ProjektController {
 			println "onZentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
 			if (!model.map.anlage.zentralgeratManuell) {
 				def (zentralgerat, nl) = wacCalculationService.berechneZentralgerat(model.map)
-				println "onZentralgeratAktualisieren: zentralgerat=${zentralgerat}, nl=${nl}/${wacCalculationService.round5(nl)}"
+				println "onZentralgeratAktualisieren: zentralgerat=${zentralgerat}," +
+					"nl=${nl}/${wacCalculationService.round5(nl)}"
 				// Aktualisiere Zentralgerät
 				GH.withDisabledActionListeners view.raumVsZentralgerat, {
 					model.map.anlage.zentralgerat =
@@ -588,7 +594,10 @@ class ProjektController {
 		}
 	}
 	
-
+	/**
+	 * TODO mmu Documentation?
+	 * TODO mmu Move up as it does not belong to other methods around here
+	 */
         def initTableModelBuilder() {
             def myTableModel = GH.initTableModelBuilder(builder)
             myTableModel
@@ -600,6 +609,68 @@ class ProjektController {
 	def volumenstromZentralgeratGewahlt = {
 		// Im Projekt-Model speichern
 		model.map.anlage.volumenstromZentralgerat = view.raumVsVolumenstrom.selectedItem?.toInteger()
+	}
+	
+	/**
+	 * Druckverlustberechnung - Kanalnetz - Hinzufügen.
+	 */
+	def dvbKanalnetzHinzufugen = {
+		def kanalnetz = GH.getValuesFromView(view, "dvbKanalnetz")
+		publishEvent "DvbKanalnetzHinzufugen", [kanalnetz]
+	}
+	
+	/**
+	 * Druckverlustberechnung - Kanalnetz wurde hinzugefügt: Eintrag in der Tabelle anwählen.
+	 */
+	def onDvbKanalnetzInTabelleWahlen = { kanalnetzIndex ->
+		doLater {
+			view.dvbKanalnetzTabelle.changeSelection(kanalnetzIndex, 0, false, false)
+		}
+	}
+	
+	/**
+	 * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
+	 */
+	def openWbwDialog = {
+		
+	}
+	
+	/**
+	 * Druckverlustberechnung - Kanalnetz - Entfernen.
+	 */
+	def dvbKanalnetzEntfernen = {
+		
+	}
+	
+	/**
+	 * Druckverlustberechnung - Ventileinstellung - Hinzufügen.
+	 */
+	def dvbVentileinstellungHinzufugen = {
+		def ventileinstellung = GH.getValuesFromView(view, "dvbVentileinstellung")
+		publishEvent "DvbVentileinstellungHinzufugen", [ventileinstellung]
+	}
+	
+	/**
+	 * Druckverlustberechnung - Ventileinstellung wurde hinzugefügt: Eintrag in der Tabelle anwählen.
+	 */
+	def onDvbVentileinstellungInTabelleWahlen = { ventileinstellungIndex ->
+		doLater {
+			view.dvbVentileinstellungTabelle.changeSelection(ventileinstellungIndex, 0, false, false)
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	def openTeilstreckenDialog() {
+		
+	}
+	
+	/**
+	 * Druckverlustberechnung - Ventileinstellung - Entfernen.
+	 */
+	def dvbVentileinstellungEntfernen = {
+		
 	}
 	
 }
