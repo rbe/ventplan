@@ -391,19 +391,26 @@ class GriffonHelper {
 	}
 	
 	/**
-	 * Get all values from components as a map.
+	 * Get all values from components as a map: [view-id: value].
+	 * Filter view IDs by prefix, if given.
 	 */
-	def static getValuesFromView = { view, prefix ->
+	def static getValuesFromView = { view, prefix = null ->
 		def map = [:]
-		view.binding.variables.each { k, v ->
-			if (k.startsWith(prefix)) {
-				if (v instanceof javax.swing.JTextField) {
-					//println "getValuesFromView: JTextField: ${k}"
-					map["${k}"] = v.text
-				} else if (v instanceof javax.swing.JComboBox) {
-					//println "getValuesFromView: JComboBox: ${k}"
-					map["${k}"] = v.selectedItem
-				}
+		def bindings
+		// Find bindings
+		if (prefix) {
+			bindings = view.binding.variables.findAll { k, v -> k.startsWith(prefix) }
+		} else {
+			bindings = view.binding.variables
+		}
+		// Extract values from components
+		bindings.each { k, v ->
+			if (v instanceof javax.swing.JTextField) {
+				//println "getValuesFromView: JTextField: ${k} -> ${v.text}"
+				map["${k}"] = v.text
+			} else if (v instanceof javax.swing.JComboBox) {
+				//println "getValuesFromView: JComboBox: ${k} -> ${v.selectedItem}"
+				map["${k}"] = v.selectedItem
 			}
 		}
 		map
