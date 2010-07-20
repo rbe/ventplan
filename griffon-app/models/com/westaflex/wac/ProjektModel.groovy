@@ -54,6 +54,37 @@ class ProjektModel {
 		]
 	
 	/**
+	 * Template für alle Werte bei Druckverlust - Kanalnetz.
+	 */
+	def dvbKanalnetzMapTemplate = [
+			luftart: "",
+			teilstrecke: 0,
+			luftVs: 0.0d,
+			kanalbezeichnung: "",
+			lange: 0.0d,
+			geschwindigkeit: 0.0d,
+			reibungswiderstand: 0.0d,
+			gesamtwiderstandszahl: 0,
+			einzelwiderstand: 0.0d,
+			widerstandTeilstrecke: 0.0d
+		]
+	
+	/**
+	 * Template for alle Werte bei Druckverlust - Ventileinstellung.
+	 */
+	def dvbVentileinstellungMapTemplate = [
+			luftart: "",
+			raum: "",
+			teilstrecken: "",
+			ventilbezeichnung: "",
+			dpOffen: 0.0d,
+			gesamtWiderstand: 0.0d,
+			differenz: 0.0d,
+			abgleich: 0.0d,
+			einstellung: 0
+		]
+	
+	/**
 	 * Our central model.
 	 * dirty: Was the model changed (since last save)? This is set true by a PropertyChangeListener installed in ProjectController.addMapPropertyChangeListener().
 	 */
@@ -112,7 +143,10 @@ class ProjektModel {
 				infiltrationBerechnen: true,
 				massnahme: " "
 			] as ObservableMap,
-		dvb: [] as ObservableList,
+		dvb: [
+				kanalnetz: [] as ObservableList,
+				ventileinstellung: [] as ObservableList
+			] as ObservableMap,
 		akkustik: [:] as ObservableMap
 	] as ObservableMap
 	
@@ -202,8 +236,8 @@ class ProjektModel {
 	 * Druckverlustberechnung - Kanalnetz.
 	 */
 	def createDvbKanalnetzTableModel() {
-		def columnNames =   ["Luftart",    "Teilstrecke",    ws("Luftvolumen-<br/>strom<br/>(m³/h)"), "Kanalbezeichnung",    ws("Kanallänge<br/>(m)"), ws("Geschwindigkeit<br/>(m/s)"), ws("Reibungswiderstand<br/>gerader Kanal<br/>(Pa)"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>(Pa)"), ws("Widerstand<br/>Teilstrecke<br/><(Pa)")]
-		def propertyNames = ["dvbLuftart", "dvbTeilstrecke", "dvbLuftVs",                             "dvbKanalbezeichnung", "dvbKanallange",          "dvbGeschwindigkeit",            "dvbReibungswiderstand",                             "dvbGesamtwiderstandszahl",        "dvbEinzelwiderstannd",                "dvbWiderstandTeilstrecke"]
+		def columnNames =   ["Luftart", "Teilstrecke", ws("Luftvolumen-<br/>strom<br/>(m³/h)"), "Kanalbezeichnung", ws("Kanallänge<br/>(m)"), ws("Geschwindigkeit<br/>(m/s)"), ws("Reibungswiderstand<br/>gerader Kanal<br/>(Pa)"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>(Pa)"), ws("Widerstand<br/>Teilstrecke<br/><(Pa)")]
+		def propertyNames = ["luftart", "teilstrecke", "luftVs",                                "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"]
 		new ca.odell.glazedlists.swing.EventTableModel(tableModels.dvbKanalnetz, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
@@ -215,8 +249,8 @@ class ProjektModel {
 	 * Druckverlustberechnung - Ventileinstellung.
 	 */
 	def createDvbVentileinstellungTableModel() {
-		def columnNames =   ["Luftart",    "Raum",    "Teilstrecken",    "Ventiltyp",    "dP Pa (offen)", "Gesamt Pa", "Differenz",    "Abgleich Pa", "Einstellung"]
-		def propertyNames = ["dvbLuftart", "dvbRaum", "dvbTeilstrecken", "dvbVentiltyp", "dvbDpOffen",    "dvbGesamt", "dvbDifferenz", "dvbAbgleich", "dvbEinstellung"]
+		def columnNames =   ["Luftart", "Raum", "Teilstrecken", "Ventiltyp",         "dP offen (Pa)", "Gesamt (Pa)",      "Differenz", "Abgleich (Pa)", "Einstellung"]
+		def propertyNames = ["luftart", "raum", "teilstrecken", "ventilbezeichnung", "dpOffen",       "gesamtWiderstand", "differenz", "abgleich",      "einstellung"]
 		new ca.odell.glazedlists.swing.EventTableModel(tableModels.dvbVentileinstellung, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
@@ -228,8 +262,9 @@ class ProjektModel {
 	 * Einen Raum im Model hinzufügen: auch alle TableModels, Comboboxen synchronisieren.
 	 */
 	def addRaum = { raum ->
-		//println "addRaum: adding raum=${raum.dump()}"
-		map.raum.raume << raum
+		def r = (raumMapTemplate + raum) as ObservableMap
+		println "addRaum: adding raum=${r.dump()}"
+		map.raum.raume << r
 		// Sync table models
 		[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
 			it.add(map.raum.raume[raum.position])
@@ -286,5 +321,63 @@ class ProjektModel {
 		// TODO mmu rbe: Quickfix: added null-safe-operator
 		tableModels.raumeBearbeiten?.addAll(map.raum.raume)
 	}
-        
+	
+	/**
+	 * 
+	 */
+	def addDvbKanalnetz = { kanalnetz ->
+		def k = (dvbKanalnetzMapTemplate + kanalnetz) as ObservableMap
+		println "addDvbKanalnetz: adding kanalnetz=${k.dump()}"
+		map.dvb.kanalnetz << k
+		// Sync table model
+		[tableModels.dvbKanalnetz].each {
+			it.add(map.dvb.kanalnetz[kanalnetz.position])
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	def removeDvbKanalnetz = { kanalnetzIndex ->
+		
+	}
+	
+	/**
+	 * 
+	 */
+	def addDvbVentileinstellung = { ventileinstellung ->
+		def v = (dvbVentileinstellungMapTemplate + ventileinstellung) as ObservableMap
+		println "addDvbVentileinstellung: adding ventileinstellung=${v.dump()}"
+		map.dvb.ventileinstellung << v
+		// Sync table model
+		[tableModels.dvbVentileinstellung].each {
+			it.add(map.dvb.ventileinstellung[ventileinstellung.position])
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	def removeDvbVentileinstellung = { ventileinstellungIndex ->
+		
+	}
+	
+	/**
+	 * Synchronize all Swing table models depending on map.dvb.kanalnetz.
+	 */
+	def resyncDvbKanalnetzTableModels() {
+		// Druckverlust - Kanalnetz
+		tableModels.dvbKanalnetz.clear()
+		tableModels.dvbKanalnetz.addAll(map.dvb.kanalnetz)
+	}
+	
+	/**
+	 * Synchronize all Swing table models depending on map.dvb.ventileinstellung.
+	 */
+	def resyncDvbVentileinstellungTableModels() {
+		// Druckverlust - Ventileinstellung
+		tableModel.dvbVentileinstellung.clear()
+		tableModel.dvbVentileinstellung.addAll(map.dvb.ventileinstellung)
+	}
+	
 }
