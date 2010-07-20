@@ -66,6 +66,10 @@ class GriffonHelper {
 	def static toDouble2 = { digits = 2, roundingMode = null ->
 		def d = delegate
 		def r = 0.0d
+		// Stop in case of we got a float/double
+		if (d.class in [Float, Double]) {
+			return d
+		}
 		if (d in ["NaN", "Inf"]) {
 			//r = 0.0d
 		} else if (d) {
