@@ -90,3 +90,5 @@ dvbTabGroup.with {
 	setTabColorProvider(com.jidesoft.swing.JideTabbedPane.ONENOTE_COLOR_PROVIDER)
 	setBoldActiveTab(true)
 }
+// Bindings
+build(DruckverlustBindings)
