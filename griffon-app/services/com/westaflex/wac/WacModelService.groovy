@@ -107,6 +107,17 @@ class WacModelService {
 	/**
 	 * 
 	 */
+	def getKanal(String kanalbezeichnung) {
+		def r = withSql { sql ->
+				sql.firstRow("SELECT klasse, durchmesser, flaeche, seitea, seiteb FROM rohrwerte WHERE artikelnummer = ?", [kanalbezeichnung])
+			}
+		//println "getFlacheFurKanalbezeichnung(): ${r?.dump()}"
+		r
+	}
+	
+	/**
+	 * 
+	 */
 	List getDvbVentileinstellung() {
 		def r = withSql { sql ->
 				sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust WHERE ausblaswinkel <> 180")
