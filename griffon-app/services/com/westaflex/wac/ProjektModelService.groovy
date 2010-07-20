@@ -27,7 +27,7 @@ class ProjektModelService {
 	 */
 	def ProjektModelService() {
 		// Load XSD
-		xsdFile = new File(Wac2Resource.class.getResource("../resources/westaflex-project-1.0.xsd").toURI())
+		xsdFile = new File(Wac2Resource.class.getResource("../resources/westaflex-project-1.0.1.xsd").toURI())
 		println xsdFile
 		validator = javax.xml.validation.SchemaFactory
 					.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI)
