@@ -66,7 +66,7 @@ class RaumEvents {
 		doLater {
 			println "adding raum " + raum.dump()
 			model.addRaum(raum)
-			onRaumHinzugefugt(model.map.raum.raume.size() - 1 ?: 0)
+			onRaumHinzugefugt(raum.position/*model.map.raum.raume.size() - 1 ?: 0*/)
 		}
 	}
 	
@@ -93,8 +93,6 @@ class RaumEvents {
 			wacCalculationService.geometrieAusRaumdaten(model.map)
 			// Aussenluftvolumenströme berechnen
 			wacCalculationService.aussenluftVs(model.map)
-			// Luftmenge berechnen
-			// TODO wacCalculationService.berechnenRaumLuftmenge(model.map, raumIndex)
 			// Nummern der Räume berechnen
 			wacCalculationService.berechneRaumnummer(model.map)
 			// Zentralgerät bestimmen
