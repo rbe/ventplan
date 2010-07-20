@@ -9,3 +9,10 @@
  */
 package com.westaflex.wac
 
+// Kanalnetz - Buttons
+dvbKanalnetzHinzufugen.actionPerformed = controller.dvbKanalnetzHinzufugen
+dvbKanalnetzWiderstandswerte.actionPerformed = controller.openWbwDialog
+dvbKanalnetzEntfernen.actionPerformed = controller.dvbKanalnetzEntfernen
+// Ventileinstellung - Buttons
+dvbVentileinstellungHinzufugen.actionPerformed = controller.dvbVentileinstellungHinzufugen
+dvbVentileinstellungEntfernen.actionPerformed = controller.dvbVentileinstellungEntfernen
