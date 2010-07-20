@@ -22,7 +22,10 @@ class WacModelService {
 	 */
 	List getZentralgerat() {
 		def r = withSql { sql ->
-				sql.rows("SELECT artikelnummer FROM artikelstamm WHERE kategorie = ? AND gesperrt = ? AND maxvolumenstrom <> ? ORDER BY artikelnummer", [1, false, 0])
+				sql.rows("SELECT artikelnummer FROM artikelstamm"
+					+ " WHERE kategorie = ? AND gesperrt = ? AND maxvolumenstrom <> ?"
+					+ " ORDER BY artikelnummer",
+					[1, false, 0])
 			}?.collect {
 				it.artikelnummer
 			}
@@ -35,7 +38,9 @@ class WacModelService {
 	 */
 	List getVolumenstromFurZentralgerat(String artikel) {
 		def r = withSql { sql ->
-				sql.rows("SELECT DISTINCT volumenstrom FROM schalleistungspegel WHERE artikelnummer = ? ORDER BY volumenstrom", [artikel])
+				sql.rows("SELECT DISTINCT volumenstrom FROM schalleistungspegel"
+					+ " WHERE artikelnummer = ? ORDER BY volumenstrom",
+					[artikel])
 			}?.collect {
 				it.volumenstrom
 			}
@@ -48,7 +53,9 @@ class WacModelService {
 	 */
 	String getZentralgeratFurVolumenstrom(Integer luftung) {
 		def r = withSql { sql ->
-				sql.firstRow("SELECT artikelnummer FROM artikelstamm WHERE kategorie = 1 AND maxvolumenstrom >= ?", [luftung])
+				sql.firstRow("SELECT artikelnummer FROM artikelstamm"
+					+ " WHERE kategorie = 1 AND maxvolumenstrom >= ?",
+					[luftung])
 			}
 		println "getZentralgeratForVolumenstrom: ${luftung} -> ${r}"
 		r ? r.ARTIKELNUMMER : ""
@@ -85,7 +92,10 @@ class WacModelService {
 	 */
 	Integer getMaxVolumenstrom(String artikel) {
 		def r = withSql { sql ->
-				sql.firstRow("SELECT maxvolumenstrom FROM artikelstamm WHERE artikelnummer = ? ORDER BY maxvolumenstrom", [artikel])
+				sql.firstRow("SELECT maxvolumenstrom FROM artikelstamm"
+					+ " WHERE artikelnummer = ?"
+					+ " ORDER BY maxvolumenstrom",
+					[artikel])
 			}
 		//println "getMaxVolumenstrom(${artikel}): ${r?.dump()}"
 		r ? r as Integer : 0
@@ -109,9 +119,11 @@ class WacModelService {
 	 */
 	def getKanal(String kanalbezeichnung) {
 		def r = withSql { sql ->
-				sql.firstRow("SELECT klasse, durchmesser, flaeche, seitea, seiteb FROM rohrwerte WHERE artikelnummer = ?", [kanalbezeichnung])
+				sql.firstRow("SELECT klasse, durchmesser, flaeche, seitea, seiteb FROM rohrwerte"
+					+ " WHERE artikelnummer = ?",
+					[kanalbezeichnung])
 			}
-		//println "getFlacheFurKanalbezeichnung(): ${r?.dump()}"
+		//println "getKanal(): ${r?.dump()}"
 		r
 	}
 	
@@ -128,6 +140,48 @@ class WacModelService {
 		r << ""
 		//println "getDvbKanalbezeichnung(): ${r?.dump()}"
 		r
+	}
+	
+	/**
+	 * 
+	 */
+	def getMinimalerDruckverlustFurVentil(String ventilbezeichnung, String luftart, Double luftmenge) {
+		def r = withSql { sql ->
+				sql.firstRow(
+					"SELECT MIN(druckverlust) druckverlust FROM druckverlust"
+					+ " WHERE artikelnummer = ? AND luftart = ? AND luftmenge = ?",
+					[ventilbezeichnung, luftart, luftmenge])
+			}
+		println "getDruckverlustFurVentil(): ${r?.dump()}"
+		r ? r.druckverlust : 0.0d
+	}
+	
+	/**
+	 * 
+	 */
+	def getEinstellung(String ventilbezeichnung, String luftart, Double luftmenge, Double abgleich) {
+		def r = withSql { sql ->
+				sql.rows("SELECT DISTINCT einstellung, druckverlust, luftmenge"
+					+ " FROM druckverlust"
+					+ " WHERE artikelnummer = ? AND luftart = ? AND luftmenge >= ?"
+					+ " AND (ausblaswinkel = 360 OR ausblaswinkel = 0)"
+					+ " ORDER BY luftmenge ASC, einstellung ASC",
+					[ventilbezeichnung, luftart, luftmenge])
+			}
+		// Suche die nächst höhere zum Parameter 'luftmenge' passende Luftmenge aus den Datenbankergebnissen
+		// Dies funktioniert nur mit einem in aufsteigender Reihenfolge sortierten Luftmengen!
+		def nahe = r.find { if (it >= luftmenge) luftmenge }
+		// Nehme nur diese Einträge und errechne min(|(abgleich - r.druckverlust)|)
+		def m = r.findAll {
+					it.luftmenge == nahe
+				}.inject([druckverlust: Double.MAX_VALUE], { o, n ->
+					def v1 = Math.abs(abgleich - o.druckverlust)
+					def v2 = Math.abs(abgleich - n.druckverlust)
+					if (v1 < v2) v1
+					else v2
+				})
+		println "getEinstellung: einstellung=${m.einstellung}"
+		m.einstellung
 	}
 	
 }
