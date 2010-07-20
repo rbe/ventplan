@@ -479,7 +479,8 @@ class WacCalculationService {
 	}
 	
 	/**
-	 * 
+	 * Aussenluftvolumenstrom, Raumvolumenströme: je nach Zentralgerät bestehen unterschiedliche
+	 * Mindestwerte.
 	 */
 	def setzeAussenluftVsMindestwerte(map) {
 		def c = { v, min -> v < min ? min : v }
@@ -494,7 +495,7 @@ class WacCalculationService {
 	}
 	
 	/**
-	 * Berechne das zu verwendende Zentralgerät.
+	 * Raumvolumenströme - berechne das zu verwendende Zentralgerät.
 	 */
 	def berechneZentralgerat(map) {
 		def nl = map.aussenluftVs.gesamtLvsLtmLvsNl as Integer
