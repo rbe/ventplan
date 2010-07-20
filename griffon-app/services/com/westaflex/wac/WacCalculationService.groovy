@@ -587,19 +587,30 @@ class WacCalculationService {
 	 * @param map
 	 */
 	def berechneVentileinstellung(map) {
-		def maxZu = 0.0d
-		def maxAb = 0.0d
-		// Alle Einträge in der Tabelle Ventileinstellung durchlaufen
-		map.dvb.ventileinstellung.each { ve ->
+		// Hole den Luftvolumenstrom der letzten Teilstrecke
+		def luftVsLetzteTeilstrecke = { ve ->
 			def teilstrecken = ve.teilstrecken.split(";").toList()
 			// Hole Luftvolumenstrom der letzten Teilstrecke
 			def letzteTeilstrecke = teilstrecken.last().toInteger()
 			def teilstrecke = map.dvb.kanalnetz.find { it.teilstrecke == letzteTeilstrecke }
+			if (teilstrecke.luftart == ve.luftart) {
+				teilstrecke.luftVs
+			} else {
+				0.0d
+			}
+			
+		}
+		//
+		def maxZu = 0.0d
+		def maxAb = 0.0d
+		// Alle Einträge in der Tabelle Ventileinstellung durchlaufen
+		map.dvb.ventileinstellung.each { ve ->
 			// Prüfe, ob die letzte Teilstrecke existiert und ob die Luftart übereinstimmt
-			if (teilstrecke && teilstrecke.luftart == ve.luftart) {
+			def luftVsLts = luftVsLetzteTeilstrecke ve
+			if (luftVsLts > 0.0d) {
 				// Berechne dP offen
 				ventileinstellung.dpOffen =
-					wacModelService.getMinimalerDruckverlustFurVentil(ve.ventilbezeichnung, ve.luftart, teilstrecke.luftVs)
+					wacModelService.getMinimalerDruckverlustFurVentil(ve.ventilbezeichnung, ve.luftart, luftVsLts)
 				// Berechne Gesamtwiderstand aller Teilstrecken
 				ventileinstellung.gesamtWiderstand =
 					ventileinstellung.dpOffen +
@@ -617,7 +628,6 @@ class WacCalculationService {
 		maxZu = Collections.max(map.dvb.ventileinstellung.findAll { it.luftart == "ZU" }.collect { it.gesamtWiderstand })
 		maxAb = Collections.max(map.dvb.ventileinstellung.findAll { it.luftart == "AB" }.collect { it.gesamtWiderstand })
 		// Differenzen
-		def result = 0.0d
 		// Alle Einträge in der Tabelle Ventileinstellung durchlaufen
 		map.dvb.ventileinstellung.each { ve ->
 			if (ve.luftart == "ZU") {
@@ -626,7 +636,14 @@ class WacCalculationService {
 				ve.differenz = maxAb - ve.gesamtWiderstand
 			}
 			ve.abgleich = ve.differenz + ve.dpOffen
-			ve.einstellung = 
+			ve.einstellung =
+				wacModelService.getEinstellung(ve.ventilbezeichnung, ve.luftart, luftVsLetzteTeilstrecke(ve), ve.abgleich)
+			// Wurde keine Einstellung gefunden, Benutzer informieren
+			if (ve.einstellung != 0.0d) {
+				// TODO mmu Dialog mit Oxbow
+				println "Keine Einstellung für Ventil ${ve.ventilbezeichnung} gefunden!"
+					+ " Bitte prüfen Sie die Zeile#${ve.position}."
+			}
 		}
 	}
 	
