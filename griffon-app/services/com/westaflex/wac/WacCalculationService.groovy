@@ -263,7 +263,6 @@ class WacCalculationService {
 		}
 		//
 		if (map.gebaude.luftdichtheit.messwerte) {
-			//fDiffDruck = fDDruck (= diffDruck(map))
 			m.n50 = map.gebaude.luftdichtheit.luftwechsel
 			m.druckExpo = map.gebaude.luftdichtheit.druckexponent
 		} else {
@@ -283,9 +282,6 @@ class WacCalculationService {
 			m.volumen = map.gebaude.geometrie.geluftetesVolumen
 		}
 		// wirk wird nach Tabelle 11 Seite 29 ermittelt, Norm 1946-6 endgültige Fassung
-		//m.wirk = sys * inf * (-flache / 1600 + 1.025)
-		/*if (ventilator) m.wirk = 0.45f
-		else m.wirk = 0.5f*/
 		m.wirk = ventilator ? 0.45f : 0.5f
 		//
 		def r = m.with {
@@ -495,12 +491,143 @@ class WacCalculationService {
 	}
 	
 	/**
-	 * Raumvolumenströme - berechne das zu verwendende Zentralgerät.
+	 * Raumvolumenströme - wähle das zu verwendende Zentralgerät anhand der
+	 * Nennleistung Luftvolumenstrom der lüftungstechnischen Maßnahme (Aussenluftvolumenströme).
 	 */
 	def berechneZentralgerat(map) {
 		def nl = map.aussenluftVs.gesamtLvsLtmLvsNl as Integer
 		String zentralgerat = wacModelService.getZentralgeratFurVolumenstrom(nl)
 		[zentralgerat, nl]
+	}
+	
+	/**
+	 * Druckverlust - Kanalnetz: berechne eine (gerade eingegebene) Teilstrecke.
+	 * @param map One of map.dvb.kanalnetz
+	 */
+	def berechneTeilstrecke(map) {
+		def kanal = wacModelService.getKanal(map.kanalbezeichnung)
+		map.geschwindigkeit = map.luftVs * 1000000 / (kanal.flaeche * 3600)
+		def lambda
+		switch (kanal.klasse?.toInteger()) {
+			case 4:
+				lambda = calcDruckverlustKlasse4(kanal.durchmesser, kanal.seiteA, kanal.seiteB)
+				break
+			case [5, 6, 7, 8]:
+				lambda = "calcDruckverlustKlasse${kanal.klasse}"(map.geschwindigkeit, kanal.durchmesser)
+				break
+			default:
+				println "switch clause runs into default. Klasse=" + kanal.klasse + " not defined ==> lambda not set"
+		}
+		map.reibungswiderstand =
+			lambda * map.lange * 1.2 * Math.pow(map.geschwindigkeit, 2) / (2 * (kanal.durchmesser + 0.0d) / 1000)
+		println "berechneTeilstrecke: ${map.dump()}"
+	}
+	
+	def calcDruckverlustKlasse4 = { BigDecimal durchmesser, BigDecimal seiteA, BigDecimal seiteB ->
+		final Double k1 = 0.0255 * Math.pow((seiteA / seiteB), 2) - 0.1393 * (seiteA / seiteB) + 1.1485
+		final Double lambda1 = Math.log10(50 * Math.sqrt(0.674 * durchmesser))
+		final Double lambda2 = lambda1 * lambda1
+		k1 * 0.25 / lambda2
+	}
+	
+	def calcDruckverlustKlasse5 = { Double geschwindigkeit, BigDecimal durchmesser ->
+		final Double re = geschwindigkeit * (durchmesser + 0f) / (0.015) //1000 * 15 hoch -6
+		lambda = 0.22 / Math.pow(re, 0.2)
+	}
+	
+	def calcDruckverlustKlasse6 = { Double geschwindigkeit, BigDecimal durchmesser ->
+		Double lambda
+		final Double re = geschwindigkeit * (durchmesser + 0f) / 0.015
+		if (re < 2300) {
+			lambda = 64 / re
+		} else {
+			final Float f1 = 1.2f
+			final Float f2 = 2.4f
+			if (re >= 2300 && re < 20000) {
+				lambda = 1.14 - 2 * Math.log10(f1 / durchmesser)
+				// Iteration
+				0.upto 3 { i ->
+					lambda = -2 * Math.log10(f1 / (durchmesser * 3.71) + 2.51 / re * lambda)
+				}
+				lambda = Math.pow(1 / lambda, 2)
+			} else {
+				lambda = 1.14 - 2 * Math.log10(f2 / durchmesser)
+				lambda = Math.pow(1 / lambda, 2)
+			}
+		}
+		lambda
+	}
+	
+	def calcDruckverlustKlasse7 = { Double geschwindigkeit, BigDecimal durchmesser ->
+		Double lambda = 0d
+		final Double re = geschwindigkeit * durchmesser / 0.015d
+		if (re < 2300) {
+			lambda = 64 / re
+		} else {
+			final Float f1 = 0.09f
+			if (re >= 2300 && re < 20000) {
+				// Iteration
+				lambda = 1.14 - 2 * Math.log10(f1 / durchmesser)
+				0.upto 3 { i ->
+					lambda = -2 * Math.log10(f1 / (durchmesser * 3.71) + 2.51 / re * lambda)
+				}
+				lambda = Math.pow(1 / lambda, 2)
+			} else {
+				lambda = 1.14 - 2 * Math.log10(0.8 / durchmesser)
+				lambda = Math.pow(1 / lambda, 2)
+			}
+		}
+		lambda
+	}
+	
+	def calcDruckverlustKlasse8 = calcDruckverlustKlasse7
+	
+	/**
+	 * Druckverlust - Ventileinstellung: berechne die (gerade eingegebene) Ventileinstellung.
+	 * @param map
+	 */
+	def berechneVentileinstellung(map) {
+		def maxZu = 0.0d
+		def maxAb = 0.0d
+		// Alle Einträge in der Tabelle Ventileinstellung durchlaufen
+		map.dvb.ventileinstellung.each { ve ->
+			def teilstrecken = ve.teilstrecken.split(";").toList()
+			// Hole Luftvolumenstrom der letzten Teilstrecke
+			def letzteTeilstrecke = teilstrecken.last().toInteger()
+			def teilstrecke = map.dvb.kanalnetz.find { it.teilstrecke == letzteTeilstrecke }
+			// Prüfe, ob die letzte Teilstrecke existiert und ob die Luftart übereinstimmt
+			if (teilstrecke && teilstrecke.luftart == ve.luftart) {
+				// Berechne dP offen
+				ventileinstellung.dpOffen =
+					wacModelService.getMinimalerDruckverlustFurVentil(ve.ventilbezeichnung, ve.luftart, teilstrecke.luftVs)
+				// Berechne Gesamtwiderstand aller Teilstrecken
+				ventileinstellung.gesamtWiderstand =
+					ventileinstellung.dpOffen +
+					teilstrecken.collect { t ->
+						map.dvb.kanalnetz.find { t.teilstrecke }?.widerstandTeilstrecke
+					}.inject(0.0d) { o, n ->
+						o + n
+					}
+			} else {
+				println "berechneVentileinstellung: Letzte Teilstrecke ${letzteTeilstrecke} existiert nicht oder" +
+					" Luftart stimmt nicht überein: ${map.luftart} == ${teilstrecke?.luftart}?"
+			}
+		}
+		// Ermittle maximale Widerstandswerte
+		maxZu = Collections.max(map.dvb.ventileinstellung.findAll { it.luftart == "ZU" }.collect { it.gesamtWiderstand })
+		maxAb = Collections.max(map.dvb.ventileinstellung.findAll { it.luftart == "AB" }.collect { it.gesamtWiderstand })
+		// Differenzen
+		def result = 0.0d
+		// Alle Einträge in der Tabelle Ventileinstellung durchlaufen
+		map.dvb.ventileinstellung.each { ve ->
+			if (ve.luftart == "ZU") {
+				ve.differenz = maxZu - ve.gesamtWiderstand
+			} else if (ve.luftart == "AB") {
+				ve.differenz = maxAb - ve.gesamtWiderstand
+			}
+			ve.abgleich = ve.differenz + ve.dpOffen
+			ve.einstellung = 
+		}
 	}
 	
 }
