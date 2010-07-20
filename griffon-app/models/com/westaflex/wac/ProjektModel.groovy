@@ -112,7 +112,7 @@ class ProjektModel {
 				infiltrationBerechnen: true,
 				massnahme: " "
 			] as ObservableMap,
-		dvb: [:] as ObservableMap,
+		dvb: [] as ObservableList,
 		akkustik: [:] as ObservableMap
 	] as ObservableMap
 	
