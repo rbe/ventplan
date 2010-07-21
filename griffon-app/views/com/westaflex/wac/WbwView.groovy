@@ -21,7 +21,7 @@ panel(id: "wbwPanel", layout: new MigLayout("debug, fillx, wrap 2", "[fill][fill
 		}
 	}
 	// Rechts oben: Bezeichnung (Textfeld), Widerstandsbeiwert (Textfeld), Anzahl (Textfeld)
-	panel(id: "wbwPflege", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[fill][fill]")) {
+	panel(id: "wbwPflege", layout: new MigLayout("debug, fillx, wrap 2", "[fill][fill]", "[fill][fill]")) {
 		
 		panel(layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill][fill]")) {
 			button("<<")
@@ -39,14 +39,12 @@ panel(id: "wbwPanel", layout: new MigLayout("debug, fillx, wrap 2", "[fill][fill
 			textField()
 		}
 		
-		// Anzeige Bild des in der linken Tabelle ausgewählten Widerstands
-		label(id: "wbwImage", text: "-- kein Bild --", constraints: "span")
-		
+		label(id: "wbwImage", text: "-- kein Bild --", constraints: "span, grow")
 	}
 	
 	// Links unten: Summe aller Einzelwiderstände
 	panel(id: "wbwSumme", layout: new MigLayout("fillx", "[left][right]", "[fill]")) {
-		label("<html><b>Summe aller Einzelwiderstände")
+		label("<html><b>Summe aller Einzelwiderstände</b></html>")
 		label("0,00")
 	}
 	// Rechts unten: Buttons
