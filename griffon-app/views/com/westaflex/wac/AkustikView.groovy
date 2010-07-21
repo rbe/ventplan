@@ -1,7 +1,7 @@
 /**
  * /Users/rbe/project/wac2/griffon-app/views/com/westaflex/wac/AkustikView.groovy
  * 
- * Copyright (C) 1996-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
  * Alle Rechte vorbehalten. Nutzungslizenz siehe http://www.bensmann.com/license_de.html
  * All Rights Reserved. Use is subject to license terms, see http://www.bensmann.com/license_en.html
  * 
@@ -33,7 +33,7 @@ def buildLayout(tabname) {
 	panel(id: "akustik${tabname}Tab", title: tabname, layout: new MigLayout("fillx, wrap 4", "[left,fill]para[right,fill]para[center,fill]para[left,fill]", "[fill]")) {
 		label("Raumbezeichnung", constraints: "cell 0 0")
 		label("", constraints: "cell 1 0, width 150::200")
-		// TODO: Zentralgerät aus RaumVsView -> raumVsZuAbluftventileZentralgerat
+		// TODO Binding: Zentralgerät aus RaumVsView -> raumVsZuAbluftventileZentralgerat
 		label("Zentrales Lüftungsgerät " + raumVsZentralgerat.selectedItem, constraints: "cell 2 0")
 		label("", constraints: "cell 3 0")
 		
