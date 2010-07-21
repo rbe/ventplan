@@ -396,9 +396,7 @@ class WacCalculationService {
 		// Gesamt-Außenluftvolumentstrom
 		Double gesamtAvs = gesamtAussenluftVs(map)
 		Double wsFaktor = warmeschutzFaktor(map)
-		map.aussenluftVs.gesamt = (
-				gesamtAvs * wsFaktor * map.gebaude.faktorBesondereAnforderungen
-			)
+		map.aussenluftVs.gesamt = (gesamtAvs * wsFaktor * map.gebaude.faktorBesondereAnforderungen)
 		// Infiltration
 		map.aussenluftVs.infiltration = infiltration(map, false)
 		// Lüftungstechnische Maßnahmen erforderlich?
