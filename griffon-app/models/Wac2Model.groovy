@@ -29,7 +29,8 @@ class Wac2Model {
 				raumVsUberstromelemente: [/* initialized in Wac2Controller.mvcGroupInit */],
 				raumVsVentilebene: ["KG", "EG", "OG", "DG", "SB"],
 			],
-		gewahlterRaum: [:] as ObservableMap
+		gewahlterRaum: [:] as ObservableMap,
+		wbw: [] as ObservableList, /* initialized in Wac2Controller.mvcGroupInit */
 	] as ObservableMap
 	
 	/**
