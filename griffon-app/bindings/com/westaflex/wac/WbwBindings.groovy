@@ -9,7 +9,14 @@
  */
 package com.westaflex.wac
 
-
+// Add list selection listener to select a Wbw and show its picture
+[wbwTabelle].each {
+	it.selectionModel.addListSelectionListener([
+		valueChanged: { evt ->
+				controller.wbwInTabelleGewahlt(evt)
+			}
+		] as javax.swing.event.ListSelectionListener)
+}
 // Buttons
-wbwOk.actionPerformed = controller.wbwOk
-wbwCancel.actionPerformed = controller.wbwCancel
+wbwOk.actionPerformed = controller.wbwOkButton
+wbwCancel.actionPerformed = controller.wbwCancelButton
