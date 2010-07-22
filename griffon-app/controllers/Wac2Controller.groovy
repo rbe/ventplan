@@ -33,6 +33,8 @@ class Wac2Controller {
 				wacModelService.getVolumenstromFurZentralgerat(model.meta.zentralgerat[0])
 			// Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
 			model.meta.dvbKanalbezeichnung = wacModelService.getDvbKanalbezeichnung()
+			// Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte
+			model.meta.wbw = wacModelService.getWbw()
 			// Druckverlustberechnung - Ventileinstellung - Ventilbezeichnung
 			model.meta.dvbVentileinstellung = wacModelService.getDvbVentileinstellung()
 		}
