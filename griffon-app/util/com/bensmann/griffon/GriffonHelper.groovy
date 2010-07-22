@@ -420,111 +420,83 @@ class GriffonHelper {
 		map
 	}
 
-        // Leeres TableModel initialisieren.
-        def static initTableModelBuilder = { builder ->
-            def items1 = ["zuluftventil1", "zuluftventil 2", "zuluftventil 3", "zuluftventil 4"]
-            def items2 = [' 1', ' 2', ' 3', ' 4']
-            def items3 = [' 1', ' 2', ' 3', ' 4']
+    // Leeres TableModel initialisieren.
+    def static initTableModelBuilder = { builder, model ->
+        def items1 = model.meta.zuluftventile
+        def items2 = model.meta.abluftventile
+        def items3 = [' 1', ' 2', ' 3', ' 4']
 
-            def editor1 = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumBezeichnungZuluftventileCombo', items: items1))
-            def editor2 = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumBezeichnungAbluftventileCombo', items: items2))
-            def editor3 = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumVentilebeneCombo', items: items3))
+        def editor1 = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumBezeichnungZuluftventileCombo', items: items1))
+        def editor2 = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumBezeichnungAbluftventileCombo', items: items2))
+        def editor3 = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumVentilebeneCombo', items: items3))
 
-            def tableModel = builder.tableModel() {
-                propertyColumn(header: 'Raum', propertyName: 'raumBezeichnung')
-                propertyColumn(header: 'Luftart', propertyName: 'raumLuftart')
-                propertyColumn(header: GriffonHelper.ws("Raumvolumen<br/>(m³)"), propertyName: 'raumVolumen')
-                propertyColumn(header: GriffonHelper.ws("Luftwechsel<br/>(1/h)"), propertyName: 'raumLuftwechsel')
-                propertyColumn(header: GriffonHelper.ws("Anzahl<br/>Abluftventile"), propertyName: "raumBezeichnungAbluftventile")
-                propertyColumn(header: GriffonHelper.ws("Abluftmenge<br/>je Ventil"), propertyName: "raumAnzahlAbluftventile")
-                propertyColumn(header: GriffonHelper.ws("Volumenstrom<br/>(m³/h)"), propertyName: 'raumVolumenstrom')
-                propertyColumn(header: GriffonHelper.ws("Anzahl<br/>Zuluftventile"), propertyName: 'raumAnzahlZuluftventile')
-                propertyColumn(header: GriffonHelper.ws("Bezeichnung<br/>Zuluftventile"),
-                    propertyName: 'raumBezeichnungZuluftventileCombo',
-                    cellEditor: editor1,
-                    cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
-                ) // combo
-                propertyColumn(header: GriffonHelper.ws("Bezeichnung<br/>Abluftventile"),
-                    propertyName: 'raumBezeichnungAbluftventileCombo',
-                    cellEditor: editor2,
-                    cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
-                ) // combo
-                propertyColumn(header: "Ventilebene",
-                    propertyName: 'raumVentilebeneCombo',
-                    cellEditor: editor3,
-                    cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
-                ) // combo
-                propertyColumn(header: GriffonHelper.ws("Zuluftmenge<br/>je Ventil"), propertyName: 'raumZuluftmengeJeVentil')
-            }
-            tableModel
+        def tableModel = builder.tableModel() {
+            propertyColumn(header: 'Raum', propertyName: 'raumBezeichnung')
+            propertyColumn(header: 'Luftart', propertyName: 'raumLuftart')
+            propertyColumn(header: GriffonHelper.ws("Raumvolumen<br/>(m³)"), propertyName: 'raumVolumen')
+            propertyColumn(header: GriffonHelper.ws("Luftwechsel<br/>(1/h)"), propertyName: 'raumLuftwechsel')
+            propertyColumn(header: GriffonHelper.ws("Anzahl<br/>Abluftventile"), propertyName: "raumBezeichnungAbluftventile")
+            propertyColumn(header: GriffonHelper.ws("Abluftmenge<br/>je Ventil"), propertyName: "raumAnzahlAbluftventile")
+            propertyColumn(header: GriffonHelper.ws("Volumenstrom<br/>(m³/h)"), propertyName: 'raumVolumenstrom')
+            propertyColumn(header: GriffonHelper.ws("Anzahl<br/>Zuluftventile"), propertyName: 'raumAnzahlZuluftventile')
+            propertyColumn(header: GriffonHelper.ws("Bezeichnung<br/>Zuluftventile"),
+                propertyName: 'raumBezeichnungZuluftventileCombo',
+                cellEditor: editor1,
+                cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
+            ) // combo
+            propertyColumn(header: GriffonHelper.ws("Bezeichnung<br/>Abluftventile"),
+                propertyName: 'raumBezeichnungAbluftventileCombo',
+                cellEditor: editor2,
+                cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
+            ) // combo
+            propertyColumn(header: "Ventilebene",
+                propertyName: 'raumVentilebeneCombo',
+                cellEditor: editor3,
+                cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
+            ) // combo
+            propertyColumn(header: GriffonHelper.ws("Zuluftmenge<br/>je Ventil"), propertyName: 'raumZuluftmengeJeVentil')
         }
+        tableModel
+    }
 
-        // Hier wird das TableModel erstellt und zurückgegeben.
-        def static tweakTableModelBuilder = { data, builder ->
-            def items1 = ["zuluftventil1", "zuluftventil 2", "zuluftventil 3", "zuluftventil 4"]
-            def items2 = [' 1', ' 2', ' 3', ' 4']
-            def items3 = [' 1', ' 2', ' 3', ' 4']
+    // TableModel updaten. Neue Row hinzufügen.
+    def static addRowToTableModel = { r, builder, raumVsZuAbluftventileTabelle ->
+        println "addRowToTableModel ${r}}"
+        def dataList = createDataList(r)
 
-            def editor1 = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumBezeichnungZuluftventileCombo', items: items1))
-            def editor2 = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumBezeichnungAbluftventileCombo', items: items2))
-            def editor3 = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumVentilebeneCombo', items: items3))
+        // Let's add a new row to the table
+        def rows = raumVsZuAbluftventileTabelle.getModel().getRowsModel().getValue()
+        rows.add( dataList )
+        raumVsZuAbluftventileTabelle.getModel().getRowsModel().setValue( rows )
+        raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
+    }
 
-            def tableModel = builder.tableModel(list:data) {
-                propertyColumn(header: 'Raum', propertyName: 'raumBezeichnung')
-                propertyColumn(header: 'Luftart', propertyName: 'raumLuftart')
-                propertyColumn(header: GriffonHelper.ws("Raumvolumen<br/>(m³)"), propertyName: 'raumVolumen')
-                propertyColumn(header: GriffonHelper.ws("Luftwechsel<br/>(1/h)"), propertyName: 'raumLuftwechsel')
-                propertyColumn(header: GriffonHelper.ws("Anzahl<br/>Abluftventile"), propertyName: "raumBezeichnungAbluftventile")
-                propertyColumn(header: GriffonHelper.ws("Abluftmenge<br/>je Ventil"), propertyName: "raumAnzahlAbluftventile")
-                propertyColumn(header: GriffonHelper.ws("Volumenstrom<br/>(m³/h)"), propertyName: 'raumVolumenstrom')
-                propertyColumn(header: GriffonHelper.ws("Anzahl<br/>Zuluftventile"), propertyName: 'raumAnzahlZuluftventile')
-                propertyColumn(header: GriffonHelper.ws("Bezeichnung<br/>Zuluftventile"),
-                    propertyName: 'raumBezeichnungZuluftventileCombo',
-                    cellEditor: editor1,
-                    cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
-                ) // combo
-                propertyColumn(header: GriffonHelper.ws("Bezeichnung<br/>Abluftventile"),
-                    propertyName: 'raumBezeichnungAbluftventileCombo',
-                    cellEditor: editor2,
-                    cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
-                ) // combo
-                propertyColumn(header: "Ventilebene",
-                    propertyName: 'raumVentilebeneCombo',
-                    cellEditor: editor3,
-                    cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
-                ) // combo
-                propertyColumn(header: GriffonHelper.ws("Zuluftmenge<br/>je Ventil"), propertyName: 'raumZuluftmengeJeVentil')
-            }
-            tableModel
-        }
+    // TableModel updaten. Row löschen!
+    def static removeRowToTableModel = { r, builder, raumVsZuAbluftventileTabelle ->
+        println "removeRowToTableModel"
+        def dataList = createDataList(r)
 
-        // TableModel updaten. Neue Row hinzufügen.
-        // TODO mmu: korrektes updaten und Combobox.
-        def static updateTableModel = { r, builder, raumVsZuAbluftventileTabelle ->
-            def dataList = [r.raumBezeichnung, r.raumLuftart, r.raumVolumen, r.raumLuftwechsel,
-                            r.raumBezeichnungAbluftventile, r.raumAnzahlAbluftventile,
-                            r.raumVolumenstrom, r.raumAnzahlZuluftventile,
-                            r.raumBezeichnungZuluftventileCombo, r.raumBezeichnungAbluftventileCombo,
-                            r.raumVentilebeneCombo,
-                            r.raumZuluftmengeJeVentil] as Object[]
-            /*
-            dataList.put(r.raumBezeichnung)
-            dataList.put(r.raumLuftart)
-            dataList.put(r.raumVolumen)
-            dataList.put(r.raumLuftwechsel)
-            dataList.put(r.raumBezeichnungAbluftventile)
-            dataList.put(r.raumAnzahlAbluftventile)
-            dataList.put(r.raumVolumenstrom)
-            dataList.put(r.raumAnzahlZuluftventile)
+        // Let's remove a row from the table
+        def rows = raumVsZuAbluftventileTabelle.getModel().getRowsModel().getValue()
+        rows.remove( dataList )
+        raumVsZuAbluftventileTabelle.getModel().getRowsModel().setValue( rows )
+        raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
+    }
 
-            dataList.put(r.raumBezeichnungZuluftventileCombo)
-            dataList.put(r.raumBezeichnungAbluftventileCombo)
-            dataList.put(r.raumVentilebeneCombo)
-
-            dataList.put(r.raumZuluftmengeJeVentil)
-            */
-           
-            raumVsZuAbluftventileTabelle.getModel().addRow(dataList)
-            raumVsZuAbluftventileTabelle?.update()
-        }
+    // Erstelle eine Liste mit den aktuellen Raumdaten
+    def static createDataList = {r ->
+        def dataList = [raumBezeichnung: r.raumBezeichnung,
+                        raumLuftart: r.raumLuftart,
+                        raumVolumen: r.raumVolumen,
+                        raumLuftwechsel: r.raumLuftwechsel,
+                        raumBezeichnungAbluftventile: r.raumBezeichnungAbluftventile,
+                        raumAnzahlAbluftventile: r.raumAnzahlAbluftventile,
+                        raumVolumenstrom: r.raumVolumenstrom,
+                        raumAnzahlZuluftventile: r.raumAnzahlZuluftventile,
+                        raumBezeichnungZuluftventileCombo: r.raumBezeichnungZuluftventileCombo,
+                        raumBezeichnungAbluftventileCombo: r.raumBezeichnungAbluftventileCombo,
+                        raumVentilebeneCombo: r.raumVentilebeneCombo,
+                        raumZuluftmengeJeVentil: r.raumZuluftmengeJeVentil]
+         dataList
+    }
 }
