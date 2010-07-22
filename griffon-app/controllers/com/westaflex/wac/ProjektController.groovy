@@ -92,6 +92,12 @@ class ProjektController {
 		model.map.anlage.volumenstromZentralgerat = model.meta.volumenstromZentralgerat
 		// Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
 		model.map.dvb.kanalbezeichnung = model.meta.dvbKanalbezeichnung
+		// Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte
+		// Clone as this list may get modified -- for this project only
+		model.map.dvb.wbw = model.meta.wbw.clone()
+		model.map.dvb.wbw.each {
+			model.tableModels.wbw.add([id: it.id, anzahl: 0, name: it.bezeichnung, widerstandsbeiwert: it.wert])
+		}
 		// Druckverlustberechnung - Ventileinstellung - Ventilbezeichnung
 		model.map.dvb.ventileinstellung = model.meta.dvbVentileinstellung[]
 	}
@@ -631,8 +637,41 @@ class ProjektController {
 	/**
 	 * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
 	 */
-	def openWbwDialog = {
-		
+	def widerstandsbeiwerteBearbeiten = {
+		// Show dialog
+		def dialog = GH.showDialog(builder, WbwView)
+		println "widerstandsbeiwerteBearbeiten: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
+	}
+	
+	/**
+	 * Ein Widerstandsbeiwert wurde in der Tabelle gewählt:
+	 *   - Bild anzeigen.
+	 */
+	def wbwInTabelleGewahlt = { evt ->
+		// Welche Zeile ist gewählt --> welcher Widerstand?
+		def index = view.wbwTabelle.selectedRow
+		def wbw = model.tableModels.wbw[index]
+		javax.swing.ImageIcon image = new javax.swing.ImageIcon(Wac2Resource.getWiderstandUrl(wbw.id))
+		// Image und Text setzen
+		if (image) {
+			view.wbwBild.setText("")
+			view.wbwBild.setIcon(image)
+		} else {
+			view.wbwBild.setText("-- kein Bild --")
+			view.wbwBild.setIcon(null)
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	def wbwOkButton = {
+	}
+	
+	/**
+	 * 
+	 */
+	def wbwCancelButton = {
 	}
 	
 	/**
