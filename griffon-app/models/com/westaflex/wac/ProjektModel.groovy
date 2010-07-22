@@ -24,7 +24,9 @@ class ProjektModel {
 	/**
 	 * Meta-data: will be initialized by ProjektController.
 	 */
-	@Bindable meta
+	@Bindable meta = [
+			gewahlterRaum: [:] as ObservableMap
+		]
 	
 	/**
 	 * Template für alle Werte eines Raumes.
@@ -186,11 +188,11 @@ class ProjektModel {
 	 * Raumvolumenströme, Zu-/Abluftventile - TableModel
 	 */
 	def createRaumVsZuAbluftventileTableModel() {
-		def columnNames =	["Raum",			"Luftart",	   ws("Raumvolumen<br/>(m³)"), ws("Luftwechsel<br/>(1/h)"), ws("Bezeichnung<br/>Abluftventile"),	ws("Anzahl<br/>Abluftventile"),	   ws("Abluftmenge<br/>je Ventil"),	  ws("Volumenstrom<br/>(m³/h)"), ws("Bezeichnung<br/>Zuluftventile"),	 ws("Anzahl<br/>Zuluftventile"),	ws("Zuluftmenge<br/>je Ventil"),   "Ventilebene"]
-		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",			   "raumLuftwechsel",			"raumBezeichnungAbluftventile",			"raumAnzahlAbluftventile",		   "raumAbluftmengeJeVentil",		  "raumVolumenstrom",			 "raumBezeichnungZuluftventile",		 "raumAnzahlZuluftventile",			"raumZuluftmengeJeVentil",		   "raumVentilebene"]
+        def columnNames =   ["Raum",            "Luftart",     ws("Raumvolumen<br/>(m³)"), ws("Luftwechsel<br/>(1/h)"), ws("Bezeichnung<br/>Abluftventile"),    ws("Anzahl<br/>Abluftventile"),    ws("Abluftmenge<br/>je Ventil"),   ws("Volumenstrom<br/>(m³/h)"), ws("Bezeichnung<br/>Zuluftventile"),    ws("Anzahl<br/>Zuluftventile"),    ws("Zuluftmenge<br/>je Ventil"),   "Ventilebene"]
+        def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",              "raumLuftwechsel",           "raumBezeichnungAbluftventile",         "raumAnzahlAbluftventile",         "raumAbluftmengeJeVentil",         "raumVolumenstrom",            "raumBezeichnungZuluftventile",         "raumAnzahlZuluftventile",         "raumZuluftmengeJeVentil",         "raumVentilebene"]
 		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeVsZuAbluftventile, [
 				getColumnCount: { columnNames.size() },
-				getColumnName:	{ index -> columnNames[index] },
+				getColumnName:  { index -> columnNames[index] },
 				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
 			] as ca.odell.glazedlists.gui.TableFormat)
 	}
@@ -261,11 +263,11 @@ class ProjektModel {
 	}
 	
 	/**
-	 * Druckverlustberechnung - Kanal - Widerstandsbeiwerte.
+	 * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
 	 */
 	def createWbwTableModel() {
-		def columnNames =   ["Anzahl", "Widerstand", "Widerstandsbeiwert"]
-		def propertyNames = ["anzahl", "name",       "widerstandsbeiwert"]
+		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"]
+		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"]
 		new ca.odell.glazedlists.swing.EventTableModel(tableModels.wbw, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
