@@ -147,7 +147,7 @@ class WacModelService {
 	 */
 	List getWbw() {
 		def r = withSql { sql ->
-				sql.rows("SELECT id, bezeichnung, wert, CONCAT(id, '.png') bild FROM widerstandsbeiwerte")
+				sql.rows("SELECT id, bezeichnung, wert, CONCAT(id, '.png') bild FROM widerstandsbeiwerte ORDER BY bezeichnung")
 			}
 		//println "getWbw: r=${r?.dump()}"
 		r
