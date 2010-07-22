@@ -151,15 +151,17 @@ class ProjektModel {
 	] as ObservableMap
 	
 	// TableModels
-	def tmComparator = { a, b -> a.position <=> b.position } as Comparator
+	def tmPositionComparator = { a, b -> a.position <=> b.position } as Comparator
+	def tmNameComparator = { a, b -> a.name <=> b.name } as Comparator
 	def tableModels = [
-			raume: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList,
-			raumeVsZuAbluftventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList,
-			raumeVsUberstromventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList,
-			raumeBearbeitenDetails: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList,
-			raumeBearbeitenEinstellungen: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList,
-			dvbKanalnetz: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList,
-			dvbVentileinstellung: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmComparator) as ca.odell.glazedlists.EventList
+			raume: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			raumeVsZuAbluftventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			raumeVsUberstromventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			raumeBearbeitenDetails: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			raumeBearbeitenEinstellungen: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			dvbKanalnetz: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			dvbVentileinstellung: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			wbw: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNameComparator) as ca.odell.glazedlists.EventList
 		]
 	
 	/**
@@ -252,6 +254,19 @@ class ProjektModel {
 		def columnNames =   ["Luftart", "Raum", "Teilstrecken", "Ventiltyp",         "dP offen (Pa)", "Gesamt (Pa)",      "Differenz", "Abgleich (Pa)", "Einstellung"]
 		def propertyNames = ["luftart", "raum", "teilstrecken", "ventilbezeichnung", "dpOffen",       "gesamtWiderstand", "differenz", "abgleich",      "einstellung"]
 		new ca.odell.glazedlists.swing.EventTableModel(tableModels.dvbVentileinstellung, [
+				getColumnCount: { columnNames.size() },
+				getColumnName:  { index -> columnNames[index] },
+				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
+			] as ca.odell.glazedlists.gui.TableFormat)
+	}
+	
+	/**
+	 * Druckverlustberechnung - Kanal - Widerstandsbeiwerte.
+	 */
+	def createWbwTableModel() {
+		def columnNames =   ["Anzahl", "Widerstand", "Widerstandsbeiwert"]
+		def propertyNames = ["anzahl", "name",       "widerstandsbeiwert"]
+		new ca.odell.glazedlists.swing.EventTableModel(tableModels.wbw, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
 				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
