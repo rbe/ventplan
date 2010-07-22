@@ -544,7 +544,7 @@ class WacCalculationService {
 			if (re >= 2300 && re < 20000) {
 				lambda = 1.14 - 2 * Math.log10(f1 / durchmesser)
 				// Iteration
-				0.upto 3 { i ->
+				0.upto 3, { i ->
 					lambda = -2 * Math.log10(f1 / (durchmesser * 3.71) + 2.51 / re * lambda)
 				}
 				lambda = Math.pow(1 / lambda, 2)
@@ -566,7 +566,7 @@ class WacCalculationService {
 			if (re >= 2300 && re < 20000) {
 				// Iteration
 				lambda = 1.14 - 2 * Math.log10(f1 / durchmesser)
-				0.upto 3 { i ->
+				0.upto 3, { i ->
 					lambda = -2 * Math.log10(f1 / (durchmesser * 3.71) + 2.51 / re * lambda)
 				}
 				lambda = Math.pow(1 / lambda, 2)
@@ -598,13 +598,10 @@ class WacCalculationService {
 			}
 			
 		}
-		//
-		def maxZu = 0.0d
-		def maxAb = 0.0d
 		// Alle Einträge in der Tabelle Ventileinstellung durchlaufen
 		map.dvb.ventileinstellung.each { ve ->
 			// Prüfe, ob die letzte Teilstrecke existiert und ob die Luftart übereinstimmt
-			def luftVsLts = luftVsLetzteTeilstrecke ve
+			def luftVsLts = luftVsLetzteTeilstrecke(ve)
 			if (luftVsLts > 0.0d) {
 				// Berechne dP offen
 				ventileinstellung.dpOffen =
@@ -613,18 +610,18 @@ class WacCalculationService {
 				ventileinstellung.gesamtWiderstand =
 					ventileinstellung.dpOffen +
 					teilstrecken.collect { t ->
-						map.dvb.kanalnetz.find { t.teilstrecke }?.widerstandTeilstrecke
-					}.inject(0.0d) { o, n ->
-						o + n
-					}
+							map.dvb.kanalnetz.find { t.teilstrecke }?.widerstandTeilstrecke
+						}.inject(0.0d) { o, n ->
+							o + n
+						}
 			} else {
 				println "berechneVentileinstellung: Letzte Teilstrecke ${letzteTeilstrecke} existiert nicht oder" +
 					" Luftart stimmt nicht überein: ${map.luftart} == ${teilstrecke?.luftart}?"
 			}
 		}
 		// Ermittle maximale Widerstandswerte
-		maxZu = Collections.max(map.dvb.ventileinstellung.findAll { it.luftart == "ZU" }.collect { it.gesamtWiderstand })
-		maxAb = Collections.max(map.dvb.ventileinstellung.findAll { it.luftart == "AB" }.collect { it.gesamtWiderstand })
+		def maxZu = Collections.max(map.dvb.ventileinstellung.findAll { it.luftart == "ZU" }.collect { it.gesamtWiderstand })
+		def maxAb = Collections.max(map.dvb.ventileinstellung.findAll { it.luftart == "AB" }.collect { it.gesamtWiderstand })
 		// Differenzen
 		// Alle Einträge in der Tabelle Ventileinstellung durchlaufen
 		map.dvb.ventileinstellung.each { ve ->
@@ -641,6 +638,20 @@ class WacCalculationService {
 				// TODO mmu Dialog mit Oxbow
 				println "Keine Einstellung für Ventil ${ve.ventilbezeichnung} gefunden!"
 					+ " Bitte prüfen Sie die Zeile#${ve.position}."
+			}
+		}
+	}
+	
+	/**
+	 * Raum bearbeiten - Türen berechnen.
+	 * @param map One of model.map.raum.raume
+	 */
+	def berechneTuerspalt(map) {
+		// Gilt nicht für Überström-Räume
+		if (map.luftart.contains("ÜB")) {
+			return
+		} else {
+			map.turen.each {
 			}
 		}
 	}

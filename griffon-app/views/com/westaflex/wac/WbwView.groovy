@@ -14,9 +14,9 @@ import net.miginfocom.swing.MigLayout
 panel(id: "wbwPanel", layout: new MigLayout("debug, fillx, wrap 2", "[fill][fill]", "[fill][fill]")) {
 	
 	// Links oben: Tabelle: Anzahl (Textfeld), Bezeichnung des Widerstands, Widerstandswert
-	panel(id: "wbwTabelle", layout: new MigLayout("fillx", "[fill]", "[fill]")) {
+	panel(id: "wbwTabellePanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
 		jideScrollPane() {
-			table() {
+			table(id: "wbwTabelle", model: model.createWbwTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
 			}
 		}
 	}
@@ -39,13 +39,14 @@ panel(id: "wbwPanel", layout: new MigLayout("debug, fillx, wrap 2", "[fill][fill
 			textField()
 		}
 		
-		label(id: "wbwImage", text: "-- kein Bild --", constraints: "span, grow")
+		// TODO mmu Set initial size so label won't resize when an image is displayed
+		label(id: "wbwBild", text: "-- kein Bild --", constraints: "span, grow")
 	}
 	
 	// Links unten: Summe aller Einzelwiderstände
 	panel(id: "wbwSumme", layout: new MigLayout("fillx", "[left][right]", "[fill]")) {
 		label("<html><b>Summe aller Einzelwiderstände</b></html>")
-		label("0,00")
+		label("<html><b>0,00</b></html>")
 	}
 	// Rechts unten: Buttons
 	panel(id: "wbwButton", layout: new MigLayout("fillx", "[left][right]", "[fill]")) {
