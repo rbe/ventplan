@@ -43,13 +43,13 @@ panel(id: "raumPanel") {
 	}
 	// Buttons
 	hbox(constraints: SOUTH) {
-		// TODO mmu Enable buttons when table isn't empty
+		// TODO mmu Enable buttons when table isn't empty and a row is selected
+		button(id: "raumEntfernen",            enabled: bind { 1 == 1 }, text: "Raum entfernen")
+		button(id: "raumBearbeiten",           enabled: bind { 1 == 1 }, text: "Raum bearbeiten")
+		button(id: "raumKopieren",             enabled: bind { 1 == 1 }, text: "Raum kopieren")
 		// TODO mmu Buttons "nach oben" und "nach unten" müssen rechts neben die Tabelle
-		button(id: "raumEntfernen",            enabled: bind { /*raumTabelle.selectedRow > -1*/1 == 1 }, text: "Raum entfernen")
-		button(id: "raumBearbeiten",           enabled: bind { /*raumTabelle.selectedRow > -1*/1 == 1 }, text: "Raum bearbeiten")
-		button(id: "raumKopieren",             enabled: bind { /*raumTabelle.selectedRow > -1*/1 == 1 }, text: "Raum kopieren")
-		button(id: "raumNachObenVerschieben",  enabled: bind { /*raumTabelle.selectedRow > -1*/1 == 1 }, text: "^")
-		button(id: "raumNachUntenVerschieben", enabled: bind { /*raumTabelle.selectedRow > -1*/1 == 1 }, text: "v")
+		button(id: "raumNachObenVerschieben",  enabled: bind { 1 == 1 }, text: "^")
+		button(id: "raumNachUntenVerschieben", enabled: bind { 1 == 1 }, text: "v")
 	}
 	
 }
