@@ -544,7 +544,7 @@ class WacCalculationService {
 			if (re >= 2300 && re < 20000) {
 				lambda = 1.14 - 2 * Math.log10(f1 / durchmesser)
 				// Iteration
-				0.upto 3 { i ->
+				0.upto 3, { i ->
 					lambda = -2 * Math.log10(f1 / (durchmesser * 3.71) + 2.51 / re * lambda)
 				}
 				lambda = Math.pow(1 / lambda, 2)
@@ -566,7 +566,7 @@ class WacCalculationService {
 			if (re >= 2300 && re < 20000) {
 				// Iteration
 				lambda = 1.14 - 2 * Math.log10(f1 / durchmesser)
-				0.upto 3 { i ->
+				0.upto 3, { i ->
 					lambda = -2 * Math.log10(f1 / (durchmesser * 3.71) + 2.51 / re * lambda)
 				}
 				lambda = Math.pow(1 / lambda, 2)
@@ -601,7 +601,7 @@ class WacCalculationService {
 		// Alle Einträge in der Tabelle Ventileinstellung durchlaufen
 		map.dvb.ventileinstellung.each { ve ->
 			// Prüfe, ob die letzte Teilstrecke existiert und ob die Luftart übereinstimmt
-			def luftVsLts = luftVsLetzteTeilstrecke ve
+			def luftVsLts = luftVsLetzteTeilstrecke(ve)
 			if (luftVsLts > 0.0d) {
 				// Berechne dP offen
 				ventileinstellung.dpOffen =
@@ -643,10 +643,17 @@ class WacCalculationService {
 	}
 	
 	/**
-	 * Raum bearbeiten - Türen
+	 * Raum bearbeiten - Türen berechnen.
+	 * @param map One of model.map.raum.raume
 	 */
 	def berechneTuerspalt(map) {
-		
+		// Gilt nicht für Überström-Räume
+		if (map.luftart.contains("ÜB")) {
+			return
+		} else {
+			map.turen.each {
+			}
+		}
 	}
 	
 }
