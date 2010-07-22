@@ -101,6 +101,16 @@ class ProjektController {
 		// Druckverlustberechnung - Ventileinstellung - Ventilbezeichnung
 		model.map.dvb.ventileinstellung = model.meta.dvbVentileinstellung[]
 	}
+
+    /**
+	 * Initialisiert das TableModel in RaumVsView. Erstellt ein leeres TableModel ohne Daten!
+	 */
+    def initTableModelBuilder() {
+        def myTableModel = GH.initTableModelBuilder(builder)
+        myTableModel
+    }
+
+
 	
 	/**
 	 * Titel der Tab für dieses Projekt erstellen: Bauvorhaben und Sternchen für ungesicherte Änderungen.
@@ -365,16 +375,6 @@ class ProjektController {
 		}
 		// Hole Werte für neuen Raum aus der View und füge Raum hinzu
 		publishEvent "RaumHinzufugen", [raumWerte]
-		/* TODO mmu remove code if unused!
-		// Neues TableModel setzen !
-		// TODO mmu/rbe: Wann ist das model.map.raum.raume aktualisiert??? Ich brauche es hier!
-		doLater {
-			def i = model.map.raum.raume.size() - 1 ?: 0
-			GH.updateTableModel(model.map.raum.raume[i], builder, view.raumVsZuAbluftventileTabelle)
-			//def raumeVsZuAbluftventile = GH.tweakTableModelBuilder(dataList)
-			//raumVsZuAbluftventileTabelle.setModel(raumeVsZuAbluftventile)
-		}
-		*/
 	}
 	
 	/**
@@ -550,6 +550,27 @@ class ProjektController {
 			}
 		}
 	}
+
+    /**
+     * TableModel updaten
+     */
+    def onAddTableModelRow = { rowIndex ->
+        // Neues TableModel setzen !
+        println "add row to table model ${rowIndex}"
+        doLater {
+            GH.addRowToTableModel(model.map.raum.raume[rowIndex], builder, view.raumVsZuAbluftventileTabelle)
+        }
+    }
+
+    /**
+     * TableModel updaten. Raum entfernen
+     */
+    def onRemoveTableModelRow = { r ->
+        println "remove row"
+        doLater {
+            GH.removeRowToTableModel(r, builder, view.raumVsZuAbluftventileTabelle)
+        }
+    }
 	
 	/**
 	 * Raumvolumenströme - Zentralgerät: manuelle Auswahl des Zentralgeräts.
@@ -599,15 +620,6 @@ class ProjektController {
 			}
 		}
 	}
-	
-	/**
-	 * TODO mmu Documentation?
-	 * TODO mmu Move up as it does not belong to other methods around here
-	 */
-        def initTableModelBuilder() {
-            def myTableModel = GH.initTableModelBuilder(builder)
-            myTableModel
-        }
 	
 	/**
 	 * Raumvolumenströme - Volumenstrom des Zentralgeräts.

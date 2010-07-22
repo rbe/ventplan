@@ -79,14 +79,14 @@ class RaumEvents {
 			// Add PropertyChangeListener to our model.map
 			GH.addMapPropertyChangeListener("map.raum.raume", model.map.raum.raume[raumIndex])
 			// Neu berechnen
-			onRaumGeandert(raumIndex)
+			onRaumGeandert(raumIndex, false, [])
 		}
 	}
 	
 	/**
 	 * Ein Raum wurde geändert - berechne alles, was von Räumen abhängt.
 	 */
-	def onRaumGeandert = { raumIndex ->
+	def onRaumGeandert = { raumIndex, isRemove, zuLoschenderRaum ->
 		doLater {
 			println "processing event 'RaumGeandert': raumIndex=${raumIndex}: ${model.map.raum.raume[raumIndex]?.dump()}"
 			// Gebäude-Geometrie berechnen
@@ -99,6 +99,15 @@ class RaumEvents {
 			publishEvent "ZentralgeratAktualisieren"
 			// Diesen Raum in allen Tabellen anwählen
 			publishEvent "RaumInTabelleWahlen", [raumIndex]
+            // TabelModel aktualisieren
+            if (isRemove) {
+                println "publish event RemoveTableModelRow"
+                publishEvent "RemoveTableModelRow", [zuLoschenderRaum]
+            }
+            else {
+                println "publish event AddTableModelRow"
+                publishEvent "AddTableModelRow", [raumIndex]
+            }
 		}
 	}
 	
@@ -108,10 +117,11 @@ class RaumEvents {
 	def onRaumEntfernen = { raumIndex ->
 		doLater {
 			println "onRaumEntfernen: raumIndex=${raumIndex}"
+            def zuLoschenderRaum = model.map.raum.raume[raumIndex]
 			// Raum aus Model entfernen
 			model.removeRaum(raumIndex)
 			// Neu berechnen
-			onRaumGeandert(raumIndex)
+			onRaumGeandert(raumIndex, true, zuLoschenderRaum)
 		}
 	}
 	
