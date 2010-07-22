@@ -598,9 +598,6 @@ class WacCalculationService {
 			}
 			
 		}
-		//
-		def maxZu = 0.0d
-		def maxAb = 0.0d
 		// Alle Einträge in der Tabelle Ventileinstellung durchlaufen
 		map.dvb.ventileinstellung.each { ve ->
 			// Prüfe, ob die letzte Teilstrecke existiert und ob die Luftart übereinstimmt
@@ -613,18 +610,18 @@ class WacCalculationService {
 				ventileinstellung.gesamtWiderstand =
 					ventileinstellung.dpOffen +
 					teilstrecken.collect { t ->
-						map.dvb.kanalnetz.find { t.teilstrecke }?.widerstandTeilstrecke
-					}.inject(0.0d) { o, n ->
-						o + n
-					}
+							map.dvb.kanalnetz.find { t.teilstrecke }?.widerstandTeilstrecke
+						}.inject(0.0d) { o, n ->
+							o + n
+						}
 			} else {
 				println "berechneVentileinstellung: Letzte Teilstrecke ${letzteTeilstrecke} existiert nicht oder" +
 					" Luftart stimmt nicht überein: ${map.luftart} == ${teilstrecke?.luftart}?"
 			}
 		}
 		// Ermittle maximale Widerstandswerte
-		maxZu = Collections.max(map.dvb.ventileinstellung.findAll { it.luftart == "ZU" }.collect { it.gesamtWiderstand })
-		maxAb = Collections.max(map.dvb.ventileinstellung.findAll { it.luftart == "AB" }.collect { it.gesamtWiderstand })
+		def maxZu = Collections.max(map.dvb.ventileinstellung.findAll { it.luftart == "ZU" }.collect { it.gesamtWiderstand })
+		def maxAb = Collections.max(map.dvb.ventileinstellung.findAll { it.luftart == "AB" }.collect { it.gesamtWiderstand })
 		// Differenzen
 		// Alle Einträge in der Tabelle Ventileinstellung durchlaufen
 		map.dvb.ventileinstellung.each { ve ->
@@ -643,6 +640,13 @@ class WacCalculationService {
 					+ " Bitte prüfen Sie die Zeile#${ve.position}."
 			}
 		}
+	}
+	
+	/**
+	 * Raum bearbeiten - Türen
+	 */
+	def berechneTuerspalt(map) {
+		
 	}
 	
 }
