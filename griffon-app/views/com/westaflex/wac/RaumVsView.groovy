@@ -17,12 +17,19 @@ panel(id: "raumVsVentileTabPanel", layout: new MigLayout("fillx", "[left]para[ri
 	jideTabbedPane(id: "raumVsVentileTabGroup", constraints: "span") {
 		// Raumvolumenströme - Zu-/Abluftventile
 		panel(id: "raumVsZuAbluftventileTab", title: "Zu-/Abluftventile") {
-			panel(id: "raumVsZuAbluftventileTabellePanel", constraints: "cell 0 0 5 1", layout: new MigLayout("fillx", "[fill]")) {
-				jideScrollPane() {
-					table(id: "raumVsZuAbluftventileTabelle", model: model.createRaumVsZuAbluftventileTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-					}
-				}
-			}
+            panel(id: "raumVsZuAbluftventileTabellePanel", constraints: "cell 0 0 5 1", layout: new MigLayout("fillx", "[fill]")) {
+				//jideScrollPane() {
+                    //table(id: "raumVsZuAbluftventileTabelle", model: model.myTableModel, selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                    //}
+                    //table(id: "raumVsZuAbluftventileTabelle", model: controller.tweakTableModelBuilder(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                    builder.table(id: "raumVsZuAbluftventileTabelle", selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                    }
+                    //setUpColumn(raumVsUberstromventileTabelle, raumVsUberstromventileTabelle.getColumnModel().getColumn(9))
+                    //setUpColumn(raumVsUberstromventileTabelle, raumVsUberstromventileTabelle.getColumnModel().getColumn(10))
+					//table(id: "raumVsZuAbluftventileTabelle", model: model.createRaumVsZuAbluftventileTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+					//}
+				//}
+            }
 		}
 		// Raumvolumenströme - Überströmventile
 		panel(id: "raumVsUberstromventileTab", title: "Überströmventile") {
@@ -78,3 +85,11 @@ raumVsVentileTabGroup.with {
 }
 // Bindings
 build(RaumVsBindings)
+
+noparent {
+    def raumeVsZuAbluftventile = controller.initTableModelBuilder()
+    raumeVsZuAbluftventile.addTableModelListener({ e ->
+        println "${e.firstRow} ${e.column} ${e.type}"
+    } as javax.swing.event.TableModelListener)
+    raumVsZuAbluftventileTabelle.setModel(raumeVsZuAbluftventile)
+}
