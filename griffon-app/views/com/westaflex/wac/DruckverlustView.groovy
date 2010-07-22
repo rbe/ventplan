@@ -34,8 +34,7 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fillx", "[fill]", "[fill]")) {
 					textField(id: "dvbKanalnetzLuftmenge")
 					comboBox(id: "dvbKanalnetzKanalbezeichnung", items: model.meta.dvbKanalbezeichnung)
 					textField(id: "dvbKanalnetzLange")
-					button(id: "dvbKanalnetzHinzufugen", text: "Hinzufügen")
-					button(id: "dvbKanalnetzWiderstandswerte", text: "Widerstandsbeiwerte...", constraints: "wrap")
+					button(id: "dvbKanalnetzHinzufugen", text: "Hinzufügen", constraints: "wrap")
 					
 					panel(id: "dvbKanalnetzTabellePanel", constraints: "span", layout: new MigLayout("fillx", "[fill]")) {
 						jideScrollPane() {
@@ -44,7 +43,11 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fillx", "[fill]", "[fill]")) {
 						}
 					}
 					
-					button(id: "dvbKanalnetzEntfernen", text: "Entfernen")
+					panel(layout: new MigLayout("fillx", "[left][right]", "[fill]")) {
+						// TODO mmu Enable only when table isn't empty and row is selected
+						button(id: "dvbKanalnetzEntfernen",        text: "Entfernen",               enabled: bind { 1 == 1 })
+						button(id: "dvbKanalnetzWiderstandswerte", text: "Widerstandsbeiwerte..." , enabled: bind { 1 == 1 })
+					}
 					
 				}
 			}
