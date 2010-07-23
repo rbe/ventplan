@@ -53,11 +53,44 @@ class GriffonHelper {
 			def nf = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN)
 			nf.minimumFractionDigits = digits
 			nf.maximumFractionDigits = digits
-			if (roundingMode) nf.roundingMode = roundingMode ?: GriffonHelper.ROUNDING_MODE
+			nf.roundingMode = roundingMode ?: GriffonHelper.ROUNDING_MODE
 			r = nf.format(d)
 		}
 		//println "toString2(): ${d?.dump()} -> ${r?.dump()}"
 		r
+	}
+	
+	/**
+	 * Show number with 2 fraction digits
+	 */
+	def static toString2Converter = { v ->
+		if (v && v instanceof Number) {
+			v.toString2()
+		} else {
+			"0,00"
+		}
+	}
+	
+	/**
+	 * Convert number to rounded value, shown with 2 fraction digits
+	 */
+	def static toString2Round5Converter = { v ->
+		if (v && v instanceof Number) {
+			round5(v).toString2()
+		} else {
+			"0,00"
+		}
+	}
+	
+	/**
+	 * Show number with 3 fraction digits
+	 */
+	def static toString3Converter = { v ->
+		if (v && v instanceof Number) {
+			v.toString2(3)
+		} else {
+			"0,000"
+		}
 	}
 	
 	/**
@@ -134,45 +167,6 @@ class GriffonHelper {
 	 */
 	def static round5(factor) {
 		5.0d * (Math.round(factor / 5.0d))
-	}
-	
-	/**
-	 * Show number with 2 fraction digits
-	 */
-	def static toString2Converter = { v ->
-		if (v instanceof Number) {
-			def v2 = v?.toString2()
-			//println "toString2Converter: ${v?.dump()} -> ${v2?.dump()}"
-			v2
-		} else if (v) {
-			throw new IllegalStateException("toString2Converter: You tried to convert a String to a String: ${v?.dump()}")
-		}
-	}
-	
-	/**
-	 * Convert number to rounded value, shown with 2 fraction digits
-	 */
-	def static toString2Round5Converter = { v ->
-		if (v && v instanceof Number) {
-			def v2 = round5(v).toString2()
-			//println "toString2Converter: ${v?.dump()} -> ${v2?.dump()}"
-			v2
-		} else if (v) {
-			throw new IllegalStateException("toString2Converter: You tried to convert a String to a String: ${v?.dump()}")
-		}
-	}
-	
-	/**
-	 * Show number with 3 fraction digits
-	 */
-	def static toString3Converter = { v ->
-		if (v instanceof Number) {
-			def v3 = v?.toString2(3)
-			//println "toString3Converter: ${v?.dump()} -> ${v3?.dump()}"
-			v3
-		} else if (v) {
-			throw new IllegalStateException("toString3Converter: You tried to convert a String to a String: ${v?.dump()}")
-		}
 	}
 	
 	/**
