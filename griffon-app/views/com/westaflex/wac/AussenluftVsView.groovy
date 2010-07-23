@@ -1,3 +1,12 @@
+/**
+ * /Users/rbe/project/wac2/griffon-app/views/com/westaflex/wac/AussenluftVsView.groovy
+ * 
+ * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
+ * Alle Rechte vorbehalten. Nutzungslizenz siehe http://www.bensmann.com/license_de.html
+ * All Rights Reserved. Use is subject to license terms, see http://www.bensmann.com/license_en.html
+ * 
+ * Created by: rbe
+ */
 package com.westaflex.wac
 
 import net.miginfocom.swing.MigLayout
@@ -111,12 +120,6 @@ panel(id: "aussenluftVsGesamtLTM", border: titledBorder(title: "Gesamt-Luftvolum
 	label(id: "gesamtLvsLtmLwNl", text: "0,00"); label("l/h")
 	label(id: "gesamtLvsLtmLwIl", text: "0,00"); label("l/h", constraints: "span")
 }
-
-// Rounding Mode
-panel(id: "aussenluftVsRoundingModePanel", border: titledBorder(title: "Rounding Mode"), layout: new MigLayout("wrap", "[left]", "")) {
-	comboBox(id: "aussenluftVsRoundingMode", items: ["CEILING", "DOWN", "FLOOR", "HALF_DOWN", "HALF_EVEN", "HALF_UP", "UNNECESSARY", "UP"], selectedItem: "HALF_UP")
-}
-aussenluftVsRoundingMode.actionPerformed = controller.setRoundingMode
 
 // Bindings
 build(AussenluftVsBindings)
