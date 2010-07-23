@@ -24,8 +24,8 @@ import com.bensmann.griffon.GriffonHelper as GH
 raumVsZentralgerat.actionPerformed = controller.zentralgeratGewahlt
 raumVsVolumenstrom.actionPerformed = controller.volumenstromZentralgeratGewahlt
 //
-bind(source: model.map.raum.raumVs, sourceProperty: "gesamtVolumenNE", target: raumVsGesamtVolumenNE, targetProperty: "text", converter: GH.toString2Converter)
-bind(source: model.map.raum.raumVs, sourceProperty: "luftwechselNE", target: raumVsLuftwechselNE, targetProperty: "text", converter: GH.toString2Converter)
+bind(source: model.map.raum.raumVs, sourceProperty: "gesamtVolumenNE",                   target: raumVsGesamtVolumenNE,                   targetProperty: "text", converter: GH.toString2Converter)
+bind(source: model.map.raum.raumVs, sourceProperty: "luftwechselNE",                     target: raumVsLuftwechselNE,                     targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.raum.raumVs, sourceProperty: "gesamtaussenluftVsMitInfiltration", target: raumVsGesamtaussenluftVsMitInfiltration, targetProperty: "text", converter: GH.toString2Round5Converter)
 // Aussenluftvolumenstrom der lüftungstechnsichen Maßnahme
 bind(source: model.map.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsFs", target: raumVsAussenluftVsDerLtmFs, targetProperty: "text", converter: GH.toString2Round5Converter)

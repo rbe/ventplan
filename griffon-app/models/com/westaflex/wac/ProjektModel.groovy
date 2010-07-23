@@ -138,12 +138,18 @@ class ProjektModel {
 				ltmZuluftSumme: 0.0d,
 				ltmAbluftSumme: 0.0d,
 				raumVs: [
-					gesamtVolumenNE: 0.0d
+					gesamtVolumenNE: 0.0d,
+					luftwechselNE: 0.0d,
+					gesamtaussenluftVsMitInfiltration: 0.0d
 				] as ObservableMap
 			] as ObservableMap,
 		aussenluftVs: [
 				infiltrationBerechnen: true,
-				massnahme: " "
+				massnahme: " ",
+				gesamtLvsLtmLvsFs: 0.0d,
+				gesamtLvsLtmLvsRl: 0.0d,
+				gesamtLvsLtmLvsNl: 0.0d,
+				gesamtLvsLtmLvsIl: 0.0d,
 			] as ObservableMap,
 		dvb: [
 				kanalnetz: [] as ObservableList,
