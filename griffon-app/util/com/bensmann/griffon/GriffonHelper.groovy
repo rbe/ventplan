@@ -422,9 +422,31 @@ class GriffonHelper {
 
     // Leeres TableModel initialisieren.
     def static initTableModelBuilder = { builder, model ->
-        def items1 = model.meta.zuluftventile
-        def items2 = model.meta.abluftventile
-        def items3 = [' 1', ' 2', ' 3', ' 4']
+        def items1 = model.meta.raumVsBezeichnungZuluftventile
+        def items2 = model.meta.raumVsBezeichnungAbluftventile
+        def items3 = ["KG", "EG", "OG", "DG", "SB"]
+
+        println "#####################################################"
+        println "#####################################################"
+        println "#####################################################"
+        println "#####################################################"
+        println "#####################################################"
+        println "#####################################################"
+        println "#####################################################"
+        println "#####################################################"
+        println "#####################################################"
+        println "items1 = ${items1}"
+        println "items2 = ${items2}"
+        println "items3 = ${items3}"
+        println "#####################################################"
+        println "#####################################################"
+        println "#####################################################"
+        println "#####################################################"
+        println "#####################################################"
+        println "#####################################################"
+        println "#####################################################"
+        println "#####################################################"
+        println "#####################################################"
 
         def editor1 = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumBezeichnungZuluftventileCombo', items: items1))
         def editor2 = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumBezeichnungAbluftventileCombo', items: items2))
@@ -462,29 +484,7 @@ class GriffonHelper {
     // TableModel updaten. Neue Row hinzufügen.
     def static addRowToTableModel = { r, builder, raumVsZuAbluftventileTabelle ->
         println "addRowToTableModel ${r}}"
-        def dataList = createDataList(r)
-
-        // Let's add a new row to the table
-        def rows = raumVsZuAbluftventileTabelle.getModel().getRowsModel().getValue()
-        rows.add( dataList )
-        raumVsZuAbluftventileTabelle.getModel().getRowsModel().setValue( rows )
-        raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
-    }
-
-    // TableModel updaten. Row löschen!
-    def static removeRowToTableModel = { r, builder, raumVsZuAbluftventileTabelle ->
-        println "removeRowToTableModel"
-        def dataList = createDataList(r)
-
-        // Let's remove a row from the table
-        def rows = raumVsZuAbluftventileTabelle.getModel().getRowsModel().getValue()
-        rows.remove( dataList )
-        raumVsZuAbluftventileTabelle.getModel().getRowsModel().setValue( rows )
-        raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
-    }
-
-    // Erstelle eine Liste mit den aktuellen Raumdaten
-    def static createDataList = {r ->
+        // Erstelle eine Liste mit den aktuellen Raumdaten
         def dataList = [raumBezeichnung: r.raumBezeichnung,
                         raumLuftart: r.raumLuftart,
                         raumVolumen: r.raumVolumen,
@@ -497,6 +497,36 @@ class GriffonHelper {
                         raumBezeichnungAbluftventileCombo: r.raumBezeichnungAbluftventileCombo,
                         raumVentilebeneCombo: r.raumVentilebeneCombo,
                         raumZuluftmengeJeVentil: r.raumZuluftmengeJeVentil]
-         dataList
+
+        // Let's add a new row to the table
+        def rows = raumVsZuAbluftventileTabelle.getModel().getRowsModel().getValue()
+        rows.add( dataList )
+        raumVsZuAbluftventileTabelle.getModel().getRowsModel().setValue( rows )
+        raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
     }
+
+    // TableModel updaten. Row löschen!
+    def static removeRowToTableModel = { r, builder, raumVsZuAbluftventileTabelle ->
+        println "removeRowToTableModel"
+        // Erstelle eine Liste mit den aktuellen Raumdaten
+        def dataList = [raumBezeichnung: r.raumBezeichnung,
+                        raumLuftart: r.raumLuftart,
+                        raumVolumen: r.raumVolumen,
+                        raumLuftwechsel: r.raumLuftwechsel,
+                        raumBezeichnungAbluftventile: r.raumBezeichnungAbluftventile,
+                        raumAnzahlAbluftventile: r.raumAnzahlAbluftventile,
+                        raumVolumenstrom: r.raumVolumenstrom,
+                        raumAnzahlZuluftventile: r.raumAnzahlZuluftventile,
+                        raumBezeichnungZuluftventileCombo: r.raumBezeichnungZuluftventileCombo,
+                        raumBezeichnungAbluftventileCombo: r.raumBezeichnungAbluftventileCombo,
+                        raumVentilebeneCombo: r.raumVentilebeneCombo,
+                        raumZuluftmengeJeVentil: r.raumZuluftmengeJeVentil]
+
+        // Let's remove a row from the table
+        def rows = raumVsZuAbluftventileTabelle.getModel().getRowsModel().getValue()
+        rows.remove( dataList )
+        raumVsZuAbluftventileTabelle.getModel().getRowsModel().setValue( rows )
+        raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
+    }
+
 }
