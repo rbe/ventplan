@@ -20,7 +20,7 @@ log4j {
 
 griffon.basic_injection.disable = true
 
-griffon.gsql.injectInto = ['controller']
+griffon.gsql.injectInto = ['service']
 
 // The following properties have been added by the Upgrade process...
 griffon.jars.pack=false // jars were not automatically packed in Griffon 0.0

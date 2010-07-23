@@ -17,7 +17,3 @@ mvcGroups {
 		view="Wac2View"
 	}
 }
-griffon {
-	basic_injection.disable=true
-	gsql.injectInto=["service"]
-}
