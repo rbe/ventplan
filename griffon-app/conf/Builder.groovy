@@ -21,11 +21,11 @@ root.'griffon.builder.jide.JideBuilder'.view = '*'
 
 root.'GlazedlistsGriffonAddon'.addon = true
 
-root.'GsqlGriffonAddon'.addon=true
-
 root.'OxbowGriffonAddon'.addon=true
 root.'OxbowGriffonAddon'.controller=['ask','choice','error','inform','showException','radioChoice','warn']
 
 root.'MiglayoutGriffonAddon'.addon=true
 
 root.'SpringGriffonAddon'.addon=true
+
+root.'GsqlGriffonAddon'.addon=true
