@@ -19,7 +19,5 @@ mvcGroups {
 }
 griffon {
 	basic_injection.disable=true
-	gsql.injectInto=[/*"controller", */"service"]
+	gsql.injectInto=["service"]
 }
-
-griffon.basic_injection.disable = true
