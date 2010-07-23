@@ -558,7 +558,7 @@ class ProjektController {
         // Neues TableModel setzen !
         println "add row to table model ${rowIndex}"
         doLater {
-            GH.addRowToTableModel(model.map.raum.raume[rowIndex], builder, view.raumVsZuAbluftventileTabelle)
+            GH.addRowToTableModel(model.map.raum.raume[rowIndex], view.raumVsZuAbluftventileTabelle)
         }
     }
 
@@ -568,7 +568,7 @@ class ProjektController {
     def onRemoveTableModelRow = { r ->
         println "remove row"
         doLater {
-            GH.removeRowToTableModel(r, builder, view.raumVsZuAbluftventileTabelle)
+            GH.removeRowFromTableModel(r, view.raumVsZuAbluftventileTabelle)
         }
     }
 	
