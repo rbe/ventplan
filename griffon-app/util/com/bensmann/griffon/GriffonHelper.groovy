@@ -446,7 +446,12 @@ class GriffonHelper {
         def editor2 = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumBezeichnungAbluftventileCombo', items: items2))
         def editor3 = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumVentilebeneCombo', items: items3))
 
+        def tableModelListener = { e ->
+            println "${e.firstRow} ${e.column} ${e.type}"
+        } as TableModelListener
+
         def tableModel = builder.tableModel() {
+            current.addTableModelListener(tableModelListener)
             propertyColumn(header: 'Raum', propertyName: 'raumBezeichnung')
             propertyColumn(header: 'Luftart', propertyName: 'raumLuftart')
             propertyColumn(header: GriffonHelper.ws("Raumvolumen<br/>(m³)"), propertyName: 'raumVolumen')
@@ -476,8 +481,8 @@ class GriffonHelper {
     }
 
     // TableModel updaten. Neue Row hinzufügen.
-    def static addRowToTableModel = { r, builder, raumVsZuAbluftventileTabelle ->
-        println "addRowToTableModel ${r}}"
+    def static addRowToTableModel = { r, raumVsZuAbluftventileTabelle ->
+        //println "addRowToTableModel ${r}"
         // Erstelle eine Liste mit den aktuellen Raumdaten
         def dataList = [raumBezeichnung: r.raumBezeichnung,
                         raumLuftart: r.raumLuftart,
@@ -492,7 +497,7 @@ class GriffonHelper {
                         raumVentilebeneCombo: r.raumVentilebeneCombo,
                         raumZuluftmengeJeVentil: r.raumZuluftmengeJeVentil]
 
-        // Let's add a new row to the table
+        // Let's add a row to the table
         def rows = raumVsZuAbluftventileTabelle.getModel().getRowsModel().getValue()
         rows.add( dataList )
         raumVsZuAbluftventileTabelle.getModel().getRowsModel().setValue( rows )
@@ -500,7 +505,7 @@ class GriffonHelper {
     }
 
     // TableModel updaten. Row löschen!
-    def static removeRowToTableModel = { r, builder, raumVsZuAbluftventileTabelle ->
+    def static removeRowFromTableModel = { r, raumVsZuAbluftventileTabelle ->
         println "removeRowToTableModel"
         // Erstelle eine Liste mit den aktuellen Raumdaten
         def dataList = [raumBezeichnung: r.raumBezeichnung,
