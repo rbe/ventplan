@@ -106,7 +106,7 @@ class ProjektController {
 	 * Initialisiert das TableModel in RaumVsView. Erstellt ein leeres TableModel ohne Daten!
 	 */
     def initTableModelBuilder() {
-        def myTableModel = GH.initTableModelBuilder(builder)
+        def myTableModel = GH.initTableModelBuilder(builder, model)
         myTableModel
     }
 
