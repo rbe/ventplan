@@ -121,11 +121,5 @@ panel(id: "aussenluftVsGesamtLTM", border: titledBorder(title: "Gesamt-Luftvolum
 	label(id: "gesamtLvsLtmLwIl", text: "0,00"); label("l/h", constraints: "span")
 }
 
-// Rounding Mode
-panel(id: "aussenluftVsRoundingModePanel", border: titledBorder(title: "Rounding Mode"), layout: new MigLayout("wrap", "[left]", "")) {
-	comboBox(id: "aussenluftVsRoundingMode", items: ["CEILING", "DOWN", "FLOOR", "HALF_DOWN", "HALF_EVEN", "HALF_UP", "UNNECESSARY", "UP"], selectedItem: "HALF_UP")
-}
-aussenluftVsRoundingMode.actionPerformed = controller.setRoundingMode
-
 // Bindings
 build(AussenluftVsBindings)
