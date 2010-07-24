@@ -146,8 +146,40 @@ class Wac2Controller {
 		def mvc = getMvcGroupAktivesProjekt() //getMVCGroup(model.aktivesProjekt)
 		println "projektSchliessen: model.aktivesProjekt=${model.aktivesProjekt} mvc=${mvc}"
 		def canClose = mvc.controller.canClose()
-		if (canClose) {
-			// MVC Gruppe zerstören
+		if (!canClose) {
+			println "projektSchliessen: there's unsaved data"
+            def options = ['Speichern', 'Abbrechen', 'Schliessen']
+            def choice = mvc.controller.showCloseProjectDialog(options)
+            if (options[choice] == options[0]) {
+                println "Speichern und Beenden"
+                // TODO rbe Projekt speichern !!!
+
+                // MVC Gruppe zerstören
+                destroyMVCGroup(model.aktivesProjekt)
+                // Aus Liste der Projekte entfernen
+                model.projekte.remove(model.aktivesProjekt)
+                // Tab entfernen
+                view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
+                // Anderes Projekt aktivieren?
+                projektIndexAktivieren(view.projektTabGroup.selectedIndex)
+            }
+            else if (options[choice] == options[1]) {
+                println "Abbrechen"
+            }
+            else {
+                println "Schliessen ohne Speichern"
+                // MVC Gruppe zerstören
+                destroyMVCGroup(model.aktivesProjekt)
+                // Aus Liste der Projekte entfernen
+                model.projekte.remove(model.aktivesProjekt)
+                // Tab entfernen
+                view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
+                // Anderes Projekt aktivieren?
+                projektIndexAktivieren(view.projektTabGroup.selectedIndex)
+            }
+		}
+        else {
+            // MVC Gruppe zerstören
 			destroyMVCGroup(model.aktivesProjekt)
 			// Aus Liste der Projekte entfernen
 			model.projekte.remove(model.aktivesProjekt)
@@ -155,10 +187,7 @@ class Wac2Controller {
 			view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
 			// Anderes Projekt aktivieren?
 			projektIndexAktivieren(view.projektTabGroup.selectedIndex)
-		} else {
-			// TODO mmu Dialog anzeigen: Speichern, Abbrechen, Schliessen
-			println "projektSchliessen: there's unsaved data"
-		}
+        }
 	}
 	
 	/**

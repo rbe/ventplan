@@ -723,5 +723,20 @@ class ProjektController {
 	def dvbVentileinstellungEntfernen = {
 		
 	}
-	
+
+    def showCloseProjectDialog = { options ->
+        def choice
+        def lastPane = builder.optionPane()
+        choice = lastPane.showOptionDialog( null,
+                                            'Nicht gespeichertes Projekt sichern?',
+                                            'Achtung: Ungesichertes Projekt',
+                                            JOptionPane.YES_NO_CANCEL_OPTION,
+                                            JOptionPane.WARNING_MESSAGE,
+                                            null,
+                                            options as Object[],
+                                            options[1])
+
+        options[choice]
+    }
+
 }
