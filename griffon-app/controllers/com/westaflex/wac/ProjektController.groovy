@@ -8,6 +8,8 @@
  */
 package com.westaflex.wac
 
+import com.ezware.dialog.task.CommandLink
+
 import com.bensmann.griffon.GriffonHelper as GH
 
 import javax.swing.DefaultCellEditor
@@ -737,6 +739,30 @@ class ProjektController {
                                             options[1])
 
         options[choice]
+    }
+
+    /**
+     * Dialog anzeigen, wenn ein nicht gespeichertes Projekt geschlossen wird.
+     */
+    def closeTab = { evt = null ->
+        def choice = choice("Ok", "Ok2", 2, [new CommandLink("Speichern",""),new CommandLink("Schliessen",""),new CommandLink("Abbrechen","")])
+        println "choice= ${choice}"
+        // rbe TODO:
+        if (choice == 0)
+        {
+            // Save: save the closing project
+            println "choice -> saving project"
+        }
+        else if (choice == 1)
+        {
+            // Close: just close the tab...
+            println "choice -> closing project"
+        }
+        else if (choice == 2)
+        {
+            // Cancel: do nothing...
+            println "choice -> do nothing..."
+        }
     }
 
 }

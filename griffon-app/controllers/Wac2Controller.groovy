@@ -146,8 +146,9 @@ class Wac2Controller {
 		def mvc = getMvcGroupAktivesProjekt() //getMVCGroup(model.aktivesProjekt)
 		println "projektSchliessen: model.aktivesProjekt=${model.aktivesProjekt} mvc=${mvc}"
 		def canClose = mvc.controller.canClose()
+        println "canClose = ${canClose}"
 		if (!canClose) {
-			println "projektSchliessen: there's unsaved data"
+			println "projektSchliessen -> there's unsaved data"
             def options = ['Speichern', 'Abbrechen', 'Schliessen']
             def choice = mvc.controller.showCloseProjectDialog(options)
             if (options[choice] == options[0]) {
@@ -164,10 +165,10 @@ class Wac2Controller {
                 projektIndexAktivieren(view.projektTabGroup.selectedIndex)
             }
             else if (options[choice] == options[1]) {
-                println "Abbrechen"
+                println "projektSchliessen -> Abbrechen"
             }
             else {
-                println "Schliessen ohne Speichern"
+                println "projektSchliessen -> Schliessen ohne Speichern"
                 // MVC Gruppe zerstören
                 destroyMVCGroup(model.aktivesProjekt)
                 // Aus Liste der Projekte entfernen
@@ -179,6 +180,7 @@ class Wac2Controller {
             }
 		}
         else {
+            println "projektSchliessen -> else..."
             // MVC Gruppe zerstören
 			destroyMVCGroup(model.aktivesProjekt)
 			// Aus Liste der Projekte entfernen

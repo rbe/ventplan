@@ -8,3 +8,10 @@
  */
 package com.westaflex.wac
 
+[projektTabGroup].each {
+	it.addChangeListener([
+		stateChanged: { evt ->
+				controller.closeTab(evt)
+			}
+		] as javax.swing.event.ChangeListener)
+}

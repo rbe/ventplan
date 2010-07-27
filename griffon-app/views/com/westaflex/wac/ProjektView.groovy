@@ -11,6 +11,8 @@ package com.westaflex.wac
 
 import net.miginfocom.swing.MigLayout
 
+
+
 jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 	panel(id: "projektTab", title: controller.makeTabTitle()) {
 		borderLayout()
@@ -63,6 +65,8 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 }
 // Bindings
 build(ProjektBindings)
+
+def event
 //
 // JIDE
 //
