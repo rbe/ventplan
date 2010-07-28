@@ -46,46 +46,42 @@ panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[f
 			}
 
 			panel(id: "raumBearbeitenDurchlassposition", border: titledBorder("Durchlassposition"), layout: new MigLayout("fillx", "[left,fill]para[left,fill]para[left,fill]", "[fill]")) {
-				button(id: "raumBearbeitenDurchlasspositionInfo", text: "Info...")
-				label(text: "Zuluft")
-				label(text: "Abluft")
-
-				buttonGroup().with {
-					add radioButton(id: "raumBearbeitenDurchlasspositionZuluftDecke", text: "Decke", constraints: "wrap")
-					add radioButton(id: "raumBearbeitenDurchlasspositionZuluftWandOben", text: "Wand oben", constraints: "wrap")
-					add radioButton(id: "raumBearbeitenDurchlasspositionZuluftWandUnten", text: "Wand unten", constraints: "wrap")
-					add radioButton(id: "raumBearbeitenDurchlasspositionZuluftBoden", text: "Boden", constraints: "wrap")
-				}
-
-				buttonGroup().with {
-					add radioButton(id: "raumBearbeitenDurchlasspositionAbluftDecke", text: "Decke", constraints: "wrap")
-					add radioButton(id: "raumBearbeitenDurchlasspositionAbluftWandOben", text: "Wand oben", constraints: "wrap")
-					add radioButton(id: "raumBearbeitenDurchlasspositionAbluftWandUnten", text: "Wand unten", constraints: "wrap")
-					add radioButton(id: "raumBearbeitenDurchlasspositionAbluftBoden", text: "Boden", constraints: "wrap")
-				}
+                button(id: "raumBearbeitenDurchlasspositionInfo", text: "Info...", constraints: "cell 0 0")
+                label(text: "Zuluft", constraints: "cell 1 0")
+                buttonGroup().with {
+                    add radioButton(id: "raumBearbeitenDurchlasspositionZuluftDecke", text: "Decke", constraints: "cell 1 1")
+                    add radioButton(id: "raumBearbeitenDurchlasspositionZuluftWandOben", text: "Wand oben", constraints: "cell 1 2")
+                    add radioButton(id: "raumBearbeitenDurchlasspositionZuluftWandUnten", text: "Wand unten", constraints: "cell 1 3")
+                    add radioButton(id: "raumBearbeitenDurchlasspositionZuluftBoden", text: "Boden", constraints: "cell 1 4")
+                }
+                label(text: "Abluft", constraints: "cell 2 0")
+                buttonGroup().with {
+                    add radioButton(id: "raumBearbeitenDurchlasspositionAbluftDecke", text: "Decke", constraints: "cell 2 1")
+                    add radioButton(id: "raumBearbeitenDurchlasspositionAbluftWandOben", text: "Wand oben", constraints: "cell 2 2")
+                    add radioButton(id: "raumBearbeitenDurchlasspositionAbluftWandUnten", text: "Wand unten", constraints: "cell 2 3")
+                    add radioButton(id: "raumBearbeitenDurchlasspositionAbluftBoden", text: "Boden", constraints: "cell 2 4")
+                }
 			}
 
 			panel(id: "raumBearbeitenKanalanschluss", border: titledBorder("Kanalanschluss"), layout: new MigLayout("fillx", "[left,fill]para[left,fill]para[left,fill]", "[fill]")) {
-				button(id: "raumBearbeitenKanalanschlussInfo", text: "Info...")
-				label(text: "Zuluft")
-				label(text: "Abluft")
-
-				buttonGroup().with {
-					add radioButton(id: "raumBearbeitenKanalanschlussZuluftDecke", text: "Decke", constraints: "wrap")
-					add radioButton(id: "raumBearbeitenKanalanschlussZuluftWandOben", text: "Wand oben", constraints: "wrap")
-					add radioButton(id: "raumBearbeitenKanalanschlussZuluftWandUnten", text: "Wand unten", constraints: "wrap")
-					add radioButton(id: "raumBearbeitenKanalanschlussZuluftBoden", text: "Boden", constraints: "wrap")
-				}
-
-				buttonGroup().with {
-					add radioButton(id: "raumBearbeitenKanalanschlussAbluftDecke", text: "Decke", constraints: "wrap")
-					add radioButton(id: "raumBearbeitenKanalanschlussAbluftWandOben", text: "Wand oben", constraints: "wrap")
-					add radioButton(id: "raumBearbeitenKanalanschlussAbluftWandUnten", text: "Wand unten", constraints: "wrap")
-					add radioButton(id: "raumBearbeitenKanalanschlussAbluftBoden", text: "Boden", constraints: "wrap")
-				}
+                button(id: "raumBearbeitenKanalanschlussInfo", text: "Info...", constraints: "cell 0 0")
+                label(text: "Zuluft", constraints: "cell 1 0")
+                buttonGroup().with {
+                    add radioButton(id: "raumBearbeitenKanalanschlussZuluftDecke", text: "Decke", constraints: "cell 1 1")
+                    add radioButton(id: "raumBearbeitenKanalanschlussZuluftWandOben", text: "Wand oben", constraints: "cell 1 2")
+                    add radioButton(id: "raumBearbeitenKanalanschlussZuluftWandUnten", text: "Wand unten", constraints: "cell 1 3")
+                    add radioButton(id: "raumBearbeitenKanalanschlussZuluftBoden", text: "Boden", constraints: "cell 1 4")
+                }
+                label(text: "Abluft", constraints: "cell 2 0")
+                buttonGroup().with {
+                    add radioButton(id: "raumBearbeitenKanalanschlussAbluftDecke", text: "Decke", constraints: "cell 2 1")
+                    add radioButton(id: "raumBearbeitenKanalanschlussAbluftWandOben", text: "Wand oben", constraints: "cell 2 2")
+                    add radioButton(id: "raumBearbeitenKanalanschlussAbluftWandUnten", text: "Wand unten", constraints: "cell 2 3")
+                    add radioButton(id: "raumBearbeitenKanalanschlussAbluftBoden", text: "Boden", constraints: "cell 2 4")
+                }
 			}
 
-						// TODO mmu: make the dialog not sooo big!!!
+            // TODO mmu: make the dialog not sooo big!!!
 			panel(id: "raumBearbeitenTabelle", layout: new MigLayout("width 800", "[left]para[left]para[left]", "[fill]"), constraints: "span") {
 
 				label(text: "Maximale Türspalthöhe [mm]")
