@@ -1,6 +1,6 @@
 application {
 	title="Wac2"
-	startupGroups=["wac2"]
+	startupGroups=["wac2", "Dialog"]
 	autoShutdown=false
 }
 mvcGroups {
@@ -16,4 +16,7 @@ mvcGroups {
 		actions="Wac2Actions"
 		view="Wac2View"
 	}
+    Dialog {
+        controller="com.westaflex.wac.DialogController"
+    }
 }

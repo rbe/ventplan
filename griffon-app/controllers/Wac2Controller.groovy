@@ -68,9 +68,37 @@ class Wac2Controller {
 	/**
 	 * 
 	 */
-	def exitApplication = { evt = null -> 
+	def exitApplication = { evt = null ->
+        // Ask if we can close
 		def canClose = canClose()
 		println "exitApplication: ${canClose}"
+
+		if (canClose) {
+			app.shutdown()
+		} else {
+			println "windowClosing(${evt.dump()}): there are unsaved changes"
+			// TODO mmu Show dialog: ask user for save all, cancel, quit
+            println "projektSchliessen: there's unsaved data"
+            def choice = app.controllers["Dialog"].showApplicationCloseDialog()
+
+            println "choice= ${choice}"
+            switch (choice)
+            {
+                case 0:
+                    println "Alles speichern"
+                    // TODO rbe Projekte speichern aufrufen
+                    break
+                case 1:
+                    // Cancel: do nothing...
+                    println "Abbrechen..."
+                    app.show()
+                    break
+                case 2:
+                    println "Schliessen"
+                    app.shutdown()
+                    break
+            }
+		}
 	}
 	
 	/**
@@ -149,38 +177,45 @@ class Wac2Controller {
         println "canClose = ${canClose}"
 		if (!canClose) {
 			println "projektSchliessen -> there's unsaved data"
-            def options = ['Speichern', 'Abbrechen', 'Schliessen']
-            def choice = mvc.controller.showCloseProjectDialog(options)
-            if (options[choice] == options[0]) {
-                println "Speichern und Beenden"
-                // TODO rbe Projekt speichern !!!
+            //def options = ['Speichern', 'Abbrechen', 'Schliessen']
+            def choice = app.controllers["Dialog"].showCloseProjectDialog()
+            println "choice= ${choice}"
+            switch (choice)
+            {
+                case 0:
+                    // Save: save the closing project
+                    println "Speichern und Beenden"
+                    // TODO rbe Projekt speichern !!!
 
-                // MVC Gruppe zerstören
-                destroyMVCGroup(model.aktivesProjekt)
-                // Aus Liste der Projekte entfernen
-                model.projekte.remove(model.aktivesProjekt)
-                // Tab entfernen
-                view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
-                // Anderes Projekt aktivieren?
-                projektIndexAktivieren(view.projektTabGroup.selectedIndex)
-            }
-            else if (options[choice] == options[1]) {
-                println "projektSchliessen -> Abbrechen"
-            }
-            else {
-                println "projektSchliessen -> Schliessen ohne Speichern"
-                // MVC Gruppe zerstören
-                destroyMVCGroup(model.aktivesProjekt)
-                // Aus Liste der Projekte entfernen
-                model.projekte.remove(model.aktivesProjekt)
-                // Tab entfernen
-                view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
-                // Anderes Projekt aktivieren?
-                projektIndexAktivieren(view.projektTabGroup.selectedIndex)
+                    // MVC Gruppe zerstören
+                    destroyMVCGroup(model.aktivesProjekt)
+                    // Aus Liste der Projekte entfernen
+                    model.projekte.remove(model.aktivesProjekt)
+                    // Tab entfernen
+                    view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
+                    // Anderes Projekt aktivieren?
+                    projektIndexAktivieren(view.projektTabGroup.selectedIndex)
+                    break
+                case 1:
+                    // Cancel: do nothing...
+                    println "projektSchliessen -> Abbrechen"
+                    break
+                case 2:
+                    // Close: just close the tab...
+                    println "projektSchliessen -> Schliessen ohne Speichern"
+                    // MVC Gruppe zerstören
+                    destroyMVCGroup(model.aktivesProjekt)
+                    // Aus Liste der Projekte entfernen
+                    model.projekte.remove(model.aktivesProjekt)
+                    // Tab entfernen
+                    view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
+                    // Anderes Projekt aktivieren?
+                    projektIndexAktivieren(view.projektTabGroup.selectedIndex)
+                    break
             }
 		}
         else {
-            println "projektSchliessen -> else..."
+            println "projektSchliessen -> else... close!!"
             // MVC Gruppe zerstören
 			destroyMVCGroup(model.aktivesProjekt)
 			// Aus Liste der Projekte entfernen

@@ -8,8 +8,6 @@
  */
 package com.westaflex.wac
 
-import com.ezware.dialog.task.CommandLink
-
 import com.bensmann.griffon.GriffonHelper as GH
 
 import javax.swing.DefaultCellEditor
@@ -726,42 +724,29 @@ class ProjektController {
 		
 	}
 
-    def showCloseProjectDialog = { options ->
-        def choice
-        def lastPane = builder.optionPane()
-        choice = lastPane.showOptionDialog( null,
-                                            'Nicht gespeichertes Projekt sichern?',
-                                            'Achtung: Ungesichertes Projekt',
-                                            JOptionPane.YES_NO_CANCEL_OPTION,
-                                            JOptionPane.WARNING_MESSAGE,
-                                            null,
-                                            options as Object[],
-                                            options[1])
-
-        options[choice]
-    }
-
+    
     /**
      * Dialog anzeigen, wenn ein nicht gespeichertes Projekt geschlossen wird.
      */
-    def closeTab = { evt = null ->
-        def choice = choice("Ok", "Ok2", 2, [new CommandLink("Speichern",""),new CommandLink("Schliessen",""),new CommandLink("Abbrechen","")])
+    def closeProjectTab = { evt = null ->
+        println "closeTab = ${app.controllers}"
+        def choice = app.controllers["Dialog"].showCloseProjectDialog()
         println "choice= ${choice}"
         // rbe TODO:
-        if (choice == 0)
+        switch (choice)
         {
             // Save: save the closing project
-            println "choice -> saving project"
-        }
-        else if (choice == 1)
-        {
+            case 0: 
+                println "choice -> saving project"
+                break
             // Close: just close the tab...
-            println "choice -> closing project"
-        }
-        else if (choice == 2)
-        {
+            case 1: 
+                println "choice -> do nothing"
+                break
             // Cancel: do nothing...
-            println "choice -> do nothing..."
+            case 2: 
+                println "choice -> closing project"
+                break
         }
     }
 
