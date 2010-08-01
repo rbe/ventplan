@@ -87,11 +87,12 @@ class Wac2Controller {
                 case 0:
                     println "Alles speichern"
                     // TODO rbe Projekte speichern aufrufen
+                    app.shutdown()
                     break
                 case 1:
                     // Cancel: do nothing...
                     println "Abbrechen..."
-                    app.show()
+                    app.shutdown() // REMOVE THIS LATER
                     break
                 case 2:
                     println "Schliessen"

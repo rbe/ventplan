@@ -31,7 +31,7 @@ panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[f
 				button(id: "links", text: " < ")
 				textField(id: "raumBearbeitenRaumnummer", text: model.meta.raum.s, constraints: "width 50px")
 				button(id: "rechts", text: " > ")
-				textField(id: "raumBearbeitenBezeichnung", text: "")
+				textField(id: "raumBearbeitenBezeichnung", text: "", constraints: "width 100px")
 				comboBox(id: "raumBearbeitenRaumtyp", items: model.meta.raum.typ)
 				button(id: "raumdatenDialogRaumButton", text: "...")
 			}
@@ -129,7 +129,7 @@ panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[f
 	}
 	}
 	panel(id: "raumBearbeitenSubPanel2") {
-		button(id: "raumBearbeitenSchliessen", text: "Schliessen", )
+		button(id: "raumBearbeitenSchliessen", text: "Schliessen") 
 	}
 	
 }
@@ -147,17 +147,3 @@ raumBearbeitenTabGroup.with {
 	setShowCloseButton(false)
 	setShowCloseButtonOnSelectedTab(false)
 }
-/* mmu
-class RaumdatenDialogView {
-	public RaumdatenDialogView(def row) { 
-		SwingBuilder swing = new SwingBuilder()
-		swing.frame( title: "GroovyFileViewer", 
-					 defaultCloseOperation: JFrame.DISPOSE_ON_CLOSE, 
-					 pack: false, visible: true, id: "raumdatendialogframe" ) { 
-			// TODO: hier einfügen...
-			//button("Click to select a file", constraints: context.SOUTH, actionPerformed: this.&selectFile)			
-		}
-		swing.frame.size = [800,600]
-	}
-}
-*/

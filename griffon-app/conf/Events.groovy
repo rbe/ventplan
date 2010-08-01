@@ -88,13 +88,13 @@ onReadyEnd = { app ->
  * 
  */
 onShutdownStart = { app ->
-	/*
+	
 	def startTime = System.currentTimeMillis()
 	println "Events.onShutdownStart: start"
 	//
 	def stopTime = System.currentTimeMillis()
 	println "Events.onShutdownStart: finished in ${stopTime - startTime} ms"
-	*/
+	
 }
 
 /**

@@ -442,6 +442,8 @@ class ProjektController {
 			}
 		}
 	}
+
+    def raumBearbeitenDialog
 	
 	/**
 	 * Raumdaten - einen Raum bearbeiten.
@@ -454,12 +456,20 @@ class ProjektController {
 			model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
 			*/
 			// Show dialog
-			def dialog = GH.showDialog(builder, RaumBearbeitenView)
+			raumBearbeitenDialog = GH.showDialog(builder, RaumBearbeitenView)
 			println "raumBearbeiten: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
 			// Berechne alles, was von Räumen abhängt
 			publishEvent "RaumGeandert", [row]
 		}
 	}
+
+    /**
+	 * RaumBearbeiten - RaumBearbeitenView schliessen.
+	 */
+	def raumBearbeitenSchliessen = {
+        println "raumBearbeitenSchliessen -> closing dialog"
+        raumBearbeitenDialog.dispose()
+    }
 	
 	/**
 	 * Raumvolumenströme - Zu/Abluftventile, Luftmenge berechnen.

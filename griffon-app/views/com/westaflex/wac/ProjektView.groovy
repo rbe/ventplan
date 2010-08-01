@@ -20,7 +20,8 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 		//jideScrollPane() {
 			jideTabbedPane(id: "datenTabGroup") {
 				// Kundendaten
-				panel(id: "kundenTab", title: "Kundendaten", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[fill][fill]")) {
+				//panel(id: "kundenTab", title: "Kundendaten", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[fill][fill]")) {
+                panel(id: "kundenTab", title: "Kundendaten", layout: new MigLayout("fill", "[fill, grow]", "[fill]")) {
 					build(KundendatenView)
 				}
 				// Gebäudedaten
@@ -66,7 +67,6 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 // Bindings
 build(ProjektBindings)
 
-def event
 //
 // JIDE
 //
@@ -74,8 +74,8 @@ def event
 projektTabGroup.with {
 	setTabColorProvider(com.jidesoft.swing.JideTabbedPane.ONENOTE_COLOR_PROVIDER)
 	setBoldActiveTab(true)
-	setShowCloseButton(true)
-	setShowCloseButtonOnSelectedTab(true)
+	setShowCloseButton(false)
+	setShowCloseButtonOnSelectedTab(false)
 }
 // datenTabGroup
 datenTabGroup.with {
