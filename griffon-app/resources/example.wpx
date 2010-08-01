@@ -12,9 +12,8 @@
 				<adresse>
 					<name/>
 					<strasse/>
-					<stadt/>
-					<ort/>
 					<postleitzahl/>
+					<ort/>
 					<land/>
 				</adresse>
 			</person>
@@ -24,7 +23,7 @@
 		<bauvorhaben></bauvorhaben>
 		<gebaude>
 			<!-- MFH EFH MAI -->
-			<gebaudeTyp>mfh</gebaudeTyp>
+			<gebaudeTyp>MFH</gebaudeTyp>
 			<!-- SCH STA -->
 			<gebaudeLage>SCH</gebaudeLage>
 			<!-- HOC NIE -->
@@ -69,9 +68,8 @@
 			<adresse>
 				<name/>
 				<strasse/>
-				<stadt/>
-				<ort/>
 				<postleitzahl/>
+				<ort/>
 				<land/>
 			</adresse>
 			<kontakt>
@@ -86,9 +84,8 @@
 					<adresse>
 						<name/>
 						<strasse/>
-						<stadt/>
-						<ort/>
 						<postleitzahl/>
+						<ort/>
 						<land/>
 					</adresse>
 				</person>

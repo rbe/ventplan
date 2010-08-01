@@ -12,9 +12,9 @@ package com.westaflex.wac
 import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
-jideScrollPane() {
+jideScrollPane(constraints: "grow") {
 	
-	panel(layout: new MigLayout("fillx, filly", "[fill][fill][fill][fill]", "[fill]")) {
+	panel(constraints: "grow", layout: new MigLayout("fillx, filly", "[fill][fill][fill][fill]", "[fill]")) {
 		
 		// Gerätestandort
 		panel(id: "anlageGeratestandortPanel", border: titledBorder(title: "Gerätestandort"), layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
@@ -34,9 +34,8 @@ jideScrollPane() {
 			checkBox(id: "anlageLuftkanalverlegungDammschicht", text: "Dämmschicht unter Estrich")
 			checkBox(id: "anlageLuftkanalverlegungDecke",       text: "Decke (abgehängt)")
 			checkBox(id: "anlageLuftkanalverlegungSpitzboden",  text: "Spitzboden")
-			//checkBox(id: "anlageLuftkanalverlegungSpitzboden", selected: false, text: "Spitzboden")
 		}
-		
+	
 		// Außenluft
 		panel(id: "anlageAussenluftPanel", border: titledBorder(title: "Außenluft"), constraints: "wrap", layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
 			buttonGroup().with {
@@ -45,22 +44,20 @@ jideScrollPane() {
 				add radioButton(id: "anlageAussenluftErdwarme", text: "Erdwärmetauscher")
 			}
 		}
-		
+	
 		// Zuluftdurchlässe
 		panel(id: "anlageZuluftPanel", border: titledBorder(title: "Zuluftdurchlässe"), layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
 			checkBox(id: "anlageZuluftTellerventile",  text: "Tellerventile")
 			checkBox(id: "anlageZuluftSchlitzauslass", text: "Schlitzauslass (Weitwurfdüse)")
 			checkBox(id: "anlageZuluftFussboden",      text: "Fußbodenauslass")
 			checkBox(id: "anlageZuluftSockel",         text: "Sockelquellauslass")
-			checkBox(id: "anlageZuluftdurchlaesseSockelquellauslass", selected: false, text: "Sockelquellauslass")
 		}
-		
+	
 		// Abluftdurchlässe
 		panel(id: "anlageAbluft", border: titledBorder(title: "Abluftdurchlässe"), layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
 			checkBox(id: "anlageAbluftTellerventile",  text: "Tellerventile (Standard)")
-			checkBox(id: "anlageAbluftdurchlaesseTellerventile", selected: false, text: "Tellerventile (Standard)", constraints:'wrap')
 		}
-		
+	
 		// Fortluft
 		panel(id: "anlageFortluftPanel", border: titledBorder(title: "Fortluft"), constraints: "wrap", layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
 			buttonGroup().with {
@@ -69,7 +66,7 @@ jideScrollPane() {
 				add radioButton(id: "anlageFortluftLichtschacht", text: "Lichtschacht (Kellergeschoss)")
 			}
 		}
-		
+	
 		// Energie-Kennzeichen
 		panel(id: "anlageEnergiePanel", border: titledBorder(title: "Energie-Kennzeichen"), layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
 			checkBox(id: "anlageEnergieZuAbluftWarme", text: "Zu-/Abluftgeräte mit Wärmerückgewinnung")
@@ -78,7 +75,7 @@ jideScrollPane() {
 			checkBox(id: "anlageEnergieRegelung",      text: "Zweckmäßige Relegung")
 			label(id: "anlageEnergieNachricht", foreground: java.awt.Color.RED, text: " ")
 		}
-		
+	
 		// Hygiene-Kennzeichen
 		panel(id: "anlageHygienePanel", border: titledBorder(title: "Hygiene-Kennzeichen"), constraints: "span 2, wrap", layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
 			checkBox(id: "anlageHygieneAusfuhrung",         text: "Ausführung und Lage der Außenluftansaugung")
@@ -87,27 +84,27 @@ jideScrollPane() {
 			checkBox(id: "anlageHygieneDichtheitsklasseB",  text: "Dichtheitsklasse B der Luftleitungen")
 			label(id: "anlageHygieneNachricht", foreground: java.awt.Color.RED, text: " ")
 		}
-		
+	
 		// Rückschlagkappe
 		panel(id: "anlageRuckschlagPanel", border: titledBorder(title: "Rückschlagkappe"), layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
 			checkBox(id: "anlageRuckschlagKappe", text: "Lüftungsanlage mit Rückschlagkappe")
 		}
-		
+	
 		// Schallschutz-Kennzeichnung
 		panel(id: "anlageSchallschutzPanel", border: titledBorder(title: "Schallschutz-Kennzeichnung"), layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
 			checkBox(id: "anlageSchallschutz", text: "Lüftungsanlage mit Schallschutz")
 		}
-		
+	
 		// Feuerstätten-Kennzeichnung
 		panel(id: "anlageFeuerstattePanel", border: titledBorder(title: "Feuerstätten-Kennzeichnung"), constraints: "wrap", layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
 			checkBox(id: "anlageFeuerstatte", text: "Lüftungsanlage mit Sicherheitseinrichtung")
 		}
-		
+	
 		// Kennzeichnung der Lüftungsanlage
 		panel(id: "anlageKennzeichnungPanel", border: titledBorder(title: "Kennzeichnung der Lüftungsanlage"), constraints: "span", layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
 			label(id: "anlageKennzeichnungLuftungsanlage", foreground: java.awt.Color.RED)
 		}
-		
+	
 	}
 	
 }

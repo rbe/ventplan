@@ -17,7 +17,7 @@ panel(id: "aussenluftVsNotwendigkeitLuftungstechnischeMassnahme", border: titled
 	label(id: "aussenluftVsGesamt", text: "0,00", constraints: "width 50px!")
 	label("m³/h")
 	label(id: "aussenluftVsMassnahme", " ", foreground: java.awt.Color.RED)
-	
+
 	label("Luftvolumenstrom durch Infiltration")
 	label(id: "aussenluftVsInfiltration", text: "0,00")
 	label("m³/h")
@@ -35,13 +35,13 @@ panel(id: "aussenluftVsGesamtAussenluftVsNutzungseinheit", border: titledBorder(
 	label("")
 	label("Intensivlüftung")
 	label("")
-	
+
 	label("Luftvolumenstrom")
 	label(id: "gesamtAvsNeLvsFs", text: "0,00", constraints: "width 50px!"); label("m³/h")
 	label(id: "gesamtAvsNeLvsRl", text: "0,00", constraints: "width 50px!"); label("m³/h")
 	label(id: "gesamtAvsNeLvsNl", text: "0,00", constraints: "width 50px!"); label("m³/h")
 	label(id: "gesamtAvsNeLvsIl", text: "0,00", constraints: "width 50px!"); label("m³/h")
-	
+
 	label("Luftwechsel")
 	label(id: "gesamtAvsNeLwFs", text: "0,00"); label("l/h")
 	label(id: "gesamtAvsNeLwRl", text: "0,00"); label("l/h")
@@ -60,13 +60,13 @@ panel(id: "aussenluftVsGesamtabluftVsRaume", border: titledBorder(title: "Gesamt
 	label("")
 	label("Intensivlüftung")
 	label("")
-	
+
 	label("Luftvolumenstrom", constraints: "width 120px!")
 	label(id: "gesamtAvsRaumLvsFs", text: "0,00", constraints: "width 50px!"); label("m³/h")
 	label(id: "gesamtAvsRaumLvsRl", text: "0,00", constraints: "width 50px!"); label("m³/h")
 	label(id: "gesamtAvsRaumLvsNl", text: "0,00", constraints: "width 50px!"); label("m³/h")
 	label(id: "gesamtAvsRaumLvsIl", text: "0,00", constraints: "width 50px!"); label("m³/h")
-	
+
 	label("Luftwechsel", constraints: "width 120px!")
 	label(id: "gesamtAvsRaumLwFs", text: "0,00"); label("l/h")
 	label(id: "gesamtAvsRaumLwRl", text: "0,00"); label("l/h")
@@ -85,13 +85,13 @@ panel(id: "aussenluftVsPersonenbezogeneGesamtabluftVs", border: titledBorder(tit
 	label("")
 	label("Intensivlüftung")
 	label("")
-	
+
 	label("Luftvolumenstrom", constraints: "width 120px!")
 	label(id: "gesamtAvsPersonLvsFs", text: "0,00", constraints: "width 50px!"); label("m³/h")
 	label(id: "gesamtAvsPersonLvsRl", text: "0,00", constraints: "width 50px!"); label("m³/h")
 	label(id: "gesamtAvsPersonLvsNl", text: "0,00", constraints: "width 50px!"); label("m³/h")
 	label(id: "gesamtAvsPersonLvsIl", text: "0,00", constraints: "width 50px!"); label("m³/h")
-	
+
 	label("Luftwechsel")
 	label(id: "gesamtAvsPersonLwFs", text: "0,00"); label("l/h")
 	label(id: "gesamtAvsPersonLwRl", text: "0,00"); label("l/h")
@@ -108,13 +108,13 @@ panel(id: "aussenluftVsGesamtLTM", border: titledBorder(title: "Gesamt-Luftvolum
 	label("")
 	label("Intensivlüftung")
 	label("", constraints: "span")
-	
+
 	label("Luftvolumenstrom")
 	label(id: "gesamtLvsLtmLvsRl", text: "0,00", constraints: "width 50px!"); label("m³/h")
 	label(id: "gesamtLvsLtmLvsNl", text: "0,00", constraints: "width 50px!"); label("m³/h")
 	label(id: "gesamtLvsLtmLvsIl", text: "0,00", constraints: "width 50px!"); label("m³/h")
 	checkBox(id: "aussenluftVsGesamtLtmInfiltrationsanteil", selected: false, text: "mit Infiltrationsanteil berechnen")
-	
+
 	label("Luftwechsel")
 	label(id: "gesamtLvsLtmLwRl", text: "0,00"); label("l/h")
 	label(id: "gesamtLvsLtmLwNl", text: "0,00"); label("l/h")

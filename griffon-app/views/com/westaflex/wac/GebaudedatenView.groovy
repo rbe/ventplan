@@ -28,7 +28,7 @@ panel(id: "gebaudeLage", border: titledBorder(title: "Gebäudelage"), layout: ne
 	}
 }
 // Wärmeschutz
-panel(id: "gebaudewarmeschutz", border: titledBorder(title: "Wärmeschutz"), layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
+panel(id: "gebaudewarmeschutz", border: titledBorder(title: "Wärmeschutz"), constraints: "wrap", layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
 	buttonGroup().with {
 		add radioButton(id: "gebaudeWarmeschutzHoch", text: "hoch (Neubau / Sanierung mind. WSchV 1995)")
 		add radioButton(id: "gebaudeWarmeschutzNiedrig", text: "niedrig (Gebäude bestand vor 1995)")
@@ -104,5 +104,6 @@ panel(id: "gebaudeGeplanteBelegung", border: titledBorder(title: "Geplante Beleg
 	label("m³/h", foreground: java.awt.Color.RED)
 }
 GH.doubleTextField(gebaudeGeplanteAussenluftVsProPerson)
+
 // Bindings
 build(GebaudedatenBindings)

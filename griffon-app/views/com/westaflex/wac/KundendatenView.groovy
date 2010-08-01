@@ -1,12 +1,22 @@
+/**
+ * /Users/rbe/project/wac2/griffon-app/views/com/westaflex/wac/KundendatenView.groovy
+ * 
+ * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
+ * Alle Rechte vorbehalten. Nutzungslizenz siehe http://www.bensmann.com/license_de.html
+ * All Rights Reserved. Use is subject to license terms, see http://www.bensmann.com/license_en.html
+ * 
+ * Created by: rbe
+ */
 package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
+
 jideScrollPane() {
 //panel(id: "kundendatenHauptPanel", layout: new MigLayout("wrap 2", "[fill,grow]", "[fill,grow]")) {
     // Großhandel
-    panel(id: "kundendatenHaupPanel", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[fill][fill]")) {
+    panel(id: "kundendatenHauptPanel", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[fill][fill]")) {
         panel(id: "kundendatenGrosshandel", border: titledBorder(title: "Kunde 1 (Großhandel)"), layout: new MigLayout("fill, insets 5, gap 5, wrap 2", "[][grow]", "[][]")) {
             // Row 1
             label("Firma 1")
@@ -76,5 +86,6 @@ jideScrollPane() {
         GH.recurse(kundendatenNotizen, GH.yellowTextField)
     }
 }
+
 // Bindings
 build(KundendatenBindings)
