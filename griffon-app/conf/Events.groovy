@@ -32,7 +32,7 @@ onBootstrapEnd = { app ->
 	}
 	// Override String.toString2
 	String.metaClass.toString2 = {
-		delegate //.toString()
+		delegate
 	}
 	//
 	def stopTime = System.currentTimeMillis()
