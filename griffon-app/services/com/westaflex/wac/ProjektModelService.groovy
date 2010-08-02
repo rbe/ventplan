@@ -109,19 +109,15 @@ class ProjektModelService {
 								efh:         X.vb { gebaude."gebaudeTyp".text() == "EFH" },
 								mfh:         X.vb { gebaude."gebaudeTyp".text() == "MFH" },
 								maisonette:  X.vb { gebaude."gebaudeTyp".text() == "MAI" }
-							] as ObservableMap,
 						lage: [
 								windschwach: X.vb { gebaude."gebaudeLage".text() == "SCH" },
 								windstark:   X.vb { gebaude."gebaudeLage".text() == "STA" }
-							] as ObservableMap,
 						warmeschutz: [
 								hoch:    X.vb { gebaude."warmeschutz".text() == "HOC" },
 								niedrig: X.vb { gebaude."warmeschutz".text() == "NIE" },
-							] as ObservableMap,
 						geometrie: [:
 								//raumhohe: "0,00",
 								//geluftetesVolumen: "0,00"
-							] as ObservableMap,
 						luftdichtheit: [
 								kategorieA: true,
 								kategorieB: true,
@@ -130,40 +126,25 @@ class ProjektModelService {
 								druckdifferenz: 2.0d,
 								luftwechsel: 1.0d,
 								druckexponent: 0.666f
-							] as ObservableMap,
 						faktorBesondereAnforderungen: 1.0d,
 						geplanteBelegung: [
 								personenanzahl: 0.0d,
 								aussenluftVsProPerson: 30,
 								mindestaussenluftrate: 0.0d
-							] as ObservableMap,
-					] as ObservableMap,
 				anlage: [
-						standort: [EG: true] as ObservableMap,
-						luftkanalverlegung: [:] as ObservableMap,
-						aussenluft: [:] as ObservableMap,
-						zuluft: [:] as ObservableMap,
-						abluft: [:] as ObservableMap,
-						fortluft: [dach: true] as ObservableMap,
-						energie: [zuAbluftWarme: true, nachricht: " "] as ObservableMap,
-						hygiene: [nachricht: " "] as ObservableMap,
 						kennzeichnungLuftungsanlage: "ZuAbLS-Z-WE-WÜT-0-0-0-0-0",
 						zentralgerat: "",
 						zentralgeratManuell: false,
 						volumenstromZentralgerat: 0,
-					] as ObservableMap,
 				raum: [
 						raume: [
 								/* ProjektModel.raumMapTemplate wird durch Event RaumHinzufugen pro Raum erstellt */
-							] as ObservableList,
 						ltmZuluftSumme: 0.0d,
 						ltmAbluftSumme: 0.0d,
 						raumVs: [
 							gesamtVolumenNE: 0.0d,
 							luftwechselNE: 0.0d,
 							gesamtaussenluftVsMitInfiltration: 0.0d
-						] as ObservableMap
-					] as ObservableMap,
 				aussenluftVs: [
 						infiltrationBerechnen: true,
 						massnahme: " ",
@@ -171,13 +152,10 @@ class ProjektModelService {
 						gesamtLvsLtmLvsRl: 0.0d,
 						gesamtLvsLtmLvsNl: 0.0d,
 						gesamtLvsLtmLvsIl: 0.0d,
-					] as ObservableMap,
 				dvb: [
-						kanalnetz: [] as ObservableList,
-						ventileinstellung: [] as ObservableList
-					] as ObservableMap,
-				akkustik: [:] as ObservableMap
-			] as ObservableMap
+					],
+				akkustik: [:]
+			]
 		}
 	}
 	
