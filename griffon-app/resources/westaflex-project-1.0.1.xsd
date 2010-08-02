@@ -1,195 +1,202 @@
 <?xml version="1.0"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-	<xs:element name="westaflex-wpx">
-		<xs:complexType>
-			<xs:sequence minOccurs="1" maxOccurs="unbounded">
-				<xs:element name="projekt" type="project"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:complexType name="project">
-		<xs:sequence>
-			<xs:element name="ersteller" type="contact" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="erstellt" type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="bearbeitet" type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="geschickt" type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="bauvorhaben" type="xs:string" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="notizen" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="gebaude" type="building" minOccurs="1" maxOccurs="unbounded"/>
-			<xs:element name="firma" type="company" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="building">
-		<xs:sequence>
-			<xs:element name="gebaudeTyp" type="gebaudeTyp"/>
-			<xs:element name="gebaudeLage" type="gebaudeLage"/>
-			<xs:element name="warmeschutz" type="warmeschutz"/>
-			<xs:element name="luftdichtheit" type="luftdichtheit"/>
-			<xs:element name="besAnfFaktor" type="xs:double"/>
-			<xs:element name="personenAnzahl" type="xs:integer"/>
-			<xs:element name="personenVolumen" type="xs:integer"/>
-			<xs:element name="aussenluft" type="aussenluft"/>
-			<xs:element name="fortluft" type="fortluft"/>
-			<xs:element name="luftkanalverlegung" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="zuluftdurchlasse" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="abluftdurchlasse" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="raum" type="room" minOccurs="1" maxOccurs="unbounded"/>
-			<xs:element name="zentralgerat" type="zentralgerat" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="room">
-		<xs:sequence>
-			<xs:element name="raumnummer" type="xs:string"/>
-			<xs:element name="bezeichnung" type="xs:string"/>
-			<xs:element name="raumtyp" type="raumtyp"/>
-			<xs:element name="geschoss" type="geschoss"/>
-			<xs:element name="luftart" type="luftart"/>
-			<xs:element name="raumflache" type="xs:double"/>
-			<xs:element name="raumhohe" type="xs:double"/>
-			<xs:element name="raumlange" type="xs:double"/>
-			<xs:element name="raumbreite" type="xs:double"/>
-			<xs:element name="zuluftfaktor" type="xs:integer"/>
-			<xs:element name="abluftvs" type="xs:double"/>
-			<xs:element name="tur" type="door" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="door">
-		<xs:sequence>
-			<xs:element name="name" type="xs:string" default="T&#xFC;r"/>
-			<xs:element name="breite" type="xs:integer" default="610"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="zentralgerat">
-		<xs:sequence>
-			<xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="volumenstrom" type="xs:integer" minOccurs="1" maxOccurs="1"/>
-			<xs:element name="geratestandort" type="geratestandort"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="company">
-		<xs:sequence>
-			<xs:element name="firma1" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="firma2" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="rolle" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="email" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="tel" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="fax" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="adresse" type="address" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="kontakt" type="contact" minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="contact">
-		<xs:sequence>
-			<xs:element name="rolle" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="person" type="person"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="person">
-		<xs:sequence>
-			<xs:element name="benutzername" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="vorname" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="nachname" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="email" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="tel" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="fax" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="adresse" type="address" minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="address">
-		<xs:sequence>
-			<xs:element name="name" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="strasse" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="stadt" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="ort" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="postleitzahl" type="xs:string" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="land" type="xs:string" minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:simpleType name="gebaudeTyp">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="mfh"/>
-			<xs:enumeration value="efh"/>
-			<xs:enumeration value="maisonette"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="gebaudeLage">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="windschwach"/>
-			<xs:enumeration value="windstark"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="warmeschutz">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="hoch"/>
-			<xs:enumeration value="niedrig"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="luftdichtheit">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="A"/>
-			<xs:enumeration value="B"/>
-			<xs:enumeration value="C"/>
-			<xs:enumeration value="M"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="geratestandort">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="KG"/>
-			<xs:enumeration value="EG"/>
-			<xs:enumeration value="OG"/>
-			<xs:enumeration value="DG"/>
-			<xs:enumeration value="SB"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="aussenluft">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="dach"/>
-			<xs:enumeration value="wand"/>
-			<xs:enumeration value="erdwarme"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="fortluft">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="dach"/>
-			<xs:enumeration value="wand"/>
-			<xs:enumeration value="lichtschacht"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="raumtyp">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Wohnzimmer"/>
-			<xs:enumeration value="Kinderzimmer"/>
-			<xs:enumeration value="Schlafzimmer"/>
-			<xs:enumeration value="Esszimmer"/>
-			<xs:enumeration value="Arbeitszimmer"/>
-			<xs:enumeration value="Gastezimme"/>
-			<xs:enumeration value="Hausarbeitsraum"/>
-			<xs:enumeration value="Kellerraum"/>
-			<xs:enumeration value="WC"/>
-			<xs:enumeration value="Kuche"/>
-			<xs:enumeration value="Kochnische"/>
-			<xs:enumeration value="Bad"/>
-			<xs:enumeration value="Dusche"/>
-			<xs:enumeration value="Sau"/>
-			<xs:enumeration value="Flur"/>
-			<xs:enumeration value="Diele"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="geschoss">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="KG"/>
-			<xs:enumeration value="EG"/>
-			<xs:enumeration value="OG"/>
-			<xs:enumeration value="DG"/>
-			<xs:enumeration value="SB"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="luftart">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="ZU"/>
-			<xs:enumeration value="AB"/>
-			<xs:enumeration value="ZU/AB"/>
-			<xs:enumeration value="UB"/>
-		</xs:restriction>
-	</xs:simpleType>
+
+<xs:element name="westaflex-wpx">
+	<xs:complexType>
+		<xs:sequence minOccurs="1" maxOccurs="unbounded">
+	    	<xs:element name="projekt" type="project"/>
+	    </xs:sequence>
+    </xs:complexType>
+</xs:element> 
+
+<xs:complexType name="project">
+	<xs:sequence>
+		<xs:element name="ersteller"   type="contact"     minOccurs="1" maxOccurs="1" />
+		<xs:element name="erstellt"    type="xs:dateTime" minOccurs="0" maxOccurs="1" />
+		<xs:element name="bearbeitet"  type="xs:dateTime" minOccurs="0" maxOccurs="1" />
+		<xs:element name="geschickt"   type="xs:dateTime" minOccurs="0" maxOccurs="1" />
+		<xs:element name="bauvorhaben" type="xs:string"   minOccurs="1" maxOccurs="1" />
+		<xs:element name="notizen"     type="xs:string"   minOccurs="0" maxOccurs="1" />
+		<xs:element name="gebaude"     type="building"    minOccurs="1" maxOccurs="unbounded" />
+		<xs:element name="firma"       type="company"     minOccurs="1" maxOccurs="unbounded" />
+	</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="building">
+	<xs:sequence>
+		<xs:element name="gebaudeTyp"         type="gebaudeTyp" />
+		<xs:element name="gebaudeLage"        type="gebaudeLage" />
+		<xs:element name="warmeschutz"        type="warmeschutz" />
+		<xs:element name="luftdichtheit"      type="luftdichtheit" />
+		<xs:element name="geratestandort"     type="geratestandort" />
+		<xs:element name="besAnfFaktor"       type="xs:double" />
+		<xs:element name="personenAnzahl"     type="xs:integer" />
+		<xs:element name="personenVolumen"    type="xs:integer" />
+		<xs:element name="aussenluft"         type="aussenluft" />
+		<xs:element name="fortluft"           type="fortluft" />
+		<xs:element name="luftkanalverlegung" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+		<xs:element name="zuluftdurchlasse"   type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+		<xs:element name="abluftdurchlasse"   type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+		<xs:element name="room"               type="room"      minOccurs="1" maxOccurs="unbounded"/>
+	</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="room">
+	<xs:sequence>
+		<xs:element name="raumnummer"  type="xs:string" />
+		<xs:element name="bezeichnung" type="xs:string" />
+		<xs:element name="raumtyp"     type="raumtyp" />
+		<xs:element name="geschoss"    type="geschoss" />
+		<xs:element name="luftart"     type="luftart" />
+		<xs:element name="raumflache"  type="xs:double" />
+		<xs:element name="raumhohe"    type="xs:double" />
+		<xs:element name="tuer"        type="door"      minOccurs="0" maxOccurs="unbounded" />
+	</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="door">
+	<xs:sequence>
+		<xs:element name="name" type="xs:string" default="Tür" />
+		<xs:element name="breite" type="xs:integer" default="610" />
+	</xs:sequence>
+</xs:complexType>
+ 
+<xs:complexType name="company">
+	<xs:sequence>
+		<xs:element name="name"    type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+		<xs:element name="rolle"   type="xs:string" minOccurs="0" maxOccurs="1" />
+		<xs:element name="email"   type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+		<xs:element name="tel"     type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+		<xs:element name="fax"     type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+		<xs:element name="adresse" type="address"   minOccurs="0" maxOccurs="unbounded" />
+		<xs:element name="kontakt" type="contact"   minOccurs="0" maxOccurs="unbounded" />
+	</xs:sequence>
+</xs:complexType> 
+ 
+<xs:complexType name="contact">
+	<xs:sequence>
+		<xs:element name="rolle"  type="xs:string" minOccurs="0" maxOccurs="1" />
+		<xs:element name="person" type="person"/>
+	</xs:sequence>
+</xs:complexType> 
+   
+<xs:complexType name="person">
+	<xs:sequence>
+		<xs:element name="benutzername" type="xs:string" minOccurs="0" maxOccurs="1"/>
+		<xs:element name="name"         type="xs:string" minOccurs="0" maxOccurs="1"/>
+		<xs:element name="vorname"      type="xs:string" minOccurs="0" maxOccurs="1"/>
+		<xs:element name="nachname"     type="xs:string" minOccurs="0" maxOccurs="1"/>
+		<xs:element name="email"        type="xs:string" minOccurs="0" maxOccurs="1"/>
+		<xs:element name="tel"          type="xs:string" minOccurs="0" maxOccurs="1"/>
+		<xs:element name="fax"          type="xs:string" minOccurs="0" maxOccurs="1"/>
+		<xs:element name="adresse"      type="address"   minOccurs="0" maxOccurs="1"/>
+	</xs:sequence>
+</xs:complexType> 
+
+<xs:complexType name="address">
+   <xs:sequence>
+     <xs:element name="strasse"      type="xs:string" minOccurs="0" maxOccurs="1"/>
+     <xs:element name="ort"          type="xs:string" minOccurs="0" maxOccurs="1"/>
+     <xs:element name="postleitzahl" type="xs:string" minOccurs="0" maxOccurs="1"/>
+     <xs:element name="land"         type="xs:string" minOccurs="0" maxOccurs="1"/>
+   </xs:sequence>
+</xs:complexType>
+
+<xs:simpleType name="gebaudeTyp">
+   <xs:restriction base="xs:string">
+     <xs:enumeration value="MFH"/>
+     <xs:enumeration value="EFH"/>
+     <xs:enumeration value="MAI"/>
+   </xs:restriction>
+ </xs:simpleType>
+
+<xs:simpleType name="gebaudeLage">
+   <xs:restriction base="xs:string">
+     <xs:enumeration value="SCH"/>
+     <xs:enumeration value="STA"/>
+   </xs:restriction>
+ </xs:simpleType>
+
+<xs:simpleType name="warmeschutz">
+   <xs:restriction base="xs:string">
+     <xs:enumeration value="HOC"/>
+     <xs:enumeration value="NIE"/>
+   </xs:restriction>
+ </xs:simpleType>
+
+<xs:simpleType name="luftdichtheit">
+   <xs:restriction base="xs:string">
+     <xs:enumeration value="A"/>
+     <xs:enumeration value="B"/>
+     <xs:enumeration value="C"/>
+     <xs:enumeration value="M"/>
+   </xs:restriction>
+ </xs:simpleType>
+
+<xs:simpleType name="geratestandort">
+   <xs:restriction base="xs:string">
+     <xs:enumeration value="KG"/>
+     <xs:enumeration value="EG"/>
+     <xs:enumeration value="OG"/>
+     <xs:enumeration value="DG"/>
+     <xs:enumeration value="SB"/>
+   </xs:restriction>
+ </xs:simpleType>
+
+<xs:simpleType name="aussenluft">
+  <xs:restriction base="xs:string">
+    <xs:enumeration value="DAC"/>
+    <xs:enumeration value="WAN"/>
+    <xs:enumeration value="ERD"/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="fortluft">
+   <xs:restriction base="xs:string">
+     <xs:enumeration value="DAC"/>
+     <xs:enumeration value="WAN"/>
+     <xs:enumeration value="LIC"/>
+   </xs:restriction>
+ </xs:simpleType>
+
+<xs:simpleType name="raumtyp">
+   <xs:restriction base="xs:string">
+     <xs:enumeration value="WOH"/>
+     <xs:enumeration value="KIN"/>
+     <xs:enumeration value="SLF"/>
+     <xs:enumeration value="ESS"/>
+     <xs:enumeration value="ARB"/>
+     <xs:enumeration value="GAS"/>
+     <xs:enumeration value="HAU"/>
+     <xs:enumeration value="KEL"/>
+     <xs:enumeration value="WC"/>
+     <xs:enumeration value="KUC"/>
+     <xs:enumeration value="BAD"/>
+     <xs:enumeration value="DUS"/>
+     <xs:enumeration value="SAU"/>
+     <xs:enumeration value="FLU"/>
+     <xs:enumeration value="DIE"/>
+   </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="geschoss">
+   <xs:restriction base="xs:string">
+     <xs:enumeration value="KG"/>
+     <xs:enumeration value="EG"/>
+     <xs:enumeration value="OG"/>
+     <xs:enumeration value="DG"/>
+     <xs:enumeration value="SB"/>
+   </xs:restriction>
+ </xs:simpleType>
+        
+<xs:simpleType name="luftart">
+   <xs:restriction base="xs:string">
+     <xs:enumeration value="ZU"/>
+     <xs:enumeration value="AB"/>
+     <xs:enumeration value="ZUA"/>
+     <xs:enumeration value="UB"/>
+   </xs:restriction>
+ </xs:simpleType>
+
 </xs:schema>
+
