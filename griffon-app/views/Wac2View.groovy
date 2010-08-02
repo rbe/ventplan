@@ -8,7 +8,9 @@
  */
 def screen = java.awt.Toolkit.defaultToolkit.screenSize
 
-application(title: 'WestaWAC 2',
+fileChooserWindow = fileChooser()
+
+wac2Frame = application(title: 'WestaWAC 2',
 	size: [screen.width as int, screen.height as int],
 	pack: false,
 	locationByPlatform: true,
