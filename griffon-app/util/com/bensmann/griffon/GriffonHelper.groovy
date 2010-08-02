@@ -54,9 +54,12 @@ class GriffonHelper {
 			nf.minimumFractionDigits = digits
 			nf.maximumFractionDigits = digits
 			nf.roundingMode = roundingMode ?: GriffonHelper.ROUNDING_MODE
-			r = nf.format(d)
+			try {
+				r = nf.format(d)
+			} catch (e) {
+				println "toString2(): Exception while converting number ${d?.dump()}: ${e}"
+			}
 		}
-		//println "toString2(): ${d?.dump()} -> ${r?.dump()}"
 		r
 	}
 	
