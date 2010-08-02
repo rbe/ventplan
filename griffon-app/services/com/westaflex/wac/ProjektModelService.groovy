@@ -91,8 +91,8 @@ class ProjektModelService {
 							ort:             X.vs { grosshandel."adresse"."ort".text() },
 							telefon:         X.vs { grosshandel."tel".text() },
 							telefax:         X.vs { grosshandel."fax".text() },
-							ansprechpartner: X.vs { grosshandel."person"."nachname".text() },
-						] as ObservableMap,
+							ansprechpartner: X.vs { grosshandel."person"."name".text() },
+						],
 					ausfuhrendeFirma: [
 							firma1:          X.vs { ausfuhrende."firma1".text() },
 							firma2:          X.vs { ausfuhrende."firma2".text() },
@@ -101,9 +101,9 @@ class ProjektModelService {
 							ort:             X.vs { ausfuhrende."adresse"."ort".text() },
 							telefon:         X.vs { ausfuhrende."tel".text() },
 							telefax:         X.vs { ausfuhrende."fax".text() },
-							ansprechpartner: X.vs { ausfuhrende."person"."nachname".text() },
-						] as ObservableMap,
-				] as ObservableMap,
+							ansprechpartner: X.vs { ausfuhrende."person"."name".text() },
+						],
+				],
 				gebaude: [
 						typ: [
 								efh:         X.vb { gebaude."gebaudeTyp".text() == "EFH" },
