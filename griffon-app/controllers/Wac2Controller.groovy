@@ -58,7 +58,8 @@ class Wac2Controller {
 	/**
 	 * Hole MVC Group des aktiven Projekts.
 	 */
-	def getMvcGroupAktivesProjekt = {
+	def getMVCGroupAktivesProjekt = {
+		println "getMVCGroupAktivesProjekt: model.aktivesProjekt=${model.aktivesProjekt}"
 		getMVCGroup(model.aktivesProjekt)
 	}
 	
