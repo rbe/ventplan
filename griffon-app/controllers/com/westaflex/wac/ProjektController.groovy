@@ -731,22 +731,22 @@ class ProjektController {
 	 * Dialog anzeigen, wenn ein nicht gespeichertes Projekt geschlossen wird.
 	 */
 	def closeProjectTab = { evt = null ->
-		println "closeTab = ${app.controllers}"
+		println "closeProjectTab: closeTab=${app.controllers}"
 		def choice = app.controllers["Dialog"].showCloseProjectDialog()
-		println "choice= ${choice}"
+		println "closeProjectTab: choice=${choice}"
 		// TODO rbe
 		switch (choice) {
 			// Save: save the closing project
 			case 0: 
-				println "choice -> saving project"
+				println "closeProjectTab: choice -> saving project"
 				break
 			// Close: just close the tab...
 			case 1: 
-				println "choice -> do nothing"
+				println "closeProjectTab: choice -> do nothing"
 				break
 			// Cancel: do nothing...
 			case 2: 
-				println "choice -> closing project"
+				println "closeProjectTab: choice -> closing project"
 				break
 		}
 	}
