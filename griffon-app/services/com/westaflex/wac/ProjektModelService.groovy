@@ -10,6 +10,7 @@
 package com.westaflex.wac
 
 import com.bensmann.griffon.XmlHelper as X
+import com.westaflex.wac.WpxConstants as WX
 
 /**
  * Speichern und Laden von WAC 2-Projekten im WPX 2-Format.
@@ -109,50 +110,77 @@ class ProjektModelService {
 								efh:         X.vb { gebaude."gebaudeTyp".text() == "EFH" },
 								mfh:         X.vb { gebaude."gebaudeTyp".text() == "MFH" },
 								maisonette:  X.vb { gebaude."gebaudeTyp".text() == "MAI" }
+							],
 						lage: [
 								windschwach: X.vb { gebaude."gebaudeLage".text() == "SCH" },
 								windstark:   X.vb { gebaude."gebaudeLage".text() == "STA" }
+							],
 						warmeschutz: [
 								hoch:    X.vb { gebaude."warmeschutz".text() == "HOC" },
 								niedrig: X.vb { gebaude."warmeschutz".text() == "NIE" },
-						geometrie: [:
-								//raumhohe: "0,00",
-								//geluftetesVolumen: "0,00"
+							],
+						// Will be calculated after loading
+						geometrie: [:],
 						luftdichtheit: [
-								kategorieA: true,
-								kategorieB: true,
-								kategorieC: true,
-								kategorieM: true,
+								kategorieA: X.vb { gebaude."luftdichtheit".text() == "A" },
+								kategorieB: X.vb { gebaude."luftdichtheit".text() == "B" },
+								kategorieC: X.vb { gebaude."luftdichtheit".text() == "C" },
+								kategorieM: X.vb { gebaude."luftdichtheit".text() == "M" },
 								druckdifferenz: 2.0d,
 								luftwechsel: 1.0d,
 								druckexponent: 0.666f
-						faktorBesondereAnforderungen: 1.0d,
+							],
+						faktorBesondereAnforderungen: X.vd { gebaude."besAnfFaktor".text() },
 						geplanteBelegung: [
-								personenanzahl: 0.0d,
-								aussenluftVsProPerson: 30,
-								mindestaussenluftrate: 0.0d
+								personenanzahl:  X.vd { gebaude."personenAnzahl".text() },
+								aussenluftVsProPerson:  X.vd { gebaude."personenVolumen".text() },
+								// Will be calculated
+								//mindestaussenluftrate: 0.0d
+							],
+					],
 				anlage: [
-						kennzeichnungLuftungsanlage: "ZuAbLS-Z-WE-WÜT-0-0-0-0-0",
+						standort: [
+								KG: X.vb { gebaude."geratestandort".text() == "KG" },
+								EG: X.vb { gebaude."geratestandort".text() == "EG" },
+								OG: X.vb { gebaude."geratestandort".text() == "OG" },
+								DG: X.vb { gebaude."geratestandort".text() == "DG" },
+								SG: X.vb { gebaude."geratestandort".text() == "SG" }
+							],
+						luftkanalverlegung: [:],
+						aussenluft: [:],
+						zuluft: [:],
+						abluft: [:],
+						fortluft: [
+								dach: true
+							],
+						energie: [
+								zuAbluftWarme: true,
+								nachricht: " "
+							],
+						hygiene: [
+								nachricht: " "
+							],
+						// Will be calculated
+						//kennzeichnungLuftungsanlage: "ZuAbLS-Z-WE-WÜT-0-0-0-0-0",
 						zentralgerat: "",
 						zentralgeratManuell: false,
 						volumenstromZentralgerat: 0,
+					],
 				raum: [
 						raume: [
 								/* ProjektModel.raumMapTemplate wird durch Event RaumHinzufugen pro Raum erstellt */
-						ltmZuluftSumme: 0.0d,
-						ltmAbluftSumme: 0.0d,
-						raumVs: [
-							gesamtVolumenNE: 0.0d,
-							luftwechselNE: 0.0d,
-							gesamtaussenluftVsMitInfiltration: 0.0d
-				aussenluftVs: [
-						infiltrationBerechnen: true,
-						massnahme: " ",
-						gesamtLvsLtmLvsFs: 0.0d,
-						gesamtLvsLtmLvsRl: 0.0d,
-						gesamtLvsLtmLvsNl: 0.0d,
-						gesamtLvsLtmLvsIl: 0.0d,
+							],
+						// Will be calculated
+						//ltmZuluftSumme: 0.0d,
+						//ltmAbluftSumme: 0.0d,
+						// Will be calculated
+						raumVs: [:]
+					],
+				// Will be calculated
+				aussenluftVs: [:],
 				dvb: [
+						kanalnetz: [],
+						ventileinstellung: []
 					],
 				akkustik: [:]
 			]
@@ -164,7 +192,7 @@ class ProjektModelService {
 	 */
 	def makeAdresse = { map ->
 		domBuilder.adresse() {
-			X.m(["strasse", "postleitzahl", "ort", "land"], map)
+			X.m(["strasse", "ort", "postleitzahl", "land"], map)
 		}
 	}
 	
@@ -173,8 +201,18 @@ class ProjektModelService {
 	 */
 	def makePerson = { map ->
 		domBuilder.person() {
-			X.m(["benutzername", "vorname", "nachname", "email", "tel", "fax"], map)
+			X.m(["benutzername", "vorname", "nachname", "name", "email", "tel", "fax"], map)
 			makeAdresse(map.adresse)
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	def makeKontakt = { map ->
+		domBuilder.kontakt() {
+			X.m(["rolle"], map)
+			makePerson(map.person)
 		}
 	}
 	
@@ -183,15 +221,14 @@ class ProjektModelService {
 	 */
 	def makeFirma = { firmaRolle, map ->
 		domBuilder.firma() {
-			X.tc { firma1(map.firma1) } { firma1() }
-			X.tc { firma2(map.firma2) } { firma2() }
-			X.tc { rolle(firmaRolle) } { rolle() }
-			X.tc { email(map.email) } { email() }
-			X.tc { tel(map.telefon) } { tel() }
-			X.tc { fax(map.telefax) } { fax() }
+			X.tc { firma1(map.firma1) }
+			X.tc { firma2(map.firma2) }
+			X.tc { rolle(firmaRolle) }
+			X.tc { email(map.email) }
+			X.tc { tel(map.telefon) }
+			X.tc { fax(map.telefax) }
 			makeAdresse([strasse: map.strasse, postleitzahl: map.plz, stadt: map.ort])
-			// Not much information available in WAC2!
-			makePerson(nachname: map.ansprechpartner)
+			makeKontakt(rolle: "Ansprechpartner", name: map.ansprechpartner)
 		}
 	}
 	
@@ -199,18 +236,18 @@ class ProjektModelService {
 	 * 
 	 */
 	def makeRaum = { map ->
-		domBuilder.raum() {
-			X.tc { raumnummer(map.raumNummer) } { raumnummer() }
-			X.tc { bezeichnung(map.raumBezeichnung) } { bezeichnung() }
-			X.tc { raumtyp(map.raumTyp) } { raumtyp() }
-			X.tc { geschoss(map.raumGeschoss) } { geschoss() }
-			X.tc { luftart(map.raumLuftart) } { luftart() }
-			X.tc { raumflache(map.raumFlache) } { raumflache() }
-			X.tc { raumhohe(map.raumHohe) } { raumhohe() }
-			X.tc { raumlange(map.raumLange) } { raumlange() }
-			X.tc { raumbreite(map.raumbreite) } { raumbreite() }
-			X.tc { zuluftfaktor(map.raumZuluftfaktor) } { zuluftfaktor() }
-			X.tc { abluftvs(map.raumAbluftVs) } { abluftVs() }
+		domBuilder.room() {
+			X.tc { raumnummer(map.raumNummer) }
+			X.tc { bezeichnung(map.raumBezeichnung) }
+			X.tc { raumtyp(map.raumTyp) }
+			X.tc { geschoss(map.raumGeschoss) }
+			X.tc { luftart(map.raumLuftart) }
+			X.tc { raumflache(map.raumFlache) }
+			X.tc { raumhohe(map.raumHohe) }
+			X.tc { raumlange(map.raumLange) }
+			X.tc { raumbreite(map.raumbreite) }
+			X.tc { zuluftfaktor(map.raumZuluftfaktor) }
+			X.tc { abluftvs(map.raumAbluftVs) }
 			// Türen
 			map.turen.eachWithIndex { t, i ->
 				tur() {
@@ -228,9 +265,9 @@ class ProjektModelService {
 		def g = map.gebaude
 		def a = map.anlage
 		domBuilder.gebaude() {
-			X.tc { gebaudeTyp(g.typ.grep { it.value == true }?.key[0]) } { gebaudeTyp() }
-			X.tc { gebaudeLage(g.lage.grep { it.value == true }?.key[0]) } { gebaudeLage() }
-			X.tc { warmeschutz(g.warmeschutz.grep { it.value == true }?.key[0]) } { warmeschutz() }
+			X.tc { gebaudeTyp(g.typ.grep { it.value == true }?.key[0]) }
+			X.tc { gebaudeLage(g.lage.grep { it.value == true }?.key[0]) }
+			X.tc { warmeschutz(g.warmeschutz.grep { it.value == true }?.key[0]) }
 			domBuilder.geometrie() {
 				def gg = g.geometrie
 				X.tc { wohnflache(gg.wohnflache) }
@@ -241,41 +278,25 @@ class ProjektModelService {
 			}
 			X.tc {
 				luftdichtheit((g.warmeschutz.grep { it.key ==~ /kategorie[\w]/ && it.value == true }?.key[0]) - "kategorie")
-			} { luftdichtheit() }
-			X.tc { besAnfFaktor(g.faktorBesondereAnforderungen) } { besAnfFaktor() }
-			X.tc { personenAnzahl(g.geplanteBelegung.personenanzahl) } { personenAnzahl() }
-			X.tc { personenVolumen(g.geplanteBelegung.mindestaussenluftrate) } { personenVolumen() }
-			X.tc { aussenluft(a.aussenluft.grep { it.value == true }?.key[0]) } { aussenluft() }
-			X.tc { fortluft(a.fortluft.grep { it.value == true }?.key[0]) } { fortluft() }
-			X.tc { luftkanalverlegung() } { luftkanalverlegung() }
-			X.tc { zuluftdurchlasse() } { zuluftdurchlasse() }
-			X.tc { abluftdurchlasse() } { abluftdurchlasse() }
+			}
+			X.tc { besAnfFaktor(g.faktorBesondereAnforderungen) }
+			X.tc { personenAnzahl(g.geplanteBelegung.personenanzahl) }
+			X.tc { personenVolumen(g.geplanteBelegung.mindestaussenluftrate) }
+			X.tc { aussenluft(a.aussenluft.grep { it.value == true }?.key[0]) }
+			X.tc { fortluft(a.fortluft.grep { it.value == true }?.key[0]) }
+			X.tc { luftkanalverlegung() }
+			X.tc { zuluftdurchlasse() }
+			X.tc { abluftdurchlasse() }
 			// Räume
 			map.raum.raume.each { r -> makeRaum(r) }
 			// Zentralgerät
 			zentralgerat() {
-				X.tc { name(a.zentralgerat) } { name() }
+				X.tc { name(a.zentralgerat) }
 				// TODO selektieren volumenstrom, nicht liste
-				X.tc { volumenstrom(a.volumenstromZentralgerat) } { volumenstrom() }
-				X.tc { geratestandort(a.standort.grep { it.value == true }?.key[0]) } { geratestandort() }
+				X.tc { volumenstrom(a.volumenstromZentralgerat) }
+				X.tc { geratestandort(a.standort.grep { it.value == true }?.key[0]) }
 			}
 		}
-	}
-	
-	/**
-	 * Mapping old WPX constants into new ones
-	 * Ticket #20
-	 */
-	private static final wpxConstants = [
-			
-		]
-	
-	/**
-	 * Mapping old WPX constants into new ones
-	 * Ticket #20
-	 */
-	def mapConstant = { c ->
-		wpxConstants[c]
 	}
 	
 	/**
@@ -284,19 +305,10 @@ class ProjektModelService {
 	def save = { map, file ->
 		def wpx = domBuilder."westaflex-wpx" {
 			project() {
-				// This information is not available in WAC2!
-				/*
-				ersteller() {
-					rolle(map.person?.rolle)
-					makePerson(map.person)
-				}
-				erstellt()
-				bearbeitet()
-				*/
 				makeFirma("Grosshandel", map.kundendaten.grosshandel)
 				makeFirma("Ausfuhrende", map.kundendaten.ausfuhrendeFirma)
-				X.tc { bauvorhaben(map.kundendaten.bauvorhaben) } { bauvorhaben() }
-				X.tc { notizen(map.kundendaten.notizen) } { notizen() }
+				X.tc { bauvorhaben(map.kundendaten.bauvorhaben) }
+				X.tc { notizen(map.kundendaten.notizen) }
 				makeGebaude(map)
 			}
 		}
