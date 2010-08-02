@@ -71,8 +71,9 @@ class ProjektModelService {
 	
 	/**
 	 * Transform loaded XML into our Griffon model.
+	 * @param xml XmlSlurped XML
 	 */
-	def toMap = { org.w3c.dom.Document xml ->
+	def toMap = { xml ->
 		use (groovy.xml.dom.DOMCategory) {
 			def p = xml."projekt"
 			def ausfuhrende = p."firma".find { it."rolle".text() == "Ausfuhrende" }
