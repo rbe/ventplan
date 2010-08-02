@@ -1,93 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <westaflex-wpx>
 	<projekt>
 		<ersteller>
-			<rolle></rolle>
 			<person>
-				<benutzername/>
-				<vorname/>
-				<nachname/>
-				<email/>
-				<tel/>
-				<fax/>
-				<adresse>
-					<name/>
-					<strasse/>
-					<postleitzahl/>
-					<ort/>
-					<land/>
-				</adresse>
+				<benutzername> dc@snapconsult.com</benutzername>
+				<email> dc@snapconsult.com</email>
 			</person>
 		</ersteller>
-		<erstellt>2010-06-28T08:23:44</erstellt>
-		<bearbeitet>2010-07-01T10:50:21</bearbeitet>
-		<bauvorhaben></bauvorhaben>
+		<bauvorhaben>Test_Bauvorhaben</bauvorhaben>
+		<notizen>Erstellt von:  dc@snapconsult.com
+In Klammern dahinter steht der Feldname. Falls dann noch Anmerkung fest auf 'Wert' oder eine andere Anweisung dahinter steht, bedeutet das, dass dieses Feld nicht in der Anwendung zu sehen bzw. eingabebereit ist. Ansonsten default-Werte aus Quellcode (Swing-Komponente).Unterstrichen bedeutet Muss-Feld. Das heißt, in dem Feld muss ein Character eingetragen sein. Bereits ein Leerzeichen kann diese Abfrage umgehen.</notizen>
 		<gebaude>
-			<!-- MFH EFH MAI -->
-			<gebaudeTyp>MFH</gebaudeTyp>
-			<!-- SCH STA -->
+			<gebaudeTyp>EFH</gebaudeTyp>
 			<gebaudeLage>SCH</gebaudeLage>
-			<!-- HOC NIE -->
-			<warmeschutz>NIE</warmeschutz>
-			<!-- A B C M-->
-			<luftdichtheit>A</luftdichtheit>
-			<!-- KG EG OG DG SB -->
-			<geratestandort>EG</geratestandort>
-			<besAnfFaktor>1.0</besAnfFaktor>
-			<personenAnzahl>3</personenAnzahl>
-			<personenVolumen>90</personenVolumen>
-			<!-- DAC WAN ERD -->
-			<aussenluft>DAC</aussenluft>
-			<!-- DAC WAN LIC -->
-			<fortluft>DAC</fortluft>
-			<luftkanalverlegung/>
-			<zuluftdurchlasse/>
-			<abluftdurchlasse/>
+			<warmeschutz>HOC</warmeschutz>
+			<luftdichtheit>B</luftdichtheit>
+			<geratestandort>DG</geratestandort>
+			<besAnfFaktor>-1.0</besAnfFaktor>
+			<personenAnzahl>5</personenAnzahl>
+			<personenVolumen>-1</personenVolumen>
+			<aussenluft>ERD</aussenluft>
+			<fortluft>LIC</fortluft>
+			<luftkanalverlegung>DAM</luftkanalverlegung>
+			<luftkanalverlegung>DEC</luftkanalverlegung>
+			<zuluftdurchlasse>FUS</zuluftdurchlasse>
+			<zuluftdurchlasse>SCH</zuluftdurchlasse>
+			<abluftdurchlasse>TEL</abluftdurchlasse>
 			<room>
-				<raumnummer>001</raumnummer>
+				<raumnummer>101</raumnummer>
 				<bezeichnung>Wohnzimmer</bezeichnung>
-				<!-- WOH KIN SLF ESS ARB GAS HAU KEL WC" KUC BAD DUS SAU FLU DIE -->
 				<raumtyp>WOH</raumtyp>
-				<!-- KG EG OG DG SB -->
 				<geschoss>EG</geschoss>
-				<!-- ZU AB ZUA UB -->
 				<luftart>ZU</luftart>
 				<raumflache>25.0</raumflache>
-				<raumhohe>2.50</raumhohe>
+				<raumhohe>2.5</raumhohe>
 				<tuer>
-					<name>T&#xFC;r</name>
-					<breite>610</breite>
+					<name>Tür_0</name>
+					<breite>2000</breite>
+				</tuer>
+				<tuer>
+					<name>Tür_1</name>
+					<breite>2001</breite>
+				</tuer>
+				<tuer>
+					<name>Tür_2</name>
+					<breite>2002</breite>
+				</tuer>
+				<tuer>
+					<name>Tür_3</name>
+					<breite>2003</breite>
+				</tuer>
+			</room>
+			<room>
+				<raumnummer>102</raumnummer>
+				<bezeichnung>Küche, Kochnische</bezeichnung>
+				<raumtyp>KUC</raumtyp>
+				<geschoss>EG</geschoss>
+				<luftart>AB</luftart>
+				<raumflache>14.0</raumflache>
+				<raumhohe>2.5</raumhohe>
+				<tuer>
+					<name>Tür_0</name>
+					<breite>2000</breite>
+				</tuer>
+				<tuer>
+					<name>Tür_1</name>
+					<breite>2001</breite>
+				</tuer>
+			</room>
+			<room>
+				<raumnummer>103</raumnummer>
+				<bezeichnung>WC</bezeichnung>
+				<raumtyp>WC</raumtyp>
+				<geschoss>EG</geschoss>
+				<luftart>AB</luftart>
+				<raumflache>8.0</raumflache>
+				<raumhohe>2.5</raumhohe>
+				<tuer>
+					<name>Tür_0</name>
+					<breite>2000</breite>
+				</tuer>
+			</room>
+			<room>
+				<raumnummer>301</raumnummer>
+				<bezeichnung>Duschraum</bezeichnung>
+				<raumtyp>DUS</raumtyp>
+				<geschoss>DG</geschoss>
+				<luftart>AB</luftart>
+				<raumflache>14.0</raumflache>
+				<raumhohe>2.5</raumhohe>
+				<tuer>
+					<name>Tür_0</name>
+					<breite>2000</breite>
+				</tuer>
+				<tuer>
+					<name>Tür_1</name>
+					<breite>2001</breite>
+				</tuer>
+				<tuer>
+					<name>Tür_2</name>
+					<breite>2002</breite>
+				</tuer>
+				<tuer>
+					<name>Tür_3</name>
+					<breite>2003</breite>
 				</tuer>
 			</room>
 		</gebaude>
 		<firma>
-			<name>Firma name</name>
-			<rolle>Ausfuhrende</rolle>
-			<email></email>
-			<tel></tel>
-			<fax></fax>
+			<name>Firma_1</name>
+			<rolle>Kunde</rolle>
+			<tel>+49 (0) 872348 / 89 _ 1</tel>
+			<fax>+49 (0) 872348 / 4489 _ 1</fax>
 			<adresse>
-				<name/>
-				<strasse/>
-				<postleitzahl/>
-				<ort/>
-				<land/>
+				<strasse>Strasse_1</strasse>
+				<ort>Ort_1</ort>
 			</adresse>
 			<kontakt>
-				<rolle></rolle>
+				<rolle>Ansprechpartner</rolle>
 				<person>
-					<benutzername/>
-					<vorname/>
-					<nachname/>
-					<email/>
-					<tel/>
-					<fax/>
-					<adresse>
-						<name/>
-						<strasse/>
-						<postleitzahl/>
-						<ort/>
-						<land/>
-					</adresse>
+					<name>Ansprechpartner_1</name>
+					<nachname>Ansprechpartner_1</nachname>
+				</person>
+			</kontakt>
+		</firma>
+		<firma>
+			<name>Firma_2</name>
+			<rolle>Handel/Planer/Handwerker?</rolle>
+			<tel>+49 (0) 872348 / 89 _ 2</tel>
+			<fax>+49 (0) 872348 / 4489 _ 2</fax>
+			<adresse>
+				<strasse>Strasse_2</strasse>
+				<ort>Ort_2</ort>
+			</adresse>
+			<kontakt>
+				<rolle>Ansprechpartner</rolle>
+				<person>
+					<name>Ansprechpartner_2</name>
+					<nachname>Ansprechpartner_2</nachname>
 				</person>
 			</kontakt>
 		</firma>
