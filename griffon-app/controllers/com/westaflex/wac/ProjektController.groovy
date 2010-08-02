@@ -30,11 +30,6 @@ class ProjektController {
 	def wacModelService
 	
 	/**
-	 * User's settings.
-	 */
-	private def prefs = java.util.prefs.Preferences.userNodeForPackage(ProjektController)
-	
-	/**
 	 * Initialize MVC group.
 	 */
 	void mvcGroupInit(Map args) {
