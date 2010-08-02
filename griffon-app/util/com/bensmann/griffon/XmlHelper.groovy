@@ -43,6 +43,9 @@ class XmlHelper {
 		}
 	}
 	
+	/**
+	 * XML value to String
+	 */
 	def static vs = { closure ->
 		def std = ""
 		try {
@@ -51,29 +54,37 @@ class XmlHelper {
 		std
 	}
 	
+	/**
+	 * XML value as Integer
+	 */
 	def static vi = { closure ->
 		def std = 0
 		try {
-			return closure() ?: std
+			return (closure() as Integer) ?: std
 		} catch (e) { println e }
 		std
 	}
 	
+	/**
+	 * XML value as Double
+	 */
 	def static vd = { closure ->
 		def std = 0.0d
 		try {
-			return closure() ?: std
+			return (closure() as Double) ?: std
 		} catch (e) { println e }
 		std
 	}
 	
+	/**
+	 * XML value as Boolean
+	 */
 	def static vb = { closure ->
 		def std = false
 		try {
-			return closure() ?: std
+			return (closure() as Boolean) ?: std
 		} catch (e) { println e }
 		std
 	}
-	
 	
 }
