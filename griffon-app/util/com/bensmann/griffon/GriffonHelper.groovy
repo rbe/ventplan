@@ -140,7 +140,7 @@ class GriffonHelper {
 	/**
 	 * Recursively add PropertyChangeListener to the map itself and all nested maps.
 	 */
-	def static addMapPropertyChangeListener = { name, map, closure = {} ->
+	def static addMapPropertyChangeListener = { name, map, closure = null ->
 		// This map
 		println "addMapPropertyChangeListener: adding PropertyChangeListener for ${name}"
 		map.addPropertyChangeListener({ evt ->
@@ -156,6 +156,22 @@ class GriffonHelper {
 	}
 	
 	/**
+	 * Copy all values from a map taking nested maps into account.
+	 */
+	def static deepCopyMap = { m, x ->
+		x.each { k, v ->
+			println "k=${k} v=${v}"
+			if (v instanceof Map) {
+				println "... is Map"
+				// TODO Create a nested map if missing? m[k] = [:] as ObservableMap
+				GriffonHelper.deepCopyMap m[k], v
+			} else {
+				m[k] = v
+			}
+		}
+	}
+	
+	/**
 	 * Dezimalzahl auf 5 runden.
 	 */
 	def static round5(factor) {
@@ -164,6 +180,7 @@ class GriffonHelper {
 	
 	/**
 	 * Wrap text in HTML and substitute every space character with HTML-breaks.
+	 * TODO Rename to wrapInHTML
 	 */
 	def static ws = { t, threshold = 0 ->
 		def n = t
@@ -269,7 +286,7 @@ class GriffonHelper {
 	}
 	
 	/**
-	 * Apply a closure to a component or recurse component's components.
+	 * Apply a closure to a component or recurse component's components and apply closure.
 	 */
 	def static recurse(component, closure) {
 		//println "recurseComponent: ${component.class}"
