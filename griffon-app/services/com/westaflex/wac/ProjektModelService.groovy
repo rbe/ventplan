@@ -80,7 +80,6 @@ class ProjektModelService {
 			def grosshandel = p."firma".find { it."rolle".text() == "Grosshandel" }
 			def gebaude = p."gebaude"
 			[
-				dirty: true,
 				kundendaten: [
 					bauvorhaben: X.vs { p."bauvorhaben".text() },
 					notizen:     X.vs { p."notizen".text() },
