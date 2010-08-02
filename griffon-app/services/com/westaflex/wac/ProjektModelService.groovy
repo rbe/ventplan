@@ -39,7 +39,7 @@ class ProjektModelService {
 		xmlns = new groovy.xml.NamespaceBuilder(new NodeBuilder())
 		xsd = xmlns.namespace("http://www.w3.org/2001/XMLSchema", "xsd")
 		*/
-		//javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder()
+		// Create DOMBuilder and set it in XmlHelper too
 		X.domBuilder = domBuilder = groovy.xml.DOMBuilder.newInstance()
 	}
 	
