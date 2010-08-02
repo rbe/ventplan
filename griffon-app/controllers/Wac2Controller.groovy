@@ -14,9 +14,15 @@ import com.westaflex.wac.*
 class Wac2Controller {
 	
 	def model
-	def view
 	def wacModelService
 	def projektModelService
+	def view
+	def wacCalculationService
+	
+	/**
+	 * User's settings.
+	 */
+	private def prefs = java.util.prefs.Preferences.userNodeForPackage(Wac2Controller)
 	
 	void mvcGroupInit(Map args) {
 		// Lookup values from database and put them into our model
