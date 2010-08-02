@@ -8,6 +8,8 @@
  */
 import com.westaflex.wac.*
 
+import com.bensmann.griffon.GriffonHelper as GH
+
 /**
  * 
  */
@@ -241,26 +243,43 @@ class Wac2Controller {
 	def projektOffnen = { evt = null ->
 		// Splash screen
 		doLater {
-			Wac2Splash.instance.setup()
-			Wac2Splash.instance.loadingProject()
 			doOutside {
-				// Load data
-				def document = projektModelService.load("/Users/rbe/wac2.xml")
-				def map = projektModelService.toMap(document)
-				// Set dirty-flag in project's model to false
-				map.dirty = false
-				//
-				String mvcId = "Projekt " + (view.projektTabGroup.tabCount + 1)
-				def (m, v, c) =
-					createMVCGroup("Projekt", mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
-				// Recursively copy map
-				m.map.kundendaten.bauvorhaben = map.kundendaten.bauvorhaben
-				m.map.dirty = map.dirty
-				doLater {
-					// Splash screen
-					Wac2Splash.instance.creatingUiForProject()
-					// Update tab title to ensure that no "unsave-data-star" is displayed
-					c.setTabTitle()
+				// Choose file
+				def file
+				def openResult = view.fileChooserWindow.showOpenDialog(view.wac2Frame)
+				if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
+					file = view.fileChooserWindow.selectedFile.toString()
+					println "projektOffnen: file=${file?.dump()}"
+					// Load data
+					Wac2Splash.instance.setup()
+					Wac2Splash.instance.loadingProject()
+					// May return null due to org.xml.sax.SAXParseException while validating against XSD
+					def document = projektModelService.load(file)
+					println "projektOffnen: document=${document?.dump()}"
+					if (document) {
+						// Create new Projekt MVC group
+						String mvcId = "Projekt " + (view.projektTabGroup.tabCount + 1)
+						def (m, v, c) =
+							createMVCGroup("Projekt", mvcId,
+											[projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+						// Convert loaded XML into map
+						def map = projektModelService.toMap(document)
+						// Calculations
+						map = wacCalculationService.geometrieAusRaumdaten(map)
+						// Recursively copy map to model
+						GH.deepCopyMap m.map, map
+						// Set dirty-flag in project's model to false
+						m.map.dirty = false
+						doLater {
+							// Splash screen
+							Wac2Splash.instance.creatingUiForProject()
+							// Update tab title to ensure that no "unsave-data-star" is displayed
+							c.setTabTitle()
+						}
+					} else {
+						// TODO mmu Show error dialog
+						println "projektOffnen: Konnte Projekt nicht öffnen!"
+					}
 					// Splash screen
 					Wac2Splash.instance.dispose()
 				}
