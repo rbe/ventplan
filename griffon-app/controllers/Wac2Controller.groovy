@@ -78,10 +78,9 @@ class Wac2Controller {
 	 * 
 	 */
 	def exitApplication = { evt = null ->
-        // Ask if we can close
+		// Ask if we can close
 		def canClose = canClose()
 		println "exitApplication: ${canClose}"
-
 		if (canClose) {
 			app.shutdown()
 		} else {
