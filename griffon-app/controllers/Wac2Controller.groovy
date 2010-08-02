@@ -229,7 +229,7 @@ class Wac2Controller {
 			view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
 			// Anderes Projekt aktivieren?
 			projektIndexAktivieren(view.projektTabGroup.selectedIndex)
-        }
+		}
 	}
 	
 	/**
@@ -260,15 +260,21 @@ class Wac2Controller {
 						// Convert loaded XML into map
 						def map = projektModelService.toMap(document)
 						// Calculations
-						map = wacCalculationService.geometrieAusRaumdaten(map)
+						wacCalculationService.geometrieAusRaumdaten(map)
+						wacCalculationService.aussenluftVs(map)
 						// Recursively copy map to model
 						GH.deepCopyMap m.map, map
 						// Set dirty-flag in project's model to false
 						m.map.dirty = false
+						// MVC ID zur Liste der Projekte hinzufügen
+						model.projekte << mvcId
+						// Projekt aktivieren
+						projektAktivieren(mvcId)
+						// Update splash screen, UI
 						doLater {
 							// Splash screen
 							Wac2Splash.instance.creatingUiForProject()
-							// Update tab title to ensure that no "unsave-data-star" is displayed
+							// Update tab title to ensure that no "unsaved-data-star" is displayed
 							c.setTabTitle()
 						}
 					} else {
@@ -288,7 +294,7 @@ class Wac2Controller {
 	def projektSpeichern = { evt = null ->
 		// Open filechooser
 		// Save data
-		println projektModelService.save(getMvcGroupAktivesProjekt().model.map, null)
+		println projektModelService.save(getMVCGroupAktivesProjekt().model.map, null)
 		// Set dirty-flag in project's model to false
 	}
 	
