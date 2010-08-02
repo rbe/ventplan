@@ -9,7 +9,6 @@
 		</ersteller>
 		<bauvorhaben>Test_Bauvorhaben</bauvorhaben>
 		<notizen>Erstellt von:  dc@snapconsult.com
-In Klammern dahinter steht der Feldname. Falls dann noch Anmerkung fest auf 'Wert' oder eine andere Anweisung dahinter steht, bedeutet das, dass dieses Feld nicht in der Anwendung zu sehen bzw. eingabebereit ist. Ansonsten default-Werte aus Quellcode (Swing-Komponente).Unterstrichen bedeutet Muss-Feld. Das heißt, in dem Feld muss ein Character eingetragen sein. Bereits ein Leerzeichen kann diese Abfrage umgehen.</notizen>
 		<gebaude>
 			<gebaudeTyp>EFH</gebaudeTyp>
 			<gebaudeLage>SCH</gebaudeLage>
