@@ -123,7 +123,7 @@ class GriffonHelper {
 	/**
 	 * Map.flatten
 	 */
-	def installMapFlatten = {
+	def static installMapFlatten = {
 		Map.metaClass.flatten = { String prefix = '' ->
 			delegate.inject([:]) { map, v ->
 				def kstr = "${prefix${prefix ? '.' : ''}$v.key}"
