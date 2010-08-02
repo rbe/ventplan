@@ -62,8 +62,8 @@ class ProjektModelService {
 			// Validate
 			validateWpx(xml)
 			// Return document
-			domBuilder.parseText(xml).documentElement
-			// Does not return org.w3c.dom.Document: .parse(new ByteArrayInputStream(xml.bytes))
+			new XmlSlurper().parseText(xml)
+			// domBuilder.parseText(xml).documentElement //.parse(new ByteArrayInputStream(xml.bytes))
 		} catch (e) {
 			e.printStackTrace()
 		}
