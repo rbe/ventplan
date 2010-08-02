@@ -16,7 +16,11 @@ onBootstrapEnd = { app ->
 	def startTime = System.currentTimeMillis()
 	println "Events.onBootstrapEnd: start"
 	// Add .toDouble2 and .toString2 to all types to have a convenient API
-	[Integer, Long, Float, Double, BigDecimal, String].each {
+	[Integer].each {
+		//it.metaClass.toDouble2 = GH.toDouble2
+		it.metaClass.toString2 = GH.toString2(0)
+	}
+	[Long, Float, Double, BigDecimal, String].each {
 		it.metaClass.toDouble2 = GH.toDouble2
 		it.metaClass.toString2 = GH.toString2
 	}
