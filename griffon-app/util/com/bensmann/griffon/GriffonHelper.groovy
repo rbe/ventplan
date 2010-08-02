@@ -160,9 +160,7 @@ class GriffonHelper {
 	 */
 	def static deepCopyMap = { m, x ->
 		x.each { k, v ->
-			println "k=${k} v=${v}"
 			if (v instanceof Map) {
-				println "... is Map"
 				// TODO Create a nested map if missing? m[k] = [:] as ObservableMap
 				GriffonHelper.deepCopyMap m[k], v
 			} else {
