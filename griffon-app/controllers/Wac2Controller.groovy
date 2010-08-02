@@ -119,7 +119,8 @@ class Wac2Controller {
 			doOutside {
 				String mvcId = "Projekt " + (view.projektTabGroup.tabCount + 1)
 				def (m, v, c) =
-					createMVCGroup("Projekt", mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+					createMVCGroup("Projekt", mvcId,
+									[projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
 				doLater {
 					// Splash screen
 					Wac2Splash.instance.creatingUiForProject()
