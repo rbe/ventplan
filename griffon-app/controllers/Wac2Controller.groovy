@@ -272,6 +272,7 @@ class Wac2Controller {
 	 * TODO rbe
 	 */
 	def projektSpeichern = { evt = null ->
+		// Open filechooser
 		// Save data
 		println projektModelService.save(getMvcGroupAktivesProjekt().model.map, null)
 		// Set dirty-flag in project's model to false
