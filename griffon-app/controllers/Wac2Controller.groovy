@@ -270,10 +270,9 @@ class Wac2Controller {
 							e.printStackTrace()
 							// TODO mmu Show dialog
 						}
+						*/
 						// Recursively copy map to model
 						GH.deepCopyMap m.map, map
-						// Set dirty-flag in project's model to false
-						m.map.dirty = false
 						// MVC ID zur Liste der Projekte hinzufügen
 						model.projekte << mvcId
 						// Projekt aktivieren
@@ -282,6 +281,8 @@ class Wac2Controller {
 						doLater {
 							// Splash screen
 							Wac2Splash.instance.creatingUiForProject()
+							// Set dirty-flag in project's model to false
+							m.map.dirty = false
 							// Update tab title to ensure that no "unsaved-data-star" is displayed
 							c.setTabTitle()
 						}
