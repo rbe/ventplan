@@ -51,9 +51,15 @@ class GriffonHelper {
 			//r = "Inf"
 		} else if (d) {
 			def nf = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN)
-			nf.minimumFractionDigits = digits
-			nf.maximumFractionDigits = digits
-			nf.roundingMode = roundingMode ?: GriffonHelper.ROUNDING_MODE
+			// Use fraction digits?
+			if (d instanceof Integer) {
+				nf.minimumFractionDigits = 0
+				nf.maximumFractionDigits = 0
+			} else {
+				nf.minimumFractionDigits = digits
+				nf.maximumFractionDigits = digits
+				nf.roundingMode = roundingMode ?: GriffonHelper.ROUNDING_MODE
+			}
 			try {
 				r = nf.format(d)
 			} catch (e) {
