@@ -80,6 +80,7 @@ class ProjektModelService {
 			def ausfuhrende = p."firma".find { it."rolle".text() == "Ausfuhrende" }
 			def grosshandel = p."firma".find { it."rolle".text() == "Grosshandel" }
 			def gebaude = p."gebaude"
+			def anlage = p."anlage"
 			[
 				kundendaten: [
 					bauvorhaben: X.vs { p."bauvorhaben".text() },
@@ -92,7 +93,7 @@ class ProjektModelService {
 							ort:             X.vs { grosshandel."adresse"."ort".text() },
 							telefon:         X.vs { grosshandel."tel".text() },
 							telefax:         X.vs { grosshandel."fax".text() },
-							ansprechpartner: X.vs { grosshandel."person"."name".text() },
+							ansprechpartner: X.vs { grosshandel."kontakt"."person"."name".text() },
 						],
 					ausfuhrendeFirma: [
 							firma1:          X.vs { ausfuhrende."firma1".text() },
@@ -102,7 +103,7 @@ class ProjektModelService {
 							ort:             X.vs { ausfuhrende."adresse"."ort".text() },
 							telefon:         X.vs { ausfuhrende."tel".text() },
 							telefax:         X.vs { ausfuhrende."fax".text() },
-							ansprechpartner: X.vs { ausfuhrende."person"."name".text() },
+							ansprechpartner: X.vs { ausfuhrende."kontakt"."person"."name".text() },
 						],
 				],
 				gebaude: [
@@ -126,9 +127,9 @@ class ProjektModelService {
 								kategorieB: X.vb { gebaude."luftdichtheit".text() == "B" },
 								kategorieC: X.vb { gebaude."luftdichtheit".text() == "C" },
 								kategorieM: X.vb { gebaude."luftdichtheit".text() == "M" },
-								druckdifferenz: 2.0d,
-								luftwechsel: 1.0d,
-								druckexponent: 0.666f
+								druckdifferenz: X.vd { gebaude."luftdichtheitDruckdifferenz".text() },
+								luftwechsel: X.vd { gebaude."luftdichtheitLuftwechsel".text() },
+								druckexponent: X.vd { gebaude."luftdichtheitDruckexponent".text() }
 							],
 						faktorBesondereAnforderungen: X.vd { gebaude."besAnfFaktor".text() },
 						geplanteBelegung: [
@@ -146,10 +147,18 @@ class ProjektModelService {
 								DG: X.vb { gebaude."geratestandort".text() == "DG" },
 								SG: X.vb { gebaude."geratestandort".text() == "SG" }
 							],
-						luftkanalverlegung: [:],
-						aussenluft: [:],
-						zuluft: [:],
-						abluft: [:],
+						luftkanalverlegung: [
+								:
+							],
+						aussenluft: [
+								:
+							],
+						zuluft: [
+								:
+							],
+						abluft: [
+								:
+							],
 						fortluft: [
 								dach: true
 							],
@@ -162,9 +171,9 @@ class ProjektModelService {
 							],
 						// Will be calculated
 						//kennzeichnungLuftungsanlage: "ZuAbLS-Z-WE-WÜT-0-0-0-0-0",
-						zentralgerat: "",
-						zentralgeratManuell: false,
-						volumenstromZentralgerat: 0,
+						zentralgerat: X.vs { anlage."zentralgerat"."name".text() },
+						zentralgeratManuell: X.vb { anlage."zentralgerat"."manuell".text() },
+						volumenstromZentralgerat: X.vi { anlage."zentralgerat"."volumenstrom".text() },
 					],
 				raum: [
 						raume: [
@@ -202,7 +211,7 @@ class ProjektModelService {
 	def makePerson = { map ->
 		domBuilder.person() {
 			X.m(["benutzername", "vorname", "nachname", "name", "email", "tel", "fax"], map)
-			makeAdresse(map.adresse)
+			map.adresse && makeAdresse(map.adresse)
 		}
 	}
 	
@@ -212,7 +221,7 @@ class ProjektModelService {
 	def makeKontakt = { map ->
 		domBuilder.kontakt() {
 			X.m(["rolle"], map)
-			makePerson(map.person)
+			map.person && makePerson(map.person)
 		}
 	}
 	
@@ -227,8 +236,8 @@ class ProjektModelService {
 			X.tc { email(map.email) }
 			X.tc { tel(map.telefon) }
 			X.tc { fax(map.telefax) }
-			makeAdresse([strasse: map.strasse, postleitzahl: map.plz, stadt: map.ort])
-			makeKontakt(rolle: "Ansprechpartner", name: map.ansprechpartner)
+			makeAdresse([strasse: map.strasse, postleitzahl: map.plz, ort: map.ort])
+			makeKontakt(rolle: "Ansprechpartner", person: [name: map.ansprechpartner])
 		}
 	}
 	
@@ -265,10 +274,10 @@ class ProjektModelService {
 		def g = map.gebaude
 		def a = map.anlage
 		domBuilder.gebaude() {
-			X.tc { gebaudeTyp(g.typ.grep { it.value == true }?.key[0]) }
-			X.tc { gebaudeLage(g.lage.grep { it.value == true }?.key[0]) }
-			X.tc { warmeschutz(g.warmeschutz.grep { it.value == true }?.key[0]) }
-			domBuilder.geometrie() {
+			X.tc { gebaudeTyp(WX[g.typ.grep { it.value == true }?.key[0]]) }
+			X.tc { gebaudeLage(WX[g.lage.grep { it.value == true }?.key[0]]) }
+			X.tc { warmeschutz(WX[g.warmeschutz.grep { it.value == true }?.key[0]]) }
+			geometrie() {
 				def gg = g.geometrie
 				X.tc { wohnflache(gg.wohnflache) }
 				X.tc { mittlereRaumhohe(gg.raumhohe) }
@@ -277,25 +286,57 @@ class ProjektModelService {
 				X.tc { gelufteteFlache(gg.gelufteteFlache) }
 			}
 			X.tc {
-				luftdichtheit((g.warmeschutz.grep { it.key ==~ /kategorie[\w]/ && it.value == true }?.key[0]) - "kategorie")
+				luftdichtheit((g.luftdichtheit.grep { it.key ==~ /kategorie[\w]/ && it.value == true }?.key[0]) - "kategorie")
 			}
+			X.tc { luftdichtheitDruckdifferenz(g.luftdichtheit.druckdifferenz) }
+			X.tc { luftdichtheitLuftwechsel(g.luftdichtheit.luftwechsel) }
+			X.tc { luftdichtheitDruckexponent(g.luftdichtheit.druckexponent) }
 			X.tc { besAnfFaktor(g.faktorBesondereAnforderungen) }
 			X.tc { personenAnzahl(g.geplanteBelegung.personenanzahl) }
 			X.tc { personenVolumen(g.geplanteBelegung.mindestaussenluftrate) }
-			X.tc { aussenluft(a.aussenluft.grep { it.value == true }?.key[0]) }
-			X.tc { fortluft(a.fortluft.grep { it.value == true }?.key[0]) }
-			X.tc { luftkanalverlegung() }
-			X.tc { zuluftdurchlasse() }
-			X.tc { abluftdurchlasse() }
+			X.tc { aussenluft(WX[a.aussenluft.grep { it.value == true }?.key[0]]) }
+			X.tc { fortluft(WX[a.fortluft.grep { it.value == true }?.key[0]]) }
+			[a.luftkanalverlegung].each {
+				X.tc { luftkanalverlegung(WX[it]) }
+			}
+			[a.zuluft].each {
+				X.tc { zuluftdurchlasse(WX[it]) }
+			}
+			[a.abluft].each {
+				X.tc { abluftdurchlasse(WX[it]) }
+			}
 			// Räume
 			map.raum.raume.each { r -> makeRaum(r) }
-			// Zentralgerät
-			zentralgerat() {
-				X.tc { name(a.zentralgerat) }
-				// TODO selektieren volumenstrom, nicht liste
-				X.tc { volumenstrom(a.volumenstromZentralgerat) }
-				X.tc { geratestandort(a.standort.grep { it.value == true }?.key[0]) }
+		}
+		// Anlage
+		domBuilder.anlage() {
+			// Energie
+			energie() {
+				def e = a.energie
+				X.tc { zuAbluftWarme(e.zuAbluftWarme) }
+				X.tc { bemessung(e.bemessung) }
+				X.tc { ruckgewinnung(e.ruckgewinnung) }
+				X.tc { regelung(e.regelung) }
 			}
+			// Hygiene
+			hygiene() {
+				def h = a.hygiene
+				X.tc { ausfuhrung(h.ausfuhrung) }
+				X.tc { filterung(h.filterung) }
+				X.tc { keineVerschmutzung(h.keineVerschmutzung) }
+				X.tc { dichtheitsklasseB(h.dichtheitsklasseB) }
+			}
+			X.tc { ruckschlagkappe(a.ruckschlagkappe) }
+			X.tc { schallschutz(a.schallschutz) }
+			X.tc { feuerstatte(a.feuerstatte) }
+		}
+		// Zentralgerät
+		domBuilder.zentralgerat() {
+			X.tc { name(a.zentralgerat) }
+			X.tc { manuell(a.zentralgeratManuell) }
+			// TODO selektieren volumenstrom, nicht liste
+			X.tc { volumenstrom(a.volumenstromZentralgerat) }
+			X.tc { geratestandort(a.standort.grep { it.value == true }?.key[0]) }
 		}
 	}
 	
@@ -305,11 +346,18 @@ class ProjektModelService {
 	def save = { map, file ->
 		def wpx = domBuilder."westaflex-wpx" {
 			project() {
-				makeFirma("Grosshandel", map.kundendaten.grosshandel)
-				makeFirma("Ausfuhrende", map.kundendaten.ausfuhrendeFirma)
+				ersteller()
 				X.tc { bauvorhaben(map.kundendaten.bauvorhaben) }
 				X.tc { notizen(map.kundendaten.notizen) }
 				makeGebaude(map)
+				makeFirma("Grosshandel", map.kundendaten.grosshandel)
+				makeFirma("Ausfuhrende", map.kundendaten.ausfuhrendeFirma)
+			}
+		}
+		if (file) {
+			def fh = file instanceof java.io.File ? file : new File(file)
+			fh.withWriter { writer ->
+				writer.write(groovy.xml.XmlUtil.serialize(wpx))
 			}
 		}
 	}
