@@ -98,12 +98,11 @@ class WacCalculationService {
 			g.luftvolumen = g.geluftetesVolumen = "E"
 		}
 		// Set calculated values in model
-		map.gebaude.geometrie.geluftetesVolumen = g.geluftetesVolumen
-		map.gebaude.geometrie.luftvolumen = g.luftvolumen
+		map.gebaude.geometrie.geluftetesVolumen = g.geluftetesVolumen ?: 0.0d
+		map.gebaude.geometrie.luftvolumen = g.luftvolumen ?: 0.0d
 		println "wacCalculation/geometrie: ${map.gebaude.geometrie?.dump()}"
 		// Raumvolumenströme - Gesamtvolumen der Nutzungseinheit
-		map.raum.raumVs.gesamtVolumenNE = g.luftvolumen
-		println "wacCalclulation: geometrie: ${map.gebaude.geometrie?.dump()}"
+		map.raum.raumVs.gesamtVolumenNE = g.luftvolumen ?: 0.0d
 		println "wacCalculation/geometrie: map.raum.raumVs.gesamtVolumenNE=${map.raum.raumVs.gesamtVolumenNE?.dump()}"
 	}
 	
@@ -112,7 +111,6 @@ class WacCalculationService {
 	 */
 	Double summeRaumFlache(map) {
 		def flache = map.raum.raume.inject(0.0d) { o, n -> o + n.raumFlache }
-		println "wacCalclulation: summeRaumFlache: ${flache?.dump()}"
 		println "wacCalculation/summeRaumFlache: ${flache?.dump()}"
 		flache
 	}
@@ -213,6 +211,7 @@ class WacCalculationService {
 		} else {
 			println "gesamtAussenluftVs: Konnte keine Fläche ermitteln"
 		}
+		r = r ?: 0.0d
 		println "wacCalculation/gesamtAussenluftVs: ${r?.dump()}"
 		r
 	}
@@ -339,7 +338,7 @@ class WacCalculationService {
 		Double gesamtAussenluft =
 				Math.max(
 						Math.max(gesamtAbluftVs, gesamtAussenluftVs(map)),
-						map.gebaude.geplanteBelegung.mindestaussenluftrate
+						map.gebaude.geplanteBelegung.mindestaussenluftrate ?: 0.0d
 					) * (map.gebaude.faktorBesondereAnforderungen ?: 1.0d)
 		// Gesamt-Außenluftvolumenstrom für lüftungstechnische Maßnahmen
 		Double gesamtAvsLTM = 0.0d
@@ -350,7 +349,9 @@ class WacCalculationService {
 		}
 		//
 		Double ltmAbluftSumme = 0.0d
+		map.raum.ltmAbluftSumme = 0.0d
 		Double ltmZuluftSumme = 0.0d
+		map.raum.ltmZuluftSumme = 0.0d
 		// Alle Räume, die einen Abluftvolumenstrom > 0 haben...
 		map.raum.raume.grep { it.raumAbluftVs > 0.0d }.each {
 			Double ltmAbluftRaum = Math.round(gesamtAvsLTM / gesamtAbluftVs * it.raumAbluftVs)
