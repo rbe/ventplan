@@ -7,18 +7,15 @@
  * 
  * Created by: rbe
  */
-package com.bensmann.griffon
+package com.westaflex.wac
 
 /**
  * Konstanten für das Mapping von Schlüsseln aus dem "ProjektModel" nach XML.
  * Wird vor allem wegen den Abkürzungen aus der Webversion genutzt.
+ * Siehe Ticket #20.
  */
 class WpxConstants {
 	
-	/**
-	 * Mapping old WPX constants into new ones
-	 * Ticket #20
-	 */
 	private static final wpxConstants = [
 			// Gebäudetyp
 			efh: "EFH",
@@ -58,7 +55,7 @@ class WpxConstants {
 	 * Mapping old WPX constants into new ones
 	 * Ticket #20
 	 */
-	String static mapConstant = { c ->
+	static String mapConstant = { c ->
 		wpxConstants[c]
 	}
 	
