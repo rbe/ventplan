@@ -260,8 +260,14 @@ class Wac2Controller {
 						// Convert loaded XML into map
 						def map = projektModelService.toMap(document)
 						// Calculations
-						wacCalculationService.geometrieAusRaumdaten(map)
-						wacCalculationService.aussenluftVs(map)
+						try {
+							wacCalculationService.mindestaussenluftrate(map)
+							wacCalculationService.geometrieAusRaumdaten(map)
+							wacCalculationService.aussenluftVs(map)
+						} catch (e) {
+							e.printStackTrace()
+							// TODO mmu Show dialog
+						}
 						// Recursively copy map to model
 						GH.deepCopyMap m.map, map
 						// Set dirty-flag in project's model to false
