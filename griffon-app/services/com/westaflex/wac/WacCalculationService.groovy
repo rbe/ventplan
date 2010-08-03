@@ -60,21 +60,25 @@ class WacCalculationService {
 	 * Gebäudedaten - Geometrie anhand eingegebener Räume berechnen.
 	 */
 	void geometrieAusRaumdaten(map) {
-		// TODO rbe May produce NaN values (when all entered rooms are removed)
-		map.with {
-			// Gesamtfläche berechnen
-			gebaude.geometrie.wohnflache =
-				(raum.raume.inject(0.0d) { o, n ->
-						o + n.raumFlache
-					})
-			// Mittlere Raumhöhe berechnen
-			gebaude.geometrie.raumhohe =
-				(raum.raume.inject(0.0d) { o, n ->
-						o + n.raumHohe
-					} / raum.raume.size())
+		// May produce NaN values (when all entered rooms are removed)
+		if (map.raum.raume?.size() > 0) {
+			map.with {
+				// Gesamtfläche berechnen
+				gebaude.geometrie.wohnflache =
+					(raum.raume.inject(0.0d) { o, n ->
+							o + n.raumFlache
+						})
+				// Mittlere Raumhöhe berechnen
+				gebaude.geometrie.raumhohe =
+					(raum.raume.inject(0.0d) { o, n ->
+							o + n.raumHohe
+						} / raum.raume.size())
+			}
+			// Geometrie berechnen...
+			geometrie(map)
+		} else {
+			println "wacCalculation/geometrieAusRaumdaten: Keine Räume vorhanden!"
 		}
-		// Geometrie berechnen...
-		geometrie(map)
 	}
 	
 	/**
