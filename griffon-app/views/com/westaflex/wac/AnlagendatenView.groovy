@@ -14,7 +14,7 @@ import net.miginfocom.swing.MigLayout
 
 jideScrollPane(constraints: "grow") {
 	
-	panel(constraints: "grow", layout: new MigLayout("fillx, filly", "[fill][fill][fill][fill]", "[fill]")) {
+	panel(constraints: "grow", layout: new MigLayout("fillx, filly", "[fill][fill][fill]", "[fill]")) {
 		
 		// Gerätestandort
 		panel(id: "anlageGeratestandortPanel", border: titledBorder(title: "Gerätestandort"), layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
@@ -66,24 +66,26 @@ jideScrollPane(constraints: "grow") {
 				add radioButton(id: "anlageFortluftLichtschacht", text: "Lichtschacht (Kellergeschoss)")
 			}
 		}
-	
-		// Energie-Kennzeichen
-		panel(id: "anlageEnergiePanel", border: titledBorder(title: "Energie-Kennzeichen"), layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
-			checkBox(id: "anlageEnergieZuAbluftWarme", text: "Zu-/Abluftgeräte mit Wärmerückgewinnung")
-			checkBox(id: "anlageEnergieBemessung",     text: "Bemessung und Ausführung des Lüftungssystems")
-			checkBox(id: "anlageEnergieRuckgewinnung", text: "Rückgewinnung von Abluftwärme")
-			checkBox(id: "anlageEnergieRegelung",      text: "Zweckmäßige Relegung")
-			label(id: "anlageEnergieNachricht", foreground: java.awt.Color.RED, text: " ")
-		}
-	
-		// Hygiene-Kennzeichen
-		panel(id: "anlageHygienePanel", border: titledBorder(title: "Hygiene-Kennzeichen"), constraints: "span 2, wrap", layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
-			checkBox(id: "anlageHygieneAusfuhrung",         text: "Ausführung und Lage der Außenluftansaugung")
-			checkBox(id: "anlageHygieneFilterung",          text: "Filterung der Außenluft und der Abluft")
-			checkBox(id: "anlageHygieneKeineVerschmutzung", text: "möglichst keine Verschmutzung des Luftleitungsnetzes")
-			checkBox(id: "anlageHygieneDichtheitsklasseB",  text: "Dichtheitsklasse B der Luftleitungen")
-			label(id: "anlageHygieneNachricht", foreground: java.awt.Color.RED, text: " ")
-		}
+
+        panel(id: "test", layout: new MigLayout("fillx", "[fill][fill]", "[fill]"), constraints: "span") {
+            // Energie-Kennzeichen
+            panel(id: "anlageEnergiePanel", border: titledBorder(title: "Energie-Kennzeichen"), layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
+                checkBox(id: "anlageEnergieZuAbluftWarme", text: "Zu-/Abluftgeräte mit Wärmerückgewinnung")
+                checkBox(id: "anlageEnergieBemessung",     text: "Bemessung und Ausführung des Lüftungssystems")
+                checkBox(id: "anlageEnergieRuckgewinnung", text: "Rückgewinnung von Abluftwärme")
+                checkBox(id: "anlageEnergieRegelung",      text: "Zweckmäßige Relegung")
+                label(id: "anlageEnergieNachricht", foreground: java.awt.Color.RED, text: " ")
+            }
+
+            // Hygiene-Kennzeichen
+            panel(id: "anlageHygienePanel", border: titledBorder(title: "Hygiene-Kennzeichen"), constraints: "span 2, wrap", layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
+                checkBox(id: "anlageHygieneAusfuhrung",         text: "Ausführung und Lage der Außenluftansaugung")
+                checkBox(id: "anlageHygieneFilterung",          text: "Filterung der Außenluft und der Abluft")
+                checkBox(id: "anlageHygieneKeineVerschmutzung", text: "möglichst keine Verschmutzung des Luftleitungsnetzes")
+                checkBox(id: "anlageHygieneDichtheitsklasseB",  text: "Dichtheitsklasse B der Luftleitungen")
+                label(id: "anlageHygieneNachricht", foreground: java.awt.Color.RED, text: " ")
+            }
+        }
 	
 		// Rückschlagkappe
 		panel(id: "anlageRuckschlagPanel", border: titledBorder(title: "Rückschlagkappe"), layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
