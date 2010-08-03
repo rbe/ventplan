@@ -28,6 +28,15 @@ class WpxConstants {
 			hoch: "HOC",
 			niedrig: "NIE",
 			// Luftkanalverlegung
+			aufputz: "AUF",
+			dammschicht: "DAM",
+			decke: "DEC",
+			spitzboden: "SPI",
+			// Zuluftdurchlässe, Abluftdurchlässe
+			tellerventile: "TEL",
+			fussboden: "FUS",
+			schlitzauslass: "SCH",
+			sockel: "SOC",
 			// Außenluft, Fortluft
 			dach: "DAC",
 			wand: "WAN",
@@ -55,8 +64,10 @@ class WpxConstants {
 	 * Mapping old WPX constants into new ones
 	 * Ticket #20
 	 */
-	static String mapConstant = { c ->
-		wpxConstants[c]
+	def static get(String p) {
+		def r = WpxConstants.wpxConstants[p]
+		println "WpxConstants: mapping ${p?.dump()} -> ${r?.dump()}"
+		r
 	}
 	
 }
