@@ -24,13 +24,13 @@ panel(id: "raumPanel") {
 		label("Zuluftfaktor")
 		label("Abluftvolumenstrom (m³)", constraints: "wrap")
 		comboBox(id: "raumTyp", items: model.meta.raum.typ)
-		textField(id: "raumBezeichnung", constraints: "width 60px")
+		textField(id: "raumBezeichnung", constraints: "width 80px")
 		comboBox(id: "raumGeschoss", items: model.meta.raum.geschoss)
 		comboBox(id: "raumLuftart", items: model.meta.raum.luftart)
-		textField(id: "raumFlache", constraints: "width 60px")
-		textField(id: "raumHohe", text: "2,50", constraints: "width 60px")
-		textField(id: "raumZuluftfaktor", text: "3,00", editable: bind { raumLuftart.selectedItem != "ÜB" }, constraints: "width 60px")
-		textField(id: "raumAbluftVs",                   editable: bind { raumLuftart.selectedItem != "ÜB" }, constraints: "width 60px")
+		textField(id: "raumFlache", constraints: "width 80px")
+		textField(id: "raumHohe", text: "2,50", constraints: "width 80px")
+		textField(id: "raumZuluftfaktor", text: "3,00", editable: bind { raumLuftart.selectedItem != "ÜB" }, constraints: "width 80px")
+		textField(id: "raumAbluftVs",                   editable: bind { raumLuftart.selectedItem != "ÜB" }, constraints: "width 80px")
 		// Hinzufügen-Button aktivieren, wenn Fläche eingegeben wurde
 		button(id: "raumHinzufugen", enabled: bind { !raumFlache.text.isEmpty() }, text: "Hinzufügen")
 	}
