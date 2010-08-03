@@ -301,21 +301,35 @@ class Wac2Controller {
 	 * TODO rbe
 	 */
 	def projektSpeichern = { evt = null ->
-		// Open filechooser
-		// Save data
-		def m = getMVCGroupAktivesProjekt().model.map
-		println "projektSpeichern: ${m.dump()}"
-		println projektModelService.save(m, null)
-		// Set dirty-flag in project's model to false
+		def p = getMVCGroupAktivesProjekt()
+		def m = p.model
+		// Do we have a filename? If not, redirect to save-as
+		if (m.wpxFilename) {
+			// Save data
+			projektModelService.save(m.map, m.wpxFilename)
+			// Set dirty-flag in project's model to false
+			m.map.dirty = false
+			// Update tab title to ensure that no "unsaved-data-star" is displayed
+			p.controller.setTabTitle()
+		} else {
+			projektSpeichernAls(evt)
+		}
 	}
 	
 	/**
 	 * TODO rbe
 	 */
 	def projektSpeichernAls = { evt = null ->
+		def m = getMVCGroupAktivesProjekt().model
 		// Open filechooser
-		// Save data
-		// Set dirty-flag in project's model to false
+		def openResult = view.fileChooserWindow.showSaveDialog(view.wac2Frame)
+		println openResult
+		if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
+			m.wpxFilename = view.fileChooserWindow.selectedFile.toString()
+			println "projektSpeichernAls: wpxFilename=${m.wpxFilename?.dump()}"
+			// Save data
+			projektSpeichern(evt)
+		}
 	}
 	
 	/**

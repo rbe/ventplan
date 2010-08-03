@@ -22,6 +22,11 @@ class ProjektModel {
 	String mvcId
 	
 	/**
+	 * Filename of .wpx file.
+	 */
+	String wpxFilename
+	
+	/**
 	 * Meta-data: will be initialized by ProjektController.
 	 */
 	@Bindable meta = [
