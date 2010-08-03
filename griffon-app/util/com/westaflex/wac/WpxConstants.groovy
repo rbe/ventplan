@@ -35,7 +35,7 @@ class WpxConstants {
 			dach: "DAC",
 			wand: "WAN",
 			erdwarme: "ERD",
-			lichtschacht: "LIC"
+			lichtschacht: "LIC",
 			// Raumtypen
 			"Wohnzimmer": "WOH",
 			"Kinderzimmer": "KIN",
