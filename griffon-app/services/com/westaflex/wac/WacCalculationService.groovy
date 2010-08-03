@@ -48,10 +48,12 @@ class WacCalculationService {
 	}
 	
 	/**
-	 * Projekt, Gebäudedaten
+	 * Projekt, Gebäudedaten, Geplante Belegung.
 	 */
-	Double mindestaussenluftRate(Integer personenAnzahl, Double aussenluftVolumenstrom) {
-		personenAnzahl * aussenluftVolumenstrom
+	void mindestaussenluftrate(map) {
+		map.gebaude.geplanteBelegung.with {
+			mindestaussenluftrate = personenanzahl * aussenluftVsProPerson
+		}
 	}
 	
 	/**
