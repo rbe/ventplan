@@ -87,7 +87,7 @@ jideScrollPane(constraints: "grow") {
 	
 		// Rückschlagkappe
 		panel(id: "anlageRuckschlagPanel", border: titledBorder(title: "Rückschlagkappe"), layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
-			checkBox(id: "anlageRuckschlagKappe", text: "Lüftungsanlage mit Rückschlagkappe")
+			checkBox(id: "anlageRuckschlagkappe", text: "Lüftungsanlage mit Rückschlagkappe")
 		}
 	
 		// Schallschutz-Kennzeichnung
