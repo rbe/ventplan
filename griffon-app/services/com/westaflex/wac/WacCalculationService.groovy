@@ -11,7 +11,6 @@ package com.westaflex.wac
 /**
  * 
  */
-//@Singleton(lazy = true)
 class WacCalculationService {
 	
 	/**
