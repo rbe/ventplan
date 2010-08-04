@@ -16,7 +16,7 @@ import net.miginfocom.swing.MigLayout
 jideScrollPane() {
 //panel(id: "kundendatenHauptPanel", layout: new MigLayout("wrap 2", "[fill,grow]", "[fill,grow]")) {
     // Großhandel
-    panel(id: "kundendatenHauptPanel", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[fill][fill]")) {
+    panel(id: "kundendatenHauptPanel", layout: new MigLayout("wrap 2", "[grow 50,fill][grow 50,fill]", "[]30[]")) {
         panel(id: "kundendatenGrosshandel", border: titledBorder(title: "Kunde 1 (Großhandel)"), layout: new MigLayout("fill, insets 5, gap 5, wrap 2", "[][grow]", "[][]")) {
             // Row 1
             label("Firma 1")
