@@ -259,18 +259,6 @@ class Wac2Controller {
 											[projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
 						// Convert loaded XML into map
 						def map = projektModelService.toMap(document)
-						/* This will be done by events automatically, when values are copied into ProjektModel
-						 * using deepCopyMap below */
-						/* Perform calculations
-						try {
-							wacCalculationService.mindestaussenluftrate(map)
-							wacCalculationService.geometrieAusRaumdaten(map)
-							wacCalculationService.aussenluftVs(map)
-						} catch (e) {
-							e.printStackTrace()
-							// TODO mmu Show dialog
-						}
-						*/
 						// Recursively copy map to model
 						GH.deepCopyMap m.map, map
 						// MVC ID zur Liste der Projekte hinzufügen
