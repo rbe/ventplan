@@ -85,7 +85,7 @@ class Wac2Controller {
 			app.shutdown()
 		} else {
 			println "windowClosing(${evt.dump()}): there are unsaved changes"
-			// TODO mmu Show dialog: ask user for save all, cancel, quit
+			// Show dialog: ask user for save all, cancel, quit
 			println "projektSchliessen: there's unsaved data"
 			def choice = app.controllers["Dialog"].showApplicationCloseDialog()
 			println "exitApplication: choice=${choice}"
@@ -184,7 +184,6 @@ class Wac2Controller {
 		def canClose = mvc.controller.canClose()
 		if (!canClose) {
 			println "projektSchliessen: canClose=${canClose}, there's unsaved data"
-			//def options = ['Speichern', 'Abbrechen', 'Schliessen']
 			def choice = app.controllers["Dialog"].showCloseProjectDialog()
 			println "projektSchliessen: choice=${choice}"
 			switch (choice) {
