@@ -291,7 +291,7 @@ class Wac2Controller {
 	def aktivesProjektSpeichern = { evt = null ->
 		def mvc = getMVCGroupAktivesProjekt()
 		if (mvc.controller.save()) {
-			
+			println "aktivesProjektSpeichern: Projekt gespeichert in ${mvc.model.wpxFilename}"
 		} else {
 			println "aktivesProjektSpeichern: Projekt nicht gespeichert, kein Dateiname (mvc.model.wpxFilename=${mvc.model.wpxFilename?.dump()})?"
 			aktivesProjektSpeichernAls(evt)
