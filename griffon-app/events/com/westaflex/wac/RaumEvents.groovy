@@ -116,7 +116,7 @@ class RaumEvents {
 	def onRaumEntfernen = { raumIndex ->
 		doLater {
 			println "onRaumEntfernen: raumIndex=${raumIndex}"
-            def zuLoschenderRaum = model.map.raum.raume[raumIndex]
+			def zuLoschenderRaum = model.map.raum.raume[raumIndex]
 			// Raum aus Model entfernen
 			model.removeRaum(raumIndex)
 			// Neu berechnen
