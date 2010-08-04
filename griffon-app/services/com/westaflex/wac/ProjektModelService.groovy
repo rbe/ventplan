@@ -236,7 +236,7 @@ class ProjektModelService {
 	 */
 	def makePerson = { map ->
 		domBuilder.person() {
-			X.m(["benutzername", "vorname", "nachname", "name", "email", "tel", "fax"], map)
+			X.m(["benutzername", "name", "vorname", "nachname", "email", "tel", "fax"], map)
 			map.adresse && makeAdresse(map.adresse)
 		}
 	}
@@ -274,7 +274,7 @@ class ProjektModelService {
 		domBuilder.room() {
 			X.tc { raumnummer(map.raumNummer) }
 			X.tc { bezeichnung(map.raumBezeichnung) }
-			X.tc { raumtyp(map.raumTyp) }
+			X.tc { raumtyp(WX[map.raumTyp]) }
 			X.tc { geschoss(map.raumGeschoss) }
 			X.tc { luftart(map.raumLuftart) }
 			X.tc { raumflache(map.raumFlache) }
@@ -282,7 +282,7 @@ class ProjektModelService {
 			X.tc { raumlange(map.raumLange) }
 			X.tc { raumbreite(map.raumbreite) }
 			X.tc { zuluftfaktor(map.raumZuluftfaktor) }
-			X.tc { abluftvs(map.raumAbluftVs) }
+			X.tc { abluftvolumenstrom(map.raumAbluftVs) }
 			// Türen
 			map.turen.eachWithIndex { t, i ->
 				tur() {
@@ -303,14 +303,6 @@ class ProjektModelService {
 			X.tc { gebaudeTyp(WX[g.typ.grep { it.value == true }?.key[0]]) }
 			X.tc { gebaudeLage(WX[g.lage.grep { it.value == true }?.key[0]]) }
 			X.tc { warmeschutz(WX[g.warmeschutz.grep { it.value == true }?.key[0]]) }
-			geometrie() {
-				def gg = g.geometrie
-				X.tc { wohnflache(gg.wohnflache) }
-				X.tc { mittlereRaumhohe(gg.raumhohe) }
-				X.tc { luftvolumen(gg.luftvolumen) }
-				X.tc { geluftetesVolumen(gg.geluftetesVolumen) }
-				X.tc { gelufteteFlache(gg.gelufteteFlache) }
-			}
 			X.tc {
 				luftdichtheit((g.luftdichtheit.grep { it.key ==~ /kategorie[\w]/ && it.value == true }?.key[0]) - "kategorie")
 			}
@@ -331,11 +323,25 @@ class ProjektModelService {
 			[a.abluft].each {
 				X.tc { abluftdurchlasse(WX[it]) }
 			}
+			// Geometrie
+			geometrie() {
+				def gg = g.geometrie
+				X.tc { wohnflache(gg.wohnflache) }
+				X.tc { mittlereRaumhohe(gg.raumhohe) }
+				X.tc { luftvolumen(gg.luftvolumen) }
+				X.tc { geluftetesVolumen(gg.geluftetesVolumen) }
+				X.tc { gelufteteFlache(gg.gelufteteFlache) }
+			}
 			// Räume
 			map.raum.raume.each { r -> makeRaum(r) }
 		}
-		// Anlage
-		domBuilder.anlage() {
+		// Anlagendaten, Zentralgerät
+		domBuilder.zentralgerat() {
+			X.tc { name(a.zentralgerat) }
+			X.tc { manuell(a.zentralgeratManuell) }
+			// TODO selektieren volumenstrom, nicht liste
+			X.tc { volumenstrom(a.volumenstromZentralgerat) }
+			X.tc { geratestandort(a.standort.grep { it.value == true }?.key[0]) }
 			// Energie
 			energie() {
 				def e = a.energie
@@ -355,14 +361,6 @@ class ProjektModelService {
 			X.tc { ruckschlagkappe(a.ruckschlagkappe) }
 			X.tc { schallschutz(a.schallschutz) }
 			X.tc { feuerstatte(a.feuerstatte) }
-		}
-		// Zentralgerät
-		domBuilder.zentralgerat() {
-			X.tc { name(a.zentralgerat) }
-			X.tc { manuell(a.zentralgeratManuell) }
-			// TODO selektieren volumenstrom, nicht liste
-			X.tc { volumenstrom(a.volumenstromZentralgerat) }
-			X.tc { geratestandort(a.standort.grep { it.value == true }?.key[0]) }
 		}
 	}
 	

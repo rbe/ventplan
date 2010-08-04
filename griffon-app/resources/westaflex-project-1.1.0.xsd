@@ -56,18 +56,38 @@
             <xs:element name="manuell"        type="xs:boolean"      minOccurs="0" maxOccurs="1"/>
             <xs:element name="volumenstrom"   type="xs:integer"      minOccurs="0" maxOccurs="1"/>
             <xs:element name="geratestandort" type="geratestandort"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="energie"        type="deviceEnergy"    minOccurs="0" maxOccurs="1"/>
+            <xs:element name="hygiene"        type="deviceHygiene"   minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="deviceEnergy">
+        <xs:sequence>
+            <xs:element name="zuAbluftWarme" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bemessung"     type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ruckgewinnung" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="regelung"      type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="deviceHygiene">
+        <xs:sequence>
+            <xs:element name="ausfuhrung"         type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="filterung"          type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="keineVerschmutzung" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="dichtheitsklasseB"  type="xs:boolean" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="room">
         <xs:sequence>
-            <xs:element name="raumnummer"  type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="bezeichnung" type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="raumtyp"     type="raumtyp"   minOccurs="0" maxOccurs="1"/>
-            <xs:element name="geschoss"    type="geschoss"  minOccurs="0" maxOccurs="1"/>
-            <xs:element name="luftart"     type="luftart"   minOccurs="0" maxOccurs="1"/>
-            <xs:element name="raumflache"  type="xs:double" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="raumhohe"    type="xs:double" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="tur"         type="door"      minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="raumnummer"         type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bezeichnung"        type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="raumtyp"            type="raumtyp"   minOccurs="0" maxOccurs="1"/>
+            <xs:element name="geschoss"           type="geschoss"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="luftart"            type="luftart"   minOccurs="0" maxOccurs="1"/>
+            <xs:element name="raumflache"         type="xs:double" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="raumhohe"           type="xs:double" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="zuluftfaktor"       type="xs:double" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="abluftvolumenstrom" type="xs:double" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="tur"                type="door"      minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="door">
@@ -78,12 +98,12 @@
     </xs:complexType>
     <xs:complexType name="company">
         <xs:sequence>
-            <xs:element name="firma1"  type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="firma2"  type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="firma1"  type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="firma2"  type="xs:string" minOccurs="0" maxOccurs="1"/>
             <xs:element name="rolle"   type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="email"   type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="tel"     type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="fax"     type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="email"   type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="tel"     type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="fax"     type="xs:string" minOccurs="0" maxOccurs="1"/>
             <xs:element name="adresse" type="address"   minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="kontakt" type="contact"   minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
