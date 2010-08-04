@@ -114,7 +114,7 @@ class ProjektController {
 		} else {
 			title << model.mvcId
 		}
-		title.toString()
+		title
 	}
 	
 	/**
@@ -134,7 +134,7 @@ class ProjektController {
 	 * Titel des Projekts für Tab setzen.
 	 */
 	def setTabTitle() {
-		view.projektTabGroup.setTitleAt(view.projektTabGroup.selectedIndex, makeTabTitle())
+		view.projektTabGroup.setTitleAt(view.projektTabGroup.selectedIndex, makeTabTitle().toString())
 	}
 	
 	/**
