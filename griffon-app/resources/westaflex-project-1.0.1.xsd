@@ -60,10 +60,11 @@
 		<xs:element name="breite" type="xs:integer" default="610" />
 	</xs:sequence>
 </xs:complexType>
- 
+
 <xs:complexType name="company">
 	<xs:sequence>
-		<xs:element name="name"    type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+		<xs:element name="firma1"    type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+		<xs:element name="firma2"    type="xs:string" minOccurs="0" maxOccurs="unbounded" />
 		<xs:element name="rolle"   type="xs:string" minOccurs="0" maxOccurs="1" />
 		<xs:element name="email"   type="xs:string" minOccurs="0" maxOccurs="unbounded" />
 		<xs:element name="tel"     type="xs:string" minOccurs="0" maxOccurs="unbounded" />
