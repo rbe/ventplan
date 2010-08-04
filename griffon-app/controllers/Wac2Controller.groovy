@@ -232,7 +232,8 @@ class Wac2Controller {
 	}
 	
 	/**
-	 * TODO rbe
+	 * Projekt öffnen: zeige FileChooser, lese XML, erstelle eine MVC Group und übertrage die Werte
+	 * aus dem XML in das ProjektModel.
 	 */
 	def projektOffnen = { evt = null ->
 		// Splash screen
@@ -285,7 +286,8 @@ class Wac2Controller {
 	}
 	
 	/**
-	 * TODO rbe
+	 * Projekt speichern. Es wird der Dateiname aus dem ProjektModel 'wpxFilename' verwendet.
+	 * Ist er nicht gesetzt, wird "Projekt speichern als" aufgerufen.
 	 */
 	def projektSpeichern = { evt = null ->
 		def p = getMVCGroupAktivesProjekt()
@@ -304,7 +306,7 @@ class Wac2Controller {
 	}
 	
 	/**
-	 * TODO rbe
+	 * Zeige FileChooser, setze gewählten Dateinamen im ProjektModel und rufe "Projekt speichern".
 	 */
 	def projektSpeichernAls = { evt = null ->
 		def m = getMVCGroupAktivesProjekt().model
