@@ -18,15 +18,15 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 		// Kundendaten
 		jideTabbedPane(id: "datenTabGroup") {
 			// Kundendaten
-			panel(id: "kundenTab", title: "Kundendaten", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[fill][fill]")) {
+			panel(id: "kundenTab", title: "Kundendaten", layout: new MigLayout("fillx")) {
 				build(KundendatenView)
 			}
 			// Gebäudedaten
-			panel(id: "gebaudeTab", title: "Gebäudedaten", layout: new MigLayout("fillx, wrap 3", "[fill][fill][fill]", "[fill][fill]")) {
+			panel(id: "gebaudeTab", title: "Gebäudedaten", layout: new MigLayout("fillx")) {
 				build(GebaudedatenView)
 			}
 			// Anlagendaten
-			panel(id: "anlageTab", title: "Anlagedaten", layout: new MigLayout("fillx, wrap 3", "[fill][fill][fill]", "[fill][fill]")) {
+			panel(id: "anlageTab", title: "Anlagedaten", layout: new MigLayout("fillx")) {
 				jideScrollPane() { build(AnlagendatenView) }
 			}
 			// Raumdaten
@@ -34,7 +34,7 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 				build(RaumdatenView)
 			}
 			// Außenluftvolumenströme
-			panel(id: "aussenluftVsTab", title: "Außenluftvolumenströme", layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
+			panel(id: "aussenluftVsTab", title: "Außenluftvolumenströme", layout: new MigLayout("fillx")) {
 				build(AussenluftVsView)
 			}
 			// Raumvolumenströme
@@ -42,11 +42,11 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 				build(RaumVsView)
 			}
 			// Druckverlustberechnung
-			panel(id: "dvbTab", title: "Druckverlustberechnung") {
+			panel(id: "dvbTab", title: "Druckverlustberechnung", layout: new MigLayout("fillx")) {
 				build(DruckverlustView)
 			}
 			// Akkustikberechnung
-			panel(id: "akustikTab", title: "Akustikberechnung") {
+			panel(id: "akustikTab", title: "Akustikberechnung", layout: new MigLayout("fillx")) {
 				build(AkustikView)
 			}
 		}
