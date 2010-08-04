@@ -147,6 +147,20 @@ class GriffonHelper {
 	}
 	
 	/**
+	 * Invert a map. Taken from http://jira.codehaus.org/browse/GROOVY-4294.
+	 * http://jira.codehaus.org/secure/attachment/49994/patchfile.txt
+	 */
+	public static <K, V> Map<V, K> invertMap(Map<K, V> self) {
+		Map<V, K> answer = new HashMap<V, K>();
+		Iterator<Map.Entry<K, V>> it = self.entrySet().iterator();
+		while(it.hasNext()) {
+			Map.Entry entry = it.next();
+			answer.put((V)entry.getValue(), (K)entry.getKey());
+		}
+		return answer;
+	}
+	
+	/**
 	 * Recursively add PropertyChangeListener to the map itself and all nested maps.
 	 */
 	def static addMapPropertyChangeListener = { name, map, closure = null ->
