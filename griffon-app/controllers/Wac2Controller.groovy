@@ -191,7 +191,7 @@ class Wac2Controller {
 				case 0:
 					// Save: save the closing project
 					println "Speichern und Beenden"
-					// TODO rbe Projekt speichern !!!
+					projektSpeichern(evt)
 					// MVC Gruppe zerstören
 					destroyMVCGroup(model.aktivesProjekt)
 					// Aus Liste der Projekte entfernen
