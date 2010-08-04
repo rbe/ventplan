@@ -99,15 +99,14 @@ class RaumEvents {
 			publishEvent "ZentralgeratAktualisieren"
 			// Diesen Raum in allen Tabellen anwählen
 			publishEvent "RaumInTabelleWahlen", [raumIndex]
-            // TabelModel aktualisieren
-            if (isRemove) {
-                println "publish event RemoveTableModelRow"
-                publishEvent "RemoveTableModelRow", [zuLoschenderRaum]
-            }
-            else {
-                println "publish event AddTableModelRow"
-                publishEvent "AddTableModelRow", [raumIndex]
-            }
+			// TabelModel aktualisieren
+			if (isRemove) {
+				println "publish event RemoveTableModelRow"
+				publishEvent "RemoveTableModelRow", [zuLoschenderRaum]
+			} else {
+				println "publish event AddTableModelRow"
+				publishEvent "AddTableModelRow", [raumIndex]
+			}
 		}
 	}
 	
