@@ -182,9 +182,8 @@ class Wac2Controller {
 		def mvc = getMVCGroupAktivesProjekt()
 		println "projektSchliessen: model.aktivesProjekt=${model.aktivesProjekt} mvc=${mvc}"
 		def canClose = mvc.controller.canClose()
-		println "canClose = ${canClose}"
 		if (!canClose) {
-			println "projektSchliessen -> there's unsaved data"
+			println "projektSchliessen: canClose=${canClose}, there's unsaved data"
 			//def options = ['Speichern', 'Abbrechen', 'Schliessen']
 			def choice = app.controllers["Dialog"].showCloseProjectDialog()
 			println "projektSchliessen: choice=${choice}"
@@ -204,11 +203,11 @@ class Wac2Controller {
 					break
 				case 1:
 					// Cancel: do nothing...
-					println "projektSchliessen -> Abbrechen"
+					println "projektSchliessen: Abbrechen"
 					break
 				case 2:
 					// Close: just close the tab...
-					println "projektSchliessen -> Schliessen ohne Speichern"
+					println "projektSchliessen: Schliessen ohne Speichern"
 					// MVC Gruppe zerstören
 					destroyMVCGroup(model.aktivesProjekt)
 					// Aus Liste der Projekte entfernen
@@ -220,7 +219,7 @@ class Wac2Controller {
 					break
 			}
 		} else {
-			println "projektSchliessen -> else... close!!"
+			println "projektSchliessen: else... close!!"
 			// MVC Gruppe zerstören
 			destroyMVCGroup(model.aktivesProjekt)
 			// Aus Liste der Projekte entfernen
