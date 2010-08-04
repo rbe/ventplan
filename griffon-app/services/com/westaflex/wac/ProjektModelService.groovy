@@ -371,7 +371,7 @@ class ProjektModelService {
 	 */
 	def save = { map, file ->
 		def wpx = domBuilder."westaflex-wpx" {
-			project() {
+			projekt() {
 				ersteller()
 				X.tc { bauvorhaben(map.kundendaten.bauvorhaben) }
 				X.tc { notizen(map.kundendaten.notizen) }
