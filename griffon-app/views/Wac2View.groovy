@@ -8,7 +8,7 @@
  */
 def screen = java.awt.Toolkit.defaultToolkit.screenSize
 
-fileChooserWindow = fileChooser()
+wpxFileChooserWindow = fileChooser(
 
 wac2Frame = application(title: 'WestaWAC 2',
 	size: [screen.width as int, screen.height as int],

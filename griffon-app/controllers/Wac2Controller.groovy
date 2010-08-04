@@ -240,9 +240,9 @@ class Wac2Controller {
 			doOutside {
 				// Choose file
 				def file
-				def openResult = view.fileChooserWindow.showOpenDialog(view.wac2Frame)
+				def openResult = view.wpxFileChooserWindow.showOpenDialog(view.wac2Frame)
 				if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
-					file = view.fileChooserWindow.selectedFile.toString()
+					file = view.wpxFileChooserWindow.selectedFile.toString()
 					println "projektOffnen: file=${file?.dump()}"
 					// Load data
 					Wac2Splash.instance.setup()
