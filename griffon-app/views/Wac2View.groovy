@@ -9,6 +9,14 @@
 def screen = java.awt.Toolkit.defaultToolkit.screenSize
 
 wpxFileChooserWindow = fileChooser(
+		dialogTitle: "Bitte wählen Sie eine WPX-Datei",
+		fileFilter: [
+				getDescription: { -> "WestaWAC Projekt XML"},
+				accept: { file ->
+					println "wpxFileChooser: filtering ${file.dump()} isDirectory=${file.isDirectory()} endsWith(wpx)=${file.name.endsWith(".wpx")}"
+					return file.isDirectory() || file.name.toLowerCase().endsWith(".wpx")
+				} ] as javax.swing.filechooser.FileFilter
+	)
 
 wac2Frame = application(title: 'WestaWAC 2',
 	size: [screen.width as int, screen.height as int],
