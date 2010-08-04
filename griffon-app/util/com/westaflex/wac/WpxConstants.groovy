@@ -9,6 +9,8 @@
  */
 package com.westaflex.wac
 
+import com.bensmann.griffon.GriffonHelper as GH
+
 /**
  * Konstanten für das Mapping von Schlüsseln aus dem "ProjektModel" nach XML.
  * Wird vor allem wegen den Abkürzungen aus der Webversion genutzt.
@@ -16,7 +18,7 @@ package com.westaflex.wac
  */
 class WpxConstants {
 	
-	private static final wpxConstants = [
+	private static final m = [
 			// Gebäudetyp
 			efh: "EFH",
 			mfh: "MFH",
@@ -65,7 +67,10 @@ class WpxConstants {
 	 * Ticket #20
 	 */
 	def static get(String p) {
-		def r = WpxConstants.wpxConstants[p]
+		def r = WpxConstants.m[p]
+		if (!r) {
+			r = GH.invertMap(WpxConstants.m)[p]
+		}
 		println "WpxConstants: mapping ${p?.dump()} -> ${r?.dump()}"
 		r
 	}
