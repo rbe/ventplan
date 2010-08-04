@@ -80,6 +80,34 @@ class ProjektModelService {
 			def ausfuhrende = p."firma".find { it."rolle".text() == "Ausfuhrende" }
 			def grosshandel = p."firma".find { it."rolle".text() == "Grosshandel" }
 			def gebaude = p."gebaude"
+			def raume = []
+			gebaude."room".each { room ->
+				def r = [
+					raumBezeichnung: room."bezeichnung".text(),
+					raumTyp: WX[room."raumtyp".text()],
+					raumLuftart: room."luftart".text(),
+					raumGeschoss: room."geschoss".text(),
+					raumFlache: X.vd { room."raumflache".text() },
+					raumHohe: X.vd { room."raumhohe".text() },
+					raumZuluftfaktor: 0.0d,
+					raumAbluftVs: 0.0d,
+					raumVolumen: 0.0d,
+					raumLuftwechsel: 0.0d,
+					raumVolumenstrom: 0.0d,
+					raumBezeichnungAbluftventile: "",
+					raumAnzahlAbluftventile: "",
+					raumAbluftmengeJeVentil: 0.0d,
+					raumBezeichnungZuluftventile: "",
+					raumAnzahlZuluftventile: 0,
+					raumZuluftmengeJeVentil: 0.0d,
+					raumVentilebene: "",
+					raumAnzahlUberstromVentile: 0d,
+					raumUberstromElement: "",
+					raumNummer: room."raumnummer".text(),
+					turen: []
+				]
+				raume << r
+			}
 			def anlage = p."anlage"
 			[
 				kundendaten: [
@@ -176,9 +204,7 @@ class ProjektModelService {
 						volumenstromZentralgerat: X.vi { anlage."zentralgerat"."volumenstrom".text() },
 					],
 				raum: [
-						raume: [
-								/* ProjektModel.raumMapTemplate wird durch Event RaumHinzufugen pro Raum erstellt */
-							],
+						raume: raume,
 						// Will be calculated
 						//ltmZuluftSumme: 0.0d,
 						//ltmAbluftSumme: 0.0d,
