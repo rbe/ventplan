@@ -289,35 +289,30 @@ class Wac2Controller {
 	 * Projekt speichern. Es wird der Dateiname aus dem ProjektModel 'wpxFilename' verwendet.
 	 * Ist er nicht gesetzt, wird "Projekt speichern als" aufgerufen.
 	 */
-	def projektSpeichern = { evt = null ->
-		def p = getMVCGroupAktivesProjekt()
-		def m = p.model
-		// Do we have a filename? If not, redirect to save-as
-		if (m.wpxFilename) {
-			// Save data
-			projektModelService.save(m.map, m.wpxFilename)
-			// Set dirty-flag in project's model to false
-			m.map.dirty = false
-			// Update tab title to ensure that no "unsaved-data-star" is displayed
-			p.controller.setTabTitle()
+	def aktivesProjektSpeichern = { evt = null ->
+		def mvc = getMVCGroupAktivesProjekt()
+		if (mvc.controller.save()) {
+			
 		} else {
-			projektSpeichernAls(evt)
+			println "aktivesProjektSpeichern: Projekt nicht gespeichert, kein Dateiname (mvc.model.wpxFilename=${mvc.model.wpxFilename?.dump()})?"
+			aktivesProjektSpeichernAls(evt)
 		}
 	}
 	
 	/**
 	 * Zeige FileChooser, setze gewählten Dateinamen im ProjektModel und rufe "Projekt speichern".
 	 */
-	def projektSpeichernAls = { evt = null ->
-		def m = getMVCGroupAktivesProjekt().model
+	def aktivesProjektSpeichernAls = { evt = null ->
+		def mvc = getMVCGroupAktivesProjekt()
+		// Reset selected filename
+		view.wpxFileChooserWindow.selectedFile = null
 		// Open filechooser
-		def openResult = view.fileChooserWindow.showSaveDialog(view.wac2Frame)
-		println openResult
+		def openResult = view.wpxFileChooserWindow.showSaveDialog(view.wac2Frame)
 		if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
-			m.wpxFilename = view.fileChooserWindow.selectedFile.toString()
-			println "projektSpeichernAls: wpxFilename=${m.wpxFilename?.dump()}"
+			mvc.model.wpxFilename = view.wpxFileChooserWindow.selectedFile.toString()
+			println "projektSpeichernAls: wpxFilename=${mvc.model.wpxFilename?.dump()}"
 			// Save data
-			projektSpeichern(evt)
+			aktivesProjektSpeichern(evt)
 		}
 	}
 	

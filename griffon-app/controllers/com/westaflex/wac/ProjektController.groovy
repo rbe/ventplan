@@ -30,6 +30,7 @@ class ProjektController {
 	
 	def wacCalculationService
 	def wacModelService
+	def projektModelService
 	
 	def raumBearbeitenDialog
 	
@@ -155,6 +156,34 @@ class ProjektController {
 			case 2: 
 				println "closeProjectTab: choice -> closing project"
 				break
+		}
+	}
+	
+	/**
+	 * Save this project.
+	 * @return Boolean Was project successfully saved to a file?
+	 */
+	def save = {
+		println "save()"
+		try {
+			if (model.wpxFilename) {
+				// Save data
+				projektModelService.save(model.map, model.wpxFilename)
+				// Set dirty-flag in project's model to false
+				model.map.dirty = false
+				// Update tab title to ensure that no "unsaved-data-star" is displayed
+				setTabTitle()
+				// Project was saved
+				true
+			} else {
+				// Project was not saved
+				false
+			}
+		} catch (e) {
+			// TODO mmu Show dialog
+			e.printStackTrace()
+			// Project was not saved
+			false
 		}
 	}
 	
