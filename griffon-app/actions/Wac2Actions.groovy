@@ -30,23 +30,23 @@ projektOeffnenAction = action(
 	)
 
 projektSpeichernAction = action(
-		id: "projektSpeichernAction",
+		id: "aktivesProjektSpeichernAction",
 		name: "Projekt speichern",
 		mnemonic: "S",
 		accelerator: shortcut("S"),
 		smallIcon: imageIcon("/menu/projektspeichern.png"),
 		enabled: bind { model.aktivesProjektGeandert },
-		closure: controller.projektSpeichern
+		closure: controller.aktivesProjektSpeichern
 	)
 
 projektSpeichernAlsAction = action(
-		id: "projektSpeichernAlsAction",
+		id: "aktivesProjektSpeichernAlsAction",
 		name: "Projekt speichern als...",
 		mnemonic: "A",
 		accelerator: shortcut("shift S"),
 		smallIcon: imageIcon("/menu/projektspeichern.png"),
 		enabled: bind { model.aktivesProjektGeandert },
-		closure: controller.projektSpeichernAls
+		closure: controller.aktivesProjektSpeichernAls
 	)
 
 projektSchliessenAction = action(
