@@ -103,9 +103,9 @@ class ProjektController {
 	}
 	
 	/**
-	 * Titel der Tab für dieses Projekt erstellen: Bauvorhaben und Sternchen für ungesicherte Änderungen.
+	 * Titel für dieses Projekt erstellen: Bauvorhaben, ansonsten MVC ID.
 	 */
-	def makeTabTitle = {
+	def getProjektTitel = {
 		def title = new StringBuilder()
 		// Bauvorhaben
 		def bauvorhaben = model.map.kundendaten.bauvorhaben
@@ -114,15 +114,24 @@ class ProjektController {
 		} else {
 			title << model.mvcId
 		}
-		// MVC ID
-		title << " (${view.mvcId})"
-		// Ungespeicherte Daten?
-		if (model.map.dirty) title << "*"
 		title.toString()
 	}
 	
 	/**
-	 * Titel der Tab für dieses Projekt setzen.
+	 * Titel der Tab für dieses Projekt erstellen, und Sternchen für ungesicherte Änderungen anhängen.
+	 */
+	def makeTabTitle = {
+		def tabTitle = getProjektTitel()
+		// MVC ID
+		tabTitle << " (${view.mvcId})"
+		// Ungespeicherte Daten?
+		if (model.map.dirty) tabTitle << "*"
+		//
+		tabTitle
+	}
+	
+	/**
+	 * Titel des Projekts für Tab setzen.
 	 */
 	def setTabTitle() {
 		view.projektTabGroup.setTitleAt(view.projektTabGroup.selectedIndex, makeTabTitle())
