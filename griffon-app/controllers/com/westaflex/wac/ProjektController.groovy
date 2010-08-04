@@ -450,7 +450,7 @@ class ProjektController {
 			*/
 			// Show dialog
 			raumBearbeitenDialog = GH.showDialog(builder, RaumBearbeitenView)
-			println "raumBearbeiten: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
+			println "raumBearbeiten: dialog '${raumBearbeitenDialog.title}' closed: dialog=${raumBearbeitenDialog.dump()}"
 			// Berechne alles, was von Räumen abhängt
 			publishEvent "RaumGeandert", [row]
 		}
