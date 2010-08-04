@@ -79,14 +79,17 @@ class RaumEvents {
 			// Add PropertyChangeListener to our model.map
 			GH.addMapPropertyChangeListener("map.raum.raume", model.map.raum.raume[raumIndex])
 			// Neu berechnen
-			onRaumGeandert(raumIndex, false, [])
+			onRaumGeandert(raumIndex)
+            // RaumVsView - Zu-/Abluftventile TabelModel aktualisieren
+            println "publish event AddTableModelRow"
+            publishEvent "AddTableModelRow", [raumIndex]
 		}
 	}
 	
 	/**
 	 * Ein Raum wurde geändert - berechne alles, was von Räumen abhängt.
 	 */
-	def onRaumGeandert = { raumIndex, isRemove, zuLoschenderRaum ->
+	def onRaumGeandert = { raumIndex ->
 		doLater {
 			println "processing event 'RaumGeandert': raumIndex=${raumIndex}: ${model.map.raum.raume[raumIndex]?.dump()}"
 			// Gebäude-Geometrie berechnen
@@ -99,14 +102,6 @@ class RaumEvents {
 			publishEvent "ZentralgeratAktualisieren"
 			// Diesen Raum in allen Tabellen anwählen
 			publishEvent "RaumInTabelleWahlen", [raumIndex]
-			// TabelModel aktualisieren
-			if (isRemove) {
-				println "publish event RemoveTableModelRow"
-				publishEvent "RemoveTableModelRow", [zuLoschenderRaum]
-			} else {
-				println "publish event AddTableModelRow"
-				publishEvent "AddTableModelRow", [raumIndex]
-			}
 		}
 	}
 	
@@ -119,8 +114,9 @@ class RaumEvents {
 			def zuLoschenderRaum = model.map.raum.raume[raumIndex]
 			// Raum aus Model entfernen
 			model.removeRaum(raumIndex)
-			// Neu berechnen
-			onRaumGeandert(raumIndex, true, zuLoschenderRaum)
+			// RaumVsView - Zu-/Abluftventile TabelModel aktualisieren
+            println "publish event RemoveTableModelRow"
+            publishEvent "RemoveTableModelRow", [zuLoschenderRaum]
 		}
 	}
 	
