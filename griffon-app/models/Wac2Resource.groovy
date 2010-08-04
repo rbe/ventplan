@@ -24,7 +24,7 @@ class Wac2Resource {
 	 * Get URI for XSD of WPX files.
 	 */
 	def static getWpxXsdUri = {
-		Wac2Resource.class.getResource("../resources/westaflex-project-1.0.2.xsd").toURI()
+		Wac2Resource.class.getResource("../resources/westaflex-project-1.1.0.xsd").toURI()
 	}
 	
 	/**
