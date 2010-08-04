@@ -179,7 +179,7 @@ class Wac2Controller {
 	 */
 	def projektSchliessen = { evt = null ->
 		// Projekt zur aktiven Tab finden
-		def mvc = getMvcGroupAktivesProjekt() //getMVCGroup(model.aktivesProjekt)
+		def mvc = getMVCGroupAktivesProjekt()
 		println "projektSchliessen: model.aktivesProjekt=${model.aktivesProjekt} mvc=${mvc}"
 		def canClose = mvc.controller.canClose()
 		println "canClose = ${canClose}"
