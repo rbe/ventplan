@@ -24,10 +24,14 @@ import java.awt.Component
 class ProjektController {
 	
 	def builder
+	
 	def model
 	def view
+	
 	def wacCalculationService
 	def wacModelService
+	
+	def raumBearbeitenDialog
 	
 	/**
 	 * Initialize MVC group.
@@ -69,14 +73,6 @@ class ProjektController {
 		GH.tieEventListener(this, DvbKanalnetzEvents, props)
 		GH.tieEventListener(this, DvbVentileinstellungEvents, props)
 	}
-	
-	/**
-	 * Method call interception.
-	Object invokeMethod(String methodName, Object params) {
-		println "ProjektController.invokeMethod: ${methodName}"
-		metaClass.invokeMethod(this, methodName, params)
-	}
-	 */
 	
 	/**
 	 * Setze Standardwerte (meist in Comboboxen).
@@ -136,6 +132,30 @@ class ProjektController {
 	 */
 	boolean canClose() {
 		model.map.dirty == false
+	}
+	
+	/**
+	 * Dialog anzeigen, wenn ein nicht gespeichertes Projekt geschlossen wird.
+	 */
+	def closeProjectTab = { evt = null ->
+		println "closeProjectTab: closeTab=${app.controllers}"
+		def choice = app.controllers["Dialog"].showCloseProjectDialog()
+		println "closeProjectTab: choice=${choice}"
+		// TODO rbe
+		switch (choice) {
+			// Save: save the closing project
+			case 0: 
+				println "closeProjectTab: choice -> saving project"
+				break
+			// Close: just close the tab...
+			case 1: 
+				println "closeProjectTab: choice -> do nothing"
+				break
+			// Cancel: do nothing...
+			case 2: 
+				println "closeProjectTab: choice -> closing project"
+				break
+		}
 	}
 	
 	/**
@@ -279,15 +299,6 @@ class ProjektController {
 			model.map.anlage.kennzeichnungLuftungsanlage =
 				"ZuAbLS-Z-${gebaudeTyp}-WÜT-${energieKz}-${hygieneKz}-${ruckschlag}-${schallschutz}-${feuerstatte}"
 		}
-	}
-	
-	/**
-	 * 
-	 */
-	def setRoundingMode = {
-		def rm = java.math.RoundingMode.valueOf(view.aussenluftVsRoundingMode.selectedItem)
-		println "setRoundingMode: setting rounding mode to ${rm.dump()}"
-		GH.ROUNDING_MODE = rm
 	}
 	
 	/**
@@ -435,8 +446,6 @@ class ProjektController {
 			}
 		}
 	}
-
-    def raumBearbeitenDialog
 	
 	/**
 	 * Raumdaten - einen Raum bearbeiten.
@@ -455,14 +464,14 @@ class ProjektController {
 			publishEvent "RaumGeandert", [row]
 		}
 	}
-
-    /**
+	
+	/**
 	 * RaumBearbeiten - RaumBearbeitenView schliessen.
 	 */
 	def raumBearbeitenSchliessen = {
-        println "raumBearbeitenSchliessen -> closing dialog"
-        raumBearbeitenDialog.dispose()
-    }
+		println "raumBearbeitenSchliessen -> closing dialog"
+		raumBearbeitenDialog.dispose()
+	}
 	
 	/**
 	 * Raumvolumenströme - Zu/Abluftventile, Luftmenge berechnen.
@@ -553,27 +562,27 @@ class ProjektController {
 			}
 		}
 	}
-
-    /**
-     * TableModel updaten
-     */
-    def onAddTableModelRow = { rowIndex ->
-        // Neues TableModel setzen !
-        println "add row to table model ${rowIndex}"
-        doLater {
-            GH.addRowToTableModel(model.map.raum.raume[rowIndex], view.raumVsZuAbluftventileTabelle)
-        }
-    }
-
-    /**
-     * TableModel updaten. Raum entfernen
-     */
-    def onRemoveTableModelRow = { r ->
-        println "remove row"
-        doLater {
-            GH.removeRowFromTableModel(r, view.raumVsZuAbluftventileTabelle)
-        }
-    }
+	
+	/**
+	 * TableModel updaten
+	 */
+	def onAddTableModelRow = { rowIndex ->
+		// Neues TableModel setzen !
+		println "add row to table model ${rowIndex}"
+		doLater {
+			GH.addRowToTableModel(model.map.raum.raume[rowIndex], view.raumVsZuAbluftventileTabelle)
+		}
+	}
+	
+	/**
+	 * TableModel updaten. Raum entfernen
+	 */
+	def onRemoveTableModelRow = { r ->
+		println "remove row"
+		doLater {
+			GH.removeRowFromTableModel(r, view.raumVsZuAbluftventileTabelle)
+		}
+	}
 	
 	/**
 	 * Raumvolumenströme - Zentralgerät: manuelle Auswahl des Zentralgeräts.
@@ -725,30 +734,6 @@ class ProjektController {
 	 */
 	def dvbVentileinstellungEntfernen = {
 		
-	}
-	
-	/**
-	 * Dialog anzeigen, wenn ein nicht gespeichertes Projekt geschlossen wird.
-	 */
-	def closeProjectTab = { evt = null ->
-		println "closeProjectTab: closeTab=${app.controllers}"
-		def choice = app.controllers["Dialog"].showCloseProjectDialog()
-		println "closeProjectTab: choice=${choice}"
-		// TODO rbe
-		switch (choice) {
-			// Save: save the closing project
-			case 0: 
-				println "closeProjectTab: choice -> saving project"
-				break
-			// Close: just close the tab...
-			case 1: 
-				println "closeProjectTab: choice -> do nothing"
-				break
-			// Cancel: do nothing...
-			case 2: 
-				println "closeProjectTab: choice -> closing project"
-				break
-		}
 	}
 	
 }
