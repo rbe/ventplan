@@ -13,7 +13,7 @@ import net.miginfocom.swing.MigLayout
 
 jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 	
-	panel(id: "projektTab", title: controller.makeTabTitle()) {
+	panel(id: "projektTab", title: controller.makeTabTitle().toString()) {
 		borderLayout()
 		// Kundendaten
 		jideTabbedPane(id: "datenTabGroup") {
