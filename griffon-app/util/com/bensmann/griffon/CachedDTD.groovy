@@ -7,12 +7,15 @@
  * 
  * Created by: rbe
  */
-public class CachedDTD implements org.xml.sax.EntityResolver {
 package com.bensmann.griffon
+
+/**
+ * 
+ */
+class CachedDTD {
 	
 	/**
-	 * 
-	 */
+	 * implements org.xml.sax.EntityResolver
 	public org.xml.sax.InputSource resolveEntity(String publicId, String systemId) throws org.xml.sax.SAXException, java.io.IOException {
 		String resource = systemId.split("/").last()
 		//println "resolveEntity: publicId=${publicId} systemId=${systemId} resource=${resource}"
@@ -25,5 +28,20 @@ package com.bensmann.griffon
 			null
 		}
 	}
+	 */
+	
+	/**
+	 * 
+	 */
+	def static entityResolver = [
+		resolveEntity: { publicId, systemId ->
+			try {
+				new org.xml.sax.InputSource(CachedDTD.class.getResourceAsStream("dtd/" + systemId.split("/").last()))
+			} catch (e) {
+				e.printStackTrace()
+				null
+			}
+		}
+	] as org.xml.sax.EntityResolver
 	
 }
