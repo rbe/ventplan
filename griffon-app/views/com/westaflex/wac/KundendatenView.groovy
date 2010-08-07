@@ -13,10 +13,10 @@ import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
 
-jideScrollPane() {
+jideScrollPane(constraints: "grow") {
 //panel(id: "kundendatenHauptPanel", layout: new MigLayout("wrap 2", "[fill,grow]", "[fill,grow]")) {
     // Großhandel
-    panel(id: "kundendatenHauptPanel", layout: new MigLayout("wrap 2", "[grow 50,fill][grow 50,fill]", "[]30[]")) {
+    panel(id: "kundendatenHauptPanel", constraints: "grow", layout: new MigLayout("wrap 2", "[grow 50,fill][grow 50,fill]", "[]30[]")) {
         panel(id: "kundendatenGrosshandel", border: titledBorder(title: "Kunde 1 (Großhandel)"), layout: new MigLayout("fill, insets 5, gap 5, wrap 2", "[][grow]", "[][]")) {
             // Row 1
             label("Firma 1")

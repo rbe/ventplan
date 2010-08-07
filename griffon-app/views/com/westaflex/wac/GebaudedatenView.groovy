@@ -13,10 +13,10 @@ import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
 jideScrollPane(constraints: "grow") {
-    panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill][fill]", "[fill]")) {
-        panel(id: "test", layout: new MigLayout("fillx, wrap", "[fill]para[fill]para[fill]", "[fill][fill][fill]"), constraints: "span, wrap") {
+    panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]para[fill]", "[fill]")) {
+        panel(id: "test", layout: new MigLayout("fillx, wrap", "[fill]para[fill]para[fill]", "[fill]"), constraints: "span, wrap") {
             // Gebäudetyp
-            panel(id: "gebaudeTyp", border: titledBorder(title: "Gebäudetyp"), layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
+            panel(id: "gebaudeTyp", border: titledBorder(title: "Gebäudetyp"), layout: new MigLayout("wrap", "[]", "")) {
                 buttonGroup().with {
                     add radioButton(id: "gebaudeTypMFH", text: "Mehrfamilienhaus MFH")
                     add radioButton(id: "gebaudeTypEFH", text: "Einfamilienhaus EFH")
@@ -24,14 +24,14 @@ jideScrollPane(constraints: "grow") {
                 }
             }
             // Gebäudelage
-            panel(id: "gebaudeLage", border: titledBorder(title: "Gebäudelage"), layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
+            panel(id: "gebaudeLage", border: titledBorder(title: "Gebäudelage"), layout: new MigLayout("wrap", "[]", "")) {
                 buttonGroup().with {
                     add radioButton(id: "gebaudeLageWindschwach", text: "windschwach")
                     add radioButton(id: "gebaudeLageWindstark", text: "windstark")
                 }
             }
             // Wärmeschutz
-            panel(id: "gebaudewarmeschutz", border: titledBorder(title: "Wärmeschutz"), layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill]")) {
+            panel(id: "gebaudewarmeschutz", border: titledBorder(title: "Wärmeschutz"), layout: new MigLayout("wrap 1", "[]", "")) {
                 buttonGroup().with {
                     add radioButton(id: "gebaudeWarmeschutzHoch", text: "hoch (Neubau / Sanierung mind. WSchV 1995)")
                     add radioButton(id: "gebaudeWarmeschutzNiedrig", text: "niedrig (Gebäude bestand vor 1995)")
@@ -39,7 +39,7 @@ jideScrollPane(constraints: "grow") {
             }
         }
         // Geometrie
-        panel(id: "gebaudeGeometrie", border: titledBorder(title: "Geometrie"), layout: new MigLayout("fillx, wrap 3", "[fill][fill]para[fill]", "")) {
+        panel(id: "gebaudeGeometrie", border: titledBorder(title: "Geometrie"), layout: new MigLayout("wrap 3", "[]para[]para[]", "")) {
             //
             textField(id: "gebaudeGeometrieWohnflache", constraints: "width 60px")
             label("m²")
@@ -63,7 +63,7 @@ jideScrollPane(constraints: "grow") {
         }
         GH.recurse(gebaudeGeometrie, GH.doubleTextField)
         // Luftdichtheit der Gebäudehülle
-        panel(id: "gebaudeLuftdichtheit", border: titledBorder(title: "Luftdichtheit der Gebäudehülle"), layout: new MigLayout("fillx, wrap 1", "[fill,left]para[fill]", "[fill]")) {
+        panel(id: "gebaudeLuftdichtheit", border: titledBorder(title: "Luftdichtheit der Gebäudehülle"), layout: new MigLayout("wrap 1", "[left]para[]", "")) {
             buttonGroup().with {
                 add radioButton(id: "gebaudeLuftdichtheitKategorieA", text: "Kategorie A (ventilatorgestützt)", constraints: "cell 0 1")
                 add radioButton(id: "gebaudeLuftdichtheitKategorieB", text: "Kategorie B (frei, Neubau)", constraints: "cell 0 2")
@@ -80,20 +80,20 @@ jideScrollPane(constraints: "grow") {
         }
         GH.recurse(gebaudeLuftdichtheit, GH.doubleTextField)
         // Besondere Anforderungen
-        panel(id: "gebaudeBesondereAnforderungen", border: titledBorder(title: "Besondere Anforderungen"), constraints: "span", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[fill]")) {
-            textField(id: "faktorBesondereAnforderungen", constraints: "growx")
+        panel(id: "gebaudeBesondereAnforderungen", border: titledBorder(title: "Besondere Anforderungen"), constraints: "span", layout: new MigLayout("wrap 2", "[]para[]", "")) {
+            textField(id: "faktorBesondereAnforderungen", constraints: "width 80px")
             label("Faktor für besondere bauphysikalische oder hygienische Anforderungen")
         }
         GH.doubleTextField(faktorBesondereAnforderungen)
         // Geplante Belegung
-        panel(id: "gebaudeGeplanteBelegung", border: titledBorder(title: "Geplante Belegung"), constraints: "span", layout: new MigLayout("fillx, wrap 4", "[fill]para[fill]para[fill]para[fill]", "[fill]")) {
+        panel(id: "gebaudeGeplanteBelegung", border: titledBorder(title: "Geplante Belegung"), constraints: "span", layout: new MigLayout("", "[]para[right]para[]", "")) {
             label("Personenanzahl")
-            spinner(id: "gebaudeGeplantePersonenanzahl")
+            spinner(id: "gebaudeGeplantePersonenanzahl", constraints: "wrap, width 100px")
             label("Außenluftvolumenstrom pro Person")
-            spinner(id: "gebaudeGeplanteAussenluftVsProPerson")
+            spinner(id: "gebaudeGeplanteAussenluftVsProPerson", constraints: "wrap, width 100px")
             //
             label("Mindestaußenluftrate:", foreground: java.awt.Color.RED)
-            label(id: "gebaudeGeplanteMindestaussenluftrate", foreground: java.awt.Color.RED, text: "0")
+            label(id: "gebaudeGeplanteMindestaussenluftrate", foreground: java.awt.Color.RED, text: "0", constraints: "right")
             label("m³/h", foreground: java.awt.Color.RED)
         }
         GH.doubleTextField(gebaudeGeplanteAussenluftVsProPerson)
