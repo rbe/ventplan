@@ -43,6 +43,10 @@ class ProjektModelService {
 		*/
 		// XmlSlurper for reading XML
 		xmlSlurper = new XmlSlurper()
+		// Read XML using locally cached DTDs
+		xmlSlurper.setEntityResolver(com.bensmann.griffon.CachedDTD.entityResolver)
+		// Turn off loading of external DTDs
+		// xmlSlurper.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
 		// Create DOMBuilder and set it in XmlHelper too
 		X.domBuilder = domBuilder = groovy.xml.DOMBuilder.newInstance()
 	}
@@ -65,10 +69,6 @@ class ProjektModelService {
 			def xml = fh.getText("UTF-8")
 			// Validate
 			validateWpx(xml)
-			// Read XML using locally cached DTDs
-			xmlSlurper.setEntityResolver(new com.bensmann.griffon.CachedDTD())
-			// Turn off loading of external DTDs
-			// xmlSlurper.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
 			// Return document
 			xmlSlurper.parseText(xml)
 		} catch (e) {
