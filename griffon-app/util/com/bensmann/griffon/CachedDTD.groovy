@@ -15,22 +15,6 @@ package com.bensmann.griffon
 class CachedDTD {
 	
 	/**
-	 * implements org.xml.sax.EntityResolver
-	public org.xml.sax.InputSource resolveEntity(String publicId, String systemId) throws org.xml.sax.SAXException, java.io.IOException {
-		String resource = systemId.split("/").last()
-		//println "resolveEntity: publicId=${publicId} systemId=${systemId} resource=${resource}"
-		try {
-			InputStream uri = CachedDTD.class.getResourceAsStream("dtd/" + resource)
-			//println "resolveEntity: uri=${CachedDTD.class.getResource("dtd/" + resource)}"
-			new org.xml.sax.InputSource(uri)
-		} catch (e) {
-			e.printStackTrace()
-			null
-		}
-	}
-	 */
-	
-	/**
 	 * 
 	 */
 	def static entityResolver = [
