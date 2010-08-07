@@ -95,59 +95,6 @@ class ProjektController {
 	}
 	
 	/**
-     * RaumVsView - Zu-/Abluftventile
-	 * Initialisiert das TableModel in RaumVsView. Erstellt ein leeres TableModel ohne Daten!
-	 */
-	def initTableModelBuilder() {
-        def items1 = model.meta.raumVsBezeichnungZuluftventile
-        def items2 = model.meta.raumVsBezeichnungAbluftventile
-        def items3 = ["KG", "EG", "OG", "DG", "SB"]
-
-        println "#####################################################"
-        println "items1 = ${items1}"
-        println "items2 = ${items2}"
-        println "items3 = ${items3}"
-        println "#####################################################"
-
-        def editor1 = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumBezeichnungZuluftventileCombo', items: items1))
-        def editor2 = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumBezeichnungAbluftventileCombo', items: items2))
-        def editor3 = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumVentilebeneCombo', items: items3))
-
-        def tableModelListener = { e ->
-            println "${e.firstRow} ${e.column} ${e.type}"
-        } as TableModelListener
-
-        def myTableModel = builder.tableModel() {
-            current.addTableModelListener(tableModelListener)
-            propertyColumn(header: 'Raum', propertyName: 'raumBezeichnung')
-            propertyColumn(header: 'Luftart', propertyName: 'raumLuftart')
-            propertyColumn(header: GH.ws("Raumvolumen<br/>(m³)"), propertyName: 'raumVolumen')
-            propertyColumn(header: GH.ws("Luftwechsel<br/>(1/h)"), propertyName: 'raumLuftwechsel')
-            propertyColumn(header: GH.ws("Anzahl<br/>Abluftventile"), propertyName: "raumBezeichnungAbluftventile")
-            propertyColumn(header: GH.ws("Abluftmenge<br/>je Ventil"), propertyName: "raumAnzahlAbluftventile")
-            propertyColumn(header: GH.ws("Volumenstrom<br/>(m³/h)"), propertyName: 'raumVolumenstrom')
-            propertyColumn(header: GH.ws("Anzahl<br/>Zuluftventile"), propertyName: 'raumAnzahlZuluftventile')
-            propertyColumn(header: GH.ws("Bezeichnung<br/>Zuluftventile"),
-                propertyName: 'raumBezeichnungZuluftventileCombo',
-                cellEditor: editor1,
-                cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
-            ) // combo
-            propertyColumn(header: GH.ws("Bezeichnung<br/>Abluftventile"),
-                propertyName: 'raumBezeichnungAbluftventileCombo',
-                cellEditor: editor2,
-                cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
-            ) // combo
-            propertyColumn(header: "Ventilebene",
-                propertyName: 'raumVentilebeneCombo',
-                cellEditor: editor3,
-                cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
-            ) // combo
-            propertyColumn(header: GH.ws("Zuluftmenge<br/>je Ventil"), propertyName: 'raumZuluftmengeJeVentil')
-        }
-		myTableModel
-	}
-	
-	/**
 	 * Titel für dieses Projekt erstellen: Bauvorhaben, ansonsten MVC ID.
 	 */
 	def getProjektTitel = {

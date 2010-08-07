@@ -445,4 +445,47 @@ class GriffonHelper {
 		map
 	}
 
+    /**
+     * Liefert einen DefaultCellEditor für "Bezeichnung Zuluftventile" in RaumVsView
+     * für die Tabelle "raumVsZuAbluftventileTabelle" zurück
+     */
+    def static getRaumBezeichnungZuluftventileCellEditor = { builder, model ->
+        def raumVsBezeichnungZuluftventileItems = model.meta.raumVsBezeichnungZuluftventile
+        def editor = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumBezeichnungZuluftventileCombo', items: raumVsBezeichnungZuluftventileItems))
+        editor
+    }
+
+    /**
+     * Liefert einen DefaultCellEditor für "Bezeichnung Abluftventile" in RaumVsView
+     * für die Tabelle "raumVsZuAbluftventileTabelle" zurück
+     */
+    def static getRaumBezeichnungAbluftventileCellEditor = { builder, model ->
+        def raumVsBezeichnungAbluftventileItems = model.meta.raumVsBezeichnungAbluftventile
+        def editor = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumBezeichnungAbluftventileCombo', items: raumVsBezeichnungAbluftventileItems))
+        editor
+    }
+
+    /**
+     * Liefert einen DefaultCellEditor für "Ventilebene" in RaumVsView für die
+     * Tabelle "raumVsZuAbluftventileTabelle" zurück
+     */
+    def static getRaumVentilebeneCellEditor = { builder ->
+        def raumVsVentilebeneItems = ["KG", "EG", "OG", "DG", "SB"]
+        //def raumVsVentilebeneItems = model.meta.raumVsVentilebene
+        def editor = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumVentilebeneCombo', items: raumVsVentilebeneItems))
+        editor
+    }
+
+    /**
+     * Liefert einen TableModelListener für die Tabelle "raumVsZuAbluftventileTabelle" zurück
+     */
+    def static getRaumVsZuAbluftventileTableModelListener = {
+        // Initialisiere TableModelListener
+        def raumVsZuAbluftventileTableModelListener = { e ->
+            println "${e.firstRow} ${e.column} ${e.type}"
+        } as javax.swing.event.TableModelListener
+        
+        raumVsZuAbluftventileTableModelListener
+    }
+
 }
