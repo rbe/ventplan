@@ -238,15 +238,17 @@ class Wac2Controller {
 		// Splash screen
 		doLater {
 			// Choose file
-			def file
 			def openResult = view.wpxFileChooserWindow.showOpenDialog(view.wac2Frame)
 			if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
-				file = view.wpxFileChooserWindow.selectedFile.toString()
+				// Save selected file
+				def file = view.wpxFileChooserWindow.selectedFile.toString()
+				// ... and reset it in FileChooser
+				view.wpxFileChooserWindow.selectedFile = null
 				println "projektOffnen: file=${file?.dump()}"
 				// Load data
 				Wac2Splash.instance.setup()
 				Wac2Splash.instance.loadingProject()
-					doOutside {
+				doOutside {
 					// May return null due to org.xml.sax.SAXParseException while validating against XSD
 					def document = projektModelService.load(file)
 					if (document) {
