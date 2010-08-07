@@ -37,10 +37,6 @@ class ProjektModelService {
 					.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI)
 					.newSchema(new javax.xml.transform.stream.StreamSource(new FileReader(xsdFile)))
 					.newValidator()
-		/*
-		xmlns = new groovy.xml.NamespaceBuilder(new NodeBuilder())
-		xsd = xmlns.namespace("http://www.w3.org/2001/XMLSchema", "xsd")
-		*/
 		// XmlSlurper for reading XML
 		xmlSlurper = new XmlSlurper()
 		// Read XML using locally cached DTDs
