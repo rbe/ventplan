@@ -78,16 +78,29 @@
     </xs:complexType>
     <xs:complexType name="room">
         <xs:sequence>
-            <xs:element name="raumnummer"         type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="bezeichnung"        type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="raumtyp"            type="raumtyp"   minOccurs="0" maxOccurs="1"/>
-            <xs:element name="geschoss"           type="geschoss"  minOccurs="0" maxOccurs="1"/>
-            <xs:element name="luftart"            type="luftart"   minOccurs="0" maxOccurs="1"/>
-            <xs:element name="raumflache"         type="xs:double" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="raumhohe"           type="xs:double" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="zuluftfaktor"       type="xs:double" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="abluftvolumenstrom" type="xs:double" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="tur"                type="door"      minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="position"                 type="xs:integer" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="raumnummer"               type="xs:string"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bezeichnung"              type="xs:string"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="raumtyp"                  type="raumtyp"    minOccurs="0" maxOccurs="1"/>
+            <xs:element name="geschoss"                 type="geschoss"   minOccurs="0" maxOccurs="1"/>
+            <xs:element name="luftart"                  type="luftart"    minOccurs="0" maxOccurs="1"/>
+            <xs:element name="raumflache"               type="xs:double"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="raumhohe"                 type="xs:double"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="raumvolumen"              type="xs:double"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="zuluftfaktor"             type="xs:double"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="abluftvolumenstrom"       type="xs:double"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="luftwechsel"              type="xs:double"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="volumenstrom"             type="xs:double"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bezeichnungAbluftventile" type="xs:string"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="anzahlAbluftventile"      type="xs:integer" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="abluftmengeJeVentile"     type="xs:double"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bezeichnungZuluftventile" type="xs:string"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="anzahlZuluftventile"      type="xs:integer" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="zuluftmengeJeVentile"     type="xs:double"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ventilebene"              type="xs:string"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="anzahlUberstromventile"   type="xs:integer" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="uberstromelement"         type="xs:string"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="tur"                      type="door"       minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="door">

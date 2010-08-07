@@ -37,10 +37,6 @@ class ProjektModelService {
 					.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI)
 					.newSchema(new javax.xml.transform.stream.StreamSource(new FileReader(xsdFile)))
 					.newValidator()
-		/*
-		xmlns = new groovy.xml.NamespaceBuilder(new NodeBuilder())
-		xsd = xmlns.namespace("http://www.w3.org/2001/XMLSchema", "xsd")
-		*/
 		// XmlSlurper for reading XML
 		xmlSlurper = new XmlSlurper()
 		// Read XML using locally cached DTDs
@@ -86,32 +82,36 @@ class ProjektModelService {
 			def ausfuhrende = p."firma".find { it."rolle".text() == "Ausfuhrende" }
 			def grosshandel = p."firma".find { it."rolle".text() == "Grosshandel" }
 			def gebaude = p."gebaude"
+			def zentralgerat = p."zentralgerat"
 			def raume = []
-			gebaude."room".each { room ->
+			gebaude."raum".each { room ->
 				def r = [
-					raumBezeichnung: room."bezeichnung".text(),
-					raumTyp: WX[room."raumtyp".text()],
-					raumLuftart: room."luftart".text(),
-					raumGeschoss: room."geschoss".text(),
+					raumBezeichnung: X.vs { room."bezeichnung".text() },
+					raumTyp: X.vs { WX[room."raumtyp".text()] },
+					raumLuftart: X.vs { room."luftart".text() },
+					raumGeschoss: X.vs { room."geschoss".text() },
 					raumFlache: X.vd { room."raumflache".text() },
 					raumHohe: X.vd { room."raumhohe".text() },
-					raumZuluftfaktor: 0.0d,
-					raumAbluftVs: 0.0d,
-					raumVolumen: 0.0d,
-					raumLuftwechsel: 0.0d,
-					raumVolumenstrom: 0.0d,
-					raumBezeichnungAbluftventile: "",
-					raumAnzahlAbluftventile: "",
-					raumAbluftmengeJeVentil: 0.0d,
-					raumBezeichnungZuluftventile: "",
-					raumAnzahlZuluftventile: 0,
-					raumZuluftmengeJeVentil: 0.0d,
-					raumVentilebene: "",
-					raumAnzahlUberstromVentile: 0d,
-					raumUberstromElement: "",
-					raumNummer: room."raumnummer".text(),
+					raumLange: X.vd { room."raumlange".text() },
+					raumBreite: X.vd { room."raumbreite".text() },
+					raumVolumen: X.vd { room."raumvolumen".text() },
+					raumZuluftfaktor: X.vd { room."zuluftfaktor".text() },
+					raumAbluftVs: X.vd { room."abluftvolumenstrom".text() },
+					raumLuftwechsel: X.vd { room."luftwechsel".text() },
+					raumVolumenstrom: X.vd { room."volumenstrom".text() },
+					raumBezeichnungAbluftventile: X.vs { room."bezeichnungAbluftventile".text() },
+					raumAnzahlAbluftventile: X.vi { room."anzahlAbluftventile".text() },
+					raumAbluftmengeJeVentil: X.vd { room."abluftmengeJeVentile".text() },
+					raumBezeichnungZuluftventile: X.vs { room."bezeichnungZuluftventile".text() },
+					raumAnzahlZuluftventile: X.vi { room."anzahlAbluftventile".text() },
+					raumZuluftmengeJeVentil: X.vd { room."zuluftmengeJeVentile".text() },
+					raumVentilebene: X.vs { room."ventilebene".text() },
+					raumAnzahlUberstromVentile: X.vi { room."anzahlUberstromventile".text() },
+					raumUberstromElement: X.vs { room."uberstromelement".text() },
+					raumNummer: X.vs { room."raumnummer".text() },
 					turen: []
 				]
+				println "####!!!!!!! r=${r.dump()}"
 				raume << r
 			}
 			def anlage = p."anlage"
@@ -175,11 +175,11 @@ class ProjektModelService {
 					],
 				anlage: [
 						standort: [
-								KG: X.vb { gebaude."geratestandort".text() == "KG" },
-								EG: X.vb { gebaude."geratestandort".text() == "EG" },
-								OG: X.vb { gebaude."geratestandort".text() == "OG" },
-								DG: X.vb { gebaude."geratestandort".text() == "DG" },
-								SG: X.vb { gebaude."geratestandort".text() == "SG" }
+								KG: X.vb { zentralgerat."geratestandort".text() == "KG" },
+								EG: X.vb { zentralgerat."geratestandort".text() == "EG" },
+								OG: X.vb { zentralgerat."geratestandort".text() == "OG" },
+								DG: X.vb { zentralgerat."geratestandort".text() == "DG" },
+								SG: X.vb { zentralgerat."geratestandort".text() == "SG" }
 							],
 						luftkanalverlegung: [
 								:
@@ -277,7 +277,8 @@ class ProjektModelService {
 	 * 
 	 */
 	def makeRaum = { map ->
-		domBuilder.room() {
+		domBuilder.raum() {
+			X.tc { position(map.position) }
 			X.tc { raumnummer(map.raumNummer) }
 			X.tc { bezeichnung(map.raumBezeichnung) }
 			X.tc { raumtyp(WX[map.raumTyp]) }
@@ -287,8 +288,20 @@ class ProjektModelService {
 			X.tc { raumhohe(map.raumHohe) }
 			X.tc { raumlange(map.raumLange) }
 			X.tc { raumbreite(map.raumbreite) }
+			X.tc { raumvolumen(map.raumVolumen) }
 			X.tc { zuluftfaktor(map.raumZuluftfaktor) }
 			X.tc { abluftvolumenstrom(map.raumAbluftVs) }
+			X.tc { luftwechsel(map.raumLuftwechsel) }
+			X.tc { volumenstrom(map.raumVolumenstrom) }
+			X.tc { bezeichnungAbluftventile(map.raumBezeichnungAbluftventile) }
+			X.tc { anzahlAbluftventile(map.raumAnzahlAbluftventile) }
+			X.tc { abluftmengeJeVentil(map.raumAbluftmengeJeVentil) }
+			X.tc { bezeichnungZuluftventile(map.raumBezeichnungZuluftventile) }
+			X.tc { anzahlZuluftventile(map.raumAnzahlZuluftventile) }
+			X.tc { zuluftmengeJeVentil(map.raumZuluftmengeJeVentil) }
+			X.tc { ventilebene(map.raumVentilebene) }
+			X.tc { anzahlUberstromventile(map.raumAnzahlUberstromVentile) }
+			X.tc { uberstromelement(map.raumUberstromElement) }
 			// Türen
 			map.turen.eachWithIndex { t, i ->
 				tur() {
@@ -318,6 +331,7 @@ class ProjektModelService {
 			X.tc { besAnfFaktor(g.faktorBesondereAnforderungen) }
 			X.tc { personenAnzahl(g.geplanteBelegung.personenanzahl) }
 			X.tc { personenVolumen(g.geplanteBelegung.mindestaussenluftrate) }
+			try { println a.aussenluft.grep { it.value == true }?.key[0] } catch (e) {e.printStackTrace()}
 			X.tc { aussenluft(WX[a.aussenluft.grep { it.value == true }?.key[0]]) }
 			X.tc { fortluft(WX[a.fortluft.grep { it.value == true }?.key[0]]) }
 			[a.luftkanalverlegung].each {
@@ -376,7 +390,9 @@ class ProjektModelService {
 	def save = { map, file ->
 		def wpx = domBuilder."westaflex-wpx" {
 			projekt() {
-				ersteller()
+				ersteller() {
+					person()
+				}
 				X.tc { bauvorhaben(map.kundendaten.bauvorhaben) }
 				X.tc { notizen(map.kundendaten.notizen) }
 				makeGebaude(map)

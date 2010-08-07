@@ -237,28 +237,33 @@ class Wac2Controller {
 	def projektOffnen = { evt = null ->
 		// Splash screen
 		doLater {
-			doOutside {
-				// Choose file
-				def file
-				def openResult = view.wpxFileChooserWindow.showOpenDialog(view.wac2Frame)
-				if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
-					file = view.wpxFileChooserWindow.selectedFile.toString()
-					println "projektOffnen: file=${file?.dump()}"
-					// Load data
-					Wac2Splash.instance.setup()
-					Wac2Splash.instance.loadingProject()
+			// Choose file
+			def openResult = view.wpxFileChooserWindow.showOpenDialog(view.wac2Frame)
+			if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
+				// Save selected file
+				def file = view.wpxFileChooserWindow.selectedFile.toString()
+				// ... and reset it in FileChooser
+				view.wpxFileChooserWindow.selectedFile = null
+				println "projektOffnen: file=${file?.dump()}"
+				// Load data
+				Wac2Splash.instance.setup()
+				Wac2Splash.instance.loadingProject()
+				doOutside {
 					// May return null due to org.xml.sax.SAXParseException while validating against XSD
 					def document = projektModelService.load(file)
-					println "projektOffnen: document=${document?.dump()}"
 					if (document) {
+						println "projektOffnen: document=${document?.dump()}"
 						// Create new Projekt MVC group
 						String mvcId = "Projekt " + (view.projektTabGroup.tabCount + 1)
 						def (m, v, c) =
 							createMVCGroup("Projekt", mvcId,
 											[projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+						// Set filename in model
+						m.wpxFilename = file
 						// Convert loaded XML into map
 						def map = projektModelService.toMap(document)
 						// Recursively copy map to model
+						// ATTENTION: asynchronously fires bindings and events in background!
 						GH.deepCopyMap m.map, map
 						// MVC ID zur Liste der Projekte hinzufügen
 						model.projekte << mvcId
