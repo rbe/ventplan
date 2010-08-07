@@ -167,8 +167,8 @@ class ProjektModelService {
 							],
 						faktorBesondereAnforderungen: X.vd { gebaude."besAnfFaktor".text() },
 						geplanteBelegung: [
-								personenanzahl:  X.vd { gebaude."personenAnzahl".text() },
-								aussenluftVsProPerson:  X.vd { gebaude."personenVolumen".text() },
+								personenanzahl:  X.vi { gebaude."personenAnzahl".text() },
+								aussenluftVsProPerson:  X.vi { gebaude."personenVolumen".text() },
 								// Will be calculated
 								//mindestaussenluftrate: 0.0d
 							],
