@@ -8,6 +8,7 @@
  * Created by: rbe
  */
 public class CachedDTD implements org.xml.sax.EntityResolver {
+package com.bensmann.griffon
 	
 	/**
 	 * 
