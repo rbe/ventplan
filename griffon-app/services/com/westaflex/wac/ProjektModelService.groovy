@@ -23,6 +23,7 @@ class ProjektModelService {
 	def xmlns
 	def xsd
 	
+	def xmlSlurper
 	def domBuilder
 	
 	/**
@@ -40,6 +41,8 @@ class ProjektModelService {
 		xmlns = new groovy.xml.NamespaceBuilder(new NodeBuilder())
 		xsd = xmlns.namespace("http://www.w3.org/2001/XMLSchema", "xsd")
 		*/
+		// XmlSlurper for reading XML
+		xmlSlurper = new XmlSlurper()
 		// Create DOMBuilder and set it in XmlHelper too
 		X.domBuilder = domBuilder = groovy.xml.DOMBuilder.newInstance()
 	}
@@ -59,12 +62,15 @@ class ProjektModelService {
 		try {
 			// Load WPX XML file
 			def fh = file instanceof java.io.File ? file : new File(file)
-			def xml = fh.text
+			def xml = fh.getText("UTF-8")
 			// Validate
 			validateWpx(xml)
+			// Read XML using locally cached DTDs
+			xmlSlurper.setEntityResolver(new com.bensmann.griffon.CachedDTD())
+			// Turn off loading of external DTDs
+			// xmlSlurper.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
 			// Return document
-			new XmlSlurper().parseText(xml)
-			// domBuilder.parseText(xml).documentElement //.parse(new ByteArrayInputStream(xml.bytes))
+			xmlSlurper.parseText(xml)
 		} catch (e) {
 			e.printStackTrace()
 		}
@@ -380,7 +386,7 @@ class ProjektModelService {
 		}
 		if (file) {
 			def fh = file instanceof java.io.File ? file : new File(file)
-			fh.withWriter { writer ->
+			fh.withWriter("UTF-8") { writer ->
 				writer.write(groovy.xml.XmlUtil.serialize(wpx))
 			}
 		}
