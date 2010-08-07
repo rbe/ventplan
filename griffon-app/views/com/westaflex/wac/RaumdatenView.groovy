@@ -55,7 +55,7 @@ jideScrollPane(constraints: "grow") {
             button(id: "raumKopieren",             enabled: bind { model.map.raum.raume?.size() > 0 ? true : false }, text: "Raum kopieren")
             */
         }
-        vbox(constraints: EAST,CENTER) {
+        vbox(constraints: EAST) {
             // TODO mmu Buttons "nach oben" und "nach unten" müssen rechts neben die Tabelle
             button(id: "raumNachObenVerschieben",  enabled: bind {1==1}, text: "^")
             button(id: "raumNachUntenVerschieben", enabled: bind {1==1}, text: "v")
