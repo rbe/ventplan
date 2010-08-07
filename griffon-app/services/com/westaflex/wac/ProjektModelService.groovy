@@ -92,6 +92,8 @@ class ProjektModelService {
 					raumGeschoss: X.vs { room."geschoss".text() },
 					raumFlache: X.vd { room."raumflache".text() },
 					raumHohe: X.vd { room."raumhohe".text() },
+					raumLange: X.vd { room."raumlange".text() },
+					raumBreite: X.vd { room."raumbreite".text() },
 					raumVolumen: X.vd { room."raumvolumen".text() },
 					raumZuluftfaktor: X.vd { room."zuluftfaktor".text() },
 					raumAbluftVs: X.vd { room."abluftvolumenstrom".text() },
@@ -275,7 +277,7 @@ class ProjektModelService {
 	 * 
 	 */
 	def makeRaum = { map ->
-		domBuilder.room() {
+		domBuilder.raum() {
 			X.tc { position(map.position) }
 			X.tc { raumnummer(map.raumNummer) }
 			X.tc { bezeichnung(map.raumBezeichnung) }
@@ -286,8 +288,20 @@ class ProjektModelService {
 			X.tc { raumhohe(map.raumHohe) }
 			X.tc { raumlange(map.raumLange) }
 			X.tc { raumbreite(map.raumbreite) }
+			X.tc { raumvolumen(map.raumVolumen) }
 			X.tc { zuluftfaktor(map.raumZuluftfaktor) }
 			X.tc { abluftvolumenstrom(map.raumAbluftVs) }
+			X.tc { luftwechsel(map.raumLuftwechsel) }
+			X.tc { volumenstrom(map.raumVolumenstrom) }
+			X.tc { bezeichnungAbluftventile(map.raumBezeichnungAbluftventile) }
+			X.tc { anzahlAbluftventile(map.raumAnzahlAbluftventile) }
+			X.tc { abluftmengeJeVentil(map.raumAbluftmengeJeVentil) }
+			X.tc { bezeichnungZuluftventile(map.raumBezeichnungZuluftventile) }
+			X.tc { anzahlZuluftventile(map.raumAnzahlZuluftventile) }
+			X.tc { zuluftmengeJeVentil(map.raumZuluftmengeJeVentil) }
+			X.tc { ventilebene(map.raumVentilebene) }
+			X.tc { anzahlUberstromventile(map.raumAnzahlUberstromVentile) }
+			X.tc { uberstromelement(map.raumUberstromElement) }
 			// Türen
 			map.turen.eachWithIndex { t, i ->
 				tur() {
@@ -317,6 +331,7 @@ class ProjektModelService {
 			X.tc { besAnfFaktor(g.faktorBesondereAnforderungen) }
 			X.tc { personenAnzahl(g.geplanteBelegung.personenanzahl) }
 			X.tc { personenVolumen(g.geplanteBelegung.mindestaussenluftrate) }
+			try { println a.aussenluft.grep { it.value == true }?.key[0] } catch (e) {e.printStackTrace()}
 			X.tc { aussenluft(WX[a.aussenluft.grep { it.value == true }?.key[0]]) }
 			X.tc { fortluft(WX[a.fortluft.grep { it.value == true }?.key[0]]) }
 			[a.luftkanalverlegung].each {
@@ -375,7 +390,9 @@ class ProjektModelService {
 	def save = { map, file ->
 		def wpx = domBuilder."westaflex-wpx" {
 			projekt() {
-				ersteller()
+				ersteller() {
+					person()
+				}
 				X.tc { bauvorhaben(map.kundendaten.bauvorhaben) }
 				X.tc { notizen(map.kundendaten.notizen) }
 				makeGebaude(map)
