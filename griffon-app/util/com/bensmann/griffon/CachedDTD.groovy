@@ -7,7 +7,7 @@
  * 
  * Created by: rbe
  */
-public static class CachedDTD implements org.xml.sax.EntityResolver {
+public class CachedDTD implements org.xml.sax.EntityResolver {
 	
 	/**
 	 * 
@@ -15,9 +15,8 @@ public static class CachedDTD implements org.xml.sax.EntityResolver {
 	public org.xml.sax.InputSource resolveEntity(String publicId, String systemId) throws org.xml.sax.SAXException, java.io.IOException {
 		String resource = systemId.substring(systemId.lastIndexOf("/") + 1)
 		println "resolveEntity: publicId=${publicId} systemId=${systemId} resource=${resource}"
-		InputStream uri = null
 		try {
-			uri = CachedDTD.class.getResourceAsStream("dtd/" + resource)
+			InputStream uri = CachedDTD.class.getResourceAsStream("dtd/" + resource)
 			println "resolveEntity: uri=${CachedDTD.class.getResource("dtd/" + resource)}"
 			new org.xml.sax.InputSource(uri)
 		} catch (e) {
