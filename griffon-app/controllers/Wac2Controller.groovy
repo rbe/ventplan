@@ -258,6 +258,8 @@ class Wac2Controller {
 						def (m, v, c) =
 							createMVCGroup("Projekt", mvcId,
 											[projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+						// Set filename in model
+						m.wpxFilename = file
 						// Convert loaded XML into map
 						def map = projektModelService.toMap(document)
 						// Recursively copy map to model
