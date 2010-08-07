@@ -167,8 +167,8 @@ class ProjektController {
 	 */
 	def makeTabTitle = {
 		def tabTitle = getProjektTitel()
-		// MVC ID
-		tabTitle << " (${view.mvcId})"
+		// Dateiname des Projekts oder MVC ID
+		tabTitle << " (${model.wpxFilename ?: view.mvcId})"
 		// Ungespeicherte Daten?
 		if (model.map.dirty) tabTitle << "*"
 		//
