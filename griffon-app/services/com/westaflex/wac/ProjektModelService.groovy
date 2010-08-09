@@ -157,17 +157,17 @@ class ProjektModelService {
 						// Will be calculated after loading
 						geometrie: [:],
 						luftdichtheit: [
-								kategorieA: X.vb { gebaude."luftdichtheit".text() == "A" },
-								kategorieB: X.vb { gebaude."luftdichtheit".text() == "B" },
-								kategorieC: X.vb { gebaude."luftdichtheit".text() == "C" },
-								kategorieM: X.vb { gebaude."luftdichtheit".text() == "M" },
+								kategorieA:     X.vb { gebaude."luftdichtheit".text() == "A" },
+								kategorieB:     X.vb { gebaude."luftdichtheit".text() == "B" },
+								kategorieC:     X.vb { gebaude."luftdichtheit".text() == "C" },
+								kategorieM:     X.vb { gebaude."luftdichtheit".text() == "M" },
 								druckdifferenz: X.vd { gebaude."luftdichtheitDruckdifferenz".text() },
-								luftwechsel: X.vd { gebaude."luftdichtheitLuftwechsel".text() },
-								druckexponent: X.vd { gebaude."luftdichtheitDruckexponent".text() }
+								luftwechsel:    X.vd { gebaude."luftdichtheitLuftwechsel".text() },
+								druckexponent:  X.vd { gebaude."luftdichtheitDruckexponent".text() }
 							],
 						faktorBesondereAnforderungen: X.vd { gebaude."besAnfFaktor".text() },
 						geplanteBelegung: [
-								personenanzahl:  X.vi { gebaude."personenAnzahl".text() },
+								personenanzahl:         X.vi { gebaude."personenAnzahl".text() },
 								aussenluftVsProPerson:  X.vi { gebaude."personenVolumen".text() },
 								// Will be calculated
 								//mindestaussenluftrate: 0.0d
@@ -182,31 +182,47 @@ class ProjektModelService {
 								SG: X.vb { zentralgerat."geratestandort".text() == "SG" }
 							],
 						luftkanalverlegung: [
-								:
+								aufputz:     X.vb { gebaude."luftkanalverlegung".find { it.text() == "AUF" } },
+								dammschicht: X.vb { gebaude."luftkanalverlegung".find { it.text() == "DAM" } },
+								decke:       X.vb { gebaude."luftkanalverlegung".find { it.text() == "DEC" } },
+								spitzboden:  X.vb { gebaude."luftkanalverlegung".find { it.text() == "SPI" } },
 							],
+						// TODO move to complex type zentralgerat
 						aussenluft: [
-								:
+								dach:     X.vb { gebaude."aussenluft".find { it.text() == "DAC" } },
+								wand:     X.vb { gebaude."aussenluft".find { it.text() == "WAN" } },
+								erdwarme: X.vb { gebaude."aussenluft".find { it.text() == "ERD" } },
 							],
 						zuluft: [
-								:
+								tellerventile:  X.vb { gebaude."zuluftdurchlasse".find { it.text() == "TEL" } }
+								schlitzauslass: X.vb { gebaude."zuluftdurchlasse".find { it.text() == "SCH" } }
+								fussboden:      X.vb { gebaude."zuluftdurchlasse".find { it.text() == "FUS" } }
+								sockel:         X.vb { gebaude."zuluftdurchlasse".find { it.text() == "SOC" } }
 							],
 						abluft: [
-								:
+								tellerventile: X.vb { gebaude."abluftdurchlasse".find { it.text() == "TEL" } }
 							],
 						fortluft: [
-								dach: true
+								dach:         X.vb { gebaude."fortluft".find { it.text() == "DAC" } },
+								wand:         X.vb { gebaude."fortluft".find { it.text() == "WAN" } },
+								lichtschacht: X.vb { gebaude."fortluft".find { it.text() == "LIC" } },
 							],
 						energie: [
-								zuAbluftWarme: true,
-								nachricht: " "
+								zuAbluftWarme: X.vb { zentralgerat."energie"."zuAbluftWarme".text() },
+								bemessung:     X.vb { zentralgerat."energie"."bemessung".text() }
+								ruckgewinnung: X.vb { zentralgerat."energie"."ruckgewinnung".text() }
+								regelung:      X.vb { zentralgerat."energie"."regelung".text() }
 							],
 						hygiene: [
-								nachricht: " "
+								ausfuhrung:         X.vb { zentralgerat."hygiene"."ausfuhrung".text() }
+								filterung:          X.vb { zentralgerat."hygiene"."filterung".text() }
+								keineVerschmutzung: X.vb { zentralgerat."hygiene"."keineVerschmutzung".text() }
+								dichtheitsklasseB:  X.vb { zentralgerat."hygiene"."dichtheitsklasseB".text() }
 							],
 						// Will be calculated
 						//kennzeichnungLuftungsanlage: "ZuAbLS-Z-WE-WÜT-0-0-0-0-0",
-						zentralgerat: X.vs { anlage."zentralgerat"."name".text() },
-						zentralgeratManuell: X.vb { anlage."zentralgerat"."manuell".text() },
+						zentralgerat:             X.vs { anlage."zentralgerat"."name".text() },
+						zentralgeratManuell:      X.vb { anlage."zentralgerat"."manuell".text() },
 						volumenstromZentralgerat: X.vi { anlage."zentralgerat"."volumenstrom".text() },
 					],
 				raum: [
@@ -330,7 +346,10 @@ class ProjektModelService {
 			X.tc { luftdichtheitDruckexponent(g.luftdichtheit.druckexponent) }
 			X.tc { besAnfFaktor(g.faktorBesondereAnforderungen) }
 			X.tc { personenAnzahl(g.geplanteBelegung.personenanzahl) }
+			// TODO
 			X.tc { personenVolumen(g.geplanteBelegung.mindestaussenluftrate) }
+			// TODO move into zentralgerat
+			println a.aussenluft
 			try { println a.aussenluft.grep { it.value == true }?.key[0] } catch (e) {e.printStackTrace()}
 			X.tc { aussenluft(WX[a.aussenluft.grep { it.value == true }?.key[0]]) }
 			X.tc { fortluft(WX[a.fortluft.grep { it.value == true }?.key[0]]) }
@@ -343,6 +362,7 @@ class ProjektModelService {
 			[a.abluft].each {
 				X.tc { abluftdurchlasse(WX[it]) }
 			}
+			// TODO end
 			// Geometrie
 			geometrie() {
 				def gg = g.geometrie
