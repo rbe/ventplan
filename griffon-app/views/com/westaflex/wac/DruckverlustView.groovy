@@ -13,7 +13,7 @@ import net.miginfocom.swing.MigLayout
 
 jideScrollPane(constraints: "grow") {
     // Druckverlustberechnung
-    panel(id: "dvbTabPanel", layout: new MigLayout("fillx", "[fill]", "[fill]")) {
+    panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
 
         // Tabellen für Druckverlustberechnung
         jideTabbedPane(id: "dvbTabGroup", constraints: "grow, span") {
@@ -87,9 +87,7 @@ jideScrollPane(constraints: "grow") {
                     }
                 }
             }
-
         }
-
     }
 }
 // dvbTabGroup

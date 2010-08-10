@@ -12,7 +12,7 @@ import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
 jideScrollPane(constraints: "grow") {
-    panel(id: "raumPanel", layout: new MigLayout("", "[fill,grow]", "")) {
+    panel(id: "raumPanel", layout: new MigLayout("fill", "[fill,grow]", "")) {
         borderLayout()
         // Raum anlegen
         panel(id: "raumEingabePanel", constraints: NORTH, layout: new MigLayout("fillx", "[left,fill]para[left]")) {
@@ -37,7 +37,7 @@ jideScrollPane(constraints: "grow") {
         }
         // Tabelle aller Räume
         panel(id: "raumTabellePanel", constraints: CENTER, layout: new MigLayout("fill", "[fill]")) {
-            jideScrollPane() {
+            jideScrollPane(constraints: "grow") {
                 table(id: "raumTabelle", model: model.createRaumTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
                 }
             }

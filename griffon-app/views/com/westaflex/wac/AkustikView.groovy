@@ -12,12 +12,20 @@ package com.westaflex.wac
 import net.miginfocom.swing.MigLayout
 
 // Akustikberechnung
-panel(id: "akustikTabPanel") {
-	// Tabellen für 
-	jideTabbedPane(id: "akustikTabGroup", constraints: "span") {
-		buildLayout("Zuluft")
-		buildLayout("Abluft")
-	}
+jideScrollPane(constraints: "grow") {
+    panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
+        panel(id: "akustikTabPanel", layout: new MigLayout("fill", "[]", "")) {
+            // Tabellen für
+            jideTabbedPane(id: "akustikTabGroup", constraints: "grow, span") {
+                panel(id: "akustikZuluftTab", title: "Zuluft", layout: new MigLayout("fill", "[]", "")) {
+                    buildLayout("Zuluft")
+                }
+                panel(id: "akustikAbluftTab", title: "Abluft", layout: new MigLayout("fill", "[]", "")) {
+                    buildLayout("Abluft")
+                }
+            }
+        }
+    }
 }
 // akustikTabGroup
 akustikTabGroup.with {
@@ -30,7 +38,7 @@ akustikTabGroup.with {
  */
 def buildLayout(tabname) {
 	// Akustikberechnung - Zuluft
-	panel(id: "akustik${tabname}Tab", title: tabname, layout: new MigLayout("fillx, wrap 4", "[left,fill]para[right,fill]para[center,fill]para[left,fill]", "[fill]")) {
+	panel(layout: new MigLayout("fillx, wrap 4", "[left,fill]para[right,fill]para[center,fill]para[left,fill]", "[fill]")) {
 		label("Raumbezeichnung", constraints: "cell 0 0")
 		label("", constraints: "cell 1 0, width 150::200")
 		// TODO Binding: Zentralgerät aus RaumVsView -> raumVsZuAbluftventileZentralgerat

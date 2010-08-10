@@ -27,7 +27,7 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
 			}
 			// Anlagendaten
 			panel(id: "anlageTab", title: "Anlagedaten", layout: new MigLayout("fillx")) {
-				jideScrollPane() { build(AnlagendatenView) }
+				build(AnlagendatenView)
 			}
 			// Raumdaten
 			panel(id: "raumTab", title: "Raumdaten", layout: new MigLayout("fillx")) {

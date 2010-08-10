@@ -13,60 +13,61 @@ import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
 jideScrollPane(constraints: "grow") {
-	panel(constraints: "grow", layout: new MigLayout("fillx", "[fill]para[fill]para[fill]", "[fill]")) {
-		
-		// Gerätestandort
-		panel(id: "anlageGeratestandortPanel", border: titledBorder(title: "Gerätestandort"), layout: new MigLayout("wrap 1", "[]", "")) {
-			buttonGroup().with {
-				add radioButton(id: "anlageGeratestandortKG", text: "Kellergeschoss")
-				add radioButton(id: "anlageGeratestandortEG", text: "Erdgeschoss")
-				add radioButton(id: "anlageGeratestandortOG", text: "Obergeschoss")
-				add radioButton(id: "anlageGeratestandortDG", text: "Dachgeschoss")
-				add radioButton(id: "anlageGeratestandortSB", text: "Spitzboden")
-			}
-		}
-		
-		// Luftkanalverlegung
-		panel(id: "anlageLuftkanalverlegungPanel", border: titledBorder(title: "Luftkanalverlegung"), layout: new MigLayout("wrap 1", "[]", "")) {
-			label("Quadroflexsysteme 100 mit nur 60 mm Aufbauhöhe")
-			checkBox(id: "anlageLuftkanalverlegungAufputz",     text: "Aufputz (Abkastung)")
-			checkBox(id: "anlageLuftkanalverlegungDammschicht", text: "Dämmschicht unter Estrich")
-			checkBox(id: "anlageLuftkanalverlegungDecke",       text: "Decke (abgehängt)")
-			checkBox(id: "anlageLuftkanalverlegungSpitzboden",  text: "Spitzboden")
-		}
-	
-		// Außenluft
-		panel(id: "anlageAussenluftPanel", border: titledBorder(title: "Außenluft"), constraints: "wrap", layout: new MigLayout("wrap 1", "[]", "")) {
-			buttonGroup().with {
-				add radioButton(id: "anlageAussenluftDach",     text: "Dachdurchführung")
-				add radioButton(id: "anlageAussenluftWand",     text: "Wand (Luftgitter)")
-				add radioButton(id: "anlageAussenluftErdwarme", text: "Erdwärmetauscher")
-			}
-		}
-	
-		// Zuluftdurchlässe
-		panel(id: "anlageZuluftPanel", border: titledBorder(title: "Zuluftdurchlässe"), layout: new MigLayout("wrap 1", "[]", "")) {
-			checkBox(id: "anlageZuluftTellerventile",  text: "Tellerventile")
-			checkBox(id: "anlageZuluftSchlitzauslass", text: "Schlitzauslass (Weitwurfdüse)")
-			checkBox(id: "anlageZuluftFussboden",      text: "Fußbodenauslass")
-			checkBox(id: "anlageZuluftSockel",         text: "Sockelquellauslass")
-		}
-	
-		// Abluftdurchlässe
-		panel(id: "anlageAbluft", border: titledBorder(title: "Abluftdurchlässe"), layout: new MigLayout("wrap 1", "[]", "")) {
-			checkBox(id: "anlageAbluftTellerventile",  text: "Tellerventile (Standard)")
-		}
-	
-		// Fortluft
-		panel(id: "anlageFortluftPanel", border: titledBorder(title: "Fortluft"), constraints: "wrap", layout: new MigLayout("wrap 1", "[]", "")) {
-			buttonGroup().with {
-				add radioButton(id: "anlageFortluftDach",         text: "Dachdurchführung")
-				add radioButton(id: "anlageFortluftWand",         text: "Wand (Luftgitter)")
-				add radioButton(id: "anlageFortluftLichtschacht", text: "Lichtschacht (Kellergeschoss)")
-			}
-		}
+    panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
+        panel(constraints: "grow", layout: new MigLayout("fillx", "[fill]para[fill]para[fill]", "[fill]")) {
+            // Gerätestandort
+            panel(id: "anlageGeratestandortPanel", border: titledBorder(title: "Gerätestandort"), layout: new MigLayout("wrap 1", "[]", "")) {
+                buttonGroup().with {
+                    add radioButton(id: "anlageGeratestandortKG", text: "Kellergeschoss")
+                    add radioButton(id: "anlageGeratestandortEG", text: "Erdgeschoss")
+                    add radioButton(id: "anlageGeratestandortOG", text: "Obergeschoss")
+                    add radioButton(id: "anlageGeratestandortDG", text: "Dachgeschoss")
+                    add radioButton(id: "anlageGeratestandortSB", text: "Spitzboden")
+                }
+            }
 
-        panel(id: "test", layout: new MigLayout("fillx", "[fill]para[fill]", "[fill]"), constraints: "grow, span") {
+            // Luftkanalverlegung
+            panel(id: "anlageLuftkanalverlegungPanel", border: titledBorder(title: "Luftkanalverlegung"), layout: new MigLayout("wrap 1", "[]", "")) {
+                label("Quadroflexsysteme 100 mit nur 60 mm Aufbauhöhe")
+                checkBox(id: "anlageLuftkanalverlegungAufputz",     text: "Aufputz (Abkastung)")
+                checkBox(id: "anlageLuftkanalverlegungDammschicht", text: "Dämmschicht unter Estrich")
+                checkBox(id: "anlageLuftkanalverlegungDecke",       text: "Decke (abgehängt)")
+                checkBox(id: "anlageLuftkanalverlegungSpitzboden",  text: "Spitzboden")
+            }
+
+            // Außenluft
+            panel(id: "anlageAussenluftPanel", border: titledBorder(title: "Außenluft"), constraints: "wrap", layout: new MigLayout("wrap 1", "[]", "")) {
+                buttonGroup().with {
+                    add radioButton(id: "anlageAussenluftDach",     text: "Dachdurchführung")
+                    add radioButton(id: "anlageAussenluftWand",     text: "Wand (Luftgitter)")
+                    add radioButton(id: "anlageAussenluftErdwarme", text: "Erdwärmetauscher")
+                }
+            }
+        }
+        panel(constraints: "grow", layout: new MigLayout("fillx", "[fill]para[fill]para[fill]", "[fill]")) {
+            // Zuluftdurchlässe
+            panel(id: "anlageZuluftPanel", border: titledBorder(title: "Zuluftdurchlässe"), layout: new MigLayout("wrap 1", "[]", "")) {
+                checkBox(id: "anlageZuluftTellerventile",  text: "Tellerventile")
+                checkBox(id: "anlageZuluftSchlitzauslass", text: "Schlitzauslass (Weitwurfdüse)")
+                checkBox(id: "anlageZuluftFussboden",      text: "Fußbodenauslass")
+                checkBox(id: "anlageZuluftSockel",         text: "Sockelquellauslass")
+            }
+
+            // Abluftdurchlässe
+            panel(id: "anlageAbluft", border: titledBorder(title: "Abluftdurchlässe"), layout: new MigLayout("wrap 1", "[]", "")) {
+                checkBox(id: "anlageAbluftTellerventile",  text: "Tellerventile (Standard)")
+            }
+
+            // Fortluft
+            panel(id: "anlageFortluftPanel", border: titledBorder(title: "Fortluft"), constraints: "wrap", layout: new MigLayout("wrap 1", "[]", "")) {
+                buttonGroup().with {
+                    add radioButton(id: "anlageFortluftDach",         text: "Dachdurchführung")
+                    add radioButton(id: "anlageFortluftWand",         text: "Wand (Luftgitter)")
+                    add radioButton(id: "anlageFortluftLichtschacht", text: "Lichtschacht (Kellergeschoss)")
+                }
+            }
+        }
+        panel(layout: new MigLayout("fillx", "[fill]para[fill]", "[fill]"), constraints: "grow, span") {
             // Energie-Kennzeichen
             panel(id: "anlageEnergiePanel", border: titledBorder(title: "Energie-Kennzeichen"), layout: new MigLayout("wrap 1", "[]", "")) {
                 checkBox(id: "anlageEnergieZuAbluftWarme", text: "Zu-/Abluftgeräte mit Wärmerückgewinnung")
@@ -85,29 +86,29 @@ jideScrollPane(constraints: "grow") {
                 label(id: "anlageHygieneNachricht", foreground: java.awt.Color.RED, text: " ")
             }
         }
-	
-		// Rückschlagkappe
-		panel(id: "anlageRuckschlagPanel", border: titledBorder(title: "Rückschlagkappe"), layout: new MigLayout("wrap 1", "[]", "")) {
-			checkBox(id: "anlageRuckschlagkappe", text: "Lüftungsanlage mit Rückschlagkappe")
-		}
-	
-		// Schallschutz-Kennzeichnung
-		panel(id: "anlageSchallschutzPanel", border: titledBorder(title: "Schallschutz-Kennzeichnung"), layout: new MigLayout("wrap 1", "[]", "")) {
-			checkBox(id: "anlageSchallschutz", text: "Lüftungsanlage mit Schallschutz")
-		}
-	
-		// Feuerstätten-Kennzeichnung
-		panel(id: "anlageFeuerstattePanel", border: titledBorder(title: "Feuerstätten-Kennzeichnung"), constraints: "wrap", layout: new MigLayout("wrap 1", "[]", "")) {
-			checkBox(id: "anlageFeuerstatte", text: "Lüftungsanlage mit Sicherheitseinrichtung")
-		}
-	
-		// Kennzeichnung der Lüftungsanlage
-		panel(id: "anlageKennzeichnungPanel", border: titledBorder(title: "Kennzeichnung der Lüftungsanlage"), constraints: "span", layout: new MigLayout("wrap 1", "[]", "")) {
-			label(id: "anlageKennzeichnungLuftungsanlage", foreground: java.awt.Color.RED)
-		}
-	
-	}
-	
+        panel(constraints: "grow", layout: new MigLayout("fillx", "[fill]para[fill]para[fill]", "[fill]")) {
+            // Rückschlagkappe
+            panel(id: "anlageRuckschlagPanel", border: titledBorder(title: "Rückschlagkappe"), layout: new MigLayout("wrap 1", "[]", "")) {
+                checkBox(id: "anlageRuckschlagkappe", text: "Lüftungsanlage mit Rückschlagkappe")
+            }
+
+            // Schallschutz-Kennzeichnung
+            panel(id: "anlageSchallschutzPanel", border: titledBorder(title: "Schallschutz-Kennzeichnung"), layout: new MigLayout("wrap 1", "[]", "")) {
+                checkBox(id: "anlageSchallschutz", text: "Lüftungsanlage mit Schallschutz")
+            }
+
+            // Feuerstätten-Kennzeichnung
+            panel(id: "anlageFeuerstattePanel", border: titledBorder(title: "Feuerstätten-Kennzeichnung"), constraints: "wrap", layout: new MigLayout("wrap 1", "[]", "")) {
+                checkBox(id: "anlageFeuerstatte", text: "Lüftungsanlage mit Sicherheitseinrichtung")
+            }
+        }
+        panel(constraints: "grow", layout: new MigLayout("fillx", "[fill]para[fill]para[fill]", "[fill]")) {
+            // Kennzeichnung der Lüftungsanlage
+            panel(id: "anlageKennzeichnungPanel", border: titledBorder(title: "Kennzeichnung der Lüftungsanlage"), constraints: "span", layout: new MigLayout("wrap 1", "[]", "")) {
+                label(id: "anlageKennzeichnungLuftungsanlage", foreground: java.awt.Color.RED)
+            }
+        }
+    }
 }
 
 // Bindings
