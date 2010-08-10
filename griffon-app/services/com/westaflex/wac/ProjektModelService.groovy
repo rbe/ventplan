@@ -194,9 +194,9 @@ class ProjektModelService {
 								erdwarme: X.vb { gebaude."aussenluft".find { it.text() == "ERD" } },
 							],
 						zuluft: [
-								tellerventile:  X.vb { gebaude."zuluftdurchlasse".find { it.text() == "TEL" } }
-								schlitzauslass: X.vb { gebaude."zuluftdurchlasse".find { it.text() == "SCH" } }
-								fussboden:      X.vb { gebaude."zuluftdurchlasse".find { it.text() == "FUS" } }
+								tellerventile:  X.vb { gebaude."zuluftdurchlasse".find { it.text() == "TEL" } },
+								schlitzauslass: X.vb { gebaude."zuluftdurchlasse".find { it.text() == "SCH" } },
+								fussboden:      X.vb { gebaude."zuluftdurchlasse".find { it.text() == "FUS" } },
 								sockel:         X.vb { gebaude."zuluftdurchlasse".find { it.text() == "SOC" } }
 							],
 						abluft: [
@@ -209,14 +209,14 @@ class ProjektModelService {
 							],
 						energie: [
 								zuAbluftWarme: X.vb { zentralgerat."energie"."zuAbluftWarme".text() },
-								bemessung:     X.vb { zentralgerat."energie"."bemessung".text() }
-								ruckgewinnung: X.vb { zentralgerat."energie"."ruckgewinnung".text() }
+								bemessung:     X.vb { zentralgerat."energie"."bemessung".text() },
+								ruckgewinnung: X.vb { zentralgerat."energie"."ruckgewinnung".text() },
 								regelung:      X.vb { zentralgerat."energie"."regelung".text() }
 							],
 						hygiene: [
-								ausfuhrung:         X.vb { zentralgerat."hygiene"."ausfuhrung".text() }
-								filterung:          X.vb { zentralgerat."hygiene"."filterung".text() }
-								keineVerschmutzung: X.vb { zentralgerat."hygiene"."keineVerschmutzung".text() }
+								ausfuhrung:         X.vb { zentralgerat."hygiene"."ausfuhrung".text() },
+								filterung:          X.vb { zentralgerat."hygiene"."filterung".text() },
+								keineVerschmutzung: X.vb { zentralgerat."hygiene"."keineVerschmutzung".text() },
 								dichtheitsklasseB:  X.vb { zentralgerat."hygiene"."dichtheitsklasseB".text() }
 							],
 						// Will be calculated
