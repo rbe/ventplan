@@ -166,6 +166,28 @@ class ProjektController {
 	 */
 	
 	/**
+	 * 
+	 */
+	def afterLoading = {
+		println "afterLoading: fire RaumHinzufugen"
+		// Räume
+		model.map.raum.raume.each { raum ->
+			publishEvent "RaumHinzugefugt", [raum.position]
+		}
+		// HACK
+		try { Thread.sleep(500) } catch (e) {}
+		model.resyncRaumTableModels()
+		println "afterLoading: setting model.map.dirty to false"
+		// Set dirty-flag in project's model to false
+		model.map.dirty = false
+		// Update tab title to ensure that no "unsaved-data-star" is displayed
+		setTabTitle()
+		// Splash screen
+		println "projektOffnen: disposing splashscreen"
+		Wac2Splash.instance.dispose()
+	}
+	
+	/**
 	 * Save this project.
 	 * @return Boolean Was project successfully saved to a file?
 	 */
