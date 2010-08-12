@@ -137,8 +137,8 @@ class ProjektController {
 	}
 	
 	/**
+	 * TODO mmu UNUSED?
 	 * Dialog anzeigen, wenn ein nicht gespeichertes Projekt geschlossen wird.
-	 */
 	def closeProjectTab = { evt = null ->
 		println "closeProjectTab: closeTab=${app.controllers}"
 		def choice = app.controllers["Dialog"].showCloseProjectDialog()
@@ -158,6 +158,7 @@ class ProjektController {
 				break
 		}
 	}
+	 */
 	
 	/**
 	 * Save this project.
