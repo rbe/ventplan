@@ -84,9 +84,8 @@ class Wac2Controller {
 		if (canClose) {
 			app.shutdown()
 		} else {
-			println "windowClosing(${evt.dump()}): there are unsaved changes"
+			println "exitApplication: there are unsaved changes"
 			// Show dialog: ask user for save all, cancel, quit
-			println "projektSchliessen: there's unsaved data"
 			def choice = app.controllers["Dialog"].showApplicationCloseDialog()
 			println "exitApplication: choice=${choice}"
 			switch (choice) {
@@ -95,10 +94,9 @@ class Wac2Controller {
 					// TODO rbe Projekte speichern aufrufen
 					app.shutdown()
 					break
-				case 1:
-					// Cancel: do nothing...
+				case 1: // Cancel: do nothing...
 					println "Abbrechen..."
-					app.shutdown() // REMOVE THIS LATER
+					app.shutdown() // TODO mmu REMOVE THIS LATER
 					break
 				case 2:
 					println "Schliessen"
@@ -187,10 +185,9 @@ class Wac2Controller {
 			def choice = app.controllers["Dialog"].showCloseProjectDialog()
 			println "projektSchliessen: choice=${choice}"
 			switch (choice) {
-				case 0:
-					// Save: save the closing project
-					println "Speichern und Beenden"
-					projektSpeichern(evt)
+				case 0: // Save: save and close project
+					println "projektSchliessen: save and close"
+					aktivesProjektSpeichern(evt)
 					// MVC Gruppe zerstören
 					destroyMVCGroup(model.aktivesProjekt)
 					// Aus Liste der Projekte entfernen
@@ -200,13 +197,11 @@ class Wac2Controller {
 					// Anderes Projekt aktivieren?
 					projektIndexAktivieren(view.projektTabGroup.selectedIndex)
 					break
-				case 1:
-					// Cancel: do nothing...
-					println "projektSchliessen: Abbrechen"
+				case 1: // Cancel: do nothing...
+					println "projektSchliessen: cancel"
 					break
-				case 2:
-					// Close: just close the tab...
-					println "projektSchliessen: Schliessen ohne Speichern"
+				case 2: // Close: just close the tab...
+					println "projektSchliessen: close without save"
 					// MVC Gruppe zerstören
 					destroyMVCGroup(model.aktivesProjekt)
 					// Aus Liste der Projekte entfernen
