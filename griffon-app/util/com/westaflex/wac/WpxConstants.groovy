@@ -67,11 +67,12 @@ class WpxConstants {
 	 * Ticket #20
 	 */
 	def static get(String p) {
+		print "WpxConstants: mapping ${p?.dump()}"
 		def r = WpxConstants.m[p]
 		if (!r) {
 			r = GH.invertMap(WpxConstants.m)[p]
 		}
-		println "WpxConstants: mapping ${p?.dump()} -> ${r?.dump()}"
+		println " -> ${r?.dump()}"
 		r
 	}
 	
