@@ -40,6 +40,7 @@ class Wac2Controller {
 			model.meta.raumVsUberstromelemente = wacModelService.getUberstromelemente()
 			// Raumvolumenströme - Zentralgerät + Volumenstrom
 			model.meta.zentralgerat = wacModelService.getZentralgerat()
+			// Liste aller möglichen Volumenströme
 			model.meta.volumenstromZentralgerat =
 				wacModelService.getVolumenstromFurZentralgerat(model.meta.zentralgerat[0])
 			// Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
@@ -236,42 +237,47 @@ class Wac2Controller {
 				// Load data
 				Wac2Splash.instance.setup()
 				Wac2Splash.instance.loadingProject()
+				// Start thread
+				def projektModel, projektView, projektController
 				doOutside {
 					// May return null due to org.xml.sax.SAXParseException while validating against XSD
 					def document = projektModelService.load(file)
 					if (document) {
-						println "projektOffnen: document=${document?.dump()}"
+						//println "projektOffnen: document=${document?.dump()}"
 						// Create new Projekt MVC group
 						String mvcId = "Projekt " + (view.projektTabGroup.tabCount + 1)
-						def (m, v, c) =
+						(projektModel, projektView, projektController) =
 							createMVCGroup("Projekt", mvcId,
 											[projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
 						// Set filename in model
-						m.wpxFilename = file
+						projektModel.wpxFilename = file
 						// Convert loaded XML into map
 						def map = projektModelService.toMap(document)
 						// Recursively copy map to model
-						// ATTENTION: asynchronously fires bindings and events in background!
-						GH.deepCopyMap m.map, map
+						// ATTENTION: DOES NOT fire bindings and events asynchronously/in background!
+						// They are fired after leaving this method.
+						GH.deepCopyMap projektModel.map, map
+						// Splash screen
+						doLater {
+							Wac2Splash.instance.creatingUiForProject()
+						}
 						// MVC ID zur Liste der Projekte hinzufügen
 						model.projekte << mvcId
 						// Projekt aktivieren
 						projektAktivieren(mvcId)
-						// Update splash screen, UI
-						doLater {
-							// Splash screen
-							Wac2Splash.instance.creatingUiForProject()
-							// Set dirty-flag in project's model to false
-							m.map.dirty = false
-							// Update tab title to ensure that no "unsaved-data-star" is displayed
-							c.setTabTitle()
-						}
 					} else {
 						// TODO mmu Show error dialog
 						println "projektOffnen: Konnte Projekt nicht öffnen!"
 					}
-					// Splash screen
-					Wac2Splash.instance.dispose()
+					// Bindings and events of ProjektModel are fired now!?
+					println "-" * 80
+					println "projektOffnen: ProjektModel bidings/events fire now!?"
+					println "-" * 80
+					// HACK
+					doOutside {
+						try { Thread.sleep(1 * 1000) } catch (e) {}
+						projektController.afterLoading()
+					}
 				}
 			}
 		}
@@ -280,11 +286,14 @@ class Wac2Controller {
 	/**
 	 * Projekt speichern. Es wird der Dateiname aus dem ProjektModel 'wpxFilename' verwendet.
 	 * Ist er nicht gesetzt, wird "Projekt speichern als" aufgerufen.
+	 * @return Boolean Was project saved sucessfully?
 	 */
 	def aktivesProjektSpeichern = { evt = null ->
 		def mvc = getMVCGroupAktivesProjekt()
-		if (mvc.controller.save()) {
+		def saved = mvc.controller.save()
+		if (saved) {
 			println "aktivesProjektSpeichern: Projekt gespeichert in ${mvc.model.wpxFilename}"
+			saved
 		} else {
 			println "aktivesProjektSpeichern: Projekt nicht gespeichert, kein Dateiname (mvc.model.wpxFilename=${mvc.model.wpxFilename?.dump()})?"
 			aktivesProjektSpeichernAls(evt)
@@ -293,6 +302,7 @@ class Wac2Controller {
 	
 	/**
 	 * Zeige FileChooser, setze gewählten Dateinamen im ProjektModel und rufe "Projekt speichern".
+	 * @return Boolean Was project saved sucessfully?
 	 */
 	def aktivesProjektSpeichernAls = { evt = null ->
 		def mvc = getMVCGroupAktivesProjekt()
