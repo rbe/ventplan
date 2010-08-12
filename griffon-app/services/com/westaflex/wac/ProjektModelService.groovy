@@ -86,6 +86,8 @@ class ProjektModelService {
 			def raume = []
 			gebaude."raum".each { room ->
 				def r = [
+					position: X.vi { room."position".text() },
+					raumNummer: X.vs { room."raumnummer".text() },
 					raumBezeichnung: X.vs { room."bezeichnung".text() },
 					raumTyp: X.vs { WX[room."raumtyp".text()] },
 					raumLuftart: X.vs { room."luftart".text() },
@@ -108,10 +110,9 @@ class ProjektModelService {
 					raumVentilebene: X.vs { room."ventilebene".text() },
 					raumAnzahlUberstromVentile: X.vi { room."anzahlUberstromventile".text() },
 					raumUberstromElement: X.vs { room."uberstromelement".text() },
-					raumNummer: X.vs { room."raumnummer".text() },
 					turen: []
-				]
-				println "####!!!!!!! r=${r.dump()}"
+				] as ObservableMap
+				//println "####!!!!!!! r=${r.dump()}"
 				raume << r
 			}
 			def anlage = p."anlage"
@@ -123,7 +124,7 @@ class ProjektModelService {
 							firma1:          X.vs { grosshandel."firma1".text() },
 							firma2:          X.vs { grosshandel."firma2".text() },
 							strasse:         X.vs { grosshandel."adresse"."strasse".text() },
-							plz:             X.vs { grosshandel."adresse"."plz".text() },
+							plz:             X.vs { grosshandel."adresse"."postleitzahl".text() },
 							ort:             X.vs { grosshandel."adresse"."ort".text() },
 							telefon:         X.vs { grosshandel."tel".text() },
 							telefax:         X.vs { grosshandel."fax".text() },
@@ -133,7 +134,7 @@ class ProjektModelService {
 							firma1:          X.vs { ausfuhrende."firma1".text() },
 							firma2:          X.vs { ausfuhrende."firma2".text() },
 							strasse:         X.vs { ausfuhrende."adresse"."strasse".text() },
-							plz:             X.vs { ausfuhrende."adresse"."plz".text() },
+							plz:             X.vs { ausfuhrende."adresse"."postleitzahl".text() },
 							ort:             X.vs { ausfuhrende."adresse"."ort".text() },
 							telefon:         X.vs { ausfuhrende."tel".text() },
 							telefax:         X.vs { ausfuhrende."fax".text() },
@@ -168,7 +169,7 @@ class ProjektModelService {
 						faktorBesondereAnforderungen: X.vd { gebaude."besAnfFaktor".text() },
 						geplanteBelegung: [
 								personenanzahl:         X.vi { gebaude."personenAnzahl".text() },
-								aussenluftVsProPerson:  X.vi { gebaude."personenVolumen".text() },
+								aussenluftVsProPerson:  X.vi { gebaude."personenVolumen".text() } / X.vi { gebaude."personenAnzahl".text() },
 								// Will be calculated
 								//mindestaussenluftrate: 0.0d
 							],
@@ -182,25 +183,25 @@ class ProjektModelService {
 								SG: X.vb { zentralgerat."geratestandort".text() == "SG" }
 							],
 						luftkanalverlegung: [
-								aufputz:     X.vb { gebaude."luftkanalverlegung".find { it.text() == "AUF" } },
-								dammschicht: X.vb { gebaude."luftkanalverlegung".find { it.text() == "DAM" } },
-								decke:       X.vb { gebaude."luftkanalverlegung".find { it.text() == "DEC" } },
-								spitzboden:  X.vb { gebaude."luftkanalverlegung".find { it.text() == "SPI" } },
+								aufputz:     X.vb { gebaude."luftkanalverlegung".find { it.text() == "AUF" } == "AUF" },
+								dammschicht: X.vb { gebaude."luftkanalverlegung".find { it.text() == "DAM" } == "DAM" },
+								decke:       X.vb { gebaude."luftkanalverlegung".find { it.text() == "DEC" } == "DEC" },
+								spitzboden:  X.vb { gebaude."luftkanalverlegung".find { it.text() == "SPI" } == "SPI" },
 							],
 						// TODO move to complex type zentralgerat
 						aussenluft: [
-								dach:     X.vb { gebaude."aussenluft".find { it.text() == "DAC" } },
-								wand:     X.vb { gebaude."aussenluft".find { it.text() == "WAN" } },
-								erdwarme: X.vb { gebaude."aussenluft".find { it.text() == "ERD" } },
+								dach:     X.vb { gebaude."aussenluft".find { it.text() == "DAC" } == "DAC" },
+								wand:     X.vb { gebaude."aussenluft".find { it.text() == "WAN" } == "WAN" },
+								erdwarme: X.vb { gebaude."aussenluft".find { it.text() == "ERD" } == "ERD" },
 							],
 						zuluft: [
-								tellerventile:  X.vb { gebaude."zuluftdurchlasse".find { it.text() == "TEL" } },
-								schlitzauslass: X.vb { gebaude."zuluftdurchlasse".find { it.text() == "SCH" } },
-								fussboden:      X.vb { gebaude."zuluftdurchlasse".find { it.text() == "FUS" } },
-								sockel:         X.vb { gebaude."zuluftdurchlasse".find { it.text() == "SOC" } }
+								tellerventile:  X.vb { gebaude."zuluftdurchlasse".find { it.text() == "TEL" } == "TEL" },
+								schlitzauslass: X.vb { gebaude."zuluftdurchlasse".find { it.text() == "SCH" } == "SCH" },
+								fussboden:      X.vb { gebaude."zuluftdurchlasse".find { it.text() == "FUS" } == "FUS" },
+								sockel:         X.vb { gebaude."zuluftdurchlasse".find { it.text() == "SOC" } == "SOC" }
 							],
 						abluft: [
-								tellerventile: X.vb { gebaude."abluftdurchlasse".find { it.text() == "TEL" } }
+								tellerventile: X.vb { gebaude."abluftdurchlasse".find { it.text() == "TEL" } == "TEL" }
 							],
 						fortluft: [
 								dach:         X.vb { gebaude."fortluft".find { it.text() == "DAC" } },
@@ -208,21 +209,21 @@ class ProjektModelService {
 								lichtschacht: X.vb { gebaude."fortluft".find { it.text() == "LIC" } },
 							],
 						energie: [
-								zuAbluftWarme: X.vb { zentralgerat."energie"."zuAbluftWarme".text() },
-								bemessung:     X.vb { zentralgerat."energie"."bemessung".text() },
-								ruckgewinnung: X.vb { zentralgerat."energie"."ruckgewinnung".text() },
-								regelung:      X.vb { zentralgerat."energie"."regelung".text() }
+								zuAbluftWarme: X.vb { zentralgerat."energie"."zuAbluftWarme".text() == "true" },
+								bemessung:     X.vb { zentralgerat."energie"."bemessung".text() == "true" },
+								ruckgewinnung: X.vb { zentralgerat."energie"."ruckgewinnung".text() == "true" },
+								regelung:      X.vb { zentralgerat."energie"."regelung".text() == "true" }
 							],
 						hygiene: [
-								ausfuhrung:         X.vb { zentralgerat."hygiene"."ausfuhrung".text() },
-								filterung:          X.vb { zentralgerat."hygiene"."filterung".text() },
-								keineVerschmutzung: X.vb { zentralgerat."hygiene"."keineVerschmutzung".text() },
-								dichtheitsklasseB:  X.vb { zentralgerat."hygiene"."dichtheitsklasseB".text() }
+								ausfuhrung:         X.vb { zentralgerat."hygiene"."ausfuhrung".text() == "true" },
+								filterung:          X.vb { zentralgerat."hygiene"."filterung".text() == "true" },
+								keineVerschmutzung: X.vb { zentralgerat."hygiene"."keineVerschmutzung".text() == "true" },
+								dichtheitsklasseB:  X.vb { zentralgerat."hygiene"."dichtheitsklasseB".text() == "true" }
 							],
 						// Will be calculated
 						//kennzeichnungLuftungsanlage: "ZuAbLS-Z-WE-WÜT-0-0-0-0-0",
 						zentralgerat:             X.vs { anlage."zentralgerat"."name".text() },
-						zentralgeratManuell:      X.vb { anlage."zentralgerat"."manuell".text() },
+						zentralgeratManuell:      X.vb { anlage."zentralgerat"."manuell".text() == "true" },
 						volumenstromZentralgerat: X.vi { anlage."zentralgerat"."volumenstrom".text() },
 					],
 				raum: [
@@ -310,13 +311,13 @@ class ProjektModelService {
 			X.tc { luftwechsel(map.raumLuftwechsel) }
 			X.tc { volumenstrom(map.raumVolumenstrom) }
 			X.tc { bezeichnungAbluftventile(map.raumBezeichnungAbluftventile) }
-			X.tc { anzahlAbluftventile(map.raumAnzahlAbluftventile) }
+			X.tc { anzahlAbluftventile(map.raumAnzahlAbluftventile) as Integer }
 			X.tc { abluftmengeJeVentil(map.raumAbluftmengeJeVentil) }
 			X.tc { bezeichnungZuluftventile(map.raumBezeichnungZuluftventile) }
-			X.tc { anzahlZuluftventile(map.raumAnzahlZuluftventile) }
+			X.tc { anzahlZuluftventile(map.raumAnzahlZuluftventile) as Integer }
 			X.tc { zuluftmengeJeVentil(map.raumZuluftmengeJeVentil) }
 			X.tc { ventilebene(map.raumVentilebene) }
-			X.tc { anzahlUberstromventile(map.raumAnzahlUberstromVentile) }
+			X.tc { anzahlUberstromventile(map.raumAnzahlUberstromVentile) as Integer }
 			X.tc { uberstromelement(map.raumUberstromElement) }
 			// Türen
 			map.turen.eachWithIndex { t, i ->
@@ -333,6 +334,7 @@ class ProjektModelService {
 	 */
 	def makeGebaude = { map ->
 		def g = map.gebaude
+		def geo = g.geometrie
 		def a = map.anlage
 		domBuilder.gebaude() {
 			X.tc { gebaudeTyp(WX[g.typ.grep { it.value == true }?.key[0]]) }
@@ -346,31 +348,33 @@ class ProjektModelService {
 			X.tc { luftdichtheitDruckexponent(g.luftdichtheit.druckexponent) }
 			X.tc { besAnfFaktor(g.faktorBesondereAnforderungen) }
 			X.tc { personenAnzahl(g.geplanteBelegung.personenanzahl) }
-			// TODO
 			X.tc { personenVolumen(g.geplanteBelegung.mindestaussenluftrate) }
 			// TODO move into zentralgerat
-			println a.aussenluft
-			try { println a.aussenluft.grep { it.value == true }?.key[0] } catch (e) {e.printStackTrace()}
 			X.tc { aussenluft(WX[a.aussenluft.grep { it.value == true }?.key[0]]) }
 			X.tc { fortluft(WX[a.fortluft.grep { it.value == true }?.key[0]]) }
-			[a.luftkanalverlegung].each {
-				X.tc { luftkanalverlegung(WX[it]) }
+			X.tc {
+				a.luftkanalverlegung.grep { it.value }.collect { it.key }.each {
+					luftkanalverlegung(WX[it])
+				}
 			}
-			[a.zuluft].each {
-				X.tc { zuluftdurchlasse(WX[it]) }
+			X.tc {
+				a.zuluft.grep { it.value }.collect { it.key }.each {
+					zuluftdurchlasse(WX[it])
+				}
 			}
-			[a.abluft].each {
-				X.tc { abluftdurchlasse(WX[it]) }
+			X.tc {
+				a.abluft.grep { it.value }.collect { it.key }.each {
+					abluftdurchlasse(WX[it])
+				}
 			}
 			// TODO end
 			// Geometrie
 			geometrie() {
-				def gg = g.geometrie
-				X.tc { wohnflache(gg.wohnflache) }
-				X.tc { mittlereRaumhohe(gg.raumhohe) }
-				X.tc { luftvolumen(gg.luftvolumen) }
-				X.tc { geluftetesVolumen(gg.geluftetesVolumen) }
-				X.tc { gelufteteFlache(gg.gelufteteFlache) }
+				X.tc { wohnflache(geo.wohnflache) }
+				X.tc { mittlereRaumhohe(geo.raumhohe) }
+				X.tc { luftvolumen(geo.luftvolumen) }
+				X.tc { geluftetesVolumen(geo.geluftetesVolumen) }
+				X.tc { gelufteteFlache(geo.gelufteteFlache) }
 			}
 			// Räume
 			map.raum.raume.each { r -> makeRaum(r) }
@@ -413,7 +417,7 @@ class ProjektModelService {
 				ersteller() {
 					person()
 				}
-				X.tc { bauvorhaben(map.kundendaten.bauvorhaben) }
+				X.tc { bauvorhaben(map.kundendaten.bauvorhaben) } { bauvorhaben() }
 				X.tc { notizen(map.kundendaten.notizen) }
 				makeGebaude(map)
 				makeFirma("Grosshandel", map.kundendaten.grosshandel)
