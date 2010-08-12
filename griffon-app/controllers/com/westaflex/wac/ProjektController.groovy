@@ -46,7 +46,7 @@ class ProjektController {
 		model.meta = app.models["wac2"].meta
 		setDefaultValues()
 		// Add PropertyChangeListener to our model.meta
-		GH.addMapPropertyChangeListener("meta", model.meta)
+		//GH.addMapPropertyChangeListener("meta", model.meta)
 		// Add PropertyChangeListener to our model.map
 		GH.addMapPropertyChangeListener("map", model.map, { evt ->
 				// Only set dirty flag, when modified property is not the dirty flag
@@ -73,15 +73,20 @@ class ProjektController {
 		GH.tieEventListener(this, RaumVsEvents, props)
 		GH.tieEventListener(this, DvbKanalnetzEvents, props)
 		GH.tieEventListener(this, DvbVentileinstellungEvents, props)
+		println "-" * 80
+		println "ProjektController.mvcGroupInit leaving"
+		println "-" * 80
 	}
 	
 	/**
 	 * Setze Standardwerte (meist in Comboboxen).
 	 */
 	def setDefaultValues() {
-		// Raumvolumenströme
+		// Raumvolumenströme, Zentralgerät
 		model.map.anlage.zentralgerat = model.meta.zentralgerat[0]
-		model.map.anlage.volumenstromZentralgerat = model.meta.volumenstromZentralgerat
+		// Raumvolumenströme, Volumenstrom des Zentralgeräts; default ist erster Wert der Liste
+		model.map.anlage.volumenstromZentralgerat = model.meta.volumenstromZentralgerat[0]
+		println "ProjektController.mvcGroupInit: model.map.anlage.volumenstromZentralgerat=${model.map.anlage.volumenstromZentralgerat}"
 		// Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
 		model.map.dvb.kanalbezeichnung = model.meta.dvbKanalbezeichnung
 		// Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte
