@@ -176,6 +176,17 @@ class Wac2Controller {
 	 * Das aktive Projekt schliessen.
 	 */
 	def projektSchliessen = { evt = null ->
+		// Closure for closing the active project
+		def clacpr = {
+			// Tab entfernen
+			view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
+			// MVC Gruppe zerstören
+			destroyMVCGroup(model.aktivesProjekt)
+			// Aus Liste der Projekte entfernen
+			model.projekte.remove(model.aktivesProjekt)
+			// Anderes Projekt aktivieren?
+			projektIndexAktivieren(view.projektTabGroup.selectedIndex)
+		}
 		// Projekt zur aktiven Tab finden
 		def mvc = getMVCGroupAktivesProjekt()
 		println "projektSchliessen: model.aktivesProjekt=${model.aktivesProjekt} mvc=${mvc}"
@@ -188,40 +199,19 @@ class Wac2Controller {
 				case 0: // Save: save and close project
 					println "projektSchliessen: save and close"
 					aktivesProjektSpeichern(evt)
-					// MVC Gruppe zerstören
-					destroyMVCGroup(model.aktivesProjekt)
-					// Aus Liste der Projekte entfernen
-					model.projekte.remove(model.aktivesProjekt)
-					// Tab entfernen
-					view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
-					// Anderes Projekt aktivieren?
-					projektIndexAktivieren(view.projektTabGroup.selectedIndex)
+					clacpr()
 					break
 				case 1: // Cancel: do nothing...
 					println "projektSchliessen: cancel"
 					break
 				case 2: // Close: just close the tab...
 					println "projektSchliessen: close without save"
-					// MVC Gruppe zerstören
-					destroyMVCGroup(model.aktivesProjekt)
-					// Aus Liste der Projekte entfernen
-					model.projekte.remove(model.aktivesProjekt)
-					// Tab entfernen
-					view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
-					// Anderes Projekt aktivieren?
-					projektIndexAktivieren(view.projektTabGroup.selectedIndex)
+					clacpr()
 					break
 			}
 		} else {
 			println "projektSchliessen: else... close!!"
-			// MVC Gruppe zerstören
-			destroyMVCGroup(model.aktivesProjekt)
-			// Aus Liste der Projekte entfernen
-			model.projekte.remove(model.aktivesProjekt)
-			// Tab entfernen
-			view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
-			// Anderes Projekt aktivieren?
-			projektIndexAktivieren(view.projektTabGroup.selectedIndex)
+			clacpr()
 		}
 	}
 	
