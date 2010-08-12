@@ -43,7 +43,7 @@ class GriffonHelper {
 	 */
 	def static toString2 = { digits = 2, roundingMode = null ->
 		def d = delegate
-		def r = "0," + "0" * digits
+		def r
 		// Check against NaN, Infinity
 		if (d in [Float.NaN, Double.NaN]) {
 			//r = "NaN"
@@ -53,9 +53,11 @@ class GriffonHelper {
 			def nf = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN)
 			// Use fraction digits?
 			if (d instanceof Integer) {
+				r = "0"
 				nf.minimumFractionDigits = 0
 				nf.maximumFractionDigits = 0
 			} else {
+				r = "0," + "0" * digits
 				nf.minimumFractionDigits = digits
 				nf.maximumFractionDigits = digits
 				nf.roundingMode = roundingMode ?: GriffonHelper.ROUNDING_MODE
@@ -366,7 +368,8 @@ class GriffonHelper {
 	}
 	
 	/**
-	 * Set behaviour for Double-TextFields.
+	 * Set behaviour for Double-TextFields:
+	 * yellow background + right align, select all on focus gained
 	 */
 	def static doubleTextField = { component ->
 		//println "doubleTextField: ${component.class}"
@@ -400,13 +403,13 @@ class GriffonHelper {
 	}
 	
 	/**
-	 * Auto-format a Double-textfield when focus is lost.
+	 * Auto-format a Double-textfield when focus is lost:
+	 * doubleTextField plus: convert value to formatted double on focus lost
 	 */
 	def static autoformatDoubleTextField = { component ->
 		//println "autoformatDoubleTextField: ${component.class}"
 		if (component instanceof javax.swing.JTextField) {
-			// Right-align
-			GriffonHelper.rightAlignTextField(component)
+			GriffonHelper.doubleTextField(component)
 			// Add focus listener
 			component.addFocusListener({ evt ->
 				if (evt.id == java.awt.event.FocusEvent.FOCUS_LOST) {
