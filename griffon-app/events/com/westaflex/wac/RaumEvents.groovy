@@ -41,10 +41,10 @@ class RaumEvents {
 	/**
 	 * Einen neuen Raum hinzufügen.
 	 */
-	def onRaumHinzufugen = { raumWerte ->
-		println "processing event 'RaumHinzufugen': raumWerte=${raumWerte.dump()}"
+	def onRaumHinzufugen = { raum ->
+		println "processing event 'RaumHinzufugen': raum=${raum.dump()}"
 		// Standard-Werte setzen
-		raumWerte.with {
+		raum.with {
 			// Übernehme Wert für Bezeichnung vom Typ?
 			raumBezeichnung = raumBezeichnung ?: raumTyp
 			// Länge + Breite
@@ -61,12 +61,10 @@ class RaumEvents {
 			// Standard Türspalthöhe ist 10 mm
 			raumTurspaltHohe = 10.0d
 		}
-		// Raum im Model unten (= position: ...size()) hinzufügen
-		def raum = (raumWerte + [position: model.map.raum.raume.size() ?: 0]) as ObservableMap
 		doLater {
-			//println "onRaumHinzufugen: adding raum " + raum.dump()
+			// Raum im Model hinzufügen
 			model.addRaum(raum)
-			onRaumHinzugefugt(raum.position/*model.map.raum.raume.size() - 1 ?: 0*/)
+			onRaumHinzugefugt(raum.position)
 		}
 	}
 	
@@ -115,8 +113,8 @@ class RaumEvents {
 			// Raum aus Model entfernen
 			model.removeRaum(raumIndex)
 			// RaumVsView - Zu-/Abluftventile TabelModel aktualisieren
-            println "publish event RemoveTableModelRow"
-            publishEvent "RemoveTableModelRow", [zuLoschenderRaum]
+			println "onRaumEntfernen: publish event RemoveTableModelRow"
+			publishEvent "RemoveTableModelRow", [zuLoschenderRaum]
 		}
 	}
 	
