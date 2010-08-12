@@ -421,21 +421,25 @@ class ProjektController {
 	 */
 	def raumHinzufugen = {
 		// Erstelle Model für Raum: Standardwerte überschreiben mit eingegebenen Werten
-		def raumWerte = model.raumMapTemplate + GH.getValuesFromView(view, "raum")
+		// Berechne Position: Raum wird unten angefügt
+		def raum = model.raumMapTemplate +
+					GH.getValuesFromView(view, "raum") +
+					[position: model.map.raum.raume.size()]
 		// Prüfe Toleranzwerte für Zuluftfaktor
-		if (raumWerte.raumLuftart ==~ /ZU.*/) {
-			def eingegebenerZuluftfaktor = raumWerte.raumZuluftfaktor.toDouble2()
+		if (raum.raumLuftart ==~ /ZU.*/) {
+			def eingegebenerZuluftfaktor = raum.raumZuluftfaktor.toDouble2()
 			def (zuluftfaktor, neuerZuluftfaktor) =
-				wacCalculationService.prufeZuluftfaktor(raumWerte.raumTyp, eingegebenerZuluftfaktor)
+				wacCalculationService.prufeZuluftfaktor(raum.raumTyp, eingegebenerZuluftfaktor)
 			if (zuluftfaktor != neuerZuluftfaktor) {
 				// TODO mmu Dialog with Oxbow
 				println "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor}" +
 					" (laut Norm-Tolerenz) geändert!"
 			}
-			raumWerte.raumZuluftfaktor = neuerZuluftfaktor
+			raum.raumZuluftfaktor = neuerZuluftfaktor
 		}
 		// Hole Werte für neuen Raum aus der View und füge Raum hinzu
-		publishEvent "RaumHinzufugen", [raumWerte]
+		println "raumHinzufugen: publishing event for raum.position=${raum.position}"
+		publishEvent "RaumHinzufugen", [raum]
 	}
 	
 	/**
