@@ -48,13 +48,13 @@ class ProjektModel {
 			raumLuftwechsel: 0.0d,
 			raumVolumenstrom: 0.0d,
 			raumBezeichnungAbluftventile: "",
-			raumAnzahlAbluftventile: "",
+			raumAnzahlAbluftventile: 0,
 			raumAbluftmengeJeVentil: 0.0d,
 			raumBezeichnungZuluftventile: "",
 			raumAnzahlZuluftventile: 0,
 			raumZuluftmengeJeVentil: 0.0d,
 			raumVentilebene: "",
-			raumAnzahlUberstromVentile: 0d,
+			raumAnzahlUberstromVentile: 0,
 			raumUberstromElement: "",
 			raumNummer: "",
 			turen: [] as ObservableList
@@ -167,14 +167,14 @@ class ProjektModel {
 	def tmPositionComparator = { a, b -> a.position <=> b.position } as Comparator
 	def tmNameComparator = { a, b -> a.name <=> b.name } as Comparator
 	def tableModels = [
-			raume: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			raumeVsZuAbluftventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			raumeVsUberstromventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			raumeBearbeitenDetails: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			raume:                        new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			raumeVsZuAbluftventile:       new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			raumeVsUberstromventile:      new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			raumeBearbeitenDetails:       new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
 			raumeBearbeitenEinstellungen: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			dvbKanalnetz: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			dvbVentileinstellung: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			wbw: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNameComparator) as ca.odell.glazedlists.EventList
+			dvbKanalnetz:                 new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			dvbVentileinstellung:         new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			wbw:                          new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNameComparator) as ca.odell.glazedlists.EventList
 		]
 	
 	/**
@@ -290,12 +290,16 @@ class ProjektModel {
 	 * Einen Raum im Model hinzufügen: auch alle TableModels, Comboboxen synchronisieren.
 	 */
 	def addRaum = { raum ->
-		def r = (raumMapTemplate + raum) as ObservableMap
-		println "addRaum: adding raum=${r.dump()}"
-		map.raum.raume << r
-		// Sync table models
-		[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
-			it.add(map.raum.raume[raum.position])
+		synchronized (map.raum.raume) {
+			def r = (raumMapTemplate + raum) as ObservableMap
+			println "addRaum: adding raum=${r.dump()}"
+			map.raum.raume << r
+			// Sync table models
+			[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
+				//println "addRaum: ${map.raum.raume.raumBezeichnung} r.bezeichnung=${r.raumBezeichnung}"
+				//println "addRaum: map.raum.raume.size=${map.raum.raume.size()} r.position=${r.position}"
+				it.add(map.raum.raume[r.position])
+			}
 		}
 	}
 	
@@ -303,21 +307,23 @@ class ProjektModel {
 	 * Einen Raum aus dem Model entfernen, alle TableModels synchronisieren.
 	 */
 	def removeRaum = { raumIndex ->
-		//println "removeRaum: removing raumIndex=${raumIndex}"
-		/*
-		map.raum.raume.eachWithIndex { r, i ->
-			println "BEFORE raumIndex=${raumIndex} i=${i}: ${r.raumBezeichnung} ${r.position}"
-		}
-		*/
-		map.raum.raume.remove(raumIndex)
-		/*
-		map.raum.raume.eachWithIndex { r, i ->
-			println "AFTER raumIndex=${raumIndex} i=${i}: ${r.raumBezeichnung} ${r.position}"
-		}
-		*/
-		// Sync table models
-		[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
-			it.remove(raumIndex)
+		synchronized (map.raum.raume) {
+			//println "removeRaum: removing raumIndex=${raumIndex}"
+			/*
+			map.raum.raume.eachWithIndex { r, i ->
+				println "BEFORE raumIndex=${raumIndex} i=${i}: ${r.raumBezeichnung} ${r.position}"
+			}
+			*/
+			map.raum.raume.remove(raumIndex)
+			/*
+			map.raum.raume.eachWithIndex { r, i ->
+				println "AFTER raumIndex=${raumIndex} i=${i}: ${r.raumBezeichnung} ${r.position}"
+			}
+			*/
+			// Sync table models
+			[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
+				it.remove(raumIndex)
+			}
 		}
 	}
 	
@@ -335,31 +341,38 @@ class ProjektModel {
 			println "resyncRaumTableModels: ${r.raumBezeichnung}: i=${i} == position=${r.position}?"
 		}
 		*/
-		// Raumdaten
-		tableModels.raume.clear()
-		tableModels.raume.addAll(map.raum.raume)
-		// Raumvolumentströme - Zu-/Abluftventile
-		tableModels.raumeVsZuAbluftventile.clear()
-		tableModels.raumeVsZuAbluftventile.addAll(map.raum.raume)
-		// Raumvolumentströme - Überströmventile
-		tableModels.raumeVsUberstromventile.clear()
-		tableModels.raumeVsUberstromventile.addAll(map.raum.raume)
-		// TODO mmu Documentation?
-		// TODO mmu Possible java.lang.NullPointerException: Cannot invoke method addAll() on null object when RaumBearbeitenDialog was not opened before
-		// TODO mmu rbe: Quickfix: added null-safe-operator
-		tableModels.raumeBearbeiten?.addAll(map.raum.raume)
+		synchronized (tableModels) {
+			println "-" * 80
+			println "resyncRaumTableModels"
+			println "-" * 80
+			// Raumdaten
+			tableModels.raume.clear()
+			tableModels.raume.addAll(map.raum.raume)
+			// Raumvolumentströme - Zu-/Abluftventile
+			tableModels.raumeVsZuAbluftventile.clear()
+			tableModels.raumeVsZuAbluftventile.addAll(map.raum.raume)
+			// Raumvolumentströme - Überströmventile
+			tableModels.raumeVsUberstromventile.clear()
+			tableModels.raumeVsUberstromventile.addAll(map.raum.raume)
+			// TODO mmu Documentation?
+			// TODO mmu Possible java.lang.NullPointerException: Cannot invoke method addAll() on null object when RaumBearbeitenDialog was not opened before
+			// TODO mmu rbe: Quickfix: added null-safe-operator
+			tableModels.raumeBearbeiten?.addAll(map.raum.raume)
+		}
 	}
 	
 	/**
 	 * 
 	 */
 	def addDvbKanalnetz = { kanalnetz ->
-		def k = (dvbKanalnetzMapTemplate + kanalnetz) as ObservableMap
-		println "addDvbKanalnetz: adding kanalnetz=${k.dump()}"
-		map.dvb.kanalnetz << k
-		// Sync table model
-		[tableModels.dvbKanalnetz].each {
-			it.add(map.dvb.kanalnetz[kanalnetz.position])
+		synchronized (map.dvb.kanalnetz) {
+			def k = (dvbKanalnetzMapTemplate + kanalnetz) as ObservableMap
+			println "addDvbKanalnetz: adding kanalnetz=${k.dump()}"
+			map.dvb.kanalnetz << k
+			// Sync table model
+			[tableModels.dvbKanalnetz].each {
+				it.add(map.dvb.kanalnetz[kanalnetz.position])
+			}
 		}
 	}
 	
