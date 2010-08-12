@@ -80,9 +80,9 @@ class RaumEvents {
 			GH.addMapPropertyChangeListener("map.raum.raume", model.map.raum.raume[raumIndex])
 			// Neu berechnen
 			onRaumGeandert(raumIndex)
-            // RaumVsView - Zu-/Abluftventile TabelModel aktualisieren
-            println "publish event AddTableModelRow"
-            publishEvent "AddTableModelRow", [raumIndex]
+			// RaumVsView - Zu-/Abluftventile TabelModel aktualisieren
+			println "publish event AddTableModelRow"
+			publishEvent "AddTableModelRow", [raumIndex]
 		}
 	}
 	
