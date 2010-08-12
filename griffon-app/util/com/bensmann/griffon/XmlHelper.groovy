@@ -23,8 +23,7 @@ class XmlHelper {
 		try {
 			valueClosure()
 		} catch (e) {
-			//
-			println "tc: CATCHED: ${e}"
+			//println "tc: CATCHED: ${e}"
 			// Default?
 			if (defaultClosure) {
 				defaultClosure()
@@ -50,7 +49,7 @@ class XmlHelper {
 		def std = ""
 		try {
 			return closure() ?: std
-		} catch (e) { println e }
+		} catch (e) { /*println e*/ }
 		std
 	}
 	
@@ -61,7 +60,7 @@ class XmlHelper {
 		def std = 0
 		try {
 			return (closure() as Integer) ?: std
-		} catch (e) { println e }
+		} catch (e) { /*println e*/ }
 		std
 	}
 	
@@ -72,7 +71,7 @@ class XmlHelper {
 		def std = 0.0d
 		try {
 			return (closure() as Double) ?: std
-		} catch (e) { println e }
+		} catch (e) { /*println e*/ }
 		std
 	}
 	
@@ -83,7 +82,7 @@ class XmlHelper {
 		def std = false
 		try {
 			return (closure() as Boolean) ?: std
-		} catch (e) { println e }
+		} catch (e) { /*println e*/ }
 		std
 	}
 	
