@@ -787,9 +787,16 @@ class ProjektController {
 	}
 	
 	/**
-	 * 
+	 * Widerstandsbeiwerte, Dialog mit OK geschlossen.
 	 */
 	def wbwOkButton = {
+		println "wbwOkButton: selectedRow=${view.dvbKanalnetzTabelle.selectedRow}"
+		println model.map.dvb.kanalnetz
+		// Welche Teilstrecke ist ausgewählt?
+		def map = model.map.dvb.kanalnetz[view.dvbKanalnetzTabelle.selectedRow]
+		map.gesamtwiderstandszahl = 0.5d
+		// Berechne Teilstrecke
+		wacCalculationService.berechneTeilstrecke(map)
 	}
 	
 	/**
