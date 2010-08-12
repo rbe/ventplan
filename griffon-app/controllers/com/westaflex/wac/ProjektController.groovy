@@ -702,6 +702,8 @@ class ProjektController {
 	
 	/**
 	 * Raumvolumenströme - Zentralgerät: automatische Aktualisierung das Zentralgeräts.
+	 * Darf nur dann durchgeführt werden, wenn der Benutzer das Zentralgerät noch nicht selbst
+	 * verändert hat!
 	 */
 	def onZentralgeratAktualisieren = {
 		doLater {
