@@ -512,6 +512,7 @@ class WacCalculationService {
 	 * @param map One of map.dvb.kanalnetz
 	 */
 	def berechneTeilstrecke(map) {
+		println "berechneTeilstrecke: map=${map.dump()}"
 		def kanal = wacModelService.getKanal(map.kanalbezeichnung)
 		map.geschwindigkeit = map.luftVs * 1000000 / (kanal.flaeche * 3600)
 		def lambda
@@ -523,11 +524,19 @@ class WacCalculationService {
 				lambda = "calcDruckverlustKlasse${kanal.klasse}"(map.geschwindigkeit, kanal.durchmesser)
 				break
 			default:
-				println "switch clause runs into default. Klasse=" + kanal.klasse + " not defined ==> lambda not set"
+				println "switch clause runs into default. Klasse=${kanal.klasse} not defined ==> lambda not set"
 		}
+		//
+		def geschwPow2 = Math.pow(map.geschwindigkeit, 2)
+		// Gesamtwiderstandszahl wurde via ProjektController.wbwOkButton gesetzt
+		// Reibungswiderstand
 		map.reibungswiderstand =
-			lambda * map.lange * 1.2 * Math.pow(map.geschwindigkeit, 2) / (2 * (kanal.durchmesser + 0.0d) / 1000)
-		println "berechneTeilstrecke: ${map.dump()}"
+			lambda * map.lange * 1.2 * geschwPow2 / (2 * (kanal.durchmesser + 0.0d) / 1000)
+		// Einzelwiderstand berechnen
+		map.einzelwiderstand = 0.6d * map.gesamtwiderstandszahl * geschwPow2
+		// Widerstand der Teilstrecke = Reibungswiderstand + Einzelwiderstand
+		map.widerstandTeilstrecke = map.reibungswiderstand + map.einzelwiderstand
+		println "berechneTeilstrecke: map=${map.dump()}"
 	}
 	
 	def calcDruckverlustKlasse4 = { BigDecimal durchmesser, BigDecimal seiteA, BigDecimal seiteB ->
