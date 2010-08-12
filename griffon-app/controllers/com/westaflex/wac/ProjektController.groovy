@@ -594,63 +594,62 @@ class ProjektController {
 	}
 	
 	/**
-     * RaumVsView - Zu-/Abluftventile
+	 * RaumVsView - Zu-/Abluftventile
 	 * TableModel updaten. Neue Row hinzufügen.
 	 */
 	def onAddTableModelRow = { rowIndex ->
 		// Neues TableModel setzen !
-		println "add row to table model ${rowIndex}"
+		println "onAddTableModelRow: add row to table model ${rowIndex}"
 		doLater {
-            //println "addRowToTableModel ${r}"
-            // Erstelle eine Liste mit den aktuellen Raumdaten
-            def r = model.map.raum.raume[rowIndex]
-            def dataList = [raumBezeichnung: r.raumBezeichnung,
-                            raumLuftart: r.raumLuftart,
-                            raumVolumen: r.raumVolumen,
-                            raumLuftwechsel: r.raumLuftwechsel,
-                            raumBezeichnungAbluftventile: r.raumBezeichnungAbluftventile,
-                            raumAnzahlAbluftventile: r.raumAnzahlAbluftventile,
-                            raumVolumenstrom: r.raumVolumenstrom,
-                            raumAnzahlZuluftventile: r.raumAnzahlZuluftventile,
-                            raumBezeichnungZuluftventileCombo: r.raumBezeichnungZuluftventileCombo,
-                            raumBezeichnungAbluftventileCombo: r.raumBezeichnungAbluftventileCombo,
-                            raumVentilebeneCombo: r.raumVentilebeneCombo,
-                            raumZuluftmengeJeVentil: r.raumZuluftmengeJeVentil]
-
-            // Let's add a row to the table
-            def rows = view.raumVsZuAbluftventileTabelle.getModel().getRowsModel().getValue()
-            rows.add( dataList )
-            view.raumVsZuAbluftventileTabelle.getModel().getRowsModel().setValue( rows )
-            view.raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
+			//println "addRowToTableModel ${r}"
+			// Erstelle eine Liste mit den aktuellen Raumdaten
+			def r = model.map.raum.raume[rowIndex]
+			def dataList = [raumBezeichnung: r.raumBezeichnung,
+							raumLuftart: r.raumLuftart,
+							raumVolumen: r.raumVolumen,
+							raumLuftwechsel: r.raumLuftwechsel,
+							raumBezeichnungAbluftventile: r.raumBezeichnungAbluftventile,
+							raumAnzahlAbluftventile: r.raumAnzahlAbluftventile,
+							raumVolumenstrom: r.raumVolumenstrom,
+							raumAnzahlZuluftventile: r.raumAnzahlZuluftventile,
+							raumBezeichnungZuluftventileCombo: r.raumBezeichnungZuluftventileCombo,
+							raumBezeichnungAbluftventileCombo: r.raumBezeichnungAbluftventileCombo,
+							raumVentilebeneCombo: r.raumVentilebeneCombo,
+							raumZuluftmengeJeVentil: r.raumZuluftmengeJeVentil]
+			// Let's add a row to the table
+			def rows = view.raumVsZuAbluftventileTabelle.getModel().getRowsModel().getValue()
+			rows.add(dataList)
+			view.raumVsZuAbluftventileTabelle.getModel().getRowsModel().setValue(rows)
+			view.raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
 		}
 	}
 	
 	/**
-     * RaumVsView - Zu-/Abluftventile
+	 * RaumVsView - Zu-/Abluftventile
 	 * TableModel updaten. Raum entfernen.
 	 */
 	def onRemoveTableModelRow = { r ->
 		println "remove row"
 		doLater {
-            // Erstelle eine Liste mit den aktuellen Raumdaten
-            def dataList = [raumBezeichnung: r.raumBezeichnung,
-                            raumLuftart: r.raumLuftart,
-                            raumVolumen: r.raumVolumen,
-                            raumLuftwechsel: r.raumLuftwechsel,
-                            raumBezeichnungAbluftventile: r.raumBezeichnungAbluftventile,
-                            raumAnzahlAbluftventile: r.raumAnzahlAbluftventile,
-                            raumVolumenstrom: r.raumVolumenstrom,
-                            raumAnzahlZuluftventile: r.raumAnzahlZuluftventile,
-                            raumBezeichnungZuluftventileCombo: r.raumBezeichnungZuluftventileCombo,
-                            raumBezeichnungAbluftventileCombo: r.raumBezeichnungAbluftventileCombo,
-                            raumVentilebeneCombo: r.raumVentilebeneCombo,
-                            raumZuluftmengeJeVentil: r.raumZuluftmengeJeVentil]
+			// Erstelle eine Liste mit den aktuellen Raumdaten
+			def dataList = [raumBezeichnung: r.raumBezeichnung,
+							raumLuftart: r.raumLuftart,
+							raumVolumen: r.raumVolumen,
+							raumLuftwechsel: r.raumLuftwechsel,
+							raumBezeichnungAbluftventile: r.raumBezeichnungAbluftventile,
+							raumAnzahlAbluftventile: r.raumAnzahlAbluftventile,
+							raumVolumenstrom: r.raumVolumenstrom,
+							raumAnzahlZuluftventile: r.raumAnzahlZuluftventile,
+							raumBezeichnungZuluftventileCombo: r.raumBezeichnungZuluftventileCombo,
+							raumBezeichnungAbluftventileCombo: r.raumBezeichnungAbluftventileCombo,
+							raumVentilebeneCombo: r.raumVentilebeneCombo,
+							raumZuluftmengeJeVentil: r.raumZuluftmengeJeVentil]
 
-            // Let's remove a row from the table
-            def rows = view.raumVsZuAbluftventileTabelle.getModel().getRowsModel().getValue()
-            rows.remove( dataList )
-            view.raumVsZuAbluftventileTabelle.getModel().getRowsModel().setValue( rows )
-            view.raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
+			// Let's remove a row from the table
+			def rows = view.raumVsZuAbluftventileTabelle.getModel().getRowsModel().getValue()
+			rows.remove( dataList )
+			view.raumVsZuAbluftventileTabelle.getModel().getRowsModel().setValue( rows )
+			view.raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
 		}
 	}
 	
