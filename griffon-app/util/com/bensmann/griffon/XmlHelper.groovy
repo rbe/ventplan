@@ -23,7 +23,7 @@ class XmlHelper {
 		try {
 			valueClosure()
 		} catch (e) {
-			//println "tc: CATCHED: ${e}"
+			println "tc: CATCHED: ${e}"
 			// Default?
 			if (defaultClosure) {
 				defaultClosure()
