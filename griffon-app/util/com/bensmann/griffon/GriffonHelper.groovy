@@ -167,6 +167,7 @@ class GriffonHelper {
 		// This map
 		println "addMapPropertyChangeListener: adding PropertyChangeListener for ${name}"
 		map.addPropertyChangeListener({ evt ->
+				// TODO rbe print if debug flag is set
 				println "C! ${name}.${evt.propertyName}: ${evt.oldValue?.dump()} -> ${evt.newValue?.dump()}"
 				if (closure) closure(evt)
 			} as java.beans.PropertyChangeListener)
