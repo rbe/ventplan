@@ -9,6 +9,7 @@
  */
 package com.westaflex.wac
 
+import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
 jideScrollPane(constraints: "grow") {
@@ -32,10 +33,10 @@ jideScrollPane(constraints: "grow") {
                         label("", constraints: "wrap")
 
                         comboBox(id: "dvbKanalnetzLuftart", items: ["ZU", "AB"])
-                        textField(id: "dvbKanalnetzNrTeilstrecke")
-                        textField(id: "dvbKanalnetzLuftmenge")
+                        textField(id: "dvbKanalnetzNrTeilstrecke", constraints: "width 80px")
+                        textField(id: "dvbKanalnetzLuftmenge", constraints: "width 100px")
                         comboBox(id: "dvbKanalnetzKanalbezeichnung", items: model.meta.dvbKanalbezeichnung)
-                        textField(id: "dvbKanalnetzLange")
+                        textField(id: "dvbKanalnetzLange", constraints: "width 80px")
                         button(id: "dvbKanalnetzHinzufugen", text: "Hinzufügen", constraints: "wrap")
 
                         panel(id: "dvbKanalnetzTabellePanel", constraints: "span", layout: new MigLayout("fillx", "[fill]", "")) {
@@ -70,7 +71,7 @@ jideScrollPane(constraints: "grow") {
 
                         comboBox(id: "dvbVentileinstellungLuftart", items: ["ZU", "AB", "AU", "FO"])
                         comboBox(id: "dvbVentileinstellungRaum", items: model.meta.raum.typ + [/* items werden nach RaumHinzufugen aktualisiert, siehe Ticket#10 */])
-                        textField(id: "dvbVentileinstellungTeilstrecken")
+                        textField(id: "dvbVentileinstellungTeilstrecken", constraints: "width 150px")
                         button(id: "dvbVentileinstellungAuswahlen", text: "Auswählen")
                         comboBox(id: "dvbVentileinstellungVentilbezeichnung", items: model.meta.dvbVentileinstellung)
                         button(id: "dvbVentileinstellungHinzufugen", text: "Hinzufügen", constraints: "wrap")
@@ -90,6 +91,10 @@ jideScrollPane(constraints: "grow") {
         }
     }
 }
+// Textfields
+GH.doubleTextField(dvbKanalnetzNrTeilstrecke)
+GH.autoformatDoubleTextField(dvbKanalnetzLuftmenge)
+GH.autoformatDoubleTextField(dvbKanalnetzLange)
 // dvbTabGroup
 dvbTabGroup.with {
 	setTabColorProvider(com.jidesoft.swing.JideTabbedPane.ONENOTE_COLOR_PROVIDER)
