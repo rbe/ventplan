@@ -145,16 +145,15 @@ class ProjektController {
 		println "closeProjectTab: choice=${choice}"
 		// TODO rbe
 		switch (choice) {
-			// Save: save the closing project
-			case 0: 
+			case 0: // Save: save the closing project
 				println "closeProjectTab: choice -> saving project"
+				// Return boolean value from save()
+				save()
 				break
-			// Close: just close the tab...
-			case 1: 
+			case 1: // Close: just close the tab...
 				println "closeProjectTab: choice -> do nothing"
 				break
-			// Cancel: do nothing...
-			case 2: 
+			case 2: // Cancel: do nothing...
 				println "closeProjectTab: choice -> closing project"
 				break
 		}
@@ -165,7 +164,7 @@ class ProjektController {
 	 * @return Boolean Was project successfully saved to a file?
 	 */
 	def save = {
-		println "save()"
+		println "save: saving project '${getProjektTitel}' in file ${model.wpxFilename?.dump()}"
 		try {
 			if (model.wpxFilename) {
 				// Save data
