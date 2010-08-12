@@ -26,6 +26,9 @@ class Wac2Controller {
 	 */
 	private def prefs = java.util.prefs.Preferences.userNodeForPackage(Wac2Controller)
 	
+	/**
+	 * Initialize wac2 MVC group.
+	 */
 	void mvcGroupInit(Map args) {
 		// Lookup values from database and put them into our model
 		doOutside {
