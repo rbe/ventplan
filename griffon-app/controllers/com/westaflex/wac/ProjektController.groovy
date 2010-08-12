@@ -192,7 +192,7 @@ class ProjektController {
 	 * @return Boolean Was project successfully saved to a file?
 	 */
 	def save = {
-		println "save: saving project '${getProjektTitel}' in file ${model.wpxFilename?.dump()}"
+		println "save: saving project '${getProjektTitel()}' in file ${model.wpxFilename?.dump()}"
 		try {
 			if (model.wpxFilename) {
 				// Save data
