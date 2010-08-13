@@ -521,7 +521,8 @@ class WacCalculationService {
 			raumZuluftmengeJeVentil: 50.0d,
 			raumVerteilebene: "EG"
 		])
-		println "berechneZuAbluft: ${map}"
+		println "berechneZuAbluftventile: ${map}"
+		map
 	}
 	
 	/**
