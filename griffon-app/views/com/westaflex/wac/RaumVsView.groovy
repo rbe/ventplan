@@ -145,8 +145,7 @@ jideScrollPane(constraints: "grow") {
 GH.getRaumdatenBezeichnungCellEditor(builder,model).editingStopped = { e ->
     println "stop editing row: ${-> raumVsUberstromventileTabelle.selectedColumn} ${-> raumVsUberstromventileTabelle.selectedRow} -> ${e}"
     // raumbezeichnung aktualisieren
-    if (e.getSource() instanceof javax.swing.DefaultCellEditor)
-    {
+    if (e.getSource() instanceof javax.swing.DefaultCellEditor) {
         def cellEditor = e.getSource() as javax.swing.DefaultCellEditor
         controller.updateRaumBezeichnungCombo(raumVsUberstromventileTabelle.selectedRow, cellEditor.getCellEditorValue())
     }
@@ -154,8 +153,7 @@ GH.getRaumdatenBezeichnungCellEditor(builder,model).editingStopped = { e ->
 GH.getRaumdatenLuftartCellEditor(builder,model).editingStopped = { e ->
     println "stop editing row: ${-> raumVsUberstromventileTabelle.selectedColumn} ${-> raumVsUberstromventileTabelle.selectedRow} -> ${e}"
     // raum Luftart aktualisieren
-    if (e.getSource() instanceof javax.swing.DefaultCellEditor)
-    {
+    if (e.getSource() instanceof javax.swing.DefaultCellEditor) {
         def cellEditor = e.getSource() as javax.swing.DefaultCellEditor
         controller.updateRaumLuftartCombo(raumVsUberstromventileTabelle.selectedRow, cellEditor.getCellEditorValue())
     }

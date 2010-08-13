@@ -587,7 +587,7 @@ class GriffonHelper {
 		} as javax.swing.event.TableModelListener
 		dvbKanalnetzTableModelListener
 	}
-
+	
 	/**
 	 * Liefert einen DefaultCellEditor für "Luftart" in DruckverlustView
 	 * für die Tabelle zurück (Kanalnetz)
@@ -596,7 +596,7 @@ class GriffonHelper {
 		def druckverlustLuftartItems = ["ZU", "AB"]
 		new javax.swing.DefaultCellEditor(builder.comboBox(id: 'druckverlustLuftartCombo', items: druckverlustLuftartItems))
 	}
-
+	
 	/**
 	 * Liefert einen DefaultCellEditor für "Kanalbezeichnung" in DruckverlustView
 	 * für die Tabelle zurück (Kanalnetz)

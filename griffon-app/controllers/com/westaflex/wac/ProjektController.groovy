@@ -894,6 +894,7 @@ class ProjektController {
 	}
 	
 	/**
+	 * Raumvolumenströme - Zu-/Abluftventile:
 	 * Raumbezeichnung Comboboxen in der RaumdatenView und RaumVsView aktualisieren
 	 */
 	def updateRaumBezeichnungCombo = { rowIndex, newValue ->
@@ -924,7 +925,8 @@ class ProjektController {
 	}
 	
 	/**
-	 * Luftart Comboboxen in der RaumdatenView und RaumVsView aktualisieren
+	 * Raumvolumenströme - Zu-/Abluftventile:
+	 * Luftart-Comboboxen in der RaumdatenView und RaumVsView aktualisieren
 	 */
 	def updateRaumLuftartCombo = { rowIndex, newValue ->
 		// Neues TableModel setzen !
