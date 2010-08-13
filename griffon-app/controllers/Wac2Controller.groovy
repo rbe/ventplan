@@ -21,6 +21,12 @@ class Wac2Controller {
 	def wacCalculationService
 	
 	/**
+	 * Zähler für erstellte/geladene Projekte. Wird als "unique id" verwendet.
+	 * Siehe generateMVCId().
+	 */
+	def static projektCounter = 1
+	
+	/**
 	 * User's settings.
 	 */
 	private def prefs = java.util.prefs.Preferences.userNodeForPackage(Wac2Controller)
@@ -54,8 +60,13 @@ class Wac2Controller {
 	/**
 	 * Get access to all components of a MVC group by its ID.
 	 */
-	def getMVCGroup(id) {
-		[model: app.models[id], view: app.views[id], controller: app.controllers[id]]
+	def getMVCGroup(mvcId) {
+		[
+			mvcId: mvcId,
+			model: app.models[mvcId],
+			view: app.views[mvcId],
+			controller: app.controllers[mvcId]
+		]
 	}
 	
 	/**
@@ -110,6 +121,13 @@ class Wac2Controller {
 	}
 	
 	/**
+	 * 
+	 */
+	def generateMVCId = {
+		"Projekt " + (Wac2Controller.projektCounter++)
+	}
+	
+	/**
 	 * Ein neues Projekt erstellen.
 	 */
 	def neuesProjekt = { evt = null ->
@@ -118,7 +136,10 @@ class Wac2Controller {
 			Wac2Splash.instance.setup()
 			Wac2Splash.instance.creatingProject()
 			doOutside {
-				String mvcId = "Projekt " + (view.projektTabGroup.tabCount + 1)
+				// Die hier vergebene MVC ID wird immer genutzt, selbst wenn das Projekt anders benannt wird!
+				// (durch Bauvorhaben, Speichern)
+				// Es wird also immer "Projekt 1", "Projekt 2" etc. genutzt, nach Reihenfolge der Erstellung
+				String mvcId = generateMVCId()
 				def (m, v, c) =
 					createMVCGroup("Projekt", mvcId,
 									[projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
@@ -140,14 +161,16 @@ class Wac2Controller {
 	 * Ein Projekt aktivieren -- MVC ID an Wac2Model übergeben.
 	 */
 	def projektAktivieren = { mvcId ->
-		// Anderes Projekt wurde aktiviert
+		println "projektAktivieren: mvcId=${mvcId} model.aktivesProjekt=${model.aktivesProjekt}"
+		// Anderes Projekt wurde aktiviert?
 		if (mvcId && mvcId != model.aktivesProjekt) {
 			// MVC ID merken
 			model.aktivesProjekt = mvcId
 			// Dirty-flag aus Projekt-Model übernehmen
 			try {
-				println "projektAktivieren: getMVCGroup(mvcId)=" + getMVCGroup(mvcId)
-				model.aktivesProjektGeandert = getMVCGroup(mvcId).model?.map.dirty
+				def mvcGroup = getMVCGroup(mvcId)
+				println "projektAktivieren: getMVCGroup(mvcId)=${mvcGroup}, wpx=${mvcGroup.model?.wpxFilename}"
+				model.aktivesProjektGeandert = mvcGroup.model?.map.dirty
 			} catch (e) {
 				e.printStackTrace()
 			}
@@ -165,6 +188,7 @@ class Wac2Controller {
 	 */
 	def projektIndexAktivieren = { index ->
 		if (index > -1) {
+			println "projektIndexAktivieren: model.projekte=${model.projekte.dump()}"
 			projektAktivieren(model.projekte[index])
 			println "projektIndexAktivieren: index=${index} -> ${model.aktivesProjekt}"
 		}
@@ -180,15 +204,18 @@ class Wac2Controller {
 	 */
 	def projektSchliessen = { evt = null ->
 		// Closure for closing the active project
-		def clacpr = {
+		def clacpr = { mvc ->
 			// Tab entfernen
 			view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
 			// MVC Gruppe zerstören
-			destroyMVCGroup(model.aktivesProjekt)
+			destroyMVCGroup(mvc.mvcId)
 			// Aus Liste der Projekte entfernen
-			model.projekte.remove(model.aktivesProjekt)
+			println "projektSchliessen: removing ${model.aktivesProjekt} from model.projekte=${model.projekte.dump()}"
+			model.projekte.remove(mvc.mvcId)
+			println "projektSchliessen: model.projekte=${model.projekte.dump()}"
 			// Anderes Projekt aktivieren?
-			projektIndexAktivieren(view.projektTabGroup.selectedIndex)
+			// NOT NEEDED projektIndexAktivieren(view.projektTabGroup.selectedIndex)
+			// Wird durch die Tab und den ChangeListener erledigt.
 		}
 		// Projekt zur aktiven Tab finden
 		def mvc = getMVCGroupAktivesProjekt()
@@ -214,7 +241,7 @@ class Wac2Controller {
 			}
 		} else {
 			println "projektSchliessen: else... close!!"
-			clacpr()
+			clacpr(mvc)
 		}
 	}
 	
@@ -244,7 +271,7 @@ class Wac2Controller {
 					if (document) {
 						//println "projektOffnen: document=${document?.dump()}"
 						// Create new Projekt MVC group
-						String mvcId = "Projekt " + (view.projektTabGroup.tabCount + 1)
+						String mvcId = generateMVCId()
 						(projektModel, projektView, projektController) =
 							createMVCGroup("Projekt", mvcId,
 											[projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
