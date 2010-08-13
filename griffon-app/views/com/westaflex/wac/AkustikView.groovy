@@ -9,6 +9,7 @@
  */
 package com.westaflex.wac
 
+import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
 // Akustikberechnung
@@ -57,7 +58,18 @@ def buildLayout(tabname) {
 
 		label("", constraints: "cell 0 3")
 		label("", constraints: "cell 1 3")
-		// TODO table here!!! constraints: "cell 2 3 13 1"
+		jideScrollPane(constraints: "grow") {
+			table(id: 'akustik${tabName}Tabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "cell 2 3 13 1") {
+				tableModel() {
+					propertyColumn(header: GH.ws("125"),  propertyName: "125")
+					propertyColumn(header: GH.ws("250"),  propertyName: "250")
+					propertyColumn(header: GH.ws("500"),  propertyName: "500")
+					propertyColumn(header: GH.ws("1000"), propertyName: "1000")
+					propertyColumn(header: GH.ws("2000"), propertyName: "2000")
+					propertyColumn(header: GH.ws("4000"), propertyName: "4000")
+				}
+			}
+		}
 		label("dB(A)", constraints: "cell 3 3")
 	
 		label("Schallleistungspegel Zuluftstutzen", constraints: "cell 0 4")
