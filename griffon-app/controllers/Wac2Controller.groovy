@@ -7,7 +7,6 @@
  * 
  */
 import com.westaflex.wac.*
-
 import com.bensmann.griffon.GriffonHelper as GH
 
 /**
