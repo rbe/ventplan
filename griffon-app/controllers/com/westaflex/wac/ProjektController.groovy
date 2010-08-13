@@ -975,7 +975,7 @@ class ProjektController {
 			// Werte in Tabelle übertragen
 			tableModel.setValueAt("100ULC", rowIndex, 8)
 			//
-			tableModel.fireTableDataChanged()
+			//tableModel.fireTableDataChanged()
 		} catch (NullPointerException e) {}
 		println "-" * 80
 	}
