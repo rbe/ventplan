@@ -508,6 +508,23 @@ class WacCalculationService {
 	}
 	
 	/**
+	 * Raumvolumenströme - Zu/Abluftventile.
+	 * @param map One of map.raum.raumVs
+	 */
+	def berechneZuAbluftventile(map) {
+		map.putAll([
+			raumBezeichnungAbluftventile: "100ULC",
+			raumAnzahlAbluftventile: 1,
+			raumAbluftmengeJeVentil: 50.0d,
+			raumBezeichnungZuluftventile: "100ULE",
+			raumAnzahlZuluftventile: 1,
+			raumZuluftmengeJeVentil: 50.0d,
+			raumVerteilebene: "EG"
+		])
+		println "berechneZuAbluft: ${map}"
+	}
+	
+	/**
 	 * Druckverlust - Kanalnetz: berechne eine (gerade eingegebene) Teilstrecke.
 	 * @param map One of map.dvb.kanalnetz
 	 */

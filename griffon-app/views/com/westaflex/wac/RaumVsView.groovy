@@ -23,7 +23,13 @@ jideScrollPane(constraints: "grow") {
                         jideScrollPane(constraints: "grow") {
                             table(id: 'raumVsZuAbluftventileTabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "grow") {
                                 tableModel() {
-                                    current.addTableModelListener(GH.getRaumVsZuAbluftventileTableModelListener())
+                                    //current.addTableModelListener(GH.getRaumVsZuAbluftventileTableModelListener())
+                                    current.addTableModelListener({ javax.swing.event.TableModelEvent e ->
+                                        if (0 == e.type) {
+                                            println "raumVsZuAbluftventileTabelle,TableModelListener,updateRaumVentile: ${e.firstRow} ${e.lastRow} ${e.column} ${e.type}"
+                                            controller.updateRaumVentile(e.firstRow)
+                                        }
+                                    } as javax.swing.event.TableModelListener)
                                     propertyColumn(header: 'Raum',
                                         propertyName: 'raumBezeichnungCombo',
                                         cellEditor: GH.getRaumdatenBezeichnungCellEditor(builder,model),

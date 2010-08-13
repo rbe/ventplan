@@ -955,4 +955,29 @@ class ProjektController {
 		}
 	}
 	
+	/**
+	 * Raumvolumenströme - Zu-/Abluftventile:
+	 * Combobox für eines der Ventile geändert.
+	 */
+	def updateRaumVentile = { rowIndex ->
+		println "-" * 80
+		println "model.map.raum.raume=${model.map.raum.raume}"
+		try {
+			// Raum holen
+			def r = model.map.raum.raume[rowIndex]
+			println "updateRaumVentile: row#${rowIndex} changed, raum=${r.dump()}"
+			// Werte aus Tabelle übertragen
+			def tableModel = view.raumVsZuAbluftventileTabelle.model
+			def row = tableModel.rows.get(rowIndex)
+			println row
+			// Berechnen und neue Werte im Model speichern
+			model.map.raum.raume[rowIndex] = wacCalculationService.berechneZuAbluftventile(r)
+			// Werte in Tabelle übertragen
+			tableModel.setValueAt("100ULC", rowIndex, 8)
+			//
+			tableModel.fireTableDataChanged()
+		} catch (NullPointerException e) {}
+		println "-" * 80
+	}
+	
 }
