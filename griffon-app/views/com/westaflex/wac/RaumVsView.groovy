@@ -80,13 +80,17 @@ jideScrollPane(constraints: "grow") {
                                         cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
                                     )
                                     propertyColumn(header: 'Luftart',
-                                        propertyName: 'raumLuftartUberstromCombo',
-                                        cellEditor: GH.getRaumVsUberstromLuftartCellEditor(builder,model),
+                                        propertyName: 'raumLuftartCombo',
+                                        cellEditor: GH.getRaumdatenLuftartCellEditor(builder,model),
                                         cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
                                     )
                                     propertyColumn(header: GH.ws("Anzahl<br/>Ventile"), propertyName: 'raumAnzahlUberstromVentile')
                                     propertyColumn(header: GH.ws("Volumenstrom<br/>(m³/h)"), propertyName: 'raumVolumenstrom')
-                                    propertyColumn(header: GH.ws("Überström<br/>Elemente"), propertyName: 'raumUberstromElement')
+                                    propertyColumn(header: GH.ws("Überström<br/>Elemente"),
+                                        propertyName: 'raumVsUberstromElementCombo',
+                                        cellEditor: GH.getRaumVsUberstromElementCellEditor(builder,model),
+                                        cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
+                                    )
                                 }
                             }
                         }

@@ -670,6 +670,21 @@ class ProjektController {
 			raumVsRows.add(dataListRaumVs)
 			view.raumVsZuAbluftventileTabelle.getModel().getRowsModel().setValue(raumVsRows)
 			view.raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
+
+
+            // Erstelle eine Liste mit den aktuellen Raumdaten
+			def dataListRaumVsUberstrom = [
+                raumBezeichnungCombo: r.raumBezeichnungCombo,
+                raumLuftartCombo: r.raumLuftartCombo,
+                raumAnzahlUberstromVentile: r.raumAnzahlUberstromVentile,
+                raumVolumenstrom: r.raumVolumenstrom,
+                raumVsUberstromElementCombo: r.raumVsUberstromElementCombo
+            ]
+            // Let's add a row to the table
+			def raumVsUberstromRows = view.raumVsUberstromventileTabelle.getModel().getRowsModel().getValue()
+			raumVsUberstromRows.add(dataListRaumVsUberstrom)
+			view.raumVsUberstromventileTabelle.getModel().getRowsModel().setValue(raumVsUberstromRows)
+			view.raumVsUberstromventileTabelle.getModel().fireTableDataChanged()
 		}
 	}
 	
@@ -693,6 +708,13 @@ class ProjektController {
 			raumVsRows.remove( dataListRaumVs )
 			view.raumVsZuAbluftventileTabelle.getModel().getRowsModel().setValue( raumVsRows )
 			view.raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
+
+            // Let's remove a row from the table
+			def raumVsUberstromRows = view.raumVsZuAbluftventileTabelle.getModel().getRowsModel().getValue()
+            def dataListRaumVsUberstrom = raumVsUberstromRows.get(raumIndex)
+			raumVsUberstromRows.remove( dataListRaumVs )
+			view.raumVsUberstromventileTabelle.getModel().getRowsModel().setValue( raumVsUberstromRows )
+			view.raumVsUberstromventileTabelle.getModel().fireTableDataChanged()
 		}
 	}
 	
@@ -898,6 +920,12 @@ class ProjektController {
 			view.raumVsZuAbluftventileTabelle.setModel(raumVsTableModel)
 			view.raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
 
+            // raumVsZuAbluftventileTabelle updaten
+			def raumVsUberstromTableModel = view.raumVsUberstromventileTabelle.getModel()
+			raumVsUberstromTableModel.setValueAt(newValue, rowIndex, 0)
+			view.raumVsUberstromventileTabelle.setModel(raumVsUberstromTableModel)
+			view.raumVsUberstromventileTabelle.getModel().fireTableDataChanged()
+
             // raum im model updaten
             def r = model.map.raum.raume[rowIndex]
             r.raumBezeichnung = newValue
@@ -925,6 +953,12 @@ class ProjektController {
 			raumVsTableModel.setValueAt(newValue, rowIndex, 1)
 			view.raumVsZuAbluftventileTabelle.setModel(raumVsTableModel)
 			view.raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
+
+            // raumVsZuAbluftventileTabelle updaten
+			def raumVsUberstromTableModel = view.raumVsUberstromventileTabelle.getModel()
+			raumVsUberstromTableModel.setValueAt(newValue, rowIndex, 1)
+			view.raumVsUberstromventileTabelle.setModel(raumVsUberstromTableModel)
+			view.raumVsUberstromventileTabelle.getModel().fireTableDataChanged()
 
             // raum im model updaten
             def r = model.map.raum.raume[rowIndex]

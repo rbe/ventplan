@@ -500,26 +500,14 @@ class GriffonHelper {
     }
 
     /**
-     * Liefert einen DefaultCellEditor für "Raum" in RaumVsView
-     * für die Tabelle "raumVsUberstromventileTabelle" zurück
+     * Liefert einen DefaultCellEditor für "Überström-Element" in RaumVsView
+     * für die Tabelle zurück (raumVsUberstromventileTabelle)
      */
-    def static getRaumVsUberstromRaumBezeichnungCellEditor = { builder, model ->
-        def raumVsUberstromBezeichnungItems = model.meta.raum.typ
-        def editor = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumBezeichnungUberstromCombo', items: raumVsUberstromBezeichnungItems))
-        editor
+    def static getRaumVsUberstromElementCellEditor = { builder, model ->
+        def druckverlustEinstellungRaumItems = ["Element 1", "Element 2", "Element 3"]
+        def druckverlustEinstellungRaumEditor = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumVsUberstromElementCombo', items: druckverlustEinstellungRaumItems))
+        druckverlustEinstellungRaumEditor
     }
-
-    /**
-     * Liefert einen DefaultCellEditor für "Luftart" in RaumVsView
-     * für die Tabelle "raumVsUberstromventileTabelle" zurück
-     */
-    def static getRaumVsUberstromLuftartCellEditor = { builder, model ->
-        def raumVsUberstromLuftartItems = model.meta.raum.luftart
-        def editor = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumLuftartUberstromCombo', items: raumVsUberstromLuftartItems))
-        editor
-    }
-
-
 
     /**
      * Liefert einen TableModelListener für die Tabelle "raumVsZuAbluftventileTabelle" zurück
@@ -649,5 +637,6 @@ class GriffonHelper {
         def druckverlustEinstellungRaumEditor = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'druckverlustEinstellungRaumCombo', items: druckverlustEinstellungRaumItems))
         druckverlustEinstellungRaumEditor
     }
+
     
 }
