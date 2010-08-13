@@ -38,7 +38,31 @@ jideScrollPane(constraints: "grow") {
         // Tabelle aller Räume
         panel(id: "raumTabellePanel", constraints: CENTER, layout: new MigLayout("fill", "[fill]")) {
             jideScrollPane(constraints: "grow") {
-                table(id: "raumTabelle", model: model.createRaumTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                //table(id: "raumTabelle", model: model.createRaumTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                //}
+                table(id: 'raumTabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "grow") {
+                    tableModel() {
+                        current.addTableModelListener(GH.getRaumdatenTableModelListener())
+                        propertyColumn(header: 'Raum', 
+                            propertyName: 'raumBezeichnungCombo',
+                            cellEditor: GH.getRaumdatenBezeichnungCellEditor(builder,model),
+                            cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
+                        )
+                        propertyColumn(header: 'Geschoss', 
+                            propertyName: 'raumGeschossCombo',
+                            cellEditor: GH.getRaumdatenGeschossCellEditor(builder,model),
+                            cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
+                        )
+                        propertyColumn(header: 'Luftart', 
+                            propertyName: 'raumLuftartCombo',
+                            cellEditor: GH.getRaumdatenLuftartCellEditor(builder,model),
+                            cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
+                        )
+                        propertyColumn(header: GH.ws("Raumfläche<br/>(m²)"), propertyName: 'raumFlache')
+                        propertyColumn(header: GH.ws("Raumhöhe<br/>(m)"), propertyName: 'raumHohe')
+                        propertyColumn(header: 'Zuluftfaktor', propertyName: 'raumZuluftfaktor')
+                        propertyColumn(header: 'Abluftvolumenstrom', propertyName: 'raumAbluftVs')
+                    }
                 }
             }
         }

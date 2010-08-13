@@ -114,7 +114,7 @@ class RaumEvents {
 			model.removeRaum(raumIndex)
 			// RaumVsView - Zu-/Abluftventile TabelModel aktualisieren
 			println "onRaumEntfernen: publish event RemoveTableModelRow"
-			publishEvent "RemoveTableModelRow", [zuLoschenderRaum]
+			publishEvent "RemoveTableModelRow", [raumIndex]
 		}
 	}
 	

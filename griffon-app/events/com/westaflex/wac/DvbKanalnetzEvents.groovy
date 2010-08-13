@@ -35,16 +35,18 @@ class DvbKanalnetzEvents {
 		doLater {
 			// Map values from GUI
 			def k = [
-					luftart: kanalnetz.dvbKanalnetzLuftart,
+					druckverlustLuftartCombo: kanalnetz.dvbKanalnetzLuftart,
 					teilstrecke: kanalnetz.dvbKanalnetzNrTeilstrecke?.toInteger(),
 					luftVs: kanalnetz.dvbKanalnetzLuftmenge?.toDouble2(),
-					kanalbezeichnung: kanalnetz.dvbKanalnetzKanalbezeichnung,
+					druckverlustKanalbezeichnungCombo: kanalnetz.dvbKanalnetzKanalbezeichnung,
 					lange: kanalnetz.dvbKanalnetzLange?.toDouble2(),
 					position: model.map.dvb.kanalnetz.size()
 				] as ObservableMap
 			model.addDvbKanalnetz(k)
 			//
 			onDvbKanalnetzGeandert(k.position)
+
+            publishEvent "AddDvbKanalnetzToTableModel", [k]
 		}
 	}
 	

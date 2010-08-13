@@ -174,7 +174,9 @@ class ProjektModel {
 			raumeBearbeitenEinstellungen: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
 			dvbKanalnetz:                 new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
 			dvbVentileinstellung:         new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			wbw:                          new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNameComparator) as ca.odell.glazedlists.EventList
+			wbw:                          new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNameComparator) as ca.odell.glazedlists.EventList,
+            akustikZuluft:                new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+            akustikAbluft:                new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList
 		]
 	
 	/**
@@ -280,6 +282,32 @@ class ProjektModel {
 		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"]
 		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"]
 		new ca.odell.glazedlists.swing.EventTableModel(tableModels.wbw, [
+				getColumnCount: { columnNames.size() },
+				getColumnName:  { index -> columnNames[index] },
+				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
+			] as ca.odell.glazedlists.gui.TableFormat)
+	}
+
+    /**
+	 * Akustikberechnung - Zuluft.
+	 */
+	def createAkustikZuluftTableModel() {
+		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"]
+		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"]
+		new ca.odell.glazedlists.swing.EventTableModel(tableModels.akustikZuluft, [
+				getColumnCount: { columnNames.size() },
+				getColumnName:  { index -> columnNames[index] },
+				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
+			] as ca.odell.glazedlists.gui.TableFormat)
+	}
+
+    /**
+	 * Akustikberechnung - Abluft.
+	 */
+	def createAkustikAbluftTableModel() {
+		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"]
+		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"]
+		new ca.odell.glazedlists.swing.EventTableModel(tableModels.akustikAbluft, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
 				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }

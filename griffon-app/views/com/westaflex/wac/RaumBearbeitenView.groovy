@@ -13,137 +13,130 @@ import net.miginfocom.swing.MigLayout
 
 // RaumdatenDialogView
 panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[fill]")) {
-	panel(id: "raumBearbeitenTabSubPanel", constraints: "wrap") {
-	jideTabbedPane(id: "raumBearbeitenTabGroup") {
+    //panel(constraints: "grow", layout: new MigLayout("fill", "[]", "")) {
+    jideScrollPane(constraints: "grow") {
+        panel(layout: new MigLayout("fillx", "[fill]", "[fill]")) {
+            jideTabbedPane(id: "raumBearbeitenTabGroup", constraints: "grow, span") {
+                // RaumdatenDialog - Details ... , layout: new MigLayout("fillx, wrap 2", "[fill],[fill]")
+                panel(id: "raumBearbeitenDetailsTab", title: "Details", constraints: "grow") {
+                    jideScrollPane(constraints: "grow") {
+                        panel(id: "raumVsZuAbluftventileTabellePanel", constraints: "grow", layout: new MigLayout("", "[]")) {
+                        //panel(constraints: "grow", layout: new MigLayout("fill", "[fill]", "[]")) {
+                            panel(id: "raumBearbeiten", border: titledBorder("Raum"), layout: new MigLayout("fillx", "[left]para[right]para[left]para[left]para[left,fill]para[left,fill]para[left]"), constraints: "span") {
+                                label(id: "", text: "Geschoss")
+                                label("")
+                                label(id: "", text: "Raumnummer", constraints: "span 2")
+                                label(id: "", text: "Raumname")
+                                label(id: "", text: "Raumtyp")
+                                label("", constraints: "wrap")
 
-		// RaumdatenDialog - Details ... , layout: new MigLayout("fillx, wrap 2", "[fill],[fill]")
-		panel(id: "raumBearbeitenDetailsTab", title: "Details", layout: new MigLayout("fillx, wrap 2", "[fill]", "[fill]")) {
+                                comboBox(id: "raumBearbeitenRaumGeschoss", items: model.meta.raum.geschoss)
+                                button(id: "links", text: " < ")
+                                textField(id: "raumBearbeitenRaumnummer", text: model.meta.raum.s, constraints: "width 50px")
+                                button(id: "rechts", text: " > ")
+                                textField(id: "raumBearbeitenBezeichnung", text: "", constraints: "width 100px")
+                                comboBox(id: "raumBearbeitenRaumtyp", items: model.meta.raum.typ)
+                                button(id: "raumdatenDialogRaumButton", text: "...")
+                            }
 
-			panel(id: "raumBearbeiten", border: titledBorder("Raum"), layout: new MigLayout("fillx", "[left]para[right]para[left]para[left]para[left,fill]para[left,fill]para[left]"), constraints: "span") {
-				label(id: "", text: "Geschoss")
-				label("")
-				label(id: "", text: "Raumnummer", constraints: "span 2")
-				label(id: "", text: "Raumname")
-				label(id: "", text: "Raumtyp")
-				label("", constraints: "wrap")
+                            panel(id: "raumBearbeitenLuftart", border: titledBorder("Luftart"), constraints: "span", layout: new MigLayout("", "[]para[]para[]", "")) {
+                                comboBox(id: "raumBearbeitenLuftartCombo", constraints: "width 100px")
+                                textField(id: "raumBearbeitenLuftartFaktorZuluftverteilung", text: "", constraints: "width 100px")
+                                label(id: "raumBearbeitenLuftartCombo", text: "Faktor Zuluftverteilung", constraints: "wrap")
 
-				comboBox(id: "raumBearbeitenRaumGeschoss", items: model.meta.raum.geschoss)
-				button(id: "links", text: " < ")
-				textField(id: "raumBearbeitenRaumnummer", text: model.meta.raum.s, constraints: "width 50px")
-				button(id: "rechts", text: " > ")
-				textField(id: "raumBearbeitenBezeichnung", text: "", constraints: "width 100px")
-				comboBox(id: "raumBearbeitenRaumtyp", items: model.meta.raum.typ)
-				button(id: "raumdatenDialogRaumButton", text: "...")
-			}
+                                label("")
+                                textField(id: "raumBearbeitenLuftartAbluftVs", text: "", constraints: "width 100px")
+                                label(id: "raumBearbeitenLuftartCombo", text: "Abluftvolumentstrom in m³/h", constraints: "cell 2 1")
+                            }
 
-			panel(id: "raumBearbeitenLuftart", border: titledBorder("Luftart"), constraints: "span") {
-				comboBox(id: "raumBearbeitenLuftartCombo", constraints: "cell 0 0 2 1")
-				textField(id: "raumBearbeitenLuftartFaktorZuluftverteilung", text: "", constraints: "cell 1 0")
-				label(id: "raumBearbeitenLuftartCombo", text: "Faktor Zuluftverteilung", constraints: "cell 2 0")
+                            panel(id: "raumBearbeitenDurchlassposition", border: titledBorder("Durchlassposition"), layout: new MigLayout("fillx", "[left,fill]para[left,fill]para[left,fill]", "[fill]")) {
+                                button(id: "raumBearbeitenDurchlasspositionInfo", text: "Info...", constraints: "cell 0 0")
+                                label(text: "Zuluft", constraints: "cell 1 0")
+                                buttonGroup().with {
+                                    add radioButton(id: "raumBearbeitenDurchlasspositionZuluftDecke", text: "Decke", constraints: "cell 1 1")
+                                    add radioButton(id: "raumBearbeitenDurchlasspositionZuluftWandOben", text: "Wand oben", constraints: "cell 1 2")
+                                    add radioButton(id: "raumBearbeitenDurchlasspositionZuluftWandUnten", text: "Wand unten", constraints: "cell 1 3")
+                                    add radioButton(id: "raumBearbeitenDurchlasspositionZuluftBoden", text: "Boden", constraints: "cell 1 4")
+                                }
+                                label(text: "Abluft", constraints: "cell 2 0")
+                                buttonGroup().with {
+                                    add radioButton(id: "raumBearbeitenDurchlasspositionAbluftDecke", text: "Decke", constraints: "cell 2 1")
+                                    add radioButton(id: "raumBearbeitenDurchlasspositionAbluftWandOben", text: "Wand oben", constraints: "cell 2 2")
+                                    add radioButton(id: "raumBearbeitenDurchlasspositionAbluftWandUnten", text: "Wand unten", constraints: "cell 2 3")
+                                    add radioButton(id: "raumBearbeitenDurchlasspositionAbluftBoden", text: "Boden", constraints: "cell 2 4")
+                                }
+                            }
 
-				textField(id: "raumBearbeitenLuftartAbluftVs", text: "", constraints: "cell 1 1")
-				label(id: "raumBearbeitenLuftartCombo", text: "Abluftvolumentstrom in m³/h", constraints: "cell 2 1")
-			}
+                            panel(id: "raumBearbeitenKanalanschluss", border: titledBorder("Kanalanschluss"), constraints: "wrap", layout: new MigLayout("fill", "[left,fill]para[left,fill]para[left,fill]", "[fill]")) {
+                                button(id: "raumBearbeitenKanalanschlussInfo", text: "Info...", constraints: "cell 0 0")
+                                label(text: "Zuluft", constraints: "cell 1 0")
+                                buttonGroup().with {
+                                    add radioButton(id: "raumBearbeitenKanalanschlussZuluftDecke", text: "Decke", constraints: "cell 1 1")
+                                    add radioButton(id: "raumBearbeitenKanalanschlussZuluftWandOben", text: "Wand oben", constraints: "cell 1 2")
+                                    add radioButton(id: "raumBearbeitenKanalanschlussZuluftWandUnten", text: "Wand unten", constraints: "cell 1 3")
+                                    add radioButton(id: "raumBearbeitenKanalanschlussZuluftBoden", text: "Boden", constraints: "cell 1 4")
+                                }
+                                label(text: "Abluft", constraints: "cell 2 0")
+                                buttonGroup().with {
+                                    add radioButton(id: "raumBearbeitenKanalanschlussAbluftDecke", text: "Decke", constraints: "cell 2 1")
+                                    add radioButton(id: "raumBearbeitenKanalanschlussAbluftWandOben", text: "Wand oben", constraints: "cell 2 2")
+                                    add radioButton(id: "raumBearbeitenKanalanschlussAbluftWandUnten", text: "Wand unten", constraints: "cell 2 3")
+                                    add radioButton(id: "raumBearbeitenKanalanschlussAbluftBoden", text: "Boden", constraints: "cell 2 4")
+                                }
+                            }
 
-			panel(id: "raumBearbeitenDurchlassposition", border: titledBorder("Durchlassposition"), layout: new MigLayout("fillx", "[left,fill]para[left,fill]para[left,fill]", "[fill]")) {
-                button(id: "raumBearbeitenDurchlasspositionInfo", text: "Info...", constraints: "cell 0 0")
-                label(text: "Zuluft", constraints: "cell 1 0")
-                buttonGroup().with {
-                    add radioButton(id: "raumBearbeitenDurchlasspositionZuluftDecke", text: "Decke", constraints: "cell 1 1")
-                    add radioButton(id: "raumBearbeitenDurchlasspositionZuluftWandOben", text: "Wand oben", constraints: "cell 1 2")
-                    add radioButton(id: "raumBearbeitenDurchlasspositionZuluftWandUnten", text: "Wand unten", constraints: "cell 1 3")
-                    add radioButton(id: "raumBearbeitenDurchlasspositionZuluftBoden", text: "Boden", constraints: "cell 1 4")
+                            panel(id: "raumBearbeitenTabelle", layout: new MigLayout("fill", "[left]para[left]para[left]", "[fill]"), constraints: "span") {
+                                label(text: "Maximale Türspalthöhe [mm]")
+                                textField(id: "raumBearbeitenDetailsTurspalthohe", text: "10.0", constraints: "width 100px")
+                                button(id: "raumBearbeitenDetailsTurentfernen", text: "Tür entfernen", constraints: "wrap")
+
+                                //jideScrollPane() {
+                                    table(id: "raumBearbeitenDetailsTabelle", constraints: "height 150px", model: model.createRaumDetailsTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                                    }
+                                //}
+                            }
+
+                            panel(id: "raumBearbeitenOptional", border: titledBorder("Optional"), layout: new MigLayout("fillx", "[left]para[right]para[left]para[left]para[right]para[left]para[left]para[right]para[left]"), constraints: "span") {
+                                label(text: "Raumlänge")
+                                textField(id: "raumBearbeitenOptionalRaumlange", constraints: "width 100px")
+                                label(text: "m")
+                                label(text: "Raumbreite")
+                                textField(id: "raumBearbeitenOptionalRaumbreite", constraints: "width 100px")
+                                label(text: "m")
+                                label(text: "Raumhöhe")
+                                textField(id: "raumBearbeitenOptionalRaumhohe", constraints: "width 100px")
+                                label(text: "m", constraints: "wrap")
+
+                                label(text: "Raumfläche")
+                                textField(id: "raumBearbeitenOptionalRaumflache", constraints: "width 100px")
+                                label(text: "m²")
+                                label(text: "Raumvolumen")
+                                textField(id: "raumBearbeitenOptionalRaumvolumen", constraints: "width 100px")
+                                label(text: "m³")
+                                label("")
+                                label("")
+                                label("")
+                            }
+                        }
+                    }
                 }
-                label(text: "Abluft", constraints: "cell 2 0")
-                buttonGroup().with {
-                    add radioButton(id: "raumBearbeitenDurchlasspositionAbluftDecke", text: "Decke", constraints: "cell 2 1")
-                    add radioButton(id: "raumBearbeitenDurchlasspositionAbluftWandOben", text: "Wand oben", constraints: "cell 2 2")
-                    add radioButton(id: "raumBearbeitenDurchlasspositionAbluftWandUnten", text: "Wand unten", constraints: "cell 2 3")
-                    add radioButton(id: "raumBearbeitenDurchlasspositionAbluftBoden", text: "Boden", constraints: "cell 2 4")
+                // RaumdatenDialog - Zusammenfassung
+                panel(id: "raumBearbeitenZusammenfassungTab", title: "Zusammenfassung", constraints: "grow") {
+                    jideScrollPane(constraints: "grow") {
+                        // TODO...
+                        //table(id: "raumEinstellungenTabelle", model: model.createRaumEinstellungenTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                        //}
+                    }
                 }
-			}
+            }
+            panel(id: "raumBearbeitenSubPanel2") {
+                button(id: "raumBearbeitenSchliessen", text: "Schliessen")
+            }
+        }
 
-			panel(id: "raumBearbeitenKanalanschluss", border: titledBorder("Kanalanschluss"), layout: new MigLayout("fillx", "[left,fill]para[left,fill]para[left,fill]", "[fill]")) {
-                button(id: "raumBearbeitenKanalanschlussInfo", text: "Info...", constraints: "cell 0 0")
-                label(text: "Zuluft", constraints: "cell 1 0")
-                buttonGroup().with {
-                    add radioButton(id: "raumBearbeitenKanalanschlussZuluftDecke", text: "Decke", constraints: "cell 1 1")
-                    add radioButton(id: "raumBearbeitenKanalanschlussZuluftWandOben", text: "Wand oben", constraints: "cell 1 2")
-                    add radioButton(id: "raumBearbeitenKanalanschlussZuluftWandUnten", text: "Wand unten", constraints: "cell 1 3")
-                    add radioButton(id: "raumBearbeitenKanalanschlussZuluftBoden", text: "Boden", constraints: "cell 1 4")
-                }
-                label(text: "Abluft", constraints: "cell 2 0")
-                buttonGroup().with {
-                    add radioButton(id: "raumBearbeitenKanalanschlussAbluftDecke", text: "Decke", constraints: "cell 2 1")
-                    add radioButton(id: "raumBearbeitenKanalanschlussAbluftWandOben", text: "Wand oben", constraints: "cell 2 2")
-                    add radioButton(id: "raumBearbeitenKanalanschlussAbluftWandUnten", text: "Wand unten", constraints: "cell 2 3")
-                    add radioButton(id: "raumBearbeitenKanalanschlussAbluftBoden", text: "Boden", constraints: "cell 2 4")
-                }
-			}
-
-            // TODO mmu: make the dialog not sooo big!!!
-			panel(id: "raumBearbeitenTabelle", layout: new MigLayout("width 800", "[left]para[left]para[left]", "[fill]"), constraints: "span") {
-
-				label(text: "Maximale Türspalthöhe [mm]")
-				textField(id: "raumBearbeitenDetailsTurspalthohe", text: "10.0")
-				button(id: "raumBearbeitenDetailsTurentfernen", text: "Tür entfernen", constraints: "wrap")
-
-				jideScrollPane() {
-					//table(id: "raumBearbeitenDetailsTabelle", constraints: "span, width 800", model: model.createRaumDetailsTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-					//}
-				}
-			}
-
-			panel(id: "raumBearbeitenOptional", border: titledBorder("Optional"), layout: new MigLayout("fillx", "[left]para[right]para[left]para[left]para[right]para[left]para[left]para[right]para[left]"), constraints: "span") {
-				label(text: "Raumlänge")
-				textField(id: "raumBearbeitenOptionalRaumlange")
-				label(text: "m")
-				label(text: "Raumbreite")
-				textField(id: "raumBearbeitenOptionalRaumbreite")
-				label(text: "m")
-				label(text: "Raumhöhe")
-				textField(id: "raumBearbeitenOptionalRaumhohe")
-				label(text: "m", constraints: "wrap")
-
-				label(text: "Raumfläche")
-				textField(id: "raumBearbeitenOptionalRaumflache")
-				label(text: "m²")
-				label(text: "Raumvolumen")
-				textField(id: "raumBearbeitenOptionalRaumvolumen")
-				label(text: "m³")
-				label("")
-				label("")
-				label("")
-			}
-		}
-
-		// RaumdatenDialog - Zusammenfassung
-		panel(id: "raumBearbeitenZusammenfassungTab", title: "Zusammenfassung") {
-			jideScrollPane() {
-				// TODO...
-				//table(id: "raumEinstellungenTabelle", model: model.createRaumEinstellungenTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-				//}
-			}
-		}
-
-	}
-	}
-	panel(id: "raumBearbeitenSubPanel2") {
-		button(id: "raumBearbeitenSchliessen", text: "Schliessen") 
-	}
-	
+    }
 }
 // Format fields
 GH.recurse(raumBearbeitenTabPanel, GH.yellowTextField)
 // Bindings
 build(RaumBearbeitenBindings)
-//
-// JIDE
-//
-// raumBearbeitenTabGroup
-raumBearbeitenTabGroup.with {
-	setTabColorProvider(com.jidesoft.swing.JideTabbedPane.ONENOTE_COLOR_PROVIDER)
-	setBoldActiveTab(true)
-	setShowCloseButton(false)
-	setShowCloseButtonOnSelectedTab(false)
-}
