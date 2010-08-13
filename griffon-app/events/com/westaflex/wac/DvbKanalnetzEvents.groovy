@@ -45,8 +45,7 @@ class DvbKanalnetzEvents {
 			model.addDvbKanalnetz(k)
 			//
 			onDvbKanalnetzGeandert(k.position)
-
-            publishEvent "AddDvbKanalnetzToTableModel", [k]
+			publishEvent "AddDvbKanalnetzToTableModel", [k]
 		}
 	}
 	

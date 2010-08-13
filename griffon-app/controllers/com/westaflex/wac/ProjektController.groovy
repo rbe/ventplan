@@ -632,25 +632,21 @@ class ProjektController {
 		// Neues TableModel setzen !
 		println "onAddTableModelRow: add row to table model ${rowIndex}"
 		doLater {
-            //println "addRowToTableModel ${r}"
+			//println "addRowToTableModel ${r}"
 			// Erstelle Raumdaten Tabelle aktualisieren
 			def r = model.map.raum.raume[rowIndex]
-
 			def dataListRaumdaten = [raumBezeichnungCombo: r.raumBezeichnung,
-                                    raumGeschossCombo: r.raumGeschoss,
-                                    raumLuftartCombo: r.raumLuftart,
-                                    raumFlache: r.raumFlache,
-                                    raumHohe: r.raumHohe,
-                                    raumZuluftfaktor: r.raumZuluftfaktor,
-                                    raumAbluftVs: r.raumAbluftVs]
+									raumGeschossCombo: r.raumGeschoss,
+									raumLuftartCombo: r.raumLuftart,
+									raumFlache: r.raumFlache,
+									raumHohe: r.raumHohe,
+									raumZuluftfaktor: r.raumZuluftfaktor,
+									raumAbluftVs: r.raumAbluftVs]
 			// Let's add a row to the table
 			def raumRows = view.raumTabelle.getModel().getRowsModel().getValue()
 			raumRows.add(dataListRaumdaten)
 			view.raumTabelle.getModel().getRowsModel().setValue(raumRows)
 			view.raumTabelle.getModel().fireTableDataChanged()
-
-
-
 			//println "addRowToTableModel ${r}"
 			// Erstelle eine Liste mit den aktuellen Raumdaten
 			def dataListRaumVs = [raumBezeichnungCombo: r.raumBezeichnung,
@@ -670,17 +666,15 @@ class ProjektController {
 			raumVsRows.add(dataListRaumVs)
 			view.raumVsZuAbluftventileTabelle.getModel().getRowsModel().setValue(raumVsRows)
 			view.raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
-
-
-            // Erstelle eine Liste mit den aktuellen Raumdaten
+			// Erstelle eine Liste mit den aktuellen Raumdaten
 			def dataListRaumVsUberstrom = [
-                raumBezeichnungCombo: r.raumBezeichnungCombo,
-                raumLuftartCombo: r.raumLuftartCombo,
-                raumAnzahlUberstromVentile: r.raumAnzahlUberstromVentile,
-                raumVolumenstrom: r.raumVolumenstrom,
-                raumVsUberstromElementCombo: r.raumVsUberstromElementCombo
-            ]
-            // Let's add a row to the table
+				raumBezeichnungCombo: r.raumBezeichnungCombo,
+				raumLuftartCombo: r.raumLuftartCombo,
+				raumAnzahlUberstromVentile: r.raumAnzahlUberstromVentile,
+				raumVolumenstrom: r.raumVolumenstrom,
+				raumVsUberstromElementCombo: r.raumVsUberstromElementCombo
+			]
+			// Let's add a row to the table
 			def raumVsUberstromRows = view.raumVsUberstromventileTabelle.getModel().getRowsModel().getValue()
 			raumVsUberstromRows.add(dataListRaumVsUberstrom)
 			view.raumVsUberstromventileTabelle.getModel().getRowsModel().setValue(raumVsUberstromRows)
@@ -697,21 +691,19 @@ class ProjektController {
 		doLater {
 			// Let's add a row to the table
 			def raumRows = view.raumTabelle.getModel().getRowsModel().getValue()
-            def dataListRaumdaten = raumRows.get(raumIndex)
-            raumRows.remove( dataListRaumdaten )
+			def dataListRaumdaten = raumRows.get(raumIndex)
+			raumRows.remove( dataListRaumdaten )
 			view.raumTabelle.getModel().getRowsModel().setValue( raumRows )
 			view.raumTabelle.getModel().fireTableDataChanged()
-
 			// Let's remove a row from the table
 			def raumVsRows = view.raumVsZuAbluftventileTabelle.getModel().getRowsModel().getValue()
-            def dataListRaumVs = raumVsRows.get(raumIndex)
+			def dataListRaumVs = raumVsRows.get(raumIndex)
 			raumVsRows.remove( dataListRaumVs )
 			view.raumVsZuAbluftventileTabelle.getModel().getRowsModel().setValue( raumVsRows )
 			view.raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
-
-            // Let's remove a row from the table
+			// Let's remove a row from the table
 			def raumVsUberstromRows = view.raumVsZuAbluftventileTabelle.getModel().getRowsModel().getValue()
-            def dataListRaumVsUberstrom = raumVsUberstromRows.get(raumIndex)
+			def dataListRaumVsUberstrom = raumVsUberstromRows.get(raumIndex)
 			raumVsUberstromRows.remove( dataListRaumVs )
 			view.raumVsUberstromventileTabelle.getModel().getRowsModel().setValue( raumVsUberstromRows )
 			view.raumVsUberstromventileTabelle.getModel().fireTableDataChanged()
@@ -793,17 +785,17 @@ class ProjektController {
 			view.dvbKanalnetzTabelle.changeSelection(kanalnetzIndex, 0, false, false)
 		}
 	}
-
-    /**
+	
+	/**
 	 * Druckverlustberechnung - Kanalnetz neuen Eintrag ins TableModel hinzufügen
 	 */
-    def onAddDvbKanalnetzToTableModel = { kanalnetz ->
-        // Let's add a row to the table
-        def dvbKanalnetzRows = view.dvbKanalnetzTabelle.getModel().getRowsModel().getValue()
-        dvbKanalnetzRows.add( kanalnetz )
-        view.raumTabelle.getModel().getRowsModel().setValue( dvbKanalnetzRows )
-        view.raumTabelle.getModel().fireTableDataChanged()
-    }
+	def onAddDvbKanalnetzToTableModel = { kanalnetz ->
+		// Let's add a row to the table
+		def dvbKanalnetzRows = view.dvbKanalnetzTabelle.getModel().getRowsModel().getValue()
+		dvbKanalnetzRows.add( kanalnetz )
+		view.raumTabelle.getModel().getRowsModel().setValue( dvbKanalnetzRows )
+		view.raumTabelle.getModel().fireTableDataChanged()
+	}
 	
 	/**
 	 * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
@@ -875,17 +867,17 @@ class ProjektController {
 			view.dvbVentileinstellungTabelle.changeSelection(ventileinstellungIndex, 0, false, false)
 		}
 	}
-
-    /**
+	
+	/**
 	 * Druckverlustberechnung - Ventileinstellung neuen Eintrag ins TableModel hinzufügen
 	 */
-    def onAddDvbVentileinstellungToTableModel = { ventileinstellung ->
-        // Let's add a row to the table
-        def dvbVentileinstellungRows = view.dvbKanalnetzTabelle.getModel().getRowsModel().getValue()
-        dvbVentileinstellungRows.add( ventileinstellung )
-        view.raumTabelle.getModel().getRowsModel().setValue( dvbVentileinstellungRows )
-        view.raumTabelle.getModel().fireTableDataChanged()
-    }
+	def onAddDvbVentileinstellungToTableModel = { ventileinstellung ->
+		// Let's add a row to the table
+		def dvbVentileinstellungRows = view.dvbKanalnetzTabelle.getModel().getRowsModel().getValue()
+		dvbVentileinstellungRows.add(ventileinstellung)
+		view.raumTabelle.getModel().getRowsModel().setValue(dvbVentileinstellungRows)
+		view.raumTabelle.getModel().fireTableDataChanged()
+	}
 	
 	/**
 	 * 
@@ -900,73 +892,65 @@ class ProjektController {
 	def dvbVentileinstellungEntfernen = {
 		
 	}
-
-    /**
-     * Raumbezeichnung Comboboxen in der RaumdatenView und RaumVsView aktualisieren
-     */
-    def updateRaumBezeichnungCombo = { rowIndex, newValue ->
-        // Neues TableModel setzen !
+	
+	/**
+	 * Raumbezeichnung Comboboxen in der RaumdatenView und RaumVsView aktualisieren
+	 */
+	def updateRaumBezeichnungCombo = { rowIndex, newValue ->
+		// Neues TableModel setzen !
 		println "updateRaumBezeichnungCombo: ${rowIndex}"
 		doLater {
-            // raumTabelle updaten
+			// raumTabelle updaten
 			def raumTableModel = view.raumTabelle.getModel()
-            raumTableModel.setValueAt(newValue, rowIndex, 0)
-            view.raumTabelle.setModel(raumTableModel)
-            view.raumTabelle.getModel().fireTableDataChanged()
-
+			raumTableModel.setValueAt(newValue, rowIndex, 0)
+			view.raumTabelle.setModel(raumTableModel)
+			view.raumTabelle.getModel().fireTableDataChanged()
 			// raumVsZuAbluftventileTabelle updaten
 			def raumVsTableModel = view.raumVsZuAbluftventileTabelle.getModel()
 			raumVsTableModel.setValueAt(newValue, rowIndex, 0)
 			view.raumVsZuAbluftventileTabelle.setModel(raumVsTableModel)
 			view.raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
-
-            // raumVsZuAbluftventileTabelle updaten
+			// raumVsZuAbluftventileTabelle updaten
 			def raumVsUberstromTableModel = view.raumVsUberstromventileTabelle.getModel()
 			raumVsUberstromTableModel.setValueAt(newValue, rowIndex, 0)
 			view.raumVsUberstromventileTabelle.setModel(raumVsUberstromTableModel)
 			view.raumVsUberstromventileTabelle.getModel().fireTableDataChanged()
-
-            // raum im model updaten
-            def r = model.map.raum.raume[rowIndex]
-            r.raumBezeichnung = newValue
-
-            // TODO rbe: vielleicht andere Methode hierfür nutzen??
-            model.resyncRaumTableModels()
+			// raum im model updaten
+			def r = model.map.raum.raume[rowIndex]
+			r.raumBezeichnung = newValue
+			// TODO rbe: vielleicht andere Methode hierfür nutzen??
+			model.resyncRaumTableModels()
 		}
-    }
-
-    /**
-     * Luftart Comboboxen in der RaumdatenView und RaumVsView aktualisieren
-     */
-    def updateRaumLuftartCombo = { rowIndex, newValue ->
-        // Neues TableModel setzen !
+	}
+	
+	/**
+	 * Luftart Comboboxen in der RaumdatenView und RaumVsView aktualisieren
+	 */
+	def updateRaumLuftartCombo = { rowIndex, newValue ->
+		// Neues TableModel setzen !
 		println "updateRaumLuftartCombo: add row to table model ${rowIndex}"
 		doLater {
-            // raumTabelle updaten
+			// raumTabelle updaten
 			def raumTableModel = view.raumTabelle.getModel()
-            raumTableModel.setValueAt(newValue, rowIndex, 2)
-            view.raumTabelle.setModel(raumTableModel)
-            view.raumTabelle.getModel().fireTableDataChanged()
-
-            // raumVsZuAbluftventileTabelle updaten
+			raumTableModel.setValueAt(newValue, rowIndex, 2)
+			view.raumTabelle.setModel(raumTableModel)
+			view.raumTabelle.getModel().fireTableDataChanged()
+			// raumVsZuAbluftventileTabelle updaten
 			def raumVsTableModel = view.raumVsZuAbluftventileTabelle.getModel()
 			raumVsTableModel.setValueAt(newValue, rowIndex, 1)
 			view.raumVsZuAbluftventileTabelle.setModel(raumVsTableModel)
 			view.raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
-
-            // raumVsZuAbluftventileTabelle updaten
+			// raumVsZuAbluftventileTabelle updaten
 			def raumVsUberstromTableModel = view.raumVsUberstromventileTabelle.getModel()
 			raumVsUberstromTableModel.setValueAt(newValue, rowIndex, 1)
 			view.raumVsUberstromventileTabelle.setModel(raumVsUberstromTableModel)
 			view.raumVsUberstromventileTabelle.getModel().fireTableDataChanged()
-
-            // raum im model updaten
-            def r = model.map.raum.raume[rowIndex]
-            r.raumLuftart = newValue
-
-            // TODO rbe: vielleicht andere Methode hierfür nutzen??
-            model.resyncRaumTableModels()
+			// raum im model updaten
+			def r = model.map.raum.raume[rowIndex]
+			r.raumLuftart = newValue
+			// TODO rbe: vielleicht andere Methode hierfür nutzen??
+			model.resyncRaumTableModels()
 		}
-    }
+	}
 	
 }

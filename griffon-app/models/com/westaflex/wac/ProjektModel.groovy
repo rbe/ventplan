@@ -175,8 +175,8 @@ class ProjektModel {
 			dvbKanalnetz:                 new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
 			dvbVentileinstellung:         new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
 			wbw:                          new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNameComparator) as ca.odell.glazedlists.EventList,
-            akustikZuluft:                new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-            akustikAbluft:                new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList
+			akustikZuluft:                new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			akustikAbluft:                new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList
 		]
 	
 	/**
@@ -201,8 +201,8 @@ class ProjektModel {
 	 * Raumvolumenströme, Zu-/Abluftventile - TableModel
 	 */
 	def createRaumVsZuAbluftventileTableModel() {
-        def columnNames =   ["Raum",            "Luftart",     ws("Raumvolumen<br/>(m³)"), ws("Luftwechsel<br/>(1/h)"), ws("Bezeichnung<br/>Abluftventile"),    ws("Anzahl<br/>Abluftventile"),    ws("Abluftmenge<br/>je Ventil"),   ws("Volumenstrom<br/>(m³/h)"), ws("Bezeichnung<br/>Zuluftventile"),    ws("Anzahl<br/>Zuluftventile"),    ws("Zuluftmenge<br/>je Ventil"),   "Ventilebene"]
-        def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",              "raumLuftwechsel",           "raumBezeichnungAbluftventile",         "raumAnzahlAbluftventile",         "raumAbluftmengeJeVentil",         "raumVolumenstrom",            "raumBezeichnungZuluftventile",         "raumAnzahlZuluftventile",         "raumZuluftmengeJeVentil",         "raumVentilebene"]
+		def columnNames =   ["Raum",            "Luftart",     ws("Raumvolumen<br/>(m³)"), ws("Luftwechsel<br/>(1/h)"), ws("Bezeichnung<br/>Abluftventile"),    ws("Anzahl<br/>Abluftventile"),    ws("Abluftmenge<br/>je Ventil"),   ws("Volumenstrom<br/>(m³/h)"), ws("Bezeichnung<br/>Zuluftventile"),    ws("Anzahl<br/>Zuluftventile"),    ws("Zuluftmenge<br/>je Ventil"),   "Ventilebene"]
+		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",              "raumLuftwechsel",           "raumBezeichnungAbluftventile",         "raumAnzahlAbluftventile",         "raumAbluftmengeJeVentil",         "raumVolumenstrom",            "raumBezeichnungZuluftventile",         "raumAnzahlZuluftventile",         "raumZuluftmengeJeVentil",         "raumVentilebene"]
 		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeVsZuAbluftventile, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
@@ -287,8 +287,8 @@ class ProjektModel {
 				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
 			] as ca.odell.glazedlists.gui.TableFormat)
 	}
-
-    /**
+	
+	/**
 	 * Akustikberechnung - Zuluft.
 	 */
 	def createAkustikZuluftTableModel() {
@@ -300,8 +300,8 @@ class ProjektModel {
 				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
 			] as ca.odell.glazedlists.gui.TableFormat)
 	}
-
-    /**
+	
+	/**
 	 * Akustikberechnung - Abluft.
 	 */
 	def createAkustikAbluftTableModel() {
