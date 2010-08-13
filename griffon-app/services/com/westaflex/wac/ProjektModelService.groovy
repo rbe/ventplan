@@ -107,7 +107,7 @@ class ProjektModelService {
 					raumBezeichnungZuluftventile: X.vs { room."bezeichnungZuluftventile".text() },
 					raumAnzahlZuluftventile: X.vi { room."anzahlAbluftventile".text() },
 					raumZuluftmengeJeVentil: X.vd { room."zuluftmengeJeVentile".text() },
-					raumVentilebene: X.vs { room."ventilebene".text() },
+					raumVerteilebene: X.vs { room."ventilebene".text() },
 					raumAnzahlUberstromVentile: X.vi { room."anzahlUberstromventile".text() },
 					raumUberstromElement: X.vs { room."uberstromelement".text() },
 					turen: []
@@ -316,7 +316,7 @@ class ProjektModelService {
 			X.tc { bezeichnungZuluftventile(map.raumBezeichnungZuluftventile) }
 			X.tc { anzahlZuluftventile(map.raumAnzahlZuluftventile) as Integer }
 			X.tc { zuluftmengeJeVentil(map.raumZuluftmengeJeVentil) }
-			X.tc { ventilebene(map.raumVentilebene) }
+			X.tc { ventilebene(map.raumVerteilebene) }
 			X.tc { anzahlUberstromventile(map.raumAnzahlUberstromVentile) as Integer }
 			X.tc { uberstromelement(map.raumUberstromElement) }
 			// Türen

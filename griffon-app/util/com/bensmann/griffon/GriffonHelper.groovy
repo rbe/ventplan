@@ -51,7 +51,7 @@ class GriffonHelper {
 	def static raumdatenLuftartItems
 	
 	/**
-	 * Statischer DefaultCellEditor für raumGeschoss/Ventilebene Combobox
+	 * Statischer DefaultCellEditor für raumGeschoss/Verteilebene Combobox
 	 */
 	def static raumdatenGeschossEditor
 	def static raumdatenGeschossItems
@@ -488,13 +488,13 @@ class GriffonHelper {
 	}
 	
 	/**
-	 * Liefert einen DefaultCellEditor für "Ventilebene" in RaumVsView für die
+	 * Liefert einen DefaultCellEditor für "Verteilebene" in RaumVsView für die
 	 * Tabelle "raumVsZuAbluftventileTabelle" zurück
 	 */
-	def static getRaumVsVentilebeneCellEditor = { builder ->
-		def raumVsVentilebeneItems = ["KG", "EG", "OG", "DG", "SB"]
-		//def raumVsVentilebeneItems = model.meta.raumVsVentilebene
-		def editor = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumVsVentilebeneCombo', items: raumVsVentilebeneItems))
+	def static getRaumVsVerteilebeneCellEditor = { builder ->
+		def raumVsVerteilebeneItems = ["KG", "EG", "OG", "DG", "SB"]
+		//def raumVsVerteilebeneItems = model.meta.raumVsVerteilebene
+		def editor = new javax.swing.DefaultCellEditor(builder.comboBox(id: 'raumVsVerteilebeneCombo', items: raumVsVerteilebeneItems))
 		editor
 	}
 	

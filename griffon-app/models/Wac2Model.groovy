@@ -27,7 +27,7 @@ class Wac2Model {
 				raumVsBezeichnungZuluftventile: [/* initialized in Wac2Controller.mvcGroupInit */],
 				raumVsBezeichnungAbluftventile: [/* initialized in Wac2Controller.mvcGroupInit */],
 				raumVsUberstromelemente: [/* initialized in Wac2Controller.mvcGroupInit */],
-				raumVsVentilebene: ["KG", "EG", "OG", "DG", "SB"],
+				raumVsVerteilebene: ["KG", "EG", "OG", "DG", "SB"],
 			],
 		gewahlterRaum: [:] as ObservableMap,
 		wbw: [] as ObservableList, /* initialized in Wac2Controller.mvcGroupInit */

@@ -50,9 +50,9 @@ jideScrollPane(constraints: "grow") {
                                         cellEditor: GH.getRaumVsBezeichnungAbluftventileCellEditor(builder,model),
                                         cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
                                     ) // combo
-                                    propertyColumn(header: "Ventilebene",
-                                        //propertyName: 'raumVsVentilebeneCombo',
-                                        //cellEditor: GH.getRaumVsVentilebeneCellEditor(builder),
+                                    propertyColumn(header: "Verteilebene",
+                                        //propertyName: 'raumVsVerteilebeneCombo',
+                                        //cellEditor: GH.getRaumVsVerteilebeneCellEditor(builder),
                                         propertyName: 'raumGeschossCombo',
                                         cellEditor: GH.getRaumdatenGeschossCellEditor(builder,model),
                                         cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
