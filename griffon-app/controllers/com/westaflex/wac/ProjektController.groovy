@@ -911,7 +911,7 @@ class ProjektController {
 			raumVsTableModel.setValueAt(newValue, rowIndex, 0)
 			view.raumVsZuAbluftventileTabelle.setModel(raumVsTableModel)
 			view.raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
-			// raumVsZuAbluftventileTabelle updaten
+			// raumVsUberstromventileTabelle updaten
 			def raumVsUberstromTableModel = view.raumVsUberstromventileTabelle.getModel()
 			raumVsUberstromTableModel.setValueAt(newValue, rowIndex, 0)
 			view.raumVsUberstromventileTabelle.setModel(raumVsUberstromTableModel)
@@ -942,7 +942,7 @@ class ProjektController {
 			raumVsTableModel.setValueAt(newValue, rowIndex, 1)
 			view.raumVsZuAbluftventileTabelle.setModel(raumVsTableModel)
 			view.raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
-			// raumVsZuAbluftventileTabelle updaten
+			// raumVsUberstromventileTabelle updaten
 			def raumVsUberstromTableModel = view.raumVsUberstromventileTabelle.getModel()
 			raumVsUberstromTableModel.setValueAt(newValue, rowIndex, 1)
 			view.raumVsUberstromventileTabelle.setModel(raumVsUberstromTableModel)
