@@ -301,8 +301,8 @@ class ProjektController {
 				try {
 					mindestaussenluftrate = personenanzahl * aussenluftVsProPerson
 				} catch (e) {
-					// TODO mmu Dialog via Oxbow
-					e.printStackTrace()
+					def errorMsg = e.printStackTrace()
+                    app.controllers["Dialog"].showErrorDialog(errorMsg as String)
 					mindestaussenluftrate = 0.0d
 				}
 			}

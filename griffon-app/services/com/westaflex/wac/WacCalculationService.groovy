@@ -323,8 +323,9 @@ class WacCalculationService {
 	void autoLuftmenge(map, Boolean b) {
 		// LTM erforderlich?
 		if (!ltmErforderlich(map)) {
-			// TODO mmu Information als Dialog anzeigen (Oxbow)
-			println "autoLuftmenge: Es sind keine lüftungstechnischen Maßnahmen notwendig!"
+            def infoMsg = "autoLuftmenge: Es sind keine lüftungstechnischen Maßnahmen notwendig!"
+            app.controllers["Dialog"].showInformDialog(infoMsg as String)
+			println infoMsg
 		}
 		// LTM: erste Berechnung für Raumvolumenströme
 		// Summiere Daten aus Raumdaten
@@ -671,9 +672,9 @@ class WacCalculationService {
 				wacModelService.getEinstellung(ve.ventilbezeichnung, ve.luftart, luftVsLetzteTeilstrecke(ve), ve.abgleich)
 			// Wurde keine Einstellung gefunden, Benutzer informieren
 			if (ve.einstellung != 0.0d) {
-				// TODO mmu Dialog mit Oxbow
-				println "Keine Einstellung für Ventil ${ve.ventilbezeichnung} gefunden!"
-					+ " Bitte prüfen Sie die Zeile#${ve.position}."
+				def infoMsg = "Keine Einstellung für Ventil ${ve.ventilbezeichnung} gefunden! Bitte prüfen Sie die Zeile#${ve.position}."
+                app.controllers["Dialog"].showInformDialog(infoMsg as String)
+				println infoMsg
 			}
 		}
 	}

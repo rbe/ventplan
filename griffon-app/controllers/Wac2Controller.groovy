@@ -306,8 +306,9 @@ class Wac2Controller {
 						// Projekt aktivieren
 						projektAktivieren(mvcId)
 					} else {
-						// TODO mmu Show error dialog
-						println "projektOffnen: Konnte Projekt nicht öffnen!"
+                        def errorMsg = "projektOffnen: Konnte Projekt nicht öffnen!"
+                        app.controllers["Dialog"].showErrorDialog(errorMsg as String)
+						println errorMsg
 					}
 					// Bindings and events of ProjektModel are fired now!?
 					println "-" * 80

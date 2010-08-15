@@ -382,9 +382,8 @@ class ProjektModel {
 			// Raumvolumentströme - Überströmventile
 			tableModels.raumeVsUberstromventile.clear()
 			tableModels.raumeVsUberstromventile.addAll(map.raum.raume)
-			// TODO mmu Documentation?
-			// TODO mmu Possible java.lang.NullPointerException: Cannot invoke method addAll() on null object when RaumBearbeitenDialog was not opened before
-			// TODO mmu rbe: Quickfix: added null-safe-operator
+			// java.lang.NullPointerException: Cannot invoke method addAll() on null object when RaumBearbeitenDialog was not opened before
+			// Quickfix: added null-safe-operator
 			tableModels.raumeBearbeiten?.addAll(map.raum.raume)
 		}
 	}
