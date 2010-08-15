@@ -208,8 +208,8 @@ class ProjektController {
 				false
 			}
 		} catch (e) {
-			// TODO mmu Show dialog
-			e.printStackTrace()
+            def errorMsg = e.printStackTrace()
+            app.controllers["Dialog"].showErrorDialog(errorMsg as String)
 			// Project was not saved
 			false
 		}

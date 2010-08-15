@@ -39,4 +39,11 @@ class DialogController {
         inform("Information", infoMsg)
     }
 
+    /**
+     * Zeige Fehler-Informationsdialog mit mitgegebener Nachricht an.
+     */
+    def showErrorDialog = { errorMsg ->
+        inform("Fehler", errorMsg)
+    }
+
 }
