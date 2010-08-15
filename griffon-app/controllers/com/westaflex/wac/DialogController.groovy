@@ -16,31 +16,27 @@ import com.ezware.dialog.task.CommandLink
 class DialogController {
 	
 	/**
-     * Show this dialog, when closing the application.
+     * Dialog anzeigen, wenn die Applikation geschlossen werden soll, obwohl
+     * noch nicht gespeicherte Projekte vorhanden sind.
      */
 	def showApplicationCloseDialog() {
-        /*
-        def choice
-        def lastPane = builder.optionPane()
-        choice = lastPane.showOptionDialog( null,
-            'Es befinden sich nicht gespeicherte Projekte in der Anwendung. Was möchten Sie machen?',
-            'Achtung: Nicht gespeicherte Projekte vorhanden',
-            javax.swing.JOptionPane.YES_NO_CANCEL_OPTION,
-            javax.swing.JOptionPane.WARNING_MESSAGE,
-            null,
-            options as Object[],
-            options[2])
-        */
         def choice = choice("Anwendung schliessen?", "Die Anwendung enthält nicht gespeicherte Projekte. Bitte wählen Sie.", 1, [new CommandLink("Alle Speichern",""),new CommandLink("Abbrechen",""),new CommandLink("Schliessen","")])
         choice
     }
 
     /**
-     * Show this dialog, when closing a project.
+     * Dialog anzeigen, wenn ein nicht gespeichertes Projekt geschlossen werden soll.
      */
 	def showCloseProjectDialog() {
         def choice = choice("Projekt schliessen?", "Das Projekt enthält nicht gespeicherte Werte. Bitte wählen Sie.", 1, [new CommandLink("Speichern",""),new CommandLink("Abbrechen",""),new CommandLink("Schliessen","")])
         choice
+    }
+
+    /**
+     * Zeige Informationsdialog mit mitgegebener Nachricht an.
+     */
+    def showInformDialog = { infoMsg ->
+        inform("Information", infoMsg)
     }
 
 }

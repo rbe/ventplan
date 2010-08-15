@@ -431,9 +431,9 @@ class ProjektController {
 			def (zuluftfaktor, neuerZuluftfaktor) =
 				wacCalculationService.prufeZuluftfaktor(raum.raumTyp, eingegebenerZuluftfaktor)
 			if (zuluftfaktor != neuerZuluftfaktor) {
-				// TODO mmu Dialog with Oxbow
-				println "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor}" +
-					" (laut Norm-Tolerenz) geändert!"
+                def infoMsg = "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
+                app.controllers["Dialog"].showInformDialog(infoMsg as String)
+                println errorMsg
 			}
 			raum.raumZuluftfaktor = neuerZuluftfaktor
 		}
