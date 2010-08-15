@@ -433,7 +433,7 @@ class ProjektController {
 			if (zuluftfaktor != neuerZuluftfaktor) {
                 def infoMsg = "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
                 app.controllers["Dialog"].showInformDialog(infoMsg as String)
-                println errorMsg
+                println infoMsg
 			}
 			raum.raumZuluftfaktor = neuerZuluftfaktor
 		}

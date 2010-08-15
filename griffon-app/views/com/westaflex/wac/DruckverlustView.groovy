@@ -10,6 +10,7 @@
 package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
+import com.bensmann.griffon.WacTableHelper as WTH
 import net.miginfocom.swing.MigLayout
 
 jideScrollPane(constraints: "grow") {
@@ -45,17 +46,17 @@ jideScrollPane(constraints: "grow") {
                                 //}
                                 table(id: 'dvbKanalnetzTabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "grow") {
                                     tableModel() {
-                                        current.addTableModelListener(GH.getDvbKanalnetzTableModelListener())
+                                        current.addTableModelListener(WTH.getDvbKanalnetzTableModelListener())
                                         propertyColumn(header: 'Luftart',
                                             propertyName: 'druckverlustLuftartCombo',
-                                            cellEditor: GH.getDruckverlustLuftartEditor(builder,model),
+                                            cellEditor: WTH.getDruckverlustLuftartEditor(builder,model),
                                             cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
                                         )
                                         propertyColumn(header: 'Teilstrecke', propertyName: 'teilstrecke')
                                         propertyColumn(header: GH.ws("Luftvolumen<br/>strom<br/>(m³/h)"), propertyName: 'luftVs')
                                         propertyColumn(header: 'Kanalbezeichnung', 
                                             propertyName: 'druckverlustKanalbezeichnungCombo',
-                                            cellEditor: GH.getDruckverlustKanalbezeichnungEditor(builder,model),
+                                            cellEditor: WTH.getDruckverlustKanalbezeichnungEditor(builder,model),
                                             cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
                                         )
                                         propertyColumn(header: GH.ws("Kanallänge<br/>(m)"), propertyName: 'lange')
@@ -105,15 +106,15 @@ jideScrollPane(constraints: "grow") {
                                 //}
                                 table(id: 'dvbVentileinstellungTabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "grow") {
                                     tableModel() {
-                                        current.addTableModelListener(GH.getDvbKanalnetzTableModelListener())
+                                        current.addTableModelListener(WTH.getDvbKanalnetzTableModelListener())
                                         propertyColumn(header: 'Luftart',
                                             propertyName: 'druckverlustEinstellungLuftartCombo',
-                                            cellEditor: GH.getDruckverlustEinstellungLuftartEditor(builder,model),
+                                            cellEditor: WTH.getDruckverlustEinstellungLuftartEditor(builder,model),
                                             cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
                                         )
                                         propertyColumn(header: 'Raum',
                                             propertyName: 'druckverlustEinstellungRaumCombo',
-                                            cellEditor: GH.getDruckverlustEinstellungRaumEditor(builder,model),
+                                            cellEditor: WTH.getDruckverlustEinstellungRaumEditor(builder,model),
                                             cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
                                         )
                                         propertyColumn(header: 'Teilstrecken', propertyName: 'teilstrecken')

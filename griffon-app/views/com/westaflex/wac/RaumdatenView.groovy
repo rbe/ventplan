@@ -9,6 +9,7 @@
 package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
+import com.bensmann.griffon.WacTableHelper as WTH
 import net.miginfocom.swing.MigLayout
 
 jideScrollPane(constraints: "grow") {
@@ -42,20 +43,20 @@ jideScrollPane(constraints: "grow") {
                 //}
                 table(id: 'raumTabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "grow") {
                     tableModel() {
-                        current.addTableModelListener(GH.getRaumdatenTableModelListener())
+                        current.addTableModelListener(WTH.getRaumdatenTableModelListener())
                         propertyColumn(header: 'Raum', 
                             propertyName: 'raumBezeichnungCombo',
-                            cellEditor: GH.getRaumdatenBezeichnungCellEditor(builder,model),
+                            cellEditor: WTH.getRaumdatenBezeichnungCellEditor(builder,model),
                             cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
                         )
                         propertyColumn(header: 'Geschoss', 
                             propertyName: 'raumGeschossCombo',
-                            cellEditor: GH.getRaumdatenGeschossCellEditor(builder,model),
+                            cellEditor: WTH.getRaumdatenGeschossCellEditor(builder,model),
                             cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
                         )
                         propertyColumn(header: 'Luftart', 
                             propertyName: 'raumLuftartCombo',
-                            cellEditor: GH.getRaumdatenLuftartCellEditor(builder,model),
+                            cellEditor: WTH.getRaumdatenLuftartCellEditor(builder,model),
                             cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
                         )
                         propertyColumn(header: GH.ws("Raumfläche<br/>(m²)"), propertyName: 'raumFlache')

@@ -9,6 +9,7 @@
 package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
+import com.bensmann.griffon.WacTableHelper as WTH
 import net.miginfocom.swing.MigLayout
 
 // Raumvolumenströme
@@ -32,12 +33,12 @@ jideScrollPane(constraints: "grow") {
                                     } as javax.swing.event.TableModelListener)
                                     propertyColumn(header: 'Raum',
                                         propertyName: 'raumBezeichnungCombo',
-                                        cellEditor: GH.getRaumdatenBezeichnungCellEditor(builder,model),
+                                        cellEditor: WTH.getRaumdatenBezeichnungCellEditor(builder,model),
                                         cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
                                     )
                                     propertyColumn(header: 'Luftart',
                                         propertyName: 'raumLuftartCombo',
-                                        cellEditor: GH.getRaumdatenLuftartCellEditor(builder,model),
+                                        cellEditor: WTH.getRaumdatenLuftartCellEditor(builder,model),
                                         cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
                                     )
                                     propertyColumn(header: GH.ws("Raumvolumen<br/>(m³)"), propertyName: 'raumVolumen')
@@ -48,19 +49,19 @@ jideScrollPane(constraints: "grow") {
                                     propertyColumn(header: GH.ws("Anzahl<br/>Zuluftventile"), propertyName: 'raumAnzahlZuluftventile')
                                     propertyColumn(header: GH.ws("Bezeichnung<br/>Zuluftventile"),
                                         propertyName: 'raumVsBezeichnungZuluftventileCombo',
-                                        cellEditor: GH.getRaumVsBezeichnungZuluftventileCellEditor(builder,model),
+                                        cellEditor: WTH.getRaumVsBezeichnungZuluftventileCellEditor(builder,model),
                                         cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
                                     ) // combo
                                     propertyColumn(header: GH.ws("Bezeichnung<br/>Abluftventile"),
                                         propertyName: 'raumVsBezeichnungAbluftventileCombo',
-                                        cellEditor: GH.getRaumVsBezeichnungAbluftventileCellEditor(builder,model),
+                                        cellEditor: WTH.getRaumVsBezeichnungAbluftventileCellEditor(builder,model),
                                         cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
                                     ) // combo
                                     propertyColumn(header: "Verteilebene",
                                         //propertyName: 'raumVsVerteilebeneCombo',
                                         //cellEditor: GH.getRaumVsVerteilebeneCellEditor(builder),
                                         propertyName: 'raumGeschossCombo',
-                                        cellEditor: GH.getRaumdatenGeschossCellEditor(builder,model),
+                                        cellEditor: WTH.getRaumdatenGeschossCellEditor(builder,model),
                                         cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
                                     ) // combo
                                     propertyColumn(header: GH.ws("Zuluftmenge<br/>je Ventil"), propertyName: 'raumZuluftmengeJeVentil', editable: false)
@@ -77,24 +78,24 @@ jideScrollPane(constraints: "grow") {
                             //}
                             table(id: 'raumVsUberstromventileTabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "grow") {
                                 tableModel() {
-                                    current.addTableModelListener(GH.getRaumVsUberstromTableModelListener())
+                                    current.addTableModelListener(WTH.getRaumVsUberstromTableModelListener())
                                     propertyColumn(header: 'Raum',
                                         //propertyName: 'raumBezeichnungUberstromCombo',
                                         //cellEditor: GH.getRaumVsUberstromRaumBezeichnungCellEditor(builder,model),
                                         propertyName: 'raumBezeichnungCombo',
-                                        cellEditor: GH.getRaumdatenBezeichnungCellEditor(builder,model),
+                                        cellEditor: WTH.getRaumdatenBezeichnungCellEditor(builder,model),
                                         cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
                                     )
                                     propertyColumn(header: 'Luftart',
                                         propertyName: 'raumLuftartCombo',
-                                        cellEditor: GH.getRaumdatenLuftartCellEditor(builder,model),
+                                        cellEditor: WTH.getRaumdatenLuftartCellEditor(builder,model),
                                         cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
                                     )
                                     propertyColumn(header: GH.ws("Anzahl<br/>Ventile"), propertyName: 'raumAnzahlUberstromVentile')
                                     propertyColumn(header: GH.ws("Volumenstrom<br/>(m³/h)"), propertyName: 'raumVolumenstrom')
                                     propertyColumn(header: GH.ws("Überström<br/>Elemente"),
                                         propertyName: 'raumVsUberstromElementCombo',
-                                        cellEditor: GH.getRaumVsUberstromElementCellEditor(builder,model),
+                                        cellEditor: WTH.getRaumVsUberstromElementCellEditor(builder,model),
                                         cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
                                     )
                                 }
@@ -148,7 +149,7 @@ jideScrollPane(constraints: "grow") {
 }
 
 // Event abfangen. model.map.raum.raume aktualisieren...
-GH.getRaumdatenBezeichnungCellEditor(builder,model).editingStopped = { e ->
+WTH.getRaumdatenBezeichnungCellEditor(builder,model).editingStopped = { e ->
     println "stop editing row: ${-> raumVsUberstromventileTabelle.selectedColumn} ${-> raumVsUberstromventileTabelle.selectedRow} -> ${e}"
     // raumbezeichnung aktualisieren
     if (e.getSource() instanceof javax.swing.DefaultCellEditor) {
@@ -156,7 +157,7 @@ GH.getRaumdatenBezeichnungCellEditor(builder,model).editingStopped = { e ->
         controller.updateRaumBezeichnungCombo(raumVsUberstromventileTabelle.selectedRow, cellEditor.getCellEditorValue())
     }
 }
-GH.getRaumdatenLuftartCellEditor(builder,model).editingStopped = { e ->
+WTH.getRaumdatenLuftartCellEditor(builder,model).editingStopped = { e ->
     println "stop editing row: ${-> raumVsUberstromventileTabelle.selectedColumn} ${-> raumVsUberstromventileTabelle.selectedRow} -> ${e}"
     // raum Luftart aktualisieren
     if (e.getSource() instanceof javax.swing.DefaultCellEditor) {
