@@ -13,17 +13,15 @@ import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
 // Akustikberechnung
-jideScrollPane(constraints: "grow") {
-    panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
-        panel(id: "akustikTabPanel", layout: new MigLayout("fill", "[]", "")) {
-            // Tabellen für
-            jideTabbedPane(id: "akustikTabGroup", constraints: "grow, span") {
-                panel(id: "akustikZuluftTab", title: "Zuluft", layout: new MigLayout("fill", "[]", "")) {
-                    buildLayout("Zuluft")
-                }
-                panel(id: "akustikAbluftTab", title: "Abluft", layout: new MigLayout("fill", "[]", "")) {
-                    buildLayout("Abluft")
-                }
+panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
+    panel(id: "akustikTabPanel", layout: new MigLayout("fill", "[]", "")) {
+        // Tabellen für
+        jideTabbedPane(id: "akustikTabGroup", constraints: "grow, span") {
+            panel(id: "akustikZuluftTab", title: "Zuluft", layout: new MigLayout("fill", "[]", "")) {
+                buildLayout("Zuluft")
+            }
+            panel(id: "akustikAbluftTab", title: "Abluft", layout: new MigLayout("fill", "[]", "")) {
+                buildLayout("Abluft")
             }
         }
     }
@@ -40,97 +38,86 @@ akustikTabGroup.with {
 def buildLayout(tabname) {
 	// Akustikberechnung - Zuluft
 	panel(layout: new MigLayout("fillx, wrap 4", "[left,fill]para[right,fill]para[center,fill]para[left,fill]", "[fill]")) {
-		label("Raumbezeichnung", constraints: "cell 0 0")
-		label("", constraints: "cell 1 0, width 150::200")
-		// TODO Binding: Zentralgerät aus RaumVsView -> raumVsZuAbluftventileZentralgerat
-		label("Zentrales Lüftungsgerät " + raumVsZentralgerat.selectedItem, constraints: "cell 2 0")
-		label("", constraints: "cell 3 0")
-	
-		comboBox(id: "akustik${tabname}Raumbezeichnung", constraints: "cell 0 1")
-		label("", constraints: "cell 1 1")
-		label(tabname, constraints: "cell 2 1")
-		label("", constraints: "cell 3 1")
-	
-		label("", constraints: "cell 0 2")
-		label("", constraints: "cell 1 2")
-		label("Oktavmittenfrequenz in Hz", constraints: "cell 2 2")
-		label("", constraints: "cell 3 2")
+        panel(layout: new MigLayout("fillx", "[fill]para[right,fill]", "[fill]")) {
+            label("Raumbezeichnung", constraints: "cell 0 0, wrap")
+            
+            comboBox(id: "akustik${tabname}Raumbezeichnung", constraints: "span 2")
+            label("", constraints: "wrap")
 
-		label("", constraints: "cell 0 3")
-		label("", constraints: "cell 1 3")
-		jideScrollPane(constraints: "grow") {
-			table(id: 'akustik${tabName}Tabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "cell 2 3 13 1") {
-				tableModel() {
-					propertyColumn(header: GH.ws("125"),  propertyName: "125")
-					propertyColumn(header: GH.ws("250"),  propertyName: "250")
-					propertyColumn(header: GH.ws("500"),  propertyName: "500")
-					propertyColumn(header: GH.ws("1000"), propertyName: "1000")
-					propertyColumn(header: GH.ws("2000"), propertyName: "2000")
-					propertyColumn(header: GH.ws("4000"), propertyName: "4000")
-				}
-			}
-		}
-		label("dB(A)", constraints: "cell 3 3")
-	
-		label("Schallleistungspegel Zuluftstutzen", constraints: "cell 0 4")
-		// TODO: Zentralgerät aus RaumVsView -> raumVsZuAbluftventileZentralgerat
-		// TODO: split -> comboBox...???
-		label(raumVsZentralgerat.selectedItem, constraints: "cell 1 4")
-		label("", constraints: "cell 2 4")
-		// TODO: mittelwert der 1. Reihe von der Tabelle?
-		label("", constraints: "cell 3 4")
-	
-		label("Schallleistungspegelerhöhung Kanalnetz", constraints: "cell 0 5")
-		comboBox(id: "akustik${tabname}Kanalnetz", constraints: "cell 1 5")
-		label("", constraints: "cell 3 5")
-	
-		label("Schallleistungspegelerhöhung Filter", constraints: "cell 0 6")
-		comboBox(id: "akustik${tabname}Filter", constraints: "cell 1 6")
-		label("", constraints: "cell 3 6")
-	
-		label("1. Hauptschalldämpfer", constraints: "cell 0 7")
-		comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "cell 1 7")
-		label("", constraints: "cell 3 7")
-	
-		label("2. Hauptschalldämpfer", constraints: "cell 0 8")
-		comboBox(id: "akustik${tabname}2Hauptschalldampfer", constraints: "cell 1 8")
-		label("", constraints: "cell 3 8")
-	
-		label("Anzahl der Umlenkungen 90° Stck.", constraints: "cell 0 9")
-		textField(id: "akustik${tabname}AnzahlUmlenkungen90GradStck", constraints: "cell 1 9")
-		label("", constraints: "cell 3 9")
-	
-		label("Luftverteilerkasten Stck.", constraints: "cell 0 10")
-		textField(id: "akustik${tabname}LuftverteilerkastenStck", constraints: "cell 1 10")
-		label("", constraints: "cell 3 10")
-	
-		label("Längsdämpfung Kanal lfdm.", constraints: "cell 0 11")
-		// TODO: split ???
-		textField(id: "akustik${tabname}LangsdampfungKanal", constraints: "cell 1 11")
-		label("", constraints: "cell 3 11")
-	
-		label("Schalldämpfer Ventil", constraints: "cell 0 12")
-		comboBox(id: "akustik${tabname}SchalldampferVentil", constraints: "cell 1 12")
-		label("", constraints: "cell 3 12")
-	
-		label("Einfügungsdämmwert Luftdurchlass", constraints: "cell 0 13")
-		comboBox(id: "akustik${tabname}EinfugungsdammwertLuftdurchlass", constraints: "cell 1 13")
-		label("", constraints: "cell 3 13")
-	
-		label("Raumabsorption (Ahnnahme) BAD=0 WOHNEN=1", constraints: "cell 0 14")
-		textField(id: "akustik${tabname}Raumabsorption", constraints: "cell 1 14")
-		label("", constraints: "cell 3 14")
-	
-		label("Korrektur der A-Bewertung", constraints: "cell 0 15")
-		label("", constraints: "cell 1 15")
-		label("", constraints: "cell 3 15")
-	
-		label("Bewerteter Schallpegel", constraints: "cell 0 16")
-		label("", constraints: "cell 1 16")
-		label("Mittlerer Schalldruckpegel* dB(A) =", constraints: "cell 2 16")
-		label("", constraints: "cell 3 16") // Wert aus Berechnung
-	
-		label("* Bei dieser Berechnung handelt es dich um eine theoretische Auslegung, deren Werte in der Praxis abweichen können", constraints: "span")
+            label("", constraints: "span 2, wrap")
+
+            label("", constraints: "span 2, wrap")
+
+            label("Schallleistungspegel Zuluftstutzen")
+            // TODO: Zentralgerät aus RaumVsView -> raumVsZuAbluftventileZentralgerat
+            // TODO: split -> comboBox...???
+            label(raumVsZentralgerat.selectedItem, constraints: "wrap")
+
+            label("Schallleistungspegelerhöhung Kanalnetz")
+            comboBox(id: "akustik${tabname}Kanalnetz", constraints: "wrap")
+
+
+            label("Schallleistungspegelerhöhung Filter")
+            comboBox(id: "akustik${tabname}Filter", constraints: "wrap")
+
+            label("1. Hauptschalldämpfer")
+            comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "wrap")
+
+            label("2. Hauptschalldämpfer")
+            comboBox(id: "akustik${tabname}2Hauptschalldampfer", constraints: "wrap")
+
+            label("Anzahl der Umlenkungen 90° Stck.")
+            textField(id: "akustik${tabname}AnzahlUmlenkungen90GradStck", constraints: "wrap")
+
+            label("Luftverteilerkasten Stck.")
+            textField(id: "akustik${tabname}LuftverteilerkastenStck", constraints: "wrap")
+
+            label("Längsdämpfung Kanal lfdm.")
+            // TODO: split ???
+            textField(id: "akustik${tabname}LangsdampfungKanal", constraints: "wrap")
+
+            label("Schalldämpfer Ventil")
+            comboBox(id: "akustik${tabname}SchalldampferVentil", constraints: "wrap")
+
+            label("Einfügungsdämmwert Luftdurchlass")
+            comboBox(id: "akustik${tabname}EinfugungsdammwertLuftdurchlass", constraints: "wrap")
+
+            label("Raumabsorption (Ahnnahme) BAD=0 WOHNEN=1")
+            textField(id: "akustik${tabname}Raumabsorption", constraints: "wrap")
+
+            label("Korrektur der A-Bewertung", constraints: "wrap")
+
+            label("Bewerteter Schallpegel", constraints: "wrap")
+
+            label("* Bei dieser Berechnung handelt es dich um eine theoretische Auslegung, deren Werte in der Praxis abweichen können", constraints: "span")
+        }
+
+        panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
+            label("Zentrales Lüftungsgerät " + raumVsZentralgerat.selectedItem)
+
+            label(tabname)
+
+            label("Oktavmittenfrequenz in Hz")
+
+            jideScrollPane(constraints: "grow") {
+                table(id: 'akustik${tabName}Tabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                    tableModel() {
+                        propertyColumn(header: GH.ws("125"),  propertyName: "125")
+                        propertyColumn(header: GH.ws("250"),  propertyName: "250")
+                        propertyColumn(header: GH.ws("500"),  propertyName: "500")
+                        propertyColumn(header: GH.ws("1000"), propertyName: "1000")
+                        propertyColumn(header: GH.ws("2000"), propertyName: "2000")
+                        propertyColumn(header: GH.ws("4000"), propertyName: "4000")
+                    }
+                }
+            }
+
+            label("Mittlerer Schalldruckpegel* dB(A) =")
+        }
+
+        panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
+            label("dB(A)")
+        }
 	}
 	return "akustik${tabname}Tab"
 }

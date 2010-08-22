@@ -6,6 +6,8 @@
  * All Rights Reserved. Use is subject to license terms, see http://www.bensmann.com/license_en.html
  * 
  */
+import net.miginfocom.swing.MigLayout
+
 def screen = java.awt.Toolkit.defaultToolkit.screenSize
 
 wpxFileChooserWindow = fileChooser(
@@ -38,7 +40,15 @@ wac2Frame = application(title: 'WestaWAC 2',
 	// Build toolbar
 	toolBar(build(Wac2ToolBar))
 	// Content
-	widget(build(Wac2MainPane))
+    widget(
+        // set scrollpane for all projects
+        jideScrollPane(id: "mainScrollPane") {
+            build(Wac2MainPane)
+        }
+    )
+    // set visibility of scrollbars
+    mainScrollPane.setHorizontalScrollBarPolicy(com.jidesoft.swing.JideScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    mainScrollPane.setVerticalScrollBarPolicy(com.jidesoft.swing.JideScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 	// Bindings
 	build(Wac2Bindings)
 	// The status bar
