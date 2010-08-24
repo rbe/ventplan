@@ -167,7 +167,7 @@ class WacTableHelper {
 	 */
 	def static getDruckverlustLuftartEditor = { builder, model ->
 		def druckverlustLuftartItems = ["ZU", "AB"]
-		new javax.swing.DefaultCellEditor(builder.comboBox(id: 'druckverlustLuftartCombo', items: druckverlustLuftartItems))
+		new javax.swing.DefaultCellEditor(builder.comboBox(id: 'dvbkLuftart', items: druckverlustLuftartItems))
 	}
 	
 	/**
@@ -176,7 +176,7 @@ class WacTableHelper {
 	 */
 	def static getDruckverlustKanalbezeichnungEditor = { builder, model ->
 		def druckverlustKanalbezeichnungItems = model.meta.dvbKanalbezeichnung
-		new javax.swing.DefaultCellEditor(builder.comboBox(id: 'druckverlustKanalbezeichnungCombo', items: druckverlustKanalbezeichnungItems))
+		new javax.swing.DefaultCellEditor(builder.comboBox(id: 'kanalbezeichnung', items: druckverlustKanalbezeichnungItems))
 	}
 	
 	/**
@@ -185,7 +185,7 @@ class WacTableHelper {
 	 */
 	def static getDruckverlustEinstellungLuftartEditor = { builder, model ->
 		def druckverlustEinstellungLuftartItems = ["ZU", "AB", "AU", "FO"]
-		new javax.swing.DefaultCellEditor(builder.comboBox(id: 'druckverlustEinstellungLuftartCombo', items: druckverlustEinstellungLuftartItems))
+		new javax.swing.DefaultCellEditor(builder.comboBox(id: 'dvbvLuftart', items: druckverlustEinstellungLuftartItems))
 	}
 	
 	/**
@@ -194,7 +194,16 @@ class WacTableHelper {
 	 */
 	def static getDruckverlustEinstellungRaumEditor = { builder, model ->
 		def druckverlustEinstellungRaumItems = model.meta.raum.typ
-		new javax.swing.DefaultCellEditor(builder.comboBox(id: 'druckverlustEinstellungRaumCombo', items: druckverlustEinstellungRaumItems))
+		new javax.swing.DefaultCellEditor(builder.comboBox(id: 'dvbvRaum', items: druckverlustEinstellungRaumItems))
 	}
+
+    /**
+	 * Liefert einen DefaultCellEditor für "Ventilbezeichnung" in DruckverlustView
+	 * für die Tabelle zurück (Ventileinstellung)
+	 */
+    def static getDruckverlustEinstellungVentilbezeichnungEditor = { builder, model ->
+		def druckverlustVentilbezeichnungItems = model.meta.dvbVentileinstellung
+		new javax.swing.DefaultCellEditor(builder.comboBox(id: 'ventilbezeichnung', items: druckverlustVentilbezeichnungItems))
+    }
 	
 }

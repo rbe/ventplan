@@ -567,7 +567,8 @@ class WacCalculationService {
 	
 	def calcDruckverlustKlasse5 = { Double geschwindigkeit, BigDecimal durchmesser ->
 		final Double re = geschwindigkeit * (durchmesser + 0f) / (0.015) //1000 * 15 hoch -6
-		lambda = 0.22 / Math.pow(re, 0.2)
+		def lambda = 0.22 / Math.pow(re, 0.2)
+        lambda
 	}
 	
 	def calcDruckverlustKlasse6 = { Double geschwindigkeit, BigDecimal durchmesser ->
@@ -628,13 +629,14 @@ class WacCalculationService {
 			// Hole Luftvolumenstrom der letzten Teilstrecke
 			def letzteTeilstrecke = teilstrecken.last().toInteger()
 			def teilstrecke = map.dvb.kanalnetz.find { it.teilstrecke == letzteTeilstrecke }
-			if (teilstrecke.luftart == ve.luftart) {
+			if (teilstrecke.luftart == ve.dvbvLuftart) {
 				teilstrecke.luftVs
 			} else {
 				0.0d
 			}
 			
 		}
+
 		// Alle Einträge in der Tabelle Ventileinstellung durchlaufen
 		map.dvb.ventileinstellung.each { ve ->
 			// Prüfe, ob die letzte Teilstrecke existiert und ob die Luftart übereinstimmt
@@ -642,7 +644,7 @@ class WacCalculationService {
 			if (luftVsLts > 0.0d) {
 				// Berechne dP offen
 				ventileinstellung.dpOffen =
-					wacModelService.getMinimalerDruckverlustFurVentil(ve.ventilbezeichnung, ve.luftart, luftVsLts)
+					wacModelService.getMinimalerDruckverlustFurVentil(ve.ventilbezeichnung, ve.dvbvLuftart, luftVsLts)
 				// Berechne Gesamtwiderstand aller Teilstrecken
 				ventileinstellung.gesamtWiderstand =
 					ventileinstellung.dpOffen +
@@ -657,19 +659,19 @@ class WacCalculationService {
 			}
 		}
 		// Ermittle maximale Widerstandswerte
-		def maxZu = Collections.max(map.dvb.ventileinstellung.findAll { it.luftart == "ZU" }.collect { it.gesamtWiderstand })
-		def maxAb = Collections.max(map.dvb.ventileinstellung.findAll { it.luftart == "AB" }.collect { it.gesamtWiderstand })
+		def maxZu = Collections.max(map.dvb.ventileinstellung.findAll { it.dvbvLuftart == "ZU" }.collect { it.gesamtWiderstand })
+		def maxAb = Collections.max(map.dvb.ventileinstellung.findAll { it.dvbvLuftart == "AB" }.collect { it.gesamtWiderstand })
 		// Differenzen
 		// Alle Einträge in der Tabelle Ventileinstellung durchlaufen
 		map.dvb.ventileinstellung.each { ve ->
-			if (ve.luftart == "ZU") {
+			if (ve.dvbvLuftart == "ZU") {
 				ve.differenz = maxZu - ve.gesamtWiderstand
-			} else if (ve.luftart == "AB") {
+			} else if (ve.dvbvLuftart == "AB") {
 				ve.differenz = maxAb - ve.gesamtWiderstand
 			}
 			ve.abgleich = ve.differenz + ve.dpOffen
 			ve.einstellung =
-				wacModelService.getEinstellung(ve.ventilbezeichnung, ve.luftart, luftVsLetzteTeilstrecke(ve), ve.abgleich)
+				wacModelService.getEinstellung(ve.ventilbezeichnung, ve.dvbvLuftart, luftVsLetzteTeilstrecke(ve), ve.abgleich)
 			// Wurde keine Einstellung gefunden, Benutzer informieren
 			if (ve.einstellung != 0.0d) {
 				def infoMsg = "Keine Einstellung für Ventil ${ve.ventilbezeichnung} gefunden! Bitte prüfen Sie die Zeile#${ve.position}."

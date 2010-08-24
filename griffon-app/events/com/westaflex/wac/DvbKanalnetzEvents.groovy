@@ -35,10 +35,10 @@ class DvbKanalnetzEvents {
 		doLater {
 			// Map values from GUI
 			def k = [
-					druckverlustLuftartCombo: kanalnetz.dvbKanalnetzLuftart,
+					dvbkLuftart: kanalnetz.dvbKanalnetzLuftart,
 					teilstrecke: kanalnetz.dvbKanalnetzNrTeilstrecke?.toInteger(),
 					luftVs: kanalnetz.dvbKanalnetzLuftmenge?.toDouble2(),
-					druckverlustKanalbezeichnungCombo: kanalnetz.dvbKanalnetzKanalbezeichnung,
+					kanalbezeichnung: kanalnetz.dvbKanalnetzKanalbezeichnung,
 					lange: kanalnetz.dvbKanalnetzLange?.toDouble2(),
 					position: model.map.dvb.kanalnetz.size()
 				] as ObservableMap
