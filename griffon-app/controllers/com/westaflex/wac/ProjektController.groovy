@@ -792,8 +792,8 @@ class ProjektController {
 	def onAddDvbKanalnetzToTableModel = { kanalnetz ->
 		// Let's add a row to the table
 		def dvbKanalnetzRows = view.dvbKanalnetzTabelle.getModel().getRowsModel().getValue()
-		dvbKanalnetzRows.add( kanalnetz )
-		view.raumTabelle.getModel().getRowsModel().setValue( dvbKanalnetzRows )
+		dvbKanalnetzRows.add(kanalnetz)
+		view.raumTabelle.getModel().getRowsModel().setValue(dvbKanalnetzRows)
 		view.raumTabelle.getModel().fireTableDataChanged()
 	}
 	
