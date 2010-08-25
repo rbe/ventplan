@@ -40,9 +40,15 @@ class DvbKanalnetzEvents {
 					luftVs: kanalnetz.dvbKanalnetzLuftmenge?.toDouble2(),
 					kanalbezeichnung: kanalnetz.dvbKanalnetzKanalbezeichnung,
 					lange: kanalnetz.dvbKanalnetzLange?.toDouble2(),
-					position: model.map.dvb.kanalnetz.size()
+					position: model.map.dvb.kanalnetz.size(),
+					gesamtwiderstandszahl: 0.0d
 				] as ObservableMap
+			// Berechne die Teilstrecke
+			k = wacCalculationService.berechneTeilstrecke(k)
+			// Add values to model
 			model.addDvbKanalnetz(k)
+			// Add PropertyChangeListener to our model.map
+			GH.addMapPropertyChangeListener("map.dvb.kanalnetz", k/*model.map.dvb.kanalnetz[kanalnetzIndex]*/)
 			//
 			onDvbKanalnetzGeandert(k.position)
 			publishEvent "AddDvbKanalnetzToTableModel", [k]
@@ -54,8 +60,6 @@ class DvbKanalnetzEvents {
 	 */
 	def onDvbKanalnetzGeandert = { kanalnetzIndex ->
 		doLater {
-			// Add PropertyChangeListener to our model.map
-			GH.addMapPropertyChangeListener("map.dvb.kanalnetz", model.map.dvb.kanalnetz[kanalnetzIndex])
 			// Berechne die Teilstrecke
 			model.map.dvb.kanalnetz[kanalnetzIndex] =
 				wacCalculationService.berechneTeilstrecke(model.map.dvb.kanalnetz[kanalnetzIndex])
