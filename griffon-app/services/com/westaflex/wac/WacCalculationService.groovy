@@ -556,6 +556,7 @@ class WacCalculationService {
 		// Widerstand der Teilstrecke = Reibungswiderstand + Einzelwiderstand
 		map.widerstandTeilstrecke = map.reibungswiderstand + map.einzelwiderstand
 		println "berechneTeilstrecke: map=${map.dump()}"
+		map
 	}
 	
 	def calcDruckverlustKlasse4 = { BigDecimal durchmesser, BigDecimal seiteA, BigDecimal seiteB ->
