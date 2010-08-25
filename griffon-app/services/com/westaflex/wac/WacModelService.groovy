@@ -123,7 +123,7 @@ class WacModelService {
 					+ " WHERE artikelnummer = ?",
 					[kanalbezeichnung])
 			}
-		//println "getKanal(): ${r?.dump()}"
+		println "getKanal(): ${kanalbezeichnung}: ${r?.dump()}"
 		r
 	}
 	
