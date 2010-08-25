@@ -823,6 +823,7 @@ class ProjektController {
 			view.wbwBild.setText("-- kein Bild --")
 			view.wbwBild.setIcon(null)
 		}
+		// TODO Daten in Eingabemaske setzen
 	}
 	
 	/**
