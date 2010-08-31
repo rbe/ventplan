@@ -17,35 +17,35 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
         // Kundendaten
         jideTabbedPane(id: "datenTabGroup") {
             // Kundendaten , constraints: java.awt.BorderLayout.CENTER
-            panel(id: "kundenTab", title: "Kundendaten", layout: new MigLayout("fill")) {
+            panel(id: "kundenTab", title: "Kundendaten", layout: new MigLayout("","[] [fill,grow] []")) {
                 build(KundendatenView)
             }
             // Gebäudedaten
-            panel(id: "gebaudeTab", title: "Gebäudedaten", layout: new MigLayout("fillx")) {
+            panel(id: "gebaudeTab", title: "Gebäudedaten", layout: new MigLayout("","[] [fill,grow] []")) {
                 build(GebaudedatenView)
             }
             // Anlagendaten
-            panel(id: "anlageTab", title: "Anlagedaten", layout: new MigLayout("fillx")) {
+            panel(id: "anlageTab", title: "Anlagedaten", layout: new MigLayout("","[] [fill,grow] []")) {
                 build(AnlagendatenView)
             }
             // Raumdaten
-            panel(id: "raumTab", title: "Raumdaten", layout: new MigLayout("fillx")) {
+            panel(id: "raumTab", title: "Raumdaten", layout: new MigLayout("","[] [fill,grow] []")) {
                 build(RaumdatenView)
             }
             // Außenluftvolumenströme
-            panel(id: "aussenluftVsTab", title: "Außenluftvolumenströme", layout: new MigLayout("fillx")) {
+            panel(id: "aussenluftVsTab", title: "Außenluftvolumenströme", layout: new MigLayout("","[] [fill,grow] []")) {
                 build(AussenluftVsView)
             }
             // Raumvolumenströme
-            panel(id: "raumVsTab", title: "Raumvolumenströme", layout: new MigLayout("fillx")) {
+            panel(id: "raumVsTab", title: "Raumvolumenströme", layout: new MigLayout("","[] [fill,grow] []")) {
                 build(RaumVsView)
             }
             // Druckverlustberechnung
-            panel(id: "dvbTab", title: "Druckverlustberechnung", layout: new MigLayout("fillx")) {
+            panel(id: "dvbTab", title: "Druckverlustberechnung", layout: new MigLayout("","[] [fill,grow] []")) {
                 build(DruckverlustView)
             }
             // Akkustikberechnung
-            panel(id: "akustikTab", title: "Akustikberechnung", layout: new MigLayout("fillx")) {
+            panel(id: "akustikTab", title: "Akustikberechnung", layout: new MigLayout("","[] [fill,grow] []")) {
                 build(AkustikView)
             }
         }

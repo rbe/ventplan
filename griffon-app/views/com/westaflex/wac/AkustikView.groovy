@@ -89,7 +89,7 @@ def buildLayout(tabname) {
 
             label("Bewerteter Schallpegel", constraints: "wrap")
 
-            label("* Bei dieser Berechnung handelt es dich um eine theoretische Auslegung, deren Werte in der Praxis abweichen können", constraints: "span")
+            label(GH.ws("* Bei dieser Berechnung handelt es dich um eine <br>theoretische Auslegung, deren Werte in der Praxis abweichen können"), constraints: "wrap")
         }
 
         panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {

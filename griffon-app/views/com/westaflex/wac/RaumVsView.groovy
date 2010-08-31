@@ -13,13 +13,13 @@ import com.bensmann.griffon.WacTableHelper as WTH
 import net.miginfocom.swing.MigLayout
 
 // Raumvolumenströme
-panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
+panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill, grow]", "[fill]")) {
     // Tabellen für Zu-/Abluftventile, Überströmventile
-    panel(constraints: "grow", layout: new MigLayout("fill", "[]", "")) {
+    panel(constraints: "grow", layout: new MigLayout("fill", "[fill, grow]", "")) {
         jideTabbedPane(id: "raumVsVentileTabGroup", constraints: "grow, span") {
             // Raumvolumenströme - Zu-/Abluftventile
             panel(id: "raumVsZuAbluftventileTab", title: "Zu-/Abluftventile", constraints: "grow") {
-                panel(id: "raumVsZuAbluftventileTabellePanel", constraints: "grow", layout: new MigLayout("", "[]")) {
+                panel(id: "raumVsZuAbluftventileTabellePanel", constraints: "grow", layout: new MigLayout("", "[fill, grow]")) {
                     jideScrollPane(constraints: "grow") {
                         table(id: 'raumVsZuAbluftventileTabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "grow") {
                             tableModel() {
