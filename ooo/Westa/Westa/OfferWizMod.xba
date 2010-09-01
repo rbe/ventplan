@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="OfferWizMod" script:language="StarBasic">rem 
+rem	Modul zur Behandlung der Events des Dialoges OfferWiz
+rem
+option explicit
+
+&apos; Zusatzeintrag für die Listbox Apsprechpartner
+private const sAusBenutzerdaten = &quot;- aus Benutzerdaten-&quot;
+
+
+sub goMain
+	Main()
+end sub
+
+&apos; Initialisierung des Dialoges
+&apos;_____________________________
+sub initDLG()
+
+	dim s as string
+
+end sub
+
+sub initStep(iStep as integer)
+
+	dim oLB
+	dim s as string
+	static aStepInitDone(3) as Boolean
+	static bFirst as boolean
+
+	if aStepInitDone(iStep) = false then
+		select case iStep
+		case 1:
+				&apos; Versionsnummer in Titelleiste schreiben
+				&apos;¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+				s = oDlg.getTitle()
+				oDlg.setTitle(s &amp; &quot; (Version: &quot; &amp; VERSIONSTRING &amp; &quot;)&quot;)
+				s = oDlg.getControl(&quot;rbWAC-Angebot&quot;).model.Tag
+				oDlg.model.imSystem.ImageUrl = BASEPATH &amp; &quot;img/&quot; &amp; left(s, instr(s,&quot;;&quot;)-1)
+				OFFERMODE = OFFERMODE_WESTAWAC
+				aStepInitDone(iStep) = true
+		case 2: 
+				&apos; 	Listbox &apos;Vertreter versorgen
+				&apos;¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+				oResult = queryDB(&quot;SELECT ~Name1~ FROM ~werksvertretung~ ORDER BY ~Name1~&quot;)
+				oLB = oDlg.getControl(&quot;lbVertreter&quot;)
+				while oResult.next
+					oLB.addItem(oResult.getString(1), oLB.getItemCount())
+				wend
+				oLB.addItem(&quot;&quot;, 0)
+				oLB.selectItemPos(0,1)
+				&apos; Listbox Ansprechpartner versorgen
+				&apos;¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+				oLB = oDlg.getControl(&quot;lbAnsprechpartner&quot;)
+				oResult = queryDB(&quot;SELECT * FROM ~ansprechpartner~ ORDER BY ~Name~&quot;)
+				while oResult.next
+					oLB.addItem(oResult.getString(2), oLB.getItemCount())
+				wend
+					oLB.addItem(sAusBenutzerdaten, 0)
+				oLB.selectItem((oRegUser.getByName(&quot;givenname&quot;) &amp; &quot; &quot; &amp; oRegUser.getByName(&quot;sn&quot;)), true)
+				lbAnsprechpartnerSelect()
+				aStepInitDone(iStep) = true
+		case 3:
+				&apos; Pfeilbilder versorgen				
+				&apos;¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+				oDlg.getControl(&quot;pbUp&quot;).model.imageURL = BASEPATH &amp; &quot;img/up.png&quot;
+				oDlg.getControl(&quot;pbDn&quot;).model.imageURL = BASEPATH &amp; &quot;img/down.png&quot;	
+				&apos; Listbox Kategorie versorgen
+				&apos;¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+				oLB = oDlg.getControl(&quot;lbKategorie&quot;)
+				oResult = queryDB(&quot;SELECT ~KatName~ FROM ~kategorie~ where ~KatID~ between &quot;&amp; KATRANGE(OFFERMODE) &amp; &quot; ORDER BY ~KatID~&quot;)
+				while oResult.next
+					oLB.addItem(oResult.getString(1), oLB.getItemCount())
+				wend
+				oLB.addItem(&quot;Alle&quot;, 0)
+				&apos; *** Artikelliste füllen
+				oLBArtikel = oDlg.getControl(&quot;lbArtikel&quot;)
+				oLB.selectItemPos(0,1)
+				toggleLB()
+				if OFFERMODE = OFFERMODE_WESTAWAC then
+					if instr(oDlg.getControl(&quot;etAdresse&quot;).Text, &quot;Leysser&quot;) &gt; 0 then
+						MsgBox(&quot;Achtung:&quot; &amp; chr(10) &amp; chr(10) &amp; &quot;Bei Leysser bitte Revisionsverlängerung mit anbieten.&quot;, 64, &quot;WestaWAC Info&quot;)
+					end if
+				end if
+				if bFirst then
+					aStepInitDone(iStep) = true
+				else
+					bFirst = true
+				end if
+		end select
+	end if
+end sub
+
+
+&apos;!! ========================
+&apos;!! Event: Abbrechen gewählt
+&apos;!! ========================
+function pbCancelSelect(e) as integer
+
+	if msgbox(&quot;Angebotsassistenten beenden?&quot;, 33, &quot;Abbruch&quot;) = 1 then
+	   e.Source.Context.endExecute()
+		pbCancelSelect = 1
+	end if
+end function
+
+&apos;!! ===================================
+&apos;!! Event: Doppelklick auf Artikelliste
+&apos;!! ===================================
+sub lbArtikelSelect(e)
+	_Global.copyEntry(false)
+	toggleLB()
+end sub
+
+&apos;!! ===========================
+&apos;!! Event: &quot;Hinzufügen&quot; gewählt
+&apos;!! ===========================
+sub pbAddSelect(e)
+	_Global.copyEntry(false)
+	toggleLB()
+end sub
+
+&apos;!! ==================================
+&apos;!! Event: &quot;als EP hinzufügen&quot; gewählt
+&apos;!! ==================================
+sub pbAddEPSelect(e)
+	_Global.copyEntry(true)
+	toggleLB()
+end sub
+
+&apos;!! ==========================================
+&apos;!! Event: &quot;Freien Artikel hinzufügen&quot; gewählt
+&apos;!! ==========================================
+sub pbAddDummySelect(e)
+	
+	if isNull(oDummyDlg) then
+		oDummyDlg = LoadDialog(&quot;Westa&quot;, &quot;ArtWiz&quot;)
+	end if	
+	oDummyDlg.execute()
+	toggleLB()
+end sub
+
+&apos;!! ===================================
+&apos;!! Event: &quot;Löschen&quot; gewählt
+&apos;!! ===================================
+sub pbDeleteSelect(e)
+	_Global.removeEntry()
+	toggleLB()
+end sub
+
+&apos;!! ==============================================
+&apos;!! Sensitivschaltung der Hoch- und Runter-Buttons
+&apos;!! ==============================================
+sub toggleLB()
+	dim bState
+	
+	bState = (oDlg.getControl(&quot;lbZusammenfassung&quot;).itemcount &gt; 0)
+	oDlg.getControl(&quot;pbKurzangebot&quot;).model.Enabled = (bState AND (OFFERMODE = OFFERMODE_WESTAWAC))
+	oDlg.getControl(&quot;pbDetailangebot&quot;).model.Enabled = bState
+	if oDlg.getControl(&quot;lbZusammenfassung&quot;).itemcount &gt; 1 then
+		oDlg.getControl(&quot;pbUp&quot;).model.Enabled = true
+		oDlg.getControl(&quot;pbDn&quot;).model.Enabled = true
+	else
+		oDlg.getControl(&quot;pbUp&quot;).model.Enabled = false
+		oDlg.getControl(&quot;pbDn&quot;).model.Enabled = false		
+	end if
+end sub
+
+sub etFilterGetFocus(e)
+	oDlg.model.pbHinzufuegen.DefaultButton = false
+end sub
+
+sub etFilterLoseFocus(e)
+	oDlg.model.pbHinzufuegen.DefaultButton = true
+end sub
+
+sub pbUpSelect(e)
+	dim oLB, a, s
+	
+	oLB = oDlg.getControl(&quot;lbZusammenfassung&quot;)
+	a = oLB.getSelectedItemPos() 
+	if  a &gt; 0 then
+		s = oLB.getSelectedItem()
+		oLB.removeItems(a, 1)
+		oLB.addItem(s, a-1)
+		oLB.selectItem(s, true)
+	end if
+end sub
+
+sub pbDnSelect(e)
+	dim oLB, a, s
+	
+	oLB = oDlg.getControl(&quot;lbZusammenfassung&quot;)
+	a = oLB.getSelectedItemPos() 
+	if  ((a &gt; - 1) and (a &lt; oLB.getItemCount())) then
+		s = oLB.getSelectedItem()
+		oLB.removeItems(a, 1)
+		oLB.addItem(s, a+1)
+		oLB.selectItem(s, true)
+	end if	
+end sub
+
+sub rbAuswahlSelect(e)
+	dim s$
+	
+	oDlg.model.pbForward.Label = e.Source.model.Label
+	s = e.Source.model.Tag
+	if s &lt;&gt; &quot;&quot; then
+		dim aTag() as String
+		aTag = split(s, &quot;;&quot;)
+		&apos; Neues Angebot
+		OFFERMODE = CInt(aTag(1))
+		oDlg.model.imSystem.ImageUrl = BASEPATH &amp; &quot;img/&quot; &amp; aTag(0)
+		switchVisible(&quot;stFruehereAngebote&quot;, false)
+		switchVisible(&quot;pbUpdate&quot;, false)
+		switchVisible(&quot;lbAngebote&quot;, false)
+		switchVisible(&quot;imSystem&quot;, true)
+	else	
+		OFFERMODE = OFFERMODE_WESTAWAC
+		switchVisible(&quot;stFruehereAngebote&quot;, true)
+		switchVisible(&quot;pbUpdate&quot;, true)
+		switchVisible(&quot;lbAngebote&quot;, true)
+		switchVisible(&quot;imSystem&quot;, false)
+		oDlg.model.pbUpdate.Enabled = true
+		oDlg.model.lbAngebote.Enabled = true
+		pbUpdateSelect(array())
+	end if
+end sub
+
+sub switchVisible(sControlName as string, bShow as boolean)
+
+	const parkStep = 9
+	dim o as object
+	
+	o = oDlg.getControl(sControlName)
+	o.setVisible(bShow)
+	if bShow then
+		o.model.step = oDlg.model.step
+	else
+		o.model.step = parkStep
+	end if
+end sub
+
+
+sub pbUpdateSelect(e)
+	dim oLBAngebote
+	static bLast
+
+	oLBAngebote = oDlg.getControl(&quot;lbAngebote&quot;)
+	dim s$, s1$
+
+	if (oDlg.getControl(&quot;rbGespeichertesPDFAngebotOeffnen&quot;).getState()) then
+		if bLast &lt;&gt; 1 then
+			setMousePointer(&quot;wait&quot;)
+			oLBAngebote.model.StringItemList = array()
+			s = &quot;&quot;
+			s1 = Dir(SAVEPATH &amp; &quot;*.pdf&quot;)
+			while s1 &lt;&gt; &quot;&quot;
+				s = s1 &amp; &quot;;&quot; &amp; s
+				s1 = Dir()	
+			wend
+			oLBAngebote.model.StringItemList = split(s, &quot;;&quot;)
+			setMousePointer(&quot;normal&quot;)
+			bLast = 1
+		end if
+	else
+		if bLast &lt;&gt; 2 then
+			setMousePointer(&quot;wait&quot;)
+			oLBAngebote.model.StringItemList = array()
+			oResult = queryDB(&quot;select ~Angebotsnummer~, ~Bauvorhaben~ from ~angebote~ where ~Inhalt~ is not null order by ~`key`~ asc&quot;)
+			if not isNull(oResult) then
+				s = &quot;&quot;
+				while oResult.next
+					s =  oResult.getString(1) &amp; &quot;   &quot; &amp; oResult.getString(2) &amp; &quot;&quot;&quot;;&quot;&quot;&quot; &amp; s
+				wend
+				s = left(s, len(s)-3)
+				oLBAngebote.model.StringItemList = split(s, &quot;&quot;&quot;;&quot;&quot;&quot;)
+			end if
+			setMousePointer(&quot;normal&quot;)
+			bLast = 2
+		end if
+	end if
+end sub
+
+sub lbAngeboteDoubleClick(e)
+	pbForwardSelect(array())
+end sub
+
+&apos;/**
+   &apos;!! ======================================
+   &apos;!! Funktion		: Aktionsbutton geklickt
+   &apos;!!
+   &apos;!! Beschreibung	: Umschalten des Dialoges
+   &apos;!!
+   &apos;!! ======================================
+&apos;/*
+sub pbForwardSelect(e)
+	select case(oDlg.model.step)
+	case 1: if evaluateAction() then
+				calcConfigDone = false
+				if bSilent = true then
+					pushCoreData()
+				end if
+				oDlg.model.step = 2
+				oDlg.model.pbKurzangebot.step = 0
+				oDlg.model.pbDetailangebot.step = 0
+				oDlg.getControl(&quot;pbForward&quot;).label = &quot;Angebotspositionen &gt;&gt;&quot;
+			end if
+	case 2:
+&apos; 080204-SK: calcConfig nur einmal ausführen lassen...
+			if (bSilent = true) and (calcConfigDone = false) then 
+				setMousePointer(&quot;wait&quot;)
+				calculateConfig()
+				calcConfigDone = true
+				setMousePointer(&quot;normal&quot;)
+			end if
+			oDlg.model.step = 3
+			oDlg.getControl(&quot;pbForward&quot;).label = &quot;&lt;&lt; zurück&quot;
+	case 3:	oDlg.model.step = 2
+			oDlg.getControl(&quot;pbForward&quot;).label = &quot;Angebotspositionen &gt;&gt;&quot;
+	end select
+	initStep(oDlg.model.step)
+end sub
+
+&apos;!! =================================
+&apos;!! Event: Listbox Vertreter geklickt
+&apos;!! =================================
+sub lbVertreterSelect(optional e)
+
+	dim sText as string, s as string, s1 as string, sVertreter as string
+
+	&apos; *** Angebotsnummer ändert sich, wenn der Vertreter sich ändert ***
+	sText = oDlg.getcontrol(&quot;etAngebotNr&quot;).Text
+	sVertreter = oDlg.getControl(&quot;lbVertreter&quot;).getSelectedItem()
+
+	if sVertreter &lt;&gt; &quot;&quot; then
+		&apos; *** Vertreternummer aus Datenbank lesen ***
+		oResult = queryDB(&quot;select * from ~werksvertretung~ where ~Name1~ = &apos;&quot; &amp; oDlg.getControl(&quot;lbVertreter&quot;).getSelectedItem() &amp; &quot;&apos;&quot;)
+		oResult.next
+		s = s &amp; format(oResult.getInt(1), &quot;000&quot;)
+		
+		&apos; *** neue Vertreterdaten speichern ***
+		for i = 2 to 8
+			s1 = s1 &amp; oResult.getString(i) &amp; chr(10)
+		next
+		DocValues(eWerksvertretung).Value = s1
+		DocValues(eEmailWerksvertretung).Value = oResult.getString(8)
+	else
+		s = &quot;000&quot;
+		DocValues(eWerksvertretung).Value = &quot;&quot;
+	end if
+	mid(sText,10,3, s)
+	oDlg.getControl(&quot;etAngebotNr&quot;).Text = sText
+end sub
+
+   &apos;!! =====================================================
+   &apos;!! Funktion		: lbAnsprechpartnerSelect
+   &apos;!!
+   &apos;!! Beschreibung	: Listbox Ansprechpartner wurde geändert
+   &apos;!!				  Ansprechpartnerdaten lesen
+   &apos;!!
+   &apos;!! =====================================================
+sub lbAnsprechpartnerSelect(optional e)
+
+	dim sAnsprechpartner as string
+	const sWestaPhone = &quot;05241 / 401-&quot;
+
+	&apos; *** Ansprechpartnerdaten aus der Datenbank lesen... ***
+	sAnsprechpartner = oDlg.getControl(&quot;lbAnsprechpartner&quot;).getSelectedItem()
+	if sAnsprechpartner &lt;&gt; sAusBenutzerdaten then
+		oResult = queryDB(&quot;select * from ~ansprechpartner~ where ~Name~ = &apos;&quot; &amp; sAnsprechpartner &amp; &quot;&apos;&quot;)
+		if oResult.next then
+			&apos; *** ... und die Benutzerfelder damit versorgen ***
+			DocValues(eSachbearbeiter).Value      = oResult.getString(2)
+			DocValues(eFon).Value                 = sWestaPhone &amp; oResult.getString(3)
+			DocValues(eFax).Value                 = sWestaPhone &amp; oResult.getString(4)
+			DocValues(eEmailSB).Value             = oResult.getString(5)			
+			DocValues(eAbsenderFirma).Value       = &quot;Westaflexwerk GmbH&quot;
+			DocValues(eAbsenderStrasse).Value     = &quot;Thaddäusstr. 5&quot;
+			DocValues(eAbsenderPLZ).Value         = &quot;33334&quot;
+			DocValues(eAbsenderOrt).Value         = &quot;Gütersloh&quot;
+			DocValues(eAbsenderPostfach).Value    = &quot;Postfach 3255&quot;
+			DocValues(eAbsenderPostfachPLZ).Value = &quot;33262&quot;
+			
+
+		end if
+	else
+		if not isNull(oRegUser) then
+			DocValues(eSachbearbeiter).Value      = oRegUser.getByName(&quot;givenname&quot;) &amp; &quot; &quot; &amp; oRegUser.getByName(&quot;sn&quot;)
+			DocValues(eFon).Value                 = oRegUser.getByName(&quot;telephonenumber&quot;)
+			DocValues(eFax).Value                 = oRegUser.getByName(&quot;facsimiletelephonenumber&quot;)
+			DocValues(eEmailSB).Value             = oRegUser.getByName(&quot;mail&quot;)
+			DocValues(eAbsenderFirma).Value       = oRegUser.getByName(&quot;o&quot;)
+			DocValues(eAbsenderStrasse).Value     = oRegUser.getByName(&quot;street&quot;)
+			DocValues(eAbsenderPLZ).Value         = oRegUser.getByName(&quot;postalcode&quot;)
+			DocValues(eAbsenderOrt).Value         = oRegUser.getByName(&quot;l&quot;)
+			DocValues(eAbsenderPostfach).Value    = oRegUser.getByName(&quot;street&quot;)
+			DocValues(eAbsenderPostfachPLZ).Value = oRegUser.getByName(&quot;postalcode&quot;)
+			
+		end if
+	end if
+end sub
+
+&apos;/**
+   &apos;!! ==================================================================================================
+   &apos;!! Funktion		: pbEditSelect
+   &apos;!!
+   &apos;!! Beschreibung	: Editieren der Anzahl eines Eintrages in der Angebotstabelle
+   &apos;!!				Nicht aktiv!!!!
+   &apos;!! ==================================================================================================
+&apos;/*
+sub pbEditSelect(e)
+	static oResultList as object
+	dim dAnz as double
+	dim iItems as integer
+	dim sItem as String
+	
+	&apos; *** statische Variablen initialisieren
+	if isNull(oResultList) then
+		oResultList = oDlg.getControl(&quot;lbZusammenfassung&quot;)
+	end if
+	
+	iItem = oResultList.getRow()
+	sItem = oResultList.getString(iItem)
+	dAnz = toDouble(mid(sItem, 20, 6))
+	
+	&apos; *** Feld &quot;Anzahl&quot; setzen
+	oDlg.getControl(&quot;etAnzahl&quot;).setText(dAnz)
+	msgbox &quot;Hier passiert doch was!&quot;
+		
+end sub
+
+</script:module>

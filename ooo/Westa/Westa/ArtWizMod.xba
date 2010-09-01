@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ArtWizMod" script:language="StarBasic">&apos;/**
+&apos;!! ==================================================================================================
+&apos;!!
+&apos;!! Modulname		: ArtWizMod
+&apos;!!
+&apos;!! Responsible		: @author Oliver Seebass
+&apos;!!	Version			: @version $Id$
+&apos;!!
+&apos;!! Beschreibung	: Modul für die Behandlung von Events des Dialoges &quot;ArtWiz&quot;
+&apos;!!
+&apos;!! ===================================================================================================
+&apos;*/
+option explicit
+
+&apos;!! ============================
+&apos;!! Event: OK im dialog geklickt
+&apos;!! ============================
+sub pbOKSelect(e)
+
+	_Global.copyEntry(false, array( _
+			oDummyDlg.getControl(&quot;etBeschreibung&quot;).Text, _
+			oDummyDlg.getControl(&quot;etEinzelpreis&quot;).Text, _
+			oDummyDlg.getControl(&quot;etLM&quot;).Text, _
+			oDummyDlg.getControl(&quot;etME&quot;).Text, _
+			oDummyDlg.getControl(&quot;etVE&quot;).Text, _
+			oDummyDlg.getControl(&quot;etAnzahl&quot;).Text, _
+	oDummyDlg.endExecute()
+end sub
+
+sub etMECharinput(e)
+
+	e.Source.Context.getControl(&quot;stME&quot;).setText(e.Source.Text)
+end sub
+
+sub etEinzelpreisModified(e)
+	e.Source.Context.getControl(&quot;pbOK&quot;).setEnable(isNumeric(e.Source.Text))
+end sub
+</script:module>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ZZ_Berichte" script:language="StarBasic">REM  *****  BASIC  *****
+
+sub bFilterExec(e)
+
+	document   = ThisComponent.CurrentController.Frame
+	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+	
+
+	
+	dispatcher.executeDispatch(document, &quot;.uno:FormFilterExecute&quot;, &quot;&quot;, 0, Array())
+end sub
+
+sub bFilter(e)
+
+	document   = ThisComponent.CurrentController.Frame
+	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+	
+	if e.Source.Model.Label = &quot;Filter&quot; then
+		e.Source.Model.Label = &quot;!!!Filter!!!&quot;
+		dispatcher.executeDispatch(document, &quot;.uno:FormFilter&quot;, &quot;&quot;, 0, Array())
+	else
+		e.Source.Model.Label = &quot;Filter&quot;
+		dispatcher.executeDispatch(document, &quot;.uno:RemoveFilterSort&quot;, &quot;&quot;, 0, Array())
+	end if
+
+end sub
+
+</script:module>

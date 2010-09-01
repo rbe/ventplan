@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE library:library PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "library.dtd">
+<library:library xmlns:library="http://openoffice.org/2000/library" library:name="Westa" library:readonly="false" library:passwordprotected="false">
+ <library:element library:name="Main"/>
+ <library:element library:name="_Global"/>
+ <library:element library:name="ArtWizMod"/>
+ <library:element library:name="OfferWizMod"/>
+ <library:element library:name="ZZ_Berichte"/>
+ <library:element library:name="MailWizMod"/>
+ <library:element library:name="Auslegung"/>
+ <library:element library:name="DataBase"/>
+ <library:element library:name="dlgFinishMod"/>
+ <library:element library:name="Grafik"/>
+</library:library>

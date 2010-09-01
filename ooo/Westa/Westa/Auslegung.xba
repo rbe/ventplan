@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Auslegung" script:language="StarBasic">REM  *****  BASIC  *****
+option explicit
+
+&apos;  für silentMode
+public oCoreData as object
+public oLayers as object
+public oOutlet as object
+public oCulvert as object
+
+const VERTEILEBENE = 0, ANZAHLZULUFTVENTILE = 1, ZULUFTHIER = 2, ZULUFTKOMMEND = 3, ANZAHLABLUFTVENTILE = 4, ABLUFTHIER = 5, ABLUFTKOMMEND = 6
+&apos; Funktion calculateConfig
+&apos;
+
+&apos; Belegung der Grunddaten
+sub pushCoreData()
+	dim i%, s$
+
+	dim oCore as object
+
+	oCore = createUnoService(&quot;com.sun.star.beans.PropertyBag&quot;)
+	for i = 0 to UBound(oCoreData())
+		oCore.addProperty(oCoreData(i).Name, com.sun.star.beans.PropertyAttribute.MAYBEVOID, oCoreData(i).Value)
+	next
+	oDlg.model.etProjektBV.Text = oCore.getPropertyValue(&quot;Bauvorhaben&quot;)
+	oDlg.model.etAdresse.Text = join(array(oCore.getPropertyValue(&quot;Firma1&quot;),_
+							 		 oCore.getPropertyValue(&quot;Firma2&quot;),_
+									 oCore.getPropertyValue(&quot;Strasse&quot;),_
+									 oCore.getPropertyValue(&quot;PlzOrt&quot;)), chr(10))
+	oDlg.model.etTelefon.Text = oCore.getPropertyValue(&quot;Telefon&quot;)
+	oDlg.model.etFax.Text = oCore.getPropertyValue(&quot;Telefax&quot;)
+end sub
+
+&apos; Erzeugung der Stückliste aus Berechnungsergebnissen
+&apos;____________________________________________________
+function calculateConfig()
+
+	const AUSSENLUFT = 70, FORTLUFT = 71, GERAETEPAKET = 72, GRUNDPAKET = 73, ERWEITERUNGSPAKET = 74, VERTEILPAKET = 75, LUFTDURCHLASS = 76
+	const PAKET = 1, GERAET = 2, VOLUMENSTROM = 3, BEDINGUNG = 4, UEBERSTROEMELEMENT = 77
+	dim s$, s1$, s2$, order$,i%, k%, sCollector$, sZentralgeraet$, sVolumenstrom$, iVolumenstromStep%
+	dim aCollection as Object, oCore as object, aLuftverteilung
+	dim oQueryEQ as object, oQueryGTEQ as object, bZuluftDone as boolean, bAbluftDone as boolean
+	dim errorcount as integer
+
+	oCore = createUnoService(&quot;com.sun.star.beans.PropertyBag&quot;)
+	for i = 0 to UBound(oCoreData())
+		oCore.addProperty(oCoreData(i).Name, com.sun.star.beans.PropertyAttribute.MAYBEVOID, oCoreData(i).Value)
+	next
+
+	on error goto ERR_calculateConfig
+	s = &quot;select ~stueckliste~.~Artikel~, ~stueckliste~.~Anzahl~ from ~stueckliste~, ~pakete~ where ~stueckliste~.~Paket~ = ~pakete~.~ID~ and ~pakete~.~Kategorie~= ? and ~pakete~.~Geraet~= ?  and ~pakete~.~MaxVolumenstrom~ &quot;
+	s1 = &quot;= ?&quot;
+	s2 = &quot; and ~pakete~.~Bedingung~ &quot;
+	order$ = &quot; order by ~stueckliste~.~Reihenfolge~&quot;
+	
+	oQueryEQ = prepareDBStatement(s &amp; s1 &amp; s2 &amp; s1 &amp; order)
+	s1 = &quot;&gt;= ?&quot;
+	oQueryGTEQ = prepareDBStatement(s &amp; s1 &amp; s2 &amp; s1 &amp; order)
+
+	&apos; 2. Zentralgerät und Volumenstrom zuweisen
+	&apos; ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	sZentralgeraet = oCore.getPropertyValue(&quot;Zentralgeraet&quot;)
+	sVolumenstrom = oCore.getPropertyValue(&quot;Volumenstrom&quot;)
+	aLuftverteilung = calcLuftverteilung(oLayers, oCore.getPropertyValue(&quot;Geraetestandort&quot;), sVolumenstrom)
+	oResult = queryDB(&quot;select ~MaxVolumenstrom~ from ~pakete~ where ~Geraet~ = &apos;&quot; + sZentralgeraet + &quot;&apos; and ~MaxVolumenstrom~ &gt;= &apos;&quot; + toSingle(sVolumenstrom) + &quot;&apos; and ~Kategorie~ = &apos;72&apos; order by ~MaxVolumenstrom~ asc&quot;)
+	if oResult.next then
+		iVolumenstromStep = oResult.getInt(1)
+	end if
+	
+	sCollector = &quot;&quot;
+	&apos; 3. Gerätepaket zusammenstellen
+	&apos; ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	oQueryEQ.setInt(PAKET, GERAETEPAKET)
+	oQueryEQ.setString(GERAET, sZentralgeraet)
+	oQueryEQ.setInt(VOLUMENSTROM, iVolumenstromStep)
+	&apos; Zufuft
+	oQueryEQ.setString(BEDINGUNG, &quot;ZU&quot;)
+	oResult = oQueryEQ.executeQuery()
+	sCollector = collect(oResult, sCollector)
+	&apos; Abluft
+	oQueryEQ.setString(BEDINGUNG, &quot;AB&quot;)
+	oResult = oQueryEQ.executeQuery()
+	sCollector = collect(oResult, sCollector)
+
+	fillEntryList(sCollector, GERAETEPAKET)
+	sCollector = &quot;&quot;
+
+	&apos; 4. Außenluft
+	&apos; ¯¯¯¯¯¯¯¯¯¯¯¯
+
+	dim oQueryAuFo as object
+	oQueryAuFo = prepareDBStatement(&quot;select ~stueckliste~.~Artikel~, ~stueckliste~.~Anzahl~ from ~stueckliste~, ~pakete~ where ~stueckliste~.~Paket~ = ~pakete~.~ID~ and ~pakete~.~Kategorie~= ? and ~pakete~.~Geraet~= ? and ~pakete~.~Bedingung~ = ?&quot; &amp; order)
+	oQueryAuFo.setInt(PAKET, AUSSENLUFT)
+	oQueryAuFo.setString(GERAET, sZentralgeraet)	
+	oQueryAuFo.setString(3, oCore.getPropertyValue(&quot;Aussenluft&quot;))
+	oResult = oQueryAuFo.executeQuery()
+	sCollector = collect(oResult, sCollector)
+	fillEntryList(sCollector, AUSSENLUFT)
+	sCollector = &quot;&quot;
+
+	&apos; 5. Fortluft
+	&apos; ¯¯¯¯¯¯¯¯¯¯¯¯
+	oQueryAuFo.setInt(PAKET, FORTLUFT)
+	oQueryAuFo.setString(3, oCore.getPropertyValue(&quot;Fortluft&quot;))
+	oResult = oQueryAuFo.executeQuery()
+	sCollector = collect(oResult, sCollector)
+	fillEntryList(sCollector, FORTLUFT)
+	sCollector = &quot;&quot;
+
+	&apos; 6. Grundpaket
+	&apos; ¯¯¯¯¯¯¯¯¯¯¯¯¯
+	oQueryEQ.setInt(PAKET, GRUNDPAKET)
+	oQueryEQ.setInt(VOLUMENSTROM, 150)
+	&apos; Zufuft
+	oQueryEQ.setString(BEDINGUNG, &quot;ZU&quot;)
+	oResult = oQueryEQ.executeQuery()
+	sCollector = collect(oResult, sCollector)
+
+	&apos;Abluft
+	oQueryEQ.setString(BEDINGUNG, &quot;AB&quot;)
+	oResult = oQueryEQ.executeQuery()
+	sCollector = collect(oResult, sCollector)
+
+	fillEntryList(sCollector, GRUNDPAKET)
+	sCollector = &quot;&quot;
+
+	&apos; 7. Erweiterungspaket
+	&apos; ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	dim iTmp%
+	oQueryEQ.setInt(PAKET, ERWEITERUNGSPAKET)
+	bZuluftDone = false
+	bAbluftDone = false
+	for i = 0 to UBound(aLuftverteilung())
+		&apos; Hier Zuluft
+		if aLuftverteilung(i, ANZAHLZULUFTVENTILE) &gt; 0 then
+			if bZuluftDone = false and aLuftverteilung(i, ZULUFTKOMMEND) &lt;= 150 then
+				&apos; Die erste Verteilebene mit ankommender Luftmege &lt;= 150 wird zugunsten des Grundpaketes übersprungen
+				bZuluftDone = true
+			else
+				oResult = queryDB(&quot;select ~MaxVolumenstrom~ from ~pakete~ where ~Kategorie~ = &apos;&quot; &amp; ERWEITERUNGSPAKET &amp; &quot;&apos; and ~MaxVolumenstrom~ &gt;= &apos;&quot; &amp; aLuftverteilung(i, ZULUFTKOMMEND) &amp; &quot;&apos; order by ~MaxVolumenstrom~ asc&quot;)
+				if oResult.next then
+					oQueryEQ.setInt(VOLUMENSTROM, oResult.getInt(1))
+					&apos; Zufuft
+					oQueryEQ.setString(BEDINGUNG, &quot;ZU&quot;)
+					oResult = oQueryEQ.executeQuery()
+					sCollector = collect(oResult, sCollector)
+				end if
+			end if
+		end if
+		&apos; Hier Abluft
+		if aLuftverteilung(i, ANZAHLABLUFTVENTILE) &gt; 0 then
+			if bAbluftDone = false and aLuftverteilung(i, ABLUFTKOMMEND) &lt;= 150 then
+				&apos; Die erste Verteilebene mit abgehender Luftmege &lt;= 150 wird zugunsten des Grundpaketes übersprungen
+				bAbluftDone = true
+			else
+				oResult = queryDB(&quot;select ~MaxVolumenstrom~ from ~pakete~ where ~Kategorie~ = &apos;&quot; &amp; ERWEITERUNGSPAKET &amp; &quot;&apos; and ~MaxVolumenstrom~ &gt;= &apos;&quot; &amp; aLuftverteilung(i, ABLUFTKOMMEND) &amp; &quot;&apos; order by ~MaxVolumenstrom~ asc&quot;)
+				if oResult.next then
+					oQueryEQ.setInt(VOLUMENSTROM, oResult.getInt(1))
+					&apos; Zufuft
+					oQueryEQ.setString(BEDINGUNG, &quot;AB&quot;)
+					oResult = oQueryEQ.executeQuery()
+					sCollector = collect(oResult, sCollector)
+				end if
+			end if
+		end if		
+	next
+	fillEntryList(sCollector, ERWEITERUNGSPAKET)
+	sCollector = &quot;&quot;
+
+	&apos; 8. Verteilebenen ermitteln
+	&apos; ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	oQueryGTEQ.setInt(PAKET, VERTEILPAKET)
+	oQueryGTEQ.setString(GERAET, &quot;&quot;)
+	oQueryGTEQ.setInt(VOLUMENSTROM, 0)
+	
+	for i = 0 to UBound(aLuftverteilung())
+		if aLuftverteilung(i, ANZAHLZULUFTVENTILE) &gt; 0 then
+			oQueryGTEQ.setString(BEDINGUNG, aLuftverteilung(i, ANZAHLZULUFTVENTILE)+&quot;&quot;)
+			oResult = oQueryGTEQ.executeQuery()
+			if oResult.next then
+				sCollector = sCollector + oResult.getString(1) + &quot;~&quot; + oResult.getString(2) + &quot;;&quot;
+			end if
+		end if
+		if aLuftverteilung(i, ANZAHLABLUFTVENTILE) &gt; 0 then
+			oQueryGTEQ.setString(BEDINGUNG, aLuftverteilung(i, ANZAHLABLUFTVENTILE)+&quot;&quot;)
+			oResult = oQueryGTEQ.executeQuery()
+			if oResult.next then
+				sCollector = sCollector + oResult.getString(1) + &quot;~&quot; + oResult.getString(2) + &quot;;&quot;
+			end if
+		end if
+	next
+	fillEntryList(sCollector, VERTEILPAKET)
+	sCollector = &quot;&quot;
+
+	&apos; 9. Auslässe ermitteln
+	&apos; ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	dim oQueryAus as object
+	oQueryAus = prepareDBStatement(&quot;select ~stueckliste~.~Artikel~, ~stueckliste~.~Anzahl~ from ~stueckliste~, ~pakete~ where ~stueckliste~.~Paket~ = ~pakete~.~ID~ and ~pakete~.~Kategorie~= ? and ~pakete~.~Geraet~= ?&quot; &amp; order)
+	oQueryAus.setInt(PAKET, LUFTDURCHLASS)
+		for i = 0 to UBound(oOutlet())
+		s = left(oOutlet(i).Name, len(oOutlet(i).Name)-2)
+&apos;		s1 = right(oOutlet(i).Name, 2)
+		k = left(oOutlet(i).Value, instr(oOutlet(i).Value, &quot;;&quot;)-1)
+		oQueryAus.setString(GERAET, s)
+&apos;		oQueryEQ.setString(BEDINGUNG, &quot;AB&apos; OR &apos;ZU&quot;)&apos;s1)
+		oResult = oQueryAus.executeQuery()
+		while oResult.next()
+			sCollector = sCollector + oResult.getString(1) + &quot;~&quot; + k * oResult.getFloat(2) + &quot;;&quot;
+		wend
+	next
+	fillEntryList(sCollector, LUFTDURCHLASS)
+	sCollector = &quot;&quot;
+	
+	&apos;10 NEU - Überströmelemente übertragen
+	dim aAnz
+	for i = 0 to UBound(oCulvert())
+		aAnz = split(oCulvert(i).Value,&quot;;&quot;)
+		sCollector = sCollector + oCulvert(i).Name + &quot;~&quot; + aAnz(0) + &quot;;&quot;
+	next
+	fillEntryList(sCollector, UEBERSTROEMELEMENT)
+	sCollector = &quot;&quot;
+	
+	exit function
+	Err_calculateConfig:
+		msgbox Error
+		errorcount = errorcount + 1
+		if errorcount &lt; 10 then
+			resume next
+		else
+			msgbox &quot;Fehleranzahl übersteigt 10. Die Prozedur wird beendet&quot;
+		end if
+
+end function
+
+sub fillEntryList(sCollector$, iArt%)
+	dim aCollection()
+	&apos; Liste füllen
+	&apos; Für TEST: oDlg.model.etLVNr.Text = &quot;Paket &quot; + iArt
+	if sCollector &lt;&gt; &quot;&quot; then
+		aCollection = consolidateParts(truncString(sCollector, 1))
+		for i = 0 to UBound(aCollection())
+			oDlg.model.etAnzahl.Text = aCollection(i).Value
+			setList(aCollection(i).Name)
+			_Global.copyEntry(false)		
+		next
+	end if
+end sub
+
+&apos; ACHTUNG, das hier ist echt kompliziert, und das Kernstück der Auslegung
+&apos;_________________________________________________________________________________
+function calcLuftverteilung(oLayers as object, sStandort$, sLuftmenge$) as variant
+	&apos; tabellenaufbau: geschoss anzahlZuluftventile,zuluftmenge, gesamtzuluftmenge, anzahlAbluftventile, abluftmenge, gesamtabluftmenge
+
+	dim a(4,6), aTemp()
+	dim i%, k%, iIndex%, sig%, iOffset%, sLuftart$, sGeschoss$
+	dim fAnzahl!, fLuftmenge!, fGesamtLuftmenge!
+
+	iIndex = -1
+	fGesamtLuftmenge = CSng(changeChar(sLuftmenge, &quot;.&quot;, &quot;,&quot;))
+	a(0,0) = &quot;KG&quot;:a(1,0) = &quot;EG&quot;:a(2,0) = &quot;OG&quot;:a(3,0) = &quot;DG&quot;:a(4,0) = &quot;SB&quot;
+	a(0,1) = 0:a(1,1) = 0:a(2,1) = 0:a(3,1) = 0:a(4,1) = 0
+	for i = 0 to UBound(a())
+		if sStandort = a(i,0) then
+			iIndex = i
+			a(i, 3) = fGesamtLuftmenge
+			a(i, 6) = fGesamtLuftmenge
+			exit for
+		end if
+	next
+	for i = 0 to UBound(oLayers())
+		aTemp = split(oLayers(i).Value, &quot;;&quot;)
+		fAnzahl = CSng(changeChar(aTemp(0), &quot;.&quot;, &quot;,&quot;))
+		fLuftmenge = CSng(changeChar(aTemp(1), &quot;.&quot;, &quot;,&quot;))
+		sGeschoss = left(oLayers(i).Name,2)
+		sLuftart = right(oLayers(i).Name,2)
+		if sLuftart = &quot;ZU&quot; then
+			iOffset = 0
+		else
+			iOffset = 3
+		end if
+		for k = 0 to UBound(a())
+			if a(k,0) = sGeschoss then
+				a(k,1+iOffset) = fAnzahl
+				a(k,2+iOffset) = fLuftmenge
+				exit for
+			end if
+		next
+	next
+	for i = 0 to UBound(a())
+		if a(i,1) &gt; 0 then
+			&apos; gesamte Zuluftmenge in Summand setzen
+			a(i,3) = a(iIndex,3)
+			&apos; gesamte Abluftmenge in summanden setzen
+			a(i,6) = a(iIndex,6)
+			if i &gt; iIndex then
+				for k = i to i - iIndex+1 step -1
+					a(i,3) = a(i,3) - a(k-1,2)
+					a(i,6) = a(i,6) - a(k-1,5)
+				next
+			elseif i &lt; iIndex then
+				for k = i to iIndex-1
+					a(i,3) = a(i,3) - a(k+1,2)
+					a(i,6) = a(i,6) - a(k+1,5)
+				next
+			end if
+		end if
+	next
+	calcLuftverteilung = a
+end function
+
+
+
+sub setList(sItem as String)
+	oLBArtikel.model.StringItemList = array(sItem)
+	oLBArtikel.selectItemPos(0, true)
+end sub
+
+function collect(oRes as object, sString$) as String
+	dim s$
+
+	if not isNull(oRes) then
+		while oRes.next
+			s = s + oRes.getString(1) + &quot;~&quot; + oRes.getFloat(2) + &quot;;&quot;
+		wend
+	end if
+	collect = sString + s
+end function
+
+
+function consolidateParts(sParts) as Object
+	dim a(), b(), i%, k%, s$, s1$
+	
+	s = &quot;&quot;
+	a = split(sParts, &quot;;&quot;)
+	for i = 0 to UBound(a())
+		s1 = Left(a(i), instr(a(i),&quot;~&quot;)-1) + &quot;;&quot;
+		if instr(s, s1) = 0 then
+			s = s + s1
+		end if
+	next
+	if Right(s,1) = &quot;;&quot; then s = Left(s, len(s)-1)
+	b = split(s, &quot;;&quot;)
+	dim c!(UBound(b()))
+	for i = 0 to UBound(a())
+		s = left(a(i),instr(a(i), &quot;~&quot;)-1)
+		s1 = mid(a(i), len(s)+2)
+		for k = 0 to UBound(b())
+			if b(k) = s then
+				c(k) = c(k) + toSingle(s1)
+				exit for
+			end if
+		next
+	next
+	dim d(UBound(b())) as new com.sun.star.beans.NamedValue
+	for i = 0 to UBound(b())
+		d(i).Name = b(i)
+		d(i).Value = c(i)
+	next
+	consolidateParts = d
+end function
+</script:module>
