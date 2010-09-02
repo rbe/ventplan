@@ -13,12 +13,12 @@ import com.bensmann.griffon.WacTableHelper as WTH
 import net.miginfocom.swing.MigLayout
 
 // Raumvolumenströme
-panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill, grow]", "[fill]")) {
+panel(constraints: "grow", layout: new MigLayout("fill, wrap", "[fill, grow]", "[fill,grow]")) {
     // Tabellen für Zu-/Abluftventile, Überströmventile
-    panel(constraints: "grow", layout: new MigLayout("fill", "[fill, grow]", "")) {
+    panel(constraints: "grow", layout: new MigLayout("fill", "[fill, grow]", "[fill,grow]")) {
         jideTabbedPane(id: "raumVsVentileTabGroup", constraints: "grow, span") {
             // Raumvolumenströme - Zu-/Abluftventile
-            panel(id: "raumVsZuAbluftventileTab", title: "Zu-/Abluftventile", constraints: "grow") {
+            panel(id: "raumVsZuAbluftventileTab", title: "Zu-/Abluftventile", constraints: "grow", layout: new MigLayout("fill", "[fill,grow]", "[fill,grow]")) {
                 panel(id: "raumVsZuAbluftventileTabellePanel", constraints: "grow", layout: new MigLayout("", "[fill, grow]")) {
                     jideScrollPane(constraints: "grow") {
                         table(id: 'raumVsZuAbluftventileTabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "grow") {
@@ -70,7 +70,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill, grow]", 
                 }
             }
             // Raumvolumenströme - Überströmventile
-            panel(id: "raumVsUberstromventileTab", title: "Überströmventile", constraints: "grow") {
+            panel(id: "raumVsUberstromventileTab", title: "Überströmventile", constraints: "grow", layout: new MigLayout("fill", "[fill,grow]", "[fill,grow]")) {
                 panel(id: "raumVsUberstromventileTabellePanel", constraints: "grow", layout: new MigLayout("fillx", "[fill]")) {
                     jideScrollPane(constraints: "grow") {
                         //table(id: "raumVsUberstromventileTabelle", model: model.createRaumVsUberstromventileTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
@@ -104,13 +104,24 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill, grow]", 
             }
         }
     }
-    panel(constraints: "grow", layout: new MigLayout("wrap", "[]", "")) {
-        panel(id: "raumVsVentileTabPanel", layout: new MigLayout("fillx", "[left]para[right]para[left]para[fill]para[left]", "[fill]")) {
+    panel(constraints: "grow", layout: new MigLayout("fill", "[fill, grow] 16 [fill, grow] 16 [fill, grow]", "")) {
+        panel(layout: new MigLayout("", "[] 16 [] 16 []", "[] 16 []")) {
             // Informationen
-            label("Gesamtvolumen der Nutzungseinheit", constraints: "cell 0 1")
-            label(id: "raumVsGesamtVolumenNE", constraints: "cell 1 1")
-            label("m³", constraints: "cell 2 1")
-            panel(id: "raumVsAussenluftVsDerLtm", border: titledBorder("Außenluftvolumenstrom der lüftungstechnischen Massnahme"), layout: new MigLayout("fillx, wrap 4", "[left]30[right]10[left]30[left]", "[fill]"), constraints: "cell 3 1 1 5") {
+            label("Gesamtvolumen der Nutzungseinheit")
+            label(id: "raumVsGesamtVolumenNE")
+            label("m³", constraints: "wrap")
+
+            label("Luftwechsel der Nutzungseinheit")
+            label(id: "raumVsLuftwechselNE", text: "0,00")
+            label("l/h", constraints: "wrap")
+
+            label("Gesamtaußenluft-Volumentstrom mit Infiltration")
+            label(id: "raumVsGesamtaussenluftVsMitInfiltration", text: "0,00")
+            label("m³/h", constraints: "wrap")
+        }
+        panel(border: titledBorder("Außenluftvolumenstrom der lüftungstechnischen Massnahme"),
+                constraints: "grow, width 500", layout: new MigLayout("fill", "[]", "")) {
+            panel(constraints: "grow", layout: new MigLayout("fill, wrap 4", "[left] 16 [right] 16 [left] 16 [left]", "")) {
                 label("Feuchteschutz")
                 label(id: "raumVsAussenluftVsDerLtmFs", text: "0,00")
                 label("m³/h")
@@ -131,17 +142,11 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill, grow]", 
                 label("m³/h")
                 comboBox(id: "raumVsVolumenstrom", items: model.meta.volumenstromZentralgerat)
             }
-            button(id: "raumVsRaumBearbeiten", text: "Raum bearbeiten", constraints: "cell 4 1")
-
-            label("Luftwechsel der Nutzungseinheit", constraints: "cell 0 2")
-            label(id: "raumVsLuftwechselNE", text: "0,00", constraints: "cell 1 2")
-            label("l/h", constraints: "cell 2 2")
-            button(id: "raumVsZuAbluftventileSpeichern", text: "Speichern", constraints: "cell 4 2")
-
-            label("Gesamtaußenluft-Volumentstrom mit Infiltration", constraints: "cell 0 3")
-            label(id: "raumVsGesamtaussenluftVsMitInfiltration", text: "0,00", constraints: "cell 1 3")
-            label("m³/h", constraints: "cell 2 3")
-            button(id: "raumVsZuAbluftventileAngebotErstellen", text: "Angebot erstellen", constraints: "cell 4 3")
+        }
+        panel(constraints: "wrap", layout: new MigLayout("", "[fill, grow]", "[] 10 []")) {
+            button(id: "raumVsRaumBearbeiten", text: "Raum bearbeiten", constraints: "wrap")
+            button(id: "raumVsZuAbluftventileSpeichern", text: "Speichern", constraints: "wrap")
+            button(id: "raumVsZuAbluftventileAngebotErstellen", text: "Angebot erstellen", constraints: "wrap")
         }
     }
 }

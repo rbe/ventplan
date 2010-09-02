@@ -20,9 +20,9 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
     jideTabbedPane(id: "dvbTabGroup", constraints: "grow, span") {
 
         // Druckverlustberechnung - Kanalnetz
-        panel(id: "dvbKanalnetzTab", title: "Kanalnetz", layout: new MigLayout("fillx", "[fill]", "[fill]")) {
+        panel(id: "dvbKanalnetzTab", title: "Kanalnetz", layout: new MigLayout("fill", "[fill,grow]", "[fill]")) {
             jideScrollPane(constraints: "grow") {
-                panel(id: "dvbKanalnetzPanel", layout: new MigLayout("", "[]para[]para[]para[]para[]para[]para[]", "")) {
+                panel(id: "dvbKanalnetzPanel", layout: new MigLayout("", "[fill] 16 [fill] 16 [fill] 16 [fill] 16 [fill] 16 [fill] 16 [fill]", "")) {
 
                     label("Luftart")
                     label("Nr. Teilstrecke")
@@ -39,8 +39,8 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
                     textField(id: "dvbKanalnetzLange", constraints: "width 80px")
                     button(id: "dvbKanalnetzHinzufugen", text: "Hinzufügen", constraints: "wrap")
 
-                    panel(id: "dvbKanalnetzTabellePanel", constraints: "span", layout: new MigLayout("fillx", "[fill]", "")) {
-                        jideScrollPane(constraints: "grow") {
+                    panel(id: "dvbKanalnetzTabellePanel", constraints: "span, grow", layout: new MigLayout("fill", "[fill,grow]", "")) {
+                        jideScrollPane(constraints: "grow, width 600:1000:") {
                             //table(id: "dvbKanalnetzTabelle", model: model.createDvbKanalnetzTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
                             //}
                             table(id: 'dvbKanalnetzTabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "grow") {
@@ -69,9 +69,9 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
                         }
                     }
 
-                    panel(layout: new MigLayout("fillx", "[left]para[right]", "[fill]")) {
+                    panel(constraints: "span", layout: new MigLayout("fillx", "[left] 16 []", "")) {
                         // TODO mmu Enable only when table isn't empty and row is selected
-                        button(id: "dvbKanalnetzEntfernen",        text: "Entfernen",               enabled: bind { 1 == 1 })
+                        button(id: "dvbKanalnetzEntfernen",        text: "Entfernen",               enabled: bind { 1 == 1 }, constraints: "split 2")
                         button(id: "dvbKanalnetzWiderstandswerte", text: "Widerstandsbeiwerte..." , enabled: bind { 1 == 1 })
                     }
 
@@ -80,10 +80,10 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
         }
 
         // Druckverlustberechnung - Ventileinstellung
-        panel(id: "dvbVentileinstellungTab", title: "Ventileinstellung", layout: new MigLayout("fillx", "[fill]", "[fill]")) {
+        panel(id: "dvbVentileinstellungTab", title: "Ventileinstellung", layout: new MigLayout("fill", "[fill,grow]", "[fill]")) {
             // Druckverlustberechnung - Ventileinstellung
             jideScrollPane(constraints: "grow") {
-                panel(id: "dvbVentileinstellungPanel", layout: new MigLayout("", "[]para[]para[]para[]para[]para[]", "")) {
+                panel(id: "dvbVentileinstellungPanel", layout: new MigLayout("", "[] 16 [] 16 [] 16 [] 16 [] 16 []", "")) {
 
                     label("Luftart")
                     label("Raum")
@@ -99,8 +99,8 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
                     comboBox(id: "dvbVentileinstellungVentilbezeichnung", items: model.meta.dvbVentileinstellung)
                     button(id: "dvbVentileinstellungHinzufugen", text: "Hinzufügen", constraints: "wrap")
 
-                    panel(id: "dvbVentileinstellungTabellePanel", constraints: "span", layout: new MigLayout("fillx", "[fill]", "")) {
-                        jideScrollPane(constraints: "grow") {
+                    panel(id: "dvbVentileinstellungTabellePanel", constraints: "span, grow", layout: new MigLayout("fill", "[fill,grow]", "")) {
+                        jideScrollPane(constraints: "grow, width 600:1000:") {
                             //table(id: "dvbVentileinstellungTabelle", model: model.createDvbVentileinstellungTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
                             //}
                             table(id: 'dvbVentileinstellungTabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "grow") {
@@ -132,7 +132,10 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
                         }
                     }
 
-                    button(id: "dvbVentileinstellungEntfernen", text: "Entfernen")
+                    panel(constraints: "span", layout: new MigLayout("fillx", "[left] 16 []", "")) {
+                        // TODO mmu Enable only when table isn't empty and row is selected
+                        button(id: "dvbVentileinstellungEntfernen", text: "Entfernen", enabled: bind { 1 == 1 })
+                    }
 
                 }
             }

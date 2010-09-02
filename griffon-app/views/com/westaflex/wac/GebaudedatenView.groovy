@@ -13,7 +13,7 @@ import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
 panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
-    panel(layout: new MigLayout("fillx, wrap", "[fill]para[fill]para[fill]", "[fill]"), constraints: "span, wrap") {
+    panel(layout: new MigLayout("fillx, wrap", "[fill]para[fill]para[fill]", "[fill] -5 []"), constraints: "span, wrap") {
         // Gebäudetyp
         panel(id: "gebaudeTyp", border: titledBorder(title: "Gebäudetyp"), layout: new MigLayout("wrap", "[]", "")) {
             buttonGroup().with {
@@ -38,7 +38,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
         }
     }
     // Geometrie
-    panel(layout: new MigLayout("fillx, wrap", "[fill]para[fill]", "[fill]"), constraints: "span, wrap") {
+    panel(layout: new MigLayout("fillx, wrap", "[fill]para[fill]", "[fill] -5 []"), constraints: "span, wrap") {
         panel(id: "gebaudeGeometrie", border: titledBorder(title: "Geometrie"), layout: new MigLayout("wrap 3", "[]para[]para[]", "")) {
             //
             textField(id: "gebaudeGeometrieWohnflache", constraints: "width 60px!")
@@ -81,7 +81,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
         GH.recurse(gebaudeLuftdichtheit, GH.doubleTextField)
     }
     // Besondere Anforderungen
-    panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]"), constraints: "span, wrap") {
+    panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill] -5 []"), constraints: "span, wrap") {
         panel(id: "gebaudeBesondereAnforderungen", border: titledBorder(title: "Besondere Anforderungen"), constraints: "span", layout: new MigLayout("wrap 2", "[]para[]", "")) {
             textField(id: "faktorBesondereAnforderungen", constraints: "width 80px!")
             label("Faktor für besondere bauphysikalische oder hygienische Anforderungen")
@@ -89,7 +89,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
     }
     GH.doubleTextField(faktorBesondereAnforderungen)
     // Geplante Belegung
-    panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]"), constraints: "wrap") {
+    panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill] -5 []"), constraints: "wrap") {
         panel(id: "gebaudeGeplanteBelegung", border: titledBorder(title: "Geplante Belegung"), constraints: "span", layout: new MigLayout("", "[]para[right]para[]", "")) {
             label("Personenanzahl")
             spinner(id: "gebaudeGeplantePersonenanzahl", constraints: "wrap, width 100px!")
