@@ -17,21 +17,43 @@ class Wac2Resource {
 	 * Get URL for splash screen.
 	 */
 	def static getSplashScreenUrl = {
-		Wac2Resource.class.getResource("../resources/splash.png")
+		// dev
+		def r = Wac2Resource.class.getResource("../resources/splash.png")
+		// prod
+		if (!r) r = Wac2Resource.class.getResource("/splash.png")
+		r
 	}
 	
 	/**
 	 * Get URI for XSD of WPX files.
 	 */
-	def static getWpxXsdUri = {
-		Wac2Resource.class.getResource("../resources/westaflex-project.xsd").toURI()
+	def static getWPXXSDAsUri = {
+		// dev
+		def r = Wac2Resource.class.getResource("../resources/westaflex-project.xsd")
+		// prod
+		if (!r) r = Wac2Resource.class.getResource("/westaflex-project.xsd")
+		r.toURI()
+	}
+	
+	/**
+	 * Get stream for XSD of WPX files.
+	 */
+	def static getWPXXSDAsStream = {
+		// dev
+		def r = Wac2Resource.class.getResourceAsStream("../resources/westaflex-project.xsd")
+		// prod
+		if (!r) r = Wac2Resource.class.getResourceAsStream("/westaflex-project.xsd")
+		r
 	}
 	
 	/**
 	 * Get image for 'Widerstand'.
 	 */
 	def static getWiderstandUrl = { n ->
-		Wac2Resource.class.getResource("../resources/widerstand/${n}.jpg")
+		// dev
+		def r = Wac2Resource.class.getResource("../resources/widerstand/${n}.jpg")
+		// prod
+		if (!r) r = Wac2Resource.class.getResource("/widerstand/${n}.jpg")
 	}
 	
 }

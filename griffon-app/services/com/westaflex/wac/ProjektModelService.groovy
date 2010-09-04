@@ -17,7 +17,6 @@ import com.westaflex.wac.WpxConstants as WX
  */
 class ProjektModelService {
 	
-	def xsdFile
 	def validator
 	
 	def xmlns
@@ -31,11 +30,11 @@ class ProjektModelService {
 	 */
 	def ProjektModelService() {
 		// Load XSD
-		xsdFile = new File(Wac2Resource.getWpxXsdUri())
-		println "ProjektModelService: found XSD for WPX: ${xsdFile}"
+		def xsdStream = Wac2Resource.getWPXXSDAsStream()
+		println "ProjektModelService: found XSD for WPX: ${xsdStream.getClass()}"
 		validator = javax.xml.validation.SchemaFactory
 					.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI)
-					.newSchema(new javax.xml.transform.stream.StreamSource(new FileReader(xsdFile)))
+					.newSchema(new javax.xml.transform.stream.StreamSource(xsdStream))
 					.newValidator()
 		// XmlSlurper for reading XML
 		xmlSlurper = new XmlSlurper()
@@ -61,7 +60,7 @@ class ProjektModelService {
 	def load = { file ->
 		try {
 			// Load WPX XML file
-			def fh = file instanceof java.io.File ? file : new File(file)
+			def fh = file instanceof java.io.File ? file : new java.io.File(file)
 			def xml = fh.getText("UTF-8")
 			// Validate
 			validateWpx(xml)
