@@ -41,3 +41,7 @@ signingkey.params.lazy = true // only sign when unsigned
 //griffon.memory.maxPermSize='64m'
 
 griffon.basic_injection.disable = true
+
+griffon.basic_injection.disable = true
+
+griffon.basic_injection.disable = true

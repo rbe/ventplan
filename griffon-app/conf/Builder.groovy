@@ -26,6 +26,8 @@ root.'OxbowGriffonAddon'.controller=['ask','choice','error','inform','showExcept
 
 root.'MiglayoutGriffonAddon'.addon=true
 
-root.'SpringGriffonAddon'.addon=true
 
 root.'GsqlGriffonAddon'.addon=true
+
+
+root.'SpringGriffonAddon'.addon=true
