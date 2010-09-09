@@ -51,7 +51,7 @@ class ProjektModelService {
 	 * @param xml java.lang.String
 	 */
 	def validateWpx = { String xml ->
-		validator.validate(new javax.xml.transform.stream.StreamSource(new StringReader(xml)))
+		validator.validate(new javax.xml.transform.stream.StreamSource(new java.io.StringReader(xml)))
 	}
 	
 	/**
