@@ -47,81 +47,8 @@ panel(id: "raumPanel", layout: new MigLayout("fill", "[fill,grow]", "")) {
     }
     // Tabelle aller Räume
     panel(id: "raumTabellePanel", constraints: CENTER, layout: new MigLayout("fill", "[fill]")) {
-        /*panel(id: "TestPanel") {
-            EventList persons = new SortedList( new BasicEventList(),
-                {a, b -> a.name <=> b.name} as Comparator)
-
-            persons.addAll([
-                [name: 'Adam',  myComboBox: builder.comboBox(id: 'raumGeschossCombo', items: model.meta.raum.geschoss)],
-                [name: 'Jamie', myComboBox: builder.comboBox(id: 'raumGeschossCombo', items: model.meta.raum.geschoss)],
-                [name: 'Kari',  myComboBox: builder.comboBox(id: 'raumGeschossCombo', items: model.meta.raum.geschoss)],
-                [name: 'Grant', myComboBox: builder.comboBox(id: 'raumGeschossCombo', items: model.meta.raum.geschoss)],
-                [name: 'Tori',  myComboBox: builder.comboBox(id: 'raumGeschossCombo', items: model.meta.raum.geschoss)],
-                [name: 'Buster',  myComboBox: builder.comboBox(id: 'raumGeschossCombo', items: model.meta.raum.geschoss)],
-            ])
-
-            borderLayout()
-
-            scrollPane(constraints: CENTER) {
-                table(id: 'personsTable') {
-                    //tableFormat = defaultTableFormat(columnNames: ["Name", "LastName"])
-                    tableFormat = defaultAdvancedTableFormat(
-                        columns: [[name: "Name", class: String], [name: "ComboBox", class: JComboBox]]
-                    )
-                    println "tableFormat = ${tableFormat}"
-                    // tableFormat = defaultAdvancedTableFormat(columns: [[name:'Name'], [name: 'LastName']])
-
-                    //eventTableModel(source: persons, format: tableFormat)
-                    def columnNames = [ "Name", "ComboBox" ]
-                    def propertyNames = [ "name", "myComboBox" ]
-                    def tableFormat2 = [
-                        getColumnCount: { columnNames.size() },
-                        getColumnName:  { index -> columnNames[index] },
-                        getColumnValue: { object, index ->
-                            def newObject = object."${propertyNames[index]}"
-                            if (newObject instanceof JComboBox)
-                            {
-                                newObject.getSelectedItem()
-                            }
-                            else
-                            {
-                                newObject
-                            }
-                        }
-                    ] as ca.odell.glazedlists.gui.TableFormat
-                    eventTableModel(source: persons, format: tableFormat2)
-                    installTableComparatorChooser(source: persons)
-                }
-            }
-        }*/
-
         jideScrollPane(constraints: "grow") {
-            //table(id: "raumTabelle", model: model.createRaumTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-            //}
-            table(id: 'raumTabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "grow") {
-                tableModel() {
-                    current.addTableModelListener(WTH.getRaumdatenTableModelListener())
-                    propertyColumn(header: 'Raum',
-                        propertyName: 'raumBezeichnungCombo',
-                        cellEditor: WTH.getRaumdatenBezeichnungCellEditor(builder,model),
-                        cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
-                    )
-                    propertyColumn(header: 'Geschoss',
-                        propertyName: 'raumGeschossCombo',
-                        cellEditor: WTH.getRaumdatenGeschossCellEditor(builder,model),
-                        cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
-                    )
-                    propertyColumn(header: 'Luftart',
-                        propertyName: 'raumLuftartCombo',
-                        cellEditor: WTH.getRaumdatenLuftartCellEditor(builder,model),
-                        cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
-                    )
-                    propertyColumn(header: GH.ws("Raumfläche<br/>(m²)"), propertyName: 'raumFlache')
-                    propertyColumn(header: GH.ws("Raumhöhe<br/>(m)"), propertyName: 'raumHohe')
-                    propertyColumn(header: 'Zuluftfaktor', propertyName: 'raumZuluftfaktor')
-                    propertyColumn(header: 'Abluftvolumenstrom', propertyName: 'raumAbluftVs')
-                }
-            }
+            table(id: "raumTabelle", model: model.createRaumTableModel())
         }
     }
     // Buttons
