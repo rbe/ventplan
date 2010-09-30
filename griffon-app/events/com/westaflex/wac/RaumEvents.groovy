@@ -78,9 +78,6 @@ class RaumEvents {
 			GH.addMapPropertyChangeListener("map.raum.raume", model.map.raum.raume[raumIndex])
 			// Neu berechnen
 			onRaumGeandert(raumIndex)
-			// RaumVsView - Zu-/Abluftventile TabelModel aktualisieren
-			println "publish event AddTableModelRow"
-			publishEvent "AddTableModelRow", [raumIndex, view]
 		}
 	}
 	
@@ -112,9 +109,6 @@ class RaumEvents {
 			def zuLoschenderRaum = model.map.raum.raume[raumIndex]
 			// Raum aus Model entfernen
 			model.removeRaum(raumIndex)
-			// RaumVsView - Zu-/Abluftventile TabelModel aktualisieren
-			println "onRaumEntfernen: publish event RemoveTableModelRow"
-			publishEvent "RemoveTableModelRow", [raumIndex]
 		}
 	}
 	

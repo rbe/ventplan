@@ -15,6 +15,7 @@ import ca.odell.glazedlists.GlazedLists
 import ca.odell.glazedlists.swing.AutoCompleteSupport
 import javax.swing.table.TableColumn
 import javax.swing.DefaultCellEditor
+import javax.swing.DefaultComboBoxModel
 
 /**
  * 
@@ -165,7 +166,9 @@ class ProjektModel {
 				kanalnetz: [] as ObservableList,
 				ventileinstellung: [] as ObservableList
 			] as ObservableMap,
-		akkustik: [:] as ObservableMap
+		akustik: [
+                raumBezeichnung: [] as ObservableList
+            ] as ObservableMap
 	] as ObservableMap
 	
 	// TableModels
@@ -515,6 +518,11 @@ class ProjektModel {
 				it.add(map.raum.raume[r.position])
 			}
 
+            // neues DefaultComboBoxModel für AkustikView setzen
+            map.akustik.raumBezeichnung.add(raum.raumBezeichnung)
+            view.akustikAbluftRaumbezeichnung.setModel(new DefaultComboBoxModel(map.akustik.raumBezeichnung as String[]))
+            view.akustikZuluftRaumbezeichnung.setModel(new DefaultComboBoxModel(map.akustik.raumBezeichnung as String[]))
+
             view.raumTabelle.setModel(createRaumTableModel())
 
             def geschossEventList = GlazedLists.eventList(meta.raum.geschoss) as ca.odell.glazedlists.EventList
@@ -531,6 +539,14 @@ class ProjektModel {
 			DefaultCellEditor raumVsLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsluftartEventList)
 			TableColumn raumVsLuftartColumn = view.raumVsZuAbluftventileTabelle.getColumnModel().getColumn(1)
 			raumVsLuftartColumn.setCellEditor(raumVsLuftartCellEditor)
+
+            println "############################"
+            println "############################"
+            println "############################"
+            println "############################"
+            println "akustikAbluftRaumbezeichnung -> ${view.akustikAbluftRaumbezeichnung}"
+            println "akustikZuluftRaumbezeichnung -> ${view.akustikZuluftRaumbezeichnung}"
+            println "############################"
 		}
 	}
 	
@@ -555,6 +571,8 @@ class ProjektModel {
 			[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
 				it.remove(raumIndex)
 			}
+
+            map.akustik.raumBezeichnung.remove(raumIndex)
 		}
 	}
 	

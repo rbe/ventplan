@@ -41,7 +41,7 @@ def buildLayout(tabname) {
         panel(layout: new MigLayout("fillx", "[fill]para[right,fill]", "[fill]")) {
             label("Raumbezeichnung", constraints: "cell 0 0, wrap")
             
-            comboBox(id: "akustik${tabname}Raumbezeichnung", constraints: "span 2", items: model.map.raum.raume[])
+            comboBox(id: "akustik${tabname}Raumbezeichnung", constraints: "span 2")
             label("", constraints: "wrap")
 
             label("", constraints: "span 2, wrap")

@@ -625,48 +625,6 @@ class ProjektController {
 	}
 	
 	/**
-	 * RaumVsView - Zu-/Abluftventile
-	 * TableModel updaten. Neue Row hinzufügen.
-	 */
-	def onAddTableModelRow = { rowIndex, view ->
-		// Neues TableModel setzen !
-		println "onAddTableModelRow: add row to table model ${rowIndex}"
-		doLater {
-			//println "addRowToTableModel ${r}"
-			// Erstelle Raumdaten Tabelle aktualisieren
-			def r = model.map.raum.raume[rowIndex]
-		}
-	}
-	
-	/**
-	 * RaumVsView - Zu-/Abluftventile
-	 * TableModel updaten. Raum entfernen.
-	 */
-	def onRemoveTableModelRow = { raumIndex ->
-		println "remove row"
-		doLater {
-			// Let's add a row to the table
-			def raumRows = view.raumTabelle.getModel().getRowsModel().getRowCount()
-			def dataListRaumdaten = raumRows.get(raumIndex)
-			raumRows.remove( dataListRaumdaten )
-			view.raumTabelle.getModel().getRowsModel().setValue( raumRows )
-			view.raumTabelle.getModel().fireTableDataChanged()
-			// Let's remove a row from the table
-			def raumVsRows = view.raumVsZuAbluftventileTabelle.getModel().getRowsModel().getValue()
-			def dataListRaumVs = raumVsRows.get(raumIndex)
-			raumVsRows.remove( dataListRaumVs )
-			view.raumVsZuAbluftventileTabelle.getModel().getRowsModel().setValue( raumVsRows )
-			view.raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
-			// Let's remove a row from the table
-			def raumVsUberstromRows = view.raumVsZuAbluftventileTabelle.getModel().getRowsModel().getValue()
-			def dataListRaumVsUberstrom = raumVsUberstromRows.get(raumIndex)
-			raumVsUberstromRows.remove( dataListRaumVs )
-			view.raumVsUberstromventileTabelle.getModel().getRowsModel().setValue( raumVsUberstromRows )
-			view.raumVsUberstromventileTabelle.getModel().fireTableDataChanged()
-		}
-	}
-	
-	/**
 	 * Raumvolumenströme - Zentralgerät: manuelle Auswahl des Zentralgeräts.
 	 */
 	def zentralgeratGewahlt = {
