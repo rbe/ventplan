@@ -797,8 +797,9 @@ class ProjektController {
 	/**
 	 * 
 	 */
-	def openTeilstreckenDialog() {
-		
+	def dvbVentileinstellungTeilstreckeDialog = {
+		def dialog = GH.showDialog(builder, TeilstreckenView)
+		println "TeilstreckenAuswahlen: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
 	}
 	
 	/**
@@ -806,6 +807,18 @@ class ProjektController {
 	 */
 	def dvbVentileinstellungEntfernen = {
 		
+	}
+
+    /**
+	 * Teilstrecken, Dialog mit OK geschlossen.
+	 */
+	def teilstreckenOkButton = {
+	}
+
+	/**
+	 *
+	 */
+	def teilstreckenCancelButton = {
 	}
 	
 	/**

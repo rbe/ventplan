@@ -296,10 +296,6 @@ class ProjektModel {
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { index -> columnNames[index] },
 				getColumnValue: { object, index ->
-                    //println "index -> ${index}"
-                    //println "raume - propertyNames -> ${propertyNames[index]}"
-                    //println "raume - propertyNames -> ${propertyNames}"
-                    //println "raume - object -> ${object}"
                     try {
                         object."${propertyNames[index]}"?.toString2()
                     } catch (e) {
@@ -314,6 +310,7 @@ class ProjektModel {
                     //println "# 1.a object -> ${object} || value -> ${value}"
                     object."${propertyNames[index]}" = value
                     meta.gewahlterRaum[index] = value
+                    println "meta.gewahlterRaum -> ${meta.gewahlterRaum}"
                     //println "# 1.b object -> ${object}"
 
                 },
@@ -327,8 +324,8 @@ class ProjektModel {
 	 * RaumBearbeitenView - Details Tab TableModel
 	 */
 	def createRaumDetailsTableModel() {
-		def columnNames =   ["Bezeichnung", "Breite in mm", "Querschnittsfläche in mm²", "Spaltenhöhe in mm", "mit Dichtung"]
-		def propertyNames = ["turBezeichnung", "turBreite", "turQuerschnitt", "turSpaltenhohe", "turDichtung"]
+		def columnNames =   ["Bezeichnung", "Breite in mm", "Querschnittsfläche in mm²", "Spaltenhöhe in mm", "mit Dichtung"] as String[]
+		def propertyNames = ["turBezeichnung", "turBreite", "turQuerschnitt", "turSpaltenhohe", "turDichtung"] as String[]
         def writable      = [true, true, true, true, true] as boolean[]
 
         new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeBearbeitenDetails, [
@@ -366,8 +363,8 @@ class ProjektModel {
 	 * RaumBearbeitenView - Zusammenfassung Tab TableModel
 	 */
 	def createRaumEinstellungenTableModel() {
-		def columnNames =   ["Raum",            "Raumnummer", "Raumtyp", "Geschoss",     "Luftart", "Faktor", "Vorgang", "Zuluft", "Abluft", "Duch??", "Duch2???", "Kanalnetz", "Kanalnetz2", "Türhöhe", "Max...?", "Rau..???", "Rau...???", "Rau...???", "Rau...???", "Rau...???"]
-		def propertyNames = ["raumBezeichnung", "raumNummer", "raumTyp", "raumGeschoss", "luftart", "faktor", "vorgang", "zuluft", "abluft", "duch1", "duch2", "kanalnetz", "kanalnetz2", "turhohe", "max1", "raum1", "raum2", "raum3", "raum4", "raum5"]
+		def columnNames =   ["Raum",            "Raumnummer", "Raumtyp", "Geschoss",     "Luftart", "Faktor", "Vorgang", "Zuluft", "Abluft", "Duch??", "Duch2???", "Kanalnetz", "Kanalnetz2", "Türhöhe", "Max...?", "Rau..???", "Rau...???", "Rau...???", "Rau...???", "Rau...???"] as String[]
+		def propertyNames = ["raumBezeichnung", "raumNummer", "raumTyp", "raumGeschoss", "luftart", "faktor", "vorgang", "zuluft", "abluft", "duch1", "duch2", "kanalnetz", "kanalnetz2", "turhohe", "max1", "raum1", "raum2", "raum3", "raum4", "raum5"] as String[]
         def writable      = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true] as boolean[]
 
         new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeBearbeitenEinstellungen, [
@@ -405,8 +402,8 @@ class ProjektModel {
 	 * Druckverlustberechnung - Kanalnetz.
 	 */
 	def createDvbKanalnetzTableModel() {
-		def columnNames =   ["Luftart", "Teilstrecke", ws("Luftvolumen-<br/>strom<br/>(m³/h)"), "Kanalbezeichnung", ws("Kanallänge<br/>(m)"), ws("Geschwindigkeit<br/>(m/s)"), ws("Reibungswiderstand<br/>gerader Kanal<br/>(Pa)"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>(Pa)"), ws("Widerstand<br/>Teilstrecke<br/><(Pa)")]
-		def propertyNames = ["luftart", "teilstrecke", "luftVs",                                "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"]
+		def columnNames =   ["Luftart", "Teilstrecke", ws("Luftvolumen-<br/>strom<br/>(m³/h)"), "Kanalbezeichnung", ws("Kanallänge<br/>(m)"), ws("Geschwindigkeit<br/>(m/s)"), ws("Reibungswiderstand<br/>gerader Kanal<br/>(Pa)"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>(Pa)"), ws("Widerstand<br/>Teilstrecke<br/><(Pa)")] as String[]
+		def propertyNames = ["luftart", "teilstrecke", "luftVs",                                "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true, true] as boolean[]
 
         new ca.odell.glazedlists.swing.EventTableModel(tableModels.dvbKanalnetz,
@@ -424,8 +421,8 @@ class ProjektModel {
 	 * Druckverlustberechnung - Ventileinstellung.
 	 */
 	def createDvbVentileinstellungTableModel() {
-		def columnNames =   ["Luftart", "Raum", "Teilstrecken", "Ventiltyp",         "dP offen (Pa)", "Gesamt (Pa)",      "Differenz", "Abgleich (Pa)", "Einstellung"]
-		def propertyNames = ["luftart", "raum", "teilstrecken", "ventilbezeichnung", "dpOffen",       "gesamtWiderstand", "differenz", "abgleich",      "einstellung"]
+		def columnNames =   ["Luftart", "Raum", "Teilstrecken", "Ventiltyp",         "dP offen (Pa)", "Gesamt (Pa)",      "Differenz", "Abgleich (Pa)", "Einstellung"] as String[]
+		def propertyNames = ["luftart", "raum", "teilstrecken", "ventilbezeichnung", "dpOffen",       "gesamtWiderstand", "differenz", "abgleich",      "einstellung"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true] as boolean[]
 
         new ca.odell.glazedlists.swing.EventTableModel(tableModels.dvbVentileinstellung,
@@ -443,27 +440,20 @@ class ProjektModel {
 	 * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
 	 */
 	def createWbwTableModel() {
-		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"]
-		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"]
+		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"] as String[]
+		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"] as String[]
 		def writable      = [true, true, true] as boolean[]
 
         new ca.odell.glazedlists.swing.EventTableModel(tableModels.wbw,
             propertyNames, columnNames, writable)
-
-        /*new ca.odell.glazedlists.swing.EventTableModel(tableModels.wbw, [
-				getColumnCount: { columnNames.size() },
-				getColumnName:  { index -> columnNames[index] },
-				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
-			] as ca.odell.glazedlists.gui.TableFormat)
-            */
 	}
 	
 	/**
 	 * Akustikberechnung - Zuluft.
 	 */
 	def createAkustikZuluftTableModel() {
-		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"]
-		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"]
+		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"] as String[]
+		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"] as String[]
 		def writable      = [true, true, true] as boolean[]
 
         new ca.odell.glazedlists.swing.EventTableModel(tableModels.akustikZuluft,
@@ -481,8 +471,8 @@ class ProjektModel {
 	 * Akustikberechnung - Abluft.
 	 */
 	def createAkustikAbluftTableModel() {
-		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"]
-		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"]
+		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"] as String[]
+		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"] as String[]
 		def writable      = [true, true, true] as boolean[]
 
         new ca.odell.glazedlists.swing.EventTableModel(tableModels.akustikAbluft,
@@ -539,6 +529,12 @@ class ProjektModel {
 			DefaultCellEditor raumVsLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsluftartEventList)
 			TableColumn raumVsLuftartColumn = view.raumVsZuAbluftventileTabelle.getColumnModel().getColumn(1)
 			raumVsLuftartColumn.setCellEditor(raumVsLuftartCellEditor)
+
+            def raumVsUsluftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
+			DefaultCellEditor raumVsUsLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsUsluftartEventList)
+			TableColumn raumVsUsLuftartColumn = view.raumVsUberstromventileTabelle.getColumnModel().getColumn(1)
+			raumVsUsLuftartColumn.setCellEditor(raumVsUsLuftartCellEditor)
+
 
             println "############################"
             println "############################"
