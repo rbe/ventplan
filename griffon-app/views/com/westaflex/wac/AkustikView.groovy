@@ -37,62 +37,64 @@ akustikTabGroup.with {
  */
 def buildLayout(tabname) {
 	// Akustikberechnung - Zuluft
-	panel(layout: new MigLayout("fillx, wrap 4", "[left,fill]para[right,fill]para[center,fill]para[left,fill]", "[fill]")) {
-        panel(layout: new MigLayout("fillx", "[fill]para[right,fill]", "[fill]")) {
+	panel(layout: new MigLayout("fill, wrap 3", "[left]para[right]para[left]", "[fill]")) {
+        panel(layout: new MigLayout("fillx", "[fill]para[right,fill]para[right]", "[fill]")) {
             label("Raumbezeichnung", constraints: "cell 0 0, wrap")
             
-            comboBox(id: "akustik${tabname}Raumbezeichnung", constraints: "span 2")
-            label("", constraints: "wrap")
+            comboBox(id: "akustik${tabname}Raumbezeichnung")
+            label(" ", constraints: "span 2, wrap")
 
-            label("", constraints: "span 2, wrap")
+            label(" ", constraints: "span 3, wrap")
 
-            label("", constraints: "span 2, wrap")
+            label(" ", constraints: "span 3, wrap")
 
-            label("Schallleistungspegel Zuluftstutzen")
+            label("Schallleistungspegel ${tabname}stutzen")
             // TODO: Zentralgerät aus RaumVsView -> raumVsZuAbluftventileZentralgerat
             // TODO: split -> comboBox...???
-            label(raumVsZentralgerat.selectedItem, constraints: "wrap")
+            label(raumVsZentralgerat.selectedItem)
+            comboBox(id: "akustik${tabname}Pegel", constraints: "width 60px!, wrap")
 
             label("Schallleistungspegelerhöhung Kanalnetz")
-            comboBox(id: "akustik${tabname}Kanalnetz", constraints: "wrap")
+            comboBox(id: "akustik${tabname}Kanalnetz", constraints: "span 2, wrap")
 
 
             label("Schallleistungspegelerhöhung Filter")
-            comboBox(id: "akustik${tabname}Filter", constraints: "wrap")
+            comboBox(id: "akustik${tabname}Filter", constraints: "span 2, wrap")
 
             label("1. Hauptschalldämpfer")
-            comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "wrap")
+            comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "span 2, wrap")
 
             label("2. Hauptschalldämpfer")
-            comboBox(id: "akustik${tabname}2Hauptschalldampfer", constraints: "wrap")
+            comboBox(id: "akustik${tabname}2Hauptschalldampfer", constraints: "span 2, wrap")
 
             label("Anzahl der Umlenkungen 90° Stck.")
-            textField(id: "akustik${tabname}AnzahlUmlenkungen90GradStck", constraints: "wrap")
+            label("")
+            textField(id: "akustik${tabname}AnzahlUmlenkungen90GradStck", constraints: "width 60px!, wrap")
 
             label("Luftverteilerkasten Stck.")
-            textField(id: "akustik${tabname}LuftverteilerkastenStck", constraints: "wrap")
+            label("")
+            textField(id: "akustik${tabname}LuftverteilerkastenStck", constraints: "width 60px!, wrap")
 
             label("Längsdämpfung Kanal lfdm.")
-            // TODO: split ???
-            textField(id: "akustik${tabname}LangsdampfungKanal", constraints: "wrap")
+            comboBox(id: "akustik${tabname}Zentralgerat", items: model.meta.zentralgerat)
+            textField(id: "akustik${tabname}LangsdampfungKanal", constraints: "width 60px!, wrap")
 
             label("Schalldämpfer Ventil")
-            comboBox(id: "akustik${tabname}SchalldampferVentil", constraints: "wrap")
+            comboBox(id: "akustik${tabname}SchalldampferVentil", constraints: "span 2, wrap")
 
             label("Einfügungsdämmwert Luftdurchlass")
-            comboBox(id: "akustik${tabname}EinfugungsdammwertLuftdurchlass", constraints: "wrap")
+            comboBox(id: "akustik${tabname}EinfugungsdammwertLuftdurchlass", constraints: "span 2, wrap")
 
             label("Raumabsorption (Ahnnahme) BAD=0 WOHNEN=1")
-            textField(id: "akustik${tabname}Raumabsorption", constraints: "wrap")
+            label("")
+            textField(id: "akustik${tabname}Raumabsorption", constraints: "width 60px!, wrap")
 
             label("Korrektur der A-Bewertung", constraints: "wrap")
 
             label("Bewerteter Schallpegel", constraints: "wrap")
-
-            label(GH.ws("* Bei dieser Berechnung handelt es dich um eine <br>theoretische Auslegung, deren Werte in der Praxis abweichen können"), constraints: "wrap")
         }
 
-        panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
+        panel(layout: new MigLayout("fillx, wrap", "[center]", "[fill]")) {
             label("Zentrales Lüftungsgerät " + raumVsZentralgerat.selectedItem)
 
             label(tabname)
@@ -112,12 +114,18 @@ def buildLayout(tabname) {
                 }
             }
 
-            label("Mittlerer Schalldruckpegel* dB(A) =")
+            label("Mittlerer Schalldruckpegel* dB(A) =", constraints: "right")
         }
 
         panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
+            label(" ", constraints: "wrap")
+            label(" ", constraints: "wrap")
+            label(" ", constraints: "wrap")
             label("dB(A)")
         }
+
+        label(constraints: "wrap")
+        label("* Bei dieser Berechnung handelt es dich um eine <br>theoretische Auslegung, deren Werte in der Praxis abweichen können", constraints: "right, span 3")
 	}
 	return "akustik${tabname}Tab"
 }
