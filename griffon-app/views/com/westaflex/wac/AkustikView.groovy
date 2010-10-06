@@ -31,6 +31,8 @@ akustikTabGroup.with {
 	setTabColorProvider(com.jidesoft.swing.JideTabbedPane.ONENOTE_COLOR_PROVIDER)
 	setBoldActiveTab(true)
 }
+// Bindings
+build(AkustikBindings)
 
 /**
  * Synchronize all Swing table models depending on map.raum.raume.
