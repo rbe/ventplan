@@ -63,7 +63,14 @@ def buildLayout(tabname) {
             comboBox(id: "akustik${tabname}Filter", constraints: "wrap", items: (10..200).step(10))
 
             label("1. Hauptschalldämpfer", foreground: GH.MY_GREEN)
-            comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "wrap")
+            switch (tabname) {
+				case "Zuluft":
+					comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "wrap", items: model.meta.akustikSchalldampfer, selectedItem: "100150TYP4A")
+					break
+				case "Abluft":
+					comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "wrap", items: model.meta.akustikSchalldampfer, selectedItem: "")
+					break
+            }
 
             label("2. Hauptschalldämpfer", foreground: GH.MY_GREEN)
             comboBox(id: "akustik${tabname}2Hauptschalldampfer", constraints: "wrap")
