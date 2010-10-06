@@ -51,9 +51,12 @@ def buildLayout(tabname) {
 
             label("", constraints: "span 2, wrap")
 
-            label("Schallleistungspegel Zuluftstutzen", foreground: GH.MY_RED)
-            // Model wie raumvolumenströme, volumenstrom des zentralgeräts
-            comboBox(id: "akustik${tabname}Zuluftstutzen", constraints: "wrap", items: model.meta.volumenstromZentralgerat)
+            label("Schallleistungspegel ${tabname}stutzen", foreground: GH.MY_RED)
+            panel(constraints: "wrap") {
+	            label(id: "akustik${tabname}${tabname}stutzenZentralgerat")
+	            // Model wie raumvolumenströme, volumenstrom des zentralgeräts
+	            comboBox(id: "akustik${tabname}Zuluftstutzen", constraints: "wrap", items: model.meta.volumenstromZentralgerat)
+            }
 
             label("Schallleistungspegelerhöhung Kanalnetz", foreground: GH.MY_RED)
             comboBox(id: "akustik${tabname}Kanalnetz", constraints: "wrap", items: (10..200).step(10))
@@ -83,7 +86,10 @@ def buildLayout(tabname) {
 
             label("Längsdämpfung Kanal lfdm.", foreground: GH.MY_GREEN)
             // TODO: split ???
-            textField(id: "akustik${tabname}LangsdampfungKanal", constraints: "wrap")
+            panel(constraints: "wrap") {
+	            comboBox(id: "akustik${tabname}LangsdampfungKanal", items: model.meta.dvbKanalbezeichnung)
+	            textField(id: "akustik${tabname}LangsdampfungKanalWert", constraints: "wrap")
+            }
 
             label("Schalldämpfer Ventil", foreground: GH.MY_GREEN)
             comboBox(id: "akustik${tabname}SchalldampferVentil", constraints: "wrap", items: model.meta.akustikSchalldampfer)
