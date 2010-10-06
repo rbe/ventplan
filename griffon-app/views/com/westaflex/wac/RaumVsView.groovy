@@ -145,7 +145,7 @@ panel(constraints: "grow", layout: new MigLayout("fill, wrap", "[fill, grow]", "
         }
         panel(constraints: "wrap", layout: new MigLayout("", "[fill, grow]", "[] 10 []")) {
             button(id: "raumVsRaumBearbeiten", text: "Raum bearbeiten", constraints: "wrap")
-            button(id: "raumVsZuAbluftventileSpeichern", text: "Speichern", constraints: "wrap")
+            //button(id: "raumVsZuAbluftventileSpeichern", text: "Speichern", constraints: "wrap")
             button(id: "raumVsZuAbluftventileAngebotErstellen", text: "Angebot erstellen", constraints: "wrap")
         }
     }
