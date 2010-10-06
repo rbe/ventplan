@@ -272,6 +272,9 @@ class ProjektModel {
                     //println "meta.gewahlterRaum -> ${meta.gewahlterRaum}"
                     //println "# 1.b object -> ${object}"
 
+                    // TODO
+                    // resync funktioniert nicht, da wir uns im TableModel befinden!!!
+                    // Muss anders gelöst werden. Event, der später ausgelöst werden soll?!
                     /*
                     switch (resyncValue) {
                         case "raume":
