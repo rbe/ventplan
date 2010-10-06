@@ -54,7 +54,7 @@ def buildLayout(tabname) {
             label(raumVsZentralgerat.selectedItem, constraints: "wrap")
 
             label("Schallleistungspegelerhöhung Kanalnetz")
-            comboBox(id: "akustik${tabname}Kanalnetz", constraints: "wrap")
+            comboBox(id: "akustik${tabname}Kanalnetz", constraints: "wrap", model: [(0..200).step 10])
 
 
             label("Schallleistungspegelerhöhung Filter")
