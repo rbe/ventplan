@@ -95,8 +95,8 @@ class ProjektModel {
 			abgleich: 0.0d,
 			einstellung: 0
 		]
-	
-	/**
+
+    /**
 	 * Our central model.
 	 * dirty: Was the model changed (since last save)? This is set true by a PropertyChangeListener installed in ProjectController.addMapPropertyChangeListener().
 	 */
@@ -241,6 +241,7 @@ class ProjektModel {
                         case "raume":
                             myTempMap = map.raum.raume.find { it.position == object.position }
                             myTempMap[columnIndex] = value
+                            meta.gewahlterRaum[columnIndex] = value
                             resyncValue = "raume"
                             println "Edited: map.raum.raume -> ${map.raum.raume}"
                             break
@@ -428,7 +429,13 @@ class ProjektModel {
 			}
 
             // neues DefaultComboBoxModel für AkustikView setzen
-            map.akustik.raumBezeichnung.add(raum.raumBezeichnung)
+            try {
+                map.akustik.raumBezeichnung.add(r.raumBezeichnung)
+            } catch (e) {
+                // combobox...
+                map.akustik.raumBezeichnung = []
+                map.akustik.raumBezeichnung.add(r.raumBezeichnung)
+            }
             view.akustikAbluftRaumbezeichnung.setModel(new DefaultComboBoxModel(map.akustik.raumBezeichnung as String[]))
             view.akustikZuluftRaumbezeichnung.setModel(new DefaultComboBoxModel(map.akustik.raumBezeichnung as String[]))
 
