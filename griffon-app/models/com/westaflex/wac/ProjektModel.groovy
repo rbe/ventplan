@@ -160,7 +160,20 @@ class ProjektModel {
 				kanalnetz: [] as ObservableList,
 				ventileinstellung: [] as ObservableList
 			] as ObservableMap,
-		akustik: [:] as ObservableMap
+		akustik: [
+				zuluft: [
+						anzahlUmlenkungen: 5,
+						luftverteilerkastenStck: 1,
+						langsdampfung: 7,
+						raumabsorption: 1
+					] as ObservableMap,
+				abluft: [
+						anzahlUmlenkungen: 4,
+						luftverteilerkastenStck: 1,
+						langsdampfung: 12,
+						raumabsorption: 0
+					] as ObservableMap,
+			] as ObservableMap
 	] as ObservableMap
 	
 	// TableModels
