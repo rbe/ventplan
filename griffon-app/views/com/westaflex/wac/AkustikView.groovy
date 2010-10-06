@@ -73,7 +73,7 @@ def buildLayout(tabname) {
             }
 
             label("2. Hauptschalldämpfer", foreground: GH.MY_GREEN)
-            comboBox(id: "akustik${tabname}2Hauptschalldampfer", constraints: "wrap")
+            comboBox(id: "akustik${tabname}2Hauptschalldampfer", constraints: "wrap", items: model.meta.akustikSchalldampfer)
 
             label("Anzahl der Umlenkungen 90° Stck.", foreground: GH.MY_GREEN)
             textField(id: "akustik${tabname}AnzahlUmlenkungen90GradStck", constraints: "wrap")
@@ -86,10 +86,10 @@ def buildLayout(tabname) {
             textField(id: "akustik${tabname}LangsdampfungKanal", constraints: "wrap")
 
             label("Schalldämpfer Ventil", foreground: GH.MY_GREEN)
-            comboBox(id: "akustik${tabname}SchalldampferVentil", constraints: "wrap")
+            comboBox(id: "akustik${tabname}SchalldampferVentil", constraints: "wrap", items: model.meta.akustikSchalldampfer)
 
             label("Einfügungsdämmwert Luftdurchlass", foreground: GH.MY_GREEN)
-            comboBox(id: "akustik${tabname}EinfugungsdammwertLuftdurchlass", constraints: "wrap")
+            comboBox(id: "akustik${tabname}EinfugungsdammwertLuftdurchlass", constraints: "wrap", items: model.meta.dvbVentileinstellung)
 
             label("Raumabsorption (Annahme) BAD=0 WOHNEN=1", foreground: GH.MY_GREEN)
             textField(id: "akustik${tabname}Raumabsorption", constraints: "wrap")
