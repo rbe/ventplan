@@ -179,7 +179,7 @@ class ProjektModel {
 						raumabsorption: 0
 					] as ObservableMap,
 			] as ObservableMap,
-                raumBezeichnung: [] as ObservableList
+            raumBezeichnung: [] as ObservableList
 	] as ObservableMap
 	
 	// TableModels
@@ -202,6 +202,94 @@ class ProjektModel {
 	 * Wrap text in HTML and substitute every space character with HTML-breaks.
 	 */
 	def ws = GH.ws
+
+    /**
+     * Closure to generate glazedlists EventTableModel.
+     * Parameters are
+     * columnNames as String[]
+     * propertyNames as String[]
+     * writable as boolean[]
+     * tableModel as ca.odell.glazedlists.EventList
+     */
+    def gltmClosure = { columnNames, propertyNames, writable, tableModel, mapToUpdate ->
+        new ca.odell.glazedlists.swing.EventTableModel(tableModel, [
+				getColumnCount: { columnNames.size() },
+				getColumnName:  { columnIndex -> columnNames[columnIndex] },
+				getColumnValue: { object, columnIndex ->
+                    //println "index -> ${columnIndex}"
+                    //println "raume - propertyNames -> ${propertyNames[columnIndex]}"
+                    //println "raume - propertyNames -> ${propertyNames}"
+                    //println "raume - object -> ${object}"
+                    try {
+                        object."${propertyNames[columnIndex]}"?.toString2()
+                    } catch (e) {
+                        // combobox...
+                        println "error: catching object -> ${object}"
+                        object?.toString2()
+                    }
+                },
+				isEditable: 	{ object, columnIndex -> writable[columnIndex] },
+                setColumnValue: { object, value, columnIndex ->
+
+                    println "# 1.a object -> ${object} || value -> ${value}"
+                    object."${propertyNames[columnIndex]}" = value
+
+                    def resyncValue
+                    def myTempMap
+                    //println "raume ===> ${map.raum.raume}"
+                    switch (mapToUpdate) {
+                        case "raume":
+                            myTempMap = map.raum.raume.find { it.position == object.position }
+                            myTempMap[columnIndex] = value
+                            resyncValue = "raume"
+                            println "Edited: map.raum.raume -> ${map.raum.raume}"
+                            break
+                        case "dvb.kanalnetz":
+                            myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
+                            myTempMap[columnIndex] = value
+                            resyncValue = "kanalnetz"
+                            println "Edited: map.dvb.kanalnetz -> ${map.dvb.kanalnetz}"
+                            break
+                        case "dvb.ventileinstellung":
+                            myTempMap = map.dvb.ventileinstellung.find { it.position == object.position }
+                            myTempMap[columnIndex] = value
+                            resyncValue = "ventileinstellung"
+                            println "Edited: map.dvb.ventileinstellung -> ${map.dvb.ventileinstellung}"
+                            break
+                        case "akustik.abluft":
+                            myTempMap = map.akustik.abluft.find { it.position == object.position }
+                            myTempMap[columnIndex] = value
+                            println "Edited: map.akustik.abluft -> ${map.akustik.abluft}"
+                            break
+                        case "akustik.zuluft":
+                            myTempMap = map.akustik.zuluft.find { it.position == object.position }
+                            myTempMap[columnIndex] = value
+                            println "Edited: map.akustik.zuluft -> ${map.akustik.zuluft}"
+                            break
+                    }
+                    
+                    //meta.gewahlterRaum[columnIndex] = value
+                    //println "meta.gewahlterRaum -> ${meta.gewahlterRaum}"
+                    //println "# 1.b object -> ${object}"
+
+                    /*
+                    switch (resyncValue) {
+                        case "raume":
+                            resyncRaumTableModels()
+                            break
+                        case "kanalnetz":
+                            resyncDvbKanalnetzTableModels()
+                            break
+                        case "ventileinstellung":
+                            resyncDvbVentileinstellungTableModels()
+                            break
+                    }*/
+                },
+                getValueAt:     { rowIndex, columnIndex ->
+                    meta.gewahlterRaum[columnIndex]
+                }
+			] as ca.odell.glazedlists.gui.WritableTableFormat)
+    }
 	
 	/**
 	 * Raumdaten - TableModel
@@ -211,47 +299,7 @@ class ProjektModel {
 		def propertyNames = ["raumBezeichnung", "raumGeschoss", "raumLuftart", "raumFlache",      "raumHohe",     "raumZuluftfaktor", "raumAbluftVs"] as String[]
         def writable      = [true, true, true, true, true, true, true] as boolean[]
 
-        /*
-        new ca.odell.glazedlists.swing.EventTableModel(tableModels.raume,
-            propertyNames, columnNames, writable)
-
-		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raume, [
-				getColumnCount: { columnNames.size() },
-				getColumnName:  { index -> columnNames[index] },
-				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
-			] as ca.odell.glazedlists.gui.TableFormat)
-        */
-
-        new ca.odell.glazedlists.swing.EventTableModel(tableModels.raume, [
-				getColumnCount: { columnNames.size() },
-				getColumnName:  { index -> columnNames[index] },
-				getColumnValue: { object, index ->
-                    //println "index -> ${index}"
-                    //println "raume - propertyNames -> ${propertyNames[index]}"
-                    //println "raume - propertyNames -> ${propertyNames}"
-                    //println "raume - object -> ${object}"
-                    try {
-                        object."${propertyNames[index]}"?.toString2()
-                    } catch (e) {
-                        // combobox...
-                        println "error: catching object -> ${object}"
-                        object?.toString2()
-                    }
-                },
-				isEditable: 	{ object, index -> writable[index] },
-                setColumnValue: { object, value, index ->
-
-                    //println "# 1.a object -> ${object} || value -> ${value}"
-                    object."${propertyNames[index]}" = value
-                    //meta.gewahlterRaum[index] = value
-                    println "meta.gewahlterRaum -> ${meta.gewahlterRaum}"
-                    //println "# 1.b object -> ${object}"
-
-                },
-                getValueAt:     { rowIndex, columnIndex ->
-                    meta.gewahlterRaum[columnIndex]
-	}
-			] as ca.odell.glazedlists.gui.WritableTableFormat)
+        gltmClosure(columnNames, propertyNames, writable, tableModels.raume, "raume")
 	}
 
 	
@@ -263,36 +311,7 @@ class ProjektModel {
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",              "raumLuftwechsel",           "raumBezeichnungAbluftventile",         "raumAnzahlAbluftventile",         "raumAbluftmengeJeVentil",         "raumVolumenstrom",            "raumBezeichnungZuluftventile",         "raumAnzahlZuluftventile",         "raumZuluftmengeJeVentil",         "raumVerteilebene"] as String[]
         def writable      = [true, true, true, true, true, true, true, true, true, true, true, true] as boolean[]
 
-		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeVsZuAbluftventile, [
-				getColumnCount: { columnNames.size() },
-				getColumnName:  { index -> columnNames[index] },
-				getColumnValue: { object, index ->
-                    println "index -> ${index}"
-                    //println "raume - propertyNames -> ${propertyNames[index]}"
-                    //println "raume - propertyNames -> ${propertyNames}"
-                    println "raume - object -> ${object}"
-                    try {
-                        object."${propertyNames[index]}"?.toString2()
-                    } catch (e) {
-                        // combobox...
-                        println "error: catching object -> ${object}"
-                        object?.toString2()
-                    }
-                },
-				isEditable: 	{ object, index -> writable[index] },
-                setColumnValue: { object, value, index ->
-
-                    //println "# 1.a object -> ${object} || value -> ${value}"
-                    object."${propertyNames[index]}" = value
-                    meta.gewahlterRaum[index] = value
-                    println "meta.gewahlterRaum -> ${meta.gewahlterRaum}"
-                    //println "# 1.b object -> ${object}"
-
-                },
-                getValueAt:     { rowIndex, columnIndex ->
-                    meta.gewahlterRaum[columnIndex]
-                }
-			] as ca.odell.glazedlists.gui.WritableTableFormat)
+        gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsZuAbluftventile, "raume")
 	}
 	
 	/**
@@ -303,32 +322,7 @@ class ProjektModel {
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile",    "raumVolumenstrom",    "raumUberstromElement"] as String[]
         def writable      = [true, true, true, true, true] as boolean[]
 
-		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeVsUberstromventile, [
-				getColumnCount: { columnNames.size() },
-				getColumnName:  { index -> columnNames[index] },
-				getColumnValue: { object, index ->
-                    try {
-                        object."${propertyNames[index]}"?.toString2()
-                    } catch (e) {
-                        // combobox...
-                        println "error: catching object -> ${object}"
-                        object?.toString2()
-                    }
-                },
-				isEditable: 	{ object, index -> writable[index] },
-                setColumnValue: { object, value, index ->
-
-                    //println "# 1.a object -> ${object} || value -> ${value}"
-                    object."${propertyNames[index]}" = value
-                    meta.gewahlterRaum[index] = value
-                    println "meta.gewahlterRaum -> ${meta.gewahlterRaum}"
-                    //println "# 1.b object -> ${object}"
-
-                },
-                getValueAt:     { rowIndex, columnIndex ->
-                    meta.gewahlterRaum[columnIndex]
-                }
-			] as ca.odell.glazedlists.gui.WritableTableFormat)
+        gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsUberstromventile, "raume")
 	}
 	
 	/**
@@ -339,35 +333,7 @@ class ProjektModel {
 		def propertyNames = ["turBezeichnung", "turBreite", "turQuerschnitt", "turSpaltenhohe", "turDichtung"] as String[]
         def writable      = [true, true, true, true, true] as boolean[]
 
-		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeBearbeitenDetails, [
-				getColumnCount: { columnNames.size() },
-				getColumnName:  { index -> columnNames[index] },
-				getColumnValue: { object, index ->
-                    //println "index -> ${index}"
-                    //println "raume - propertyNames -> ${propertyNames[index]}"
-                    //println "raume - propertyNames -> ${propertyNames}"
-                    //println "raume - object -> ${object}"
-                    try {
-                        object."${propertyNames[index]}"?.toString2()
-                    } catch (e) {
-                        // combobox...
-                        println "error: catching object -> ${object}"
-                        object?.toString2()
-                    }
-                },
-				isEditable: 	{ object, index -> writable[index] },
-                setColumnValue: { object, value, index ->
-
-                    //println "# 1.a object -> ${object} || value -> ${value}"
-                    object."${propertyNames[index]}" = value
-                    meta.gewahlterRaum[index] = value
-                    //println "# 1.b object -> ${object}"
-
-                },
-                getValueAt:     { rowIndex, columnIndex ->
-                    meta.gewahlterRaum[columnIndex]
-                }
-			] as ca.odell.glazedlists.gui.WritableTableFormat)
+        gltmClosure(columnNames, propertyNames, writable, tableModels.raumeBearbeitenDetails, "raume")
 	}
 	
 	/**
@@ -378,35 +344,7 @@ class ProjektModel {
 		def propertyNames = ["raumBezeichnung", "raumNummer", "raumTyp", "raumGeschoss", "luftart", "faktor", "vorgang", "zuluft", "abluft", "duch1", "duch2", "kanalnetz", "kanalnetz2", "turhohe", "max1", "raum1", "raum2", "raum3", "raum4", "raum5"] as String[]
         def writable      = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true] as boolean[]
 
-		new ca.odell.glazedlists.swing.EventTableModel(tableModels.raumeBearbeitenEinstellungen, [
-				getColumnCount: { columnNames.size() },
-				getColumnName:  { index -> columnNames[index] },
-				getColumnValue: { object, index ->
-                    //println "index -> ${index}"
-                    //println "raume - propertyNames -> ${propertyNames[index]}"
-                    //println "raume - propertyNames -> ${propertyNames}"
-                    //println "raume - object -> ${object}"
-                    try {
-                        object."${propertyNames[index]}"?.toString2()
-                    } catch (e) {
-                        // combobox...
-                        println "error: catching object -> ${object}"
-                        object?.toString2()
-                    }
-                },
-				isEditable: 	{ object, index -> writable[index] },
-                setColumnValue: { object, value, index ->
-
-                    //println "# 1.a object -> ${object} || value -> ${value}"
-                    object."${propertyNames[index]}" = value
-                    meta.gewahlterRaum[index] = value
-                    //println "# 1.b object -> ${object}"
-
-                },
-                getValueAt:     { rowIndex, columnIndex ->
-                    meta.gewahlterRaum[columnIndex]
-                }
-			] as ca.odell.glazedlists.gui.WritableTableFormat)
+        gltmClosure(columnNames, propertyNames, writable, tableModels.raumeBearbeitenEinstellungen, "raume")
 	}
 	
 	/**
@@ -414,37 +352,21 @@ class ProjektModel {
 	 */
 	def createDvbKanalnetzTableModel() {
 		def columnNames =   ["Luftart", "Teilstrecke", ws("Luftvolumen-<br/>strom<br/>(m³/h)"), "Kanalbezeichnung", ws("Kanallänge<br/>(m)"), ws("Geschwindigkeit<br/>(m/s)"), ws("Reibungswiderstand<br/>gerader Kanal<br/>(Pa)"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>(Pa)"), ws("Widerstand<br/>Teilstrecke<br/><(Pa)")] as String[]
-		def propertyNames = ["luftart", "teilstrecke", "luftVs",                                "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
+		def propertyNames = ["dvbkLuftart", "teilstrecke", "luftVs",                                "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true, true] as boolean[]
 
-        new ca.odell.glazedlists.swing.EventTableModel(tableModels.dvbKanalnetz,
-            propertyNames, columnNames, writable)
-
-        /*new ca.odell.glazedlists.swing.EventTableModel(tableModels.dvbKanalnetz, [
-				getColumnCount: { columnNames.size() },
-				getColumnName:  { index -> columnNames[index] },
-				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
-			] as ca.odell.glazedlists.gui.TableFormat)
-            */
+        gltmClosure(columnNames, propertyNames, writable, tableModels.dvbKanalnetz, "dvb.kanalnetz")
 	}
 	
 	/**
 	 * Druckverlustberechnung - Ventileinstellung.
 	 */
 	def createDvbVentileinstellungTableModel() {
-		def columnNames =   ["Luftart", "Raum", "Teilstrecken", "Ventiltyp",         "dP offen (Pa)", "Gesamt (Pa)",      "Differenz", "Abgleich (Pa)", "Einstellung"] as String[]
-		def propertyNames = ["luftart", "raum", "teilstrecken", "ventilbezeichnung", "dpOffen",       "gesamtWiderstand", "differenz", "abgleich",      "einstellung"] as String[]
+		def columnNames =   ["Raum", "Luftart", "Teilstrecken", "Ventiltyp",         "dP offen (Pa)", "Gesamt (Pa)",      "Differenz", "Abgleich (Pa)", "Einstellung"] as String[]
+		def propertyNames = ["raum", "dvbvLuftart", "teilstrecken", "ventilbezeichnung", "dpOffen",       "gesamtWiderstand", "differenz", "abgleich",      "einstellung"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true] as boolean[]
 
-        new ca.odell.glazedlists.swing.EventTableModel(tableModels.dvbVentileinstellung,
-            propertyNames, columnNames, writable)
-
-        /*new ca.odell.glazedlists.swing.EventTableModel(tableModels.dvbVentileinstellung, [
-				getColumnCount: { columnNames.size() },
-				getColumnName:  { index -> columnNames[index] },
-				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
-			] as ca.odell.glazedlists.gui.TableFormat)
-            */
+        gltmClosure(columnNames, propertyNames, writable, tableModels.dvbVentileinstellung, "dvb.ventileinstellung")
 	}
 	
 	/**
@@ -455,8 +377,7 @@ class ProjektModel {
 		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"] as String[]
 		def writable      = [true, true, true] as boolean[]
 
-        new ca.odell.glazedlists.swing.EventTableModel(tableModels.wbw,
-            propertyNames, columnNames, writable)
+        gltmClosure(columnNames, propertyNames, writable, tableModels.wbw, "wbw")
 	}
 	
 	/**
@@ -467,15 +388,7 @@ class ProjektModel {
 		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"] as String[]
 		def writable      = [true, true, true] as boolean[]
 
-        new ca.odell.glazedlists.swing.EventTableModel(tableModels.akustikZuluft,
-            propertyNames, columnNames, writable)
-
-        /*new ca.odell.glazedlists.swing.EventTableModel(tableModels.akustikZuluft, [
-				getColumnCount: { columnNames.size() },
-				getColumnName:  { index -> columnNames[index] },
-				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
-			] as ca.odell.glazedlists.gui.TableFormat)
-            */
+        gltmClosure(columnNames, propertyNames, writable, tableModels.akustikZuluft, "akustik.zuluft")
 	}
 	
 	/**
@@ -486,15 +399,7 @@ class ProjektModel {
 		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"] as String[]
 		def writable      = [true, true, true] as boolean[]
 
-        new ca.odell.glazedlists.swing.EventTableModel(tableModels.akustikAbluft,
-            propertyNames, columnNames, writable)
-
-        /*new ca.odell.glazedlists.swing.EventTableModel(tableModels.akustikAbluft, [
-				getColumnCount: { columnNames.size() },
-				getColumnName:  { index -> columnNames[index] },
-				getColumnValue: { object, index -> object."${propertyNames[index]}"?.toString2() }
-			] as ca.odell.glazedlists.gui.TableFormat)
-            */
+        gltmClosure(columnNames, propertyNames, writable, tableModels.akustikAbluft, "akustik.abluft")
 	}
 	
 	/**
@@ -619,7 +524,7 @@ class ProjektModel {
 	/**
 	 * 
 	 */
-	def addDvbKanalnetz = { kanalnetz ->
+	def addDvbKanalnetz = { kanalnetz, view ->
 		synchronized (map.dvb.kanalnetz) {
 			def k = (dvbKanalnetzMapTemplate + kanalnetz) as ObservableMap
 			println "addDvbKanalnetz: adding kanalnetz=${k.dump()}"
@@ -628,6 +533,17 @@ class ProjektModel {
 			[tableModels.dvbKanalnetz].each {
 				it.add(map.dvb.kanalnetz[kanalnetz.position])
 			}
+
+            // Comboboxen in den Tabellen hinzufügen
+            def dvbKnLuftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
+			DefaultCellEditor dvbKnLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(dvbKnLuftartEventList)
+			TableColumn dvbKnLuftartColumn = view.dvbKanalnetzTabelle.getColumnModel().getColumn(0)
+			dvbKnLuftartColumn.setCellEditor(dvbKnLuftartCellEditor)
+
+            def dvbKnKanalbezeichnungEventList = GlazedLists.eventList(meta.dvbKanalbezeichnung) as ca.odell.glazedlists.EventList
+			DefaultCellEditor dvbKnKanalbezeichnungCellEditor = AutoCompleteSupport.createTableCellEditor(dvbKnKanalbezeichnungEventList)
+			TableColumn dvbKnKanalbezeichnungColumn = view.dvbKanalnetzTabelle.getColumnModel().getColumn(3)
+			dvbKnKanalbezeichnungColumn.setCellEditor(dvbKnKanalbezeichnungCellEditor)
 		}
 	}
 	
@@ -641,7 +557,7 @@ class ProjektModel {
 	/**
 	 * 
 	 */
-	def addDvbVentileinstellung = { ventileinstellung ->
+	def addDvbVentileinstellung = { ventileinstellung, view ->
 		def v = (dvbVentileinstellungMapTemplate + ventileinstellung) as ObservableMap
 		println "addDvbVentileinstellung: adding ventileinstellung=${v.dump()}"
 		map.dvb.ventileinstellung << v
@@ -649,6 +565,18 @@ class ProjektModel {
 		[tableModels.dvbVentileinstellung].each {
 			it.add(map.dvb.ventileinstellung[ventileinstellung.position])
 		}
+
+        // Comboboxen in den Tabellen hinzufügen
+        def dvbVeLuftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
+        DefaultCellEditor dvbVeLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(dvbVeLuftartEventList)
+        TableColumn dvbVeLuftartColumn = view.dvbVentileinstellungTabelle.getColumnModel().getColumn(1)
+        dvbVeLuftartColumn.setCellEditor(dvbVeLuftartCellEditor)
+
+        def dvbVeVentiltypEventList = GlazedLists.eventList(meta.dvbVentileinstellung) as ca.odell.glazedlists.EventList
+        DefaultCellEditor dvbVeVentiltypCellEditor = AutoCompleteSupport.createTableCellEditor(dvbVeVentiltypEventList)
+        TableColumn dvbVeVentiltypColumn = view.dvbVentileinstellungTabelle.getColumnModel().getColumn(3)
+        dvbVeVentiltypColumn.setCellEditor(dvbVeVentiltypCellEditor)
+
 	}
 	
 	/**
@@ -663,8 +591,10 @@ class ProjektModel {
 	 */
 	def resyncDvbKanalnetzTableModels() {
 		// Druckverlust - Kanalnetz
-		tableModels.dvbKanalnetz.clear()
-		tableModels.dvbKanalnetz.addAll(map.dvb.kanalnetz)
+        synchronized (tableModels) {
+            tableModels.dvbKanalnetz.clear()
+            tableModels.dvbKanalnetz.addAll(map.dvb.kanalnetz)
+        }
 	}
 	
 	/**
@@ -672,8 +602,10 @@ class ProjektModel {
 	 */
 	def resyncDvbVentileinstellungTableModels() {
 		// Druckverlust - Ventileinstellung
-		tableModel.dvbVentileinstellung.clear()
-		tableModel.dvbVentileinstellung.addAll(map.dvb.ventileinstellung)
+        synchronized (tableModels) {
+            tableModel.dvbVentileinstellung.clear()
+            tableModel.dvbVentileinstellung.addAll(map.dvb.ventileinstellung)
+        }
 	}
 	
 }

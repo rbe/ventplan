@@ -31,7 +31,7 @@ class DvbVentileinstellungEvents {
 	/**
 	 * 
 	 */
-	def onDvbVentileinstellungHinzufugen = { ventileinstellung ->
+	def onDvbVentileinstellungHinzufugen = { ventileinstellung, view ->
 		doLater {
 			// Map values from GUI
 			def v = [
@@ -41,11 +41,11 @@ class DvbVentileinstellungEvents {
 					ventilbezeichnung: ventileinstellung.dvbVentileinstellungVentilbezeichnung,
 					position: model.map.dvb.ventileinstellung.size() ?: 0
 				] as ObservableMap
-			model.addDvbVentileinstellung(v)
+			model.addDvbVentileinstellung(v, view)
 			//
 			onDvbVentileinstellungGeandert(v.position)
 
-            publishEvent "AddDvbVentileinstellungToTableModel", [v]
+            //publishEvent "AddDvbVentileinstellungToTableModel", [v]
 		}
 	}
 	

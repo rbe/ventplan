@@ -688,7 +688,7 @@ class ProjektController {
 	 */
 	def dvbKanalnetzHinzufugen = {
 		def kanalnetz = GH.getValuesFromView(view, "dvbKanalnetz")
-		publishEvent "DvbKanalnetzHinzufugen", [kanalnetz]
+		publishEvent "DvbKanalnetzHinzufugen", [kanalnetz, view]
 	}
 	
 	/**
@@ -703,13 +703,13 @@ class ProjektController {
 	/**
 	 * Druckverlustberechnung - Kanalnetz neuen Eintrag ins TableModel hinzufügen
 	 */
-	def onAddDvbKanalnetzToTableModel = { kanalnetz ->
+	/*def onAddDvbKanalnetzToTableModel = { kanalnetz ->
 		// Let's add a row to the table
 		def dvbKanalnetzRows = view.dvbKanalnetzTabelle.getModel().getRowsModel().getValue()
 		dvbKanalnetzRows.add(kanalnetz)
 		view.raumTabelle.getModel().getRowsModel().setValue(dvbKanalnetzRows)
 		view.raumTabelle.getModel().fireTableDataChanged()
-	}
+	}*/
 	
 	/**
 	 * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
@@ -771,7 +771,7 @@ class ProjektController {
 	 */
 	def dvbVentileinstellungHinzufugen = {
 		def ventileinstellung = GH.getValuesFromView(view, "dvbVentileinstellung")
-		publishEvent "DvbVentileinstellungHinzufugen", [ventileinstellung]
+		publishEvent "DvbVentileinstellungHinzufugen", [ventileinstellung, view]
 	}
 	
 	/**
@@ -786,13 +786,13 @@ class ProjektController {
 	/**
 	 * Druckverlustberechnung - Ventileinstellung neuen Eintrag ins TableModel hinzufügen
 	 */
-	def onAddDvbVentileinstellungToTableModel = { ventileinstellung ->
+	/*def onAddDvbVentileinstellungToTableModel = { ventileinstellung ->
 		// Let's add a row to the table
 		def dvbVentileinstellungRows = view.dvbKanalnetzTabelle.getModel().getRowsModel().getValue()
 		dvbVentileinstellungRows.add(ventileinstellung)
 		view.raumTabelle.getModel().getRowsModel().setValue(dvbVentileinstellungRows)
 		view.raumTabelle.getModel().fireTableDataChanged()
-	}
+	}*/
 	
 	/**
 	 * 

@@ -41,9 +41,11 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
 
                     panel(id: "dvbKanalnetzTabellePanel", constraints: "span, grow", layout: new MigLayout("fill", "[fill,grow]", "")) {
                         jideScrollPane(constraints: "grow, width 600:1000:") {
+                            table(id: 'dvbKanalnetzTabelle', model: model.createDvbKanalnetzTableModel())
+
                             //table(id: "dvbKanalnetzTabelle", model: model.createDvbKanalnetzTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
                             //}
-                            table(id: 'dvbKanalnetzTabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "grow") {
+                            /*table(id: 'dvbKanalnetzTabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "grow") {
                                 tableModel() {
                                     current.addTableModelListener(WTH.getDvbKanalnetzTableModelListener())
                                     propertyColumn(header: 'Luftart',
@@ -65,7 +67,7 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
                                     propertyColumn(header: GH.ws("Einzelwider-<br/>stand<br/>(Pa)"), propertyName: 'einzelwiderstand', editable: false)
                                     propertyColumn(header: GH.ws("Widerstand<br/>Teilstrecke<br/><(Pa)"), propertyName: 'widerstandTeilstrecke', editable: false)
                                 }
-                            }
+                            }*/
                         }
                     }
 
@@ -101,9 +103,11 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
 
                     panel(id: "dvbVentileinstellungTabellePanel", constraints: "span, grow", layout: new MigLayout("fill", "[fill,grow]", "")) {
                         jideScrollPane(constraints: "grow, width 600:1000:") {
+                            table(id: 'dvbVentileinstellungTabelle', model: model.createDvbVentileinstellungTableModel())
+                            
                             //table(id: "dvbVentileinstellungTabelle", model: model.createDvbVentileinstellungTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
                             //}
-                            table(id: 'dvbVentileinstellungTabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "grow") {
+                            /*table(id: 'dvbVentileinstellungTabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "grow") {
                                 tableModel() {
                                     current.addTableModelListener(WTH.getDvbKanalnetzTableModelListener())
                                     propertyColumn(header: 'Luftart',
@@ -128,7 +132,7 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
                                     propertyColumn(header: GH.ws("Abgleich<br/>(Pa)"), propertyName: 'abgleich')
                                     propertyColumn(header: 'Einstellung', propertyName: 'einstellung')
                                 }
-                            }
+                            }*/
                         }
                     }
 

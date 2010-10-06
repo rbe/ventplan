@@ -31,11 +31,12 @@ class DvbKanalnetzEvents {
 	/**
 	 * 
 	 */
-	def onDvbKanalnetzHinzufugen = { kanalnetz ->
+	def onDvbKanalnetzHinzufugen = { kanalnetz, view ->
 		doLater {
 			// Map values from GUI
 			def k = [
 					dvbkLuftart: kanalnetz.dvbKanalnetzLuftart,
+                    //  TODO Teilstrecken können wie folgt angegeben werden
 					teilstrecke: kanalnetz.dvbKanalnetzNrTeilstrecke?.toInteger(),
 					luftVs: kanalnetz.dvbKanalnetzLuftmenge?.toDouble2(),
 					kanalbezeichnung: kanalnetz.dvbKanalnetzKanalbezeichnung,
@@ -46,7 +47,7 @@ class DvbKanalnetzEvents {
 			// Berechne die Teilstrecke
 			k = wacCalculationService.berechneTeilstrecke(k)
 			// Add values to model
-			model.addDvbKanalnetz(k)
+			model.addDvbKanalnetz(k, view)
 			// Add PropertyChangeListener to our model.map
 			GH.addMapPropertyChangeListener("map.dvb.kanalnetz", k/*model.map.dvb.kanalnetz[kanalnetzIndex]*/)
 			//
