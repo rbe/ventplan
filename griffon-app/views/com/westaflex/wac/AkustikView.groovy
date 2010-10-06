@@ -49,9 +49,8 @@ def buildLayout(tabname) {
             label("", constraints: "span 2, wrap")
 
             label("Schallleistungspegel Zuluftstutzen")
-            // TODO: Zentralgerät aus RaumVsView -> raumVsZuAbluftventileZentralgerat
-            // TODO: split -> comboBox...???
-            label(raumVsZentralgerat.selectedItem, constraints: "wrap")
+            // model wie raumvolumenströme, volumenstrom des zentralgeräts
+            comboBox(id: "akustik${tabname}Zuluftstutzen", constraints: "wrap", items: items: model.meta.volumenstromZentralgerat)
 
             label("Schallleistungspegelerhöhung Kanalnetz")
             comboBox(id: "akustik${tabname}Kanalnetz", constraints: "wrap", model: [(0..200).step 10])
