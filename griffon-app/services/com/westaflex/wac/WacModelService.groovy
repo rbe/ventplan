@@ -14,7 +14,6 @@ import org.javanicus.gsql.*
 /**
  * Communicate with WestaWAC database.
  */
-//@Singleton(lazy = true)
 class WacModelService {
 	
 	/**
@@ -54,7 +53,8 @@ class WacModelService {
 	String getZentralgeratFurVolumenstrom(Integer luftung) {
 		def r = withSql { sql ->
 				sql.firstRow("SELECT artikelnummer FROM artikelstamm"
-					+ " WHERE kategorie = 1 AND maxvolumenstrom >= ?",
+					+ " WHERE kategorie = 1 AND maxvolumenstrom >= ?"
+					+ " ORDER BY artikelnummer",
 					[luftung])
 			}
 		println "getZentralgeratForVolumenstrom: ${luftung} -> ${r}"
@@ -66,7 +66,7 @@ class WacModelService {
 	 */
 	List getZuAbluftventile() {
 		def r = withSql { sql ->
-				sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust WHERE ausblaswinkel <> ?", [180])
+				sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust WHERE ausblaswinkel <> ? ORDER BY artikelnummer", [180])
 			}?.collect {
 				it.artikelnummer
 			}
@@ -79,7 +79,7 @@ class WacModelService {
 	 */
 	List getUberstromelemente() {
 		def r = withSql { sql ->
-				sql.rows("SELECT artikelnummer FROM artikelstamm WHERE klasse = ?", [14])
+				sql.rows("SELECT artikelnummer FROM artikelstamm WHERE klasse = ? ORDER BY artikelnummer", [14])
 			}?.collect {
 				it.artikelnummer
 			}
@@ -106,11 +106,11 @@ class WacModelService {
 	 */
 	List getDvbKanalbezeichnung() {
 		def r = withSql { sql ->
-				sql.rows("SELECT artikelnummer FROM artikelstamm WHERE klasse BETWEEN 4 AND 8")
+				sql.rows("SELECT artikelnummer FROM artikelstamm WHERE klasse BETWEEN 4 AND 8 ORDER BY artikelnummer")
 			}?.collect {
 				it.artikelnummer
 			}
-		//println "getDvbKanalbezeichnung(): ${r?.dump()}"
+		println "getDvbKanalbezeichnung(): ${r?.dump()}"
 		r
 	}
 	
@@ -132,7 +132,7 @@ class WacModelService {
 	 */
 	List getDvbVentileinstellung() {
 		def r = withSql { sql ->
-				sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust WHERE ausblaswinkel <> 180")
+				sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust WHERE ausblaswinkel <> 180 ORDER BY artikelnummer")
 			}?.collect {
 				it.artikelnummer
 			}
@@ -193,6 +193,19 @@ class WacModelService {
 				})
 		println "getEinstellung: einstellung=${m.einstellung}"
 		m.einstellung
+	}
+	
+	/**
+	 * 
+	 */
+	List getSchalldampfer() {
+		def r = withSql { sql ->
+			sql.rows("SELECT artikelnummer FROM artikelstamm WHERE klasse = 2 AND gesperrt = false")
+		}?.collect {
+			it.artikelnummer
+		}
+		//println "getSchalldampfer: ${r}"
+		[""] + r
 	}
 	
 }
