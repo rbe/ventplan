@@ -40,7 +40,7 @@ def buildLayout(tabname) {
 	panel(layout: new MigLayout("fillx, wrap 4", "[left,fill]para[right,fill]para[center,fill]para[left,fill]", "[fill]")) {
         panel(layout: new MigLayout("fillx", "[fill]para[right,fill]", "[fill]")) {
             label("Raumbezeichnung", constraints: "cell 0 0, wrap")
-            
+            // TODO items: liste aller eingegebenen räume
             comboBox(id: "akustik${tabname}Raumbezeichnung", constraints: "span 2")
             label("", constraints: "wrap")
 
@@ -49,7 +49,7 @@ def buildLayout(tabname) {
             label("", constraints: "span 2, wrap")
 
             label("Schallleistungspegel Zuluftstutzen")
-            // model wie raumvolumenströme, volumenstrom des zentralgeräts
+            // Model wie raumvolumenströme, volumenstrom des zentralgeräts
             comboBox(id: "akustik${tabname}Zuluftstutzen", constraints: "wrap", items: model.meta.volumenstromZentralgerat)
 
             label("Schallleistungspegelerhöhung Kanalnetz")
