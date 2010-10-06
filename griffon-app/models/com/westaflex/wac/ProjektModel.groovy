@@ -160,7 +160,7 @@ class ProjektModel {
 				kanalnetz: [] as ObservableList,
 				ventileinstellung: [] as ObservableList
 			] as ObservableMap,
-		akkustik: [:] as ObservableMap
+		akustik: [:] as ObservableMap
 	] as ObservableMap
 	
 	// TableModels
