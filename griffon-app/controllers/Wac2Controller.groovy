@@ -54,6 +54,8 @@ class Wac2Controller {
 			model.meta.wbw = wacModelService.getWbw()
 			// Druckverlustberechnung - Ventileinstellung - Ventilbezeichnung
 			model.meta.dvbVentileinstellung = wacModelService.getDvbVentileinstellung()
+			// Akustikberechnung - 1. Hauptschalldämpfer
+			model.meta.akustikSchalldampfer = wacModelService.getSchalldampfer()
 		}
 	}
 	
