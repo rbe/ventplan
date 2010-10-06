@@ -19,6 +19,7 @@ import java.awt.Component
 
 /**
  * Several helpers for Griffon.
+ * TODO Migrate to grootils
  */
 class GriffonHelper {
 	
