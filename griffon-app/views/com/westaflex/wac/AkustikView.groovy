@@ -50,10 +50,10 @@ def buildLayout(tabname) {
 
             label("Schallleistungspegel Zuluftstutzen")
             // model wie raumvolumenströme, volumenstrom des zentralgeräts
-            comboBox(id: "akustik${tabname}Zuluftstutzen", constraints: "wrap", items: items: model.meta.volumenstromZentralgerat)
+            comboBox(id: "akustik${tabname}Zuluftstutzen", constraints: "wrap", items: model.meta.volumenstromZentralgerat)
 
             label("Schallleistungspegelerhöhung Kanalnetz")
-            comboBox(id: "akustik${tabname}Kanalnetz", constraints: "wrap", model: [(0..200).step 10])
+            comboBox(id: "akustik${tabname}Kanalnetz", constraints: "wrap", model: (0..200).step(10))
 
 
             label("Schallleistungspegelerhöhung Filter")
