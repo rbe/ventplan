@@ -82,7 +82,7 @@ def buildLayout(tabname) {
             label("Einfügungsdämmwert Luftdurchlass")
             comboBox(id: "akustik${tabname}EinfugungsdammwertLuftdurchlass", constraints: "wrap")
 
-            label("Raumabsorption (Ahnnahme) BAD=0 WOHNEN=1")
+            label("Raumabsorption (Annahme) BAD=0 WOHNEN=1")
             textField(id: "akustik${tabname}Raumabsorption", constraints: "wrap")
 
             label("Korrektur der A-Bewertung", constraints: "wrap")
