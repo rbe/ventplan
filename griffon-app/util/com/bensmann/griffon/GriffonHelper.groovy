@@ -37,8 +37,9 @@ class GriffonHelper {
 	 * Colors.
 	 */
 	private static final java.awt.Color MY_YELLOW = new java.awt.Color(255, 255, 180)
-	private static final java.awt.Color MY_RED = new java.awt.Color(255, 80, 80)
-
+	private static final java.awt.Color MY_RED = new java.awt.Color(255, 0, 80)
+	private static final java.awt.Color MY_GREEN = new java.awt.Color(51, 153, 0)
+	
 	/**
 	 * Number -> Formatted German String
 	 */
