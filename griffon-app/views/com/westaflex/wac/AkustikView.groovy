@@ -60,7 +60,7 @@ def buildLayout(tabname) {
 
 
             label("Schallleistungspegelerhöhung Filter", foreground: GH.MY_RED)
-            comboBox(id: "akustik${tabname}Filter", constraints: "wrap")
+            comboBox(id: "akustik${tabname}Filter", constraints: "wrap", items: (10..200).step(10))
 
             label("1. Hauptschalldämpfer", foreground: GH.MY_GREEN)
             comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "wrap")
