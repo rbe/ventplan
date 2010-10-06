@@ -36,6 +36,7 @@ akustikTabGroup.with {
  * Synchronize all Swing table models depending on map.raum.raume.
  */
 def buildLayout(tabname) {
+	def tabTitleForeground = tabname == "Zuluft" ? GH.MY_RED : java.awt.Color.BLUE
 	// Akustikberechnung - Zuluft
 	panel(layout: new MigLayout("fillx, wrap 4", "[left,fill]para[right,fill]para[center,fill]para[left,fill]", "[fill]")) {
         panel(layout: new MigLayout("fillx", "[fill]para[right,fill]", "[fill]")) {
@@ -48,40 +49,40 @@ def buildLayout(tabname) {
 
             label("", constraints: "span 2, wrap")
 
-            label("Schallleistungspegel Zuluftstutzen")
+            label("Schallleistungspegel Zuluftstutzen", foreground: GH.MY_RED)
             // Model wie raumvolumenströme, volumenstrom des zentralgeräts
             comboBox(id: "akustik${tabname}Zuluftstutzen", constraints: "wrap", items: model.meta.volumenstromZentralgerat)
 
-            label("Schallleistungspegelerhöhung Kanalnetz")
+            label("Schallleistungspegelerhöhung Kanalnetz", foreground: GH.MY_RED)
             comboBox(id: "akustik${tabname}Kanalnetz", constraints: "wrap", items: (10..200).step(10))
 
 
-            label("Schallleistungspegelerhöhung Filter")
+            label("Schallleistungspegelerhöhung Filter", foreground: GH.MY_RED)
             comboBox(id: "akustik${tabname}Filter", constraints: "wrap")
 
-            label("1. Hauptschalldämpfer")
+            label("1. Hauptschalldämpfer", foreground: GH.MY_GREEN)
             comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "wrap")
 
-            label("2. Hauptschalldämpfer")
+            label("2. Hauptschalldämpfer", foreground: GH.MY_GREEN)
             comboBox(id: "akustik${tabname}2Hauptschalldampfer", constraints: "wrap")
 
-            label("Anzahl der Umlenkungen 90° Stck.")
+            label("Anzahl der Umlenkungen 90° Stck.", foreground: GH.MY_GREEN)
             textField(id: "akustik${tabname}AnzahlUmlenkungen90GradStck", constraints: "wrap")
 
-            label("Luftverteilerkasten Stck.")
+            label("Luftverteilerkasten Stck.", foreground: GH.MY_GREEN)
             textField(id: "akustik${tabname}LuftverteilerkastenStck", constraints: "wrap")
 
-            label("Längsdämpfung Kanal lfdm.")
+            label("Längsdämpfung Kanal lfdm.", foreground: GH.MY_GREEN)
             // TODO: split ???
             textField(id: "akustik${tabname}LangsdampfungKanal", constraints: "wrap")
 
-            label("Schalldämpfer Ventil")
+            label("Schalldämpfer Ventil", foreground: GH.MY_GREEN)
             comboBox(id: "akustik${tabname}SchalldampferVentil", constraints: "wrap")
 
-            label("Einfügungsdämmwert Luftdurchlass")
+            label("Einfügungsdämmwert Luftdurchlass", foreground: GH.MY_GREEN)
             comboBox(id: "akustik${tabname}EinfugungsdammwertLuftdurchlass", constraints: "wrap")
 
-            label("Raumabsorption (Annahme) BAD=0 WOHNEN=1")
+            label("Raumabsorption (Annahme) BAD=0 WOHNEN=1", foreground: GH.MY_GREEN)
             textField(id: "akustik${tabname}Raumabsorption", constraints: "wrap")
 
             label("Korrektur der A-Bewertung", constraints: "wrap")
@@ -92,9 +93,9 @@ def buildLayout(tabname) {
         }
 
         panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
-            label("Zentrales Lüftungsgerät " + raumVsZentralgerat.selectedItem)
+            label("Zentrales Lüftungsgerät " + raumVsZentralgerat.selectedItem, foreground: tabTitleForeground)
 
-            label(tabname)
+            label(tabname, foreground: tabTitleForeground)
 
             label("Oktavmittenfrequenz in Hz")
 
