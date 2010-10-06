@@ -44,7 +44,7 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount) {
             panel(id: "dvbTab", title: "Druckverlustberechnung", layout: new MigLayout("","[] [fill,grow] []")) {
                 build(DruckverlustView)
             }
-            // Akkustikberechnung
+            // Akustikberechnung
             panel(id: "akustikTab", title: "Akustikberechnung", layout: new MigLayout("","[] [fill,grow] []")) {
                 build(AkustikView)
             }

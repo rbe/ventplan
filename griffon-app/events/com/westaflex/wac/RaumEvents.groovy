@@ -41,7 +41,7 @@ class RaumEvents {
 	/**
 	 * Einen neuen Raum hinzufügen.
 	 */
-	def onRaumHinzufugen = { raum ->
+	def onRaumHinzufugen = { raum, view ->
 		println "processing event 'RaumHinzufugen': raum=${raum.dump()}"
 		// Standard-Werte setzen
 		raum.with {
@@ -63,24 +63,21 @@ class RaumEvents {
 		}
 		doLater {
 			// Raum im Model hinzufügen
-			model.addRaum(raum)
-			onRaumHinzugefugt(raum.position)
+			model.addRaum(raum, view)
+			onRaumHinzugefugt(raum.position, view)
 		}
 	}
 	
 	/**
 	 * Ein Raum wurde hinzugefügt - berechnen und letzen Zeile in Tabellen wählen.
 	 */
-	def onRaumHinzugefugt = { raumIndex ->
+	def onRaumHinzugefugt = { raumIndex, view ->
 		doLater {
 			println "processing event 'RaumHinzugefugt': raumIndex=${raumIndex}"
 			// Add PropertyChangeListener to our model.map
 			GH.addMapPropertyChangeListener("map.raum.raume", model.map.raum.raume[raumIndex])
 			// Neu berechnen
 			onRaumGeandert(raumIndex)
-			// RaumVsView - Zu-/Abluftventile TabelModel aktualisieren
-			println "publish event AddTableModelRow"
-			publishEvent "AddTableModelRow", [raumIndex]
 		}
 	}
 	
@@ -112,9 +109,6 @@ class RaumEvents {
 			def zuLoschenderRaum = model.map.raum.raume[raumIndex]
 			// Raum aus Model entfernen
 			model.removeRaum(raumIndex)
-			// RaumVsView - Zu-/Abluftventile TabelModel aktualisieren
-			println "onRaumEntfernen: publish event RemoveTableModelRow"
-			publishEvent "RemoveTableModelRow", [raumIndex]
 		}
 	}
 	

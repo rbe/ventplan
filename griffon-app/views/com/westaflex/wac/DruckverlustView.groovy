@@ -135,6 +135,8 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
                     panel(constraints: "span", layout: new MigLayout("fillx", "[left] 16 []", "")) {
                         // TODO mmu Enable only when table isn't empty and row is selected
                         button(id: "dvbVentileinstellungEntfernen", text: "Entfernen", enabled: bind { 1 == 1 })
+                        // TODO -> es gibt gar keine Teilstrecken !!!
+                        //button(id: "dvbVentileinstellungTeilstrecke", text: "Teilstrecke auswählen" , enabled: bind { 1 == 1 })
                     }
 
                 }
