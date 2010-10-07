@@ -907,4 +907,27 @@ class ProjektController {
 		println "-" * 80
 	}
 	
+	/**
+	 * Akustikberechnung.
+	 */
+	def berechneAkustik = { typ ->
+		println "berechneAkustik: ${typ}"
+		def input = [
+				zentralgerat: view."akustik${typ}${typ}stutzenZentralgerat".selectedItem,
+				volumenstrom: view."akustik${typ}Pegel".selectedItem,
+				slpErhohungKanalnetz: view."akustik${typ}Kanalnetz".selectedItem?.toInteger(),
+				slpErhohungFilter: view."akustik${typ}Filter".selectedItem?.toInteger(),
+				hauptschalldampfer1: view."akustik${typ}1Hauptschalldampfer".selectedItem,
+				hauptschalldampfer2: view."akustik${typ}2Hauptschalldampfer".selectedItem,
+				umlenkungen: view."akustik${typ}AnzahlUmlenkungen90GradStck".text?.toInteger(),
+				langsdampfungKanal: view."akustik${typ}LangsdampfungKanal".selectedItem,
+				langsdampfungKanalLfdmMeter: view."akustik${typ}LangsdampfungKanalLfdmMeter".text?.toInteger(),
+				schalldampferVentil: view."akustik${typ}SchalldampferVentil".selectedItem,
+				einfugungsdammwert: view."akustik${typ}EinfugungsdammwertLuftdurchlass".selectedItem,
+				raumabsorption: view."akustik${typ}Raumabsorption".text?.toInteger()
+			]
+		wacCalculationService.berechneAkustik(typ, input, model.map)
+		model.resyncAkustikTableModels()
+	}
+	
 }

@@ -698,4 +698,74 @@ class WacCalculationService {
 		}
 	}
 	
+	/**
+	 * Aktustikberechnung.
+	 */
+	def berechneAkustik(typ, input, map) {
+		def zero = [slp125: 0.0d, slp250: 0.0d, slp500: 0.0d, slp1000: 0.0d, slp2000: 0.0d, slp4000: 0.0d]
+		// Convert all values in a map; multiply with -1
+		def minus1 = { m ->
+			m?.inject [:], { o, n ->
+				o[n.key.toLowerCase()] = n.value * -1
+				o
+			}
+		}
+		// What list to work on?
+		def t = map.akustik."${typ.toLowerCase()}".tabelle
+		// Row 1
+		t[0] = wacModelService.getOktavmittenfrequenz(input.zentralgerat, input.volumenstrom, typ)
+		// Row 2
+		def pegelerhohungExternerDruck = wacModelService.getPegelerhohungExternerDruck(input.zentralgerat)
+		if (DEBUG) println "pegelerhohungExternerDruck=$pegelerhohungExternerDruck"
+		//t[1] = [:]
+		pegelerhohungExternerDruck.each { k, v -> t[1][k.toLowerCase()] = (v * input.slpErhohungKanalnetz) / 100 }
+		// Row 3
+		//t[2] = [:]
+		pegelerhohungExternerDruck.each { k, v -> t[2][k.toLowerCase()] = (v * input.slpErhohungFilter) / 100 }
+		// Row 4
+		t[3] = minus1(wacModelService.getSchallleistungspegel(input.hauptschalldampfer1)) ?: zero
+		// Row 5
+		t[4] = minus1(wacModelService.getSchallleistungspegel(input.hauptschalldampfer2)) ?: zero
+		// Row 6
+		def umlenkungenWert = input.umlenkungen * 0.9d
+		t[5] = minus1(zero.inject([:], { o, n -> o[n.key] = umlenkungenWert; o }))
+		// Row 7
+		switch (input.raumabsorption) {
+			case 0:
+				t[6] = zero
+				break
+			case 1:
+				t[6] = [slp125: -3d, slp250: -3d, slp500: -3d, slp1000: -3d, slp2000: -3d, slp4000: -3d]
+				break
+		}
+		// Row 8
+		def slpLangsdampfung = wacModelService.getSchallleistungspegel(input.langsdampfungKanal)
+		t[7] = slpLangsdampfung ? minus1(slpLangsdampfung.each { k, v -> t[7][k.toLowerCase()] = (v * input.langsdampfungKanalLfdmMeter) }) : zero
+		// Row 9
+		t[8] = minus1(wacModelService.getSchallleistungspegel(input.schalldampferVentil)) ?: zero
+		// Row 10
+		t[9] = minus1(wacModelService.getSchallleistungspegel(input.einfugungsdammwert)) ?: zero
+		// Row 11
+		switch (input.raumabsorption) {
+			case 0:
+				t[10] = zero
+				break
+			case 1:
+				t[10] = [slp125: -4d, slp250: -4d, slp500: -4d, slp1000: -4d, slp2000: -4d, slp4000: -4d]
+				break
+		}
+		// Row 12
+		t[11] = [slp125: -16.1d, slp250: -8.6d, slp500: -3.2d, slp1000: 0.0d, slp2000: 1.2d, slp4000: 1.0d]
+		// Row 13
+		def sumColumn = { k ->
+			def s = 0.0d
+			0.upto 11, {
+				s += t[it][k]
+			}
+			s
+		}
+		t[12] = [slp125: sumColumn("slp125"), slp250: sumColumn("slp250"), slp500: sumColumn("slp500"), slp1000: sumColumn("slp1000"), slp2000: sumColumn("slp2000"), slp4000: sumColumn("slp4000")]
+		t.eachWithIndex { it, p -> println "$p: $it" }
+	}
+	
 }

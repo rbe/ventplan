@@ -142,7 +142,7 @@ class WacModelService {
 				it.artikelnummer
 			}
 		// Add empty item
-		r << ""
+		r = [""] + r
 		if (DEBUG) println "getDvbKanalbezeichnung(): ${r?.dump()}"
 		r
 	}
@@ -209,23 +209,54 @@ class WacModelService {
 		}?.collect {
 			it.artikelnummer
 		}
-		if (DEBUG) println "getSchalldampfer: ${r}"
-		[""] + r
+		// Add empty item
+		r = [""] + r
+		if (DEBUG) println "getSchalldampfer: ${r?.dump()}"
+		r
 	}
 	
 	/**
 	 * Akustikberechnung, Oktavmittenfrequenz.
 	 */
-	Float[] getOktavmittenfrequenz(artnr) {
+	Map getOktavmittenfrequenz(artnr, volumenstrom, luftart) {
+		def r = withSql { sql ->
+			sql.rows("SELECT s.slp125, s.slp250, s.slp500, s.slp1000, s.slp2000, s.slp4000, s.dba"
+					+ " FROM schalleistungspegel s"
+					+ " WHERE artikelnummer = ? AND volumenstrom >= ? AND ZuAbEx = ?",
+					[artnr, volumenstrom, luftart == "Zuluft" ? 0 : 1])
+		}
+		r = r[0]
+		if (DEBUG) println "getOktavmittenfrequenz($artnr,$volumenstrom,$luftart): ${r?.dump()}"
+		r
+	}
+	
+	/**
+	 * Akustikberechnung, Hauptschalldämpfer.
+	 */
+	def getSchallleistungspegel(artnr) {
 		def r = withSql { sql ->
 			sql.rows("SELECT s.slp125, s.slp250, s.slp500, s.slp1000, s.slp2000, s.slp4000"
 					+ " FROM schalleistungspegel s"
 					+ " WHERE artikelnummer = ?",
 					[artnr])
 		}
-		if (DEBUG) println "getOktavmittenfrequenz($artnr): ${r?.dump()}"
-		r = r[0].collect { it.value }
-		if (DEBUG) println "getOktavmittenfrequenz($artnr): ${r?.dump()}"
+		r = r[0]
+		if (DEBUG) println "getSchallleistungspegel($artnr): ${r?.dump()}"
+		r
+	}
+	
+	/**
+	 * Akustikberechnung, Pegelerhöhung externer Druck.
+	 */
+	Map getPegelerhohungExternerDruck(artnr) {
+		def r = withSql { sql ->
+			sql.rows("SELECT s.slp125, s.slp250, s.slp500, s.slp1000, s.slp2000, s.slp4000"
+					+ " FROM schalleistungspegel s"
+					+ " WHERE artikelnummer = ? AND ZuAbEx = 2",
+					[artnr])
+		}
+		r = r[0]
+		if (DEBUG) println "getPegelerhohungExternerDruck($artnr): ${r?.dump()}"
 		r
 	}
 	

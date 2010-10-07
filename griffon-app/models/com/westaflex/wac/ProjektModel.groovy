@@ -171,7 +171,7 @@ class ProjektModel {
 				zuluft: [
 						anzahlUmlenkungen: 5,
 						luftverteilerkastenStck: 1,
-						langsdampfung: 7,
+						langsdampfung: 12,
 						raumabsorption: 1,
 						tabelle: [
 								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
@@ -191,21 +191,23 @@ class ProjektModel {
 				abluft: [
 						anzahlUmlenkungen: 4,
 						luftverteilerkastenStck: 1,
-						langsdampfung: 12,
+						langsdampfung: 7,
 						raumabsorption: 0,
 						tabelle: [
-								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
-								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
-								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
-								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
-								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
-								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
-								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
-								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
-								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
-								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
-								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
-								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								/*
+								[SLP125:1,SLP250:2,SLP500:3,SLP1000:4,SLP2000:5,SLP4000:6],
+								[SLP125:1,SLP250:2,SLP500:3,SLP1000:4,SLP2000:5,SLP4000:6],
+								[SLP125:1,SLP250:2,SLP500:3,SLP1000:4,SLP2000:5,SLP4000:6],
+								[SLP125:1,SLP250:2,SLP500:3,SLP1000:4,SLP2000:5,SLP4000:6],
+								[SLP125:1,SLP250:2,SLP500:3,SLP1000:4,SLP2000:5,SLP4000:6],
+								[SLP125:1,SLP250:2,SLP500:3,SLP1000:4,SLP2000:5,SLP4000:6],
+								[SLP125:1,SLP250:2,SLP500:3,SLP1000:4,SLP2000:5,SLP4000:6],
+								[SLP125:1,SLP250:2,SLP500:3,SLP1000:4,SLP2000:5,SLP4000:6],
+								[SLP125:1,SLP250:2,SLP500:3,SLP1000:4,SLP2000:5,SLP4000:6],
+								[SLP125:1,SLP250:2,SLP500:3,SLP1000:4,SLP2000:5,SLP4000:6],
+								[SLP125:1,SLP250:2,SLP500:3,SLP1000:4,SLP2000:5,SLP4000:6],
+								[SLP125:1,SLP250:2,SLP500:3,SLP1000:4,SLP2000:5,SLP4000:6],
+								*/
 							]
 					] as ObservableMap,
 			] as ObservableMap,
@@ -246,82 +248,67 @@ class ProjektModel {
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { columnIndex -> columnNames[columnIndex] },
 				getColumnValue: { object, columnIndex ->
-                    //println "index -> ${columnIndex}"
-                    //println "raume - propertyNames -> ${propertyNames[columnIndex]}"
-                    //println "raume - propertyNames -> ${propertyNames}"
-                    //println "raume - object -> ${object}"
-                    try {
-                        object."${propertyNames[columnIndex]}"?.toString2()
-                    } catch (e) {
-                        // combobox...
-                        println "error: catching object -> ${object}"
-                        object?.toString2()
-                    }
-                },
-				isEditable: 	{ object, columnIndex -> writable[columnIndex] },
-                setColumnValue: { object, value, columnIndex ->
-
-                    println "# 1.a object -> ${object} || value -> ${value}"
-                    object."${propertyNames[columnIndex]}" = value
-
-                    def resyncValue
-                    def myTempMap
-                    //println "raume ===> ${map.raum.raume}"
-                    switch (mapToUpdate) {
-                        case "raume":
-                            myTempMap = map.raum.raume.find { it.position == object.position }
-                            myTempMap[columnIndex] = value
-                            meta.gewahlterRaum[columnIndex] = value
-                            resyncValue = "raume"
-                            println "Edited: map.raum.raume -> ${map.raum.raume}"
-                            break
-                        case "dvb.kanalnetz":
-                            myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
-                            myTempMap[columnIndex] = value
-                            resyncValue = "kanalnetz"
-                            println "Edited: map.dvb.kanalnetz -> ${map.dvb.kanalnetz}"
-                            break
-                        case "dvb.ventileinstellung":
-                            myTempMap = map.dvb.ventileinstellung.find { it.position == object.position }
-                            myTempMap[columnIndex] = value
-                            resyncValue = "ventileinstellung"
-                            println "Edited: map.dvb.ventileinstellung -> ${map.dvb.ventileinstellung}"
-                            break
-                        case "akustik.abluft":
-                            myTempMap = map.akustik.abluft.find { it.position == object.position }
-                            myTempMap[columnIndex] = value
-                            println "Edited: map.akustik.abluft -> ${map.akustik.abluft}"
-                            break
-                        case "akustik.zuluft":
-                            myTempMap = map.akustik.zuluft.find { it.position == object.position }
-                            myTempMap[columnIndex] = value
-                            println "Edited: map.akustik.zuluft -> ${map.akustik.zuluft}"
-                            break
-                    }
-                    
-                    //meta.gewahlterRaum[columnIndex] = value
-                    //println "meta.gewahlterRaum -> ${meta.gewahlterRaum}"
-                    //println "# 1.b object -> ${object}"
-
-                    // TODO
-                    // resync funktioniert nicht, da wir uns im TableModel befinden!!!
-                    // Muss anders gelöst werden. Event, der später ausgelöst werden soll?!
-                    /*
-                    switch (resyncValue) {
-                        case "raume":
-                            resyncRaumTableModels()
-                            break
-                        case "kanalnetz":
-                            resyncDvbKanalnetzTableModels()
-                            break
-                        case "ventileinstellung":
-                            resyncDvbVentileinstellungTableModels()
-                            break
-                    }*/
-                },
-                getValueAt:     { rowIndex, columnIndex ->
-                    meta.gewahlterRaum[columnIndex]
-                }
+					try {
+						object."${propertyNames[columnIndex]}"?.toString2()
+					} catch (e) {
+						// combobox...
+						println "gltmClosure, getColumnValue: ${e}: ${object?.dump()}"
+						object?.toString2()
+					}
+				},
+				isEditable:     { object, columnIndex -> writable[columnIndex] },
+				setColumnValue: { object, value, columnIndex ->
+					println "setColumnValue: value@${columnIndex}=${value}"
+					object."${propertyNames[columnIndex]}" = value
+					println "... ${object}"
+					//def resyncValue
+					def myTempMap
+					switch (mapToUpdate) {
+						case "raume":
+							// TODO Call ProjektController.raumGeandert(raumIndex, view)
+							println "raume 1 ===> ${map.raum.raume}"
+							myTempMap = map.raum.raume.find { it.position == object.position }
+							myTempMap[columnIndex] = value
+							println "raume 2 ===> ${map.raum.raume}"
+							meta.gewahlterRaum[columnIndex] = value
+							//resyncValue = "raume"
+							println "Edited: map.raum.raume -> ${map.raum.raume}"
+							resyncRaumTableModels()
+							break
+						case "dvb.kanalnetz":
+							myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
+							myTempMap[columnIndex] = value
+							//resyncValue = "kanalnetz"
+							println "Edited: map.dvb.kanalnetz -> ${map.dvb.kanalnetz}"
+							resyncDvbKanalnetzTableModels()
+							break
+						case "dvb.ventileinstellung":
+							myTempMap = map.dvb.ventileinstellung.find { it.position == object.position }
+							myTempMap[columnIndex] = value
+							//resyncValue = "ventileinstellung"
+							println "Edited: map.dvb.ventileinstellung -> ${map.dvb.ventileinstellung}"
+							resyncDvbVentileinstellungTableModels()
+							break
+						/*
+						case "akustik.abluft":
+							myTempMap = map.akustik.abluft.find { it.position == object.position }
+							myTempMap[columnIndex] = value
+							println "Edited: map.akustik.abluft -> ${map.akustik.abluft}"
+							break
+						case "akustik.zuluft":
+							myTempMap = map.akustik.zuluft.find { it.position == object.position }
+							myTempMap[columnIndex] = value
+							println "Edited: map.akustik.zuluft -> ${map.akustik.zuluft}"
+							break
+						*/
+					}
+					//meta.gewahlterRaum[columnIndex] = value
+					//println "meta.gewahlterRaum -> ${meta.gewahlterRaum}"
+					//println "# 1.b object -> ${object}"
+				},
+				getValueAt: { rowIndex, columnIndex ->
+					meta.gewahlterRaum[columnIndex]
+				}
 			] as ca.odell.glazedlists.gui.WritableTableFormat)
 	}
 	
@@ -440,6 +427,7 @@ class ProjektModel {
 				//println "map.raum.raume[r.position] -> ${map.raum.raume[r.position]}"
 				it.add(map.raum.raume[r.position])
 			}
+			/* TODO Bitte nur Vorlagen wie in Raumdaten nehmen, nicht die tatsächlichen Räume
 			// Neues DefaultComboBoxModel für AkustikView setzen
 			try {
 				map.akustik.raumBezeichnung.add(r.raumBezeichnung)
@@ -448,12 +436,10 @@ class ProjektModel {
 				map.akustik.raumBezeichnung = []
 				map.akustik.raumBezeichnung.add(r.raumBezeichnung)
 			}
-			/* TODO Bitte nur Vorlagen wie in Raumdaten nehmen, nicht die tatsächlichen Räume
 			view.akustikAbluftRaumbezeichnung.setModel(new DefaultComboBoxModel(map.akustik.raumBezeichnung as String[]))
 			view.akustikZuluftRaumbezeichnung.setModel(new DefaultComboBoxModel(map.akustik.raumBezeichnung as String[]))
 			*/
-			//
-			view.raumTabelle.setModel(createRaumTableModel())
+			//view.raumTabelle.setModel(createRaumTableModel())
 			//
 			def geschossEventList = GlazedLists.eventList(meta.raum.geschoss) as ca.odell.glazedlists.EventList
 			DefaultCellEditor raumGeschossCellEditor = AutoCompleteSupport.createTableCellEditor(geschossEventList)
@@ -633,9 +619,13 @@ class ProjektModel {
 		println "resyncAkustikTableModels()"
 		synchronized (tableModels) {
 			// Akustikberechnung Zuluft
+			println "Zuluft"
+			println map.akustik.zuluft.tabelle
 			tableModels.akustikZuluft.clear()
 			map.akustik.zuluft.tabelle.each { tableModels.akustikZuluft.addAll(it) }
 			// Akustikberechnung Abluft
+			println "Abluft"
+			println map.akustik.abluft.tabelle
 			tableModels.akustikAbluft.clear()
 			map.akustik.abluft.tabelle.each { tableModels.akustikAbluft.addAll(it) }
 		}
