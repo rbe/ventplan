@@ -13,6 +13,8 @@ package com.westaflex.wac
  */
 class WacCalculationService {
 	
+	public static boolean DEBUG = false
+	
 	/**
 	 * The WAC model service.
 	 */
@@ -77,7 +79,7 @@ class WacCalculationService {
 			// Geometrie berechnen...
 			geometrie(map)
 		} else {
-			println "wacCalculation/geometrieAusRaumdaten: Keine Räume vorhanden!"
+			if (DEBUG) println "wacCalculation/geometrieAusRaumdaten: Keine Räume vorhanden!"
 		}
 	}
 	
@@ -100,10 +102,10 @@ class WacCalculationService {
 		// Set calculated values in model
 		map.gebaude.geometrie.geluftetesVolumen = g.geluftetesVolumen ?: 0.0d
 		map.gebaude.geometrie.luftvolumen = g.luftvolumen ?: 0.0d
-		println "wacCalculation/geometrie: ${map.gebaude.geometrie?.dump()}"
+		if (DEBUG) println "wacCalculation/geometrie: ${map.gebaude.geometrie?.dump()}"
 		// Raumvolumenströme - Gesamtvolumen der Nutzungseinheit
 		map.raum.raumVs.gesamtVolumenNE = g.luftvolumen ?: 0.0d
-		println "wacCalculation/geometrie: map.raum.raumVs.gesamtVolumenNE=${map.raum.raumVs.gesamtVolumenNE?.dump()}"
+		if (DEBUG) println "wacCalculation/geometrie: map.raum.raumVs.gesamtVolumenNE=${map.raum.raumVs.gesamtVolumenNE?.dump()}"
 	}
 	
 	/**
@@ -111,7 +113,7 @@ class WacCalculationService {
 	 */
 	Double summeRaumFlache(map) {
 		def flache = map.raum.raume.inject(0.0d) { o, n -> o + n.raumFlache }
-		println "wacCalculation/summeRaumFlache: ${flache?.dump()}"
+		if (DEBUG) println "wacCalculation/summeRaumFlache: ${flache?.dump()}"
 		flache
 	}
 	
@@ -125,7 +127,7 @@ class WacCalculationService {
 		if (mittlereRaumhohe) {
 			if (volumen < 30.0d * mittlereRaumhohe) volumen = 30.0d * mittlereRaumhohe
 		}
-		println "wacCalculation/summeRaumVolumen: ${volumen?.dump()}"
+		if (DEBUG) println "wacCalculation/summeRaumVolumen: ${volumen?.dump()}"
 		volumen
 	}
 	
@@ -141,7 +143,7 @@ class WacCalculationService {
 			}
 		// Minimum
 		if (vol < 30.0d * mittlereRaumhohe) volumen = 30.0d * mittlereRaumhohe
-		println "wacCalculation/summeLuftmengeVolumen: ${volumen?.dump()}"
+		if (DEBUG) println "wacCalculation/summeLuftmengeVolumen: ${volumen?.dump()}"
 		volumen
 	}
 	
@@ -201,7 +203,7 @@ class WacCalculationService {
 		}
 		//
 		if (flache == Double.NaN) {
-			println "wacCalculation/gesamtAussenluftVs: flache=${flache?.dump()}"
+			if (DEBUG) println "wacCalculation/gesamtAussenluftVs: flache=${flache?.dump()}"
 			flache = 30.0d
 		}
 		//
@@ -209,10 +211,10 @@ class WacCalculationService {
 		if (flache) {
 			r = -0.001 * flache * flache + 1.15 * flache + 20
 		} else {
-			println "gesamtAussenluftVs: Konnte keine Fläche ermitteln"
+			if (DEBUG) println "gesamtAussenluftVs: Konnte keine Fläche ermitteln"
 		}
 		r = r ?: 0.0d
-		println "wacCalculation/gesamtAussenluftVs: ${r?.dump()}"
+		if (DEBUG) println "wacCalculation/gesamtAussenluftVs: ${r?.dump()}"
 		r
 	}
 	
@@ -224,11 +226,11 @@ class WacCalculationService {
 			if (hoch) 0.3f
 			else if (niedrig) 0.4f
 			else {
-				println "wacCalculation/warmeschutzFaktor: unbekannt, 0.0"
+				if (DEBUG) println "wacCalculation/warmeschutzFaktor: unbekannt, 0.0"
 				0.0d
 			}
 		}
-		println "wacCalculation/warmeschutzFaktor: ${r?.dump()}"
+		if (DEBUG) println "wacCalculation/warmeschutzFaktor: ${r?.dump()}"
 		r
 	}
 	
@@ -240,11 +242,11 @@ class WacCalculationService {
 			if (windschwach) 2.0d
 			else if (windstark) 4.0d
 			else {
-				println "wacCalculation/diffDruck: Gebäudelage unbekannt, 0.0"
+				if (DEBUG) println "wacCalculation/diffDruck: Gebäudelage unbekannt, 0.0"
 				0.0d
 			}
 		}
-		println "wacCalculation/diffDruck: ${r?.dump()}"
+		if (DEBUG) println "wacCalculation/diffDruck: ${r?.dump()}"
 		r
 	}
 	
@@ -298,7 +300,7 @@ class WacCalculationService {
 				0.0d
 			}
 		}
-		println "wacCalculation/infiltration: ${m?.dump()} -> ${r?.dump()}"
+		if (DEBUG) println "wacCalculation/infiltration: ${m?.dump()} -> ${r?.dump()}"
 		r
 	}
 	
@@ -310,7 +312,7 @@ class WacCalculationService {
 		Double volFL =
 			gesamtAussenluftVs(map) * warmeschutzFaktor(map) * map.gebaude.faktorBesondereAnforderungen
 		def r = volFL > infiltration ? true : false
-		println "wacCalculation/ltmErforderlich: ${r?.dump()}"
+		if (DEBUG) println "wacCalculation/ltmErforderlich: ${r?.dump()}"
 		r
 	}
 	
@@ -325,7 +327,7 @@ class WacCalculationService {
 		if (!ltmErforderlich(map)) {
             def infoMsg = "autoLuftmenge: Es sind keine lüftungstechnischen Maßnahmen notwendig!"
             app.controllers["Dialog"].showInformDialog(infoMsg as String)
-			println infoMsg
+			if (DEBUG) println infoMsg
 		}
 		// LTM: erste Berechnung für Raumvolumenströme
 		// Summiere Daten aus Raumdaten
@@ -522,7 +524,7 @@ class WacCalculationService {
 			raumZuluftmengeJeVentil: 50.0d,
 			raumVerteilebene: "EG"
 		])
-		println "berechneZuAbluftventile: ${map}"
+		if (DEBUG) println "berechneZuAbluftventile: ${map}"
 		map
 	}
 	
@@ -531,7 +533,7 @@ class WacCalculationService {
 	 * @param map One of map.dvb.kanalnetz
 	 */
 	def berechneTeilstrecke(map) {
-		println "berechneTeilstrecke: map=${map.dump()}"
+		if (DEBUG) println "berechneTeilstrecke: map=${map.dump()}"
 		def kanal = wacModelService.getKanal(map.kanalbezeichnung)
 		map.geschwindigkeit = map.luftVs * 1000000 / (kanal.flaeche * 3600)
 		def lambda
@@ -543,7 +545,7 @@ class WacCalculationService {
 				lambda = "calcDruckverlustKlasse${kanal.klasse}"(map.geschwindigkeit, kanal.durchmesser)
 				break
 			default:
-				println "switch clause runs into default. Klasse=${kanal.klasse} not defined ==> lambda not set"
+				if (DEBUG) println "switch clause runs into default. Klasse=${kanal.klasse} not defined ==> lambda not set"
 		}
 		//
 		def geschwPow2 = Math.pow(map.geschwindigkeit, 2)
@@ -555,7 +557,7 @@ class WacCalculationService {
 		map.einzelwiderstand = 0.6d * map.gesamtwiderstandszahl * geschwPow2
 		// Widerstand der Teilstrecke = Reibungswiderstand + Einzelwiderstand
 		map.widerstandTeilstrecke = map.reibungswiderstand + map.einzelwiderstand
-		println "berechneTeilstrecke: map=${map.dump()}"
+		if (DEBUG) println "berechneTeilstrecke: map=${map.dump()}"
 		map
 	}
 	
@@ -655,7 +657,7 @@ class WacCalculationService {
 							o + n
 						}
 			} else {
-				println "berechneVentileinstellung: Letzte Teilstrecke ${letzteTeilstrecke} existiert nicht oder" +
+				if (DEBUG) println "berechneVentileinstellung: Letzte Teilstrecke ${letzteTeilstrecke} existiert nicht oder" +
 					" Luftart stimmt nicht überein: ${map.luftart} == ${teilstrecke?.luftart}?"
 			}
 		}
@@ -677,7 +679,7 @@ class WacCalculationService {
 			if (ve.einstellung != 0.0d) {
 				def infoMsg = "Keine Einstellung für Ventil ${ve.ventilbezeichnung} gefunden! Bitte prüfen Sie die Zeile#${ve.position}."
                 app.controllers["Dialog"].showInformDialog(infoMsg as String)
-				println infoMsg
+				if (DEBUG) println infoMsg
 			}
 		}
 	}
