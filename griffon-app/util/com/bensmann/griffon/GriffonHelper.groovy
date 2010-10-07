@@ -194,7 +194,12 @@ class GriffonHelper {
 				// TODO Create a nested map if missing? m[k] = [:] as ObservableMap
 				GriffonHelper.deepCopyMap m[k], v
 			} else {
-				m[k] = v
+				try {
+					m[k] = v
+				} catch (e) {
+					println "deepCopyMap: else; v=$v k=$k m=$m"
+					println "deepCopyMap: ${e}"
+				}
 			}
 		}
 	}
