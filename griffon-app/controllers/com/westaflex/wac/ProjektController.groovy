@@ -900,7 +900,7 @@ class ProjektController {
 			// Berechnen und neue Werte im Model speichern
 			model.map.raum.raume[rowIndex] = wacCalculationService.berechneZuAbluftventile(r)
 			// Werte in Tabelle übertragen
-			tableModel.setValueAt("100ULC", rowIndex, 8)
+			////REMOVE tableModel.setValueAt("100ULC", rowIndex, 8)
 			//
 			//tableModel.fireTableDataChanged()
 		} catch (NullPointerException e) {}
