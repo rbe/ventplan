@@ -213,4 +213,20 @@ class WacModelService {
 		[""] + r
 	}
 	
+	/**
+	 * Akustikberechnung, Oktavmittenfrequenz.
+	 */
+	Float[] getOktavmittenfrequenz(artnr) {
+		def r = withSql { sql ->
+			sql.rows("SELECT s.slp125, s.slp250, s.slp500, s.slp1000, s.slp2000, s.slp4000"
+					+ " FROM schalleistungspegel s"
+					+ " WHERE artikelnummer = ?",
+					[artnr])
+		}
+		if (DEBUG) println "getOktavmittenfrequenz($artnr): ${r?.dump()}"
+		r = r[0].collect { it.value }
+		if (DEBUG) println "getOktavmittenfrequenz($artnr): ${r?.dump()}"
+		r
+	}
+	
 }
