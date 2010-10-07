@@ -619,13 +619,9 @@ class ProjektModel {
 		println "resyncAkustikTableModels()"
 		synchronized (tableModels) {
 			// Akustikberechnung Zuluft
-			println "Zuluft"
-			println map.akustik.zuluft.tabelle
 			tableModels.akustikZuluft.clear()
 			map.akustik.zuluft.tabelle.each { tableModels.akustikZuluft.addAll(it) }
 			// Akustikberechnung Abluft
-			println "Abluft"
-			println map.akustik.abluft.tabelle
 			tableModels.akustikAbluft.clear()
 			map.akustik.abluft.tabelle.each { tableModels.akustikAbluft.addAll(it) }
 		}
