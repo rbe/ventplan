@@ -17,11 +17,11 @@ class BootstrapGsql {
 	def init = { Sql sql ->
 		// Set splash screen status text
 		Wac2Splash.instance.connectingDatabase()
-		println "BootstrapGsql.init: ${sql}"
+		//println "BootstrapGsql.init: ${sql}"
 	}
 	
 	def destroy = { Sql sql ->
-		println "BootstrapGsql.destroy: ${sql}"
+		//println "BootstrapGsql.destroy: ${sql}"
 	}
 	
 }
