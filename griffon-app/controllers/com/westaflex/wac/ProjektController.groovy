@@ -438,6 +438,13 @@ class ProjektController {
 	}
 	
 	/**
+	 * Raumdarten - ein Raum wurde geändert.
+	 */
+	def raumGeandert = { raumIndex ->
+		publishEvent "RaumGeandert", [raum, view]
+	}
+	
+	/**
 	 * Raumdaten - einen Raum entfernen.
 	 */
 	def raumEntfernen = {
