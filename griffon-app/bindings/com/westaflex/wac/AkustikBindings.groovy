@@ -19,3 +19,9 @@ bind(source: model.map.akustik.abluft, sourceProperty: "langsdampfung",         
 // Zentralgerät
 bind(source: raumVsZentralgerat, sourceProperty: "selectedItem", target: akustikZuluftZuluftstutzenZentralgerat, targetProperty: "text")
 bind(source: raumVsZentralgerat, sourceProperty: "selectedItem", target: akustikAbluftAbluftstutzenZentralgerat, targetProperty: "text")
+// ActionListener
+[akustikZuluftZuluftstutzenZentralgerat, akustikZuluftPegel].each { comp ->
+	comp.addActionListener({ evt ->
+		controller.berechneAkustik("Zuluft")
+	} as java.awt.event.ActionListener)
+}
