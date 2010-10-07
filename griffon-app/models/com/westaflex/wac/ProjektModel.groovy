@@ -172,13 +172,41 @@ class ProjektModel {
 						anzahlUmlenkungen: 5,
 						luftverteilerkastenStck: 1,
 						langsdampfung: 7,
-						raumabsorption: 1
+						raumabsorption: 1,
+						tabelle: [
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+							]
 					] as ObservableMap,
 				abluft: [
 						anzahlUmlenkungen: 4,
 						luftverteilerkastenStck: 1,
 						langsdampfung: 12,
-						raumabsorption: 0
+						raumabsorption: 0,
+						tabelle: [
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+								[slp125:1,slp250:2,slp500:3,slp1000:4,slp2000:5,slp4000:6],
+							]
 					] as ObservableMap,
 			] as ObservableMap,
 			raumBezeichnung: [] as ObservableList
@@ -187,6 +215,7 @@ class ProjektModel {
 	// TableModels
 	def tmPositionComparator = { a, b -> a.position <=> b.position } as Comparator
 	def tmNameComparator = { a, b -> a.name <=> b.name } as Comparator
+	def tmNothingComparator = { a, b -> 0 } as Comparator
 	def tableModels = [
 			raume:                        new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
 			raumeVsZuAbluftventile:       new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
@@ -196,8 +225,8 @@ class ProjektModel {
 			dvbKanalnetz:                 new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
 			dvbVentileinstellung:         new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
 			wbw:                          new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNameComparator) as ca.odell.glazedlists.EventList,
-			akustikZuluft:                new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			akustikAbluft:                new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList
+			akustikZuluft:                new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList,
+			akustikAbluft:                new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList
 		]
 	
 	/**
@@ -380,9 +409,9 @@ class ProjektModel {
 	 * Akustikberechnung - Zuluft.
 	 */
 	def createAkustikZuluftTableModel() {
-		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"] as String[]
-		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"] as String[]
-		def writable      = [true, true, true] as boolean[]
+		def columnNames =   ["125",    "250",    "500",    "1000",     "2000",    "4000"] as String[]
+		def propertyNames = ["slp125", "slp250", "slp500", "slp1000",  "slp2000", "slp4000"] as String[]
+		def writable      = [false] * columnNames.length as boolean[]
 		gltmClosure(columnNames, propertyNames, writable, tableModels.akustikZuluft, "akustik.zuluft")
 	}
 	
@@ -390,9 +419,9 @@ class ProjektModel {
 	 * Akustikberechnung - Abluft.
 	 */
 	def createAkustikAbluftTableModel() {
-		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"] as String[]
-		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"] as String[]
-		def writable      = [true, true, true] as boolean[]
+		def columnNames =   ["125",    "250",    "500",    "1000",     "2000",    "4000"] as String[]
+		def propertyNames = ["slp125", "slp250", "slp500", "slp1000",  "slp2000", "slp4000"] as String[]
+		def writable      = [false] * columnNames.length as boolean[]
 		gltmClosure(columnNames, propertyNames, writable, tableModels.akustikAbluft, "akustik.abluft")
 	}
 	
@@ -594,6 +623,18 @@ class ProjektModel {
 		synchronized (tableModels) {
 			tableModel.dvbVentileinstellung.clear()
 			tableModel.dvbVentileinstellung.addAll(map.dvb.ventileinstellung)
+	/**
+	 * Synchronize all Swing table models depending on map.akustik.*.tabelle.
+	 */
+	def resyncAkustikTableModels() {
+		println "resyncAkustikTableModels()"
+		synchronized (tableModels) {
+			// Akustikberechnung Zuluft
+			tableModels.akustikZuluft.clear()
+			map.akustik.zuluft.tabelle.each { tableModels.akustikZuluft.addAll(it) }
+			// Akustikberechnung Abluft
+			tableModels.akustikAbluft.clear()
+			map.akustik.abluft.tabelle.each { tableModels.akustikAbluft.addAll(it) }
 		}
 	}
 	
