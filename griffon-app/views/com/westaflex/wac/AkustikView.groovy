@@ -54,7 +54,7 @@ def buildLayout(tabname) {
             label("Schallleistungspegel ${tabname}stutzen", foreground: GH.MY_RED)
             // TODO: split -> comboBox...???
             label(id: "akustik${tabname}${tabname}stutzenZentralgerat", raumVsZentralgerat.selectedItem)
-            comboBox(id: "akustik${tabname}Pegel", constraints: "width 60px!, wrap", items: model.meta.volumenstromZentralgerat)
+            comboBox(id: "akustik${tabname}Pegel", constraints: "width 70px!, wrap", items: model.meta.volumenstromZentralgerat)
 
             label("Schallleistungspegelerhöhung Kanalnetz", foreground: GH.MY_RED)
             comboBox(id: "akustik${tabname}Kanalnetz", constraints: "span 2, wrap", items: (10..200).step(10))
@@ -79,15 +79,15 @@ def buildLayout(tabname) {
 
             label("Anzahl der Umlenkungen 90° Stck.", foreground: GH.MY_GREEN)
             label("")
-            textField(id: "akustik${tabname}AnzahlUmlenkungen90GradStck", constraints: "width 60px!, wrap")
+            textField(id: "akustik${tabname}AnzahlUmlenkungen90GradStck", constraints: "width 70px!, wrap")
 
             label("Luftverteilerkasten Stck.", foreground: GH.MY_GREEN)
             label("")
-            textField(id: "akustik${tabname}LuftverteilerkastenStck", constraints: "width 60px!, wrap")
+            textField(id: "akustik${tabname}LuftverteilerkastenStck", constraints: "width 70px!, wrap")
 
             label("Längsdämpfung Kanal lfdm.", foreground: GH.MY_GREEN)
             comboBox(id: "akustik${tabname}LangsdampfungKanal", items: model.meta.dvbKanalbezeichnung)
-            textField(id: "akustik${tabname}LangsdampfungKanalWert", constraints: "width 60px!, wrap")
+            textField(id: "akustik${tabname}LangsdampfungKanalWert", constraints: "width 70px!, wrap")
 
             label("Schalldämpfer Ventil", foreground: GH.MY_GREEN)
             comboBox(id: "akustik${tabname}SchalldampferVentil", constraints: "span 2, wrap", items: model.meta.akustikSchalldampfer)
@@ -97,7 +97,7 @@ def buildLayout(tabname) {
 
             label("Raumabsorption (Annahme) BAD=0 WOHNEN=1", foreground: GH.MY_GREEN)
             label("")
-            textField(id: "akustik${tabname}Raumabsorption", constraints: "width 60px!, wrap")
+            textField(id: "akustik${tabname}Raumabsorption", constraints: "width 70px!, wrap")
 
             label("Korrektur der A-Bewertung", constraints: "wrap")
 
