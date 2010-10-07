@@ -9,7 +9,6 @@
 package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
-
 import javax.swing.DefaultCellEditor
 import javax.swing.JComboBox
 import javax.swing.JTable
@@ -298,7 +297,7 @@ class ProjektController {
 					mindestaussenluftrate = personenanzahl * aussenluftVsProPerson
 				} catch (e) {
 					def errorMsg = e.printStackTrace()
-                    app.controllers["Dialog"].showErrorDialog(errorMsg as String)
+					app.controllers["Dialog"].showErrorDialog(errorMsg as String)
 					mindestaussenluftrate = 0.0d
 				}
 			}
@@ -427,9 +426,9 @@ class ProjektController {
 			def (zuluftfaktor, neuerZuluftfaktor) =
 				wacCalculationService.prufeZuluftfaktor(raum.raumTyp, eingegebenerZuluftfaktor)
 			if (zuluftfaktor != neuerZuluftfaktor) {
-                def infoMsg = "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
-                app.controllers["Dialog"].showInformDialog(infoMsg as String)
-                println infoMsg
+				def infoMsg = "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
+				app.controllers["Dialog"].showInformDialog(infoMsg as String)
+				println infoMsg
 			}
 			raum.raumZuluftfaktor = neuerZuluftfaktor
 		}
