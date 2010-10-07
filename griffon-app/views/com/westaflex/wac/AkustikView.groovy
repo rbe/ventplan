@@ -135,7 +135,7 @@ def buildLayout(tabname) {
         }
 
         label(constraints: "wrap")
-        label("* Bei dieser Berechnung handelt es dich um eine <br>theoretische Auslegung, deren Werte in der Praxis abweichen können", constraints: "right, span 3")
+        label("<html>* Bei dieser Berechnung handelt es dich um eine theoretische<br/>Auslegung, deren Werte in der Praxis abweichen können</html>", constraints: "right, span 3")
 	}
 	return "akustik${tabname}Tab"
 }
