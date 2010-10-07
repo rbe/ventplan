@@ -52,17 +52,16 @@ def buildLayout(tabname) {
             label(" ", constraints: "span 3, wrap")
 
             label("Schallleistungspegel ${tabname}stutzen", foreground: GH.MY_RED)
-            // TODO: Zentralgerät aus RaumVsView -> raumVsZuAbluftventileZentralgerat
             // TODO: split -> comboBox...???
-            label(raumVsZentralgerat.selectedItem)
-            comboBox(id: "akustik${tabname}Pegel", constraints: "width 60px!, wrap")
+            label(id: "akustik${tabname}${tabname}stutzenZentralgerat", raumVsZentralgerat.selectedItem)
+            comboBox(id: "akustik${tabname}Pegel", constraints: "width 60px!, wrap", items: model.meta.volumenstromZentralgerat)
 
             label("Schallleistungspegelerhöhung Kanalnetz", foreground: GH.MY_RED)
-            comboBox(id: "akustik${tabname}Kanalnetz", constraints: "span 2, wrap")
+            comboBox(id: "akustik${tabname}Kanalnetz", constraints: "span 2, wrap", items: (10..200).step(10))
 
 
             label("Schallleistungspegelerhöhung Filter", foreground: GH.MY_RED)
-            comboBox(id: "akustik${tabname}Filter", constraints: "span 2, wrap")
+            comboBox(id: "akustik${tabname}Filter", constraints: "span 2, wrap", items: (10..200).step(10))
 
             label("1. Hauptschalldämpfer", foreground: GH.MY_GREEN)
             //comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "span 2, wrap")
@@ -76,7 +75,7 @@ def buildLayout(tabname) {
             }
 
             label("2. Hauptschalldämpfer", foreground: GH.MY_GREEN)
-            comboBox(id: "akustik${tabname}2Hauptschalldampfer", constraints: "span 2, wrap")
+            comboBox(id: "akustik${tabname}2Hauptschalldampfer", constraints: "span 2, wrap", items: model.meta.akustikSchalldampfer)
 
             label("Anzahl der Umlenkungen 90° Stck.", foreground: GH.MY_GREEN)
             label("")
@@ -91,12 +90,12 @@ def buildLayout(tabname) {
             textField(id: "akustik${tabname}LangsdampfungKanalWert", constraints: "width 60px!, wrap")
 
             label("Schalldämpfer Ventil", foreground: GH.MY_GREEN)
-            comboBox(id: "akustik${tabname}SchalldampferVentil", constraints: "span 2, wrap")
+            comboBox(id: "akustik${tabname}SchalldampferVentil", constraints: "span 2, wrap", items: model.meta.akustikSchalldampfer)
 
             label("Einfügungsdämmwert Luftdurchlass", foreground: GH.MY_GREEN)
-            comboBox(id: "akustik${tabname}EinfugungsdammwertLuftdurchlass", constraints: "span 2, wrap")
+            comboBox(id: "akustik${tabname}EinfugungsdammwertLuftdurchlass", constraints: "span 2, wrap", items: model.meta.dvbVentileinstellung)
 
-            label("Raumabsorption (Ahnnahme) BAD=0 WOHNEN=1", foreground: GH.MY_GREEN)
+            label("Raumabsorption (Annahme) BAD=0 WOHNEN=1", foreground: GH.MY_GREEN)
             label("")
             textField(id: "akustik${tabname}Raumabsorption", constraints: "width 60px!, wrap")
 
