@@ -73,9 +73,6 @@ class ProjektController {
 		GH.tieEventListener(this, RaumVsEvents, props)
 		GH.tieEventListener(this, DvbKanalnetzEvents, props)
 		GH.tieEventListener(this, DvbVentileinstellungEvents, props)
-		println "-" * 80
-		println "ProjektController.mvcGroupInit leaving"
-		println "-" * 80
 	}
 	
 	/**
@@ -86,7 +83,6 @@ class ProjektController {
 		model.map.anlage.zentralgerat = model.meta.zentralgerat[0]
 		// Raumvolumenströme, Volumenstrom des Zentralgeräts; default ist erster Wert der Liste
 		model.map.anlage.volumenstromZentralgerat = model.meta.volumenstromZentralgerat[0]
-		println "ProjektController.mvcGroupInit: model.map.anlage.volumenstromZentralgerat=${model.map.anlage.volumenstromZentralgerat}"
 		// Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
 		model.map.dvb.kanalbezeichnung = model.meta.dvbKanalbezeichnung
 		// Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte

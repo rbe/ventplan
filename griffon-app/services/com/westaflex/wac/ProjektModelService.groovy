@@ -31,7 +31,7 @@ class ProjektModelService {
 	def ProjektModelService() {
 		// Load XSD
 		def xsdStream = Wac2Resource.getWPXXSDAsStream()
-		println "ProjektModelService: found XSD for WPX: ${xsdStream.getClass()}"
+		//println "ProjektModelService: found XSD for WPX: ${xsdStream.getClass()}"
 		validator = javax.xml.validation.SchemaFactory
 					.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI)
 					.newSchema(new javax.xml.transform.stream.StreamSource(xsdStream))
