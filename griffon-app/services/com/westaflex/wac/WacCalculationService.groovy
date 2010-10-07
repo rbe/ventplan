@@ -740,7 +740,8 @@ class WacCalculationService {
 		}
 		// Row 8
 		def slpLangsdampfung = wacModelService.getSchallleistungspegel(input.langsdampfungKanal)
-		t[7] = slpLangsdampfung ? minus1(slpLangsdampfung.each { k, v -> t[7][k.toLowerCase()] = (v * input.langsdampfungKanalLfdmMeter) }) : zero
+		slpLangsdampfung ? slpLangsdampfung.each { k, v -> t[7][k.toLowerCase()] = (v * input.langsdampfungKanalLfdmMeter) } : zero
+		t[7] = minus1(t[7])
 		// Row 9
 		t[8] = minus1(wacModelService.getSchallleistungspegel(input.schalldampferVentil)) ?: zero
 		// Row 10
@@ -765,7 +766,8 @@ class WacCalculationService {
 			s
 		}
 		t[12] = [slp125: sumColumn("slp125"), slp250: sumColumn("slp250"), slp500: sumColumn("slp500"), slp1000: sumColumn("slp1000"), slp2000: sumColumn("slp2000"), slp4000: sumColumn("slp4000")]
-		t.eachWithIndex { it, p -> println "$p: $it" }
+		//
+		if (DEBUG) t.eachWithIndex { it, p -> println "$p: $it" }
 	}
 	
 }
