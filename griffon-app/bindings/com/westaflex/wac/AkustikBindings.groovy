@@ -9,13 +9,13 @@
  */
 package com.westaflex.wac
 
-//
+// Model
 bind(source: model.map.akustik.zuluft, sourceProperty: "anzahlUmlenkungen",       target: akustikZuluftAnzahlUmlenkungen90GradStck, targetProperty: "text", mutual: true)
 bind(source: model.map.akustik.zuluft, sourceProperty: "luftverteilerkastenStck", target: akustikZuluftLuftverteilerkastenStck,     targetProperty: "text", mutual: true)
 bind(source: model.map.akustik.zuluft, sourceProperty: "langsdampfung",           target: akustikZuluftLangsdampfungKanalWert,      targetProperty: "text", mutual: true)
 bind(source: model.map.akustik.abluft, sourceProperty: "anzahlUmlenkungen",       target: akustikAbluftAnzahlUmlenkungen90GradStck, targetProperty: "text", mutual: true)
 bind(source: model.map.akustik.abluft, sourceProperty: "luftverteilerkastenStck", target: akustikAbluftLuftverteilerkastenStck,     targetProperty: "text", mutual: true)
 bind(source: model.map.akustik.abluft, sourceProperty: "langsdampfung",           target: akustikAbluftLangsdampfungKanalWert,      targetProperty: "text", mutual: true)
-//
+// Zentralgerät
 bind(source: raumVsZentralgerat, sourceProperty: "selectedItem", target: akustikZuluftZuluftstutzenZentralgerat, targetProperty: "text")
 bind(source: raumVsZentralgerat, sourceProperty: "selectedItem", target: akustikAbluftAbluftstutzenZentralgerat, targetProperty: "text")

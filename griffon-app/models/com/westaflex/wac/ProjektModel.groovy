@@ -21,6 +21,8 @@ import javax.swing.DefaultComboBoxModel
  */
 class ProjektModel {
 	
+	public static boolean DEBUG = false
+	
 	/**
 	 * The MVC id.
 	 */
@@ -95,8 +97,8 @@ class ProjektModel {
 			abgleich: 0.0d,
 			einstellung: 0
 		]
-
-    /**
+	
+	/**
 	 * Our central model.
 	 * dirty: Was the model changed (since last save)? This is set true by a PropertyChangeListener installed in ProjectController.addMapPropertyChangeListener().
 	 */
@@ -179,7 +181,7 @@ class ProjektModel {
 						raumabsorption: 0
 					] as ObservableMap,
 			] as ObservableMap,
-            raumBezeichnung: [] as ObservableList
+			raumBezeichnung: [] as ObservableList
 	] as ObservableMap
 	
 	// TableModels
@@ -202,17 +204,16 @@ class ProjektModel {
 	 * Wrap text in HTML and substitute every space character with HTML-breaks.
 	 */
 	def ws = GH.ws
-
-    /**
-     * Closure to generate glazedlists EventTableModel.
-     * Parameters are
-     * columnNames as String[]
-     * propertyNames as String[]
-     * writable as boolean[]
-     * tableModel as ca.odell.glazedlists.EventList
-     */
-    def gltmClosure = { columnNames, propertyNames, writable, tableModel, mapToUpdate ->
-        new ca.odell.glazedlists.swing.EventTableModel(tableModel, [
+	
+	/**
+	 * Closure to generate glazedlists EventTableModel.
+	 * @param columnNames String[]
+	 * @param propertyNames String[]
+	 * @param writable boolean[]
+	 * @param tableModel ca.odell.glazedlists.EventList
+	 */
+	def gltmClosure = { columnNames, propertyNames, writable, tableModel, mapToUpdate ->
+		new ca.odell.glazedlists.swing.EventTableModel(tableModel, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { columnIndex -> columnNames[columnIndex] },
 				getColumnValue: { object, columnIndex ->
@@ -293,7 +294,7 @@ class ProjektModel {
                     meta.gewahlterRaum[columnIndex]
                 }
 			] as ca.odell.glazedlists.gui.WritableTableFormat)
-    }
+	}
 	
 	/**
 	 * Raumdaten - TableModel
@@ -301,11 +302,9 @@ class ProjektModel {
 	def createRaumTableModel() {
 		def columnNames =   ["Raum",            "Geschoss",     "Luftart",     ws("Raumfläche<br/>(m²)"), ws("Raumhöhe<br/>(m)"), "Zuluftfaktor",     "Abluftvolumenstrom"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumGeschoss", "raumLuftart", "raumFlache",      "raumHohe",     "raumZuluftfaktor", "raumAbluftVs"] as String[]
-        def writable      = [true, true, true, true, true, true, true] as boolean[]
-
-        gltmClosure(columnNames, propertyNames, writable, tableModels.raume, "raume")
+		def writable      = [true, true, true, true, true, true, true] as boolean[]
+		gltmClosure(columnNames, propertyNames, writable, tableModels.raume, "raume")
 	}
-
 	
 	/**
 	 * Raumvolumenströme, Zu-/Abluftventile - TableModel
@@ -313,9 +312,8 @@ class ProjektModel {
 	def createRaumVsZuAbluftventileTableModel() {
 		def columnNames =   ["Raum",            "Luftart",     ws("Raumvolumen<br/>(m³)"), ws("Luftwechsel<br/>(1/h)"), ws("Bezeichnung<br/>Abluftventile"),    ws("Anzahl<br/>Abluftventile"),    ws("Abluftmenge<br/>je Ventil"),   ws("Volumenstrom<br/>(m³/h)"), ws("Bezeichnung<br/>Zuluftventile"),    ws("Anzahl<br/>Zuluftventile"),    ws("Zuluftmenge<br/>je Ventil"),   "Verteilebene"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",              "raumLuftwechsel",           "raumBezeichnungAbluftventile",         "raumAnzahlAbluftventile",         "raumAbluftmengeJeVentil",         "raumVolumenstrom",            "raumBezeichnungZuluftventile",         "raumAnzahlZuluftventile",         "raumZuluftmengeJeVentil",         "raumVerteilebene"] as String[]
-        def writable      = [true, true, true, true, true, true, true, true, true, true, true, true] as boolean[]
-
-        gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsZuAbluftventile, "raume")
+		def writable      = [true, true, true, true, true, true, true, true, true, true, true, true] as boolean[]
+		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsZuAbluftventile, "raume")
 	}
 	
 	/**
@@ -324,9 +322,8 @@ class ProjektModel {
 	def createRaumVsUberstromventileTableModel() {
 		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",                "Volumenstrom (m³/h)", "Überström-Elemente"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile",    "raumVolumenstrom",    "raumUberstromElement"] as String[]
-        def writable      = [true, true, true, true, true] as boolean[]
-
-        gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsUberstromventile, "raume")
+		def writable      = [true, true, true, true, true] as boolean[]
+		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsUberstromventile, "raume")
 	}
 	
 	/**
@@ -335,9 +332,8 @@ class ProjektModel {
 	def createRaumDetailsTableModel() {
 		def columnNames =   ["Bezeichnung", "Breite in mm", "Querschnittsfläche in mm²", "Spaltenhöhe in mm", "mit Dichtung"] as String[]
 		def propertyNames = ["turBezeichnung", "turBreite", "turQuerschnitt", "turSpaltenhohe", "turDichtung"] as String[]
-        def writable      = [true, true, true, true, true] as boolean[]
-
-        gltmClosure(columnNames, propertyNames, writable, tableModels.raumeBearbeitenDetails, "raume")
+		def writable      = [true, true, true, true, true] as boolean[]
+		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeBearbeitenDetails, "raume")
 	}
 	
 	/**
@@ -346,9 +342,8 @@ class ProjektModel {
 	def createRaumEinstellungenTableModel() {
 		def columnNames =   ["Raum",            "Raumnummer", "Raumtyp", "Geschoss",     "Luftart", "Faktor", "Vorgang", "Zuluft", "Abluft", "Duch??", "Duch2???", "Kanalnetz", "Kanalnetz2", "Türhöhe", "Max...?", "Rau..???", "Rau...???", "Rau...???", "Rau...???", "Rau...???"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumNummer", "raumTyp", "raumGeschoss", "luftart", "faktor", "vorgang", "zuluft", "abluft", "duch1", "duch2", "kanalnetz", "kanalnetz2", "turhohe", "max1", "raum1", "raum2", "raum3", "raum4", "raum5"] as String[]
-        def writable      = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true] as boolean[]
-
-        gltmClosure(columnNames, propertyNames, writable, tableModels.raumeBearbeitenEinstellungen, "raume")
+		def writable      = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true] as boolean[]
+		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeBearbeitenEinstellungen, "raume")
 	}
 	
 	/**
@@ -358,8 +353,7 @@ class ProjektModel {
 		def columnNames =   ["Luftart", "Teilstrecke", ws("Luftvolumen-<br/>strom<br/>(m³/h)"), "Kanalbezeichnung", ws("Kanallänge<br/>(m)"), ws("Geschwindigkeit<br/>(m/s)"), ws("Reibungswiderstand<br/>gerader Kanal<br/>(Pa)"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>(Pa)"), ws("Widerstand<br/>Teilstrecke<br/><(Pa)")] as String[]
 		def propertyNames = ["dvbkLuftart", "teilstrecke", "luftVs",                                "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true, true] as boolean[]
-
-        gltmClosure(columnNames, propertyNames, writable, tableModels.dvbKanalnetz, "dvb.kanalnetz")
+		gltmClosure(columnNames, propertyNames, writable, tableModels.dvbKanalnetz, "dvb.kanalnetz")
 	}
 	
 	/**
@@ -369,8 +363,7 @@ class ProjektModel {
 		def columnNames =   ["Raum", "Luftart", "Teilstrecken", "Ventiltyp",         "dP offen (Pa)", "Gesamt (Pa)",      "Differenz", "Abgleich (Pa)", "Einstellung"] as String[]
 		def propertyNames = ["raum", "dvbvLuftart", "teilstrecken", "ventilbezeichnung", "dpOffen",       "gesamtWiderstand", "differenz", "abgleich",      "einstellung"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true] as boolean[]
-
-        gltmClosure(columnNames, propertyNames, writable, tableModels.dvbVentileinstellung, "dvb.ventileinstellung")
+		gltmClosure(columnNames, propertyNames, writable, tableModels.dvbVentileinstellung, "dvb.ventileinstellung")
 	}
 	
 	/**
@@ -380,8 +373,7 @@ class ProjektModel {
 		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"] as String[]
 		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"] as String[]
 		def writable      = [true, true, true] as boolean[]
-
-        gltmClosure(columnNames, propertyNames, writable, tableModels.wbw, "wbw")
+		gltmClosure(columnNames, propertyNames, writable, tableModels.wbw, "wbw")
 	}
 	
 	/**
@@ -391,8 +383,7 @@ class ProjektModel {
 		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"] as String[]
 		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"] as String[]
 		def writable      = [true, true, true] as boolean[]
-
-        gltmClosure(columnNames, propertyNames, writable, tableModels.akustikZuluft, "akustik.zuluft")
+		gltmClosure(columnNames, propertyNames, writable, tableModels.akustikZuluft, "akustik.zuluft")
 	}
 	
 	/**
@@ -402,73 +393,64 @@ class ProjektModel {
 		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"] as String[]
 		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"] as String[]
 		def writable      = [true, true, true] as boolean[]
-
-        gltmClosure(columnNames, propertyNames, writable, tableModels.akustikAbluft, "akustik.abluft")
+		gltmClosure(columnNames, propertyNames, writable, tableModels.akustikAbluft, "akustik.abluft")
 	}
 	
 	/**
-	 * Einen Raum im Model hinzufügen: auch alle TableModels, Comboboxen synchronisieren.
+	 * Einen Raum im Model und allen TableModels hinzufügen, Comboboxen synchronisieren.
 	 */
 	def addRaum = { raum, view ->
 		synchronized (map.raum.raume) {
 			def r = (raumMapTemplate + raum) as ObservableMap
-			println "addRaum: adding raum=${r.dump()}"
+			println "addRaum: adding raum=${r?.dump()}"
 			map.raum.raume << r
 			// Sync table models
 			[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
 				//println "addRaum: ${map.raum.raume.raumBezeichnung} r.bezeichnung=${r.raumBezeichnung}"
 				//println "addRaum: map.raum.raume.size=${map.raum.raume.size()} r.position=${r.position}"
-                /*
-                println "#################"
-                println "#################"
-                println "map.raum.raume[r.position] -> ${map.raum.raume[r.position]}"
-                println "#################"
-                println "#################"
-                */
+				//println "map.raum.raume[r.position] -> ${map.raum.raume[r.position]}"
 				it.add(map.raum.raume[r.position])
 			}
-
-            // neues DefaultComboBoxModel für AkustikView setzen
-            try {
-                map.akustik.raumBezeichnung.add(r.raumBezeichnung)
-            } catch (e) {
-                // combobox...
-                map.akustik.raumBezeichnung = []
-                map.akustik.raumBezeichnung.add(r.raumBezeichnung)
-            }
-            view.akustikAbluftRaumbezeichnung.setModel(new DefaultComboBoxModel(map.akustik.raumBezeichnung as String[]))
-            view.akustikZuluftRaumbezeichnung.setModel(new DefaultComboBoxModel(map.akustik.raumBezeichnung as String[]))
-
-            view.raumTabelle.setModel(createRaumTableModel())
-
-            def geschossEventList = GlazedLists.eventList(meta.raum.geschoss) as ca.odell.glazedlists.EventList
+			// Neues DefaultComboBoxModel für AkustikView setzen
+			try {
+				map.akustik.raumBezeichnung.add(r.raumBezeichnung)
+			} catch (e) {
+				// combobox...
+				map.akustik.raumBezeichnung = []
+				map.akustik.raumBezeichnung.add(r.raumBezeichnung)
+			}
+			/* TODO Bitte nur Vorlagen wie in Raumdaten nehmen, nicht die tatsächlichen Räume
+			view.akustikAbluftRaumbezeichnung.setModel(new DefaultComboBoxModel(map.akustik.raumBezeichnung as String[]))
+			view.akustikZuluftRaumbezeichnung.setModel(new DefaultComboBoxModel(map.akustik.raumBezeichnung as String[]))
+			*/
+			//
+			view.raumTabelle.setModel(createRaumTableModel())
+			//
+			def geschossEventList = GlazedLists.eventList(meta.raum.geschoss) as ca.odell.glazedlists.EventList
 			DefaultCellEditor raumGeschossCellEditor = AutoCompleteSupport.createTableCellEditor(geschossEventList)
 			TableColumn raumGeschossColumn = view.raumTabelle.getColumnModel().getColumn(1)
 			raumGeschossColumn.setCellEditor(raumGeschossCellEditor)
-
-            def luftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
+			//
+			def luftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
 			DefaultCellEditor raumLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(luftartEventList)
 			TableColumn raumLuftartColumn = view.raumTabelle.getColumnModel().getColumn(2)
 			raumLuftartColumn.setCellEditor(raumLuftartCellEditor)
-
-            def raumVsluftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
+			//
+			def raumVsluftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
 			DefaultCellEditor raumVsLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsluftartEventList)
 			TableColumn raumVsLuftartColumn = view.raumVsZuAbluftventileTabelle.getColumnModel().getColumn(1)
 			raumVsLuftartColumn.setCellEditor(raumVsLuftartCellEditor)
-
-            def raumVsUsluftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
+			//
+			def raumVsUsluftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
 			DefaultCellEditor raumVsUsLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsUsluftartEventList)
 			TableColumn raumVsUsLuftartColumn = view.raumVsUberstromventileTabelle.getColumnModel().getColumn(1)
 			raumVsUsLuftartColumn.setCellEditor(raumVsUsLuftartCellEditor)
-
-
-            println "############################"
-            println "############################"
-            println "############################"
-            println "############################"
-            println "akustikAbluftRaumbezeichnung -> ${view.akustikAbluftRaumbezeichnung}"
-            println "akustikZuluftRaumbezeichnung -> ${view.akustikZuluftRaumbezeichnung}"
-            println "############################"
+			/*
+			println "-" * 80
+			println "akustikAbluftRaumbezeichnung -> ${view.akustikAbluftRaumbezeichnung}"
+			println "akustikZuluftRaumbezeichnung -> ${view.akustikZuluftRaumbezeichnung}"
+			println "-" * 80
+			*/
 		}
 	}
 	
@@ -493,7 +475,7 @@ class ProjektModel {
 			[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
 				it.remove(raumIndex)
 			}
-
+			//
             map.akustik.raumBezeichnung.remove(raumIndex)
 		}
 	}
@@ -515,7 +497,6 @@ class ProjektModel {
 		synchronized (tableModels) {
 			println "-" * 80
 			println "resyncRaumTableModels"
-			println "-" * 80
 			// Raumdaten
 			tableModels.raume.clear()
 			tableModels.raume.addAll(map.raum.raume)
@@ -528,6 +509,7 @@ class ProjektModel {
 			// java.lang.NullPointerException: Cannot invoke method addAll() on null object when RaumBearbeitenDialog was not opened before
 			// Quickfix: added null-safe-operator
 			tableModels.raumeBearbeiten?.addAll(map.raum.raume)
+			println "-" * 80
 		}
 	}
 	
@@ -543,14 +525,13 @@ class ProjektModel {
 			[tableModels.dvbKanalnetz].each {
 				it.add(map.dvb.kanalnetz[kanalnetz.position])
 			}
-
-            // Comboboxen in den Tabellen hinzufügen
-            def dvbKnLuftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
+			// Comboboxen in den Tabellen hinzufügen
+			def dvbKnLuftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
 			DefaultCellEditor dvbKnLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(dvbKnLuftartEventList)
 			TableColumn dvbKnLuftartColumn = view.dvbKanalnetzTabelle.getColumnModel().getColumn(0)
 			dvbKnLuftartColumn.setCellEditor(dvbKnLuftartCellEditor)
-
-            def dvbKnKanalbezeichnungEventList = GlazedLists.eventList(meta.dvbKanalbezeichnung) as ca.odell.glazedlists.EventList
+			//
+			def dvbKnKanalbezeichnungEventList = GlazedLists.eventList(meta.dvbKanalbezeichnung) as ca.odell.glazedlists.EventList
 			DefaultCellEditor dvbKnKanalbezeichnungCellEditor = AutoCompleteSupport.createTableCellEditor(dvbKnKanalbezeichnungEventList)
 			TableColumn dvbKnKanalbezeichnungColumn = view.dvbKanalnetzTabelle.getColumnModel().getColumn(3)
 			dvbKnKanalbezeichnungColumn.setCellEditor(dvbKnKanalbezeichnungCellEditor)
@@ -575,18 +556,16 @@ class ProjektModel {
 		[tableModels.dvbVentileinstellung].each {
 			it.add(map.dvb.ventileinstellung[ventileinstellung.position])
 		}
-
-        // Comboboxen in den Tabellen hinzufügen
-        def dvbVeLuftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
-        DefaultCellEditor dvbVeLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(dvbVeLuftartEventList)
-        TableColumn dvbVeLuftartColumn = view.dvbVentileinstellungTabelle.getColumnModel().getColumn(1)
-        dvbVeLuftartColumn.setCellEditor(dvbVeLuftartCellEditor)
-
-        def dvbVeVentiltypEventList = GlazedLists.eventList(meta.dvbVentileinstellung) as ca.odell.glazedlists.EventList
-        DefaultCellEditor dvbVeVentiltypCellEditor = AutoCompleteSupport.createTableCellEditor(dvbVeVentiltypEventList)
-        TableColumn dvbVeVentiltypColumn = view.dvbVentileinstellungTabelle.getColumnModel().getColumn(3)
-        dvbVeVentiltypColumn.setCellEditor(dvbVeVentiltypCellEditor)
-
+		// Comboboxen in den Tabellen hinzufügen
+		def dvbVeLuftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
+		DefaultCellEditor dvbVeLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(dvbVeLuftartEventList)
+		TableColumn dvbVeLuftartColumn = view.dvbVentileinstellungTabelle.getColumnModel().getColumn(1)
+		dvbVeLuftartColumn.setCellEditor(dvbVeLuftartCellEditor)
+		//
+		def dvbVeVentiltypEventList = GlazedLists.eventList(meta.dvbVentileinstellung) as ca.odell.glazedlists.EventList
+		DefaultCellEditor dvbVeVentiltypCellEditor = AutoCompleteSupport.createTableCellEditor(dvbVeVentiltypEventList)
+		TableColumn dvbVeVentiltypColumn = view.dvbVentileinstellungTabelle.getColumnModel().getColumn(3)
+		dvbVeVentiltypColumn.setCellEditor(dvbVeVentiltypCellEditor)
 	}
 	
 	/**
@@ -601,10 +580,10 @@ class ProjektModel {
 	 */
 	def resyncDvbKanalnetzTableModels() {
 		// Druckverlust - Kanalnetz
-        synchronized (tableModels) {
-            tableModels.dvbKanalnetz.clear()
-            tableModels.dvbKanalnetz.addAll(map.dvb.kanalnetz)
-        }
+		synchronized (tableModels) {
+			tableModels.dvbKanalnetz.clear()
+			tableModels.dvbKanalnetz.addAll(map.dvb.kanalnetz)
+		}
 	}
 	
 	/**
@@ -612,10 +591,10 @@ class ProjektModel {
 	 */
 	def resyncDvbVentileinstellungTableModels() {
 		// Druckverlust - Ventileinstellung
-        synchronized (tableModels) {
-            tableModel.dvbVentileinstellung.clear()
-            tableModel.dvbVentileinstellung.addAll(map.dvb.ventileinstellung)
-        }
+		synchronized (tableModels) {
+			tableModel.dvbVentileinstellung.clear()
+			tableModel.dvbVentileinstellung.addAll(map.dvb.ventileinstellung)
+		}
 	}
 	
 }
