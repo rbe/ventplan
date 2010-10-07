@@ -616,7 +616,7 @@ class ProjektModel {
 	 * Synchronize all Swing table models depending on map.akustik.*.tabelle.
 	 */
 	def resyncAkustikTableModels() {
-		println "resyncAkustikTableModels()"
+		if (DEBUG) println "resyncAkustikTableModels()"
 		synchronized (tableModels) {
 			// Akustikberechnung Zuluft
 			tableModels.akustikZuluft.clear()
