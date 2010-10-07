@@ -621,8 +621,11 @@ class ProjektModel {
 	def resyncDvbVentileinstellungTableModels() {
 		// Druckverlust - Ventileinstellung
 		synchronized (tableModels) {
-			tableModel.dvbVentileinstellung.clear()
-			tableModel.dvbVentileinstellung.addAll(map.dvb.ventileinstellung)
+			tableModels.dvbVentileinstellung.clear()
+			tableModels.dvbVentileinstellung.addAll(map.dvb.ventileinstellung)
+		}
+	}
+	
 	/**
 	 * Synchronize all Swing table models depending on map.akustik.*.tabelle.
 	 */
