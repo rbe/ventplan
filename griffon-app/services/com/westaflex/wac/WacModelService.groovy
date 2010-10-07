@@ -17,6 +17,11 @@ import org.javanicus.gsql.*
 class WacModelService {
 	
 	/**
+	 * 
+	 */
+	public static boolean DEBUG = false
+	
+	/**
 	 * Hole Liste mit Zentralgeräten (Raumvolumenströme).
 	 */
 	List getZentralgerat() {
@@ -28,7 +33,7 @@ class WacModelService {
 			}?.collect {
 				it.artikelnummer
 			}
-		//println "getZentralgerat: ${r?.dump()}"
+		if (DEBUG) println "getZentralgerat: ${r?.dump()}"
 		r
 	}
 	
@@ -43,7 +48,7 @@ class WacModelService {
 			}?.collect {
 				it.volumenstrom
 			}
-		//println "getVolumenstromFurZentralgerat: ${r?.dump()}"
+		if (DEBUG) println "getVolumenstromFurZentralgerat: ${r?.dump()}"
 		r
 	}
 	
@@ -57,7 +62,7 @@ class WacModelService {
 					+ " ORDER BY artikelnummer",
 					[luftung])
 			}
-		println "getZentralgeratForVolumenstrom: ${luftung} -> ${r}"
+		if (DEBUG) println "getZentralgeratForVolumenstrom: ${luftung} -> ${r}"
 		r ? r.ARTIKELNUMMER : ""
 	}
 	
@@ -70,7 +75,7 @@ class WacModelService {
 			}?.collect {
 				it.artikelnummer
 			}
-		//println "getZuluftventile: ${r?.dump()}"
+		if (DEBUG) println "getZuluftventile: ${r?.dump()}"
 		r
 	}
 	
@@ -83,7 +88,7 @@ class WacModelService {
 			}?.collect {
 				it.artikelnummer
 			}
-		//println "getUberstromElemente: ${r?.dump()}"
+		if (DEBUG) println "getUberstromElemente: ${r?.dump()}"
 		r
 	}
 	
@@ -97,7 +102,7 @@ class WacModelService {
 					+ " ORDER BY maxvolumenstrom",
 					[artikel])
 			}
-		//println "getMaxVolumenstrom(${artikel}): ${r?.dump()}"
+		if (DEBUG) println "getMaxVolumenstrom(${artikel}): ${r?.dump()}"
 		r ? r as Integer : 0
 	}
 	
@@ -110,7 +115,7 @@ class WacModelService {
 			}?.collect {
 				it.artikelnummer
 			}
-		println "getDvbKanalbezeichnung(): ${r?.dump()}"
+		if (DEBUG) println "getDvbKanalbezeichnung(): ${r?.dump()}"
 		r
 	}
 	
@@ -123,7 +128,7 @@ class WacModelService {
 					+ " WHERE artikelnummer = ?",
 					[kanalbezeichnung])
 			}
-		println "getKanal(): ${kanalbezeichnung}: ${r?.dump()}"
+		if (DEBUG) println "getKanal(): ${kanalbezeichnung}: ${r?.dump()}"
 		r
 	}
 	
@@ -138,7 +143,7 @@ class WacModelService {
 			}
 		// Add empty item
 		r << ""
-		//println "getDvbKanalbezeichnung(): ${r?.dump()}"
+		if (DEBUG) println "getDvbKanalbezeichnung(): ${r?.dump()}"
 		r
 	}
 	
@@ -149,7 +154,7 @@ class WacModelService {
 		def r = withSql { sql ->
 				sql.rows("SELECT id, bezeichnung, wert, CONCAT(id, '.png') bild FROM widerstandsbeiwerte ORDER BY bezeichnung")
 			}
-		//println "getWbw: r=${r?.dump()}"
+		if (DEBUG) println "getWbw: r=${r?.dump()}"
 		r
 	}
 	
@@ -163,7 +168,7 @@ class WacModelService {
 					+ " WHERE artikelnummer = ? AND luftart = ? AND luftmenge = ?",
 					[ventilbezeichnung, luftart, luftmenge])
 			}
-		println "getDruckverlustFurVentil(): ${r?.dump()}"
+		if (DEBUG) println "getDruckverlustFurVentil(): ${r?.dump()}"
 		r ? r.druckverlust : 0.0d
 	}
 	
@@ -191,7 +196,7 @@ class WacModelService {
 					if (v1 < v2) v1
 					else v2
 				})
-		println "getEinstellung: einstellung=${m.einstellung}"
+		if (DEBUG) println "getEinstellung: einstellung=${m.einstellung}"
 		m.einstellung
 	}
 	
@@ -204,7 +209,7 @@ class WacModelService {
 		}?.collect {
 			it.artikelnummer
 		}
-		//println "getSchalldampfer: ${r}"
+		if (DEBUG) println "getSchalldampfer: ${r}"
 		[""] + r
 	}
 	

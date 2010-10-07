@@ -69,7 +69,7 @@ class GriffonHelper {
 			try {
 				r = nf.format(d)
 			} catch (e) {
-				println "toString2(): Exception while converting number ${d?.dump()}: ${e}"
+				if (GriffonHelper.DEBUG) println "toString2(): Exception while converting number ${d?.dump()}: ${e}"
 			}
 		}
 		r
@@ -131,7 +131,7 @@ class GriffonHelper {
 				e.printStackTrace()
 			}
 		}
-		//println "toDouble2(): ${d?.dump()} -> ${r?.dump()}"
+		//if (GriffonHelper.DEBUG) println "toDouble2(): ${d?.dump()} -> ${r?.dump()}"
 		r
 	}
 	
@@ -171,7 +171,7 @@ class GriffonHelper {
 	 */
 	def static addMapPropertyChangeListener = { name, map, closure = null ->
 		// This map
-		println "addMapPropertyChangeListener: adding PropertyChangeListener for ${name}"
+		if (GriffonHelper.DEBUG) println "addMapPropertyChangeListener: adding PropertyChangeListener for ${name}"
 		map.addPropertyChangeListener({ evt ->
 				// TODO rbe print if debug flag is set
 				if (GriffonHelper.DEBUG) println "C! ${name}.${evt.propertyName}: ${evt.oldValue?.dump()} -> ${evt.newValue?.dump()}"
@@ -231,7 +231,7 @@ class GriffonHelper {
 	 * Establish private EventPublisher relationship between two classes.
 	 */
 	def static tieEventListener = { me, klass, props = [:] ->
-		println "tieEventListener: setting up eventlistener relationship with ${klass}"
+		//if (GriffonHelper.DEBUG) println "tieEventListener: setting up eventlistener relationship with ${klass}"
 		def el = klass.newInstance(props)
 		me.addEventListener(el)
 		el.addEventListener(me)
@@ -268,7 +268,7 @@ class GriffonHelper {
 	 * Check row to select in a table.
 	 */
 	def static checkRow = { row, table ->
-		//println "checkRow: row=${row}, table=${table}"
+		//if (GriffonHelper.DEBUG) println "checkRow: row=${row}, table=${table}"
 		if (0 <= row && row < table.rowCount) return row
 		else if (row < 0) return 0
 		else if (row >= table.rowCount) return table.rowCount - 1
@@ -283,7 +283,8 @@ class GriffonHelper {
 		// Save existing ListSelectionListener(s)
 		def lsl = lsm.listSelectionListeners
 		lsl.each {
-				// Will throw UnsupportedOperationException! println "withDisabledListSelectionListeners: removing ${it}"
+				// Will throw UnsupportedOperationException!
+				//if (GriffonHelper.DEBUG) println "withDisabledListSelectionListeners: removing ${it}"
 				lsm.removeListSelectionListener(it)
 			}
 		// Execute closure
@@ -291,7 +292,8 @@ class GriffonHelper {
 		closure()
 		// Re-add ListSelectionListener(s)
 		lsl.each {
-				// Will throw UnsupportedOperationException! println "withDisabledListSelectionListeners: re-adding ${it}"
+				// Will throw UnsupportedOperationException!
+				//if (GriffonHelper.DEBUG) println "withDisabledListSelectionListeners: re-adding ${it}"
 				lsm.addListSelectionListener(it)
 			}
 		// Repaint, as default decorator was removed and e.g. table model has changed
@@ -305,7 +307,7 @@ class GriffonHelper {
 		// Save existing ActionListener(s)
 		def actionListeners = component.actionListeners
 		actionListeners.each {
-			println "withDisabledActionListener: removing ${it}"
+			if (GriffonHelper.DEBUG) println "withDisabledActionListener: removing ${it}"
 			component.removeActionListener(it)
 		}
 		// Execute closure
@@ -313,7 +315,7 @@ class GriffonHelper {
 		closure()
 		// Re-add ActionListener(s)
 		actionListeners.each {
-				println "withDisabledActionListener: re-adding ${it}"
+				if (GriffonHelper.DEBUG) println "withDisabledActionListener: re-adding ${it}"
 				component.addActionListener(it)
 			}
 	}
@@ -322,7 +324,7 @@ class GriffonHelper {
 	 * Apply a closure to a component or recurse component's components and apply closure.
 	 */
 	def static recurse(component, closure) {
-		//println "recurseComponent: ${component.class}"
+		//if (GriffonHelper.DEBUG) println "recurseComponent: ${component.class}"
 		if (component instanceof java.awt.Container) {
 			component.components.each { recurse(it, closure) }
 		}
@@ -348,7 +350,7 @@ class GriffonHelper {
 	 * Set textfield to have a yellow background when focused.
 	 */
 	def static yellowTextField = { component ->
-		//println "yellowTextField: ${component.class}"
+		//if (GriffonHelper.DEBUG) println "yellowTextField: ${component.class}"
 		if (component instanceof javax.swing.JTextField) {
 			// Set yellow background when focused
 			if (component.editable) {
@@ -370,7 +372,7 @@ class GriffonHelper {
 	 * Right align text.
 	 */
 	def static rightAlignTextField = { component ->
-		//println "rightAlignTextField: ${component.class}"
+		//if (GriffonHelper.DEBUG) println "rightAlignTextField: ${component.class}"
 		if (component instanceof javax.swing.JTextField) {
 			component.horizontalAlignment = javax.swing.JTextField.RIGHT
 		}
@@ -381,7 +383,7 @@ class GriffonHelper {
 	 * yellow background + right align, select all on focus gained
 	 */
 	def static doubleTextField = { component ->
-		//println "doubleTextField: ${component.class}"
+		//if (GriffonHelper.DEBUG) println "doubleTextField: ${component.class}"
 		if (component instanceof javax.swing.JTextField) {
 			// Set yellow background while editing
 			GriffonHelper.yellowTextField(component)
@@ -393,7 +395,7 @@ class GriffonHelper {
 					// If component is editable and 'is empty', select entire contents for easy editing
 					if (component.editable && isEmptyDouble(component)) {
 						javax.swing.SwingUtilities.invokeLater {
-							//println "doubleTextField: selecting all: component.text = " + component.text + " -> isEmptyDouble=" + isEmptyDouble(component)
+							//if (GriffonHelper.DEBUG) println "doubleTextField: selecting all: component.text = " + component.text + " -> isEmptyDouble=" + isEmptyDouble(component)
 							component.selectAll()
 						}
 					}
@@ -416,7 +418,7 @@ class GriffonHelper {
 	 * doubleTextField plus: convert value to formatted double on focus lost
 	 */
 	def static autoformatDoubleTextField = { component ->
-		//println "autoformatDoubleTextField: ${component.class}"
+		//if (GriffonHelper.DEBUG) println "autoformatDoubleTextField: ${component.class}"
 		if (component instanceof javax.swing.JTextField) {
 			GriffonHelper.doubleTextField(component)
 			// Add focus listener
@@ -448,10 +450,10 @@ class GriffonHelper {
 		// Extract values from components
 		bindings.each { k, v ->
 			if (v instanceof javax.swing.JTextField) {
-				//println "getValuesFromView: JTextField: ${k} -> ${v.text}"
+				//if (GriffonHelper.DEBUG) println "getValuesFromView: JTextField: ${k} -> ${v.text}"
 				map["${k}"] = v.text
 			} else if (v instanceof javax.swing.JComboBox) {
-				//println "getValuesFromView: JComboBox: ${k} -> ${v.selectedItem}"
+				//if (GriffonHelper.DEBUG) println "getValuesFromView: JComboBox: ${k} -> ${v.selectedItem}"
 				map["${k}"] = v.selectedItem
 			}
 		}

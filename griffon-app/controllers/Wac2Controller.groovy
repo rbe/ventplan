@@ -14,6 +14,8 @@ import com.bensmann.griffon.GriffonHelper as GH
  */
 class Wac2Controller {
 	
+	public static boolean DEBUG = false
+	
 	def model
 	def wacModelService
 	def projektModelService
@@ -75,7 +77,7 @@ class Wac2Controller {
 	 * Hole MVC Group des aktiven Projekts.
 	 */
 	def getMVCGroupAktivesProjekt = {
-		println "getMVCGroupAktivesProjekt: model.aktivesProjekt=${model.aktivesProjekt}"
+		if (DEBUG) println "getMVCGroupAktivesProjekt: model.aktivesProjekt=${model.aktivesProjekt}"
 		getMVCGroup(model.aktivesProjekt)
 	}
 	
@@ -85,7 +87,7 @@ class Wac2Controller {
 	boolean canClose() {
 		model.projekte.inject(true) { o, n ->
 			def c = getMVCGroup(n).controller
-			println "o=${o} c.canClose=${c.canClose()}"
+			if (DEBUG) println "o=${o} c.canClose=${c.canClose()}"
 			o &= c.canClose()
 		}
 	}
@@ -96,26 +98,26 @@ class Wac2Controller {
 	def exitApplication = { evt = null ->
 		// Ask if we can close
 		def canClose = canClose()
-		println "exitApplication: ${canClose}"
+		if (DEBUG) println "exitApplication: ${canClose}"
 		if (canClose) {
 			app.shutdown()
 		} else {
-			println "exitApplication: there are unsaved changes"
+			if (DEBUG) println "exitApplication: there are unsaved changes"
 			// Show dialog: ask user for save all, cancel, quit
 			def choice = app.controllers["Dialog"].showApplicationCloseDialog()
-			println "exitApplication: choice=${choice}"
+			if (DEBUG) println "exitApplication: choice=${choice}"
 			switch (choice) {
 				case 0:
-					println "Alles speichern"
+					if (DEBUG) println "Alles speichern"
 					// TODO rbe Projekte speichern aufrufen
 					app.shutdown()
 					break
 				case 1: // Cancel: do nothing...
-					println "Abbrechen..."
+					if (DEBUG) println "Abbrechen..."
 					app.shutdown() // TODO mmu REMOVE THIS LATER
 					break
 				case 2:
-					println "Schliessen"
+					if (DEBUG) println "Schliessen"
 					app.shutdown()
 					break
 			}
@@ -177,7 +179,7 @@ class Wac2Controller {
 	 * Ein Projekt aktivieren -- MVC ID an Wac2Model übergeben.
 	 */
 	def projektAktivieren = { mvcId ->
-		println "projektAktivieren: mvcId=${mvcId} model.aktivesProjekt=${model.aktivesProjekt}"
+		//if (DEBUG) println "projektAktivieren: mvcId=${mvcId} model.aktivesProjekt=${model.aktivesProjekt}"
 		// Anderes Projekt wurde aktiviert?
 		if (mvcId && mvcId != model.aktivesProjekt) {
 			// MVC ID merken
@@ -185,16 +187,16 @@ class Wac2Controller {
 			// Dirty-flag aus Projekt-Model übernehmen
 			try {
 				def mvcGroup = getMVCGroup(mvcId)
-				println "projektAktivieren: getMVCGroup(mvcId)=${mvcGroup}, wpx=${mvcGroup.model?.wpxFilename}"
+				//if (DEBUG) println "projektAktivieren: getMVCGroup(mvcId)=${mvcGroup}, wpx=${mvcGroup.model?.wpxFilename}"
 				model.aktivesProjektGeandert = mvcGroup.model?.map.dirty
 			} catch (e) {
 				e.printStackTrace()
 			}
-			println "projektAktivieren: mvcId=${model.aktivesProjekt}"
+			//if (DEBUG) println "projektAktivieren: mvcId=${model.aktivesProjekt}"
 		}
 		/*
 		else {
-			println "projektAktivieren: no change"
+			if (DEBUG) println "projektAktivieren: no change"
 		}
 		*/
 	}
@@ -204,13 +206,13 @@ class Wac2Controller {
 	 */
 	def projektIndexAktivieren = { index ->
 		if (index > -1) {
-			println "projektIndexAktivieren: model.projekte=${model.projekte.dump()}"
+			//if (DEBUG) println "projektIndexAktivieren: model.projekte=${model.projekte.dump()}"
 			projektAktivieren(model.projekte[index])
-			println "projektIndexAktivieren: index=${index} -> ${model.aktivesProjekt}"
+			//if (DEBUG) println "projektIndexAktivieren: index=${index} -> ${model.aktivesProjekt}"
 		}
 		/*
 		else {
-			println "projektIndexAktivieren: index=${index}: Kein Projekt vorhanden!"
+			if (DEBUG) println "projektIndexAktivieren: index=${index}: Kein Projekt vorhanden!"
 		}
 		*/
 	}
@@ -226,37 +228,37 @@ class Wac2Controller {
 			// MVC Gruppe zerstören
 			destroyMVCGroup(mvc.mvcId)
 			// Aus Liste der Projekte entfernen
-			println "projektSchliessen: removing ${model.aktivesProjekt} from model.projekte=${model.projekte.dump()}"
+			if (DEBUG) println "projektSchliessen: removing ${model.aktivesProjekt} from model.projekte=${model.projekte.dump()}"
 			model.projekte.remove(mvc.mvcId)
-			println "projektSchliessen: model.projekte=${model.projekte.dump()}"
+			if (DEBUG) println "projektSchliessen: model.projekte=${model.projekte.dump()}"
 			// Anderes Projekt aktivieren?
 			// NOT NEEDED projektIndexAktivieren(view.projektTabGroup.selectedIndex)
 			// Wird durch die Tab und den ChangeListener erledigt.
 		}
 		// Projekt zur aktiven Tab finden
 		def mvc = getMVCGroupAktivesProjekt()
-		println "projektSchliessen: model.aktivesProjekt=${model.aktivesProjekt} mvc=${mvc}"
+		if (DEBUG) println "projektSchliessen: model.aktivesProjekt=${model.aktivesProjekt} mvc=${mvc}"
 		def canClose = mvc.controller.canClose()
 		if (!canClose) {
-			println "projektSchliessen: canClose=${canClose}, there's unsaved data"
+			if (DEBUG) println "projektSchliessen: canClose=${canClose}, there's unsaved data"
 			def choice = app.controllers["Dialog"].showCloseProjectDialog()
-			println "projektSchliessen: choice=${choice}"
+			if (DEBUG) println "projektSchliessen: choice=${choice}"
 			switch (choice) {
 				case 0: // Save: save and close project
-					println "projektSchliessen: save and close"
+					if (DEBUG) println "projektSchliessen: save and close"
 					aktivesProjektSpeichern(evt)
 					clacpr()
 					break
 				case 1: // Cancel: do nothing...
-					println "projektSchliessen: cancel"
+					if (DEBUG) println "projektSchliessen: cancel"
 					break
 				case 2: // Close: just close the tab...
-					println "projektSchliessen: close without save"
+					if (DEBUG) println "projektSchliessen: close without save"
 					clacpr()
 					break
 			}
 		} else {
-			println "projektSchliessen: else... close!!"
+			if (DEBUG) println "projektSchliessen: else... close!!"
 			clacpr(mvc)
 		}
 	}
@@ -275,7 +277,7 @@ class Wac2Controller {
 				def file = view.wpxFileChooserWindow.selectedFile.toString()
 				// ... and reset it in FileChooser
 				view.wpxFileChooserWindow.selectedFile = null
-				println "projektOffnen: file=${file?.dump()}"
+				if (DEBUG) println "projektOffnen: file=${file?.dump()}"
 				// Load data
 				Wac2Splash.instance.setup()
 				Wac2Splash.instance.loadingProject()
@@ -285,7 +287,7 @@ class Wac2Controller {
 					// May return null due to org.xml.sax.SAXParseException while validating against XSD
 					def document = projektModelService.load(file)
 					if (document) {
-						//println "projektOffnen: document=${document?.dump()}"
+						//if (DEBUG) println "projektOffnen: document=${document?.dump()}"
 						// Create new Projekt MVC group
 						String mvcId = generateMVCId()
 						(projektModel, projektView, projektController) =
@@ -310,12 +312,12 @@ class Wac2Controller {
 					} else {
 						def errorMsg = "projektOffnen: Konnte Projekt nicht öffnen!"
 						app.controllers["Dialog"].showErrorDialog(errorMsg as String)
-						println errorMsg
+						if (DEBUG) println errorMsg
 					}
 					// Bindings and events of ProjektModel are fired now!?
-					println "-" * 80
-					println "projektOffnen: ProjektModel bidings/events fire now!?"
-					println "-" * 80
+					if (DEBUG) println "-" * 80
+					if (DEBUG) println "projektOffnen: ProjektModel bidings/events fire now!?"
+					if (DEBUG) println "-" * 80
 					// HACK
 					doOutside {
 						try { Thread.sleep(1 * 1000) } catch (e) {}
@@ -335,10 +337,10 @@ class Wac2Controller {
 		def mvc = getMVCGroupAktivesProjekt()
 		def saved = mvc.controller.save()
 		if (saved) {
-			println "aktivesProjektSpeichern: Projekt gespeichert in ${mvc.model.wpxFilename}"
+			if (DEBUG) println "aktivesProjektSpeichern: Projekt gespeichert in ${mvc.model.wpxFilename}"
 			saved
 		} else {
-			println "aktivesProjektSpeichern: Projekt nicht gespeichert, kein Dateiname (mvc.model.wpxFilename=${mvc.model.wpxFilename?.dump()})?"
+			if (DEBUG) println "aktivesProjektSpeichern: Projekt nicht gespeichert, kein Dateiname (mvc.model.wpxFilename=${mvc.model.wpxFilename?.dump()})?"
 			aktivesProjektSpeichernAls(evt)
 		}
 	}
@@ -355,7 +357,7 @@ class Wac2Controller {
 		def openResult = view.wpxFileChooserWindow.showSaveDialog(view.wac2Frame)
 		if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
 			mvc.model.wpxFilename = view.wpxFileChooserWindow.selectedFile.toString()
-			println "projektSpeichernAls: wpxFilename=${mvc.model.wpxFilename?.dump()}"
+			if (DEBUG) println "projektSpeichernAls: wpxFilename=${mvc.model.wpxFilename?.dump()}"
 			// Save data
 			aktivesProjektSpeichern(evt)
 		}
