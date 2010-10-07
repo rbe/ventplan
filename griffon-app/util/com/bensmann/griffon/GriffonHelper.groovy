@@ -23,6 +23,8 @@ import java.awt.Component
  */
 class GriffonHelper {
 	
+	public static boolean DEBUG = false
+	
 	/**
 	 * Standard rounding mode.
 	 */
@@ -172,7 +174,7 @@ class GriffonHelper {
 		println "addMapPropertyChangeListener: adding PropertyChangeListener for ${name}"
 		map.addPropertyChangeListener({ evt ->
 				// TODO rbe print if debug flag is set
-				println "C! ${name}.${evt.propertyName}: ${evt.oldValue?.dump()} -> ${evt.newValue?.dump()}"
+				if (GriffonHelper.DEBUG) println "C! ${name}.${evt.propertyName}: ${evt.oldValue?.dump()} -> ${evt.newValue?.dump()}"
 				if (closure) closure(evt)
 			} as java.beans.PropertyChangeListener)
 		// All nested maps
