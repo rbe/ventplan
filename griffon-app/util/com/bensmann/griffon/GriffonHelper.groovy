@@ -230,7 +230,7 @@ class GriffonHelper {
 	/**
 	 * Establish private EventPublisher relationship between two classes.
 	 */
-	def static tieEventListener = { me, klass, props = [:] ->
+	def static tieEventListener = { Object me, Class klass, Map props = [:] ->
 		//if (GriffonHelper.DEBUG) println "tieEventListener: setting up eventlistener relationship with ${klass}"
 		def el = klass.newInstance(props)
 		me.addEventListener(el)
