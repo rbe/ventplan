@@ -22,6 +22,6 @@
  * - UIThreadHelper.instance.executeOutside { // your code }
  * - UIThreadHelper.instance.executeFuture { // your code }
  */
-println "lifecycle.Startup"
+//println "lifecycle.Startup"
 // Set splash screen status text
 Wac2Splash.instance.startingUp()

@@ -22,5 +22,5 @@
  * - UIThreadHelper.instance.executeOutside { // your code }
  * - UIThreadHelper.instance.executeFuture { // your code }
  */
-println "lifecycle.Ready"
+//println "lifecycle.Ready"
 Wac2Splash.instance.dispose()

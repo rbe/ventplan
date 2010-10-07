@@ -22,7 +22,7 @@
  * - UIThreadHelper.instance.executeOutside { // your code }
  * - UIThreadHelper.instance.executeFuture { // your code }
  */
-println "lifecycle.Initialize"
+//println "lifecycle.Initialize"
 
 griffon.util.GriffonPlatformHelper.tweakForNativePlatform(app)
 groovy.swing.SwingBuilder.lookAndFeel('mac', 'nimbus', 'gtk', ['metal', [boldFonts: false]])

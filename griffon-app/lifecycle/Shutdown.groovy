@@ -22,4 +22,4 @@
  * - UIThreadHelper.instance.executeOutside { // your code }
  * - UIThreadHelper.instance.executeFuture { // your code }
  */
-println "lifecycle.Shutdown"
+//println "lifecycle.Shutdown"

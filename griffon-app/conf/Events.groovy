@@ -14,7 +14,7 @@ import com.bensmann.griffon.GriffonHelper as GH
  */
 onBootstrapEnd = { app ->
 	def startTime = System.currentTimeMillis()
-	println "Events.onBootstrapEnd: start"
+	//println "Events.onBootstrapEnd: start"
 	// Add .toDouble2 and .toString2 to all types to have a convenient API
 	[Integer, Long, Float, Double, BigDecimal, String].each {
 		it.metaClass.toDouble2 = GH.toDouble2
@@ -32,16 +32,16 @@ onBootstrapEnd = { app ->
 	}
 	//
 	def stopTime = System.currentTimeMillis()
-	println "Events.onBootstrapEnd: finished in ${stopTime - startTime} ms"
+	//println "Events.onBootstrapEnd: finished in ${stopTime - startTime} ms"
 }
 
 onStartupStart = { app ->
 	/*
 	def startTime = System.currentTimeMillis()
-	println "Events.onStartupStart: start"
+	//println "Events.onStartupStart: start"
 	//
 	def stopTime = System.currentTimeMillis()
-	println "Events.onStartupStart: finished in ${stopTime - startTime} ms"
+	//println "Events.onStartupStart: finished in ${stopTime - startTime} ms"
 	*/
 }
 
@@ -51,10 +51,10 @@ onStartupStart = { app ->
 onStartupEnd = { app ->
 	/*
 	def startTime = System.currentTimeMillis()
-	println "Events.onStartupEnd: start"
+	//println "Events.onStartupEnd: start"
 	//
 	def stopTime = System.currentTimeMillis()
-	println "Events.onStartupEnd: finished in ${stopTime - startTime} ms"
+	//println "Events.onStartupEnd: finished in ${stopTime - startTime} ms"
 	*/
 }
 
@@ -64,10 +64,10 @@ onStartupEnd = { app ->
 onReadyStart = { app ->
 	/*
 	def startTime = System.currentTimeMillis()
-	println "Events.onReadyStart: start"
+	//println "Events.onReadyStart: start"
 	//
 	def stopTime = System.currentTimeMillis()
-	println "Events.onReadyStart: finished in ${stopTime - startTime} ms"
+	//println "Events.onReadyStart: finished in ${stopTime - startTime} ms"
 	*/
 }
 
@@ -77,10 +77,10 @@ onReadyStart = { app ->
 onReadyEnd = { app ->
 	/*
 	def startTime = System.currentTimeMillis()
-	println "Events.onReadyEnd: start"
+	//println "Events.onReadyEnd: start"
 	//
 	def stopTime = System.currentTimeMillis()
-	println "Events.onReadyEnd: finished in ${stopTime - startTime} ms"
+	//println "Events.onReadyEnd: finished in ${stopTime - startTime} ms"
 	*/
 }
 
@@ -88,13 +88,11 @@ onReadyEnd = { app ->
  * 
  */
 onShutdownStart = { app ->
-	
 	def startTime = System.currentTimeMillis()
-	println "Events.onShutdownStart: start"
+	//println "Events.onShutdownStart: start"
 	//
 	def stopTime = System.currentTimeMillis()
-	println "Events.onShutdownStart: finished in ${stopTime - startTime} ms"
-	
+	//println "Events.onShutdownStart: finished in ${stopTime - startTime} ms"
 }
 
 /**
@@ -103,19 +101,19 @@ onShutdownStart = { app ->
 onNewInstance = { clazz, type, instance ->
 	// Nur Anzeigen, wenn Applikation erstmalig started (see conf/Application, startup groups)
 	if (clazz.name ==~ /Wac2.*/) Wac2Splash.instance.creatingUI()
-	println "Events.onNewInstance: clazz=${clazz} type=${type} instance=${instance}"
+	//println "Events.onNewInstance: clazz=${clazz} type=${type} instance=${instance}"
 }
 
 /**
  * 
  */
 onCreateMVCGroup = { mvcId, model, view, controller, mvcType, instances ->
-	println "Events.onCreateMVCGroup: mvcId=${mvcId}"
+	//println "Events.onCreateMVCGroup: mvcId=${mvcId}"
 }
 
 /**
  * 
  */
 onDestroyMVCGroup = { mvcId ->
-	println "Events.onDestroyMVCGroup: mvcId=${mvcId}"
+	//println "Events.onDestroyMVCGroup: mvcId=${mvcId}"
 }

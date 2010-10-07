@@ -1,1 +1,1 @@
-println "lifecycle.Stop"
+//println "lifecycle.Stop"
