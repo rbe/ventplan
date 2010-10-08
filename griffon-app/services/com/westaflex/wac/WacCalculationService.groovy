@@ -711,7 +711,8 @@ class WacCalculationService {
 			}
 		}
 		// What list to work on?
-		def t = map.akustik."${typ.toLowerCase()}".tabelle
+		def m = map.akustik."${typ.toLowerCase()}"
+		def t = m.tabelle
 		// Row 1
 		t[0] = wacModelService.getOktavmittenfrequenz(input.zentralgerat, input.volumenstrom, typ)
 		// Row 2
@@ -730,13 +731,12 @@ class WacCalculationService {
 		def umlenkungenWert = input.umlenkungen * 0.9d
 		t[5] = minus1(zero.inject([:], { o, n -> o[n.key] = umlenkungenWert; o }))
 		// Row 7
-		switch (input.raumabsorption) {
+		switch (input.luftverteilerkasten) {
 			case 0:
 				t[6] = zero
 				break
-			case 1:
+			default:
 				t[6] = [slp125: -3d, slp250: -3d, slp500: -3d, slp1000: -3d, slp2000: -3d, slp4000: -3d]
-				break
 		}
 		// Row 8
 		def slpLangsdampfung = wacModelService.getSchallleistungspegel(input.langsdampfungKanal)
@@ -756,7 +756,14 @@ class WacCalculationService {
 				break
 		}
 		// Row 12
-		t[11] = [slp125: -16.1d, slp250: -8.6d, slp500: -3.2d, slp1000: 0.0d, slp2000: 1.2d, slp4000: 1.0d]
+		switch (typ) {
+			case "Zuluft":
+				t[11] = [slp125: -16.1d, slp250: -8.6d, slp500: -3.2d, slp1000: 0.0d, slp2000: 1.2d, slp4000: 1.0d]
+				break
+			case "Abluft":
+				t[11] = [slp125: -16.1d, slp250: -8.6d, slp500: -3.2d, slp1000: 0.0d, slp2000: 1.2d, slp4000: 0.0d]
+				break
+		}
 		// Row 13
 		def sumColumn = { k ->
 			def s = 0.0d
@@ -766,6 +773,40 @@ class WacCalculationService {
 			s
 		}
 		t[12] = [slp125: sumColumn("slp125"), slp250: sumColumn("slp250"), slp500: sumColumn("slp500"), slp1000: sumColumn("slp1000"), slp2000: sumColumn("slp2000"), slp4000: sumColumn("slp4000")]
+		// TODO Mittlerer Schalldruckpegel
+		// Werte absteigend sortieren
+		def msdpWerte = t[12].collect { it.value }.sort { a, b -> b <=> a }
+		/*
+		def b = a[0]
+		def i = 0
+		def x
+		while (i <= 4) {
+			x = b - a[i + 1]
+			if (x < 0 || x > 13) { i = 99 }
+			else { b += diffToDelta(Math.round(x)) }
+			i++
+		}
+		*/
+		def diffToDelta = { Float abstand ->
+			final Float[] ft = [
+					3.0f, 2.8f, 2.5f, 2.3f,  2.1f, 1.9f,  1.8f, 1.6f,  1.5f, 1.3f,   1.2f,  1.1f, 1f,
+					0.9f, 0.8f, 0.7f, 0.6f, 0.55f, 0.5f, 0.45f, 0.4f, 0.35f, 0.3f, 0.275f, 0.25f, 0.225f,
+					0.2f
+				]
+			if (abstand > 0 && abstand <= 13f && abstand % 0.5f == 0) {
+				ft[(int)abstand * 2]
+			} else {
+				0f
+			}
+		}
+		def msdp = msdpWerte[0]
+		def tmp
+		msdpWerte.eachWithIndex { it, idx ->
+		    tmp = msdpWerte[idx + 1] ? msdp - msdpWerte[idx + 1] : 0
+		    if (idx > 4 || tmp < 0 || tmp > 13) return
+		    msdp += diffToDelta(Math.round(tmp))
+		}
+		m.mittlererSchalldruckpegel = msdp
 		//
 		if (DEBUG) t.eachWithIndex { it, p -> println "$p: $it" }
 	}
