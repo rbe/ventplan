@@ -69,3 +69,11 @@ addListenerToComboBox("Zuluft")
 addListenerToTextField("Zuluft")
 addListenerToComboBox("Abluft")
 addListenerToTextField("Abluft")
+// Add ActionListener
+def addAL = { tabname ->
+	view."akustik${tabname}${tabname}stutzenZentralgerat".addActionListener({ evt ->
+		controller.aktualisiereAkustikVolumenstrom(tabname)
+	} as java.awt.event.ActionListener)
+}
+addAL("Zuluft")
+addAL("Abluft")
