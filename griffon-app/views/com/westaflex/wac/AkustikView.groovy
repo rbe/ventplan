@@ -107,9 +107,9 @@ def buildLayout(tabname) {
 					break
 			}
 
-            label("Korrektur der A-Bewertung", constraints: "wrap")
+            label("Korrektur der A-Bewertung", constraints: "height 35px!, wrap")
 
-            label("Bewerteter Schallpegel", constraints: "wrap")
+            label("Bewerteter Schallpegel", constraints: "height 35px!, wrap")
         }
 
         panel(layout: new MigLayout("fillx, wrap", "[center]", "[fill]")) {
