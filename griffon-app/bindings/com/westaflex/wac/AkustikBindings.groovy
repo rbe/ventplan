@@ -22,6 +22,9 @@ TODO Nicht als Binding lösen, sondern nach Berechnung aktualisieren!?
 bind(source: raumVsZentralgerat, sourceProperty: "selectedItem", target: akustikZuluftZuluftstutzenZentralgerat, targetProperty: "selectedItem")
 bind(source: raumVsZentralgerat, sourceProperty: "selectedItem", target: akustikAbluftAbluftstutzenZentralgerat, targetProperty: "selectedItem")
 */
+// Mittlerer Schalldruckpegel
+bind(source: model.map.akustik.zuluft, sourceProperty: "mittlererSchalldruckpegel", target: akustikZuluftMittlererSchalldruckpegel, targetProperty: "text")
+bind(source: model.map.akustik.abluft, sourceProperty: "mittlererSchalldruckpegel", target: akustikAbluftMittlererSchalldruckpegel, targetProperty: "text")
 // ActionListener
 [akustikZuluftZuluftstutzenZentralgerat, akustikZuluftPegel].each { comp ->
 	comp.addActionListener({ evt ->
