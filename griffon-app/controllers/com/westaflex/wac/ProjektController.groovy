@@ -41,8 +41,7 @@ class ProjektController {
 		Wac2Splash.instance.initializingProject()
 		// Save MVC id
 		model.mvcId = args.mvcId
-		// Reference meta values
-		model.meta = app.models["wac2"].meta
+		// Set defaults
 		setDefaultValues()
 		// Add PropertyChangeListener to our model.meta
 		//GH.addMapPropertyChangeListener("meta", model.meta)
@@ -78,6 +77,8 @@ class ProjektController {
 	 * Setze Standardwerte (meist in Comboboxen).
 	 */
 	def setDefaultValues() {
+		// Reference meta values
+		model.meta = app.models["wac2"].meta
 		// Raumvolumenströme, Zentralgerät
 		model.map.anlage.zentralgerat = model.meta.zentralgerat[0]
 		// Raumvolumenströme, Volumenstrom des Zentralgeräts; default ist erster Wert der Liste
