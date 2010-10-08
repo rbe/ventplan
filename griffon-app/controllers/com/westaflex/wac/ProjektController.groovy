@@ -672,9 +672,10 @@ class ProjektController {
 					// Füge Volumenströme in Combobox hinzu
 					model.meta.volumenstromZentralgerat.each { view.raumVsVolumenstrom.addItem(it) }
 					// Selektiere errechneten Volumenstrom
+					def i = wacCalculationService.round5(nl)
 					model.map.anlage.volumenstromZentralgerat =
 						view.raumVsVolumenstrom.selectedItem =
-						model.meta.volumenstromZentralgerat.find { it == wacCalculationService.round5(nl) }
+						model.meta.volumenstromZentralgerat.find { it == i }
 				}
 			}
 		}
