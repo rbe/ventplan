@@ -54,6 +54,7 @@ class Wac2Resource {
 		def r = Wac2Resource.class.getResource("../resources/widerstand/${n}.jpg")
 		// prod
 		if (!r) r = Wac2Resource.class.getResource("/widerstand/${n}.jpg")
+		r
 	}
 	
 }
