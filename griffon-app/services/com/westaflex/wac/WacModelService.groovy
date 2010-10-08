@@ -216,6 +216,20 @@ class WacModelService {
 	}
 	
 	/**
+	 * Akustikberechnung, db(A) des Zentralgeräts.
+	 */
+	def getDezibelZentralgerat(artnr, volumenstrom, luftart) {
+		def r = withSql { sql ->
+			sql.rows("SELECT s.dba"
+					+ " FROM schalleistungspegel s"
+					+ " WHERE artikelnummer = ? AND volumenstrom >= ? AND ZuAbEx = ?",
+					[artnr, volumenstrom, luftart == "Zuluft" ? 0 : 1])
+		}
+		r = r[0].dba
+		if (DEBUG) println "getDezibelZentralgerat($artnr,$volumenstrom,$luftart): ${r?.dump()}"
+		r
+	}
+	/**
 	 * Akustikberechnung, Oktavmittenfrequenz.
 	 */
 	Map getOktavmittenfrequenz(artnr, volumenstrom, luftart) {
@@ -231,7 +245,7 @@ class WacModelService {
 	}
 	
 	/**
-	 * Akustikberechnung, Hauptschalldämpfer.
+	 * Akustikberechnung, Schallleistungspegel.
 	 */
 	def getSchallleistungspegel(artnr) {
 		def r = withSql { sql ->
