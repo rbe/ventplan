@@ -241,7 +241,7 @@ class ProjektModel {
 	 * @param writable boolean[]
 	 * @param tableModel ca.odell.glazedlists.EventList
 	 */
-	def gltmClosure = { columnNames, propertyNames, writable, tableModel, mapToUpdate, postValueSet = null ->
+	def gltmClosure = { columnNames, propertyNames, writable, tableModel, postValueSet = null ->
 		new ca.odell.glazedlists.swing.EventTableModel(tableModel, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { columnIndex -> columnNames[columnIndex] },
@@ -260,7 +260,7 @@ class ProjektModel {
 					object."${propertyNames[columnIndex]}" = value
 					println "... ${object}"
 					// Call post-value-set closure
-					if (postValueSet) postValueSet(object)
+					if (postValueSet) postValueSet(object, columnIndex, value)
 				},
 				getValueAt: { rowIndex, columnIndex ->
 					meta.gewahlterRaum[columnIndex]
@@ -275,17 +275,17 @@ class ProjektModel {
 		def columnNames =   ["Raum",            "Geschoss",     "Luftart",     ws("Raumfläche<br/>(m²)"), ws("Raumhöhe<br/>(m)"), "Zuluftfaktor",     "Abluftvolumenstrom"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumGeschoss", "raumLuftart", "raumFlache",              "raumHohe",             "raumZuluftfaktor", "raumAbluftVs"] as String[]
 		def writable      = [true, true, true, true, true, true, true] as boolean[]
-		def postValueSet  = { object ->
-			// TODO Call ProjektController.raumGeandert(raumIndex, view)
-			println "raume 1 ===> ${map.raum.raume}"
-			myTempMap = map.raum.raume.find { it.position == object.position }
+		def postValueSet  = { object, columnIndex, value ->
+			//println "raume 1 ===> ${map.raum.raume}"
+			def myTempMap = map.raum.raume.find { it.position == object.position }
 			myTempMap[columnIndex] = value
-			println "raume 2 ===> ${map.raum.raume}"
+			//println "raume 2 ===> ${map.raum.raume}"
 			meta.gewahlterRaum[columnIndex] = value
-			println "Edited: map.raum.raume -> ${map.raum.raume}"
+			//println "Edited: map.raum.raume -> ${map.raum.raume}"
+			// TODO Call ProjektController.raumGeandert(raumIndex)
 			resyncRaumTableModels()
 		}
-		gltmClosure(columnNames, propertyNames, writable, tableModels.raume, "raume", postValueSet)
+		gltmClosure(columnNames, propertyNames, writable, tableModels.raume, postValueSet)
 	}
 	
 	/**
@@ -295,7 +295,7 @@ class ProjektModel {
 		def columnNames =   ["Raum",            "Luftart",     ws("Raumvolumen<br/>(m³)"), ws("Luftwechsel<br/>(1/h)"), ws("Bezeichnung<br/>Abluftventile"),    ws("Anzahl<br/>Abluftventile"),    ws("Abluftmenge<br/>je Ventil"),   ws("Volumenstrom<br/>(m³/h)"), ws("Bezeichnung<br/>Zuluftventile"),    ws("Anzahl<br/>Zuluftventile"),    ws("Zuluftmenge<br/>je Ventil"),   "Verteilebene"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",              "raumLuftwechsel",           "raumBezeichnungAbluftventile",         "raumAnzahlAbluftventile",         "raumAbluftmengeJeVentil",         "raumVolumenstrom",            "raumBezeichnungZuluftventile",         "raumAnzahlZuluftventile",         "raumZuluftmengeJeVentil",         "raumVerteilebene"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true, true, true, true] as boolean[]
-		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsZuAbluftventile, "raume")
+		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsZuAbluftventile)
 	}
 	
 	/**
@@ -305,7 +305,7 @@ class ProjektModel {
 		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",                "Volumenstrom (m³/h)", "Überström-Elemente"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile",    "raumVolumenstrom",    "raumUberstromElement"] as String[]
 		def writable      = [true, true, true, true, true] as boolean[]
-		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsUberstromventile, "raume")
+		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsUberstromventile)
 	}
 	
 	/**
@@ -315,7 +315,7 @@ class ProjektModel {
 		def columnNames =   ["Bezeichnung", "Breite in mm", "Querschnittsfläche in mm²", "Spaltenhöhe in mm", "mit Dichtung"] as String[]
 		def propertyNames = ["turBezeichnung", "turBreite", "turQuerschnitt", "turSpaltenhohe", "turDichtung"] as String[]
 		def writable      = [true, true, true, true, true] as boolean[]
-		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeBearbeitenDetails, "raume")
+		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeBearbeitenDetails)
 	}
 	
 	/**
@@ -325,7 +325,7 @@ class ProjektModel {
 		def columnNames =   ["Raum",            "Raumnummer", "Raumtyp", "Geschoss",     "Luftart", "Faktor", "Vorgang", "Zuluft", "Abluft", "Duch??", "Duch2???", "Kanalnetz", "Kanalnetz2", "Türhöhe", "Max...?", "Rau..???", "Rau...???", "Rau...???", "Rau...???", "Rau...???"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumNummer", "raumTyp", "raumGeschoss", "luftart", "faktor", "vorgang", "zuluft", "abluft", "duch1", "duch2", "kanalnetz", "kanalnetz2", "turhohe", "max1", "raum1", "raum2", "raum3", "raum4", "raum5"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true] as boolean[]
-		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeBearbeitenEinstellungen, "raume")
+		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeBearbeitenEinstellungen)
 	}
 	
 	/**
@@ -335,13 +335,14 @@ class ProjektModel {
 		def columnNames =   ["Luftart", "Teilstrecke", ws("Luftvolumen-<br/>strom<br/>(m³/h)"), "Kanalbezeichnung", ws("Kanallänge<br/>(m)"), ws("Geschwindigkeit<br/>(m/s)"), ws("Reibungswiderstand<br/>gerader Kanal<br/>(Pa)"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>(Pa)"), ws("Widerstand<br/>Teilstrecke<br/><(Pa)")] as String[]
 		def propertyNames = ["dvbkLuftart", "teilstrecke", "luftVs",                                "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true, true] as boolean[]
-		def postValueSet  = { object ->
-			myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
+		def postValueSet  = { object, columnIndex, value ->
+			def myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
 			myTempMap[columnIndex] = value
 			println "Edited: map.dvb.kanalnetz -> ${map.dvb.kanalnetz}"
+			// TODO Call ProjektController.dvbKanalnetzGeandert(dvbKanalnetzIndex)
 			resyncDvbKanalnetzTableModels()
 		}
-		gltmClosure(columnNames, propertyNames, writable, tableModels.dvbKanalnetz, "dvb.kanalnetz", postValueSet)
+		gltmClosure(columnNames, propertyNames, writable, tableModels.dvbKanalnetz, postValueSet)
 	}
 	
 	/**
@@ -351,13 +352,14 @@ class ProjektModel {
 		def columnNames =   ["Raum", "Luftart", "Teilstrecken", "Ventiltyp",         "dP offen (Pa)", "Gesamt (Pa)",      "Differenz", "Abgleich (Pa)", "Einstellung"] as String[]
 		def propertyNames = ["raum", "dvbvLuftart", "teilstrecken", "ventilbezeichnung", "dpOffen",       "gesamtWiderstand", "differenz", "abgleich",      "einstellung"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true] as boolean[]
-		def postValueSet  = { object ->
-			myTempMap = map.dvb.ventileinstellung.find { it.position == object.position }
+		def postValueSet  = { object, columnIndex, value ->
+			def myTempMap = map.dvb.ventileinstellung.find { it.position == object.position }
 			myTempMap[columnIndex] = value
 			println "Edited: map.dvb.ventileinstellung -> ${map.dvb.ventileinstellung}"
+			// TODO Call ProjektController.dvbVentileinstellungGeandert(dvbVentileinstellungIndex)
 			resyncDvbVentileinstellungTableModels()
 		}
-		gltmClosure(columnNames, propertyNames, writable, tableModels.dvbVentileinstellung, "dvb.ventileinstellung", postValueSet)
+		gltmClosure(columnNames, propertyNames, writable, tableModels.dvbVentileinstellung, postValueSet)
 	}
 	
 	/**
@@ -367,7 +369,7 @@ class ProjektModel {
 		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"] as String[]
 		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"] as String[]
 		def writable      = [true, true, true] as boolean[]
-		gltmClosure(columnNames, propertyNames, writable, tableModels.wbw, "wbw")
+		gltmClosure(columnNames, propertyNames, writable, tableModels.wbw)
 	}
 	
 	/**
@@ -377,7 +379,7 @@ class ProjektModel {
 		def columnNames =   ["125",    "250",    "500",    "1000",     "2000",    "4000"] as String[]
 		def propertyNames = ["slp125", "slp250", "slp500", "slp1000",  "slp2000", "slp4000"] as String[]
 		def writable      = [false] * columnNames.length as boolean[]
-		gltmClosure(columnNames, propertyNames, writable, tableModels.akustikZuluft, "akustik.zuluft")
+		gltmClosure(columnNames, propertyNames, writable, tableModels.akustikZuluft)
 	}
 	
 	/**
@@ -387,7 +389,7 @@ class ProjektModel {
 		def columnNames =   ["125",    "250",    "500",    "1000",     "2000",    "4000"] as String[]
 		def propertyNames = ["slp125", "slp250", "slp500", "slp1000",  "slp2000", "slp4000"] as String[]
 		def writable      = [false] * columnNames.length as boolean[]
-		gltmClosure(columnNames, propertyNames, writable, tableModels.akustikAbluft, "akustik.abluft")
+		gltmClosure(columnNames, propertyNames, writable, tableModels.akustikAbluft)
 	}
 	
 	/**
