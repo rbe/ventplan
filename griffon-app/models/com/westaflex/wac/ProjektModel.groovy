@@ -407,20 +407,6 @@ class ProjektModel {
 				//println "map.raum.raume[r.position] -> ${map.raum.raume[r.position]}"
 				it.add(map.raum.raume[r.position])
 			}
-			/* TODO Bitte nur Vorlagen wie in Raumdaten nehmen, nicht die tatsächlichen Räume
-			// Neues DefaultComboBoxModel für AkustikView setzen
-			try {
-				map.akustik.raumBezeichnung.add(r.raumBezeichnung)
-			} catch (e) {
-				// combobox...
-				map.akustik.raumBezeichnung = []
-				map.akustik.raumBezeichnung.add(r.raumBezeichnung)
-			}
-			view.akustikAbluftRaumbezeichnung.setModel(new DefaultComboBoxModel(map.akustik.raumBezeichnung as String[]))
-			view.akustikZuluftRaumbezeichnung.setModel(new DefaultComboBoxModel(map.akustik.raumBezeichnung as String[]))
-			*/
-			//view.raumTabelle.setModel(createRaumTableModel())
-			//
 			// Raumdaten - Geschoss
 			def geschossEventList = GlazedLists.eventList(meta.raum.geschoss) as ca.odell.glazedlists.EventList
 			DefaultCellEditor raumGeschossCellEditor = AutoCompleteSupport.createTableCellEditor(geschossEventList)
@@ -458,12 +444,6 @@ class ProjektModel {
 			DefaultCellEditor raumVsUsLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsUsluftartEventList)
 			TableColumn raumVsUsLuftartColumn = view.raumVsUberstromventileTabelle.getColumnModel().getColumn(1)
 			raumVsUsLuftartColumn.setCellEditor(raumVsUsLuftartCellEditor)
-			/*
-			println "-" * 80
-			println "akustikAbluftRaumbezeichnung -> ${view.akustikAbluftRaumbezeichnung}"
-			println "akustikZuluftRaumbezeichnung -> ${view.akustikZuluftRaumbezeichnung}"
-			println "-" * 80
-			*/
 			// Combobox RaumVs - Überströmelemente
 			def raumVsUsElementeEventList = GlazedLists.eventList(meta.raumVsUberstromelemente) as ca.odell.glazedlists.EventList
 			DefaultCellEditor raumVsUsElementeCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsUsElementeEventList)
