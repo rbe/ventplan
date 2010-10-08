@@ -421,24 +421,42 @@ class ProjektModel {
 			*/
 			//view.raumTabelle.setModel(createRaumTableModel())
 			//
+			// Raumdaten - Geschoss
 			def geschossEventList = GlazedLists.eventList(meta.raum.geschoss) as ca.odell.glazedlists.EventList
 			DefaultCellEditor raumGeschossCellEditor = AutoCompleteSupport.createTableCellEditor(geschossEventList)
 			TableColumn raumGeschossColumn = view.raumTabelle.getColumnModel().getColumn(1)
 			raumGeschossColumn.setCellEditor(raumGeschossCellEditor)
-			//
+			// Raumdaten - Luftart
 			def luftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
 			DefaultCellEditor raumLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(luftartEventList)
 			TableColumn raumLuftartColumn = view.raumTabelle.getColumnModel().getColumn(2)
 			raumLuftartColumn.setCellEditor(raumLuftartCellEditor)
-			//
-			def raumVsluftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
-			DefaultCellEditor raumVsLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsluftartEventList)
+			// RaumVs Zu- und Abluftventile
+			// Combobox RaumVs - Luftart
+			def raumVsLuftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
+			DefaultCellEditor raumVsLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsLuftartEventList)
 			TableColumn raumVsLuftartColumn = view.raumVsZuAbluftventileTabelle.getColumnModel().getColumn(1)
 			raumVsLuftartColumn.setCellEditor(raumVsLuftartCellEditor)
-			//
-			def raumVsUsluftartEventList = GlazedLists.eventList(meta.raum.raumUberstromElement) as ca.odell.glazedlists.EventList
+			// Combobox RaumVs - Bezeichnung Abluftmenge
+			def raumVsBezAbluftmengeEventList = GlazedLists.eventList(meta.raumVsBezeichnungAbluftventile) as ca.odell.glazedlists.EventList
+			DefaultCellEditor raumVsBezAbluftmengeCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsBezAbluftmengeEventList)
+			TableColumn raumVsBezAbluftmengeColumn = view.raumVsZuAbluftventileTabelle.getColumnModel().getColumn(4)
+			raumVsBezAbluftmengeColumn.setCellEditor(raumVsBezAbluftmengeCellEditor)
+			// Combobox RaumVs - Bezeichnung Zuluftmenge
+			def raumVsBezZuluftmengeEventList = GlazedLists.eventList(meta.raumVsBezeichnungZuluftventile) as ca.odell.glazedlists.EventList
+			DefaultCellEditor raumVsBezZuluftmengeCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsBezZuluftmengeEventList)
+			TableColumn raumVsBezZuluftmengeColumn = view.raumVsZuAbluftventileTabelle.getColumnModel().getColumn(8)
+			raumVsBezZuluftmengeColumn.setCellEditor(raumVsBezZuluftmengeCellEditor)
+			// Combobox RaumVs - Verteilebene
+			def raumVsVerteilebeneEventList = GlazedLists.eventList(meta.raum.geschoss) as ca.odell.glazedlists.EventList
+			DefaultCellEditor raumVsVerteilebeneCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsVerteilebeneEventList)
+			TableColumn raumVsVerteilebeneColumn = view.raumVsZuAbluftventileTabelle.getColumnModel().getColumn(11)
+			raumVsVerteilebeneColumn.setCellEditor(raumVsVerteilebeneCellEditor)
+			// RaumVs Überströmventile
+			// Combobox RaumVs - Luftart
+			def raumVsUsluftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
 			DefaultCellEditor raumVsUsLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsUsluftartEventList)
-			TableColumn raumVsUsLuftartColumn = view.raumVsUberstromventileTabelle.getColumnModel().getColumn(4)
+			TableColumn raumVsUsLuftartColumn = view.raumVsUberstromventileTabelle.getColumnModel().getColumn(1)
 			raumVsUsLuftartColumn.setCellEditor(raumVsUsLuftartCellEditor)
 			/*
 			println "-" * 80
@@ -446,6 +464,11 @@ class ProjektModel {
 			println "akustikZuluftRaumbezeichnung -> ${view.akustikZuluftRaumbezeichnung}"
 			println "-" * 80
 			*/
+			// Combobox RaumVs - Überströmelemente
+			def raumVsUsElementeEventList = GlazedLists.eventList(meta.raumVsUberstromelemente) as ca.odell.glazedlists.EventList
+			DefaultCellEditor raumVsUsElementeCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsUsElementeEventList)
+			TableColumn raumVsUsElementeColumn = view.raumVsUberstromventileTabelle.getColumnModel().getColumn(4)
+			raumVsUsElementeColumn.setCellEditor(raumVsUsElementeCellEditor)
 		}
 	}
 	
