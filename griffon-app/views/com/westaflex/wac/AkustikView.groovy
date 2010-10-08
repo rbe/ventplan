@@ -55,8 +55,8 @@ def buildLayout(tabname) {
 
             label("Schallleistungspegel ${tabname}stutzen", foreground: GH.MY_RED)
             // TODO: split -> comboBox...???
-            comboBox(id: "akustik${tabname}${tabname}stutzenZentralgerat", items: model.meta.zentralgerat)
-            comboBox(id: "akustik${tabname}Pegel", constraints: "width 70px!, wrap", items: model.meta.volumenstromZentralgerat)
+            comboBox(id: "akustik${tabname}${tabname}stutzenZentralgerat", items: [""] + model.meta.zentralgerat, selectedItem: "")
+            comboBox(id: "akustik${tabname}Pegel", constraints: "width 70px!, wrap", items: [""] + model.meta.volumenstromZentralgerat)
 
             label("Schallleistungspegelerhöhung Kanalnetz", foreground: GH.MY_RED)
             comboBox(id: "akustik${tabname}Kanalnetz", constraints: "span 2, wrap", items: (10..200).step(10))
