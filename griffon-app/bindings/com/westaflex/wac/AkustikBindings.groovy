@@ -26,8 +26,45 @@ bind(source: raumVsZentralgerat, sourceProperty: "selectedItem", target: akustik
 bind(source: model.map.akustik.zuluft, sourceProperty: "mittlererSchalldruckpegel", target: akustikZuluftMittlererSchalldruckpegel, targetProperty: "text")
 bind(source: model.map.akustik.abluft, sourceProperty: "mittlererSchalldruckpegel", target: akustikAbluftMittlererSchalldruckpegel, targetProperty: "text")
 // ActionListener
-[akustikZuluftZuluftstutzenZentralgerat, akustikZuluftPegel].each { comp ->
+def addActionListener = { comp, typ ->
 	comp.addActionListener({ evt ->
-		controller.berechneAkustik("Zuluft")
+		controller.berechneAkustik(typ)
 	} as java.awt.event.ActionListener)
 }
+def addKeyListener = { comp, typ ->
+	comp.addKeyListener(
+		[
+			keyReleased: { evt ->
+				controller.berechneAkustik(typ)
+			}
+		] as java.awt.event.KeyAdapter
+	)
+}
+def addListenerToComboBox = { tabname ->
+	[
+		"akustik${tabname}Raumbezeichnung",
+		"akustik${tabname}${tabname}stutzenZentralgerat", "akustik${tabname}Pegel",
+		"akustik${tabname}Kanalnetz", "akustik${tabname}Filter",
+		"akustik${tabname}1Hauptschalldampfer",
+		"akustik${tabname}2Hauptschalldampfer",
+		"akustik${tabname}LangsdampfungKanal",
+		"akustik${tabname}SchalldampferVentil",
+		"akustik${tabname}EinfugungsdammwertLuftdurchlass"
+	].each {
+		addActionListener(view."${it}", tabname)
+	}
+}
+def addListenerToTextField = { tabname ->
+	[
+		"akustik${tabname}AnzahlUmlenkungen90GradStck",
+		"akustik${tabname}LuftverteilerkastenStck",
+		"akustik${tabname}LangsdampfungKanalLfdmMeter",
+		"akustik${tabname}Raumabsorption"
+	].each {
+		addKeyListener(view."${it}", tabname)
+	}
+}
+addListenerToComboBox("Zuluft")
+addListenerToTextField("Zuluft")
+addListenerToComboBox("Abluft")
+addListenerToTextField("Abluft")
