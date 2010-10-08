@@ -241,7 +241,7 @@ class ProjektModel {
 	 * @param writable boolean[]
 	 * @param tableModel ca.odell.glazedlists.EventList
 	 */
-	def gltmClosure = { columnNames, propertyNames, writable, tableModel, mapToUpdate ->
+	def gltmClosure = { columnNames, propertyNames, writable, tableModel, mapToUpdate, postValueSet = null ->
 		new ca.odell.glazedlists.swing.EventTableModel(tableModel, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { columnIndex -> columnNames[columnIndex] },
@@ -259,32 +259,8 @@ class ProjektModel {
 					println "setColumnValue: value@${columnIndex}=${value}"
 					object."${propertyNames[columnIndex]}" = value
 					println "... ${object}"
-					// TODO Replace switch by closure
-					def myTempMap
-					switch (mapToUpdate) {
-						case "raume":
-							// TODO Call ProjektController.raumGeandert(raumIndex, view)
-							println "raume 1 ===> ${map.raum.raume}"
-							myTempMap = map.raum.raume.find { it.position == object.position }
-							myTempMap[columnIndex] = value
-							println "raume 2 ===> ${map.raum.raume}"
-							meta.gewahlterRaum[columnIndex] = value
-							println "Edited: map.raum.raume -> ${map.raum.raume}"
-							resyncRaumTableModels()
-							break
-						case "dvb.kanalnetz":
-							myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
-							myTempMap[columnIndex] = value
-							println "Edited: map.dvb.kanalnetz -> ${map.dvb.kanalnetz}"
-							resyncDvbKanalnetzTableModels()
-							break
-						case "dvb.ventileinstellung":
-							myTempMap = map.dvb.ventileinstellung.find { it.position == object.position }
-							myTempMap[columnIndex] = value
-							println "Edited: map.dvb.ventileinstellung -> ${map.dvb.ventileinstellung}"
-							resyncDvbVentileinstellungTableModels()
-							break
-					}
+					// Call post-value-set closure
+					if (postValueSet) postValueSet(object)
 				},
 				getValueAt: { rowIndex, columnIndex ->
 					meta.gewahlterRaum[columnIndex]
@@ -299,7 +275,17 @@ class ProjektModel {
 		def columnNames =   ["Raum",            "Geschoss",     "Luftart",     ws("Raumfläche<br/>(m²)"), ws("Raumhöhe<br/>(m)"), "Zuluftfaktor",     "Abluftvolumenstrom"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumGeschoss", "raumLuftart", "raumFlache",      "raumHohe",     "raumZuluftfaktor", "raumAbluftVs"] as String[]
 		def writable      = [true, true, true, true, true, true, true] as boolean[]
-		gltmClosure(columnNames, propertyNames, writable, tableModels.raume, "raume")
+		def postValueSet  = { object ->
+			// TODO Call ProjektController.raumGeandert(raumIndex, view)
+			println "raume 1 ===> ${map.raum.raume}"
+			myTempMap = map.raum.raume.find { it.position == object.position }
+			myTempMap[columnIndex] = value
+			println "raume 2 ===> ${map.raum.raume}"
+			meta.gewahlterRaum[columnIndex] = value
+			println "Edited: map.raum.raume -> ${map.raum.raume}"
+			resyncRaumTableModels()
+		}
+		gltmClosure(columnNames, propertyNames, writable, tableModels.raume, "raume", postValueSet)
 	}
 	
 	/**
@@ -349,7 +335,13 @@ class ProjektModel {
 		def columnNames =   ["Luftart", "Teilstrecke", ws("Luftvolumen-<br/>strom<br/>(m³/h)"), "Kanalbezeichnung", ws("Kanallänge<br/>(m)"), ws("Geschwindigkeit<br/>(m/s)"), ws("Reibungswiderstand<br/>gerader Kanal<br/>(Pa)"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>(Pa)"), ws("Widerstand<br/>Teilstrecke<br/><(Pa)")] as String[]
 		def propertyNames = ["dvbkLuftart", "teilstrecke", "luftVs",                                "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true, true] as boolean[]
-		gltmClosure(columnNames, propertyNames, writable, tableModels.dvbKanalnetz, "dvb.kanalnetz")
+		def postValueSet  = { object ->
+			myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
+			myTempMap[columnIndex] = value
+			println "Edited: map.dvb.kanalnetz -> ${map.dvb.kanalnetz}"
+			resyncDvbKanalnetzTableModels()
+		}
+		gltmClosure(columnNames, propertyNames, writable, tableModels.dvbKanalnetz, "dvb.kanalnetz", postValueSet)
 	}
 	
 	/**
@@ -359,7 +351,13 @@ class ProjektModel {
 		def columnNames =   ["Raum", "Luftart", "Teilstrecken", "Ventiltyp",         "dP offen (Pa)", "Gesamt (Pa)",      "Differenz", "Abgleich (Pa)", "Einstellung"] as String[]
 		def propertyNames = ["raum", "dvbvLuftart", "teilstrecken", "ventilbezeichnung", "dpOffen",       "gesamtWiderstand", "differenz", "abgleich",      "einstellung"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true] as boolean[]
-		gltmClosure(columnNames, propertyNames, writable, tableModels.dvbVentileinstellung, "dvb.ventileinstellung")
+		def postValueSet  = { object ->
+			myTempMap = map.dvb.ventileinstellung.find { it.position == object.position }
+			myTempMap[columnIndex] = value
+			println "Edited: map.dvb.ventileinstellung -> ${map.dvb.ventileinstellung}"
+			resyncDvbVentileinstellungTableModels()
+		}
+		gltmClosure(columnNames, propertyNames, writable, tableModels.dvbVentileinstellung, "dvb.ventileinstellung", postValueSet)
 	}
 	
 	/**
