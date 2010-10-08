@@ -259,6 +259,7 @@ class ProjektModel {
 					println "setColumnValue: value@${columnIndex}=${value}"
 					object."${propertyNames[columnIndex]}" = value
 					println "... ${object}"
+					// TODO Replace switch by closure
 					def myTempMap
 					switch (mapToUpdate) {
 						case "raume":
