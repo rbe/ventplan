@@ -26,16 +26,16 @@ bind(source: raumVsZentralgerat, sourceProperty: "selectedItem", target: akustik
 bind(source: model.map.akustik.zuluft, sourceProperty: "mittlererSchalldruckpegel", target: akustikZuluftMittlererSchalldruckpegel, targetProperty: "text")
 bind(source: model.map.akustik.abluft, sourceProperty: "mittlererSchalldruckpegel", target: akustikAbluftMittlererSchalldruckpegel, targetProperty: "text")
 // ActionListener
-def addActionListener = { comp, typ ->
+def addActionListener = { comp, tabname ->
 	comp.addActionListener({ evt ->
-		controller.berechneAkustik(typ)
+		controller.berechneAkustik(tabname)
 	} as java.awt.event.ActionListener)
 }
-def addKeyListener = { comp, typ ->
+def addKeyListener = { comp, tabname ->
 	comp.addKeyListener(
 		[
 			keyReleased: { evt ->
-				controller.berechneAkustik(typ)
+				controller.berechneAkustik(tabname)
 			}
 		] as java.awt.event.KeyAdapter
 	)
