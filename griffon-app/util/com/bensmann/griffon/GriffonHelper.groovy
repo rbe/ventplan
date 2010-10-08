@@ -352,13 +352,13 @@ class GriffonHelper {
 	def static yellowTextField = { component ->
 		//if (GriffonHelper.DEBUG) println "yellowTextField: ${component.class}"
 		if (component instanceof javax.swing.JTextField) {
-			// Set yellow background when focused
+			// Editable: set yellow background when focused
 			if (component.editable) {
 				component.addFocusListener({ evt ->
 					component.background = (evt.id == java.awt.event.FocusEvent.FOCUS_GAINED ? MY_YELLOW : java.awt.Color.WHITE)
 				} as java.awt.event.FocusListener)
 			}
-			// Set red background when focused
+			// Not editable: set red background when focused
 			else {
 				component.addFocusListener({ evt ->
 					//component.setBorder(evt.id == java.awt.event.FocusEvent.FOCUS_GAINED ? javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED) : null)
