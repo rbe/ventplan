@@ -919,6 +919,20 @@ class ProjektController {
 	}
 	
 	/**
+	 * Akustikberechnung - Zentralgerät geändert.
+	 */
+	def aktualisiereAkustikVolumenstrom = { tabname ->
+		def zg = view."akustik${tabname}${tabname}stutzenZentralgerat"
+		def p = view."akustik${tabname}Pegel"
+		// Aktualisiere Volumenstrom
+		GH.withDisabledActionListeners p, {
+			p.removeAllItems()
+			// Hole Volumenströme des Zentralgeräts und füge diese in Combobox hinzu
+			wacModelService.getVolumenstromFurZentralgerat(zg.selectedItem).each { p.addItem(it) }
+		}
+	}
+	
+	/**
 	 * Akustikberechnung.
 	 */
 	def berechneAkustik = { tabname ->
