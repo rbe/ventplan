@@ -130,7 +130,7 @@ def buildLayout(tabname) {
 						tm = model.createAkustikAbluftTableModel()
 						break
 				}
-                table(id: "akustik${tabName}Tabelle", model: tm, selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                table(id: "akustik${tabname}Tabelle", model: tm, selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
 					current.setRowHeight(33)
 				}
             }
