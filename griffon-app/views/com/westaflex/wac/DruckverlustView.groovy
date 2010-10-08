@@ -42,32 +42,6 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
                     panel(id: "dvbKanalnetzTabellePanel", constraints: "span, grow", layout: new MigLayout("fill", "[fill,grow]", "")) {
                         jideScrollPane(constraints: "grow, width 600:1000:") {
                             table(id: 'dvbKanalnetzTabelle', model: model.createDvbKanalnetzTableModel())
-
-                            //table(id: "dvbKanalnetzTabelle", model: model.createDvbKanalnetzTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-                            //}
-                            /*table(id: 'dvbKanalnetzTabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "grow") {
-                                tableModel() {
-                                    current.addTableModelListener(WTH.getDvbKanalnetzTableModelListener())
-                                    propertyColumn(header: 'Luftart',
-                                        propertyName: 'dvbkLuftart',
-                                        cellEditor: WTH.getDruckverlustLuftartEditor(builder,model),
-                                        cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
-                                    )
-                                    propertyColumn(header: 'Teilstrecke', propertyName: 'teilstrecke')
-                                    propertyColumn(header: GH.ws("Luftvolumen<br/>strom<br/>(m³/h)"), propertyName: 'luftVs')
-                                    propertyColumn(header: 'Kanalbezeichnung',
-                                        propertyName: 'kanalbezeichnung',
-                                        cellEditor: WTH.getDruckverlustKanalbezeichnungEditor(builder,model),
-                                        cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
-                                    )
-                                    propertyColumn(header: GH.ws("Kanallänge<br/>(m)"), propertyName: 'lange')
-                                    propertyColumn(header: GH.ws("Geschwindigkeit<br/>(m/s)"), propertyName: 'geschwindigkeit', editable: false)
-                                    propertyColumn(header: GH.ws("Reibungswiderstand<br/>gerader Kanal<br/>(Pa)"), propertyName: 'reibungswiderstand', editable: false)
-                                    propertyColumn(header: GH.ws("Gesamtwider-<br/>standszahl"), propertyName: 'gesamtwiderstandszahl', editable: false)
-                                    propertyColumn(header: GH.ws("Einzelwider-<br/>stand<br/>(Pa)"), propertyName: 'einzelwiderstand', editable: false)
-                                    propertyColumn(header: GH.ws("Widerstand<br/>Teilstrecke<br/><(Pa)"), propertyName: 'widerstandTeilstrecke', editable: false)
-                                }
-                            }*/
                         }
                     }
 
@@ -104,35 +78,6 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
                     panel(id: "dvbVentileinstellungTabellePanel", constraints: "span, grow", layout: new MigLayout("fill", "[fill,grow]", "")) {
                         jideScrollPane(constraints: "grow, width 600:1000:") {
                             table(id: 'dvbVentileinstellungTabelle', model: model.createDvbVentileinstellungTableModel())
-                            
-                            //table(id: "dvbVentileinstellungTabelle", model: model.createDvbVentileinstellungTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-                            //}
-                            /*table(id: 'dvbVentileinstellungTabelle', selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION, constraints: "grow") {
-                                tableModel() {
-                                    current.addTableModelListener(WTH.getDvbKanalnetzTableModelListener())
-                                    propertyColumn(header: 'Luftart',
-                                        propertyName: 'dvbvLuftart',
-                                        cellEditor: WTH.getDruckverlustEinstellungLuftartEditor(builder,model),
-                                        cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
-                                    )
-                                    propertyColumn(header: 'Raum',
-                                        propertyName: 'dvbvRaum',
-                                        cellEditor: WTH.getDruckverlustEinstellungRaumEditor(builder,model),
-                                        cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
-                                    )
-                                    propertyColumn(header: 'Teilstrecken', propertyName: 'teilstrecken')
-                                    propertyColumn(header: 'Ventiltyp', 
-                                        propertyName: 'ventilbezeichnung',
-                                        cellEditor: WTH.getDruckverlustEinstellungVentilbezeichnungEditor(builder,model),
-                                        cellRenderer: new javax.swing.table.DefaultTableCellRenderer()
-                                    )
-                                    propertyColumn(header: GH.ws("dP offen<br/>(Pa)"), propertyName: 'dpOffen')
-                                    propertyColumn(header: GH.ws("Gesamt<br/>(Pa)"), propertyName: 'gesamtWiderstand')
-                                    propertyColumn(header: 'Differenz', propertyName: 'differenz')
-                                    propertyColumn(header: GH.ws("Abgleich<br/>(Pa)"), propertyName: 'abgleich')
-                                    propertyColumn(header: 'Einstellung', propertyName: 'einstellung')
-                                }
-                            }*/
                         }
                     }
 
