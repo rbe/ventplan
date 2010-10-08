@@ -17,9 +17,11 @@ bind(source: model.map.akustik.zuluft, sourceProperty: "langsdampfung",         
 bind(source: model.map.akustik.abluft, sourceProperty: "anzahlUmlenkungen",       target: akustikAbluftAnzahlUmlenkungen90GradStck, targetProperty: "text", mutual: true)
 bind(source: model.map.akustik.abluft, sourceProperty: "luftverteilerkastenStck", target: akustikAbluftLuftverteilerkastenStck,     targetProperty: "text", mutual: true)
 bind(source: model.map.akustik.abluft, sourceProperty: "langsdampfung",           target: akustikAbluftLangsdampfungKanalLfdmMeter, targetProperty: "text", mutual: true)
-// Zentralgerät
-bind(source: raumVsZentralgerat, sourceProperty: "selectedItem", target: akustikZuluftZuluftstutzenZentralgerat, targetProperty: "text")
-bind(source: raumVsZentralgerat, sourceProperty: "selectedItem", target: akustikAbluftAbluftstutzenZentralgerat, targetProperty: "text")
+/* Zentralgerät
+TODO Nicht als Binding lösen, sondern nach Berechnung aktualisieren!?
+bind(source: raumVsZentralgerat, sourceProperty: "selectedItem", target: akustikZuluftZuluftstutzenZentralgerat, targetProperty: "selectedItem")
+bind(source: raumVsZentralgerat, sourceProperty: "selectedItem", target: akustikAbluftAbluftstutzenZentralgerat, targetProperty: "selectedItem")
+*/
 // ActionListener
 [akustikZuluftZuluftstutzenZentralgerat, akustikZuluftPegel].each { comp ->
 	comp.addActionListener({ evt ->
