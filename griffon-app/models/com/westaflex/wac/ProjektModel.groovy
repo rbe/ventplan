@@ -259,7 +259,6 @@ class ProjektModel {
 					println "setColumnValue: value@${columnIndex}=${value}"
 					object."${propertyNames[columnIndex]}" = value
 					println "... ${object}"
-					//def resyncValue
 					def myTempMap
 					switch (mapToUpdate) {
 						case "raume":
@@ -269,40 +268,22 @@ class ProjektModel {
 							myTempMap[columnIndex] = value
 							println "raume 2 ===> ${map.raum.raume}"
 							meta.gewahlterRaum[columnIndex] = value
-							//resyncValue = "raume"
 							println "Edited: map.raum.raume -> ${map.raum.raume}"
 							resyncRaumTableModels()
 							break
 						case "dvb.kanalnetz":
 							myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
 							myTempMap[columnIndex] = value
-							//resyncValue = "kanalnetz"
 							println "Edited: map.dvb.kanalnetz -> ${map.dvb.kanalnetz}"
 							resyncDvbKanalnetzTableModels()
 							break
 						case "dvb.ventileinstellung":
 							myTempMap = map.dvb.ventileinstellung.find { it.position == object.position }
 							myTempMap[columnIndex] = value
-							//resyncValue = "ventileinstellung"
 							println "Edited: map.dvb.ventileinstellung -> ${map.dvb.ventileinstellung}"
 							resyncDvbVentileinstellungTableModels()
 							break
-						/*
-						case "akustik.abluft":
-							myTempMap = map.akustik.abluft.find { it.position == object.position }
-							myTempMap[columnIndex] = value
-							println "Edited: map.akustik.abluft -> ${map.akustik.abluft}"
-							break
-						case "akustik.zuluft":
-							myTempMap = map.akustik.zuluft.find { it.position == object.position }
-							myTempMap[columnIndex] = value
-							println "Edited: map.akustik.zuluft -> ${map.akustik.zuluft}"
-							break
-						*/
 					}
-					//meta.gewahlterRaum[columnIndex] = value
-					//println "meta.gewahlterRaum -> ${meta.gewahlterRaum}"
-					//println "# 1.b object -> ${object}"
 				},
 				getValueAt: { rowIndex, columnIndex ->
 					meta.gewahlterRaum[columnIndex]
