@@ -22,6 +22,8 @@ import java.awt.Component
 @griffon.util.EventPublisher
 class ProjektController {
 	
+	public static boolean DEBUG = false
+	
 	def builder
 	
 	def model
@@ -141,21 +143,21 @@ class ProjektController {
 	 * TODO mmu UNUSED?
 	 * Dialog anzeigen, wenn ein nicht gespeichertes Projekt geschlossen wird.
 	def closeProjectTab = { evt = null ->
-		println "closeProjectTab: closeTab=${app.controllers}"
+		if (DEBUG) println "closeProjectTab: closeTab=${app.controllers}"
 		def choice = app.controllers["Dialog"].showCloseProjectDialog()
-		println "closeProjectTab: choice=${choice}"
+		if (DEBUG) println "closeProjectTab: choice=${choice}"
 		// TODO rbe
 		switch (choice) {
 			case 0: // Save: save the closing project
-				println "closeProjectTab: choice -> saving project"
+				if (DEBUG) println "closeProjectTab: choice -> saving project"
 				// Return boolean value from save()
 				save()
 				break
 			case 1: // Close: just close the tab...
-				println "closeProjectTab: choice -> do nothing"
+				if (DEBUG) println "closeProjectTab: choice -> do nothing"
 				break
 			case 2: // Cancel: do nothing...
-				println "closeProjectTab: choice -> closing project"
+				if (DEBUG) println "closeProjectTab: choice -> closing project"
 				break
 		}
 	}
@@ -165,7 +167,7 @@ class ProjektController {
 	 * 
 	 */
 	def afterLoading = {
-		println "afterLoading: fire RaumHinzufugen"
+		if (DEBUG) println "afterLoading: fire RaumHinzufugen"
 		// Räume
 		model.map.raum.raume.each { raum ->
 			publishEvent "RaumHinzugefugt", [raum.position]
@@ -173,13 +175,13 @@ class ProjektController {
 		// HACK
 		try { Thread.sleep(500) } catch (e) {}
 		model.resyncRaumTableModels()
-		println "afterLoading: setting model.map.dirty to false"
+		if (DEBUG) println "afterLoading: setting model.map.dirty to false"
 		// Set dirty-flag in project's model to false
 		model.map.dirty = false
 		// Update tab title to ensure that no "unsaved-data-star" is displayed
 		setTabTitle()
 		// Splash screen
-		println "projektOffnen: disposing splashscreen"
+		if (DEBUG) println "projektOffnen: disposing splashscreen"
 		Wac2Splash.instance.dispose()
 	}
 	
@@ -188,7 +190,7 @@ class ProjektController {
 	 * @return Boolean Was project successfully saved to a file?
 	 */
 	def save = {
-		println "save: saving project '${getProjektTitel()}' in file ${model.wpxFilename?.dump()}"
+		if (DEBUG) println "save: saving project '${getProjektTitel()}' in file ${model.wpxFilename?.dump()}"
 		try {
 			if (model.wpxFilename) {
 				// Save data
@@ -429,12 +431,12 @@ class ProjektController {
 			if (zuluftfaktor != neuerZuluftfaktor) {
 				def infoMsg = "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
 				app.controllers["Dialog"].showInformDialog(infoMsg as String)
-				println infoMsg
+				if (DEBUG) println infoMsg
 			}
 			raum.raumZuluftfaktor = neuerZuluftfaktor
 		}
 		// Hole Werte für neuen Raum aus der View und füge Raum hinzu
-		println "raumHinzufugen: publishing event for raum.position=${raum.position}"
+		if (DEBUG) println "raumHinzufugen: publishing event for raum.position=${raum.position}"
 		publishEvent "RaumHinzufugen", [raum, view]
 	}
 	
@@ -523,7 +525,7 @@ class ProjektController {
 			*/
 			// Show dialog
 			raumBearbeitenDialog = GH.showDialog(builder, RaumBearbeitenView)
-			println "raumBearbeiten: dialog '${raumBearbeitenDialog.title}' closed: dialog=${raumBearbeitenDialog.dump()}"
+			if (DEBUG) println "raumBearbeiten: dialog '${raumBearbeitenDialog.title}' closed: dialog=${raumBearbeitenDialog.dump()}"
 			// Berechne alles, was von Räumen abhängt
 			publishEvent "RaumGeandert", [row]
 		}
@@ -533,7 +535,7 @@ class ProjektController {
 	 * RaumBearbeiten - RaumBearbeitenView schliessen.
 	 */
 	def raumBearbeitenSchliessen = {
-		println "raumBearbeitenSchliessen -> closing dialog"
+		if (DEBUG) println "raumBearbeitenSchliessen -> closing dialog"
 		raumBearbeitenDialog.dispose()
 	}
 	
@@ -545,7 +547,7 @@ class ProjektController {
 		if (raumIndex > -1) {
 			publishEvent "RaumZuAbluftventileLuftmengeBerechnen", [raumIndex]
 		} else {
-			println "raumZuAbluftventileLuftmengeBerechnen: Kein Raum ausgewählt, es wird nichts berechnet"
+			if (DEBUG) println "raumZuAbluftventileLuftmengeBerechnen: Kein Raum ausgewählt, es wird nichts berechnet"
 		}
 	}
 	
@@ -557,7 +559,7 @@ class ProjektController {
 		if (raumIndex > -1) {
 			publishEvent "RaumUberstromelementeLuftmengeBerechnen", [raumIndex]
 		} else {
-			println "raumUberstromelementeLuftmengeBerechnen: Kein Raum ausgewählt, es wird nichts berechnet"
+			if (DEBUG) println "raumUberstromelementeLuftmengeBerechnen: Kein Raum ausgewählt, es wird nichts berechnet"
 		}
 	}
 	
@@ -565,14 +567,14 @@ class ProjektController {
 	 * Raum bearbeiten - Luftart ändern.
 	 */
 	def raumBearbeitenLuftartGeandert = {
-		println "TODO raumBearbeitenLuftartGeandert"
+		if (DEBUG) println "TODO raumBearbeitenLuftartGeandert"
 	}
 	
 	/**
 	 * Raum bearbeiten - Geometrie eingegeben.
 	 */
 	def raumBearbeitenGeometrieGeandert = {
-		println "TODO raumBearbeitenGeometrieGeandert"
+		if (DEBUG) println "TODO raumBearbeitenGeometrieGeandert"
 	}
 	
 	/**
@@ -584,7 +586,7 @@ class ProjektController {
 		if (!evt.isAdjusting && evt.firstIndex > -1 && evt.lastIndex > -1) {
 			// source = javax.swing.ListSelectionModel
 			def selectedRow = evt.source.leadSelectionIndex
-			//println "raumInTabelleGewahlt: ${evt.dump()}, selectedRow=${selectedRow}"
+			//if (DEBUG) println "raumInTabelleGewahlt: ${evt.dump()}, selectedRow=${selectedRow}"
 			onRaumInTabelleWahlen(selectedRow, table)
 		}
 	}
@@ -605,7 +607,7 @@ class ProjektController {
 	 */
 	def onRaumInTabelleWahlen = { row, table = null ->
 		doLater {
-			//println "onRaumInTabelleWahlen: row=${row}"
+			//if (DEBUG) println "onRaumInTabelleWahlen: row=${row}"
 			row = GH.checkRow(row, view.raumTabelle)
 			if (row > -1) {
 				// Raum in Raumdaten-Tabelle, Raumvolumenströme-Zu/Abluftventile-Tabelle,
@@ -650,10 +652,10 @@ class ProjektController {
 	 */
 	def onZentralgeratAktualisieren = {
 		doLater {
-			println "onZentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
+			if (DEBUG) println "onZentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
 			if (!model.map.anlage.zentralgeratManuell) {
 				def (zentralgerat, nl) = wacCalculationService.berechneZentralgerat(model.map)
-				println "onZentralgeratAktualisieren: zentralgerat=${zentralgerat}," +
+				if (DEBUG) println "onZentralgeratAktualisieren: zentralgerat=${zentralgerat}," +
 					"nl=${nl}/${wacCalculationService.round5(nl)}"
 				// Aktualisiere Zentralgerät
 				GH.withDisabledActionListeners view.raumVsZentralgerat, {
@@ -720,7 +722,7 @@ class ProjektController {
 	def widerstandsbeiwerteBearbeiten = {
 		// Show dialog
 		def dialog = GH.showDialog(builder, WbwView)
-		println "widerstandsbeiwerteBearbeiten: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
+		if (DEBUG) println "widerstandsbeiwerteBearbeiten: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
 	}
 	
 	/**
@@ -747,8 +749,8 @@ class ProjektController {
 	 * Widerstandsbeiwerte, Dialog mit OK geschlossen.
 	 */
 	def wbwOkButton = {
-		println "wbwOkButton: selectedRow=${view.dvbKanalnetzTabelle.selectedRow}"
-		println model.map.dvb.kanalnetz
+		if (DEBUG) println "wbwOkButton: selectedRow=${view.dvbKanalnetzTabelle.selectedRow}"
+		if (DEBUG) println model.map.dvb.kanalnetz
 		// Welche Teilstrecke ist ausgewählt?
 		def map = model.map.dvb.kanalnetz[view.dvbKanalnetzTabelle.selectedRow]
 		map.gesamtwiderstandszahl = 0.5d
@@ -802,7 +804,7 @@ class ProjektController {
 	 */
 	def dvbVentileinstellungTeilstreckeDialog = {
 		def dialog = GH.showDialog(builder, TeilstreckenView)
-		println "TeilstreckenAuswahlen: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
+		if (DEBUG) println "TeilstreckenAuswahlen: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
 	}
 	
 	/**
@@ -830,7 +832,7 @@ class ProjektController {
 	 */
 	def updateRaumBezeichnungCombo = { rowIndex, newValue ->
 		// Neues TableModel setzen !
-		println "updateRaumBezeichnungCombo: ${rowIndex}"
+		if (DEBUG) println "updateRaumBezeichnungCombo: ${rowIndex}"
 		doLater {
             /*
 			// raumTabelle updaten
@@ -863,7 +865,7 @@ class ProjektController {
 	 */
 	def updateRaumLuftartCombo = { rowIndex, newValue ->
 		// Neues TableModel setzen !
-		println "updateRaumLuftartCombo: add row to table model ${rowIndex}"
+		if (DEBUG) println "updateRaumLuftartCombo: add row to table model ${rowIndex}"
 		doLater {
             /*
 			// raumTabelle updaten
@@ -895,16 +897,16 @@ class ProjektController {
 	 * Combobox für eines der Ventile geändert.
 	 */
 	def updateRaumVentile = { rowIndex ->
-		println "-" * 80
-		println "model.map.raum.raume=${model.map.raum.raume}"
+		if (DEBUG) println "-" * 80
+		if (DEBUG) println "model.map.raum.raume=${model.map.raum.raume}"
 		try {
 			// Raum holen
 			def r = model.map.raum.raume[rowIndex]
-			println "updateRaumVentile: row#${rowIndex} changed, raum=${r.dump()}"
+			if (DEBUG) println "updateRaumVentile: row#${rowIndex} changed, raum=${r.dump()}"
 			// Werte aus Tabelle übertragen
 			def tableModel = view.raumVsZuAbluftventileTabelle.model
 			def row = tableModel.rows.get(rowIndex)
-			println row
+			if (DEBUG) println row
 			// Berechnen und neue Werte im Model speichern
 			model.map.raum.raume[rowIndex] = wacCalculationService.berechneZuAbluftventile(r)
 			// Werte in Tabelle übertragen
@@ -912,7 +914,7 @@ class ProjektController {
 			//
 			//tableModel.fireTableDataChanged()
 		} catch (NullPointerException e) {}
-		println "-" * 80
+		if (DEBUG) println "-" * 80
 	}
 	
 	/**
