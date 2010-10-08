@@ -18,7 +18,7 @@ bind(source: model.map.akustik.abluft, sourceProperty: "anzahlUmlenkungen",     
 bind(source: model.map.akustik.abluft, sourceProperty: "luftverteilerkastenStck", target: akustikAbluftLuftverteilerkastenStck,     targetProperty: "text", mutual: true)
 bind(source: model.map.akustik.abluft, sourceProperty: "langsdampfung",           target: akustikAbluftLangsdampfungKanalLfdmMeter, targetProperty: "text", mutual: true)
 /* Zentralgerät
-TODO Nicht als Binding lösen, sondern nach Berechnung aktualisieren!?
+TODO Nicht als Binding lösen...
 bind(source: raumVsZentralgerat, sourceProperty: "selectedItem", target: akustikZuluftZuluftstutzenZentralgerat, targetProperty: "selectedItem")
 bind(source: raumVsZentralgerat, sourceProperty: "selectedItem", target: akustikAbluftAbluftstutzenZentralgerat, targetProperty: "selectedItem")
 */
