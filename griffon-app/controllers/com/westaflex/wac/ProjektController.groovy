@@ -917,24 +917,56 @@ class ProjektController {
 	/**
 	 * Akustikberechnung.
 	 */
-	def berechneAkustik = { typ ->
-		println "berechneAkustik: ${typ}"
+	def berechneAkustik = { tabname ->
+		def m = model.map.akustik."${tabname.toLowerCase()}"
+		// Konvertiere Wert TextField, ComboBox in Integer, default ist 0
+		// Eingabe einer 0 im TextField gibt ""???
+		def getInt = { comp ->
+			def x
+			if (comp instanceof javax.swing.JTextField) {
+				x = comp.text
+			} else if (comp instanceof javax.swing.JComboBox) {
+				x = comp.selectedItem
+			}
+			if (x == "") x = null
+			x?.toInteger() ?: 0
+		}
+		// Input parameter map
 		def input = [
-				zentralgerat: view."akustik${typ}${typ}stutzenZentralgerat".selectedItem,
-				volumenstrom: view."akustik${typ}Pegel".selectedItem,
-				slpErhohungKanalnetz: view."akustik${typ}Kanalnetz".selectedItem?.toInteger(),
-				slpErhohungFilter: view."akustik${typ}Filter".selectedItem?.toInteger(),
-				hauptschalldampfer1: view."akustik${typ}1Hauptschalldampfer".selectedItem,
-				hauptschalldampfer2: view."akustik${typ}2Hauptschalldampfer".selectedItem,
-				umlenkungen: view."akustik${typ}AnzahlUmlenkungen90GradStck".text?.toInteger(),
-				langsdampfungKanal: view."akustik${typ}LangsdampfungKanal".selectedItem,
-				langsdampfungKanalLfdmMeter: view."akustik${typ}LangsdampfungKanalLfdmMeter".text?.toInteger(),
-				schalldampferVentil: view."akustik${typ}SchalldampferVentil".selectedItem,
-				einfugungsdammwert: view."akustik${typ}EinfugungsdammwertLuftdurchlass".selectedItem,
-				raumabsorption: view."akustik${typ}Raumabsorption".text?.toInteger()
+				zentralgerat: view."akustik${tabname}${tabname}stutzenZentralgerat".selectedItem,
+				volumenstrom: getInt(view."akustik${tabname}Pegel"),
+				slpErhohungKanalnetz: getInt(view."akustik${tabname}Kanalnetz"),
+				slpErhohungFilter: getInt(view."akustik${tabname}Filter"),
+				hauptschalldampfer1: view."akustik${tabname}1Hauptschalldampfer".selectedItem,
+				hauptschalldampfer2: view."akustik${tabname}2Hauptschalldampfer".selectedItem,
+				umlenkungen: getInt(view."akustik${tabname}AnzahlUmlenkungen90GradStck"),
+				luftverteilerkasten: getInt(view."akustik${tabname}LuftverteilerkastenStck"),
+				langsdampfungKanal: view."akustik${tabname}LangsdampfungKanal".selectedItem,
+				langsdampfungKanalLfdmMeter: getInt(view."akustik${tabname}LangsdampfungKanalLfdmMeter"),
+				schalldampferVentil: view."akustik${tabname}SchalldampferVentil".selectedItem,
+				einfugungsdammwert: view."akustik${tabname}EinfugungsdammwertLuftdurchlass".selectedItem,
+				raumabsorption: getInt(view."akustik${tabname}Raumabsorption")
 			]
-		wacCalculationService.berechneAkustik(typ, input, model.map)
-		model.resyncAkustikTableModels()
+		if (input.zentralgerat) {
+			// Volumenstrom gesetzt?
+			if (input.volumenstrom == 0) {
+				input.volumenstrom = 50
+				view."akustik${tabname}Pegel".selectedItem = model.meta.volumenstromZentralgerat[0]
+			}
+			// Berechne Akustik
+			wacCalculationService.berechneAkustik(tabname, input, model.map)
+			// Zentralgerät, Überschrift
+			view."akustik${tabname}${tabname}Zentralgerat".text =
+				input.zentralgerat
+			// db(A)
+			view."akustik${tabname}dbA".text =
+				wacModelService.getDezibelZentralgerat(input.zentralgerat, input.volumenstrom, tabname).toString2()
+			// Mittlerer Schalldruckpegel
+			view."akustik${tabname}MittlererSchalldruckpegel".text =
+				m.mittlererSchalldruckpegel?.toString2() ?: 0d.toString2()
+			// Resync table
+			model.resyncAkustikTableModels()
+		}
 	}
 	
 }
