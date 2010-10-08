@@ -668,10 +668,10 @@ class ProjektController {
 						wacModelService.getVolumenstromFurZentralgerat(view.raumVsZentralgerat.selectedItem)
 					// Füge Volumenströme in Combobox hinzu
 					model.meta.volumenstromZentralgerat.each { view.raumVsVolumenstrom.addItem(it) }
-					// TODO view.raumVsVolumenstrom does not select the desired value!
+					// Selektiere errechneten Volumenstrom
 					model.map.anlage.volumenstromZentralgerat =
 						view.raumVsVolumenstrom.selectedItem =
-						wacCalculationService.round5(nl)
+						model.meta.volumenstromZentralgerat.find { it == wacCalculationService.round5(nl) }
 				}
 			}
 		}
