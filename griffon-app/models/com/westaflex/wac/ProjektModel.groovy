@@ -436,9 +436,9 @@ class ProjektModel {
 			TableColumn raumVsLuftartColumn = view.raumVsZuAbluftventileTabelle.getColumnModel().getColumn(1)
 			raumVsLuftartColumn.setCellEditor(raumVsLuftartCellEditor)
 			//
-			def raumVsUsluftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
+			def raumVsUsluftartEventList = GlazedLists.eventList(meta.raum.raumUberstromElement) as ca.odell.glazedlists.EventList
 			DefaultCellEditor raumVsUsLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsUsluftartEventList)
-			TableColumn raumVsUsLuftartColumn = view.raumVsUberstromventileTabelle.getColumnModel().getColumn(1)
+			TableColumn raumVsUsLuftartColumn = view.raumVsUberstromventileTabelle.getColumnModel().getColumn(4)
 			raumVsUsLuftartColumn.setCellEditor(raumVsUsLuftartCellEditor)
 			/*
 			println "-" * 80
