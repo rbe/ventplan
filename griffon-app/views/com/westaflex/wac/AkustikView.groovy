@@ -31,6 +31,8 @@ akustikTabGroup.with {
 	setTabColorProvider(com.jidesoft.swing.JideTabbedPane.ONENOTE_COLOR_PROVIDER)
 	setBoldActiveTab(true)
 }
+// Format fields
+GH.recurse(akustikTabPanel, GH.yellowTextField)
 // Bindings
 build(AkustikBindings)
 
