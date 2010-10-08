@@ -113,9 +113,12 @@ def buildLayout(tabname) {
         }
 
         panel(layout: new MigLayout("fillx, wrap", "[center]", "[fill]")) {
-			// TODO "akustik${tabname}${tabname}stutzenZentralgerat"
-            label("Zentrales Lüftungsgerät " + raumVsZentralgerat.selectedItem, foreground: tabTitleForeground)
 
+			panel() {
+	            label("Zentrales Lüftungsgerät", foreground: tabTitleForeground)
+				label(id: "akustik${tabname}${tabname}Zentralgerat", foreground: tabTitleForeground)
+			}
+			
             label(tabname, foreground: tabTitleForeground)
 
             label("Oktavmittenfrequenz in Hz")
@@ -136,6 +139,7 @@ def buildLayout(tabname) {
             }
 
             label("Mittlerer Schalldruckpegel* dB(A) =", constraints: "right")
+			label(id: "akustik${tabname}MittlererSchalldruckpegel", text: "0,00", constraints: "right")
         }
 
         panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
@@ -143,10 +147,11 @@ def buildLayout(tabname) {
             label(" ", constraints: "wrap")
             label(" ", constraints: "wrap")
             label("dB(A)")
+			label(id: "akustik${tabname}dbA", text: "0,00", constraints: "left")
         }
 
-        label(constraints: "wrap")
-        label("<html>* Bei dieser Berechnung handelt es dich um eine<br/>theoretische Auslegung, deren Werte in der Praxis abweichen können</html>", constraints: "right, span 3")
+        label(constraints: "left, wrap")
+        label("<html>* Bei dieser Berechnung handelt es dich um eine theoretische Auslegung, deren Werte in der Praxis abweichen können</html>", constraints: "right, span 3")
 	}
 	return "akustik${tabname}Tab"
 }
