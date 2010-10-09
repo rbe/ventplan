@@ -139,7 +139,6 @@ def buildLayout(tabname) {
             }
 
             label("Mittlerer Schalldruckpegel* dB(A) =", constraints: "right")
-			label(id: "akustik${tabname}MittlererSchalldruckpegel", text: "0,00", constraints: "right")
         }
 
         panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
@@ -148,10 +147,17 @@ def buildLayout(tabname) {
             label(" ", constraints: "wrap")
             label("dB(A)")
 			label(id: "akustik${tabname}dbA", text: "0,00", constraints: "left")
+            label(" ", constraints: "wrap")
+            label(" ", constraints: "wrap")
+            label(" ", constraints: "wrap")
+            label(" ", constraints: "wrap")
+            label(" ", constraints: "wrap")
+            label(" ", constraints: "wrap")
+            label(id: "akustik${tabname}MittlererSchalldruckpegel", text: "0,00", constraints: "right")
         }
 
         label(constraints: "left, wrap")
-        label("<html>* Bei dieser Berechnung handelt es dich um eine theoretische Auslegung, deren Werte in der Praxis abweichen können</html>", constraints: "right, span 3")
+        label("<html>* Bei dieser Berechnung handelt es dich um eine theoretische Auslegung, deren Werte in der Praxis abweichen können</html>", constraints: "right, span 2")
 	}
 	return "akustik${tabname}Tab"
 }
