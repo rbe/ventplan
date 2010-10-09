@@ -349,7 +349,7 @@ class ProjektModel {
 	 * Druckverlustberechnung - Ventileinstellung.
 	 */
 	def createDvbVentileinstellungTableModel() {
-		def columnNames =   ["Raum", "Luftart", "Teilstrecken", "Ventiltyp",         "dP offen (Pa)", "Gesamt (Pa)",      "Differenz", "Abgleich (Pa)", "Einstellung"] as String[]
+		def columnNames =   ["Raum", "Luftart",     "Teilstrecken", "Ventiltyp",         "dP offen (Pa)", "Gesamt (Pa)",      "Differenz", "Abgleich (Pa)", "Einstellung"] as String[]
 		def propertyNames = ["raum", "dvbvLuftart", "teilstrecken", "ventilbezeichnung", "dpOffen",       "gesamtWiderstand", "differenz", "abgleich",      "einstellung"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
