@@ -754,6 +754,19 @@ class ProjektController {
 	}
 	
 	/**
+	 * Widerstandsbeiwerte, Übernehmen-Button.
+	 */
+	def wbwSaveWbwButton = {
+		// Daten aus der Eingabemaske holen
+		def wbw = [
+			name: view.wbwBezeichnung.text,
+			wert: view.wbwWert.text?.toDouble2() ?: 0.0d,
+			anzahl: view.wbwAnzahl.text?.toInteger() ?: 0
+		]
+		println wbw
+		// TODO Wenn WBW noch nicht vorhanden, dann hinzufügen
+	}
+	
 	 * Widerstandsbeiwerte, Dialog mit OK geschlossen.
 	 */
 	def wbwOkButton = {
