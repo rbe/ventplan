@@ -457,17 +457,16 @@ class ProjektModel {
 			TableColumn raumVsUsElementeColumn = view.raumVsUberstromventileTabelle.getColumnModel().getColumn(4)
 			raumVsUsElementeColumn.setCellEditor(raumVsUsElementeCellEditor)
 
-            println "BEFORE: meta.raum.typ -> ${meta.raum.typ}"
-            meta.raum.typ = meta.raum.typ + [r.raumBezeichnung]
-            view.dvbVentileinstellungRaum.setModel(new DefaultComboBoxModel(meta.raum.typ as String[]))
-            println "AFTER: meta.raum.typ -> ${meta.raum.typ}"
+            // TODO: Verbesserung?
+            // Raum Typ für Druckverlustberechnung - Ventileinstellung Combobox.
+            //updateDvbVentileinstellungComboBoxModel(view)
 		}
 	}
 	
 	/**
 	 * Einen Raum aus dem Model entfernen, alle TableModels synchronisieren.
 	 */
-	def removeRaum = { raumIndex ->
+	def removeRaum = { raumIndex, view ->
 		synchronized (map.raum.raume) {
 			//println "removeRaum: removing raumIndex=${raumIndex}"
 			/*
@@ -486,9 +485,19 @@ class ProjektModel {
 				it.remove(raumIndex)
 			}
 			//
-            map.akustik.raumBezeichnung.remove(raumIndex)
+            //map.akustik.raumBezeichnung.remove(raumIndex)
+            // TODO: Verbesserung?
+            //updateDvbVentileinstellungComboBoxModel(view)
 		}
 	}
+
+    /**
+     * ComboBox Model für Druckverlustberechnung Ventileinstellung setzen
+     */
+    def updateDvbVentileinstellungComboBoxModel = { view ->
+        def newComboBoxModel = meta.raum.typ + map.raum.raume.raumBezeichnung as Set
+        view.dvbVentileinstellungRaum.setModel(new DefaultComboBoxModel(newComboBoxModel.toArray()))
+    }
 	
 	/**
 	 * Synchronize all Swing table models depending on map.raum.raume.
