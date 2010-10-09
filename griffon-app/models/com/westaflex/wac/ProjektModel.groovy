@@ -370,7 +370,10 @@ class ProjektModel {
 		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"] as String[]
 		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"] as String[]
 		def writable      = [true, true, true] as boolean[]
-		gltmClosure(columnNames, propertyNames, writable, tableModels.wbw)
+		def postValueSet  = { object, columnIndex, value ->
+			controller.wbwInTabelleGewahlt()
+		}
+		gltmClosure(columnNames, propertyNames, writable, tableModels.wbw, postValueSet)
 	}
 	
 	/**
