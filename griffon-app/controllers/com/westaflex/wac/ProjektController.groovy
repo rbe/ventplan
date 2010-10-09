@@ -757,6 +757,9 @@ class ProjektController {
 		map.gesamtwiderstandszahl = 0.5d
 		// Berechne Teilstrecke
 		wacCalculationService.berechneTeilstrecke(map)
+		// Resync model
+		model.resyncDvbKanalnetzTableModels()
+		// TODO Close dialog
 	}
 	
 	/**
