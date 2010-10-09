@@ -251,7 +251,7 @@ class ProjektModel {
 					} catch (e) {
 						// combobox...
 						println "gltmClosure, getColumnValue: ${e}: ${object?.dump()}"
-						object?.toString2()
+						object?.toString()
 					}
 				},
 				isEditable:     { object, columnIndex -> writable[columnIndex] },
