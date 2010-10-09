@@ -457,7 +457,7 @@ class ProjektModel {
 			TableColumn raumVsUsElementeColumn = view.raumVsUberstromventileTabelle.getColumnModel().getColumn(4)
 			raumVsUsElementeColumn.setCellEditor(raumVsUsElementeCellEditor)
 
-            // TODO: Verbesserung?
+            // TODO: Verbesserung! Später freischalten.
             // Raum Typ für Druckverlustberechnung - Ventileinstellung Combobox.
             //updateDvbVentileinstellungComboBoxModel(view)
 		}
@@ -486,7 +486,7 @@ class ProjektModel {
 			}
 			//
             //map.akustik.raumBezeichnung.remove(raumIndex)
-            // TODO: Verbesserung?
+            // TODO: Verbesserung! Später freischalten.
             //updateDvbVentileinstellungComboBoxModel(view)
 		}
 	}
