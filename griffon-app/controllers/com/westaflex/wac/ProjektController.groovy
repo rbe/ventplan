@@ -768,7 +768,7 @@ class ProjektController {
 		// Resync model
 		model.resyncDvbKanalnetzTableModels()
 		// Close dialog
-		wbwDialog.close()
+		wbwDialog.dispose()
 	}
 	
 	/**
