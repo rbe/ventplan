@@ -741,11 +741,11 @@ class ProjektController {
 		javax.swing.ImageIcon image = new javax.swing.ImageIcon(Wac2Resource.getWiderstandUrl(wbw.id))
 		// Image und Text setzen
 		if (image) {
-			view.wbwBild.setText("")
-			view.wbwBild.setIcon(image)
+			view.wbwBild.text = ""
+			view.wbwBild.icon = image
 		} else {
-			view.wbwBild.setText("-- kein Bild --")
-			view.wbwBild.setIcon(null)
+			view.wbwBild.text = "-- kein Bild --"
+			view.wbwBild.icon = null
 		}
 		// TODO Daten in Eingabemaske setzen
 		wbwDialog.
