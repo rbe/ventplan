@@ -47,7 +47,7 @@ class GriffonHelper {
 	 */
 	def static toString2 = { digits = 2, roundingMode = null ->
 		def d = delegate
-		def r
+		def r = "0,00"
 		// Check against NaN, Infinity
 		if (d in [Float.NaN, Double.NaN]) {
 			//r = "NaN"
