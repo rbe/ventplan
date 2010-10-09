@@ -32,6 +32,7 @@ class DvbKanalnetzEvents {
 	 * 
 	 */
 	def onDvbKanalnetzHinzufugen = { kanalnetz, view ->
+		println "onDvbKanalnetzHinzufugen"
 		doLater {
 			// Map values from GUI
 			def k = [
