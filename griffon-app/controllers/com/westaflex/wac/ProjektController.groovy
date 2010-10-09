@@ -710,17 +710,6 @@ class ProjektController {
 	}
 	
 	/**
-	 * Druckverlustberechnung - Kanalnetz neuen Eintrag ins TableModel hinzufügen
-	 */
-	/*def onAddDvbKanalnetzToTableModel = { kanalnetz ->
-		// Let's add a row to the table
-		def dvbKanalnetzRows = view.dvbKanalnetzTabelle.getModel().getRowsModel().getValue()
-		dvbKanalnetzRows.add(kanalnetz)
-		view.raumTabelle.getModel().getRowsModel().setValue(dvbKanalnetzRows)
-		view.raumTabelle.getModel().fireTableDataChanged()
-	}*/
-	
-	/**
 	 * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
 	 */
 	def widerstandsbeiwerteBearbeiten = {
@@ -767,7 +756,7 @@ class ProjektController {
 		// TODO Wenn WBW noch nicht vorhanden, dann hinzufügen
 	}
 	
-	/**
+    /**
 	 * Widerstandsbeiwerte, Dialog mit OK geschlossen.
 	 */
 	def wbwOkButton = {
@@ -776,10 +765,9 @@ class ProjektController {
 		if (DEBUG) println model.map.dvb.kanalnetz
 		// Welche Teilstrecke ist ausgewählt?
 		def map = model.map.dvb.kanalnetz[view.dvbKanalnetzTabelle.selectedRow]
-		// TODO Summieren...
-		def summe = model.tableModels.wbw.sum { it.widerstandsbeiwert }
-		println "SUMME=$summe"
+		println map.gesamtwiderstandszahl
 		map.gesamtwiderstandszahl = 0.5d
+		println map.gesamtwiderstandszahl
 		// Berechne Teilstrecke
 		wacCalculationService.berechneTeilstrecke(map)
 		// Resync model
@@ -798,7 +786,7 @@ class ProjektController {
 	 * Druckverlustberechnung - Kanalnetz - Entfernen.
 	 */
 	def dvbKanalnetzEntfernen = {
-		// TODO
+		publishEvent "DvbKanalnetzEntfernen", [view.dvbKanalnetzTabelle.selectedRow/*model.meta.gewahlterRaum.position*/]
 	}
 	
 	/**
@@ -819,17 +807,6 @@ class ProjektController {
 	}
 	
 	/**
-	 * Druckverlustberechnung - Ventileinstellung neuen Eintrag ins TableModel hinzufügen
-	 */
-	/*def onAddDvbVentileinstellungToTableModel = { ventileinstellung ->
-		// Let's add a row to the table
-		def dvbVentileinstellungRows = view.dvbKanalnetzTabelle.getModel().getRowsModel().getValue()
-		dvbVentileinstellungRows.add(ventileinstellung)
-		view.raumTabelle.getModel().getRowsModel().setValue(dvbVentileinstellungRows)
-		view.raumTabelle.getModel().fireTableDataChanged()
-	}*/
-	
-	/**
 	 * 
 	 */
 	def dvbVentileinstellungTeilstreckeDialog = {
@@ -842,7 +819,7 @@ class ProjektController {
 	 * Druckverlustberechnung - Ventileinstellung - Entfernen.
 	 */
 	def dvbVentileinstellungEntfernen = {
-		
+		publishEvent "DvbVentileinstellungEntfernen", [view.dvbVentileinstellungTabelle.selectedRow/*model.meta.gewahlterRaum.position*/]
 	}
 
     /**
@@ -865,27 +842,6 @@ class ProjektController {
 		// Neues TableModel setzen !
 		if (DEBUG) println "updateRaumBezeichnungCombo: ${rowIndex}"
 		doLater {
-            /*
-			// raumTabelle updaten
-			def raumTableModel = view.raumTabelle.getModel()
-			raumTableModel.setValueAt(newValue, rowIndex, 0)
-			view.raumTabelle.setModel(raumTableModel)
-			view.raumTabelle.getModel().fireTableDataChanged()
-			// raumVsZuAbluftventileTabelle updaten
-			def raumVsTableModel = view.raumVsZuAbluftventileTabelle.getModel()
-			raumVsTableModel.setValueAt(newValue, rowIndex, 0)
-			view.raumVsZuAbluftventileTabelle.setModel(raumVsTableModel)
-			view.raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
-			// raumVsUberstromventileTabelle updaten
-			def raumVsUberstromTableModel = view.raumVsUberstromventileTabelle.getModel()
-			raumVsUberstromTableModel.setValueAt(newValue, rowIndex, 0)
-			view.raumVsUberstromventileTabelle.setModel(raumVsUberstromTableModel)
-			view.raumVsUberstromventileTabelle.getModel().fireTableDataChanged()
-			// raum im model updaten
-			def r = model.map.raum.raume[rowIndex]
-			r.raumBezeichnung = newValue
-            */
-			// TODO rbe: vielleicht andere Methode hierfür nutzen??
 			model.resyncRaumTableModels()
 		}
 	}
@@ -898,27 +854,6 @@ class ProjektController {
 		// Neues TableModel setzen !
 		if (DEBUG) println "updateRaumLuftartCombo: add row to table model ${rowIndex}"
 		doLater {
-            /*
-			// raumTabelle updaten
-			def raumTableModel = view.raumTabelle.getModel()
-			raumTableModel.setValueAt(newValue, rowIndex, 2)
-			view.raumTabelle.setModel(raumTableModel)
-			view.raumTabelle.getModel().fireTableDataChanged()
-			// raumVsZuAbluftventileTabelle updaten
-			def raumVsTableModel = view.raumVsZuAbluftventileTabelle.getModel()
-			raumVsTableModel.setValueAt(newValue, rowIndex, 1)
-			view.raumVsZuAbluftventileTabelle.setModel(raumVsTableModel)
-			view.raumVsZuAbluftventileTabelle.getModel().fireTableDataChanged()
-			// raumVsUberstromventileTabelle updaten
-			def raumVsUberstromTableModel = view.raumVsUberstromventileTabelle.getModel()
-			raumVsUberstromTableModel.setValueAt(newValue, rowIndex, 1)
-			view.raumVsUberstromventileTabelle.setModel(raumVsUberstromTableModel)
-			view.raumVsUberstromventileTabelle.getModel().fireTableDataChanged()
-			// raum im model updaten
-			def r = model.map.raum.raume[rowIndex]
-			r.raumLuftart = newValue
-            */
-			// TODO rbe: vielleicht andere Methode hierfür nutzen??
 			model.resyncRaumTableModels()
 		}
 	}

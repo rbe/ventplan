@@ -21,7 +21,7 @@ import javax.swing.DefaultComboBoxModel
  */
 class ProjektModel {
 	
-	public static boolean DEBUG = false
+	public static boolean DEBUG = true
 	
 	/**
 	 * The MVC id.
@@ -247,7 +247,7 @@ class ProjektModel {
 				getColumnName:  { columnIndex -> columnNames[columnIndex] },
 				getColumnValue: { object, columnIndex ->
 					try {
-						object."${propertyNames[columnIndex]}"?.toString2()
+                        object."${propertyNames[columnIndex]}"?.toString2()
 					} catch (e) {
 						// combobox...
 						println "gltmClosure, getColumnValue: ${e}: ${object?.dump()}"
@@ -261,6 +261,9 @@ class ProjektModel {
 					println "... ${object}"
 					// Call post-value-set closure
 					if (postValueSet) postValueSet(object, columnIndex, value)
+                    // VERY IMPORTANT: return null value to prevent e.g. returning
+                    // a boolean value. Table would display the wrong value in all
+                    // cells !!!
                     null
 				},
 				getValueAt: { rowIndex, columnIndex ->
@@ -453,6 +456,11 @@ class ProjektModel {
 			DefaultCellEditor raumVsUsElementeCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsUsElementeEventList)
 			TableColumn raumVsUsElementeColumn = view.raumVsUberstromventileTabelle.getColumnModel().getColumn(4)
 			raumVsUsElementeColumn.setCellEditor(raumVsUsElementeCellEditor)
+
+            println "BEFORE: meta.raum.typ -> ${meta.raum.typ}"
+            meta.raum.typ = meta.raum.typ + [r.raumBezeichnung]
+            view.dvbVentileinstellungRaum.setModel(new DefaultComboBoxModel(meta.raum.typ as String[]))
+            println "AFTER: meta.raum.typ -> ${meta.raum.typ}"
 		}
 	}
 	
@@ -541,10 +549,16 @@ class ProjektModel {
 	}
 	
 	/**
-	 * 
+	 * Eine Zeile aus dem Model entfernen.
 	 */
 	def removeDvbKanalnetz = { kanalnetzIndex ->
-		
+        synchronized (map.dvb.kanalnetz) {
+			map.dvb.kanalnetz.remove(kanalnetzIndex)
+			// Sync table models
+			[tableModels.dvbKanalnetz].each {
+				it.remove(kanalnetzIndex)
+			}
+		}
 	}
 	
 	/**
@@ -574,7 +588,13 @@ class ProjektModel {
 	 * 
 	 */
 	def removeDvbVentileinstellung = { ventileinstellungIndex ->
-		
+		synchronized (map.dvb.ventileinstellung) {
+			map.dvb.ventileinstellung.remove(ventileinstellungIndex)
+			// Sync table models
+			[tableModels.dvbVentileinstellung].each {
+				it.remove(ventileinstellungIndex)
+			}
+		}
 	}
 	
 	/**

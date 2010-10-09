@@ -69,5 +69,16 @@ class DvbKanalnetzEvents {
 			publishEvent "DvbKanalnetzInTabelleWahlen", [kanalnetzIndex]
 		}
 	}
+
+    /**
+	 * Zeile aus Druckverlustberechnung Kanalnetz entfernen.
+	 */
+	def onDvbKanalnetzEntfernen = { kanalnetzIndex ->
+		doLater {
+			println "onDvbKanalnetzEntfernen: kanalnetzIndex=${kanalnetzIndex}"
+			// Zeile aus Model entfernen
+			model.removeDvbKanalnetz(kanalnetzIndex)
+		}
+	}
 	
 }

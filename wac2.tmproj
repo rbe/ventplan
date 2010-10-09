@@ -63,8 +63,6 @@
 			<string>sql</string>
 		</dict>
 		<dict>
-			<key>expanded</key>
-			<true/>
 			<key>name</key>
 			<string>src</string>
 			<key>regexFolderFilter</key>
@@ -414,21 +412,6 @@
 							</dict>
 						</dict>
 					</dict>
-				</dict>
-			</dict>
-		</dict>
-		<key>src</key>
-		<dict>
-			<key>isExpanded</key>
-			<true/>
-			<key>subItems</key>
-			<dict>
-				<key>spring</key>
-				<dict>
-					<key>isExpanded</key>
-					<true/>
-					<key>subItems</key>
-					<dict/>
 				</dict>
 			</dict>
 		</dict>
