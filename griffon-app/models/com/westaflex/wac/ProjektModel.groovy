@@ -261,9 +261,10 @@ class ProjektModel {
 					println "... ${object}"
 					// Call post-value-set closure
 					if (postValueSet) postValueSet(object, columnIndex, value)
+                    null
 				},
 				getValueAt: { rowIndex, columnIndex ->
-					meta.gewahlterRaum[columnIndex]
+					//no value to get...
 				}
 			] as ca.odell.glazedlists.gui.WritableTableFormat)
 	}
