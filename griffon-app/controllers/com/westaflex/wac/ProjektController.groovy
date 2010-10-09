@@ -734,7 +734,7 @@ class ProjektController {
 	 * Ein Widerstandsbeiwert wurde in der Tabelle gewählt:
 	 *   - Bild anzeigen.
 	 */
-	def wbwInTabelleGewahlt = { evt ->
+	def wbwInTabelleGewahlt = { evt = null ->
 		// Welche Zeile ist gewählt --> welcher Widerstand?
 		def index = view.wbwTabelle.selectedRow
 		def wbw = model.tableModels.wbw[index]
