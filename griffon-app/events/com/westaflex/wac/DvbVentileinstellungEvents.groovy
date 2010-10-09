@@ -58,10 +58,21 @@ class DvbVentileinstellungEvents {
 			GH.addMapPropertyChangeListener("map.dvb.ventileinstellung",
 				model.map.dvb.ventileinstellung[ventileinstellungIndex])
 			//
-			model.map.dvb.ventileinstellung[ventileinstellungIndex] =
-				wacCalculationService.berechneVentileinstellung(model.map)
+			//model.map.dvb.ventileinstellung[ventileinstellungIndex] =
+			//	wacCalculationService.berechneVentileinstellung(model.map)
 			//
 			publishEvent "DvbVentileinstellungInTabelleWahlen", [ventileinstellungIndex]
+		}
+	}
+
+    /**
+	 * Zeile aus Druckverlustberechnung Ventileinstellung entfernen.
+	 */
+	def onDvbVentileinstellungEntfernen = { ventileinstellungIndex ->
+		doLater {
+			println "onDvbVentileinstellungEntfernen: ventileinstellungIndex=${ventileinstellungIndex}"
+			// Zeile aus Model entfernen
+			model.removeDvbVentileinstellung(ventileinstellungIndex)
 		}
 	}
 	
