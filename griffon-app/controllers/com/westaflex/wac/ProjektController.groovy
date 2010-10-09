@@ -34,6 +34,8 @@ class ProjektController {
 	def projektModelService
 	
 	def raumBearbeitenDialog
+	def wbwDialog
+	def teilstreckenDialog
 	
 	/**
 	 * Initialize MVC group.
@@ -524,7 +526,8 @@ class ProjektController {
 			model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
 			*/
 			// Show dialog
-			raumBearbeitenDialog = GH.showDialog(builder, RaumBearbeitenView)
+			raumBearbeitenDialog = GH.createDialog(builder, RaumBearbeitenView)
+			raumBearbeitenDialog.show()
 			if (DEBUG) println "raumBearbeiten: dialog '${raumBearbeitenDialog.title}' closed: dialog=${raumBearbeitenDialog.dump()}"
 			// Berechne alles, was von Räumen abhängt
 			publishEvent "RaumGeandert", [row]
@@ -535,7 +538,7 @@ class ProjektController {
 	 * RaumBearbeiten - RaumBearbeitenView schliessen.
 	 */
 	def raumBearbeitenSchliessen = {
-		if (DEBUG) println "raumBearbeitenSchliessen -> closing dialog"
+		if (DEBUG) println "raumBearbeitenSchliessen -> closing dialog: raumBearbeitenDialog=$raumBearbeitenDialog"
 		raumBearbeitenDialog.dispose()
 	}
 	
@@ -722,7 +725,8 @@ class ProjektController {
 	 */
 	def widerstandsbeiwerteBearbeiten = {
 		// Show dialog
-		def dialog = GH.showDialog(builder, WbwView)
+		wbwDialog = GH.createDialog(builder, WbwView)
+		wbwDialog.show()
 		if (DEBUG) println "widerstandsbeiwerteBearbeiten: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
 	}
 	
@@ -744,22 +748,27 @@ class ProjektController {
 			view.wbwBild.setIcon(null)
 		}
 		// TODO Daten in Eingabemaske setzen
+		wbwDialog.
 	}
 	
 	/**
 	 * Widerstandsbeiwerte, Dialog mit OK geschlossen.
 	 */
 	def wbwOkButton = {
+		println "wbwOkButton"
 		if (DEBUG) println "wbwOkButton: selectedRow=${view.dvbKanalnetzTabelle.selectedRow}"
 		if (DEBUG) println model.map.dvb.kanalnetz
 		// Welche Teilstrecke ist ausgewählt?
 		def map = model.map.dvb.kanalnetz[view.dvbKanalnetzTabelle.selectedRow]
+		println map.gesamtwiderstandszahl
 		map.gesamtwiderstandszahl = 0.5d
+		println map.gesamtwiderstandszahl
 		// Berechne Teilstrecke
 		wacCalculationService.berechneTeilstrecke(map)
 		// Resync model
 		model.resyncDvbKanalnetzTableModels()
-		// TODO Close dialog
+		// Close dialog
+		wbwDialog.close()
 	}
 	
 	/**
@@ -807,7 +816,8 @@ class ProjektController {
 	 * 
 	 */
 	def dvbVentileinstellungTeilstreckeDialog = {
-		def dialog = GH.showDialog(builder, TeilstreckenView)
+		teilstreckenDialog = GH.createDialog(builder, TeilstreckenView)
+		teilstreckenDialog.show()
 		if (DEBUG) println "TeilstreckenAuswahlen: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
 	}
 	
