@@ -747,8 +747,10 @@ class ProjektController {
 			view.wbwBild.text = "-- kein Bild --"
 			view.wbwBild.icon = null
 		}
-		// TODO Daten in Eingabemaske setzen
-		wbwDialog.
+		// Daten in Eingabemaske setzen
+		view.wbwBezeichnung.text = wbw.name
+		view.wbwWert.text = wbw.widerstandsbeiwert.toString2(0)
+		view.wbwAnzahl.text = wbw.anzahl
 	}
 	
 	/**
