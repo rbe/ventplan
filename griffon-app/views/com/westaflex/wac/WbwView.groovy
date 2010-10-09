@@ -20,12 +20,7 @@ panel(id: "wbwPanel", layout: new MigLayout("debug, fillx, wrap 2", "[fill][fill
 		}
 	}
 	// Rechts oben: Bezeichnung (Textfeld), Widerstandsbeiwert (Textfeld), Anzahl (Textfeld)
-	panel(id: "wbwPflege", layout: new MigLayout("debug, fillx, wrap 2", "[fill][fill]", "[fill][fill]")) {
-		
-		panel(layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill][fill]")) {
-			button("<<")
-			button(">>")
-		}
+	panel(id: "wbwPflege", layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill][fill]")) {
 		
 		panel(layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill][fill]")) {
 			label("Bezeichnung")
