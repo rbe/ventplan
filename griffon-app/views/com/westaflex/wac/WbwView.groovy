@@ -11,12 +11,15 @@ package com.westaflex.wac
 
 import net.miginfocom.swing.MigLayout
 
-panel(id: "wbwPanel", layout: new MigLayout("debug, fillx, wrap 2", "[fill][fill]", "[fill][fill]")) {
+panel(id: "wbwPanel", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[fill][fill]")) {
 	
 	// Links oben: Tabelle: Anzahl (Textfeld), Bezeichnung des Widerstands, Widerstandswert
 	panel(id: "wbwTabellePanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
 		jideScrollPane() {
-			table(id: "wbwTabelle", model: model.createWbwTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION)
+			table(id: "wbwTabelle", model: model.createWbwTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+				current.columnModel.getColumn(0).setWidth(15)
+				current.columnModel.getColumn(2).setWidth(30)
+			}
 		}
 	}
 	// Rechts oben: Bezeichnung (Textfeld), Widerstandsbeiwert (Textfeld), Anzahl (Textfeld)
@@ -37,7 +40,9 @@ panel(id: "wbwPanel", layout: new MigLayout("debug, fillx, wrap 2", "[fill][fill
 		}
 		
 		// TODO mmu Set initial size so label won't resize when an image is displayed
-		label(id: "wbwBild", text: "-- kein Bild --", constraints: "span, grow")
+		panel(background: java.awt.Color.WHITE, constraints: "span, grow, height 150px!") {
+			label(id: "wbwBild", text: "-- kein Bild --", background: java.awt.Color.WHITE, constraints: "height 150px!")
+		}
 	}
 	
 	// Links unten: Summe aller Einzelwiderstände
