@@ -9,7 +9,6 @@
 package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
-import com.bensmann.griffon.WacTableHelper as WTH
 import net.miginfocom.swing.MigLayout
 
 
