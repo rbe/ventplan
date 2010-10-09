@@ -767,6 +767,7 @@ class ProjektController {
 		// TODO Wenn WBW noch nicht vorhanden, dann hinzufügen
 	}
 	
+	/**
 	 * Widerstandsbeiwerte, Dialog mit OK geschlossen.
 	 */
 	def wbwOkButton = {
@@ -775,9 +776,10 @@ class ProjektController {
 		if (DEBUG) println model.map.dvb.kanalnetz
 		// Welche Teilstrecke ist ausgewählt?
 		def map = model.map.dvb.kanalnetz[view.dvbKanalnetzTabelle.selectedRow]
-		println map.gesamtwiderstandszahl
+		// TODO Summieren...
+		def summe = model.tableModels.wbw.sum { it.widerstandsbeiwert }
+		println "SUMME=$summe"
 		map.gesamtwiderstandszahl = 0.5d
-		println map.gesamtwiderstandszahl
 		// Berechne Teilstrecke
 		wacCalculationService.berechneTeilstrecke(map)
 		// Resync model
