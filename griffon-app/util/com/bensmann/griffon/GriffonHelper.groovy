@@ -238,9 +238,9 @@ class GriffonHelper {
 	}
 	
 	/**
-	 * Show a dialog.
+	 * Create a dialog. Please call .show() yourself as this call blocks until the dialog is closed.
 	 */
-	def static showDialog = { builder, dialogClass, dialogProp = [:] ->
+	def static createDialog = { builder, dialogClass, dialogProp = [:] ->
 		def dialog = dialogCache[dialogClass]
 		//if (!dialog) {
 			// Properties for dialog
@@ -258,8 +258,6 @@ class GriffonHelper {
 			// Cache dialog instance
 			//dialogCache[dialogClass] = dialog
 		//}
-		// Show dialog
-		dialog.show()
 		// Return dialog instance
 		dialog
 	}

@@ -11,39 +11,57 @@ package com.westaflex.wac
 import com.ezware.dialog.task.CommandLink
 
 /**
- * 
+ * Manage and create dialogs.
  */
 class DialogController {
 	
 	/**
-     * Dialog anzeigen, wenn die Applikation geschlossen werden soll, obwohl
-     * noch nicht gespeicherte Projekte vorhanden sind.
-     */
+	 * Dialog anzeigen, wenn die Applikation geschlossen werden soll, obwohl
+	 * noch nicht gespeicherte Projekte vorhanden sind.
+	 */
 	def showApplicationCloseDialog() {
-        def choice = choice("Anwendung schliessen?", "Die Anwendung enthält nicht gespeicherte Projekte. Bitte wählen Sie.", 1, [new CommandLink("Alle Speichern",""),new CommandLink("Abbrechen",""),new CommandLink("Schliessen","")])
-        choice
-    }
-
-    /**
-     * Dialog anzeigen, wenn ein nicht gespeichertes Projekt geschlossen werden soll.
-     */
+		def choice = choice(
+						"Anwendung schliessen?",
+						"Die Anwendung enthält nicht gespeicherte Projekte. Bitte wählen Sie.",
+						1,
+						[
+							new CommandLink("Alle Speichern", ""),
+							new CommandLink("Abbrechen", ""),
+							new CommandLink("Schliessen", "")
+						]
+					)
+		choice
+	}
+	
+	/**
+	 * Dialog anzeigen, wenn ein nicht gespeichertes Projekt geschlossen werden soll.
+	 */
 	def showCloseProjectDialog() {
-        def choice = choice("Projekt schliessen?", "Das Projekt enthält nicht gespeicherte Werte. Bitte wählen Sie.", 1, [new CommandLink("Speichern",""),new CommandLink("Abbrechen",""),new CommandLink("Schliessen","")])
-        choice
-    }
-
-    /**
-     * Zeige Informationsdialog mit mitgegebener Nachricht an.
-     */
-    def showInformDialog = { infoMsg ->
-        inform("Information", infoMsg)
-    }
-
-    /**
-     * Zeige Fehler-Informationsdialog mit mitgegebener Nachricht an.
-     */
-    def showErrorDialog = { errorMsg ->
-        inform("Fehler", errorMsg)
-    }
-
+		def choice = choice(
+						"Projekt schliessen?",
+						"Das Projekt enthält nicht gespeicherte Werte. Bitte wählen Sie.",
+						1,
+						[
+							new CommandLink("Speichern", ""),
+							new CommandLink("Abbrechen", ""),
+							new CommandLink("Schliessen", "")
+						]
+					)
+		choice
+	}
+	
+	/**
+	 * Zeige Informationsdialog mit mitgegebener Nachricht an.
+	 */
+	def showInformDialog = { infoMsg ->
+		inform("Information", infoMsg)
+	}
+	
+	/**
+	 * Zeige Fehler-Informationsdialog mit mitgegebener Nachricht an.
+	 */
+	def showErrorDialog = { errorMsg ->
+		inform("Fehler", errorMsg)
+	}
+	
 }
