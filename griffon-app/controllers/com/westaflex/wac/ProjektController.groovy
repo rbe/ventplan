@@ -710,17 +710,6 @@ class ProjektController {
 	}
 	
 	/**
-	 * Druckverlustberechnung - Kanalnetz neuen Eintrag ins TableModel hinzufügen
-	 */
-	/*def onAddDvbKanalnetzToTableModel = { kanalnetz ->
-		// Let's add a row to the table
-		def dvbKanalnetzRows = view.dvbKanalnetzTabelle.getModel().getRowsModel().getValue()
-		dvbKanalnetzRows.add(kanalnetz)
-		view.raumTabelle.getModel().getRowsModel().setValue(dvbKanalnetzRows)
-		view.raumTabelle.getModel().fireTableDataChanged()
-	}*/
-	
-	/**
 	 * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
 	 */
 	def widerstandsbeiwerteBearbeiten = {
@@ -766,7 +755,8 @@ class ProjektController {
 		println wbw
 		// TODO Wenn WBW noch nicht vorhanden, dann hinzufügen
 	}
-	
+
+    /**
 	 * Widerstandsbeiwerte, Dialog mit OK geschlossen.
 	 */
 	def wbwOkButton = {
@@ -815,17 +805,6 @@ class ProjektController {
 			view.dvbVentileinstellungTabelle.changeSelection(ventileinstellungIndex, 0, false, false)
 		}
 	}
-	
-	/**
-	 * Druckverlustberechnung - Ventileinstellung neuen Eintrag ins TableModel hinzufügen
-	 */
-	/*def onAddDvbVentileinstellungToTableModel = { ventileinstellung ->
-		// Let's add a row to the table
-		def dvbVentileinstellungRows = view.dvbKanalnetzTabelle.getModel().getRowsModel().getValue()
-		dvbVentileinstellungRows.add(ventileinstellung)
-		view.raumTabelle.getModel().getRowsModel().setValue(dvbVentileinstellungRows)
-		view.raumTabelle.getModel().fireTableDataChanged()
-	}*/
 	
 	/**
 	 * 
