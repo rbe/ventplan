@@ -29,13 +29,14 @@ panel(id: "wbwPanel", layout: new MigLayout("debug, fillx, wrap 2", "[fill][fill
 		
 		panel(layout: new MigLayout("fillx, wrap 1", "[fill]", "[fill][fill]")) {
 			label("Bezeichnung")
-			textField()
+			textField(id: "wbwBezeichnung")
 			
 			label("Widerstandsbeiwert")
-			textField()
+			textField(id: "wbwWert")
 			
 			label("Anzahl")
-			textField()
+			textField(id: "wbwAnzahl")
+			
 			button(id: "wbwSaveWbwButton", text: "Übernehmen")
 			label()
 		}
