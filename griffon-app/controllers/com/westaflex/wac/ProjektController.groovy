@@ -725,7 +725,7 @@ class ProjektController {
 	 */
 	def widerstandsbeiwerteBearbeiten = {
 		// Show dialog
-		wbwDialog = GH.createDialog(builder, WbwView)
+		wbwDialog = GH.createDialog(builder, WbwView, [title: "Widerstandsbeiwerte", size: [800, 600]])
 		wbwDialog.show()
 		if (DEBUG) println "widerstandsbeiwerteBearbeiten: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
 	}
@@ -741,17 +741,32 @@ class ProjektController {
 		javax.swing.ImageIcon image = new javax.swing.ImageIcon(Wac2Resource.getWiderstandUrl(wbw.id))
 		// Image und Text setzen
 		if (image) {
-			view.wbwBild.setText("")
-			view.wbwBild.setIcon(image)
+			view.wbwBild.text = ""
+			view.wbwBild.icon = image
 		} else {
-			view.wbwBild.setText("-- kein Bild --")
-			view.wbwBild.setIcon(null)
+			view.wbwBild.text = "-- kein Bild --"
+			view.wbwBild.icon = null
 		}
-		// TODO Daten in Eingabemaske setzen
-		//wbwDialog.
+		// Daten in Eingabemaske setzen
+		view.wbwBezeichnung.text = wbw.name
+		view.wbwWert.text = wbw.widerstandsbeiwert.toString2(0)
+		view.wbwAnzahl.text = wbw.anzahl
 	}
 	
 	/**
+	 * Widerstandsbeiwerte, Übernehmen-Button.
+	 */
+	def wbwSaveWbwButton = {
+		// Daten aus der Eingabemaske holen
+		def wbw = [
+			name: view.wbwBezeichnung.text,
+			wert: view.wbwWert.text?.toDouble2() ?: 0.0d,
+			anzahl: view.wbwAnzahl.text?.toInteger() ?: 0
+		]
+		println wbw
+		// TODO Wenn WBW noch nicht vorhanden, dann hinzufügen
+	}
+	
 	 * Widerstandsbeiwerte, Dialog mit OK geschlossen.
 	 */
 	def wbwOkButton = {
@@ -768,7 +783,7 @@ class ProjektController {
 		// Resync model
 		model.resyncDvbKanalnetzTableModels()
 		// Close dialog
-		wbwDialog.close()
+		wbwDialog.dispose()
 	}
 	
 	/**

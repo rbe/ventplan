@@ -248,7 +248,7 @@ class GriffonHelper {
 					title: "Ein Dialog",
 					visible: false,
 					modal: true,
-					pack: true,
+					pack: false,
 					locationByPlatform: true
 				] + dialogProp
 			// Create dialog instance
