@@ -36,6 +36,8 @@ panel(id: "wbwPanel", layout: new MigLayout("debug, fillx, wrap 2", "[fill][fill
 			
 			label("Anzahl")
 			textField()
+			button(id: "wbwSaveWbwButton", text: "Übernehmen")
+			label()
 		}
 		
 		// TODO mmu Set initial size so label won't resize when an image is displayed
