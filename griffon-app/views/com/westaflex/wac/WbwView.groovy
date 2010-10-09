@@ -39,9 +39,8 @@ panel(id: "wbwPanel", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[f
 			label()
 		}
 		
-		// TODO mmu Set initial size so label won't resize when an image is displayed
-		panel(background: java.awt.Color.WHITE, constraints: "span, grow, height 150px!") {
-			label(id: "wbwBild", text: "-- kein Bild --", background: java.awt.Color.WHITE, constraints: "height 150px!")
+		panel(background: java.awt.Color.WHITE, layout: new MigLayout("fill", "[center]", ""), constraints: "span, grow, height 300px!, width 300px!") {
+			label(id: "wbwBild", text: "-- kein Bild --", background: java.awt.Color.WHITE, constraints: "height 220px!, width 220px!")
 		}
 	}
 	
