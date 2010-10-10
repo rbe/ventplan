@@ -704,6 +704,13 @@ class ProjektController {
 	}
 	
 	/**
+	 * Druckverlustberechnung - Kanalnetz - Geändert.
+	 */
+	def dvbKanalnetzGeandert = { kanalnetzIndex ->
+		publishEvent "DvbKanalnetzGeandert", [kanalnetzIndex]
+	}
+	
+	/**
 	 * Druckverlustberechnung - Kanalnetz - Entfernen.
 	 */
 	def dvbKanalnetzEntfernen = {
@@ -842,6 +849,13 @@ class ProjektController {
 		teilstreckenDialog = GH.createDialog(builder, TeilstreckenView)
 		teilstreckenDialog.show()
 		if (DEBUG) println "TeilstreckenAuswahlen: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
+	}
+	
+	/**
+	 * Druckverlustberechnung - Ventileinstellung - Geändert.
+	 */
+	def dvbVentileinstellungGeandert = { ventileinstellungIndex ->
+		publishEvent "DvbVentileinstellungGeandert", [ventileinstellungIndex]
 	}
 	
 	/**
