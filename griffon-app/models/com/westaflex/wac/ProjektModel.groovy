@@ -276,7 +276,7 @@ class ProjektModel {
 	 * Raumdaten - TableModel
 	 */
 	def createRaumTableModel() {
-		def columnNames =   ["Raum",            "Geschoss",     "Luftart",     ws("Raumfläche<br/>(m²)"), ws("Raumhöhe<br/>(m)"), "Zuluftfaktor",     "Abluftvolumenstrom"] as String[]
+		def columnNames =   ["Raum",            "Geschoss",     "Luftart",     ws("Raumfläche<br/>[m²]"), ws("Raumhöhe<br/>[m]"), "Zuluftfaktor",     "Abluftvolumenstrom"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumGeschoss", "raumLuftart", "raumFlache",              "raumHohe",             "raumZuluftfaktor", "raumAbluftVs"] as String[]
 		def writable      = [true, true, true, true, true, true, true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
@@ -296,7 +296,7 @@ class ProjektModel {
 	 * Raumvolumenströme, Zu-/Abluftventile - TableModel
 	 */
 	def createRaumVsZuAbluftventileTableModel() {
-		def columnNames =   ["Raum",            "Luftart",     ws("Raumvolumen<br/>(m³)"), ws("Luftwechsel<br/>(1/h)"), ws("Bezeichnung<br/>Abluftventile"),    ws("Anzahl<br/>Abluftventile"),    ws("Abluftmenge<br/>je Ventil"),   ws("Volumenstrom<br/>(m³/h)"), ws("Bezeichnung<br/>Zuluftventile"),    ws("Anzahl<br/>Zuluftventile"),    ws("Zuluftmenge<br/>je Ventil"),   "Verteilebene"] as String[]
+		def columnNames =   ["Raum",            "Luftart",     ws("Raumvolumen<br/>[m³]"), ws("Luftwechsel<br/>[1/h]"), ws("Bezeichnung<br/>Abluftventile"),    ws("Anzahl<br/>Abluftventile"),    ws("Abluftmenge<br/>je Ventil"),   ws("Volumenstrom<br/>[m³/h]"), ws("Bezeichnung<br/>Zuluftventile"),    ws("Anzahl<br/>Zuluftventile"),    ws("Zuluftmenge<br/>je Ventil"),   "Verteilebene"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",              "raumLuftwechsel",           "raumBezeichnungAbluftventile",         "raumAnzahlAbluftventile",         "raumAbluftmengeJeVentil",         "raumVolumenstrom",            "raumBezeichnungZuluftventile",         "raumAnzahlZuluftventile",         "raumZuluftmengeJeVentil",         "raumVerteilebene"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true, true, true, true] as boolean[]
 		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsZuAbluftventile)
@@ -306,7 +306,7 @@ class ProjektModel {
 	 * Raumvolumenströme - Überströmventile TableModel
 	 */
 	def createRaumVsUberstromventileTableModel() {
-		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",                "Volumenstrom (m³/h)", "Überström-Elemente"] as String[]
+		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",                "Volumenstrom [m³/h]", "Überström-Elemente"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile",    "raumVolumenstrom",    "raumUberstromElement"] as String[]
 		def writable      = [true, true, true, true, true] as boolean[]
 		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsUberstromventile)
@@ -316,28 +316,28 @@ class ProjektModel {
 	 * RaumBearbeitenView - Details Tab TableModel
 	 */
 	def createRaumDetailsTableModel() {
-		def columnNames =   ["Bezeichnung", "Breite in mm", "Querschnittsfläche in mm²", "Spaltenhöhe in mm", "mit Dichtung"] as String[]
-		def propertyNames = ["turBezeichnung", "turBreite", "turQuerschnitt", "turSpaltenhohe", "turDichtung"] as String[]
+		def columnNames =   ["Bezeichnung",    "Breite [mm]", "Querschnittsfläche [mm²]", "Spaltenhöhe [mm]", "mit Dichtung"] as String[]
+		def propertyNames = ["turBezeichnung", "turBreite",   "turQuerschnitt",           "turSpaltenhohe",   "turDichtung"] as String[]
 		def writable      = [true, true, true, true, true] as boolean[]
 		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeBearbeitenDetails)
 	}
 	
 	/**
 	 * RaumBearbeitenView - Zusammenfassung Tab TableModel
-	 */
 	def createRaumEinstellungenTableModel() {
 		def columnNames =   ["Raum",            "Raumnummer", "Raumtyp", "Geschoss",     "Luftart", "Faktor", "Vorgang", "Zuluft", "Abluft", "Duch??", "Duch2???", "Kanalnetz", "Kanalnetz2", "Türhöhe", "Max...?", "Rau..???", "Rau...???", "Rau...???", "Rau...???", "Rau...???"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumNummer", "raumTyp", "raumGeschoss", "luftart", "faktor", "vorgang", "zuluft", "abluft", "duch1", "duch2", "kanalnetz", "kanalnetz2", "turhohe", "max1", "raum1", "raum2", "raum3", "raum4", "raum5"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true] as boolean[]
 		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeBearbeitenEinstellungen)
 	}
+	 */
 	
 	/**
 	 * Druckverlustberechnung - Kanalnetz.
 	 */
 	def createDvbKanalnetzTableModel() {
-		def columnNames =   ["Luftart", "Teilstrecke", ws("Luftvolumen-<br/>strom<br/>(m³/h)"), "Kanalbezeichnung", ws("Kanallänge<br/>(m)"), ws("Geschwindigkeit<br/>(m/s)"), ws("Reibungswiderstand<br/>gerader Kanal<br/>(Pa)"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>(Pa)"), ws("Widerstand<br/>Teilstrecke<br/><(Pa)")] as String[]
-		def propertyNames = ["dvbkLuftart", "teilstrecke", "luftVs",                                "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
+		def columnNames =   ["Luftart",     "Teilstrecke",  ws("Luftvolumen-<br/>strom<br/>[m³/h]"), "Kanalbezeichnung", ws("Kanallänge<br/>[m]"), ws("Geschwindigkeit<br/>[m/s]"), ws("Reibungswiderstand<br/>gerader Kanal<br/>[Pa]"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>[Pa]"), ws("Widerstand<br/>Teilstrecke<br/><[Pa]")] as String[]
+		def propertyNames = ["dvbkLuftart", "teilstrecke", "luftVs",                                 "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true, true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			def myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
@@ -354,7 +354,7 @@ class ProjektModel {
 	 * Druckverlustberechnung - Ventileinstellung.
 	 */
 	def createDvbVentileinstellungTableModel() {
-		def columnNames =   ["Raum", "Luftart",     "Teilstrecken", "Ventiltyp",         "dP offen (Pa)", "Gesamt (Pa)",      "Differenz", "Abgleich (Pa)", "Einstellung"] as String[]
+		def columnNames =   ["Raum", "Luftart",     "Teilstrecken", "Ventiltyp",         "dP offen [Pa]", "Gesamt [Pa]",      "Differenz", "Abgleich [Pa]", "Einstellung"] as String[]
 		def propertyNames = ["raum", "dvbvLuftart", "teilstrecken", "ventilbezeichnung", "dpOffen",       "gesamtWiderstand", "differenz", "abgleich",      "einstellung"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
@@ -485,7 +485,6 @@ class ProjektModel {
 			DefaultCellEditor raumVsUsElementeCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsUsElementeEventList)
 			TableColumn raumVsUsElementeColumn = view.raumVsUberstromventileTabelle.getColumnModel().getColumn(4)
 			raumVsUsElementeColumn.setCellEditor(raumVsUsElementeCellEditor)
-
             // TODO: Verbesserung! Später freischalten.
             // Raum Typ für Druckverlustberechnung - Ventileinstellung Combobox.
             //updateDvbVentileinstellungComboBoxModel(view)
@@ -590,7 +589,7 @@ class ProjektModel {
 	 * Druckverlustberechnung - Kanalnetz: eine Zeile aus dem Model entfernen.
 	 */
 	def removeDvbKanalnetz = { kanalnetzIndex ->
-        synchronized (map.dvb.kanalnetz) {
+		synchronized (map.dvb.kanalnetz) {
 			map.dvb.kanalnetz.remove(kanalnetzIndex)
 			// Sync table models
 			[tableModels.dvbKanalnetz].each {

@@ -863,7 +863,7 @@ class ProjektController {
 	 * Druckverlustberechnung - Ventileinstellung - Entfernen.
 	 */
 	def dvbVentileinstellungEntfernen = {
-		publishEvent "DvbVentileinstellungEntfernen", [view.dvbVentileinstellungTabelle.selectedRow/*model.meta.gewahlterRaum.position*/]
+		publishEvent "DvbVentileinstellungEntfernen", [view.dvbVentileinstellungTabelle.selectedRow]
 	}
 	
 	/**

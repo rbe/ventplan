@@ -49,7 +49,7 @@ class DvbKanalnetzEvents {
 			// Add values to model
 			model.addDvbKanalnetz(k, view)
 			// Add PropertyChangeListener to our model.map
-			GH.addMapPropertyChangeListener("map.dvb.kanalnetz", k/*model.map.dvb.kanalnetz[kanalnetzIndex]*/)
+			GH.addMapPropertyChangeListener("map.dvb.kanalnetz", k)
 			//
 			onDvbKanalnetzGeandert(k.position)
 			publishEvent "AddDvbKanalnetzToTableModel", [k]
