@@ -30,6 +30,7 @@ class Wac2Model {
 				raumVsVerteilebene: ["KG", "EG", "OG", "DG", "SB"],
 			],
 		gewahlterRaum: [:] as ObservableMap,
+		summeAktuelleWBW: 0.0d,
 		wbw: [] as ObservableList, /* initialized in Wac2Controller.mvcGroupInit */
 	] as ObservableMap
 	

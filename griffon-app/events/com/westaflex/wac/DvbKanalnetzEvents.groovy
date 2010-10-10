@@ -37,7 +37,7 @@ class DvbKanalnetzEvents {
 			// Map values from GUI
 			def k = [
 					dvbkLuftart: kanalnetz.dvbKanalnetzLuftart,
-                    //  TODO Teilstrecken können wie folgt angegeben werden
+                    // TODO Teilstrecken können wie folgt angegeben werden
 					teilstrecke: kanalnetz.dvbKanalnetzNrTeilstrecke?.toInteger(),
 					luftVs: kanalnetz.dvbKanalnetzLuftmenge?.toDouble2(),
 					kanalbezeichnung: kanalnetz.dvbKanalnetzKanalbezeichnung,

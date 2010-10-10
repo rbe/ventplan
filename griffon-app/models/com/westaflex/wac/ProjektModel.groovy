@@ -36,9 +36,7 @@ class ProjektModel {
 	/**
 	 * Meta-data: will be initialized by ProjektController.
 	 */
-	@Bindable meta = [
-			gewahlterRaum: [:] as ObservableMap
-		]
+	@Bindable meta
 	
 	/**
 	 * Template für alle Werte eines Raumes.
@@ -224,7 +222,7 @@ class ProjektModel {
 			raumeBearbeitenEinstellungen: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
 			dvbKanalnetz:                 new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
 			dvbVentileinstellung:         new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			wbw:                          new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNameComparator) as ca.odell.glazedlists.EventList,
+			wbw:                          [],
 			akustikZuluft:                new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList,
 			akustikAbluft:                new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList
 		]
@@ -247,7 +245,7 @@ class ProjektModel {
 				getColumnName:  { columnIndex -> columnNames[columnIndex] },
 				getColumnValue: { object, columnIndex ->
 					try {
-                        object."${propertyNames[columnIndex]}"?.toString2()
+						object."${propertyNames[columnIndex]}"?.toString2()
 					} catch (e) {
 						// combobox...
 						println "gltmClosure, getColumnValue: ${e}: ${object?.dump()}"
@@ -261,12 +259,13 @@ class ProjektModel {
 					println "... ${object}"
 					// Call post-value-set closure
 					if (postValueSet) postValueSet(object, columnIndex, value)
-                    // VERY IMPORTANT: return null value to prevent e.g. returning
-                    // a boolean value. Table would display the wrong value in all
-                    // cells !!!
-                    null
+					// VERY IMPORTANT: return null value to prevent e.g. returning
+					// a boolean value. Table would display the wrong value in all
+					// cells !!!
+					null
 				},
 				getValueAt: { rowIndex, columnIndex ->
+					println "gltmClosure, getValueAt: rowIndex=${rowIndex}, columnIndex=${columnIndex}"
 					//no value to get...
 				}
 			] as ca.odell.glazedlists.gui.WritableTableFormat)
@@ -343,7 +342,8 @@ class ProjektModel {
 			def myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
 			myTempMap[columnIndex] = value
 			println "Edited: map.dvb.kanalnetz -> ${map.dvb.kanalnetz}"
-			// TODO Call ProjektController.dvbKanalnetzGeandert(dvbKanalnetzIndex)
+			// Call ProjektController
+			app.controllers[mvcId].dvbKanalnetzGeandert(object.position)
 			resyncDvbKanalnetzTableModels()
 		}
 		gltmClosure(columnNames, propertyNames, writable, tableModels.dvbKanalnetz, postValueSet)
@@ -360,8 +360,8 @@ class ProjektModel {
 			def myTempMap = map.dvb.ventileinstellung.find { it.position == object.position }
 			myTempMap[columnIndex] = value
 			println "Edited: map.dvb.ventileinstellung -> ${map.dvb.ventileinstellung}"
-			// Call ProjektController.dvbVentileinstellungGeandert(dvbVentileinstellungIndex)
-			//app.controllers[mvcId].dvbVentileinstellungGeandert(dvbVentileinstellungIndex)
+			// Call ProjektController
+			app.controllers[mvcId].dvbVentileinstellungGeandert(object.position)
 			resyncDvbVentileinstellungTableModels()
 		}
 		gltmClosure(columnNames, propertyNames, writable, tableModels.dvbVentileinstellung, postValueSet)
@@ -370,7 +370,30 @@ class ProjektModel {
 	/**
 	 * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
 	 */
+	def addWbwTableModel(index) {
+		println "addWbwTableModel(${index})"
+		def tm = new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNameComparator) as ca.odell.glazedlists.EventList
+		tableModels.wbw << tm
+		// Clone as this list may get modified -- for this project only
+		meta.wbw.each {
+			tableModels.wbw[index].add([id: it.id, anzahl: 0, name: it.bezeichnung, widerstandsbeiwert: it.wert])
+		}
+	}
+	
+	/**
+	 * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
+	 * TableModel für WBW des aktuell gewählten Kanalnetz liefern.
+	 */
+	def getSelectedWbwTableModel() {
+		tableModels.wbw[meta.dvbKanalnetzGewahlt]
+	}
+	
+	/**
+	 * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
+	 */
 	def createWbwTableModel() {
+		def index = meta.dvbKanalnetzGewahlt
+		println "createWbwTableModel: index=${index}"
 		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"] as String[]
 		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"] as String[]
 		def writable      = [true, true, true] as boolean[]
@@ -378,7 +401,8 @@ class ProjektModel {
 			app.controllers[mvcId].wbwSummieren()
 			app.controllers[mvcId].wbwInTabelleGewahlt()
 		}
-		gltmClosure(columnNames, propertyNames, writable, tableModels.wbw, postValueSet)
+		// Widerstandsbeiwerte für die gewählte Kanalnetz in tableModels.wbw übertragen
+		gltmClosure(columnNames, propertyNames, writable, tableModels.wbw[index], postValueSet)
 	}
 	
 	/**
@@ -617,6 +641,13 @@ class ProjektModel {
 			tableModels.dvbKanalnetz.clear()
 			tableModels.dvbKanalnetz.addAll(map.dvb.kanalnetz)
 		}
+	}
+	
+	/**
+	 * Synchronize all Swing table models depending on map.dvb.kanalnetz.wbw.
+	 */
+	def resyncWbwTableModels() {
+		
 	}
 	
 	/**

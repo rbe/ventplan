@@ -44,7 +44,6 @@ class DvbVentileinstellungEvents {
 			model.addDvbVentileinstellung(v, view)
 			//
 			onDvbVentileinstellungGeandert(v.position)
-
             //publishEvent "AddDvbVentileinstellungToTableModel", [v]
 		}
 	}

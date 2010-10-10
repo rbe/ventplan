@@ -35,7 +35,7 @@ panel(id: "wbwPanel", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[f
 			label("Anzahl")
 			textField(id: "wbwAnzahl")
 			
-			button(id: "wbwSaveWbwButton", text: "Übernehmen")
+			button(id: "wbwSaveButton", text: "Übernehmen")
 			label()
 		}
 		
@@ -45,9 +45,9 @@ panel(id: "wbwPanel", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[f
 	}
 	
 	// Links unten: Summe aller Einzelwiderstände
-	panel(id: "wbwSumme", layout: new MigLayout("fillx", "[left][right]", "[fill]")) {
+	panel(id: "wbwSummePanel", layout: new MigLayout("fillx", "[left][right]", "[fill]")) {
 		label("<html><b>Summe aller Einzelwiderstände</b></html>")
-		label("<html><b>0,00</b></html>")
+		label(id: "wbwSumme", text: bind(source: model.meta, sourceProperty: "summeAktuelleWBW", converter: { v -> "<html><b>${v.toString2()}</b></html>" }))
 	}
 	// Rechts unten: Buttons
 	panel(id: "wbwButton", layout: new MigLayout("fillx", "[left][right]", "[fill]")) {

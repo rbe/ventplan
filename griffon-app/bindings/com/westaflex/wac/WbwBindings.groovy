@@ -20,4 +20,4 @@ package com.westaflex.wac
 // Buttons
 wbwOk.actionPerformed = controller.wbwOkButton
 wbwCancel.actionPerformed = controller.wbwCancelButton
-wbwSaveWbwButton.actionPerformed = controller.wbwSaveWbwButton
+wbwSaveButton.actionPerformed = controller.wbwSaveButton

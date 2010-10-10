@@ -89,14 +89,8 @@ class ProjektController {
 		model.map.anlage.volumenstromZentralgerat = model.meta.volumenstromZentralgerat[0]
 		// Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
 		model.map.dvb.kanalbezeichnung = model.meta.dvbKanalbezeichnung
-		// Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte
-		// Clone as this list may get modified -- for this project only
-		model.map.dvb.wbw = model.meta.wbw.clone()
-		model.map.dvb.wbw.each {
-			model.tableModels.wbw.add([id: it.id, anzahl: 0, name: it.bezeichnung, widerstandsbeiwert: it.wert])
-		}
 		// Druckverlustberechnung - Ventileinstellung - Ventilbezeichnung
-		model.map.dvb.ventileinstellung = model.meta.dvbVentileinstellung[]
+		// TODO Why this? model.map.dvb.ventileinstellung = model.meta.dvbVentileinstellung[]
 	}
 	
 	/**
@@ -710,13 +704,27 @@ class ProjektController {
 	}
 	
 	/**
+	 * Druckverlustberechnung - Kanalnetz - Entfernen.
+	 */
+	def dvbKanalnetzEntfernen = {
+		publishEvent "DvbKanalnetzEntfernen", [view.dvbKanalnetzTabelle.selectedRow]
+	}
+	
+	/**
 	 * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
 	 */
 	def widerstandsbeiwerteBearbeiten = {
+		// Welche Teilstrecke ist ausgewählt? Index bestimmen
+		def index = view.dvbKanalnetzTabelle.selectedRow
+		println "widerstandsbeiwerteBearbeiten: index=${index}"
+		if (!model.tableModels.wbw[index]) model.addWbwTableModel(index)
+		model.meta.dvbKanalnetzGewahlt = index
+		// WBW summieren, damit das Label im Dialog (bind model.meta.summeAktuelleWBW) den richtigen Wert anzeigt
+		wbwSummieren()
 		// Show dialog
 		wbwDialog = GH.createDialog(builder, WbwView, [title: "Widerstandsbeiwerte", size: [750, 650]])
 		wbwDialog.show()
-		if (DEBUG) println "widerstandsbeiwerteBearbeiten: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
+		if (DEBUG) println "widerstandsbeiwerteBearbeiten: dialog '${dialog.title}'"
 	}
 	
 	/**
@@ -724,9 +732,12 @@ class ProjektController {
 	 * Bild anzeigen und Daten in die Eingabemaske kopieren.
 	 */
 	def wbwInTabelleGewahlt = { evt = null ->
+		// Welche Teilstrecke ist ausgewählt? Index bestimmen
+		def index = model.meta.dvbKanalnetzGewahlt //view.dvbKanalnetzTabelle.selectedRow
 		// Welche Zeile ist gewählt --> welcher Widerstand?
-		def index = view.wbwTabelle.selectedRow
-		def wbw = model.tableModels.wbw[index]
+		def wbwIndex = view.wbwTabelle.selectedRow
+		println "wbwInTabelleGewahlt: index=${index} wbwIndex=${wbwIndex}"
+		def wbw = model.tableModels.wbw[index][wbwIndex]
 		javax.swing.ImageIcon image = new javax.swing.ImageIcon(Wac2Resource.getWiderstandUrl(wbw.id))
 		// Image und Text setzen
 		if (image) {
@@ -745,17 +756,22 @@ class ProjektController {
 	/**
 	 * Widerstandsbeiwerte, Übernehmen-Button.
 	 */
-	def wbwSaveWbwButton = {
+	def wbwSaveButton = {
+		// Welche Teilstrecke ist ausgewählt? Index bestimmen
+		def index = model.meta.dvbKanalnetzGewahlt //view.dvbKanalnetzTabelle.selectedRow
+		println "wbwSaveButton: index=${index}"
+		def wbw = model.tableModels.wbw[index]
 		// Daten aus der Eingabemaske holen
-		def wbw = [
+		def dialogWbw = [
 			name: view.wbwBezeichnung.text,
 			widerstandsbeiwert: view.wbwWert.text?.toDouble2() ?: 0.0d,
 			anzahl: view.wbwAnzahl.text?.toInteger() ?: 0
 		]
-		// TODO Wenn WBW noch nicht vorhanden, dann hinzufügen
-		if (!model.tableModels.wbw.find { it.name == wbw.name }) {
-			println "wbwSaveWbwButton: adding ${wbw.dump()} to model.tableModel.wbw"
-			model.tableModels.wbw << wbw
+		// Wenn WBW noch nicht vorhanden, dann hinzufügen
+		if (!wbw.find { it.name == dialogWbw.name }) {
+			println "wbwSaveButton: adding ${dialogWbw.dump()} to model"
+			wbw << dialogWbw
+			model.resyncWbwTableModels()
 		}
 	}
 	
@@ -763,25 +779,28 @@ class ProjektController {
 	 * Widerstandsbeiwerte: eingegebene Werte aufsummieren.
 	 */
 	def wbwSummieren = {
-		// Welche Teilstrecke ist ausgewählt?
-		def map = model.map.dvb.kanalnetz[view.dvbKanalnetzTabelle.selectedRow]
+		// Welche Teilstrecke ist ausgewählt? Index bestimmen
+		def index = model.meta.dvbKanalnetzGewahlt //view.dvbKanalnetzTabelle.selectedRow
+		println "wbwSummieren: index=${index}"
+		def wbw = model.tableModels.wbw[index]
 		// Summiere WBW
-		map.gesamtwiderstandszahl =
-			model.tableModels.wbw.sum {
+		def map = model.map.dvb.kanalnetz[index]
+		model.meta.summeAktuelleWBW = map.gesamtwiderstandszahl =
+			wbw.sum {
 				it.anzahl.toDouble2() * it.widerstandsbeiwert.toDouble2()
 			}
-		println "wbwOkButton: map.gesamtwiderstandszahl=$map.gesamtwiderstandszahl"
+		println "wbwSummieren: map.gesamtwiderstandszahl=${map.gesamtwiderstandszahl}"
 	}
 	
 	/**
 	 * Widerstandsbeiwerte, Dialog mit OK geschlossen.
 	 */
 	def wbwOkButton = {
-		println "wbwOkButton"
-		if (DEBUG) println "wbwOkButton: selectedRow=${view.dvbKanalnetzTabelle.selectedRow}"
-		if (DEBUG) println model.map.dvb.kanalnetz
-		// Welche Teilstrecke ist ausgewählt?
-		def map = model.map.dvb.kanalnetz[view.dvbKanalnetzTabelle.selectedRow]
+		// Welche Teilstrecke ist ausgewählt? Index bestimmen
+		def index = model.meta.dvbKanalnetzGewahlt //view.dvbKanalnetzTabelle.selectedRow
+		println "wbwOkButton: index=${index}"
+		def wbw = model.tableModels.wbw[index]
+		def map = model.map.dvb.kanalnetz[index]
 		// Berechne Teilstrecke
 		wbwSummieren()
 		wacCalculationService.berechneTeilstrecke(map)
@@ -797,13 +816,6 @@ class ProjektController {
 	def wbwCancelButton = {
 		// Close dialog
 		wbwDialog.dispose()
-	}
-	
-	/**
-	 * Druckverlustberechnung - Kanalnetz - Entfernen.
-	 */
-	def dvbKanalnetzEntfernen = {
-		publishEvent "DvbKanalnetzEntfernen", [view.dvbKanalnetzTabelle.selectedRow/*model.meta.gewahlterRaum.position*/]
 	}
 	
 	/**
@@ -881,7 +893,7 @@ class ProjektController {
 	 */
 	def updateRaumVentile = { rowIndex ->
 		if (DEBUG) println "-" * 80
-		if (DEBUG) println "model.map.raum.raume=${model.map.raum.raume}"
+		if (DEBUG) println "updateRaumVentile: model.map.raum.raume=${model.map.raum.raume}"
 		try {
 			// Raum holen
 			def r = model.map.raum.raume[rowIndex]
