@@ -749,14 +749,31 @@ class ProjektController {
 		// Daten aus der Eingabemaske holen
 		def wbw = [
 			name: view.wbwBezeichnung.text,
-			wert: view.wbwWert.text?.toDouble2() ?: 0.0d,
+			widerstandsbeiwert: view.wbwWert.text?.toDouble2() ?: 0.0d,
 			anzahl: view.wbwAnzahl.text?.toInteger() ?: 0
 		]
-		println wbw
 		// TODO Wenn WBW noch nicht vorhanden, dann hinzufügen
+		if (!model.tableModels.wbw.find { it.name == wbw.name }) {
+			println "wbwSaveWbwButton: adding ${wbw.dump()} to model.tableModel.wbw"
+			model.tableModels.wbw << wbw
+		}
 	}
 	
-    /**
+	/**
+	 * Widerstandsbeiwerte: eingegebene Werte aufsummieren.
+	 */
+	def wbwSummieren = {
+		// Welche Teilstrecke ist ausgewählt?
+		def map = model.map.dvb.kanalnetz[view.dvbKanalnetzTabelle.selectedRow]
+		// Summiere WBW
+		map.gesamtwiderstandszahl =
+			model.tableModels.wbw.sum {
+				it.anzahl.toDouble2() * it.widerstandsbeiwert.toDouble2()
+			}
+		println "wbwOkButton: map.gesamtwiderstandszahl=$map.gesamtwiderstandszahl"
+	}
+	
+	/**
 	 * Widerstandsbeiwerte, Dialog mit OK geschlossen.
 	 */
 	def wbwOkButton = {
@@ -765,10 +782,8 @@ class ProjektController {
 		if (DEBUG) println model.map.dvb.kanalnetz
 		// Welche Teilstrecke ist ausgewählt?
 		def map = model.map.dvb.kanalnetz[view.dvbKanalnetzTabelle.selectedRow]
-		println map.gesamtwiderstandszahl
-		map.gesamtwiderstandszahl = 0.5d
-		println map.gesamtwiderstandszahl
 		// Berechne Teilstrecke
+		wbwSummieren()
 		wacCalculationService.berechneTeilstrecke(map)
 		// Resync model
 		model.resyncDvbKanalnetzTableModels()
@@ -780,6 +795,8 @@ class ProjektController {
 	 * 
 	 */
 	def wbwCancelButton = {
+		// Close dialog
+		wbwDialog.dispose()
 	}
 	
 	/**
