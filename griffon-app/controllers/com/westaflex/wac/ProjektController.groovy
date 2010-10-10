@@ -714,7 +714,7 @@ class ProjektController {
 	 */
 	def widerstandsbeiwerteBearbeiten = {
 		// Show dialog
-		wbwDialog = GH.createDialog(builder, WbwView, [title: "Widerstandsbeiwerte", size: [800, 600]])
+		wbwDialog = GH.createDialog(builder, WbwView, [title: "Widerstandsbeiwerte", size: [750, 650]])
 		wbwDialog.show()
 		if (DEBUG) println "widerstandsbeiwerteBearbeiten: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
 	}
