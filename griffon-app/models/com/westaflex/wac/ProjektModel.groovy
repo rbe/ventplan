@@ -649,7 +649,7 @@ class ProjektModel {
 	 * Synchronize all Swing table models depending on map.dvb.kanalnetz.wbw.
 	 */
 	def resyncWbwTableModels() {
-		
+		// NOT NEEDED
 	}
 	
 	/**
