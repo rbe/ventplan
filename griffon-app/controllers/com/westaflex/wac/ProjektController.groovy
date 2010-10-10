@@ -721,7 +721,7 @@ class ProjektController {
 	
 	/**
 	 * Ein Widerstandsbeiwert wurde in der Tabelle gewählt:
-	 *   - Bild anzeigen.
+	 * Bild anzeigen und Daten in die Eingabemaske kopieren.
 	 */
 	def wbwInTabelleGewahlt = { evt = null ->
 		// Welche Zeile ist gewählt --> welcher Widerstand?
