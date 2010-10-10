@@ -864,13 +864,13 @@ class ProjektController {
 	def dvbVentileinstellungEntfernen = {
 		publishEvent "DvbVentileinstellungEntfernen", [view.dvbVentileinstellungTabelle.selectedRow/*model.meta.gewahlterRaum.position*/]
 	}
-
-    /**
+	
+	/**
 	 * Teilstrecken, Dialog mit OK geschlossen.
 	 */
 	def teilstreckenOkButton = {
 	}
-
+	
 	/**
 	 *
 	 */

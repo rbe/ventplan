@@ -222,7 +222,7 @@ class ProjektModel {
 			raumeBearbeitenEinstellungen: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
 			dvbKanalnetz:                 new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
 			dvbVentileinstellung:         new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			wbw:                          [],
+			wbw:                          [/* TableModels will be added in addWbwTableModel() */],
 			akustikZuluft:                new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList,
 			akustikAbluft:                new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList
 		]
@@ -585,7 +585,7 @@ class ProjektModel {
 	}
 	
 	/**
-	 * Eine Zeile aus dem Model entfernen.
+	 * Druckverlustberechnung - Kanalnetz: eine Zeile aus dem Model entfernen.
 	 */
 	def removeDvbKanalnetz = { kanalnetzIndex ->
         synchronized (map.dvb.kanalnetz) {
@@ -598,7 +598,7 @@ class ProjektModel {
 	}
 	
 	/**
-	 * 
+	 * Druckverlustberechnung - Ventileinstellung.
 	 */
 	def addDvbVentileinstellung = { ventileinstellung, view ->
 		def v = (dvbVentileinstellungMapTemplate + ventileinstellung) as ObservableMap
