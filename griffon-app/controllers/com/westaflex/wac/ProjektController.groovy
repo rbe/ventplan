@@ -453,7 +453,7 @@ class ProjektController {
 	 * Raumdaten - einen Raum entfernen.
 	 */
 	def raumEntfernen = {
-		publishEvent "RaumEntfernen", [view.raumTabelle.selectedRow/*model.meta.gewahlterRaum.position*/]
+		publishEvent "RaumEntfernen", [view.raumTabelle.selectedRow/*model.meta.gewahlterRaum.position*/, view]
 	}
 	
 	/**

@@ -103,11 +103,11 @@ class RaumEvents {
 	/**
 	 * Einen Raum entfernen.
 	 */
-	def onRaumEntfernen = { raumIndex ->
+	def onRaumEntfernen = { raumIndex, view ->
 		doLater {
 			println "onRaumEntfernen: raumIndex=${raumIndex}"
 			// Raum aus Model entfernen
-			model.removeRaum(raumIndex)
+			model.removeRaum(raumIndex, view)
 		}
 	}
 	
