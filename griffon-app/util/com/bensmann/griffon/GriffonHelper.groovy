@@ -109,13 +109,13 @@ class GriffonHelper {
 	}
 	
 	/**
-	 * Parse a string with german notation to a float value
+	 * Parse a string with german notation to a double value.
 	 */
 	def static toDouble2 = { digits = 2, roundingMode = null ->
 		def d = delegate
 		def r = 0.0d
 		// Stop in case of we got a float/double
-		if (d.class in [java.lang.Float, java.lang.Double, java.math.BigDecimal]) {
+		if (!(d.class in [java.lang.String]) || d.class in [java.lang.Float, java.lang.Double, java.math.BigDecimal]) {
 			return d
 		}
 		if (d in ["NaN", "Inf"]) {

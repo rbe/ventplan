@@ -16,19 +16,20 @@ onBootstrapEnd = { app ->
 	def startTime = System.currentTimeMillis()
 	//println "Events.onBootstrapEnd: start"
 	// Add .toDouble2 and .toString2 to all types to have a convenient API
-	[Integer, Long, Float, Double, BigDecimal, String].each {
+	// Integer, Long, Float, Double, BigDecimal, String
+	[java.lang.Object].each {
 		it.metaClass.toDouble2 = GH.toDouble2
 		it.metaClass.toString2 = GH.toString2
+	}
+	// Override String.toString2
+	String.metaClass.toString2 = {
+		delegate
 	}
 	// String.multiply
 	String.metaClass.multiply = { m ->
 		def a = delegate.toDouble2()
 		def b = m.toDouble2()
 		delegate = (a * b).toString2()
-	}
-	// Override String.toString2
-	String.metaClass.toString2 = {
-		delegate
 	}
 	//
 	def stopTime = System.currentTimeMillis()

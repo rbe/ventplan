@@ -255,7 +255,8 @@ class ProjektModel {
 				isEditable:     { object, columnIndex -> writable[columnIndex] },
 				setColumnValue: { object, value, columnIndex ->
 					println "setColumnValue: value@${columnIndex}=${value}"
-					object."${propertyNames[columnIndex]}" = value
+					// Try to save double value; see ticket 60
+					object."${propertyNames[columnIndex]}" = value.toDouble2()
 					println "... ${object}"
 					// Call post-value-set closure
 					if (postValueSet) postValueSet(object, columnIndex, value)
