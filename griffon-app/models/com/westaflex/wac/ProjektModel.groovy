@@ -360,7 +360,8 @@ class ProjektModel {
 			def myTempMap = map.dvb.ventileinstellung.find { it.position == object.position }
 			myTempMap[columnIndex] = value
 			println "Edited: map.dvb.ventileinstellung -> ${map.dvb.ventileinstellung}"
-			// TODO Call ProjektController.dvbVentileinstellungGeandert(dvbVentileinstellungIndex)
+			// Call ProjektController.dvbVentileinstellungGeandert(dvbVentileinstellungIndex)
+			//app.controllers[mvcId].dvbVentileinstellungGeandert(dvbVentileinstellungIndex)
 			resyncDvbVentileinstellungTableModels()
 		}
 		gltmClosure(columnNames, propertyNames, writable, tableModels.dvbVentileinstellung, postValueSet)
@@ -374,7 +375,8 @@ class ProjektModel {
 		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"] as String[]
 		def writable      = [true, true, true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
-			controller.wbwInTabelleGewahlt()
+			app.controllers[mvcId].wbwSummieren()
+			app.controllers[mvcId].wbwInTabelleGewahlt()
 		}
 		gltmClosure(columnNames, propertyNames, writable, tableModels.wbw, postValueSet)
 	}
