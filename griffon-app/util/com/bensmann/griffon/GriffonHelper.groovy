@@ -115,7 +115,7 @@ class GriffonHelper {
 		def d = delegate
 		def r = 0.0d
 		// Stop in case of we got a float/double
-		if (d.class in [Float, Double]) {
+		if (d.class in [java.lang.Float, java.lang.Double, java.math.BigDecimal]) {
 			return d
 		}
 		if (d in ["NaN", "Inf"]) {
