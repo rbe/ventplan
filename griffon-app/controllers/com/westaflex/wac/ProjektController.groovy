@@ -844,7 +844,7 @@ class ProjektController {
 	}
 	
 	/**
-	 * 
+	 * Druckverlustberechnung - Ventileinstellung - Teilstrecke wählen.
 	 */
 	def dvbVentileinstellungTeilstreckeDialog = {
 		teilstreckenDialog = GH.createDialog(builder, TeilstreckenView)
