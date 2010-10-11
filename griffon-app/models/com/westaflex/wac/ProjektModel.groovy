@@ -237,20 +237,19 @@ class ProjektModel {
 	 * Siehe Ticket #66.
 	 */
 	def checkRaum = { object, property, value, columnIndex ->
+		// Try to save double value; see ticket 60
 		object[property] = value.toDouble2()
 		def raum = map.raum.raume.find { it.position == object.position }
-		println "checkRaum: ${raum}"
 		switch (raum.raumLuftart) {
 			case "ZU":
-				println "checkRaum: 1: ${raum}"
 				raum.with {
 					raumAnzahlAbluftventile = 0
 					raumAbluftmengeJeVentil = 0.0d
 					raumBezeichnungAbluftventile = ""
 				}
-				println "checkRaum: 2: ${raum}"
 				break
 		}
+		if (DEBUG) println "checkRaum: ${raum}"
 		raum
 	}
 	
@@ -275,15 +274,14 @@ class ProjektModel {
 				},
 				isEditable:     { object, columnIndex -> writable[columnIndex] },
 				setColumnValue: { object, value, columnIndex ->
-					println "setColumnValue: value@${columnIndex}=${value}"
 					def property = propertyNames[columnIndex]
+					println "setColumnValue: ${property}=${value}"
 					// Call pre-value-set closure
 					if (preValueSet) object = preValueSet(object, property, value, columnIndex)
-					// Try to save double value; see ticket 60
 					else {
+						// Try to save double value; see ticket 60
 						object[property] = value.toDouble2()
 					}
-					println " ... ${object}"
 					// Call post-value-set closure
 					if (postValueSet) postValueSet(object, columnIndex, value)
 					// VERY IMPORTANT: return null value to prevent e.g. returning
@@ -453,7 +451,7 @@ class ProjektModel {
 	def addRaum = { raum, view ->
 		synchronized (map.raum.raume) {
 			def r = (raumMapTemplate + raum) as ObservableMap
-			println "addRaum: adding raum=${r?.dump()}"
+			if (DEBUG) println "addRaum: adding raum=${r?.dump()}"
 			map.raum.raume << r
 			// Sync table models
 			[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
@@ -504,9 +502,9 @@ class ProjektModel {
 			DefaultCellEditor raumVsUsElementeCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsUsElementeEventList)
 			TableColumn raumVsUsElementeColumn = view.raumVsUberstromelementeTabelle.getColumnModel().getColumn(4)
 			raumVsUsElementeColumn.setCellEditor(raumVsUsElementeCellEditor)
-            // TODO: Verbesserung! Später freischalten.
-            // Raum Typ für Druckverlustberechnung - Ventileinstellung Combobox.
-            //updateDvbVentileinstellungComboBoxModel(view)
+			// TODO: Verbesserung! Später freischalten.
+			// Raum Typ für Druckverlustberechnung - Ventileinstellung Combobox.
+			//updateDvbVentileinstellungComboBoxModel(view)
 		}
 	}
 	
@@ -515,26 +513,14 @@ class ProjektModel {
 	 */
 	def removeRaum = { raumIndex, view ->
 		synchronized (map.raum.raume) {
-			//println "removeRaum: removing raumIndex=${raumIndex}"
-			/*
-			map.raum.raume.eachWithIndex { r, i ->
-				println "BEFORE raumIndex=${raumIndex} i=${i}: ${r.raumBezeichnung} ${r.position}"
-			}
-			*/
+			if (DEBUG) println "removeRaum: removing raumIndex=${raumIndex}"
 			map.raum.raume.remove(raumIndex)
-			/*
-			map.raum.raume.eachWithIndex { r, i ->
-				println "AFTER raumIndex=${raumIndex} i=${i}: ${r.raumBezeichnung} ${r.position}"
-			}
-			*/
 			// Sync table models
 			[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
 				it.remove(raumIndex)
 			}
-			//
-            //map.akustik.raumBezeichnung.remove(raumIndex)
-            // TODO: Verbesserung! Später freischalten.
-            //updateDvbVentileinstellungComboBoxModel(view)
+			// TODO: Verbesserung! Später freischalten.
+			//updateDvbVentileinstellungComboBoxModel(view)
 		}
 	}
 
@@ -561,8 +547,8 @@ class ProjektModel {
 		}
 		*/
 		synchronized (tableModels) {
-			println "-" * 80
-			println "resyncRaumTableModels"
+			//println "-" * 80
+			//println "resyncRaumTableModels"
 			// Raumdaten
 			tableModels.raume.clear()
 			tableModels.raume.addAll(map.raum.raume)
@@ -572,10 +558,11 @@ class ProjektModel {
 			// Raumvolumentströme - Überströmventile
 			tableModels.raumeVsUberstromventile.clear()
 			tableModels.raumeVsUberstromventile.addAll(map.raum.raume)
-			// java.lang.NullPointerException: Cannot invoke method addAll() on null object when RaumBearbeitenDialog was not opened before
+			// java.lang.NullPointerException: Cannot invoke method addAll() on null object
+			// when RaumBearbeitenDialog was not opened before
 			// Quickfix: added null-safe-operator
 			tableModels.raumeBearbeiten?.addAll(map.raum.raume)
-			println "-" * 80
+			//println "-" * 80
 		}
 	}
 	
