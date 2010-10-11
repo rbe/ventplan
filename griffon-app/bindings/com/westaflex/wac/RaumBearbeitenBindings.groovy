@@ -35,6 +35,6 @@ bind(source: model.meta.gewahlterRaum, sourceProperty: "raumVolumen", target: ra
 [raumBearbeitenOptionalRaumlange, raumBearbeitenOptionalRaumbreite].each {
 	it.focusLost = controller.raumBearbeitenGeandert
 }
-
+// Schliessen
 raumBearbeitenSchliessen.actionPerformed = controller.raumBearbeitenSchliessen
 
