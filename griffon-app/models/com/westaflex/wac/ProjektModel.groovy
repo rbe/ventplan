@@ -585,8 +585,10 @@ class ProjektModel {
 	 */
 	def addDvbKanalnetz = { kanalnetz, view ->
 		synchronized (map.dvb.kanalnetz) {
+			// Kanalnetz mit Template zusammenführen
 			def k = (dvbKanalnetzMapTemplate + kanalnetz) as ObservableMap
 			println "addDvbKanalnetz: adding kanalnetz=${k.dump()}"
+			// In der Map hinzufügen
 			map.dvb.kanalnetz << k
 			// Sync table model
 			[tableModels.dvbKanalnetz].each {
