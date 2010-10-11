@@ -463,7 +463,7 @@ class ProjektController {
 			x.raumBezeichnung = "Kopie von ${x.raumBezeichnung}"
 			x.position = model.map.raum.raume.size()
 			// Raum zum Model hinzufügen
-			model.map.raum.raume.add(x)
+			model.map.raum.raume.add(x) // TODO Call ProjektModel.addRaum()??
 			// Raum hinzugefügt
 			publishEvent "RaumHinzugefugt", [rowCount - 1]
 		}
