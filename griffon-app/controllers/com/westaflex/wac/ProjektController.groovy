@@ -534,24 +534,27 @@ class ProjektController {
 	}
 	
 	/**
-	 * Raumvolumenströme - Zu/Abluftventile, Luftmenge berechnen.
+	 * Raumvolumenströme - Zu/Abluftventile geändert.
 	 */
-	def raumZuAbluftventileLuftmengeBerechnen = {
+	def raumZuAbluftventileGeandert = {
 		def raumIndex = view.raumVsZuAbluftventileTabelle.selectedRow
+		if (DEBUG) println "raumZuAbluftventileGeandert: raumIndex=${raumIndex}"
 		if (raumIndex > -1) {
-			publishEvent "RaumZuAbluftventileLuftmengeBerechnen", [raumIndex]
+			wacCalculationService.berechneZuAbluftventile(model.map.raum.raume[raumIndex])
+			//publishEvent "RaumZuAbluftventileLuftmengeBerechnen", [raumIndex]
 		} else {
-			if (DEBUG) println "raumZuAbluftventileLuftmengeBerechnen: Kein Raum ausgewählt, es wird nichts berechnet"
+			if (DEBUG) println "raumZuAbluftventileGeandert: Kein Raum ausgewählt, es wird nichts berechnet"
 		}
 	}
 	
 	/**
-	 * Raumvolumenströme - Überströmelemente, Luftmenge berechnen.
+	 * Raumvolumenströme - Überströmelemente geändert.
 	 */
-	def raumUberstromelementeLuftmengeBerechnen = {
+	def raumUberstromelementeGeandert = {
 		def raumIndex = view.raumVsUberstromelementeTabelle.selectedRow
 		if (raumIndex > -1) {
-			publishEvent "RaumUberstromelementeLuftmengeBerechnen", [raumIndex]
+			wacCalculationService.berechneUberstromelemente(model.map.raum.raume[raumIndex])
+			//publishEvent "RaumUberstromelementeLuftmengeBerechnen", [raumIndex]
 		} else {
 			if (DEBUG) println "raumUberstromelementeLuftmengeBerechnen: Kein Raum ausgewählt, es wird nichts berechnet"
 		}

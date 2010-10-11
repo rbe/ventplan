@@ -325,6 +325,8 @@ class ProjektModel {
 		def postValueSet  = { object, columnIndex, value ->
 			// Call ProjektController
 			app.controllers[mvcId].raumGeandert()
+			app.controllers[mvcId].raumZuAbluftventileGeandert()
+			resyncRaumTableModels()
 		}
 		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsZuAbluftventile, postValueSet, checkRaum)
 	}
@@ -336,7 +338,13 @@ class ProjektModel {
 		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",             "Überström-Volumenstrom [m³/h]", "Überström-Elemente"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile", "raumUberstromVolumenstrom",     "raumUberstromElement"] as String[]
 		def writable      = [true, true, true, true, true] as boolean[]
+		def postValueSet  = { object, columnIndex, value ->
+			// Call ProjektController
 			app.controllers[mvcId].raumGeandert()
+			app.controllers[mvcId].raumUberstromelementeGeandert()
+			resyncRaumTableModels()
+		}
+		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsUberstromventile, postValueSet, checkRaum)
 	}
 	
 	/**
@@ -346,7 +354,7 @@ class ProjektModel {
 		def columnNames =   ["Bezeichnung",    "Breite [mm]", "Querschnittsfläche [mm²]", "Spaltenhöhe [mm]", "mit Dichtung"] as String[]
 		def propertyNames = ["turBezeichnung", "turBreite",   "turQuerschnitt",           "turSpaltenhohe",   "turDichtung"] as String[]
 		def writable      = [true, true, true, true, true] as boolean[]
-		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeBearbeitenDetails, checkRaum)
+		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeBearbeitenDetails, null, checkRaum)
 	}
 	
 	/**
