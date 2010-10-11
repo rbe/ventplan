@@ -403,8 +403,7 @@ class ProjektModel {
 		println "addWbwTableModel(${index})"
 		// TableModel schon vorhanden?
 		if (tableModels.wbw[index]) return
-		def tm = new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNameComparator) as ca.odell.glazedlists.EventList
-		tableModels.wbw << tm
+		tableModels.wbw << new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNameComparator) as ca.odell.glazedlists.EventList
 		// Clone as this list may get modified -- for this project only
 		meta.wbw.each {
 			tableModels.wbw[index].add([id: it.id, anzahl: 0, name: it.bezeichnung, widerstandsbeiwert: it.wert])
