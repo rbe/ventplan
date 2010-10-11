@@ -869,9 +869,9 @@ class ProjektController {
 	}
 	
 	/**
+	 * TODO UNUSED!!!?
 	 * Raumvolumenströme - Zu-/Abluftventile:
 	 * Raumbezeichnung Comboboxen in der RaumdatenView und RaumVsView aktualisieren
-	 */
 	def updateRaumBezeichnungCombo = { rowIndex, newValue ->
 		// Neues TableModel setzen !
 		if (DEBUG) println "updateRaumBezeichnungCombo: ${rowIndex}"
@@ -879,11 +879,12 @@ class ProjektController {
 			model.resyncRaumTableModels()
 		}
 	}
+	 */
 	
 	/**
+	 * TODO UNUSED!!!?
 	 * Raumvolumenströme - Zu-/Abluftventile:
 	 * Luftart-Comboboxen in der RaumdatenView und RaumVsView aktualisieren
-	 */
 	def updateRaumLuftartCombo = { rowIndex, newValue ->
 		// Neues TableModel setzen !
 		if (DEBUG) println "updateRaumLuftartCombo: add row to table model ${rowIndex}"
@@ -891,11 +892,12 @@ class ProjektController {
 			model.resyncRaumTableModels()
 		}
 	}
+	 */
 	
 	/**
+	 * TODO UNUSED!!!?
 	 * Raumvolumenströme - Zu-/Abluftventile:
 	 * Combobox für eines der Ventile geändert.
-	 */
 	def updateRaumVentile = { rowIndex ->
 		if (DEBUG) println "-" * 80
 		if (DEBUG) println "updateRaumVentile: model.map.raum.raume=${model.map.raum.raume}"
@@ -916,6 +918,7 @@ class ProjektController {
 		} catch (NullPointerException e) {}
 		if (DEBUG) println "-" * 80
 	}
+	 */
 	
 	/**
 	 * Akustikberechnung - Zentralgerät geändert.
