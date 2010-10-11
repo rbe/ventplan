@@ -33,7 +33,7 @@ bind(source: model.meta.gewahlterRaum, sourceProperty: "raumHohe",    target: ra
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumFlache",  target: raumBearbeitenOptionalRaumflache,  targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumVolumen", target: raumBearbeitenOptionalRaumvolumen, targetProperty: "text", converter: GH.toString2Converter)
 [raumBearbeitenOptionalRaumlange, raumBearbeitenOptionalRaumbreite].each {
-	it.focusLost = controller.raumBearbeitenGeometrieGeandert
+	it.focusLost = controller.raumBearbeitenGeandert
 }
 
 raumBearbeitenSchliessen.actionPerformed = controller.raumBearbeitenSchliessen
