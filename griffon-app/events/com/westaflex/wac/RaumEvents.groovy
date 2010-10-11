@@ -86,7 +86,7 @@ class RaumEvents {
 	 */
 	def onRaumGeandert = { raumIndex ->
 		doLater {
-			println "processing event 'RaumGeandert': raumIndex=${raumIndex}: ${model.map.raum.raume[raumIndex]?.dump()}"
+			println "processing event 'RaumGeandert': raumIndex=${raumIndex}"
 			// Gebäude-Geometrie berechnen
 			wacCalculationService.geometrieAusRaumdaten(model.map)
 			// Aussenluftvolumenströme berechnen
@@ -108,6 +108,8 @@ class RaumEvents {
 			println "onRaumEntfernen: raumIndex=${raumIndex}"
 			// Raum aus Model entfernen
 			model.removeRaum(raumIndex, view)
+			// Es hat sich was geändert...
+			onRaumGeandert(raumIndex)
 		}
 	}
 	

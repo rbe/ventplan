@@ -286,7 +286,8 @@ class ProjektModel {
 			//println "raume 2 ===> ${map.raum.raume}"
 			meta.gewahlterRaum[columnIndex] = value
 			//println "Edited: map.raum.raume -> ${map.raum.raume}"
-			// TODO Call ProjektController.raumGeandert(raumIndex)
+			// TODO Call ProjektController
+			app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position)
 			resyncRaumTableModels()
 		}
 		gltmClosure(columnNames, propertyNames, writable, tableModels.raume, postValueSet)

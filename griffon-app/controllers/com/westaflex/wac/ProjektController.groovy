@@ -440,7 +440,7 @@ class ProjektController {
 	 * Raumdarten - ein Raum wurde geändert.
 	 */
 	def raumGeandert = { raumIndex ->
-		publishEvent "RaumGeandert", [raum, view]
+		publishEvent "RaumGeandert", [raumIndex]
 	}
 	
 	/**
