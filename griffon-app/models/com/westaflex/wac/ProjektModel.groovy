@@ -352,16 +352,6 @@ class ProjektModel {
 	}
 	
 	/**
-	 * RaumBearbeitenView - Zusammenfassung Tab TableModel
-	def createRaumEinstellungenTableModel() {
-		def columnNames =   ["Raum",            "Raumnummer", "Raumtyp", "Geschoss",     "Luftart", "Faktor", "Vorgang", "Zuluft", "Abluft", "Duch??", "Duch2???", "Kanalnetz", "Kanalnetz2", "Türhöhe", "Max...?", "Rau..???", "Rau...???", "Rau...???", "Rau...???", "Rau...???"] as String[]
-		def propertyNames = ["raumBezeichnung", "raumNummer", "raumTyp", "raumGeschoss", "luftart", "faktor", "vorgang", "zuluft", "abluft", "duch1", "duch2", "kanalnetz", "kanalnetz2", "turhohe", "max1", "raum1", "raum2", "raum3", "raum4", "raum5"] as String[]
-		def writable      = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true] as boolean[]
-		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeBearbeitenEinstellungen)
-	}
-	 */
-	
-	/**
 	 * Druckverlustberechnung - Kanalnetz.
 	 */
 	def createDvbKanalnetzTableModel() {

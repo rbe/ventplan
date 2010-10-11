@@ -120,14 +120,6 @@ panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[f
                         }
                     }
                 }
-                // RaumdatenDialog - Zusammenfassung
-                panel(id: "raumBearbeitenZusammenfassungTab", title: "Zusammenfassung", constraints: "grow") {
-                    jideScrollPane(constraints: "grow") {
-                        // TODO mmu...
-                        //table(id: "raumEinstellungenTabelle", model: model.createRaumEinstellungenTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-                        //}
-                    }
-                }
             }
             panel(id: "raumBearbeitenSubPanel2") {
                 button(id: "raumBearbeitenSchliessen", text: "Schliessen")
