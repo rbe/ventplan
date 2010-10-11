@@ -128,7 +128,9 @@ class GriffonHelper {
 			try {
 				r = nf.parse(d) as Double
 			} catch (e) {
-				e.printStackTrace()
+				println "toDouble2: d=${delegate} digits=${digits} e=${e}"
+				//e.printStackTrace()
+				return d
 			}
 		}
 		//if (GriffonHelper.DEBUG) println "toDouble2(): ${d?.dump()} -> ${r?.dump()}"
