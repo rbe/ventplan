@@ -332,9 +332,9 @@ class ProjektModel {
 	/**
 	 * Raumvolumenströme - Überströmventile TableModel
 	 */
-		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",                "Volumenstrom [m³/h]", "Überström-Elemente"] as String[]
-		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile",    "raumVolumenstrom",    "raumUberstromElement"] as String[]
 	def createRaumVsUberstromelementeTableModel() {
+		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",             "Überström-Volumenstrom [m³/h]", "Überström-Elemente"] as String[]
+		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile", "raumUberstromVolumenstrom",     "raumUberstromElement"] as String[]
 		def writable      = [true, true, true, true, true] as boolean[]
 			app.controllers[mvcId].raumGeandert()
 	}
