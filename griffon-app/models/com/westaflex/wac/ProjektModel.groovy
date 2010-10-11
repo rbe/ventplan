@@ -311,7 +311,7 @@ class ProjektModel {
 			meta.gewahlterRaum[columnIndex] = value
 			//println "Edited: map.raum.raume -> ${map.raum.raume}"
 			// Call ProjektController
-			app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position)
+			app.controllers[mvcId].raumGeandert()
 			resyncRaumTableModels()
 		}
 		gltmClosure(columnNames, propertyNames, writable, tableModels.raume, postValueSet, checkRaum)
@@ -326,7 +326,7 @@ class ProjektModel {
 		def writable      = [true, true, true, true, true, true, true, true, true, true, true, true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			// Call ProjektController
-			app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position)
+			app.controllers[mvcId].raumGeandert()
 		}
 		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsZuAbluftventile, postValueSet, checkRaum)
 	}
@@ -338,6 +338,7 @@ class ProjektModel {
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile",    "raumVolumenstrom",    "raumUberstromElement"] as String[]
 	def createRaumVsUberstromelementeTableModel() {
 		def writable      = [true, true, true, true, true] as boolean[]
+			app.controllers[mvcId].raumGeandert()
 	}
 	
 	/**
