@@ -346,7 +346,7 @@ class WacCalculationService {
 		// Gesamt-Außenluftvolumenstrom für lüftungstechnische Maßnahmen
 		Double gesamtAvsLTM = 0.0d
 		if (map.aussenluftVs.infiltrationBerechnen && b) {
-			gesamtAvsLTM = gesamtAussenluft - infiltration(true)
+			gesamtAvsLTM = gesamtAussenluft - infiltration(map, true)
 		} else {
 			gesamtAvsLTM = gesamtAussenluft
 		}
