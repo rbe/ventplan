@@ -549,7 +549,7 @@ class ProjektController {
 	 * Raumvolumenströme - Überströmelemente, Luftmenge berechnen.
 	 */
 	def raumUberstromelementeLuftmengeBerechnen = {
-		def raumIndex = view.raumVsUberstromventileTabelle.selectedRow
+		def raumIndex = view.raumVsUberstromelementeTabelle.selectedRow
 		if (raumIndex > -1) {
 			publishEvent "RaumUberstromelementeLuftmengeBerechnen", [raumIndex]
 		} else {
@@ -583,7 +583,7 @@ class ProjektController {
 	 */
 	def withAllRaumTables = { closure ->
 		view.with {
-			[raumTabelle, raumVsZuAbluftventileTabelle, raumVsUberstromventileTabelle].each { t ->
+			[raumTabelle, raumVsZuAbluftventileTabelle, raumVsUberstromelementeTabelle].each { t ->
 				closure(t)
 			}
 		}

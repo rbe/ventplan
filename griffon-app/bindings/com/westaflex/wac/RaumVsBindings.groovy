@@ -12,7 +12,7 @@ import com.bensmann.griffon.GriffonHelper as GH
 
 // Raumvolumenströme
 // Add list selection listener to synchronize every table's selection and model.meta.gewahlterRaum
-[raumVsZuAbluftventileTabelle, raumVsUberstromventileTabelle].each {
+[raumVsZuAbluftventileTabelle, raumVsUberstromelementeTabelle].each {
 	it.selectionModel.addListSelectionListener([
 		valueChanged: { evt ->
 				controller.raumInTabelleGewahlt(evt, it)

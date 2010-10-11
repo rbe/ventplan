@@ -26,9 +26,9 @@ panel(constraints: "grow", layout: new MigLayout("fill, wrap", "[fill, grow]", "
             }
             // Raumvolumenströme - Überströmventile
             panel(id: "raumVsUberstromventileTab", title: "Überströmventile", constraints: "grow", layout: new MigLayout("fill", "[fill,grow]", "[fill,grow]")) {
-                panel(id: "raumVsUberstromventileTabellePanel", constraints: "grow", layout: new MigLayout("fillx", "[fill]")) {
+                panel(id: "raumVsUberstromelementeTabellePanel", constraints: "grow", layout: new MigLayout("fillx", "[fill]")) {
                     jideScrollPane(constraints: "grow") {
-                        table(id: "raumVsUberstromventileTabelle", model: model.createRaumVsUberstromventileTableModel())
+                        table(id: "raumVsUberstromelementeTabelle", model: model.createRaumVsUberstromelementeTableModel())
                     }
                 }
             }

@@ -334,11 +334,10 @@ class ProjektModel {
 	/**
 	 * Raumvolumenströme - Überströmventile TableModel
 	 */
-	def createRaumVsUberstromventileTableModel() {
 		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",                "Volumenstrom [m³/h]", "Überström-Elemente"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile",    "raumVolumenstrom",    "raumUberstromElement"] as String[]
+	def createRaumVsUberstromelementeTableModel() {
 		def writable      = [true, true, true, true, true] as boolean[]
-		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsUberstromventile, checkRaum)
 	}
 	
 	/**
@@ -507,12 +506,12 @@ class ProjektModel {
 			// Combobox RaumVs - Luftart
 			def raumVsUsluftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
 			DefaultCellEditor raumVsUsLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsUsluftartEventList)
-			TableColumn raumVsUsLuftartColumn = view.raumVsUberstromventileTabelle.getColumnModel().getColumn(1)
+			TableColumn raumVsUsLuftartColumn = view.raumVsUberstromelementeTabelle.getColumnModel().getColumn(1)
 			raumVsUsLuftartColumn.setCellEditor(raumVsUsLuftartCellEditor)
 			// Combobox RaumVs - Überströmelemente
 			def raumVsUsElementeEventList = GlazedLists.eventList(meta.raumVsUberstromelemente) as ca.odell.glazedlists.EventList
 			DefaultCellEditor raumVsUsElementeCellEditor = AutoCompleteSupport.createTableCellEditor(raumVsUsElementeEventList)
-			TableColumn raumVsUsElementeColumn = view.raumVsUberstromventileTabelle.getColumnModel().getColumn(4)
+			TableColumn raumVsUsElementeColumn = view.raumVsUberstromelementeTabelle.getColumnModel().getColumn(4)
 			raumVsUsElementeColumn.setCellEditor(raumVsUsElementeCellEditor)
             // TODO: Verbesserung! Später freischalten.
             // Raum Typ für Druckverlustberechnung - Ventileinstellung Combobox.
