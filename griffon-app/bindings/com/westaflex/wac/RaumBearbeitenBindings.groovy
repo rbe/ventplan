@@ -23,9 +23,9 @@ bind(source: model.meta.gewahlterRaum, sourceProperty: "raumAbluftVs",     targe
 [raumBearbeitenLuftartFaktorZuluftverteilung, raumBearbeitenLuftartAbluftVs].each {
 	it.focusLost = controller.raumBearbeitenGeandert
 }
-// Durchlassposition
-// Kanalanschluß
-// Türen
+// TODO Durchlassposition
+// TODO Kanalanschluß
+// TODO Türen
 // Optional
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumLange",   target: raumBearbeitenOptionalRaumlange,   targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumBreite",  target: raumBearbeitenOptionalRaumbreite,  targetProperty: "text", converter: GH.toString2Converter)
