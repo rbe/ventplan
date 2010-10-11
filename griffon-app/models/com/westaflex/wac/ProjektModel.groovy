@@ -215,16 +215,15 @@ class ProjektModel {
 	def tmNameComparator = { a, b -> a.name <=> b.name } as Comparator
 	def tmNothingComparator = { a, b -> 0 } as Comparator
 	def tableModels = [
-			raume:                        new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			raumeVsZuAbluftventile:       new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			raumeVsUberstromventile:      new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			raumeBearbeitenDetails:       new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			raumeBearbeitenEinstellungen: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			dvbKanalnetz:                 new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			dvbVentileinstellung:         new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			wbw:                          [/* TableModels will be added in addWbwTableModel() */],
-			akustikZuluft:                new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList,
-			akustikAbluft:                new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList
+			raume:                   new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			raumeTuren:              [/* TableModels will be added in addRaum() */],
+			raumeVsZuAbluftventile:  new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			raumeVsUberstromventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			dvbKanalnetz:            new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			dvbVentileinstellung:    new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			wbw:                     [/* TableModels will be added in addWbwTableModel() */],
+			akustikZuluft:           new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList,
+			akustikAbluft:           new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList
 		]
 	
 	/**
@@ -348,13 +347,17 @@ class ProjektModel {
 	}
 	
 	/**
-	 * RaumBearbeitenView - Details Tab TableModel
+	 * RaumBearbeitenView - Türen.
 	 */
-	def createRaumDetailsTableModel() {
+	def createRaumTurenTableModel() {
+		def index = meta.gewahlterRaum.position
+		println "createRaumTurenTableModel: index=${index}"
 		def columnNames =   ["Bezeichnung",    "Breite [mm]", "Querschnittsfläche [mm²]", "Spaltenhöhe [mm]", "mit Dichtung"] as String[]
 		def propertyNames = ["turBezeichnung", "turBreite",   "turQuerschnitt",           "turSpaltenhohe",   "turDichtung"] as String[]
-		def writable      = [true, true, true, true, true] as boolean[]
-		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeBearbeitenDetails, null, checkRaum)
+		def writable      = [true, true, false, false, true] as boolean[]
+		def postValueSet  = { object, columnIndex, value -> 
+		}
+		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeTuren[index], postValueSet)
 	}
 	
 	/**
@@ -458,9 +461,21 @@ class ProjektModel {
 	 */
 	def addRaum = { raum, view ->
 		synchronized (map.raum.raume) {
+			// Raumdaten mit Template zusammführen
 			def r = (raumMapTemplate + raum) as ObservableMap
 			if (DEBUG) println "addRaum: adding raum=${r?.dump()}"
+			// Raum in der Map hinzufügen
 			map.raum.raume << r
+			// Turen hinzufügen
+			def turenModel = new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList
+			turenModel.addAll([
+					[turBezeichnung: "Tür 1", turBreite: 680, turQuerschnitt: 0, turSpaltenhohe: 0, turDichtung: true],
+					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpaltenhohe: 0, turDichtung: true],
+					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpaltenhohe: 0, turDichtung: true],
+					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpaltenhohe: 0, turDichtung: true],
+					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpaltenhohe: 0, turDichtung: true]
+				])
+			tableModels.raumeTuren << turenModel
 			// Sync table models
 			[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
 				//println "addRaum: ${map.raum.raume.raumBezeichnung} r.bezeichnung=${r.raumBezeichnung}"
