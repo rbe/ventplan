@@ -17,6 +17,8 @@ import com.bensmann.griffon.GriffonHelper as GH
 @griffon.util.EventPublisher
 class RaumEvents {
 	
+	public static boolean DEBUG = false
+	
 	def model
 	def wacCalculationService
 	def wacModelService
@@ -32,7 +34,7 @@ class RaumEvents {
 	 * Einen neuen Raum hinzufügen.
 	 */
 	def onRaumHinzufugen = { raum, view ->
-		println "processing event 'RaumHinzufugen': raum=${raum.dump()}"
+		if (DEBUG) println "processing event 'RaumHinzufugen': raum=${raum.dump()}"
 		// Standard-Werte setzen
 		raum.with {
 			// Übernehme Wert für Bezeichnung vom Typ?
@@ -63,7 +65,7 @@ class RaumEvents {
 	 */
 	def onRaumHinzugefugt = { raumIndex, view ->
 		doLater {
-			println "processing event 'RaumHinzugefugt': raumIndex=${raumIndex}"
+			if (DEBUG) println "processing event 'RaumHinzugefugt': raumIndex=${raumIndex}"
 			// Add PropertyChangeListener to our model.map
 			GH.addMapPropertyChangeListener("map.raum.raume", model.map.raum.raume[raumIndex])
 			// Neu berechnen
@@ -76,7 +78,7 @@ class RaumEvents {
 	 */
 	def onRaumGeandert = { raumIndex ->
 		doLater {
-			println "processing event 'RaumGeandert': raumIndex=${raumIndex}"
+			if (DEBUG) println "processing event 'RaumGeandert': raumIndex=${raumIndex}"
 			// Gebäude-Geometrie berechnen
 			wacCalculationService.geometrieAusRaumdaten(model.map)
 			// Aussenluftvolumenströme berechnen
@@ -95,7 +97,7 @@ class RaumEvents {
 	 */
 	def onRaumEntfernen = { raumIndex, view ->
 		doLater {
-			println "onRaumEntfernen: raumIndex=${raumIndex}"
+			if (DEBUG) println "onRaumEntfernen: raumIndex=${raumIndex}"
 			// Raum aus Model entfernen
 			model.removeRaum(raumIndex, view)
 			// Es hat sich was geändert...
