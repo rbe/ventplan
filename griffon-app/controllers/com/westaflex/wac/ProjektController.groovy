@@ -558,7 +558,7 @@ class ProjektController {
 	}
 	
 	/**
-	 * Raum bearbeiten - Daten eingegeben.
+	 * TODO Raum bearbeiten - Daten eingegeben.
 	 */
 	def raumBearbeitenGeandert = {
 		if (DEBUG) println "TODO raumBearbeitenGeandert"
