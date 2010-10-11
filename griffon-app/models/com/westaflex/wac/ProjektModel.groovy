@@ -239,7 +239,7 @@ class ProjektModel {
 	 * @param writable boolean[]
 	 * @param tableModel ca.odell.glazedlists.EventList
 	 */
-	def gltmClosure = { columnNames, propertyNames, writable, tableModel, postValueSet = null ->
+	def gltmClosure = { columnNames, propertyNames, writable, tableModel, postValueSet = null, preValueSet = null ->
 		new ca.odell.glazedlists.swing.EventTableModel(tableModel, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { columnIndex -> columnNames[columnIndex] },
@@ -255,9 +255,14 @@ class ProjektModel {
 				isEditable:     { object, columnIndex -> writable[columnIndex] },
 				setColumnValue: { object, value, columnIndex ->
 					println "setColumnValue: value@${columnIndex}=${value}"
+					def property = propertyNames[columnIndex]
+					// Call pre-value-set closure
+					if (preValueSet) object = preValueSet(object, property, value, columnIndex)
 					// Try to save double value; see ticket 60
-					object."${propertyNames[columnIndex]}" = value.toDouble2()
-					println "... ${object}"
+					else {
+						object[property] = value.toDouble2()
+					}
+					println " ... ${object}"
 					// Call post-value-set closure
 					if (postValueSet) postValueSet(object, columnIndex, value)
 					// VERY IMPORTANT: return null value to prevent e.g. returning
