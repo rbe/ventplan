@@ -447,7 +447,7 @@ class ProjektController {
 	 * Raumdaten - einen Raum entfernen.
 	 */
 	def raumEntfernen = {
-		publishEvent "RaumEntfernen", [view.raumTabelle.selectedRow/*model.meta.gewahlterRaum.position*/, view]
+		publishEvent "RaumEntfernen", [view.raumTabelle.selectedRow, view]
 	}
 	
 	/**
@@ -516,9 +516,6 @@ class ProjektController {
 		// Get selected row
 		def row = view.raumTabelle.selectedRow
 		if (row > -1) {
-			/* Aktuellen Raum in Metadaten setzen -- dies wurde durch das Event RaumInTabelleWahlen bereits erledigt
-			model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
-			*/
 			// Show dialog
 			raumBearbeitenDialog = GH.createDialog(builder, RaumBearbeitenView)
 			raumBearbeitenDialog.show()
