@@ -233,6 +233,28 @@ class ProjektModel {
 	def ws = GH.ws
 	
 	/**
+	 * Prüfe Daten in einem Raum auf Plausibilität.
+	 * Siehe Ticket #66.
+	 */
+	def checkRaum = { object, property, value, columnIndex ->
+		object[property] = value.toDouble2()
+		def raum = map.raum.raume.find { it.position == object.position }
+		println "checkRaum: ${raum}"
+		switch (raum.raumLuftart) {
+			case "ZU":
+				println "checkRaum: 1: ${raum}"
+				raum.with {
+					raumAnzahlAbluftventile = 0
+					raumAbluftmengeJeVentil = 0.0d
+					raumBezeichnungAbluftventile = ""
+				}
+				println "checkRaum: 2: ${raum}"
+				break
+		}
+		raum
+	}
+	
+	/**
 	 * Closure to generate glazedlists EventTableModel.
 	 * @param columnNames String[]
 	 * @param propertyNames String[]
@@ -293,7 +315,7 @@ class ProjektModel {
 			app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position)
 			resyncRaumTableModels()
 		}
-		gltmClosure(columnNames, propertyNames, writable, tableModels.raume, postValueSet)
+		gltmClosure(columnNames, propertyNames, writable, tableModels.raume, postValueSet, checkRaum)
 	}
 	
 	/**
@@ -303,7 +325,7 @@ class ProjektModel {
 		def columnNames =   ["Raum",            "Luftart",     ws("Raumvolumen<br/>[m³]"), ws("Luftwechsel<br/>[1/h]"), ws("Bezeichnung<br/>Abluftventile"),    ws("Anzahl<br/>Abluftventile"),    ws("Abluftmenge<br/>je Ventil"),   ws("Volumenstrom<br/>[m³/h]"), ws("Bezeichnung<br/>Zuluftventile"),    ws("Anzahl<br/>Zuluftventile"),    ws("Zuluftmenge<br/>je Ventil"),   "Verteilebene"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",              "raumLuftwechsel",           "raumBezeichnungAbluftventile",         "raumAnzahlAbluftventile",         "raumAbluftmengeJeVentil",         "raumVolumenstrom",            "raumBezeichnungZuluftventile",         "raumAnzahlZuluftventile",         "raumZuluftmengeJeVentil",         "raumVerteilebene"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true, true, true, true] as boolean[]
-		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsZuAbluftventile)
+		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsZuAbluftventile, postValueSet, checkRaum)
 	}
 	
 	/**
@@ -313,7 +335,7 @@ class ProjektModel {
 		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",                "Volumenstrom [m³/h]", "Überström-Elemente"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile",    "raumVolumenstrom",    "raumUberstromElement"] as String[]
 		def writable      = [true, true, true, true, true] as boolean[]
-		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsUberstromventile)
+		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsUberstromventile, checkRaum)
 	}
 	
 	/**
@@ -323,7 +345,7 @@ class ProjektModel {
 		def columnNames =   ["Bezeichnung",    "Breite [mm]", "Querschnittsfläche [mm²]", "Spaltenhöhe [mm]", "mit Dichtung"] as String[]
 		def propertyNames = ["turBezeichnung", "turBreite",   "turQuerschnitt",           "turSpaltenhohe",   "turDichtung"] as String[]
 		def writable      = [true, true, true, true, true] as boolean[]
-		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeBearbeitenDetails)
+		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeBearbeitenDetails, checkRaum)
 	}
 	
 	/**
