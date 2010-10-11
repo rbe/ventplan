@@ -597,7 +597,7 @@ class ProjektModel {
 	def removeDvbKanalnetz = { kanalnetzIndex ->
 		synchronized (map.dvb.kanalnetz) {
 			map.dvb.kanalnetz.remove(kanalnetzIndex)
-			tableModels.wbw.remove(kanalnetzIndex)
+			try { tableModels.wbw.remove(kanalnetzIndex) } catch (e) {}
 			// Sync table models
 			[tableModels.dvbKanalnetz].each {
 				it.remove(kanalnetzIndex)
