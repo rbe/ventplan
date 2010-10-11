@@ -558,17 +558,10 @@ class ProjektController {
 	}
 	
 	/**
-	 * Raum bearbeiten - Luftart ändern.
+	 * Raum bearbeiten - Daten eingegeben.
 	 */
-	def raumBearbeitenLuftartGeandert = {
-		if (DEBUG) println "TODO raumBearbeitenLuftartGeandert"
-	}
-	
-	/**
-	 * Raum bearbeiten - Geometrie eingegeben.
-	 */
-	def raumBearbeitenGeometrieGeandert = {
-		if (DEBUG) println "TODO raumBearbeitenGeometrieGeandert"
+	def raumBearbeitenGeandert = {
+		if (DEBUG) println "TODO raumBearbeitenGeandert"
 	}
 	
 	/**

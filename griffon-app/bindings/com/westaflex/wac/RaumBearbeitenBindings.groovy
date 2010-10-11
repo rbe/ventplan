@@ -21,7 +21,7 @@ bind(source: model.meta.gewahlterRaum, sourceProperty: "raumNummer",      target
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumZuluftfaktor", target: raumBearbeitenLuftartFaktorZuluftverteilung, targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumAbluftVs",     target: raumBearbeitenLuftartAbluftVs,               targetProperty: "text", converter: GH.toString2Converter)
 [raumBearbeitenLuftartFaktorZuluftverteilung, raumBearbeitenLuftartAbluftVs].each {
-	it.focusLost = controller.raumBearbeitenLuftartGeandert
+	it.focusLost = controller.raumBearbeitenGeandert
 }
 // Durchlassposition
 // Kanalanschluß
