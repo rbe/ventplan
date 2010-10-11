@@ -325,8 +325,8 @@ class WacCalculationService {
 	void autoLuftmenge(map, Boolean b) {
 		// LTM erforderlich?
 		if (!ltmErforderlich(map)) {
-            def infoMsg = "autoLuftmenge: Es sind keine lüftungstechnischen Maßnahmen notwendig!"
-            app.controllers["Dialog"].showInformDialog(infoMsg as String)
+			def infoMsg = "autoLuftmenge: Es sind keine lüftungstechnischen Maßnahmen notwendig!"
+			app.controllers["Dialog"].showInformDialog(infoMsg as String)
 			if (DEBUG) println infoMsg
 		}
 		// LTM: erste Berechnung für Raumvolumenströme
