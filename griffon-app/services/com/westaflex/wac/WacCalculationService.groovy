@@ -789,7 +789,7 @@ class WacCalculationService {
 		// TODO Mittlerer Schalldruckpegel
 		// Werte absteigend sortieren
 		def msdpWerte = t[12].collect { it.value }.sort { a, b -> b <=> a }
-		/*
+		/* Original code
 		def b = a[0]
 		def i = 0
 		def x
@@ -807,7 +807,7 @@ class WacCalculationService {
 					0.2f
 				]
 			if (abstand > 0 && abstand <= 13f && abstand % 0.5f == 0) {
-				ft[(int)abstand * 2]
+				ft[(int) abstand * 2]
 			} else {
 				0f
 			}
