@@ -29,16 +29,6 @@ class RaumEvents {
 	}
 	
 	/**
-	 * TODO rbe What code should be executed to update the UI after actions?
-	 */
-	def syncUI = { closure = {} ->
-		doLater {
-			model.resyncRaumTableModels()
-			closure()
-		}
-	}
-	
-	/**
 	 * Einen neuen Raum hinzufügen.
 	 */
 	def onRaumHinzufugen = { raum, view ->

@@ -17,15 +17,6 @@ bind(source: model.map.akustik.zuluft, sourceProperty: "langsdampfung",         
 bind(source: model.map.akustik.abluft, sourceProperty: "anzahlUmlenkungen",       target: akustikAbluftAnzahlUmlenkungen90GradStck, targetProperty: "text", mutual: true)
 bind(source: model.map.akustik.abluft, sourceProperty: "luftverteilerkastenStck", target: akustikAbluftLuftverteilerkastenStck,     targetProperty: "text", mutual: true)
 bind(source: model.map.akustik.abluft, sourceProperty: "langsdampfung",           target: akustikAbluftLangsdampfungKanalLfdmMeter, targetProperty: "text", mutual: true)
-/* Zentralgerät
-TODO Nicht als Binding lösen...
-bind(source: raumVsZentralgerat, sourceProperty: "selectedItem", target: akustikZuluftZuluftstutzenZentralgerat, targetProperty: "selectedItem")
-bind(source: raumVsZentralgerat, sourceProperty: "selectedItem", target: akustikAbluftAbluftstutzenZentralgerat, targetProperty: "selectedItem")
-*/
-/* Mittlerer Schalldruckpegel
-bind(source: model.map.akustik.zuluft, sourceProperty: "mittlererSchalldruckpegel", target: akustikZuluftMittlererSchalldruckpegel, targetProperty: "text")
-bind(source: model.map.akustik.abluft, sourceProperty: "mittlererSchalldruckpegel", target: akustikAbluftMittlererSchalldruckpegel, targetProperty: "text")
-*/
 // ActionListener
 def addActionListener = { comp, tabname ->
 	comp.addActionListener({ evt ->
