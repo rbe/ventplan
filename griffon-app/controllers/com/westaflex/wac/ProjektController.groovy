@@ -517,7 +517,7 @@ class ProjektController {
 		def row = view.raumTabelle.selectedRow
 		if (row > -1) {
 			// Show dialog
-			raumBearbeitenDialog = GH.createDialog(builder, RaumBearbeitenView)
+			raumBearbeitenDialog = GH.createDialog(builder, RaumBearbeitenView, [title: "Raum bearbeiten", pack: true])
 			raumBearbeitenDialog.show()
 			if (DEBUG) println "raumBearbeiten: dialog '${raumBearbeitenDialog.title}' closed: dialog=${raumBearbeitenDialog.dump()}"
 			// Berechne alles, was von Räumen abhängt
