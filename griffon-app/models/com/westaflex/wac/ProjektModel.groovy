@@ -280,13 +280,11 @@ class ProjektModel {
 		def propertyNames = ["raumBezeichnung", "raumGeschoss", "raumLuftart", "raumFlache",              "raumHohe",             "raumZuluftfaktor", "raumAbluftVs"] as String[]
 		def writable      = [true, true, true, true, true, true, true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
-			//println "raume 1 ===> ${map.raum.raume}"
 			def myTempMap = map.raum.raume.find { it.position == object.position }
 			myTempMap[columnIndex] = value
-			//println "raume 2 ===> ${map.raum.raume}"
 			meta.gewahlterRaum[columnIndex] = value
 			//println "Edited: map.raum.raume -> ${map.raum.raume}"
-			// TODO Call ProjektController
+			// Call ProjektController
 			app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position)
 			resyncRaumTableModels()
 		}
