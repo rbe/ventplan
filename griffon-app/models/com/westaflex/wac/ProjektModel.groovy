@@ -207,7 +207,7 @@ class ProjektModel {
 							]
 					] as ObservableMap,
 			] as ObservableMap,
-			raumBezeichnung: [] as ObservableList
+			raumBezeichnung: [] as ObservableList // TODO Wofür wird er genutzt?
 	] as ObservableMap
 	
 	// TableModels
