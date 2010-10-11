@@ -269,7 +269,6 @@ class ProjektModel {
 					try {
 						object."${propertyNames[columnIndex]}"?.toString2()
 					} catch (e) {
-						// combobox...
 						println "gltmClosure, getColumnValue: ${e}: ${object?.dump()}"
 						object?.toString()
 					}
