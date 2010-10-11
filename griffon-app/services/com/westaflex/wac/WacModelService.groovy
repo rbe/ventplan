@@ -103,7 +103,7 @@ class WacModelService {
 					[artikel])
 			}
 		if (DEBUG) println "getMaxVolumenstrom(${artikel}): ${r?.dump()}"
-		r ? r as Integer : 0
+		r ? r.maxvolumenstrom as Integer : 0
 	}
 	
 	/**
