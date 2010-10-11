@@ -379,6 +379,8 @@ class WacCalculationService {
 						it.raumLuftwechsel = (ltmAbluftRaum / it.raumVolumen)
 					}
 					ltmZuluftSumme += ltmAbluftRaum
+					// Überströmvolumenstrom = Vorschlag: Raumvolumenstrom
+					if (!it.raumUberstromVolumenstrom) it.raumUberstromVolumenstrom = it.raumVolumenstrom
 				}
 			} else {
 				ltmAbluftSumme += ltmAbluftRaum
@@ -397,6 +399,8 @@ class WacCalculationService {
 			} else {
 				ltmZuluftSumme += ltmZuluftRaum
 			}
+			// Überströmvolumenstrom = Vorschlag: Raumvolumenstrom
+			if (!it.raumUberstromVolumenstrom) it.raumUberstromVolumenstrom = it.raumVolumenstrom
 			map.raum.ltmZuluftSumme = ltmZuluftSumme
 		}
 	}
