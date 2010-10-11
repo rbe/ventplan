@@ -90,10 +90,10 @@ panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[f
                                 textField(id: "raumBearbeitenDetailsTurspalthohe", text: "10.0", constraints: "width 100px")
                                 button(id: "raumBearbeitenDetailsTurentfernen", text: "Tür entfernen", constraints: "wrap")
 
-                                //jideScrollPane() {
-                                    table(id: "raumBearbeitenDetailsTabelle", constraints: "height 150px", model: model.createRaumDetailsTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                                jideScrollPane() {
+                                    table(id: "raumBearbeitenTurenTabelle", constraints: "height 150px", model: model.createRaumTurenTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
                                     }
-                                //}
+                                }
                             }
 
                             panel(id: "raumBearbeitenOptional", border: titledBorder("Optional"), layout: new MigLayout("fillx", "[left]para[right]para[left]para[left]para[right]para[left]para[left]para[right]para[left]"), constraints: "span") {
