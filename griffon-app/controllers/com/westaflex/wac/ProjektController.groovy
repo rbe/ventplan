@@ -834,15 +834,6 @@ class ProjektController {
 	}
 	
 	/**
-	 * Druckverlustberechnung - Ventileinstellung - Teilstrecke wählen.
-	 */
-	def dvbVentileinstellungTeilstreckeDialog = {
-		teilstreckenDialog = GH.createDialog(builder, TeilstreckenView)
-		teilstreckenDialog.show()
-		if (DEBUG) println "TeilstreckenAuswahlen: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
-	}
-	
-	/**
 	 * Druckverlustberechnung - Ventileinstellung - Geändert.
 	 */
 	def dvbVentileinstellungGeandert = { ventileinstellungIndex ->
@@ -854,6 +845,15 @@ class ProjektController {
 	 */
 	def dvbVentileinstellungEntfernen = {
 		publishEvent "DvbVentileinstellungEntfernen", [view.dvbVentileinstellungTabelle.selectedRow]
+	}
+	
+	/**
+	 * Druckverlustberechnung - Ventileinstellung - Teilstrecke wählen.
+	 */
+	def dvbVentileinstellungTeilstreckeDialog = {
+		teilstreckenDialog = GH.createDialog(builder, TeilstreckenView)
+		teilstreckenDialog.show()
+		if (DEBUG) println "TeilstreckenAuswahlen: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
 	}
 	
 	/**
