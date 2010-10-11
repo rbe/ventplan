@@ -118,6 +118,10 @@ class GriffonHelper {
 		if (!(d.class in [java.lang.String]) || d.class in [java.lang.Float, java.lang.Double, java.math.BigDecimal]) {
 			return d
 		}
+		// Does String contain a character?
+		def charList = (["a".."z"] + ["A".."Z"]).flatten()
+		if (d.any { it in charList }) return d
+		// Parse number
 		if (d in ["NaN", "Inf"]) {
 			//r = 0.0d
 		} else if (d) {
