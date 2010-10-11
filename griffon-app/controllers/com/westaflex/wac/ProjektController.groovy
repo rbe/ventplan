@@ -465,7 +465,7 @@ class ProjektController {
 			// Raum zum Model hinzufügen
 			model.map.raum.raume.add(x) // TODO Call ProjektModel.addRaum()??
 			// Raum hinzugefügt
-			publishEvent "RaumHinzugefugt", [rowCount - 1]
+			publishEvent "RaumHinzugefugt", [view.raumTabelle.rowCount - 1]
 		}
 	}
 	
