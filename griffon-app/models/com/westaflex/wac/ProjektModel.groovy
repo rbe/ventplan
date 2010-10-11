@@ -523,14 +523,6 @@ class ProjektModel {
 			//updateDvbVentileinstellungComboBoxModel(view)
 		}
 	}
-
-    /**
-     * ComboBox Model für Druckverlustberechnung Ventileinstellung setzen
-     */
-    def updateDvbVentileinstellungComboBoxModel = { view ->
-        def newComboBoxModel = meta.raum.typ + map.raum.raume.raumBezeichnung as Set
-        view.dvbVentileinstellungRaum.setModel(new DefaultComboBoxModel(newComboBoxModel.toArray()))
-    }
 	
 	/**
 	 * Synchronize all Swing table models depending on map.raum.raume.
@@ -626,6 +618,14 @@ class ProjektModel {
 		DefaultCellEditor dvbVeVentiltypCellEditor = AutoCompleteSupport.createTableCellEditor(dvbVeVentiltypEventList)
 		TableColumn dvbVeVentiltypColumn = view.dvbVentileinstellungTabelle.getColumnModel().getColumn(3)
 		dvbVeVentiltypColumn.setCellEditor(dvbVeVentiltypCellEditor)
+	}
+	
+	/**
+	 * ComboBox Model für die Räume in der Druckverlustberechnung Ventileinstellung setzen.
+	 */
+	def updateDvbVentileinstellungComboBoxModel = { view ->
+		def newComboBoxModel = meta.raum.typ + map.raum.raume.raumBezeichnung as Set
+		view.dvbVentileinstellungRaum.setModel(new DefaultComboBoxModel(newComboBoxModel.toArray()))
 	}
 	
 	/**
