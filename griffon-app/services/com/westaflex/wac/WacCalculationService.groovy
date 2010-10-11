@@ -420,7 +420,9 @@ class WacCalculationService {
 			map.aussenluftVs.massnahme = "Lüftungstechnische Maßnahmen erforderlich!"
 		}
 		//
+		autoLuftmenge(map, true)
 		autoLuftmenge(map, false)
+		//
 		Double grundluftung = gesamtAvs //gesamtAussenluftVs(map)
 		Double geluftetesVolumen = map.gebaude.geometrie.geluftetesVolumen ?: 0.0d
 		Double mindestluftung
