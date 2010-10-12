@@ -465,7 +465,7 @@ class GriffonHelper {
 	}
 	
 	/**
-	 * 
+	 * Make a CellEditor with a ComboBox for GlazedLists.
 	 */
 	def static makeComboboxCellEditor = { column, list ->
 		def eventList = ca.odell.glazedlists.GlazedLists.eventList(list) as ca.odell.glazedlists.EventList
