@@ -39,14 +39,14 @@ panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[f
                                 button(id: "raumdatenDialogRaumButton", text: "...")
                             }
 
-                            panel(id: "raumBearbeitenLuftart", border: titledBorder("Luftart"), constraints: "span", layout: new MigLayout("", "[]para[]para[]", "")) {
-                                comboBox(id: "raumBearbeitenLuftartCombo", constraints: "width 100px")
+                            panel(id: "raumBearbeitenLuftartPanel", border: titledBorder("Luftart"), constraints: "span", layout: new MigLayout("", "[]para[]para[]", "")) {
+                                comboBox(id: "raumBearbeitenLuftart", constraints: "width 100px", items: model.meta.raum.luftart)
                                 textField(id: "raumBearbeitenLuftartFaktorZuluftverteilung", text: "", constraints: "width 100px")
-                                label(id: "raumBearbeitenLuftartCombo", text: "Faktor Zuluftverteilung", constraints: "wrap")
+                                label(id: "raumBearbeitenFaktorZuluftverteilungLabel", text: "Faktor Zuluftverteilung", constraints: "wrap")
 
                                 label("")
                                 textField(id: "raumBearbeitenLuftartAbluftVs", text: "", constraints: "width 100px")
-                                label(id: "raumBearbeitenLuftartCombo", text: "Abluftvolumentstrom in m³/h", constraints: "cell 2 1")
+                                label(id: "raumBearbeitenLuftartAbluftVsLabel", text: "Abluftvolumentstrom in m³/h", constraints: "cell 2 1")
                             }
 
                             panel(id: "raumBearbeitenDurchlassposition", border: titledBorder("Durchlassposition"), layout: new MigLayout("fillx", "[left,fill]para[left,fill]para[left,fill]", "[fill]")) {
@@ -90,8 +90,8 @@ panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[f
                                 textField(id: "raumBearbeitenDetailsTurspalthohe", text: "10.0", constraints: "width 100px")
                                 button(id: "raumBearbeitenDetailsTurentfernen", text: "Tür entfernen", constraints: "wrap")
 
-                                jideScrollPane() {
-                                    table(id: "raumBearbeitenTurenTabelle", constraints: "height 150px", model: model.createRaumTurenTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                                jideScrollPane(constraints: "height 150px") {
+                                    table(id: "raumBearbeitenTurenTabelle", model: model.createRaumTurenTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
                                     }
                                 }
                             }

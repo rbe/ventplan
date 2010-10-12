@@ -526,6 +526,9 @@ class ProjektController {
 			raumBearbeitenDialog.show()
 			if (DEBUG) println "raumBearbeiten: dialog '${raumBearbeitenDialog.title}' closed: dialog=${raumBearbeitenDialog.dump()}"
 			// Berechne alles, was von Räumen abhängt
+            if (DEBUG) println "raumBearbeiten: model.tableModels.raumeTuren '${model.tableModels.raumeTuren}'"
+            if (DEBUG) println "raumBearbeiten: gewahlterRaum '${model.meta.gewahlterRaum}'"
+            // TODO Update gewahlterRaum.turen
 			publishEvent "RaumGeandert", [row]
 		}
 	}

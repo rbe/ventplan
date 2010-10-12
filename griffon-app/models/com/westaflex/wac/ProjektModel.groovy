@@ -294,6 +294,68 @@ class ProjektModel {
 				}
 			] as ca.odell.glazedlists.gui.WritableTableFormat)
 	}
+
+    def gltmClosureCheckbox = { columnNames, propertyNames, writable, tableModel, postValueSet = null, preValueSet = null ->
+		new ca.odell.glazedlists.swing.EventTableModel(tableModel, [
+				getColumnCount: { columnNames.size() },
+				getColumnName:  { columnIndex -> columnNames[columnIndex] },
+				getColumnValue: { object, columnIndex ->
+                    if (columnIndex == 4) {
+                        def tempValue = object."${propertyNames[columnIndex]}"
+                        println "tempValue ${tempValue}"
+                        if (tempValue == "0,00" || tempValue == "0.00") {
+                            true
+                        } else {
+                            tempValue
+                        }
+                    }
+                    else {
+                        try {
+                            object."${propertyNames[columnIndex]}"?.toString2()
+                        } catch (e) {
+                            println "gltmClosure, getColumnValue: ${e}: ${object?.dump()}"
+                            object?.toString()
+                        }
+                    }
+				},
+				isEditable:     { object, columnIndex -> writable[columnIndex] },
+				setColumnValue: { object, value, columnIndex ->
+					def property = propertyNames[columnIndex]
+					println "setColumnValue: ${property}=${value}"
+
+                    if (columnIndex == 4) {
+                        object[property] = value
+                    }
+                    else {
+                        // Call pre-value-set closure
+                        if (preValueSet) object = preValueSet(object, property, value, columnIndex)
+                        else {
+                            // Try to save double value; see ticket 60
+                            object[property] = value.toDouble2()
+                        }
+                    }
+					// Call post-value-set closure
+					if (postValueSet) postValueSet(object, columnIndex, value)
+					// VERY IMPORTANT: return null value to prevent e.g. returning
+					// a boolean value. Table would display the wrong value in all
+					// cells !!!
+					null
+				},
+				getValueAt: { rowIndex, columnIndex ->
+					println "gltmClosure, getValueAt: rowIndex=${rowIndex}, columnIndex=${columnIndex}"
+					//no value to get...
+				},
+                getColumnClass: { columnIndex ->
+                    if (columnIndex == 4) {
+                        java.lang.Boolean.class
+                    }
+                },
+                getColumnComparator: { columnIndex ->
+                    null
+                }
+
+			] as com.bensmann.griffon.AdvancedWritableTableFormat)
+	}
 	
 	/**
 	 * Raumdaten - TableModel
@@ -357,7 +419,7 @@ class ProjektModel {
 		def writable      = [true, true, false, false, true] as boolean[]
 		def postValueSet  = { object, columnIndex, value -> 
 		}
-		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeTuren[index], postValueSet)
+		gltmClosureCheckbox(columnNames, propertyNames, writable, tableModels.raumeTuren[index], postValueSet)
 	}
 	
 	/**

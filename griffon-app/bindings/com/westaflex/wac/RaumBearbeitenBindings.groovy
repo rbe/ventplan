@@ -17,6 +17,7 @@ bind(source: model.meta.gewahlterRaum, sourceProperty: "raumTyp",    target: rau
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumBezeichnung", target: raumBearbeitenBezeichnung,  targetProperty: "text",         mutual: true)
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumGeschoss",    target: raumBearbeitenRaumGeschoss, targetProperty: "selectedItem", mutual: true)
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumNummer",      target: raumBearbeitenRaumnummer,   targetProperty: "text",         mutual: true)
+bind(source: model.meta.gewahlterRaum, sourceProperty: "raumLuftart",      target: raumBearbeitenLuftart,   targetProperty: "text",         mutual: true)
 // Luftart
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumZuluftfaktor", target: raumBearbeitenLuftartFaktorZuluftverteilung, targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumAbluftVs",     target: raumBearbeitenLuftartAbluftVs,               targetProperty: "text", converter: GH.toString2Converter)
