@@ -464,4 +464,13 @@ class GriffonHelper {
 		map
 	}
 	
+	/**
+	 * 
+	 */
+	def static makeComboboxCellEditor = { column, list ->
+		def eventList = ca.odell.glazedlists.GlazedLists.eventList(list) as ca.odell.glazedlists.EventList
+		javax.swing.DefaultCellEditor cellEditor = ca.odell.glazedlists.swing.AutoCompleteSupport.createTableCellEditor(eventList)
+		column.setCellEditor(cellEditor)
+	}
+	
 }
