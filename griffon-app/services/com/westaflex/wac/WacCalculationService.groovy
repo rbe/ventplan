@@ -786,7 +786,9 @@ class WacCalculationService {
 			s
 		}
 		t[12] = [slp125: sumColumn("slp125"), slp250: sumColumn("slp250"), slp500: sumColumn("slp500"), slp1000: sumColumn("slp1000"), slp2000: sumColumn("slp2000"), slp4000: sumColumn("slp4000")]
-		// TODO Mittlerer Schalldruckpegel
+		//
+		// Mittleren Schalldruckpegel berechnen
+		//
 		// Werte absteigend sortieren
 		def msdpWerte = t[12].collect { it.value }.sort { a, b -> b <=> a }
 		/* Original code
@@ -819,7 +821,8 @@ class WacCalculationService {
 		    if (idx > 4 || tmp < 0 || tmp > 13) return
 		    msdp += diffToDelta(Math.round(tmp))
 		}
-		m.mittlererSchalldruckpegel = msdp
+		// MSDP darf nie unter 20 sein
+		m.mittlererSchalldruckpegel = java.lang.Math.max(20, msdp)
 		//
 		if (DEBUG) t.eachWithIndex { it, p -> println "$p: $it" }
 	}
