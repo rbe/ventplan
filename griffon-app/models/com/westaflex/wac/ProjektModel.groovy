@@ -326,7 +326,7 @@ class ProjektModel {
 	def createRaumVsZuAbluftventileTableModel() {
 		def columnNames =   ["Raum",            "Luftart",     ws("Raumvolumen<br/>[m³]"), ws("Luftwechsel<br/>[1/h]"), ws("Bezeichnung<br/>Abluftventile"),    ws("Anzahl<br/>Abluftventile"),    ws("Abluftmenge<br/>je Ventil"),   ws("Volumenstrom<br/>[m³/h]"), ws("Bezeichnung<br/>Zuluftventile"),    ws("Anzahl<br/>Zuluftventile"),    ws("Zuluftmenge<br/>je Ventil"),   "Verteilebene"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",              "raumLuftwechsel",           "raumBezeichnungAbluftventile",         "raumAnzahlAbluftventile",         "raumAbluftmengeJeVentil",         "raumVolumenstrom",            "raumBezeichnungZuluftventile",         "raumAnzahlZuluftventile",         "raumZuluftmengeJeVentil",         "raumVerteilebene"] as String[]
-		def writable      = [true, true, true, true, true, true, true, true, true, true, true, true] as boolean[]
+		def writable      = [true,              false,         false,                      false,                       true,                                   false,                             false,                             false,                         true,                                   false,                             false,                             true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			// Call ProjektController
 			app.controllers[mvcId].raumGeandert()
@@ -342,7 +342,7 @@ class ProjektModel {
 	def createRaumVsUberstromelementeTableModel() {
 		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",             "Überström-Volumenstrom [m³/h]", "Überström-Elemente"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile", "raumUberstromVolumenstrom",     "raumUberstromElement"] as String[]
-		def writable      = [true, true, true, true, true] as boolean[]
+		def writable      = [true,              false,         false,                        true,                           true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			// Call ProjektController
 			app.controllers[mvcId].raumGeandert()
@@ -372,9 +372,9 @@ class ProjektModel {
 	 * Druckverlustberechnung - Kanalnetz.
 	 */
 	def createDvbKanalnetzTableModel() {
-		def columnNames =   ["Luftart",     "Teilstrecke",  ws("Luftvolumen-<br/>strom<br/>[m³/h]"), "Kanalbezeichnung", ws("Kanallänge<br/>[m]"), ws("Geschwindigkeit<br/>[m/s]"), ws("Reibungswiderstand<br/>gerader Kanal<br/>[Pa]"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>[Pa]"), ws("Widerstand<br/>Teilstrecke<br/><[Pa]")] as String[]
-		def propertyNames = ["dvbkLuftart", "teilstrecke", "luftVs",                                 "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
-		def writable      = [true, true, true, true, true, true, true, true, true, true] as boolean[]
+		def columnNames =   ["Luftart",     "Teilstrecke", ws("Luftvolumen-<br/>strom<br/>[m³/h]"), "Kanalbezeichnung", ws("Kanallänge<br/>[m]"), ws("Geschwindigkeit<br/>[m/s]"), ws("Reibungswiderstand<br/>gerader Kanal<br/>[Pa]"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>[Pa]"), ws("Widerstand<br/>Teilstrecke<br/><[Pa]")] as String[]
+		def propertyNames = ["dvbkLuftart", "teilstrecke", "luftVs",                                "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
+		def writable      = [false,         true,          true,                                    true,               true,                     false,                           false,                                               false,                             false,                                 false] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			def myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
 			myTempMap[columnIndex] = value
@@ -392,7 +392,7 @@ class ProjektModel {
 	def createDvbVentileinstellungTableModel() {
 		def columnNames =   ["Raum", "Luftart",     "Teilstrecken", "Ventiltyp",         "dP offen [Pa]", "Gesamt [Pa]",      "Differenz", "Abgleich [Pa]", "Einstellung"] as String[]
 		def propertyNames = ["raum", "dvbvLuftart", "teilstrecken", "ventilbezeichnung", "dpOffen",       "gesamtWiderstand", "differenz", "abgleich",      "einstellung"] as String[]
-		def writable      = [true, true, true, true, true, true, true, true, true] as boolean[]
+		def writable      = [true,   false,         true,           true,                false,           false,              false,       false,            true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			def myTempMap = map.dvb.ventileinstellung.find { it.position == object.position }
 			myTempMap[columnIndex] = value
