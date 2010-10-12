@@ -524,9 +524,7 @@ class ProjektController {
 			GH.makeComboboxCellEditor columnModel.getColumn(0), ["Tür", "Durchgang"]
 			GH.makeComboboxCellEditor columnModel.getColumn(1), [610, 735, 860, 985, 1110, 1235, 1485, 1735, 1985]
 			raumBearbeitenDialog.show()
-			if (DEBUG) println "raumBearbeiten: dialog '${raumBearbeitenDialog.title}' closed: dialog=${raumBearbeitenDialog.dump()}"
-			// Berechne alles, was von Räumen abhängt
-			publishEvent "RaumGeandert", [row]
+			/*if (DEBUG) println "raumBearbeiten: dialog '${raumBearbeitenDialog.title}' disposed"*/
 		}
 	}
 	
@@ -534,8 +532,10 @@ class ProjektController {
 	 * RaumBearbeiten - RaumBearbeitenView schliessen.
 	 */
 	def raumBearbeitenSchliessen = {
-		if (DEBUG) println "raumBearbeitenSchliessen -> closing dialog: raumBearbeitenDialog=$raumBearbeitenDialog"
+		/*if (DEBUG) */println "raumBearbeitenSchliessen: closing dialog '${raumBearbeitenDialog.title}'"
 		raumBearbeitenDialog.dispose()
+		// Berechne alles, was von Räumen abhängt
+		publishEvent "RaumGeandert", [view.raumTabelle.selectedRow]
 	}
 	
 	/**
