@@ -483,23 +483,23 @@ class ProjektModel {
 				it.add(map.raum.raume[r.position])
 			}
 			// Raumdaten - Geschoss
-			GH.makeComboboxCellEditor view.raumTabelle.getColumnModel().getColumn(1), meta.raum.geschoss
+			GH.makeComboboxCellEditor view.raumTabelle.columnModel.getColumn(1), meta.raum.geschoss
 			// Raumdaten - Luftart
-			GH.makeComboboxCellEditor view.raumTabelle.getColumnModel().getColumn(2), meta.raum.luftart
+			GH.makeComboboxCellEditor view.raumTabelle.columnModel.getColumn(2), meta.raum.luftart
 			// RaumVs Zu- und Abluftventile
 			// Combobox RaumVs - Luftart
-			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.getColumnModel().getColumn(1), meta.raum.luftart
+			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(1), meta.raum.luftart
 			// Combobox RaumVs - Bezeichnung Abluftmenge
-			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.getColumnModel().getColumn(4), meta.raumVsBezeichnungAbluftventile
+			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(4), meta.raumVsBezeichnungAbluftventile
 			// Combobox RaumVs - Bezeichnung Zuluftmenge
-			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.getColumnModel().getColumn(8), meta.raumVsBezeichnungZuluftventile
+			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(8), meta.raumVsBezeichnungZuluftventile
 			// Combobox RaumVs - Verteilebene
-			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.getColumnModel().getColumn(11), meta.raum.geschoss
+			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(11), meta.raum.geschoss
 			// RaumVs Überströmventile
 			// Combobox RaumVs - Luftart
-			GH.makeComboboxCellEditor view.raumVsUberstromelementeTabelle.getColumnModel().getColumn(1), meta.raum.luftart
+			GH.makeComboboxCellEditor view.raumVsUberstromelementeTabelle.columnModel.getColumn(1), meta.raum.luftart
 			// Combobox RaumVs - Überströmelemente
-			GH.makeComboboxCellEditor view.raumVsUberstromelementeTabelle.getColumnModel().getColumn(4), meta.raumVsUberstromelemente
+			GH.makeComboboxCellEditor view.raumVsUberstromelementeTabelle.columnModel.getColumn(4), meta.raumVsUberstromelemente
 			// TODO: Verbesserung! Später freischalten.
 			// Raum Typ für Druckverlustberechnung - Ventileinstellung Combobox.
 			//updateDvbVentileinstellungComboBoxModel(view)
