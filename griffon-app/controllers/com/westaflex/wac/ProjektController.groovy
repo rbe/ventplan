@@ -539,6 +539,18 @@ class ProjektController {
 	}
 	
 	/**
+	 * 
+	 */
+	def berechneTuren = { raumIndex = null ->
+		// Hole gewählten Raum
+		def raum = model.map.raum.raume[raumIndex ?: view.raumTabelle.selectedRow]
+		// Türen berechnen?
+		if (raum.turen.findAll { it.turBreite > 0 }?.size() > 0 && raum.raumUberstromVolumenstrom) {
+			wacCalculationService.berechneTurspalt(raum)
+		}
+	}
+	
+	/**
 	 * Raumvolumenströme - Zu/Abluftventile geändert.
 	 */
 	def raumZuAbluftventileGeandert = {

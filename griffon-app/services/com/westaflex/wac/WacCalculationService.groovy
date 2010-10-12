@@ -698,15 +698,25 @@ class WacCalculationService {
 	}
 	
 	/**
-	 * Raum bearbeiten - Türen berechnen.
+	 * Raum bearbeiten - Türen berechnen, wenn Raumvolumenströme/Überströmelemente eingegeben wurden.
 	 * @param map One of model.map.raum.raume
 	 */
-	def berechneTuerspalt(map) {
+	def berechneTurspalt(map) {
 		// Gilt nicht für Überström-Räume
-		if (map.luftart.contains("ÜB")) {
+		println "berechneTurspalt: map=${map.dump()}"
+		if (map.raumLuftart.contains("ÜB")) {
 			return
 		} else {
-			map.turen.each {
+			def anzTurenOhneDichtung = map.turen.findAll { it.turDichtung == false }?.size() ?: 0
+			def summeTurBreiten = map.turen.sum { it.turBreite.toDouble2() }
+			map.turen.findAll { it.turBreite > 0 }?.each {
+				// Existiert ein Durchgang? Ja, überspringen
+				if (it.turBezeichnung ==~ /.*Durchgang.*/) return
+				def tsqf =
+					(100 * 3.1d * map.raumUberstromVolumenstrom / java.lang.Math.sqrt(1.5d))
+					- 2500 * anzTurenOhneDichtung
+				it.turSpalthohe = tsqf / summeTurBreiten
+				it.turQuerschnitt = tsqf * it.turBreite / summeTurBreiten
 			}
 		}
 	}

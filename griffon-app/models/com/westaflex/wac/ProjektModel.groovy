@@ -62,7 +62,13 @@ class ProjektModel {
 			raumAnzahlUberstromVentile: 0,
 			raumUberstromElement: "",
 			raumNummer: "",
-			turen: [] as ObservableList
+			turen: [
+					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
+				] as ObservableList
 		]
 	
 	/**
@@ -353,9 +359,11 @@ class ProjektModel {
 		def index = meta.gewahlterRaum.position
 		println "createRaumTurenTableModel: index=${index}"
 		def columnNames =   ["Bezeichnung",    "Breite [mm]", "Querschnittsfläche [mm²]", "Spaltenhöhe [mm]", "mit Dichtung"] as String[]
-		def propertyNames = ["turBezeichnung", "turBreite",   "turQuerschnitt",           "turSpaltenhohe",   "turDichtung"] as String[]
-		def writable      = [true, true, false, false, true] as boolean[]
-		def postValueSet  = { object, columnIndex, value -> 
+		def propertyNames = ["turBezeichnung", "turBreite",   "turQuerschnitt",           "turSpalthohe",   "turDichtung"] as String[]
+		def writable      = [true,             true,          false,                      false,              true] as boolean[]
+		def postValueSet  = { object, columnIndex, value ->
+			// Call ProjektController
+			app.controllers[mvcId].berechneTuren()
 		}
 		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeTuren[index], postValueSet)
 	}
@@ -466,15 +474,8 @@ class ProjektModel {
 			// Raum in der Map hinzufügen
 			map.raum.raume << r
 			// Turen hinzufügen
-			def turenModel = new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList
-			turenModel.addAll([
-					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpaltenhohe: 0, turDichtung: true],
-					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpaltenhohe: 0, turDichtung: true],
-					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpaltenhohe: 0, turDichtung: true],
-					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpaltenhohe: 0, turDichtung: true],
-					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpaltenhohe: 0, turDichtung: true]
-				])
-			tableModels.raumeTuren << turenModel
+			tableModels.raumeTuren <<
+				new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList
 			// Sync table models
 			resyncRaumTableModels()
 			// Raumdaten - Geschoss
@@ -537,6 +538,12 @@ class ProjektModel {
 			// Raumdaten
 			tableModels.raume.clear()
 			tableModels.raume.addAll(map.raum.raume)
+			// Türen
+			tableModels.raume.each {
+				def m = tableModels.raumeTuren[it.position]
+				m.clear()
+				m.addAll(it.turen)
+			}
 			// Raumvolumentströme - Zu-/Abluftventile
 			tableModels.raumeVsZuAbluftventile.clear()
 			tableModels.raumeVsZuAbluftventile.addAll(map.raum.raume)
