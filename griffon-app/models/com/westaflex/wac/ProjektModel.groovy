@@ -365,7 +365,7 @@ class ProjektModel {
 	 */
 	def createDvbKanalnetzTableModel() {
 		def columnNames =   ["Luftart",     "Teilstrecke",  ws("Luftvolumen-<br/>strom<br/>[m³/h]"), "Kanalbezeichnung", ws("Kanallänge<br/>[m]"), ws("Geschwindigkeit<br/>[m/s]"), ws("Reibungswiderstand<br/>gerader Kanal<br/>[Pa]"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>[Pa]"), ws("Widerstand<br/>Teilstrecke<br/><[Pa]")] as String[]
-		def propertyNames = ["dvbkLuftart", "teilstrecke", "luftVs",                                 "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
+		def propertyNames = ["luftart", "teilstrecke", "luftVs",                                 "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true, true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			def myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
@@ -383,7 +383,7 @@ class ProjektModel {
 	 */
 	def createDvbVentileinstellungTableModel() {
 		def columnNames =   ["Raum", "Luftart",     "Teilstrecken", "Ventiltyp",         "dP offen [Pa]", "Gesamt [Pa]",      "Differenz", "Abgleich [Pa]", "Einstellung"] as String[]
-		def propertyNames = ["raum", "dvbvLuftart", "teilstrecken", "ventilbezeichnung", "dpOffen",       "gesamtWiderstand", "differenz", "abgleich",      "einstellung"] as String[]
+		def propertyNames = ["raum", "luftart", "teilstrecken", "ventilbezeichnung", "dpOffen",       "gesamtWiderstand", "differenz", "abgleich",      "einstellung"] as String[]
 		def writable      = [true, true, true, true, true, true, true, true, true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			def myTempMap = map.dvb.ventileinstellung.find { it.position == object.position }
