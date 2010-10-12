@@ -519,7 +519,7 @@ class ProjektController {
 			// Show dialog
 			raumBearbeitenDialog = GH.createDialog(builder, RaumBearbeitenView, [title: "Raum bearbeiten", pack: true])
 			// Modify TableModel
-			def columnModel = view.raumBearbeitenTurenTabelle.getColumnModel()
+			def columnModel = view.raumBearbeitenTurenTabelle.columnModel
 			// TODO Move values into model.meta
 			GH.makeComboboxCellEditor columnModel.getColumn(0), ["Tür", "Durchgang"]
 			GH.makeComboboxCellEditor columnModel.getColumn(1), [610, 735, 860, 985, 1110, 1235, 1485, 1735, 1985]
