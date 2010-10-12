@@ -476,12 +476,7 @@ class ProjektModel {
 				])
 			tableModels.raumeTuren << turenModel
 			// Sync table models
-			[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
-				//println "addRaum: ${map.raum.raume.raumBezeichnung} r.bezeichnung=${r.raumBezeichnung}"
-				//println "addRaum: map.raum.raume.size=${map.raum.raume.size()} r.position=${r.position}"
-				//println "map.raum.raume[r.position] -> ${map.raum.raume[r.position]}"
-				it.add(map.raum.raume[r.position])
-			}
+			resyncRaumTableModels()
 			// Raumdaten - Geschoss
 			GH.makeComboboxCellEditor view.raumTabelle.columnModel.getColumn(1), meta.raum.geschoss
 			// Raumdaten - Luftart
