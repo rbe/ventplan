@@ -468,7 +468,7 @@ class ProjektModel {
 			// Turen hinzufügen
 			def turenModel = new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList
 			turenModel.addAll([
-					[turBezeichnung: "Tür 1", turBreite: 680, turQuerschnitt: 0, turSpaltenhohe: 0, turDichtung: true],
+					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpaltenhohe: 0, turDichtung: true],
 					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpaltenhohe: 0, turDichtung: true],
 					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpaltenhohe: 0, turDichtung: true],
 					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpaltenhohe: 0, turDichtung: true],
