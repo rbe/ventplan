@@ -42,7 +42,7 @@ panel(id: "raumPanel", layout: new MigLayout("fill", "[fill,grow]", "")) {
         textField(id: "raumZuluftfaktor", text: "3,00", editable: bind { raumLuftart.selectedItem != "ÜB" }, constraints: "width 80px")
         textField(id: "raumAbluftVs",                   editable: bind { raumLuftart.selectedItem != "ÜB" }, constraints: "width 80px")
         // Hinzufügen-Button aktivieren, wenn Fläche eingegeben wurde
-        button(id: "raumHinzufugen", enabled: bind { !raumFlache.text.isEmpty() }, text: "Hinzufügen")
+        button(id: "raumHinzufugen"/*, enabled: bind { !raumFlache.text.isEmpty() }*/, text: "Hinzufügen")
     }
     // Tabelle aller Räume
     panel(id: "raumTabellePanel", constraints: CENTER, layout: new MigLayout("fill", "[fill]")) {
