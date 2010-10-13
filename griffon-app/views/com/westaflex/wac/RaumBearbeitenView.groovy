@@ -31,8 +31,8 @@ panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[f
                                 label("", constraints: "wrap")
 
                                 comboBox(id: "raumBearbeitenRaumGeschoss", items: model.meta.raum.geschoss)
-                                textField(id: "raumBearbeitenRaumnummer", text: model.meta.raum.s, constraints: "width 50px")
                                 button(id: "raumBearbeitenRaumLinks", text: " < ")
+                                textField(id: "raumBearbeitenRaumnummer"/*, text: model.meta.raum.s*/, constraints: "width 50px")
                                 button(id: "raumBearbeitenRaumRechts", text: " > ")
                                 textField(id: "raumBearbeitenBezeichnung", text: "", constraints: "width 100px")
                                 comboBox(id: "raumBearbeitenRaumtyp", items: model.meta.raum.typ)
