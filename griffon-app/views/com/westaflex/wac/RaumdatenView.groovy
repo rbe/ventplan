@@ -56,7 +56,6 @@ panel(id: "raumPanel", layout: new MigLayout("fill", "[fill,grow]", "")) {
         button(id: "raumEntfernen",            enabled: bind {1==1}, text: "Raum entfernen")
         button(id: "raumBearbeiten",           enabled: bind {1==1}, text: "Raum bearbeiten")
         button(id: "raumKopieren",             enabled: bind {1==1}, text: "Raum kopieren")
-
         /*
         button(id: "raumEntfernen",            enabled: bind { model.map.raum.raume?.size() > 1 ? true : false }, text: "Raum entfernen")
         button(id: "raumBearbeiten",           enabled: bind { model.map.raum.raume?.size() > 0 ? true : false }, text: "Raum bearbeiten")
@@ -68,7 +67,6 @@ panel(id: "raumPanel", layout: new MigLayout("fill", "[fill,grow]", "")) {
         button(id: "raumNachObenVerschieben",  enabled: bind {1==1}, text: "^")
         button(id: "raumNachUntenVerschieben", enabled: bind {1==1}, text: "v")
         /*
-        // TODO mmu Buttons "nach oben" und "nach unten" müssen rechts neben die Tabelle
         button(id: "raumNachObenVerschieben",  enabled: bind { model.map.raum.raume?.size() > 0 ? true : false }, text: "^")
         button(id: "raumNachUntenVerschieben", enabled: bind { model.map.raum.raume?.size() > 0 ? true : false }, text: "v")
         */

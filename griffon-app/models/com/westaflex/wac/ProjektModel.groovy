@@ -264,6 +264,8 @@ class ProjektModel {
 	 * @param propertyNames String[]
 	 * @param writable boolean[]
 	 * @param tableModel ca.odell.glazedlists.EventList
+	 * @param postValueSet Closure to execute after value was set
+	 * @param preValueSet Closure to execute before value was set
 	 */
 	def gltmClosure = { columnNames, propertyNames, writable, tableModel, postValueSet = null, preValueSet = null ->
 		new ca.odell.glazedlists.swing.EventTableModel(tableModel, [
@@ -280,7 +282,7 @@ class ProjektModel {
 				isEditable:     { object, columnIndex -> writable[columnIndex] },
 				setColumnValue: { object, value, columnIndex ->
 					def property = propertyNames[columnIndex]
-					println "setColumnValue: ${property}=${value}"
+					println "gltmClosure, setColumnValue: ${property}=${value}"
 					// Call pre-value-set closure
 					if (preValueSet) object = preValueSet(object, property, value, columnIndex)
 					else {
@@ -301,45 +303,51 @@ class ProjektModel {
 			] as ca.odell.glazedlists.gui.WritableTableFormat)
 	}
 	
-    def gltmClosureCheckbox = { columnNames, propertyNames, writable, tableModel, postValueSet = null, preValueSet = null ->
+	/**
+	 * ATTENTION: Used only within TableModel for Raume/Turen!
+	 * @param columnNames String[]
+	 * @param propertyNames String[]
+	 * @param writable boolean[]
+	 * @param tableModel ca.odell.glazedlists.EventList
+	 * @param postValueSet Closure to execute after value was set
+	 * @param preValueSet Closure to execute before value was set
+	 */
+	def gltmClosureCheckbox = { columnNames, propertyNames, writable, tableModel, postValueSet = null, preValueSet = null ->
 		new ca.odell.glazedlists.swing.EventTableModel(tableModel, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { columnIndex -> columnNames[columnIndex] },
 				getColumnValue: { object, columnIndex ->
-                    if (columnIndex == 4) {
-                        def tempValue = object."${propertyNames[columnIndex]}"
-                        println "tempValue ${tempValue}"
-                        if (tempValue == "0,00" || tempValue == "0.00") {
-                            true
-                        } else {
-                            tempValue
-                        }
-                    }
-                    else {
-                        try {
-                            object."${propertyNames[columnIndex]}"?.toString2()
-                        } catch (e) {
-                            println "gltmClosure, getColumnValue: ${e}: ${object?.dump()}"
-                            object?.toString()
-                        }
-                    }
+					if (columnIndex == 4) {
+						def tempValue = object."${propertyNames[columnIndex]}"
+						//println "tempValue ${tempValue}"
+						if (tempValue == "0,00" || tempValue == "0.00") {
+							true
+						} else {
+							tempValue
+						}
+					} else {
+						try {
+							object."${propertyNames[columnIndex]}"?.toString2()
+						} catch (e) {
+							println "gltmClosureCheckbox, getColumnValue: ${e}: ${object?.dump()}"
+							object?.toString()
+						}
+					}
 				},
 				isEditable:     { object, columnIndex -> writable[columnIndex] },
 				setColumnValue: { object, value, columnIndex ->
 					def property = propertyNames[columnIndex]
-					println "setColumnValue: ${property}=${value}"
-
-                    if (columnIndex == 4) {
-                        object[property] = value
-                    }
-                    else {
-                        // Call pre-value-set closure
-                        if (preValueSet) object = preValueSet(object, property, value, columnIndex)
-                        else {
-                            // Try to save double value; see ticket 60
-                            object[property] = value.toDouble2()
-                        }
-                    }
+					println "gltmClosureCheckbox, setColumnValue: ${property}=${value}"
+					if (columnIndex == 4) {
+						object[property] = value
+					} else {
+						// Call pre-value-set closure
+						if (preValueSet) object = preValueSet(object, property, value, columnIndex)
+						else {
+							// Try to save double value; see ticket 60
+							object[property] = value.toDouble2()
+						}
+					}
 					// Call post-value-set closure
 					if (postValueSet) postValueSet(object, columnIndex, value)
 					// VERY IMPORTANT: return null value to prevent e.g. returning
@@ -348,18 +356,17 @@ class ProjektModel {
 					null
 				},
 				getValueAt: { rowIndex, columnIndex ->
-					println "gltmClosure, getValueAt: rowIndex=${rowIndex}, columnIndex=${columnIndex}"
-					//no value to get...
+					println "gltmClosureCheckbox, getValueAt: rowIndex=${rowIndex}, columnIndex=${columnIndex}"
+					// No value to get...
 				},
-                getColumnClass: { columnIndex ->
-                    if (columnIndex == 4) {
-                        java.lang.Boolean.class
-                    }
-                },
-                getColumnComparator: { columnIndex ->
-                    null
-                }
-
+				getColumnClass: { columnIndex ->
+					if (columnIndex == 4) {
+						java.lang.Boolean.class
+					}
+				},
+				getColumnComparator: { columnIndex ->
+					null
+				}
 			] as com.bensmann.griffon.AdvancedWritableTableFormat)
 	}
 	
@@ -421,8 +428,8 @@ class ProjektModel {
 		def index = meta.gewahlterRaum.position
 		println "createRaumTurenTableModel: index=${index}"
 		def columnNames =   ["Bezeichnung",    "Breite [mm]", "Querschnittsfläche [mm²]", "Spaltenhöhe [mm]", "mit Dichtung"] as String[]
-		def propertyNames = ["turBezeichnung", "turBreite",   "turQuerschnitt",           "turSpalthohe",   "turDichtung"] as String[]
-		def writable      = [true, true, false, false, true] as boolean[]
+		def propertyNames = ["turBezeichnung", "turBreite",   "turQuerschnitt",           "turSpalthohe",     "turDichtung"] as String[]
+		def writable      = [true,             true,          false,                      false,              true] as boolean[]
 		def postValueSet  = { object, columnIndex, value -> 
 			// Call ProjektController
 			app.controllers[mvcId].berechneTuren()
@@ -435,8 +442,8 @@ class ProjektModel {
 	 */
 	def createDvbKanalnetzTableModel() {
 		def columnNames =   ["Luftart",     "Teilstrecke",  ws("Luftvolumen-<br/>strom<br/>[m³/h]"), "Kanalbezeichnung", ws("Kanallänge<br/>[m]"), ws("Geschwindigkeit<br/>[m/s]"), ws("Reibungswiderstand<br/>gerader Kanal<br/>[Pa]"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>[Pa]"), ws("Widerstand<br/>Teilstrecke<br/><[Pa]")] as String[]
-		def propertyNames = ["luftart", "teilstrecke", "luftVs",                                 "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
-		def writable      = [false,         true,          true,                                    true,               true,                     false,                           false,                                               false,                             false,                                 false] as boolean[]
+		def propertyNames = ["luftart",     "teilstrecke",  "luftVs",                                "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
+		def writable      = [false,         true,           true,                                    true,               true,                     false,                           false,                                               false,                             false,                                 false] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			def myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
 			myTempMap[columnIndex] = value
@@ -627,7 +634,7 @@ class ProjektModel {
 		synchronized (map.dvb.kanalnetz) {
 			// Kanalnetz mit Template zusammenführen
 			def k = (dvbKanalnetzMapTemplate + kanalnetz) as ObservableMap
-			println "addDvbKanalnetz: adding kanalnetz=${k.dump()}"
+			if (DEBUG) println "addDvbKanalnetz: adding kanalnetz=${k.dump()}"
 			// In der Map hinzufügen
 			map.dvb.kanalnetz << k
 			// Sync table model
@@ -666,7 +673,7 @@ class ProjektModel {
 	 */
 	def addDvbVentileinstellung = { ventileinstellung, view ->
 		def v = (dvbVentileinstellungMapTemplate + ventileinstellung) as ObservableMap
-		println "addDvbVentileinstellung: adding ventileinstellung=${v.dump()}"
+		if (DEBUG) println "addDvbVentileinstellung: adding ventileinstellung=${v.dump()}"
 		map.dvb.ventileinstellung << v
 		// Sync table model
 		[tableModels.dvbVentileinstellung].each {

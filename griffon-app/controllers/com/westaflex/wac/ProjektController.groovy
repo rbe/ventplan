@@ -518,18 +518,12 @@ class ProjektController {
 		if (row > -1) {
 			// Show dialog
 			raumBearbeitenDialog = GH.createDialog(builder, RaumBearbeitenView, [title: "Raum bearbeiten", pack: true])
-			// Modify TableModel
+			// Modify TableModel for Turen
 			def columnModel = view.raumBearbeitenTurenTabelle.columnModel
 			// TODO Move values into model.meta
 			GH.makeComboboxCellEditor columnModel.getColumn(0), ["Tür", "Durchgang"]
 			GH.makeComboboxCellEditor columnModel.getColumn(1), [610, 735, 860, 985, 1110, 1235, 1485, 1735, 1985]
 			raumBearbeitenDialog.show()
-			/*if (DEBUG) println "raumBearbeiten: dialog '${raumBearbeitenDialog.title}' disposed"*/
-			// Berechne alles, was von Räumen abhängt
-            if (DEBUG) println "raumBearbeiten: model.tableModels.raumeTuren '${model.tableModels.raumeTuren}'"
-            if (DEBUG) println "raumBearbeiten: gewahlterRaum '${model.meta.gewahlterRaum}'"
-            // TODO Update gewahlterRaum.turen
-			publishEvent "RaumGeandert", [row]
 		}
 	}
 	

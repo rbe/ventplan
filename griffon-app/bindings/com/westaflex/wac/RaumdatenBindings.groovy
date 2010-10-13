@@ -22,14 +22,8 @@ package com.westaflex.wac
 raumTyp.actionPerformed = controller.raumTypGeandert
 // Raum-Buttons unten
 raumHinzufugen.actionPerformed = controller.raumHinzufugen
-//raumHinzufugen.enabled = model.map.raum.raume?.size() > 0 ? true : false
 raumEntfernen.actionPerformed = controller.raumEntfernen
-//raumEntfernen.enabled = model.map.raum.raume?.size() > 0 ? true : false
 raumKopieren.actionPerformed = controller.raumKopieren
-//raumKopieren.enabled = model.map.raum.raume?.size() > 0 ? true : false
 raumBearbeiten.actionPerformed = controller.raumBearbeiten
-//raumBearbeiten.enabled = model.map.raum.raume?.size() > 0 ? true : false
 raumNachObenVerschieben.actionPerformed = controller.raumNachObenVerschieben
-//raumNachObenVerschieben.enabled = model.map.raum.raume?.size() > 0 ? true : false
 raumNachUntenVerschieben.actionPerformed = controller.raumNachUntenVerschieben
-//raumNachUntenVerschieben.enabled = model.map.raum.raume?.size() > 0 ? true : false
