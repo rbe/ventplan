@@ -538,6 +538,13 @@ class ProjektController {
 	}
 	
 	/**
+	 * TODO Raum bearbeiten - Daten eingegeben.
+	 */
+	def raumBearbeitenGeandert = {
+		if (DEBUG) println "TODO raumBearbeitenGeandert"
+	}
+	
+	/**
 	 * 
 	 */
 	def berechneTuren = { raumIndex = null ->
@@ -574,13 +581,6 @@ class ProjektController {
 		} else {
 			if (DEBUG) println "raumUberstromelementeLuftmengeBerechnen: Kein Raum ausgewählt, es wird nichts berechnet"
 		}
-	}
-	
-	/**
-	 * TODO Raum bearbeiten - Daten eingegeben.
-	 */
-	def raumBearbeitenGeandert = {
-		if (DEBUG) println "TODO raumBearbeitenGeandert"
 	}
 	
 	/**
