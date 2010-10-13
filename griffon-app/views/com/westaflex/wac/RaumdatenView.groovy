@@ -73,7 +73,7 @@ panel(id: "raumPanel", layout: new MigLayout("fill", "[fill,grow]", "")) {
     }
 }
 // Format fields
-GH.recurse(raumEingabePanel, GH.yellowTextField)
+GH.yellowTextField(raumBezeichnung)
 [raumFlache, raumHohe, raumZuluftfaktor, raumAbluftVs].each {
     GH.autoformatDoubleTextField(it)
 }
