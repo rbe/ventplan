@@ -640,6 +640,7 @@ class WacCalculationService {
 	 * @param map
 	 */
 	def berechneVentileinstellung(map) {
+		println "berechneVentileinstellung"
 		// Hole den Luftvolumenstrom der letzten Teilstrecke
 		def luftVsLetzteTeilstrecke = { ve ->
 			def teilstrecken = ve.teilstrecken.split(";").toList()
@@ -703,7 +704,7 @@ class WacCalculationService {
 	 */
 	def berechneTurspalt(map) {
 		// Gilt nicht für Überström-Räume
-		println "berechneTurspalt: map=${map.dump()}"
+		if (DEBUG) println "berechneTurspalt: map=${map.dump()}"
 		if (map.raumLuftart.contains("ÜB")) {
 			return
 		} else {
