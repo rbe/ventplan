@@ -692,7 +692,7 @@ class WacCalculationService {
 			// Wurde keine Einstellung gefunden, Benutzer informieren
 			if (ve.einstellung != 0.0d) {
 				def infoMsg = "Keine Einstellung für Ventil ${ve.ventilbezeichnung} gefunden! Bitte prüfen Sie die Zeile#${ve.position}."
-                app.controllers["Dialog"].showInformDialog(infoMsg as String)
+				app.controllers["Dialog"].showInformDialog(infoMsg as String)
 				if (DEBUG) println infoMsg
 			}
 		}
