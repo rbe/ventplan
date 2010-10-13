@@ -738,9 +738,10 @@ class ProjektController {
 		// Welche Teilstrecke ist ausgewählt? Index bestimmen
 		def index = view.dvbKanalnetzTabelle.selectedRow
 		println "widerstandsbeiwerteBearbeiten: index=${index}"
+		// Setze Index des gewählten Kanalnetzes in Metadaten
+		model.meta.dvbKanalnetzGewahlt = index
 		// TableModel für WBW hinzufügen, wenn noch nicht vorhanden
 		model.addWbwTableModel(index)
-		model.meta.dvbKanalnetzGewahlt = index
 		// WBW summieren, damit das Label im Dialog (bind model.meta.summeAktuelleWBW) den richtigen Wert anzeigt
 		wbwSummieren()
 		// Show dialog
