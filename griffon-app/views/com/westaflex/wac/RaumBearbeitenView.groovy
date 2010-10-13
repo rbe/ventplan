@@ -40,7 +40,7 @@ panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[f
                             }
 
                             panel(id: "raumBearbeitenLuftartPanel", border: titledBorder("Luftart"), constraints: "span", layout: new MigLayout("", "[]para[]para[]", "")) {
-                                comboBox(id: "raumBearbeitenLuftart", constraints: "width 100px", items: model.meta.raum.luftart)
+                                comboBox(id: "raumBearbeitenLuftart", constraints: "width 100px", items: model.meta.raum.luftart, enabled: false)
                                 textField(id: "raumBearbeitenLuftartFaktorZuluftverteilung", text: "", constraints: "width 100px")
                                 label(id: "raumBearbeitenFaktorZuluftverteilungLabel", text: "Faktor Zuluftverteilung", constraints: "wrap")
 
