@@ -678,10 +678,15 @@ class ProjektController {
 					// Füge Volumenströme in Combobox hinzu
 					model.meta.volumenstromZentralgerat.each { view.raumVsVolumenstrom.addItem(it) }
 					// Selektiere errechneten Volumenstrom
-					def i = wacCalculationService.round5(nl)
+					def roundedVs = wacCalculationService.round5(nl)
+					def foundVs = model.meta.volumenstromZentralgerat.find { it.toInteger() == roundedVs }
+					// Wenn gerundeter Volumenstrom nicht gefunden wurde, setze Minimum des Zentralgeräts
+					if (!foundVs) {
+						foundVs = model.meta.volumenstromZentralgerat[0]
+					}
 					model.map.anlage.volumenstromZentralgerat =
 						view.raumVsVolumenstrom.selectedItem =
-						model.meta.volumenstromZentralgerat.find { it == i }
+						foundVs
 				}
 			}
 		}
