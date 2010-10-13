@@ -247,14 +247,14 @@ class Wac2Controller {
 				case 0: // Save: save and close project
 					if (DEBUG) println "projektSchliessen: save and close"
 					aktivesProjektSpeichern(evt)
-					clacpr()
+					clacpr(mvc)
 					break
 				case 1: // Cancel: do nothing...
 					if (DEBUG) println "projektSchliessen: cancel"
 					break
 				case 2: // Close: just close the tab...
 					if (DEBUG) println "projektSchliessen: close without save"
-					clacpr()
+					clacpr(mvc)
 					break
 			}
 		} else {
