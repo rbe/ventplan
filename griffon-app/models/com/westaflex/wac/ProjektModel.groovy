@@ -642,15 +642,8 @@ class ProjektModel {
 				it.add(map.dvb.kanalnetz[kanalnetz.position])
 			}
 			// Comboboxen in den Tabellen hinzufügen
-			def dvbKnLuftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
-			DefaultCellEditor dvbKnLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(dvbKnLuftartEventList)
-			TableColumn dvbKnLuftartColumn = view.dvbKanalnetzTabelle.getColumnModel().getColumn(0)
-			dvbKnLuftartColumn.setCellEditor(dvbKnLuftartCellEditor)
-			//
-			def dvbKnKanalbezeichnungEventList = GlazedLists.eventList(meta.dvbKanalbezeichnung) as ca.odell.glazedlists.EventList
-			DefaultCellEditor dvbKnKanalbezeichnungCellEditor = AutoCompleteSupport.createTableCellEditor(dvbKnKanalbezeichnungEventList)
-			TableColumn dvbKnKanalbezeichnungColumn = view.dvbKanalnetzTabelle.getColumnModel().getColumn(3)
-			dvbKnKanalbezeichnungColumn.setCellEditor(dvbKnKanalbezeichnungCellEditor)
+			GH.makeComboboxCellEditor view.dvbKanalnetzTabelle.getColumnModel().getColumn(0), meta.raum.luftart
+			GH.makeComboboxCellEditor view.dvbKanalnetzTabelle.getColumnModel().getColumn(3), meta.dvbKanalbezeichnung
 		}
 	}
 	
@@ -680,15 +673,8 @@ class ProjektModel {
 			it.add(map.dvb.ventileinstellung[ventileinstellung.position])
 		}
 		// Comboboxen in den Tabellen hinzufügen
-		def dvbVeLuftartEventList = GlazedLists.eventList(meta.raum.luftart) as ca.odell.glazedlists.EventList
-		DefaultCellEditor dvbVeLuftartCellEditor = AutoCompleteSupport.createTableCellEditor(dvbVeLuftartEventList)
-		TableColumn dvbVeLuftartColumn = view.dvbVentileinstellungTabelle.getColumnModel().getColumn(1)
-		dvbVeLuftartColumn.setCellEditor(dvbVeLuftartCellEditor)
-		//
-		def dvbVeVentiltypEventList = GlazedLists.eventList(meta.dvbVentileinstellung) as ca.odell.glazedlists.EventList
-		DefaultCellEditor dvbVeVentiltypCellEditor = AutoCompleteSupport.createTableCellEditor(dvbVeVentiltypEventList)
-		TableColumn dvbVeVentiltypColumn = view.dvbVentileinstellungTabelle.getColumnModel().getColumn(3)
-		dvbVeVentiltypColumn.setCellEditor(dvbVeVentiltypCellEditor)
+		GH.makeComboboxCellEditor view.dvbVentileinstellungTabelle.getColumnModel().getColumn(1), meta.raum.luftart
+		GH.makeComboboxCellEditor view.dvbVentileinstellungTabelle.getColumnModel().getColumn(3), meta.dvbVentileinstellung
 	}
 	
 	/**
