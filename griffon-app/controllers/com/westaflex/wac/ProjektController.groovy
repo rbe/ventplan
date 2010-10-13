@@ -532,7 +532,7 @@ class ProjektController {
 	 * RaumBearbeiten - RaumBearbeitenView schliessen.
 	 */
 	def raumBearbeitenSchliessen = {
-		/*if (DEBUG) */println "raumBearbeitenSchliessen: closing dialog '${raumBearbeitenDialog.title}'"
+		if (DEBUG) println "raumBearbeitenSchliessen: closing dialog '${raumBearbeitenDialog.title}'"
 		raumBearbeitenDialog.dispose()
 		// Berechne alles, was von Räumen abhängt
 		publishEvent "RaumGeandert", [view.raumTabelle.selectedRow]
