@@ -525,6 +525,11 @@ class ProjektController {
 			GH.makeComboboxCellEditor columnModel.getColumn(1), [610, 735, 860, 985, 1110, 1235, 1485, 1735, 1985]
 			raumBearbeitenDialog.show()
 			/*if (DEBUG) println "raumBearbeiten: dialog '${raumBearbeitenDialog.title}' disposed"*/
+			// Berechne alles, was von Räumen abhängt
+            if (DEBUG) println "raumBearbeiten: model.tableModels.raumeTuren '${model.tableModels.raumeTuren}'"
+            if (DEBUG) println "raumBearbeiten: gewahlterRaum '${model.meta.gewahlterRaum}'"
+            // TODO Update gewahlterRaum.turen
+			publishEvent "RaumGeandert", [row]
 		}
 	}
 	

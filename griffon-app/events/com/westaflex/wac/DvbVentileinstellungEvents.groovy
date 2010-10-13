@@ -35,7 +35,7 @@ class DvbVentileinstellungEvents {
 		doLater {
 			// Map values from GUI
 			def v = [
-					dvbvLuftart: ventileinstellung.dvbVentileinstellungLuftart,
+					luftart: ventileinstellung.dvbVentileinstellungLuftart,
 					raum: ventileinstellung.dvbVentileinstellungRaum,
 					teilstrecken: ventileinstellung.dvbVentileinstellungTeilstrecken,
 					ventilbezeichnung: ventileinstellung.dvbVentileinstellungVentilbezeichnung,

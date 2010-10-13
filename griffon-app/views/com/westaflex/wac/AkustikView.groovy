@@ -43,7 +43,7 @@ def buildLayout(tabname) {
 	def tabTitleForeground = tabname == "Zuluft" ? GH.MY_RED : java.awt.Color.BLUE
 	// Akustikberechnung - Zuluft
 	panel(layout: new MigLayout("fill, wrap 3", "[left]para[right]para[left]", "[fill]")) {
-        panel(layout: new MigLayout("fillx", "[fill]para[right,fill]para[right]", "[fill]")) {
+        panel(layout: new MigLayout("fillx", "[fill]para[right,fill]para[right]", "7[fill]6")) {
             label("Raumbezeichnung", constraints: "cell 0 0, wrap")
             
             comboBox(id: "akustik${tabname}Raumbezeichnung", items: model.meta.raum.typ)
@@ -112,7 +112,7 @@ def buildLayout(tabname) {
             label("Bewerteter Schallpegel", constraints: "height 35px!, wrap")
         }
 
-        panel(layout: new MigLayout("fillx, wrap", "[center]", "[fill]")) {
+        panel(layout: new MigLayout("wrap", "[center]", "[]")) {
 
 			panel() {
 	            label("Zentrales Lüftungsgerät", foreground: tabTitleForeground)
@@ -123,7 +123,7 @@ def buildLayout(tabname) {
 
             label("Oktavmittenfrequenz in Hz")
 
-            jideScrollPane(constraints: "grow") {
+            jideScrollPane(constraints: "height 460px!") {
 				def tm
 				switch (tabname) {
 					case "Zuluft":
@@ -141,7 +141,7 @@ def buildLayout(tabname) {
             label("Mittlerer Schalldruckpegel* dB(A) =", constraints: "right")
         }
 
-        panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
+        panel(layout: new MigLayout("fillx, wrap", "[fill]", "7[fill]10")) {
             label(" ", constraints: "wrap")
             label(" ", constraints: "wrap")
             label(" ", constraints: "wrap")
@@ -153,7 +153,17 @@ def buildLayout(tabname) {
             label(" ", constraints: "wrap")
             label(" ", constraints: "wrap")
             label(" ", constraints: "wrap")
-            label(id: "akustik${tabname}MittlererSchalldruckpegel", text: "0,00", constraints: "right")
+            label(" ", constraints: "wrap")
+            label(" ", constraints: "wrap")
+            label(" ", constraints: "wrap")
+            label(" ", constraints: "wrap")
+            label(" ", constraints: "wrap")
+            label(" ", constraints: "wrap")
+            label(" ", constraints: "wrap")
+            label(" ", constraints: "wrap")
+            label(" ", constraints: "wrap")
+            label(" ", constraints: "wrap")
+            label(id: "akustik${tabname}MittlererSchalldruckpegel", text: "0,00", constraints: "height 20px, right")
         }
 
         label(constraints: "left, wrap")

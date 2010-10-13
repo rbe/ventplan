@@ -36,7 +36,7 @@ class DvbKanalnetzEvents {
 		doLater {
 			// Map values from GUI
 			def k = [
-					dvbkLuftart: kanalnetz.dvbKanalnetzLuftart,
+					luftart: kanalnetz.dvbKanalnetzLuftart,
 					teilstrecke: kanalnetz.dvbKanalnetzNrTeilstrecke?.toInteger(),
 					luftVs: kanalnetz.dvbKanalnetzLuftmenge?.toDouble2(),
 					kanalbezeichnung: kanalnetz.dvbKanalnetzKanalbezeichnung,
