@@ -531,20 +531,27 @@ class ProjektModel {
 		def writable      = [false] * columnNames.length as boolean[]
 		gltmClosure(columnNames, propertyNames, writable, tableModels.akustikAbluft)
 	}
-	
+
 	/**
 	 * Einen Raum im Model und allen TableModels hinzufügen, Comboboxen synchronisieren.
 	 */
-	def addRaum = { raum, view ->
+	def addRaum = { raum, view, isCopy = false ->
 		synchronized (map.raum.raume) {
 			// Raumdaten mit Template zusammführen
-			def r = (raumMapTemplate + raum) as ObservableMap
-			if (DEBUG) println "addRaum: adding raum=${r?.dump()}"
-			// Raum in der Map hinzufügen
-			map.raum.raume << r
-			// Turen hinzufügen
-			tableModels.raumeTuren <<
-				new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList
+            if (DEBUG) println "addRaum: isCopy -> ${isCopy}"
+            if (isCopy || isCopy == "true") {
+                map.raum.raume.add(raum)
+                tableModels.raumeTuren.add(raum.turen)
+            }
+            else {
+                def r = (raumMapTemplate + raum) as ObservableMap
+                if (DEBUG) println "addRaum: adding raum=${r?.dump()}"
+                // Raum in der Map hinzufügen
+                map.raum.raume << r
+                // Turen hinzufügen
+                tableModels.raumeTuren <<
+                    new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList
+            }
 			// Sync table models
 			resyncRaumTableModels()
 			// Raumdaten - Geschoss
