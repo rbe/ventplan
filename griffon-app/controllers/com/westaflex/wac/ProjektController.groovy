@@ -458,14 +458,19 @@ class ProjektController {
 			// Get selected row
 			def row = view.raumTabelle.selectedRow
 			// Raum anhand seiner Position finden und eine Kopie erzeugen
-			def x = model.map.raum.raume.find { it.position == row }.clone()
+			def x = model.map.raum.raume.find { it.position == row }
+
+            def newMap = new ObservableMap()
+            x.collect{ newMap.put(it.key, it.value) }
+
 			// Neuen Namen und neue Position (Ende) setzen
-			x.raumBezeichnung = "Kopie von ${x.raumBezeichnung}"
-			x.position = model.map.raum.raume.size()
+			newMap.raumBezeichnung = "Kopie von ${x.raumBezeichnung}"
+			newMap.position = model.map.raum.raume.size()
 			// Raum zum Model hinzufügen
-			model.map.raum.raume.add(x) // TODO Call ProjektModel.addRaum()??
+            
+			model.addRaum(newMap, view, true)
 			// Raum hinzugefügt
-			publishEvent "RaumHinzugefugt", [view.raumTabelle.rowCount - 1]
+			publishEvent "RaumHinzugefugt", [newMap.position, view]
 		}
 	}
 	
