@@ -42,9 +42,12 @@ class DvbVentileinstellungEvents {
 					position: model.map.dvb.ventileinstellung.size() ?: 0
 				] as ObservableMap
 			model.addDvbVentileinstellung(v, view)
+			def index = v.position
+			// Add PropertyChangeListener to our model.map
+			GH.addMapPropertyChangeListener("map.dvb.ventileinstellung",
+				model.map.dvb.ventileinstellung[index])
 			//
-			onDvbVentileinstellungGeandert(v.position)
-            //publishEvent "AddDvbVentileinstellungToTableModel", [v]
+			onDvbVentileinstellungGeandert(index)
 		}
 	}
 	
@@ -53,18 +56,14 @@ class DvbVentileinstellungEvents {
 	 */
 	def onDvbVentileinstellungGeandert = { ventileinstellungIndex ->
 		doLater {
-			// Add PropertyChangeListener to our model.map
-			GH.addMapPropertyChangeListener("map.dvb.ventileinstellung",
-				model.map.dvb.ventileinstellung[ventileinstellungIndex])
-			//
-			//model.map.dvb.ventileinstellung[ventileinstellungIndex] =
-			//	wacCalculationService.berechneVentileinstellung(model.map)
+			model.map.dvb.ventileinstellung[ventileinstellungIndex] =
+				wacCalculationService.berechneVentileinstellung(model.map)
 			//
 			publishEvent "DvbVentileinstellungInTabelleWahlen", [ventileinstellungIndex]
 		}
 	}
-
-    /**
+	
+	/**
 	 * Zeile aus Druckverlustberechnung Ventileinstellung entfernen.
 	 */
 	def onDvbVentileinstellungEntfernen = { ventileinstellungIndex ->

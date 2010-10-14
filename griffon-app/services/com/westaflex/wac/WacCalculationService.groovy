@@ -641,18 +641,17 @@ class WacCalculationService {
 	 */
 	def berechneVentileinstellung(map) {
 		println "berechneVentileinstellung"
+		def teilstrecken = { s -> s?.split(";").toList() }
 		// Hole den Luftvolumenstrom der letzten Teilstrecke
 		def luftVsLetzteTeilstrecke = { ve ->
-			def teilstrecken = ve.teilstrecken.split(";").toList()
 			// Hole Luftvolumenstrom der letzten Teilstrecke
-			def letzteTeilstrecke = teilstrecken.last().toInteger()
+			def letzteTeilstrecke = teilstrecken(ve.teilstrecken).last().toInteger()
 			def teilstrecke = map.dvb.kanalnetz.find { it.teilstrecke == letzteTeilstrecke }
 			if (teilstrecke.luftart == ve.luftart) {
 				teilstrecke.luftVs
 			} else {
 				0.0d
 			}
-			
 		}
 		// Alle Einträge in der Tabelle Ventileinstellung durchlaufen
 		map.dvb.ventileinstellung.each { ve ->
@@ -660,16 +659,22 @@ class WacCalculationService {
 			def luftVsLts = luftVsLetzteTeilstrecke(ve)
 			if (luftVsLts > 0.0d) {
 				// Berechne dP offen
-				ventileinstellung.dpOffen =
+				ve.dpOffen =
 					wacModelService.getMinimalerDruckverlustFurVentil(ve.ventilbezeichnung, ve.luftart, luftVsLts)
+				println "ve.dpOffen=${ve.dpOffen}"
 				// Berechne Gesamtwiderstand aller Teilstrecken
-				ventileinstellung.gesamtWiderstand =
-					ventileinstellung.dpOffen +
-					teilstrecken.collect { t ->
-							map.dvb.kanalnetz.find { t.teilstrecke }?.widerstandTeilstrecke
-						}.inject(0.0d) { o, n ->
-							o + n
-						}
+				println "berechne gesamtwiderstand: ${teilstrecken(ve.teilstrecken)}"
+				def x = teilstrecken(ve.teilstrecken).collect { t ->
+						map.dvb.kanalnetz.find {
+							it.teilstrecke.toString2() == t
+						}.widerstandTeilstrecke
+					}
+				println "x=$x"
+				def z = x.inject(0.0d, { o, n ->
+						o + n
+					})
+				println "z=$z"
+				ve.gesamtWiderstand = ve.dpOffen + z
 			} else {
 				if (DEBUG) println "berechneVentileinstellung: Letzte Teilstrecke ${letzteTeilstrecke} existiert nicht oder" +
 					" Luftart stimmt nicht überein: ${map.luftart} == ${teilstrecke?.luftart}?"
