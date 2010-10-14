@@ -862,7 +862,7 @@ class ProjektController {
 			view.dvbVentileinstellungTabelle.changeSelection(ventileinstellungIndex, 0, false, false)
 			// Wurde keine Einstellung gefunden, Benutzer informieren
 			model.map.dvb.ventileinstellung.each { ve ->
-				if (ve.einstellung != 0) {
+				if (ve.einstellung == 0) {
 					def infoMsg = "Keine Einstellung für Ventil ${ve.ventilbezeichnung} gefunden! Bitte prüfen Sie die Zeile#${ve.position}."
 					app.controllers["Dialog"].showInformDialog(infoMsg as String)
 					println infoMsg
