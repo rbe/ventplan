@@ -164,7 +164,7 @@ class WacModelService {
 	def getMinimalerDruckverlustFurVentil(String ventilbezeichnung, String luftart, Double luftmenge) {
 		def r = withSql { sql ->
 				sql.firstRow("SELECT MIN(druckverlust) druckverlust FROM druckverlust"
-							+ " WHERE artikelnummer = ? AND luftart = ? AND luftmenge = ?",
+							+ " WHERE artikelnummer = ? AND luftart = ? AND luftmenge >= ?",
 							[ventilbezeichnung, luftart, luftmenge])
 			}
 		/*if (DEBUG) */println "getDruckverlustFurVentil(${[ventilbezeichnung, luftart, luftmenge]}): ${r?.dump()}"
