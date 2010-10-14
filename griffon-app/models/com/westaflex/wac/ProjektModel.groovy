@@ -443,7 +443,7 @@ class ProjektModel {
 	def createDvbKanalnetzTableModel() {
 		def columnNames =   ["Luftart",     "Teilstrecke",  ws("Luftvolumen-<br/>strom<br/>[m³/h]"), "Kanalbezeichnung", ws("Kanallänge<br/>[m]"), ws("Geschwindigkeit<br/>[m/s]"), ws("Reibungswiderstand<br/>gerader Kanal<br/>[Pa]"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>[Pa]"), ws("Widerstand<br/>Teilstrecke<br/><[Pa]")] as String[]
 		def propertyNames = ["luftart",     "teilstrecke",  "luftVs",                                "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
-		def writable      = [false,         true,           true,                                    true,               true,                     false,                           false,                                               false,                             false,                                 false] as boolean[]
+		def writable      = [false,         true,           true,                                    true,               true,                     false,                           false,                                               true/* TODO false*/,               false,                                 false] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			def myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
 			myTempMap[columnIndex] = value
