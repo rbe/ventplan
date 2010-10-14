@@ -252,6 +252,15 @@ class ProjektModel {
 					raumAnzahlAbluftventile = 0
 					raumAbluftmengeJeVentil = 0.0d
 					raumBezeichnungAbluftventile = ""
+					raumAbluftVolumenstrom = 0.0d
+				}
+				break
+			case "AB":
+				raum.with {
+					raumAnzahlZuluftventile = 0
+					raumZuluftmengeJeVentil = 0.0d
+					raumBezeichnungZuluftventile = ""
+					raumZuluftVolumenstrom = 0.0d
 				}
 				break
 		}
