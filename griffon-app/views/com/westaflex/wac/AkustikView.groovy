@@ -42,132 +42,121 @@ build(AkustikBindings)
 def buildLayout(tabname) {
 	def tabTitleForeground = tabname == "Zuluft" ? GH.MY_RED : java.awt.Color.BLUE
 	// Akustikberechnung - Zuluft
-	panel(layout: new MigLayout("fill, wrap 3", "[left]para[right]para[left]", "[fill]")) {
-        panel(layout: new MigLayout("fillx", "[fill]para[right,fill]para[right]", "7[fill]6")) {
-            label("Raumbezeichnung", constraints: "cell 0 0, wrap")
-            
-            comboBox(id: "akustik${tabname}Raumbezeichnung", items: model.meta.raum.typ)
-            label(" ", constraints: "span 2, wrap")
+    panel(layout: new MigLayout("fill, wrap", "[fill]", "[fill]")) {
+        panel(layout: new MigLayout("fill, wrap 3", "[44%,left][50%,center]5[6%,left]", "[fill]")) {
 
-            label(" ", constraints: "span 3, wrap")
+            panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
+                label("Raumbezeichnung")
 
-            label(" ", constraints: "span 3, wrap")
-
-            label("Schallleistungspegel ${tabname}stutzen", foreground: GH.MY_RED)
-            // TODO: split -> comboBox...???
-            comboBox(id: "akustik${tabname}${tabname}stutzenZentralgerat", items: [""] + model.meta.zentralgerat, selectedItem: "")
-            comboBox(id: "akustik${tabname}Pegel", constraints: "width 70px!, wrap", items: [""] + model.meta.volumenstromZentralgerat)
-
-            label("Schallleistungspegelerhöhung Kanalnetz", foreground: GH.MY_RED)
-            comboBox(id: "akustik${tabname}Kanalnetz", constraints: "span 2, wrap", items: (10..200).step(10))
-
-
-            label("Schallleistungspegelerhöhung Filter", foreground: GH.MY_RED)
-            comboBox(id: "akustik${tabname}Filter", constraints: "span 2, wrap", items: (10..200).step(10))
-
-            label("1. Hauptschalldämpfer", foreground: GH.MY_GREEN)
-            switch (tabname) {
-				case "Zuluft":
-					comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "span 2, wrap", items: model.meta.akustikSchalldampfer, selectedItem: "100150TYP4A")
-					break
-				case "Abluft":
-					comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "span 2, wrap", items: model.meta.akustikSchalldampfer, selectedItem: "")
-					break
+                comboBox(id: "akustik${tabname}Raumbezeichnung", items: model.meta.raum.typ)
             }
+            panel(layout: new MigLayout("wrap", "[center]", "[]")) {
 
-            label("2. Hauptschalldämpfer", foreground: GH.MY_GREEN)
-            comboBox(id: "akustik${tabname}2Hauptschalldampfer", constraints: "span 2, wrap", items: model.meta.akustikSchalldampfer)
+                panel() {
+                    label("Zentrales Lüftungsgerät", foreground: tabTitleForeground)
+                    label(id: "akustik${tabname}${tabname}Zentralgerat", foreground: tabTitleForeground)
+                }
 
-            label("Anzahl der Umlenkungen 90° Stck.", foreground: GH.MY_GREEN)
-            label("")
-            textField(id: "akustik${tabname}AnzahlUmlenkungen90GradStck", constraints: "width 70px!, wrap")
+                label(tabname, foreground: tabTitleForeground)
 
-            label("Luftverteilerkasten Stck.", foreground: GH.MY_GREEN)
-            label("")
-            textField(id: "akustik${tabname}LuftverteilerkastenStck", constraints: "width 70px!, wrap")
-
-            label("Längsdämpfung Kanal lfdm.", foreground: GH.MY_GREEN)
-            comboBox(id: "akustik${tabname}LangsdampfungKanal", items: model.meta.dvbKanalbezeichnung)
-            textField(id: "akustik${tabname}LangsdampfungKanalLfdmMeter", constraints: "width 70px!, wrap")
-
-            label("Schalldämpfer Ventil", foreground: GH.MY_GREEN)
-            comboBox(id: "akustik${tabname}SchalldampferVentil", constraints: "span 2, wrap", items: model.meta.akustikSchalldampfer)
-
-            label("Einfügungsdämmwert Luftdurchlass", foreground: GH.MY_GREEN)
-            comboBox(id: "akustik${tabname}EinfugungsdammwertLuftdurchlass", constraints: "span 2, wrap", items: model.meta.dvbVentileinstellung, selectedItem: "100ALSQ3W002")
-
-            label("Raumabsorption (Annahme) BAD=0 WOHNEN=1", foreground: GH.MY_GREEN)
-            label("")
-			switch (tabname) {
-				case "Zuluft":
-					textField(id: "akustik${tabname}Raumabsorption", constraints: "width 70px!, wrap", text: "1")
-					break
-				case "Abluft":
-					textField(id: "akustik${tabname}Raumabsorption", constraints: "width 70px!, wrap", text: "0")
-					break
-			}
-
-            label("Korrektur der A-Bewertung", constraints: "height 35px!, wrap")
-
-            label("Bewerteter Schallpegel", constraints: "height 35px!, wrap")
+                label("Oktavmittenfrequenz in Hz")
+            }
+            panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
+                label(" ")
+            }
         }
+        panel(layout: new MigLayout("fill, wrap 3", "[left][right]5[left]", "[fill]")) {
+            panel(layout: new MigLayout("fillx", "[fill]para[fill]para[right]", "3[fill]-1")) {
 
-        panel(layout: new MigLayout("wrap", "[center]", "[]")) {
+                label(" ", constraints: "height 26px!, span 3, wrap")
 
-			panel() {
-	            label("Zentrales Lüftungsgerät", foreground: tabTitleForeground)
-				label(id: "akustik${tabname}${tabname}Zentralgerat", foreground: tabTitleForeground)
-			}
-			
-            label(tabname, foreground: tabTitleForeground)
+                label("Schallleistungspegel ${tabname}stutzen", foreground: GH.MY_RED, constraints: "height 30px!")
 
-            label("Oktavmittenfrequenz in Hz")
+                comboBox(id: "akustik${tabname}${tabname}stutzenZentralgerat", items: [""] + model.meta.zentralgerat, selectedItem: "")
+                comboBox(id: "akustik${tabname}Pegel", constraints: "width 70px!, wrap", items: [""] + model.meta.volumenstromZentralgerat)
 
-            jideScrollPane(constraints: "height 460px!") {
-				def tm
-				switch (tabname) {
-					case "Zuluft":
-						tm = model.createAkustikZuluftTableModel()
-						break
-					case "Abluft":
-						tm = model.createAkustikAbluftTableModel()
-						break
-				}
-                table(id: "akustik${tabname}Tabelle", model: tm, selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-					current.setRowHeight(33)
-				}
+                label("Schallleistungspegelerhöhung Kanalnetz", foreground: GH.MY_RED, constraints: "height 30px!")
+                comboBox(id: "akustik${tabname}Kanalnetz", constraints: "span 2, wrap", items: (10..200).step(10))
+
+
+                label("Schallleistungspegelerhöhung Filter", foreground: GH.MY_RED, constraints: "height 30px!")
+                comboBox(id: "akustik${tabname}Filter", constraints: "span 2, wrap", items: (10..200).step(10))
+
+                label("1. Hauptschalldämpfer", foreground: GH.MY_GREEN, constraints: "height 30px!")
+                switch (tabname) {
+                    case "Zuluft":
+                        comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "span 2, wrap", items: model.meta.akustikSchalldampfer, selectedItem: "100150TYP4A")
+                        break
+                    case "Abluft":
+                        comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "span 2, wrap", items: model.meta.akustikSchalldampfer, selectedItem: "")
+                        break
+                }
+
+                label("2. Hauptschalldämpfer", foreground: GH.MY_GREEN, constraints: "height 30px!")
+                comboBox(id: "akustik${tabname}2Hauptschalldampfer", constraints: "span 2, wrap", items: model.meta.akustikSchalldampfer)
+
+                label("Anzahl der Umlenkungen 90° Stck.", foreground: GH.MY_GREEN, constraints: "height 30px!")
+                label("")
+                textField(id: "akustik${tabname}AnzahlUmlenkungen90GradStck", constraints: "width 70px!, wrap")
+
+                label("Luftverteilerkasten Stck.", foreground: GH.MY_GREEN, constraints: "height 30px!")
+                label("")
+                textField(id: "akustik${tabname}LuftverteilerkastenStck", constraints: "width 70px!, wrap")
+
+                label("Längsdämpfung Kanal lfdm.", foreground: GH.MY_GREEN, constraints: "height 30px!")
+                comboBox(id: "akustik${tabname}LangsdampfungKanal", items: model.meta.dvbKanalbezeichnung)
+                textField(id: "akustik${tabname}LangsdampfungKanalLfdmMeter", constraints: "width 70px!, wrap")
+
+                label("Schalldämpfer Ventil", foreground: GH.MY_GREEN, constraints: "height 30px!")
+                comboBox(id: "akustik${tabname}SchalldampferVentil", constraints: "span 2, wrap", items: model.meta.akustikSchalldampfer)
+
+                label("Einfügungsdämmwert Luftdurchlass", foreground: GH.MY_GREEN, constraints: "height 30px!")
+                comboBox(id: "akustik${tabname}EinfugungsdammwertLuftdurchlass", constraints: "span 2, wrap", items: model.meta.dvbVentileinstellung, selectedItem: "100ALSQ3W002")
+
+                label("Raumabsorption (Annahme) BAD=0 WOHNEN=1", foreground: GH.MY_GREEN, constraints: "height 30px!")
+                label("")
+                switch (tabname) {
+                    case "Zuluft":
+                        textField(id: "akustik${tabname}Raumabsorption", constraints: "width 70px!, wrap", text: "1")
+                        break
+                    case "Abluft":
+                        textField(id: "akustik${tabname}Raumabsorption", constraints: "width 70px!, wrap", text: "0")
+                        break
+                }
+
+                label("Korrektur der A-Bewertung", constraints: "height 30px!, wrap")
+
+                label("Bewerteter Schallpegel", constraints: "height 30px!, wrap")
             }
-
+            panel(layout: new MigLayout("fill, wrap", "[fill,right]", "[fill]")) {
+                jideScrollPane(constraints: "grow, height 460px!") {
+                    def tm
+                    switch (tabname) {
+                        case "Zuluft":
+                            tm = model.createAkustikZuluftTableModel()
+                            break
+                        case "Abluft":
+                            tm = model.createAkustikAbluftTableModel()
+                            break
+                    }
+                    table(id: "akustik${tabname}Tabelle", model: tm, selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                        current.setRowHeight(33)
+                    }
+                }
+            }
+            panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
+                label("dB(A)")
+                label(id: "akustik${tabname}dbA", text: "0,00", constraints: "height 30px!")
+            }
+        }
+        panel(layout: new MigLayout("fill, wrap 3", "[44%,left][50%,right]5[6%,left]", "[fill]")) {
+            label(" ")
             label("Mittlerer Schalldruckpegel* dB(A) =", constraints: "right")
-        }
+            label(id: "akustik${tabname}MittlererSchalldruckpegel", text: "0,00", constraints: "left")
 
-        panel(layout: new MigLayout("fillx, wrap", "[fill]", "7[fill]10")) {
-            label(" ", constraints: "wrap")
-            label(" ", constraints: "wrap")
-            label(" ", constraints: "wrap")
-            label("dB(A)")
-			label(id: "akustik${tabname}dbA", text: "0,00", constraints: "left")
-            label(" ", constraints: "wrap")
-            label(" ", constraints: "wrap")
-            label(" ", constraints: "wrap")
-            label(" ", constraints: "wrap")
-            label(" ", constraints: "wrap")
-            label(" ", constraints: "wrap")
-            label(" ", constraints: "wrap")
-            label(" ", constraints: "wrap")
-            label(" ", constraints: "wrap")
-            label(" ", constraints: "wrap")
-            label(" ", constraints: "wrap")
-            label(" ", constraints: "wrap")
-            label(" ", constraints: "wrap")
-            label(" ", constraints: "wrap")
-            label(" ", constraints: "wrap")
-            label(" ", constraints: "wrap")
-            label(id: "akustik${tabname}MittlererSchalldruckpegel", text: "0,00", constraints: "height 20px, right")
+            label("<html>* Bei dieser Berechnung handelt es dich um eine theoretische Auslegung, deren Werte in der Praxis abweichen können</html>", constraints: "right, span 2")
         }
-
-        label(constraints: "left, wrap")
-        label("<html>* Bei dieser Berechnung handelt es dich um eine theoretische Auslegung, deren Werte in der Praxis abweichen können</html>", constraints: "right, span 2")
-	}
-	return "akustik${tabname}Tab"
+    }
+    return "akustik${tabname}Tab"
 }
+
