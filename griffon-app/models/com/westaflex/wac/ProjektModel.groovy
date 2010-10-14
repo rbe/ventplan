@@ -460,7 +460,7 @@ class ProjektModel {
 	 */
 	def createDvbVentileinstellungTableModel() {
 		def columnNames =   ["Raum", "Luftart",     "Teilstrecken", "Ventiltyp",         "dP offen [Pa]", "Gesamt [Pa]",      "Differenz", "Abgleich [Pa]", "Einstellung"] as String[]
-		def propertyNames = ["raum", "luftart", "teilstrecken", "ventilbezeichnung", "dpOffen",       "gesamtWiderstand", "differenz", "abgleich",      "einstellung"] as String[]
+		def propertyNames = ["raum", "luftart",     "teilstrecken", "ventilbezeichnung", "dpOffen",       "gesamtWiderstand", "differenz", "abgleich",      "einstellung"] as String[]
 		def writable      = [true,   false,         true,           true,                false,           false,              false,       false,            false] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			def myTempMap = map.dvb.ventileinstellung.find { it.position == object.position }
