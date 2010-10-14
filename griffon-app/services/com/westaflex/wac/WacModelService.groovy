@@ -167,7 +167,7 @@ class WacModelService {
 							+ " WHERE artikelnummer = ? AND luftart = ? AND luftmenge >= ?",
 							[ventilbezeichnung, luftart, luftmenge])
 			}
-		/*if (DEBUG) */println "getDruckverlustFurVentil(${[ventilbezeichnung, luftart, luftmenge]}): ${r?.dump()}"
+		if (DEBUG) println "getDruckverlustFurVentil(${[ventilbezeichnung, luftart, luftmenge]}): ${r?.dump()}"
 		r?.druckverlust ?: 0.0d
 	}
 	
@@ -183,20 +183,23 @@ class WacModelService {
 					+ " ORDER BY luftmenge ASC, einstellung ASC",
 					[ventilbezeichnung, luftart, luftmenge])
 			}
+		//println "getEinstellung: r=${r}"
 		// Suche die nächst höhere zum Parameter 'luftmenge' passende Luftmenge aus den Datenbankergebnissen
 		// Dies funktioniert nur mit einem in aufsteigender Reihenfolge sortierten Luftmengen!
 		def nahe = r.find {
+				//println "${it.luftmenge} >= ${luftmenge}?"
 				it.luftmenge >= luftmenge
 			}.luftmenge
 		// Nehme nur diese Einträge und errechne min(|(abgleich - r.druckverlust)|)
 		def m = r.findAll {
+					//println "${it.luftmenge} == ${nahe}?"
 					it.luftmenge == nahe
 				}.inject([druckverlust: Double.MAX_VALUE], { o, n ->
 					def v1 = Math.abs(abgleich - o.druckverlust)
 					def v2 = Math.abs(abgleich - n.druckverlust)
 					v1 < v2 ? o : n
 				})
-		if (DEBUG) println "getEinstellung: einstellung=${m.einstellung}"
+		if (DEBUG) println "getEinstellung(${[ventilbezeichnung,luftart,luftmenge,abgleich]}): einstellung=${m.einstellung}"
 		m.einstellung
 	}
 	
