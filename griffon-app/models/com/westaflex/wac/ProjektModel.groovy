@@ -51,7 +51,8 @@ class ProjektModel {
 			raumAbluftVs: 0.0d,
 			raumVolumen: 0.0d,
 			raumLuftwechsel: 0.0d,
-			raumVolumenstrom: 0.0d,
+			raumZuluftVolumenstrom: 0.0d,
+			raumAbluftVolumenstrom: 0.0d,
 			raumBezeichnungAbluftventile: "",
 			raumAnzahlAbluftventile: 0,
 			raumAbluftmengeJeVentil: 0.0d,
@@ -393,9 +394,9 @@ class ProjektModel {
 	 * Raumvolumenströme, Zu-/Abluftventile - TableModel
 	 */
 	def createRaumVsZuAbluftventileTableModel() {
-		def columnNames =   ["Raum",            "Luftart",     ws("Raumvolumen<br/>[m³]"), ws("Luftwechsel<br/>[1/h]"), ws("Bezeichnung<br/>Abluftventile"),    ws("Anzahl<br/>Abluftventile"),    ws("Abluftmenge<br/>je Ventil"),   ws("Volumenstrom<br/>[m³/h]"), ws("Bezeichnung<br/>Zuluftventile"),    ws("Anzahl<br/>Zuluftventile"),    ws("Zuluftmenge<br/>je Ventil"),   "Verteilebene"] as String[]
-		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",              "raumLuftwechsel",           "raumBezeichnungAbluftventile",         "raumAnzahlAbluftventile",         "raumAbluftmengeJeVentil",         "raumVolumenstrom",            "raumBezeichnungZuluftventile",         "raumAnzahlZuluftventile",         "raumZuluftmengeJeVentil",         "raumVerteilebene"] as String[]
-		def writable      = [true,              false,         false,                      false,                       true,                                   false,                             false,                             false,                         true,                                   false,                             false,                             true] as boolean[]
+		def columnNames =   ["Raum",            "Luftart",     ws("Raumvolumen<br/>[m³]"), ws("Luftwechsel<br/>[1/h]"), ws("Zuluft-<br/>Volumenstrom[m³/h]"), ws("Bezeichnung<br/>Zuluftventile"),    ws("Anzahl<br/>Zuluftventile"),    ws("Zuluftmenge<br/>je Ventil"), ws("Abluft-<br/>Volumenstrom[m³/h]"), ws("Bezeichnung<br/>Abluftventile"),    ws("Anzahl<br/>Abluftventile"), ws("Abluftmenge<br/>je Ventil"),   "Verteilebene"] as String[]
+		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",              "raumLuftwechsel",           "raumZuluftVolumenstrom",             "raumBezeichnungZuluftventile",         "raumAnzahlZuluftventile",         "raumZuluftmengeJeVentil",       "raumAbluftVolumenstrom",             "raumBezeichnungAbluftventile",         "raumAnzahlAbluftventile",      "raumAbluftmengeJeVentil",         "raumVerteilebene"] as String[]
+		def writable      = [true,              false,         false,                      false,                       false,                                true,                                   false,                             false,                           false,                                true,                                   false,                          false,                             true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			// Call ProjektController
 			app.controllers[mvcId].raumGeandert()
@@ -411,7 +412,7 @@ class ProjektModel {
 	def createRaumVsUberstromelementeTableModel() {
 		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",             "Überström-Volumenstrom [m³/h]", "Überström-Elemente"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile", "raumUberstromVolumenstrom",     "raumUberstromElement"] as String[]
-		def writable      = [true,              false,         false,                        true,                           true] as boolean[]
+		def writable      = [true,              false,         false,                        true,                            true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			// Call ProjektController
 			app.controllers[mvcId].raumGeandert()

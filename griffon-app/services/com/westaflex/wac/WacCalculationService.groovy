@@ -360,7 +360,7 @@ class WacCalculationService {
 			Double ltmAbluftRaum = Math.round(gesamtAvsLTM / gesamtAbluftVs * it.raumAbluftVs)
 			// Raumvolumenströme berechnen?
 			if (b) {
-				it.raumAbluftVs = it.raumVolumenstrom = ltmAbluftRaum
+				it.raumAbluftVolumenstrom = ltmAbluftRaum
 				if (it.raumVolumen > 0) {
 					it.raumLuftwechsel = (ltmAbluftRaum / it.raumVolumen)
 				} else {
@@ -369,13 +369,13 @@ class WacCalculationService {
 				// ZU/AB
 				if (it.raumLuftart.contains("ZU/AB")) {
 					Double ltmZuluftRaum = Math.round(gesamtAvsLTM * it.raumZuluftfaktor / gesamtZuluftfaktor)
-					it.raumZuluftVs = ltmZuluftRaum
-					it.raumAbluftVs = ltmAbluftRaum
+					it.raumZuluftVolumenstrom = ltmZuluftRaum
+					it.raumAbluftVolumenstrom = ltmAbluftRaum
 					if (ltmZuluftRaum > ltmAbluftRaum) {
-						it.raumVolumenstrom = ltmZuluftRaum
+						//it.raumVolumenstrom = ltmZuluftRaum
 						it.raumLuftwechsel = (ltmZuluftRaum / it.raumVolumen)
 					} else {
-						it.raumVolumenstrom = ltmAbluftRaum
+						//it.raumVolumenstrom = ltmAbluftRaum
 						it.raumLuftwechsel = (ltmAbluftRaum / it.raumVolumen)
 					}
 					ltmZuluftSumme += ltmAbluftRaum
@@ -393,15 +393,30 @@ class WacCalculationService {
 		}.each {
 			Double ltmZuluftRaum = Math.round(gesamtAvsLTM * it.raumZuluftfaktor / gesamtZuluftfaktor)
 			if (b) {
-				it.raumVolumenstrom = ltmZuluftRaum
-				it.raumZuluftVs = ltmZuluftRaum
+				it.raumZuluftVolumenstrom = ltmZuluftRaum
+				//it.raumZuluftVs = ltmZuluftRaum
 				it.raumLuftwechsel = ltmZuluftRaum / it.raumVolumen
 			} else {
 				ltmZuluftSumme += ltmZuluftRaum
 			}
-			// Überströmvolumenstrom = Vorschlag: Raumvolumenstrom
-			if (!it.raumUberstromVolumenstrom) it.raumUberstromVolumenstrom = it.raumVolumenstrom
 			map.raum.ltmZuluftSumme = ltmZuluftSumme
+		}
+		// Überströmvolumenstrom = Vorschlag: Raumvolumenstrom
+		map.raum.raume.each {
+			if (!it.raumUberstromVolumenstrom) {
+				switch (it.raumLuftart) {
+					case "ZU":
+						it.raumUberstromVolumenstrom = it.raumZuluftVolumenstrom
+						break
+					case "AB":
+						it.raumUberstromVolumenstrom = it.raumAbluftVolumenstrom
+						break
+					case "ZU/AB":
+						it.raumUberstromVolumenstrom =
+							java.lang.Math.abs(it.raumZuluftVolumenstrom - it.raumAbluftVolumenstrom)
+						break
+				}
+			}
 		}
 	}
 	
