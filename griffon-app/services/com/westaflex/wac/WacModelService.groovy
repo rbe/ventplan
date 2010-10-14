@@ -185,15 +185,16 @@ class WacModelService {
 			}
 		// Suche die nächst höhere zum Parameter 'luftmenge' passende Luftmenge aus den Datenbankergebnissen
 		// Dies funktioniert nur mit einem in aufsteigender Reihenfolge sortierten Luftmengen!
-		def nahe = r.find { if (it >= luftmenge) luftmenge }
+		def nahe = r.find {
+				it.luftmenge >= luftmenge
+			}.luftmenge
 		// Nehme nur diese Einträge und errechne min(|(abgleich - r.druckverlust)|)
 		def m = r.findAll {
 					it.luftmenge == nahe
 				}.inject([druckverlust: Double.MAX_VALUE], { o, n ->
 					def v1 = Math.abs(abgleich - o.druckverlust)
 					def v2 = Math.abs(abgleich - n.druckverlust)
-					if (v1 < v2) v1
-					else v2
+					v1 < v2 ? o : n
 				})
 		if (DEBUG) println "getEinstellung: einstellung=${m.einstellung}"
 		m.einstellung

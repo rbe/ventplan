@@ -56,8 +56,7 @@ class DvbVentileinstellungEvents {
 	 */
 	def onDvbVentileinstellungGeandert = { ventileinstellungIndex ->
 		doLater {
-			model.map.dvb.ventileinstellung[ventileinstellungIndex] =
-				wacCalculationService.berechneVentileinstellung(model.map)
+			wacCalculationService.berechneVentileinstellung(model.map)
 			//
 			publishEvent "DvbVentileinstellungInTabelleWahlen", [ventileinstellungIndex]
 		}
