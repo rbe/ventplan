@@ -538,19 +538,23 @@ class WacCalculationService {
 	def berechneZuAbluftventile(map) {
 		if (map.raumLuftart in ["ZU", "ZU/AB"]) {
 			def ventil = map.raumBezeichnungZuluftventile
-			def maxVolumenstrom = wacModelService.getMaxVolumenstrom(ventil)
-			// Anzahl Ventile
-			map.raumAnzahlZuluftventile = java.lang.Math.ceil(map.raumZuluftVolumenstrom / maxVolumenstrom)
-			// Luftmenge je Ventil
-			map.raumZuluftmengeJeVentil = map.raumZuluftVolumenstrom / map.raumAnzahlZuluftventile
+			if (ventil) {
+				def maxVolumenstrom = wacModelService.getMaxVolumenstrom(ventil)
+				// Anzahl Ventile
+				map.raumAnzahlZuluftventile = java.lang.Math.ceil(map.raumZuluftVolumenstrom / maxVolumenstrom)
+				// Luftmenge je Ventil
+				map.raumZuluftmengeJeVentil = map.raumZuluftVolumenstrom / map.raumAnzahlZuluftventile
+			}
 		}
 		if (map.raumLuftart in ["AB", "ZU/AB"]) {
 			def ventil = map.raumBezeichnungAbluftventile
-			def maxVolumenstrom = wacModelService.getMaxVolumenstrom(ventil)
-			// Anzahl Ventile
-			map.raumAnzahlAbluftventile = java.lang.Math.ceil(map.raumAbluftVolumenstrom / maxVolumenstrom)
-			// Luftmenge je Ventil
-			map.raumAbluftmengeJeVentil = map.raumAbluftVolumenstrom / map.raumAnzahlAbluftventile
+			if (ventil) {
+				def maxVolumenstrom = wacModelService.getMaxVolumenstrom(ventil)
+				// Anzahl Ventile
+				map.raumAnzahlAbluftventile = java.lang.Math.ceil(map.raumAbluftVolumenstrom / maxVolumenstrom)
+				// Luftmenge je Ventil
+				map.raumAbluftmengeJeVentil = map.raumAbluftVolumenstrom / map.raumAnzahlAbluftventile
+			}
 		}
 		if (DEBUG) println "berechneZuAbluftventile: ${map}"
 		map
