@@ -679,10 +679,11 @@ class WacCalculationService {
 			}
 		}
 		// Alle Einträge in der Tabelle Ventileinstellung durchlaufen
-		println map.dvb.ventileinstellung
 		map.dvb.ventileinstellung.each { ve ->
+			//println "ve: ${ve}"
 			// Prüfe, ob die letzte Teilstrecke existiert und ob die Luftart übereinstimmt
 			def luftVsLts = luftVsLetzteTeilstrecke(ve)
+			//println "luftVsLts=${luftVsLts}"
 			if (luftVsLts > 0.0d) {
 				// Berechne dP offen
 				ve.dpOffen =
