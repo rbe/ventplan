@@ -35,8 +35,14 @@ panel(id: "teilstreckenPanel", layout: new MigLayout("debug, fillx, wrap 2", "[f
 			textField()
 		}
 		
-		// TODO mmu Set initial size so label won't resize when an image is displayed
-		label(id: "teilstreckenBild", text: "-- kein Bild --", constraints: "span, grow")
+		panel(background: java.awt.Color.WHITE, layout: new MigLayout("fill", "[center]", ""), constraints: "span, grow, height 300px!, width 300px!") {
+			label(id: "wbwBild", text: "-- kein Bild --", background: java.awt.Color.WHITE, constraints: "height 220px!, width 220px!")
+		}
+	}
+    // Rechts unten: Buttons
+	panel(id: "wbwButton", layout: new MigLayout("fillx", "[left][right]", "[fill]")) {
+		button(id: "teilstreckenOk", text: "OK")
+		button(id: "teilstreckenCancel", text: "Abbrechen")
 	}
 	
 }
