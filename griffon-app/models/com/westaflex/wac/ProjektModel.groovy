@@ -572,9 +572,9 @@ class ProjektModel {
 			// Combobox RaumVs - Luftart
 			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(1), meta.raum.luftart
 			// Combobox RaumVs - Bezeichnung Abluftmenge
-			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(4), meta.raumVsBezeichnungAbluftventile
+			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(5), meta.raumVsBezeichnungAbluftventile
 			// Combobox RaumVs - Bezeichnung Zuluftmenge
-			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(8), meta.raumVsBezeichnungZuluftventile
+			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(9), meta.raumVsBezeichnungZuluftventile
 			// Combobox RaumVs - Verteilebene
 			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(11), meta.raum.geschoss
 			// RaumVs Überströmventile
