@@ -696,12 +696,6 @@ class WacCalculationService {
 			ve.abgleich = ve.differenz + ve.dpOffen
 			ve.einstellung =
 				wacModelService.getEinstellung(ve.ventilbezeichnung, ve.luftart, luftVsLetzteTeilstrecke(ve), ve.abgleich)
-			// Wurde keine Einstellung gefunden, Benutzer informieren
-			if (ve.einstellung != 0) {
-				def infoMsg = "Keine Einstellung für Ventil ${ve.ventilbezeichnung} gefunden! Bitte prüfen Sie die Zeile#${ve.position}."
-				//app.controllers["Dialog"].showInformDialog(infoMsg as String)
-				println infoMsg
-			}
 		}
 	}
 	
