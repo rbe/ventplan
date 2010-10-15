@@ -239,7 +239,7 @@ class ProjektModelService {
 						kanalnetz: [],
 						ventileinstellung: []
 					],
-				akkustik: [
+				akustik: [
                     raumBezeichnung: []
                 ]
 			]
