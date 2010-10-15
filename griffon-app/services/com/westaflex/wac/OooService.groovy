@@ -66,6 +66,15 @@ class OooService {
 			// Create new document from template
 			def doc = westaAuslegungTemplate.open(oooConnection, [Hidden: Boolean.FALSE])
 			// Execute macro
+			/*
+			def aVerteilung
+			map.raum.raume.collect { it ->
+				def k = "${it.raumVerteilebene}${it.raumLuftart}"
+				def v = "${map.raum.raume.inject(0, { o, n -> o + n.raumAnzahlAbluftventile })};${map.raum.raume.inject(0, { o, n -> o + n.raumAbluftmengeJeVentil })}"
+				new NamedValue(k, v)
+			}
+			*/
+			// Basic Parameter: aRumpf (Basisdaten, Kunde etc.), aVerteilung, aVentile, aUberstroemElemente
 			doc.executeMacro("${macro}?language=Basic&location=application", [])
 			// Save and close
 			file = java.io.File.createTempFile((title ?: "WAC_Auslegung") as String, ".odt")
@@ -80,8 +89,6 @@ class OooService {
 	 * 
 	 */
 	def performAuslegung = { blanko = false, title = null, map ->
-		// Which macro to call?
-		def macro = blanko ? "Westa.Main.silentMain" : "Westa.Main.silentMode"
 		// Get connection to OpenOffice
 		def oooConnection = ocm.acquire("group1")
 		if (!oooConnection) throw new IllegalStateException("No connection to OpenOffice")
@@ -91,13 +98,24 @@ class OooService {
 			// Create new document from template
 			def doc = westaAuslegungTemplate.open(oooConnection, [Hidden: Boolean.FALSE])
 			// Daten übergeben
+			println "projektdaten"
 			addProjektdaten(doc, map.kundendaten)
+			println "kundendaten"
 			addKundendaten(doc, map.kundendaten)
+			println "informationen"
 			addInformationen(doc, map)
+			println "raumdaten"
 			addRaumdaten(doc, map)
+			println "rauvolumenströme"
 			addRaumvolumenstrome(doc, map)
+			println "überströmelement"
 			addUberstromelemente(doc, map)
+			println "akustik"
 			addAkustikBerechnung(doc, map)
+			println "dvbkanalnetz"
+			addDvbKanalnetz(doc, map)
+			println "dvbventileinstellung"
+			addDvbVentileinstellung(doc, map)
 			// Save and close
 			file = java.io.File.createTempFile((title ?: "WAC_Auslegung") as String, ".odt")
 			doc.saveAs(file)
@@ -171,7 +189,7 @@ class OooService {
 			doc["lkDeckeCheckbox"]                 = gt(map.anlage.luftkanalverlegung, "decke", "Decke (abgehängt)")
 			doc["lkSpitzbodenCheckbox"]            = gt(map.anlage.luftkanalverlegung, "spitzboden", "Spitzboden")
 			// Geplante Belegung
-			doc["personenAnzahlSpinner"]           = map.gebaude.geplanteBelegung.personenanzahl /*as String*/
+			doc["personenAnzahlSpinner"]           = map.gebaude.geplanteBelegung.personenanzahl as String
 			// Außenluft
 			doc["rbAlDachdurchfuehrung"]           = gt(map.anlage.aussenluft, "dach", "Dachdurchführung")
 			doc["rbAlWand"]                        = gt(map.anlage.aussenluft, "wand", "Wand (Luftgitter)")
@@ -210,14 +228,16 @@ class OooService {
 	 */
 	def addRaumdaten = { doc, map ->
 		// Tabelle
+		use (com.bensmann.odisee.category.OOoTextTableCategory) {
+		}
 		// Felder
 		use (com.bensmann.odisee.category.OOoFieldCategory) {
 			// Zusammenfassung
-			doc["lmeZuSummeWertLabel"]             = map.raume.findAll { it.raumLuftart == "ZU" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
-			doc["lmeAbSummeWertLabel"]             = map.raume.findAll { it.raumLuftart == "AB" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
-			doc["lmeUebSummeWertLabel"]            = map.raume.findAll { it.raumLuftart == "ÜB" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
-			doc["lmeGesamvolumenWertLabel"]        = map.raumeVs.gesamtVolumenNE
-			doc["lmeGebaeudeluftwechselWertLabel"] = map.raumeVs.luftwechselNE
+			doc["lmeZuSummeWertLabel"]             = GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "ZU" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d)
+			doc["lmeAbSummeWertLabel"]             = GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "AB" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d)
+			doc["lmeUebSummeWertLabel"]            = GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "ÜB" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d)
+			doc["lmeGesamtvolumenWertLabel"]       = GH.toString2Converter(map.raum.raumVs.gesamtVolumenNE)
+			doc["lmeGebaeudeluftwechselWertLabel"] = GH.toString2Converter(map.raum.raumVs.luftwechselNE)
 			doc["kzKennzeichenLabel"]              = map.anlage.kennzeichnungLuftungsanlage
 			// Bemerkungen
 			doc["adNotizenTextArea"]               = map.kundendaten.notizen
@@ -229,13 +249,14 @@ class OooService {
 	 */
 	def addRaumvolumenstrome = { doc, map ->
 		// Tabelle
+		use (com.bensmann.odisee.category.OOoTextTableCategory) {
+		}
 		// Felder
 		use (com.bensmann.odisee.category.OOoFieldCategory) {
 			// Ergebnis der Berechnungen
-			doc["lmeSumLTMZuluftmengeWertLabel"]   = map.raume.findAll { it.raumLuftart == "ZU" }?.inject(0.0d, { o, n -> o + n.raumZuluftVolumenstrom }) ?: 0.0d
-			doc["lmeSumLTMAbluftmengeWertLabel"]   = map.raume.findAll { it.raumLuftart == "AB" }?.inject(0.0d, { o, n -> o + n.raumAbluftVolumenstrom }) ?: 0.0d
-			doc["lmeGesAussenluftmengeWertLabel"]  = map.raumVs.gesamtaussenluftVsMitInfiltration
-			doc["lmeGebaeudeluftwechselWertLabel"] = map.anlage.kennzeichnungLuftungsanlage
+			doc["lmeSumLTMZuluftmengeWertLabel"]   = GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "ZU" }?.inject(0.0d, { o, n -> o + n.raumZuluftVolumenstrom }) ?: 0.0d)
+			doc["lmeSumLTMAbluftmengeWertLabel"]   = GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "AB" }?.inject(0.0d, { o, n -> o + n.raumAbluftVolumenstrom }) ?: 0.0d)
+			doc["lmeGesAussenluftmengeWertLabel"]  = GH.toString2Converter(map.raum.raumVs.gesamtaussenluftVsMitInfiltration)
 		}
 	}
 	
@@ -244,14 +265,16 @@ class OooService {
 	 */
 	def addUberstromelemente = { doc, map ->
 		// Tabelle
+		use (com.bensmann.odisee.category.OOoTextTableCategory) {
+		}
 		// Felder
 		use (com.bensmann.odisee.category.OOoFieldCategory) {
 			// Einstellungen am Lüftungsgerät und an der Fernbedienung
 			doc["lmeZentralgeraetCombobox"]     = map.anlage.zentralgerat
-			doc["lmeFeuchteschutzWertLabel"]    = GH.toString2Round5Converter(model.map.aussenluftVs.raumVsAussenluftVsDerLtmFs)
-			doc["lmeMindestluftungWertLabel"]   = GH.toString2Round5Converter(model.map.aussenluftVs.raumVsAussenluftVsDerLtmRl)
-			doc["lmeGrundlueftungWertLabel"]    = GH.toString2Round5Converter(model.map.aussenluftVs.raumVsAussenluftVsDerLtmNl)
-			doc["lmeIntensivlueftungWertLabel"] = GH.toString2Round5Converter(model.map.aussenluftVs.raumVsAussenluftVsDerLtmIl)
+			doc["lmeFeuchteschutzWertLabel"]    = GH.toString2Round5Converter(map.aussenluftVs.raumVsAussenluftVsDerLtmFs)
+			doc["lmeMindestluftungWertLabel"]   = GH.toString2Round5Converter(map.aussenluftVs.raumVsAussenluftVsDerLtmRl)
+			doc["lmeGrundlueftungWertLabel"]    = GH.toString2Round5Converter(map.aussenluftVs.raumVsAussenluftVsDerLtmNl)
+			doc["lmeIntensivlueftungWertLabel"] = GH.toString2Round5Converter(map.aussenluftVs.raumVsAussenluftVsDerLtmIl)
 		}
 	}
 	
@@ -260,40 +283,60 @@ class OooService {
 	 */
 	def addAkustikBerechnung = { doc, map ->
 		// Tabelle
+		use (com.bensmann.odisee.category.OOoTextTableCategory) {
+		}
 		// Felder
 		use (com.bensmann.odisee.category.OOoFieldCategory) {
 			// Zuluft
 			//abZuTabelleUberschrift2Label = "Zuluft"
 			doc["abZuRaumbezeichnungComboBox"]                    = map.akustik.zuluft.raumBezeichnung
 			doc["abZuSchallleistungspegelZuluftstutzenComboBox"]  = map.akustik.zuluft.zentralgerat
-			doc["abZuKanalnetzComboBox"]                          = map.akustik.zuluft.slpErhohungKanalnetz
-			doc["abZuFilterverschmutzungComboBox"]                = map.akustik.zuluft.slpErhohungFilter
+			doc["abZuKanalnetzComboBox"]                          = map.akustik.zuluft.slpErhohungKanalnetz as String
+			doc["abZuFilterverschmutzungComboBox"]                = map.akustik.zuluft.slpErhohungFilter as String
 			doc["abZuHauptschalldaempfer1ComboBox"]               = map.akustik.zuluft.hauptschalldampfer1
 			doc["abZuHauptschalldaempfer2ComboBox"]               = map.akustik.zuluft.hauptschalldampfer2
-			doc["abZuAnzahlUmlenkungenTextField"]                 = map.akustik.zuluft.anzahlUmlenkungen
+			doc["abZuAnzahlUmlenkungenTextField"]                 = GH.toString2Converter(map.akustik.zuluft.anzahlUmlenkungen)
 			doc["abZuLuftverteilerkastenTextField"]               = map.akustik.zuluft.luftverteilerkasten
 			doc["abZuLaengsdaempfungKanalComboBox"]               = map.akustik.zuluft.langsdampfungKanal
-			doc["abZuLaengsdaempfungKanalTextField"]              = map.akustik.zuluft.langsdampfungKanalLfdmMeter
+			doc["abZuLaengsdaempfungKanalTextField"]              = GH.toString2Converter(map.akustik.zuluft.langsdampfungKanalLfdmMeter)
 			doc["abZuSchalldaempferVentilComboBox"]               = map.akustik.zuluft.schalldampferVentil
 			doc["abZuEinfuegungswertLuftdurchlassComboBox"]       = map.akustik.zuluft.einfugungsdammwert
-			doc["abZuTabelleDezibelWertLabel"]                    = map.akustik.zuluft.dbA
-			doc["abZuTabelleMittlererSchalddruckpegelWertLabel"]  = map.akustik.zuluft.mittlererSchalldruckpegel
+			doc["abZuTabelleDezibelWertLabel"]                    = GH.toString2Converter(map.akustik.zuluft.dbA)
+			doc["abZuTabelleMittlererSchalddruckpegelWertLabel"]  = GH.toString2Converter(map.akustik.zuluft.mittlererSchalldruckpegel)
 			// Abluft
+			//abAbTabelleUberschrift2Label = "Abluft"
 			doc["abAbRaumbezeichnungComboBox"]                    = map.akustik.abluft.raumBezeichnung
 			doc["abAbSchallleistungspegelAbluftstutzenComboBox"]  = map.akustik.abluft.zentralgerat
-			doc["abAbKanalnetzComboBox"]                          = map.akustik.abluft.slpErhohungKanalnetz
-			doc["abAbFilterverschmutzungComboBox"]                = map.akustik.abluft.slpErhohungFilter
+			doc["abAbKanalnetzComboBox"]                          = map.akustik.abluft.slpErhohungKanalnetz as String
+			doc["abAbFilterverschmutzungComboBox"]                = map.akustik.abluft.slpErhohungFilter as String
 			doc["abAbHauptschalldaempfer1ComboBox"]               = map.akustik.abluft.hauptschalldampfer1
 			doc["abAbHauptschalldaempfer2ComboBox"]               = map.akustik.abluft.hauptschalldampfer2
-			doc["abAbAnzahlUmlenkungenTextField"]                 = map.akustik.abluft.anzahlUmlenkungen
+			doc["abAbAnzahlUmlenkungenTextField"]                 = map.akustik.abluft.anzahlUmlenkungen as String
 			doc["abAbLuftverteilerkastenTextField"]               = map.akustik.abluft.luftverteilerkasten
 			doc["abAbLaengsdaempfungKanalComboBox"]               = map.akustik.abluft.langsdampfungKanal
-			doc["abAbLaengsdaempfungKanalTextField"]              = map.akustik.abluft.langsdampfungKanalLfdmMeterlangsdampfung
+			doc["abAbLaengsdaempfungKanalTextField"]              = GH.toString2Converter(map.akustik.abluft.langsdampfungKanalLfdmMeter)
 			doc["abAbSchalldaempferVentilComboBox"]               = map.akustik.abluft.schalldampferVentil
-			doc["abAbEinfuegungswertLuftdurchlassComboBox"]       = map.akustik.abluft.einfugungsdammwert
+			doc["abAbEinfuegungswertLuftdurchlassComboBox"]       = GH.toString2Converter(map.akustik.abluft.einfugungsdammwert)
 			doc["abAbTabelleDezibelWertLabel"]                    = map.akustik.abluft.dbA
-			doc["abAbTabelleMittlererSchalddruckpegelWertLabel"]  = map.akustik.abluft.mittlererSchalldruckpegel
-			//abAbTabelleUberschrift2Label = "Abluft"
+			doc["abAbTabelleMittlererSchalddruckpegelWertLabel"]  = GH.toString2Converter(map.akustik.abluft.mittlererSchalldruckpegel)
+		}
+	}
+	
+	/**
+	 * @param map model.map
+	 */
+	def addDvbKanalnetz = { doc, map ->
+		// Tabelle
+		use (com.bensmann.odisee.category.OOoTextTableCategory) {
+		}
+	}
+	
+	/**
+	 * @param map model.map
+	 */
+	def addDvbVentileinstellung = { doc, map ->
+		// Tabelle
+		use (com.bensmann.odisee.category.OOoTextTableCategory) {
 		}
 	}
 	
@@ -316,9 +359,6 @@ class OooService {
 			{"Fortluft", fortluftButtonGroup},
 			{"Geraetestandort", geraetestandortButtonGroup}
 		};//{"Ueberstroemelement", lmeTabelleTable.getValueAt(row, column)},
-		final int UEBERSTROEM = 5;
-		final int VENTILBEZEICHNUNG = 9;
-		final int VERTEILEBENE = 10;
 		com.sun.star.beans.NamedValue[] first = new com.sun.star.beans.NamedValue[controls.length + 1];
 		for (int i = 0; i < controls.length; i++) {
 			first[i] = new com.sun.star.beans.NamedValue((String) controls[i][0], ((DocumentAware) controls[i][1]).getString());
@@ -381,10 +421,13 @@ class OooService {
 		// Beim Volumenstrom die Kommata entfernen
 		first[8].Value = ((String) first[8].Value).replaceAll(",", ".");
 		//
+		final int UEBERSTROEM = 5;
+		final int VENTILBEZEICHNUNG = 9;
+		final int VERTEILEBENE = 10;
 		ret[0] = first;
-		ret[1] = makeNamedValuesFromTable(lmeTabelleTable, VERTEILEBENE);
-		ret[2] = makeNamedValuesFromTable(lmeTabelleTable, VENTILBEZEICHNUNG);
-		ret[3] = makeNamedValuesFromTable(lmeTabelleUeberstroemTable, UEBERSTROEM);
+		ret[1] = makeNamedValuesFromTable(lmeTabelleTable, VERTEILEBENE); // 10
+		ret[2] = makeNamedValuesFromTable(lmeTabelleTable, VENTILBEZEICHNUNG); // 9
+		ret[3] = makeNamedValuesFromTable(lmeTabelleUeberstroemTable, UEBERSTROEM); // 5
 		return ret;
 	}
 	
