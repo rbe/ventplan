@@ -21,6 +21,7 @@ class Wac2Controller {
 	def projektModelService
 	def view
 	def wacCalculationService
+	def oooService
 	
 	/**
 	 * Zähler für erstellte/geladene Projekte. Wird als "unique id" verwendet.
@@ -100,6 +101,7 @@ class Wac2Controller {
 		def canClose = canClose()
 		if (DEBUG) println "exitApplication: ${canClose}"
 		if (canClose) {
+			oooService.shutdown()
 			app.shutdown()
 		} else {
 			if (DEBUG) println "exitApplication: there are unsaved changes"
@@ -110,6 +112,7 @@ class Wac2Controller {
 				case 0:
 					if (DEBUG) println "Alles speichern"
 					// TODO rbe Projekte speichern aufrufen
+					oooService.shutdown()
 					app.shutdown()
 					break
 				case 1: // Cancel: do nothing...
@@ -118,6 +121,7 @@ class Wac2Controller {
 					break
 				case 2:
 					if (DEBUG) println "Schliessen"
+					oooService.shutdown()
 					app.shutdown()
 					break
 			}
