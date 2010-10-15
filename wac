@@ -1,32 +1,36 @@
 #!/bin/bash
 
-OOO_HOME=/Applications/OpenOffice.org.app/Contents
-
 # Operating system
 OS=$(uname -s)
-# MacOS X: Don't use program link
-# http://www.openoffice.org/issues/show_bug.cgi?id=101203
 case "${OS}" in
-	Darwin) OOO_PROGRAM=${OOO_HOME}/MacOS ;;
-	SunOS | Linux) OOO_PROGRAM=${OOO_HOME}/program ;;
+	Darwin)
+		OOO_HOME=${OOO_HOME:-/Applications/OpenOffice.org.app/Contents}
+		# MacOS X: Don't use program link
+		# http://www.openoffice.org/issues/show_bug.cgi?id=101203
+		OOO_PROGRAM=${OOO_HOME}/MacOS
+	;;
+	SunOS | Linux | *BSD)
+		OOO_HOME=${OOO_HOME:-/opt/openoffice.org3}
+		OOO_PROGRAM=${OOO_HOME}/program
+	;;
 esac
-OOOJ=${OOO_HOME}/basis-link/ure-link/share/java
-OOOU=${OOO_HOME}/basis-link/program/classes
-OOOL=${OOO_HOME}/basis-link/program:${OOO_HOME}/basis-link/program/components:${OOO_HOME}/basis-link/ure-link/lib
+OOOJ="${OOO_HOME}/basis-link/ure-link/share/java"
+OOOU="${OOO_HOME}/basis-link/program/classes"
+OOOL="${OOO_HOME}/basis-link/program:${OOO_HOME}/basis-link/program/components:${OOO_HOME}/basis-link/ure-link/lib"
 # Set UNO path
 UNO_PATH="${OOO_PROGRAM}"
 export UNO_PATH
 
 # Copy juh.jar into program folder
 # http://user.services.openoffice.org/en/forum/viewtopic.php?f=44&t=10825
-if [ ! -f $OOO_PROGRAM/juh.jar ]; then
-        cp $OOOJ/juh.jar $OOO_PROGRAM
+if [ ! -f ${OOO_PROGRAM}/juh.jar ]; then
+        cp ${OOOJ}/juh.jar ${OOO_PROGRAM}
 fi
 
 # Start
-CLASSPATH=$CLASSPATH$OOO_PROGRAM/juh.jar:$OOOJ/jurt.jar:$OOOJ/ridl.jar:$OOOU/unoil.jar
+CLASSPATH="${CLASSPATH}${OOO_PROGRAM}/juh.jar:${OOOJ}/jurt.jar:${OOOJ}/ridl.jar:${OOOU}/unoil.jar"
 export CLASSPATH
 cd dist
-java -cp ${CLASSPATH} -Djava.library.path=$OOOL -d32 -jar wac2.jar
+java -cp "${CLASSPATH}" -Djava.library.path="${OOOL}" -d32 -jar wac2.jar
 
 exit 0
