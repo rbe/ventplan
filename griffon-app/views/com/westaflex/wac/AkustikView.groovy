@@ -129,18 +129,36 @@ def buildLayout(tabname) {
                 label("Bewerteter Schallpegel", constraints: "height 30px!, wrap")
             }
             panel(layout: new MigLayout("fill, wrap", "[fill,right]", "[fill]")) {
-                jideScrollPane(constraints: "grow, height 460px!") {
-                    def tm
-                    switch (tabname) {
-                        case "Zuluft":
-                            tm = model.createAkustikZuluftTableModel()
-                            break
-                        case "Abluft":
-                            tm = model.createAkustikAbluftTableModel()
-                            break
+                if (System.properties.'os.name'.contains("Windows")) {
+                    jideScrollPane(constraints: "grow, height 500px!") {
+                        def tm
+                        switch (tabname) {
+                            case "Zuluft":
+                                tm = model.createAkustikZuluftTableModel()
+                                break
+                            case "Abluft":
+                                tm = model.createAkustikAbluftTableModel()
+                                break
+                        }
+                        table(id: "akustik${tabname}Tabelle", model: tm, selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                            current.setRowHeight(33)
+                        }
                     }
-                    table(id: "akustik${tabname}Tabelle", model: tm, selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-                        current.setRowHeight(33)
+                }
+                else {
+                    jideScrollPane(constraints: "grow, height 460px!") {
+                        def tm
+                        switch (tabname) {
+                            case "Zuluft":
+                                tm = model.createAkustikZuluftTableModel()
+                                break
+                            case "Abluft":
+                                tm = model.createAkustikAbluftTableModel()
+                                break
+                        }
+                        table(id: "akustik${tabname}Tabelle", model: tm, selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                            current.setRowHeight(33)
+                        }
                     }
                 }
             }
