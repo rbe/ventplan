@@ -16,4 +16,4 @@ dvbKanalnetzEntfernen.actionPerformed = controller.dvbKanalnetzEntfernen
 // Ventileinstellung - Buttons
 dvbVentileinstellungHinzufugen.actionPerformed = controller.dvbVentileinstellungHinzufugen
 dvbVentileinstellungEntfernen.actionPerformed = controller.dvbVentileinstellungEntfernen
-dvbVentileinstellungTeilstreckeAuswahlen.actionPerformed = controller.dvbVentileinstellungTeilstreckeDialog
+dvbVentileinstellungAuswahlen.actionPerformed = controller.dvbVentileinstellungTeilstreckeDialog

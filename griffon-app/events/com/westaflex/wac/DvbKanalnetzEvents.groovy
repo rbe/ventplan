@@ -52,7 +52,6 @@ class DvbKanalnetzEvents {
 			GH.addMapPropertyChangeListener("map.dvb.kanalnetz", k)
 			//
 			onDvbKanalnetzGeandert(k.position)
-			publishEvent "AddDvbKanalnetzToTableModel", [k]
 		}
 	}
 	

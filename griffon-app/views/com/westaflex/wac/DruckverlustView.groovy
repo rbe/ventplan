@@ -1,10 +1,10 @@
 /**
  * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/views/com/westaflex/wac/DruckverlustView.groovy
- * 
+ *
  * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
  * Alle Rechte vorbehalten. Nutzungslizenz siehe http://www.bensmann.com/license_de.html
  * All Rights Reserved. Use is subject to license terms, see http://www.bensmann.com/license_en.html
- * 
+ *
  * Created by: rbe
  */
 package com.westaflex.wac
@@ -83,8 +83,6 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
                     panel(constraints: "span", layout: new MigLayout("fillx", "[left] 16 []", "")) {
                         // TODO mmu Enable only when table isn't empty and row is selected
                         button(id: "dvbVentileinstellungEntfernen", text: "Entfernen", enabled: bind { 1 == 1 })
-                        // TODO -> es gibt gar keine Teilstrecken !!!
-                        button(id: "dvbVentileinstellungTeilstreckeAuswahlen", text: "Teilstrecke auswählen" , enabled: bind { 1 == 1 })
                     }
 
                 }

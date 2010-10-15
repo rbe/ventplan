@@ -15,6 +15,7 @@ import javax.swing.JTable
 import javax.swing.table.AbstractTableModel
 import javax.swing.event.TableModelListener
 import java.awt.Component
+import javax.swing.DefaultListModel
 
 /**
  * 
@@ -37,7 +38,7 @@ class ProjektController {
 	def raumBearbeitenDialog
 	def wbwDialog
 	def teilstreckenDialog
-	
+
 	/**
 	 * Initialize MVC group.
 	 */
@@ -753,8 +754,8 @@ class ProjektController {
 	def dvbKanalnetzEntfernen = {
 		publishEvent "DvbKanalnetzEntfernen", [view.dvbKanalnetzTabelle.selectedRow]
 	}
-	
-	/**
+
+    /**
 	 * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
 	 */
 	def widerstandsbeiwerteBearbeiten = {
@@ -907,16 +908,76 @@ class ProjektController {
 	 * Druckverlustberechnung - Ventileinstellung - Teilstrecke wählen.
 	 */
 	def dvbVentileinstellungTeilstreckeDialog = {
-        teilstreckenDialog = GH.createDialog(builder, TeilstreckenView, [title: "Teilstrecken", size: [750, 650]])
-		teilstreckenDialog.show()
+        teilstreckenDialog = GH.createDialog(builder, TeilstreckenView, [title: "Teilstrecken", size: [250, 400]])
+
+        def listModel = view.teilstreckenVerfugbareListe.model
+        model.map.dvb.kanalnetz.each { listModel.addElement(it.teilstrecke) }
+
+        if (DEBUG) println "dvbVentileinstellungTeilstreckeDialog: listModel -> ${listModel}"
+
+        view.teilstreckenVerfugbareListe.setModel(listModel)
+
+        teilstreckenDialog.show()
+
 		if (DEBUG) println "TeilstreckenAuswahlen: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
 	}
+
+    /**
+     * Teilstrecke von ausgewählte Teilstrecke nach verfügbare Teilstrecke verschieben
+     * TODO mmu remove old value!
+     */
+    def teilstreckenNachVerfugbarVerschieben = {
+        // get selected items
+        def selectedValues = view.teilstreckenAusgewahlteListe.selectedValues as String[]
+        if (DEBUG) println "teilstreckenNachVerfugbarVerschieben: selectedIndices -> ${selectedValues}"
+        // add to verfugbare list and remove from ausgewahlte list
+        def listModel = view.teilstreckenVerfugbareListe.model
+        selectedValues.each { listModel.addElement(it) }
+        view.teilstreckenVerfugbareListe.setModel(listModel)
+
+        // remove from ausgewahlte list
+        def aListModel = view.teilstreckenAusgewahlteListe.model
+        selectedValues.each { aListModel.remove(it) }
+        
+        view.teilstreckenAusgewahlteListe.setModel(aListModel)
+
+        def listArray = aListModel.toArray()
+        def newText = listArray.collect { it }.join(';')
+        view.teilstreckenAuswahl.setText(newText)
+    }
+
+    /**
+     * Teilstrecke von verfügbare Teilstrecke nach ausgewählte Teilstrecke verschieben
+     * TODO mmu remove old value!
+     */
+    def teilstreckenNachAusgewahlteVerschieben = {
+        // get selected items
+        def selectedValues = view.teilstreckenVerfugbareListe.selectedValues as String[]
+        println "teilstreckenNachAusgewahlteVerschieben: selectedValues -> ${selectedValues}"
+        // add to ausgewahlte list and remove from verfugbare list
+        def aListModel = view.teilstreckenAusgewahlteListe.model
+        selectedValues.each { aListModel.addElement(it) }
+        view.teilstreckenAusgewahlteListe.setModel(aListModel)
+
+        // remove from verfugbare list
+        def vListModel = view.teilstreckenVerfugbareListe.model
+        selectedValues.each { vListModel.removeElement(it) }
+        view.teilstreckenVerfugbareListe.setModel(vListModel)
+
+        println "view -> ${view}"
+
+        // set text
+        def listArray = aListModel.toArray()
+        def newText = listArray.collect { it }.join(';')
+        view.teilstreckenAuswahl.setText(newText)
+    }
 	
 	/**
 	 * Teilstrecken, Dialog mit OK geschlossen.
 	 */
 	def teilstreckenOkButton = {
-        // TODO mmu save values...
+        // save values...
+        view.dvbVentileinstellungTeilstrecken.setText(view.teilstreckenAuswahl.text)
         teilstreckenDialog.dispose()
 	}
 	

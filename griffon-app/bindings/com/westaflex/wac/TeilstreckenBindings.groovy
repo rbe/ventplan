@@ -10,5 +10,7 @@
 package com.westaflex.wac
 
 // Buttons
+teilstreckenNachVerfugbare.actionPerformed = controller.teilstreckenNachVerfugbarVerschieben
+teilstreckenNachAusgewahlte.actionPerformed = controller.teilstreckenNachAusgewahlteVerschieben
 teilstreckenOk.actionPerformed = controller.teilstreckenOkButton
 teilstreckenCancel.actionPerformed = controller.teilstreckenCancelButton
