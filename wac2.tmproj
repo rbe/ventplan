@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>currentDocument</key>
+	<string>griffon-app/controllers/com/westaflex/wac/ProjektController.groovy</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -100,7 +102,41 @@
 	<key>fileHierarchyDrawerWidth</key>
 	<integer>322</integer>
 	<key>metaData</key>
-	<dict/>
+	<dict>
+		<key>griffon-app/controllers/com/westaflex/wac/ProjektController.groovy</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>1</integer>
+				<key>line</key>
+				<integer>472</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>450</integer>
+		</dict>
+		<key>griffon-app/models/com/westaflex/wac/ProjektModel.groovy</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>3</integer>
+				<key>line</key>
+				<integer>547</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>531</integer>
+		</dict>
+	</dict>
+	<key>openDocuments</key>
+	<array>
+		<string>griffon-app/models/com/westaflex/wac/ProjektModel.groovy</string>
+		<string>griffon-app/controllers/com/westaflex/wac/ProjektController.groovy</string>
+	</array>
 	<key>showFileHierarchyDrawer</key>
 	<false/>
 	<key>showFileHierarchyPanel</key>
@@ -260,13 +296,6 @@
 						</dict>
 					</dict>
 				</dict>
-				<key>lifecycle</key>
-				<dict>
-					<key>isExpanded</key>
-					<true/>
-					<key>subItems</key>
-					<dict/>
-				</dict>
 				<key>models</key>
 				<dict>
 					<key>isExpanded</key>
@@ -297,13 +326,6 @@
 							</dict>
 						</dict>
 					</dict>
-				</dict>
-				<key>resources</key>
-				<dict>
-					<key>isExpanded</key>
-					<true/>
-					<key>subItems</key>
-					<dict/>
 				</dict>
 				<key>services</key>
 				<dict>
