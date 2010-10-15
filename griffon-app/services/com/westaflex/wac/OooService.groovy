@@ -9,6 +9,8 @@
  */
 package com.westaflex.wac
 
+import com.bensmann.griffon.GriffonHelper as GH
+
 /**
  * 
  */
@@ -92,6 +94,10 @@ class OooService {
 			addProjektdaten(doc, map.kundendaten)
 			addKundendaten(doc, map.kundendaten)
 			addInformationen(doc, map)
+			addRaumdaten(doc, map)
+			addRaumvolumenstrome(doc, map)
+			addUberstromelemente(doc, map)
+			addAkustikBerechnung(doc, map)
 			// Save and close
 			file = java.io.File.createTempFile((title ?: "WAC_Auslegung") as String, ".odt")
 			doc.saveAs(file)
@@ -115,6 +121,7 @@ class OooService {
 	 * @param map model.map.kundendaten
 	 */
 	private def addProjektdaten = { doc, map ->
+		// Felder
 		use (com.bensmann.odisee.category.OOoFieldCategory) {
 			// Projektdaten
 			doc["adBauvorhabenTextField"] = map.bauvorhaben
@@ -125,6 +132,7 @@ class OooService {
 	 * @param map model.map.kundendaten
 	 */
 	private def addKundendaten = { doc, map ->
+		// Felder
 		use (com.bensmann.odisee.category.OOoFieldCategory) {
 			// Grosshandel
 			doc["ghFirma1TextField"]          = map.grosshandel.firma1
@@ -149,6 +157,7 @@ class OooService {
 	 * @param map model.map.kundendaten
 	 */
 	private def addInformationen = { doc, map ->
+		// Felder
 		use (com.bensmann.odisee.category.OOoFieldCategory) {
 			// Gerätestandort
 			doc["gsKellergeschossRadioButton"]     = gt(map.anlage.standort, "KG", "Kellergeschoss")
@@ -162,7 +171,7 @@ class OooService {
 			doc["lkDeckeCheckbox"]                 = gt(map.anlage.luftkanalverlegung, "decke", "Decke (abgehängt)")
 			doc["lkSpitzbodenCheckbox"]            = gt(map.anlage.luftkanalverlegung, "spitzboden", "Spitzboden")
 			// Geplante Belegung
-			doc["personenAnzahlSpinner"]           = map.gebaude.geplanteBelegung.personenAnzahl as Integer
+			doc["personenAnzahlSpinner"]           = map.gebaude.geplanteBelegung.personenanzahl /*as String*/
 			// Außenluft
 			doc["rbAlDachdurchfuehrung"]           = gt(map.anlage.aussenluft, "dach", "Dachdurchführung")
 			doc["rbAlWand"]                        = gt(map.anlage.aussenluft, "wand", "Wand (Luftgitter)")
@@ -192,6 +201,99 @@ class OooService {
 			doc["ldKatARadioButton"]               = gt(map.gebaude.luftdichtheit, "kategorieA", "Kategorie A")
 			doc["ldKatBRadioButton"]               = gt(map.gebaude.luftdichtheit, "kategorieB", "Kategorie B")
 			doc["ldKatCRadioButton"]               = gt(map.gebaude.luftdichtheit, "kategorieC", "Kategorie C")
+			doc["ldMessRadioButton"]               = gt(map.gebaude.luftdichtheit, "messwerte", "Messwerte")
+		}
+	}
+	
+	/**
+	 * @param map model.map
+	 */
+	def addRaumdaten = { doc, map ->
+		// Tabelle
+		// Felder
+		use (com.bensmann.odisee.category.OOoFieldCategory) {
+			// Zusammenfassung
+			doc["lmeZuSummeWertLabel"]             = map.raume.findAll { it.raumLuftart == "ZU" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
+			doc["lmeAbSummeWertLabel"]             = map.raume.findAll { it.raumLuftart == "AB" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
+			doc["lmeUebSummeWertLabel"]            = map.raume.findAll { it.raumLuftart == "ÜB" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
+			doc["lmeGesamvolumenWertLabel"]        = map.raumeVs.gesamtVolumenNE
+			doc["lmeGebaeudeluftwechselWertLabel"] = map.raumeVs.luftwechselNE
+			doc["kzKennzeichenLabel"]              = map.anlage.kennzeichnungLuftungsanlage
+			// Bemerkungen
+			doc["adNotizenTextArea"]               = map.kundendaten.notizen
+		}
+	}
+	
+	/**
+	 * @param map model.map
+	 */
+	def addRaumvolumenstrome = { doc, map ->
+		// Tabelle
+		// Felder
+		use (com.bensmann.odisee.category.OOoFieldCategory) {
+			// Ergebnis der Berechnungen
+			doc["lmeSumLTMZuluftmengeWertLabel"]   = map.raume.findAll { it.raumLuftart == "ZU" }?.inject(0.0d, { o, n -> o + n.raumZuluftVolumenstrom }) ?: 0.0d
+			doc["lmeSumLTMAbluftmengeWertLabel"]   = map.raume.findAll { it.raumLuftart == "AB" }?.inject(0.0d, { o, n -> o + n.raumAbluftVolumenstrom }) ?: 0.0d
+			doc["lmeGesAussenluftmengeWertLabel"]  = map.raumVs.gesamtaussenluftVsMitInfiltration
+			doc["lmeGebaeudeluftwechselWertLabel"] = map.anlage.kennzeichnungLuftungsanlage
+		}
+	}
+	
+	/**
+	 * @param map model.map
+	 */
+	def addUberstromelemente = { doc, map ->
+		// Tabelle
+		// Felder
+		use (com.bensmann.odisee.category.OOoFieldCategory) {
+			// Einstellungen am Lüftungsgerät und an der Fernbedienung
+			doc["lmeZentralgeraetCombobox"]     = map.anlage.zentralgerat
+			doc["lmeFeuchteschutzWertLabel"]    = GH.toString2Round5Converter(model.map.aussenluftVs.raumVsAussenluftVsDerLtmFs)
+			doc["lmeMindestluftungWertLabel"]   = GH.toString2Round5Converter(model.map.aussenluftVs.raumVsAussenluftVsDerLtmRl)
+			doc["lmeGrundlueftungWertLabel"]    = GH.toString2Round5Converter(model.map.aussenluftVs.raumVsAussenluftVsDerLtmNl)
+			doc["lmeIntensivlueftungWertLabel"] = GH.toString2Round5Converter(model.map.aussenluftVs.raumVsAussenluftVsDerLtmIl)
+		}
+	}
+	
+	/**
+	 * @param map model.map
+	 */
+	def addAkustikBerechnung = { doc, map ->
+		// Tabelle
+		// Felder
+		use (com.bensmann.odisee.category.OOoFieldCategory) {
+			// Zuluft
+			//abZuTabelleUberschrift2Label = "Zuluft"
+			doc["abZuRaumbezeichnungComboBox"]                    = map.akustik.zuluft.raumBezeichnung
+			doc["abZuSchallleistungspegelZuluftstutzenComboBox"]  = map.akustik.zuluft.zentralgerat
+			doc["abZuKanalnetzComboBox"]                          = map.akustik.zuluft.slpErhohungKanalnetz
+			doc["abZuFilterverschmutzungComboBox"]                = map.akustik.zuluft.slpErhohungFilter
+			doc["abZuHauptschalldaempfer1ComboBox"]               = map.akustik.zuluft.hauptschalldampfer1
+			doc["abZuHauptschalldaempfer2ComboBox"]               = map.akustik.zuluft.hauptschalldampfer2
+			doc["abZuAnzahlUmlenkungenTextField"]                 = map.akustik.zuluft.anzahlUmlenkungen
+			doc["abZuLuftverteilerkastenTextField"]               = map.akustik.zuluft.luftverteilerkasten
+			doc["abZuLaengsdaempfungKanalComboBox"]               = map.akustik.zuluft.langsdampfungKanal
+			doc["abZuLaengsdaempfungKanalTextField"]              = map.akustik.zuluft.langsdampfungKanalLfdmMeter
+			doc["abZuSchalldaempferVentilComboBox"]               = map.akustik.zuluft.schalldampferVentil
+			doc["abZuEinfuegungswertLuftdurchlassComboBox"]       = map.akustik.zuluft.einfugungsdammwert
+			doc["abZuTabelleDezibelWertLabel"]                    = map.akustik.zuluft.dbA
+			doc["abZuTabelleMittlererSchalddruckpegelWertLabel"]  = map.akustik.zuluft.mittlererSchalldruckpegel
+			// Abluft
+			doc["abAbRaumbezeichnungComboBox"]                    = map.akustik.abluft.raumBezeichnung
+			doc["abAbSchallleistungspegelAbluftstutzenComboBox"]  = map.akustik.abluft.zentralgerat
+			doc["abAbKanalnetzComboBox"]                          = map.akustik.abluft.slpErhohungKanalnetz
+			doc["abAbFilterverschmutzungComboBox"]                = map.akustik.abluft.slpErhohungFilter
+			doc["abAbHauptschalldaempfer1ComboBox"]               = map.akustik.abluft.hauptschalldampfer1
+			doc["abAbHauptschalldaempfer2ComboBox"]               = map.akustik.abluft.hauptschalldampfer2
+			doc["abAbAnzahlUmlenkungenTextField"]                 = map.akustik.abluft.anzahlUmlenkungen
+			doc["abAbLuftverteilerkastenTextField"]               = map.akustik.abluft.luftverteilerkasten
+			doc["abAbLaengsdaempfungKanalComboBox"]               = map.akustik.abluft.langsdampfungKanal
+			doc["abAbLaengsdaempfungKanalTextField"]              = map.akustik.abluft.langsdampfungKanalLfdmMeterlangsdampfung
+			doc["abAbSchalldaempferVentilComboBox"]               = map.akustik.abluft.schalldampferVentil
+			doc["abAbEinfuegungswertLuftdurchlassComboBox"]       = map.akustik.abluft.einfugungsdammwert
+			doc["abAbTabelleDezibelWertLabel"]                    = map.akustik.abluft.dbA
+			doc["abAbTabelleMittlererSchalddruckpegelWertLabel"]  = map.akustik.abluft.mittlererSchalldruckpegel
+			//abAbTabelleUberschrift2Label = "Abluft"
 		}
 	}
 	
