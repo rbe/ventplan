@@ -364,15 +364,17 @@ class Wac2Controller {
 	}
 	
 	/**
-	 * TODO rbe
+	 * Seitenansicht öffnen.
 	 */
 	def projektSeitenansicht = { evt = null ->
+		getMVCGroupAktivesProjekt().controller.seitenansicht()
 	}
 	
 	/**
-	 * TODO rbe
+	 * Projekt drucken.
 	 */
 	def projektDrucken = { evt = null ->
+		getMVCGroupAktivesProjekt().controller.drucken()
 	}
 	
 }

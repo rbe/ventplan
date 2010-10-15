@@ -32,6 +32,7 @@ class ProjektController {
 	def wacCalculationService
 	def wacModelService
 	def projektModelService
+	def oooService
 	
 	def raumBearbeitenDialog
 	def wbwDialog
@@ -207,6 +208,23 @@ class ProjektController {
 			// Project was not saved
 			false
 		}
+	}
+	
+	/**
+	 * Button "Seitenansicht".
+	 */
+	def seitenansicht = {
+		println model.map
+		// TODO mmu Dialog: Daten aus Auslegung, Blanko? Ticket #97.
+		def doc = oooService.performAuslegung(false, getProjektTitel(), model.map)
+		println "projektSeitenansicht: doc=${doc?.dump()}"
+	}
+	
+	/**
+	 * TODO
+	 */
+	def drucken = {
+		
 	}
 	
 	/**
