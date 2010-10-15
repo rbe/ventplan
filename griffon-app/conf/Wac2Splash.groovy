@@ -21,7 +21,7 @@ class Wac2Splash {
 	
 	def setup = {
 		// Set a splash image
-		URL url = Wac2Resource.getSplashScreenUrl()
+		URL url = Wac2Resource.getSplashScreenURL()
 		splashScreen.setImage(url)
 		splashScreen.showStatus("...")
 		// Show splash screen

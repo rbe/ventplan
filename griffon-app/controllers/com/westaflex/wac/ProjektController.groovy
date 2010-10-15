@@ -766,7 +766,7 @@ class ProjektController {
 		def wbwIndex = view.wbwTabelle.selectedRow
 		println "wbwInTabelleGewahlt: index=${index} wbwIndex=${wbwIndex}"
 		def wbw = model.tableModels.wbw[index][wbwIndex]
-		javax.swing.ImageIcon image = new javax.swing.ImageIcon(Wac2Resource.getWiderstandUrl(wbw.id))
+		javax.swing.ImageIcon image = new javax.swing.ImageIcon(Wac2Resource.getWiderstandURL(wbw.id))
 		// Image und Text setzen
 		if (image) {
 			view.wbwBild.text = ""
