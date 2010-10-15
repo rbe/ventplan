@@ -889,7 +889,7 @@ class ProjektController {
 	 * Druckverlustberechnung - Ventileinstellung - Teilstrecke wählen.
 	 */
 	def dvbVentileinstellungTeilstreckeDialog = {
-		teilstreckenDialog = GH.createDialog(builder, TeilstreckenView)
+        teilstreckenDialog = GH.createDialog(builder, TeilstreckenView, [title: "Teilstrecken", size: [750, 650]])
 		teilstreckenDialog.show()
 		if (DEBUG) println "TeilstreckenAuswahlen: dialog '${dialog.title}' closed: dialog=${dialog.dump()}"
 	}
@@ -898,65 +898,17 @@ class ProjektController {
 	 * Teilstrecken, Dialog mit OK geschlossen.
 	 */
 	def teilstreckenOkButton = {
+        // TODO mmu save values...
+        teilstreckenDialog.dispose()
 	}
 	
 	/**
-	 *
+	 * Teilstrecken Dialog Abbrechen - nichts speichern!
 	 */
 	def teilstreckenCancelButton = {
+        // Close dialog
+        teilstreckenDialog.dispose()
 	}
-	
-	/**
-	 * TODO UNUSED!!!?
-	 * Raumvolumenströme - Zu-/Abluftventile:
-	 * Raumbezeichnung Comboboxen in der RaumdatenView und RaumVsView aktualisieren
-	def updateRaumBezeichnungCombo = { rowIndex, newValue ->
-		// Neues TableModel setzen !
-		if (DEBUG) println "updateRaumBezeichnungCombo: ${rowIndex}"
-		doLater {
-			model.resyncRaumTableModels()
-		}
-	}
-	 */
-	
-	/**
-	 * TODO UNUSED!!!?
-	 * Raumvolumenströme - Zu-/Abluftventile:
-	 * Luftart-Comboboxen in der RaumdatenView und RaumVsView aktualisieren
-	def updateRaumLuftartCombo = { rowIndex, newValue ->
-		// Neues TableModel setzen !
-		if (DEBUG) println "updateRaumLuftartCombo: add row to table model ${rowIndex}"
-		doLater {
-			model.resyncRaumTableModels()
-		}
-	}
-	 */
-	
-	/**
-	 * TODO UNUSED!!!?
-	 * Raumvolumenströme - Zu-/Abluftventile:
-	 * Combobox für eines der Ventile geändert.
-	def updateRaumVentile = { rowIndex ->
-		if (DEBUG) println "-" * 80
-		if (DEBUG) println "updateRaumVentile: model.map.raum.raume=${model.map.raum.raume}"
-		try {
-			// Raum holen
-			def r = model.map.raum.raume[rowIndex]
-			if (DEBUG) println "updateRaumVentile: row#${rowIndex} changed, raum=${r.dump()}"
-			// Werte aus Tabelle übertragen
-			def tableModel = view.raumVsZuAbluftventileTabelle.model
-			def row = tableModel.rows.get(rowIndex)
-			if (DEBUG) println row
-			// Berechnen und neue Werte im Model speichern
-			model.map.raum.raume[rowIndex] = wacCalculationService.berechneZuAbluftventile(r)
-			// Werte in Tabelle übertragen
-			////REMOVE tableModel.setValueAt("100ULC", rowIndex, 8)
-			//
-			//tableModel.fireTableDataChanged()
-		} catch (NullPointerException e) {}
-		if (DEBUG) println "-" * 80
-	}
-	 */
 	
 	/**
 	 * Akustikberechnung - Zentralgerät geändert.
