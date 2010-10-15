@@ -627,8 +627,11 @@ class ProjektModel {
 			// Türen
 			tableModels.raume.each {
 				def m = tableModels.raumeTuren[it.position]
-				m.clear()
-				m.addAll(it.turen)
+				// TODO NullPointer when loading data
+				try {
+					m.clear()
+					m.addAll(it.turen)
+				} catch (e) {}
 			}
 			// Raumvolumentströme - Zu-/Abluftventile
 			tableModels.raumeVsZuAbluftventile.clear()

@@ -167,7 +167,7 @@ class ProjektController {
 		if (DEBUG) println "afterLoading: fire RaumHinzufugen"
 		// Räume
 		model.map.raum.raume.each { raum ->
-			publishEvent "RaumHinzugefugt", [raum.position]
+			publishEvent "RaumHinzugefugt", [raum.position, view]
 		}
 		// HACK
 		try { Thread.sleep(500) } catch (e) {}
