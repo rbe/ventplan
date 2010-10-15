@@ -164,21 +164,25 @@ class ProjektController {
 	 * 
 	 */
 	def afterLoading = {
-		if (DEBUG) println "afterLoading: fire RaumHinzufugen"
+		/*if (DEBUG)*/ println "afterLoading: fire RaumHinzufugen"
 		// Räume
 		model.map.raum.raume.each { raum ->
 			publishEvent "RaumHinzugefugt", [raum.position, view]
 		}
-		// HACK
-		try { Thread.sleep(500) } catch (e) {}
 		model.resyncRaumTableModels()
-		if (DEBUG) println "afterLoading: setting model.map.dirty to false"
-		// Set dirty-flag in project's model to false
-		model.map.dirty = false
-		// Update tab title to ensure that no "unsaved-data-star" is displayed
-		setTabTitle()
-		// Splash screen
-		if (DEBUG) println "projektOffnen: disposing splashscreen"
+		/* HACK
+		def r = { ->
+			println "going to sleep"
+			try { Thread.sleep(2 * 1000) } catch (e) {}
+			if (DEBUG) println "afterLoading: setting model.map.dirty to false"
+			// Set dirty-flag in project's model to false
+			model.map.dirty = false
+			// Update tab title to ensure that no "unsaved-data-star" is displayed
+			setTabTitle()
+		} as java.lang.Runnable
+		new java.lang.Thread(r).start()
+		*/
+		// Close splash screen
 		Wac2Splash.instance.dispose()
 	}
 	
@@ -203,8 +207,8 @@ class ProjektController {
 				false
 			}
 		} catch (e) {
-            def errorMsg = e.printStackTrace()
-            app.controllers["Dialog"].showErrorDialog(errorMsg as String)
+			def errorMsg = e.printStackTrace()
+			app.controllers["Dialog"].showErrorDialog(errorMsg as String)
 			// Project was not saved
 			false
 		}
