@@ -487,11 +487,11 @@ class ProjektModel {
 	 * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
 	 */
 	def addWbwTableModel(index) {
-		println "addWbwTableModel(${index})"
+		println "addWbwTableModel(${index}): ${tableModels.wbw[index]}"
 		// TableModel schon vorhanden?
 		if (tableModels.wbw[index]) return
+		// Neues TableModel erstellen und füllen
 		tableModels.wbw << new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNameComparator) as ca.odell.glazedlists.EventList
-		// Clone as this list may get modified -- for this project only
 		meta.wbw.each {
 			tableModels.wbw[index].add([id: it.id, anzahl: 0, name: it.bezeichnung, widerstandsbeiwert: it.wert])
 		}
@@ -552,8 +552,7 @@ class ProjektModel {
             if (isCopy || isCopy == "true") {
                 map.raum.raume.add(raum)
                 tableModels.raumeTuren.add(raum.turen)
-            }
-            else {
+            } else {
                 def r = (raumMapTemplate + raum) as ObservableMap
                 if (DEBUG) println "addRaum: adding raum=${r?.dump()}"
                 // Raum in der Map hinzufügen
