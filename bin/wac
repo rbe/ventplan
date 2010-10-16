@@ -9,8 +9,15 @@
 # Created by: rbe
 #
 
+#JAVA_HOME=
+#export JAVA_HOME
+#PATH=$JAVA_HOME/bin:$PATH
+#export PATH
+
 # Operating system
 OS=$(uname -s)
+
+# Installation directory
 case "${OS}" in
 	Darwin)
 		OOO_HOME=${OOO_HOME:-/Applications/OpenOffice.org.app/Contents}
@@ -18,14 +25,29 @@ case "${OS}" in
 		# http://www.openoffice.org/issues/show_bug.cgi?id=101203
 		OOO_PROGRAM=${OOO_HOME}/MacOS
 	;;
-	SunOS | Linux | *BSD)
+	SunOS)
+		OOO_HOME=${OOO_HOME:-/opt/openoffice.org3}
+		OOO_PROGRAM=${OOO_HOME}/program
+	;;
+	Linux)
+		OOO_HOME=${OOO_HOME:-/usr/lib/openoffice}
+		OOO_PROGRAM=${OOO_HOME}/program
+	;;
+	*BSD)
 		OOO_HOME=${OOO_HOME:-/opt/openoffice.org3}
 		OOO_PROGRAM=${OOO_HOME}/program
 	;;
 esac
-OOOJ="${OOO_HOME}/basis-link/ure-link/share/java"
-OOOU="${OOO_HOME}/basis-link/program/classes"
-OOOL="${OOO_HOME}/basis-link/program:${OOO_HOME}/basis-link/program/components:${OOO_HOME}/basis-link/ure-link/lib"
+
+# Libraries
+case "${OS}" in
+	Darwin | SunOS | Linux | *BSD)
+		OOOJ="${OOO_HOME}/basis-link/ure-link/share/java"
+		OOOU="${OOO_HOME}/basis-link/program/classes"
+		OOOL="${OOO_HOME}/basis-link/program:${OOO_HOME}/basis-link/program/components:${OOO_HOME}/basis-link/ure-link/lib"
+	;;
+esac
+
 # Set UNO path
 UNO_PATH="${OOO_PROGRAM}"
 export UNO_PATH
