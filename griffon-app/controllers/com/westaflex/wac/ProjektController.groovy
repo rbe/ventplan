@@ -223,6 +223,7 @@ class ProjektController {
 		// TODO mmu Dialog: Daten aus Auslegung, Blanko? Ticket #97.
 		def doc = oooService.performAuslegung(false, getProjektTitel(), model.map)
 		println "projektSeitenansicht: doc=${doc?.dump()}"
+		
 	}
 	
 	/**
