@@ -55,74 +55,90 @@ class OooService {
 	 * 
 	 */
 	def performAngebot = { blanko = false, title = null ->
-		// Which macro to call?
-		def macro = blanko ? "Westa.Main.silentMain" : "Westa.Main.silentMode"
-		// Get connection to OpenOffice
-		def oooConnection = ocm.acquire("group1")
-		if (!oooConnection) throw new IllegalStateException("No connection to OpenOffice")
-		// Process template
-		def file
-		use (com.bensmann.odisee.category.OOoDocumentCategory) {
-			// Create new document from template
-			def doc = westaAuslegungTemplate.open(oooConnection, [Hidden: Boolean.FALSE])
-			// Execute macro
-			/*
-			def aVerteilung
-			map.raum.raume.collect { it ->
-				def k = "${it.raumVerteilebene}${it.raumLuftart}"
-				def v = "${map.raum.raume.inject(0, { o, n -> o + n.raumAnzahlAbluftventile })};${map.raum.raume.inject(0, { o, n -> o + n.raumAbluftmengeJeVentil })}"
-				new NamedValue(k, v)
+		def oooConnection
+		try {
+			// Which macro to call?
+			def macro = blanko ? "Westa.Main.silentMain" : "Westa.Main.silentMode"
+			// Get connection to OpenOffice
+			oooConnection = ocm.acquire("group1")
+			if (!oooConnection) throw new IllegalStateException("No connection to OpenOffice")
+			// Process template
+			def file
+			use (com.bensmann.odisee.category.OOoDocumentCategory) {
+				// Create new document from template
+				def doc = westaAuslegungTemplate.open(oooConnection, [Hidden: Boolean.FALSE])
+				// Execute macro
+				/*
+				def aVerteilung
+				map.raum.raume.collect { it ->
+					def k = "${it.raumVerteilebene}${it.raumLuftart}"
+					def v = "${map.raum.raume.inject(0, { o, n -> o + n.raumAnzahlAbluftventile })};${map.raum.raume.inject(0, { o, n -> o + n.raumAbluftmengeJeVentil })}"
+					new NamedValue(k, v)
+				}
+				*/
+				// Basic Parameter: aRumpf (Basisdaten, Kunde etc.), aVerteilung, aVentile, aUberstroemElemente
+				doc.executeMacro("${macro}?language=Basic&location=application", [])
+				// Save generated document
+				file = java.io.File.createTempFile((title ?: "WAC_Auslegung") as String, ".odt")
+				doc.saveAs(file)
+				// Close it
+				doc.close()
 			}
-			*/
-			// Basic Parameter: aRumpf (Basisdaten, Kunde etc.), aVerteilung, aVentile, aUberstroemElemente
-			doc.executeMacro("${macro}?language=Basic&location=application", [])
-			// Save and close
-			file = java.io.File.createTempFile((title ?: "WAC_Auslegung") as String, ".odt")
-			doc.saveAs(file)
-			doc.close()
+			// Return file reference to generated document
+			file
+		} finally {
+			// Return connection to pool
+			ocm.release(oooConnection)
 		}
-		// Return file reference to generated document
-		file
 	}
 	
 	/**
 	 * 
 	 */
 	def performAuslegung = { blanko = false, title = null, map ->
-		// Get connection to OpenOffice
-		def oooConnection = ocm.acquire("group1")
-		if (!oooConnection) throw new IllegalStateException("No connection to OpenOffice")
-		// Process template
-		def file
-		use (com.bensmann.odisee.category.OOoDocumentCategory) {
-			// Create new document from template
-			def doc = westaAuslegungTemplate.open(oooConnection, [Hidden: Boolean.FALSE])
-			// Daten übergeben
-			println "projektdaten"
-			addProjektdaten(doc, map.kundendaten)
-			println "kundendaten"
-			addKundendaten(doc, map.kundendaten)
-			println "informationen"
-			addInformationen(doc, map)
-			println "raumdaten"
-			addRaumdaten(doc, map)
-			println "rauvolumenströme"
-			addRaumvolumenstrome(doc, map)
-			println "überströmelement"
-			addUberstromelemente(doc, map)
-			println "akustik"
-			addAkustikBerechnung(doc, map)
-			println "dvbkanalnetz"
-			addDvbKanalnetz(doc, map)
-			println "dvbventileinstellung"
-			addDvbVentileinstellung(doc, map)
-			// Save and close
-			file = java.io.File.createTempFile((title ?: "WAC_Auslegung") as String, ".odt")
-			doc.saveAs(file)
-			doc.close()
+		def oooConnection
+		try {
+			// Get connection to OpenOffice
+			oooConnection = ocm.acquire("group1")
+			if (!oooConnection) throw new IllegalStateException("No connection to OpenOffice")
+			// Process template
+			def file
+			use (com.bensmann.odisee.category.OOoDocumentCategory) {
+				// Create new document from template
+				def doc = westaAuslegungTemplate.open(oooConnection, [Hidden: Boolean.FALSE])
+				// Daten übergeben
+				println "projektdaten"
+				addProjektdaten(doc, map.kundendaten)
+				println "kundendaten"
+				addKundendaten(doc, map.kundendaten)
+				println "informationen"
+				addInformationen(doc, map)
+				println "raumdaten"
+				addRaumdaten(doc, map)
+				println "rauvolumenströme"
+				addRaumvolumenstrome(doc, map)
+				println "überströmelement"
+				addUberstromelemente(doc, map)
+				println "akustik"
+				addAkustikBerechnung(doc, map)
+				println "dvbkanalnetz"
+				addDvbKanalnetz(doc, map)
+				println "dvbventileinstellung"
+				addDvbVentileinstellung(doc, map)
+				// Save generated document
+				file = java.io.File.createTempFile((title ?: "WAC_Auslegung") as String, ".odt")
+				doc.saveAs(file)
+				// Close it
+				doc.close()
+			}
+			// Return file reference to generated document
+			file
+		} finally {
+			/* Return connection to pool
+			ocm.release(oooConnection)*/
+			// Shutdown pool without terminating OOo
+			ocm.shutdown(false)
 		}
-		// Return file reference to generated document
-		file
 	}
 	
 	/**
