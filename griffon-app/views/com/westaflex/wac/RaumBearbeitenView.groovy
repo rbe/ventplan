@@ -20,7 +20,7 @@ panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[f
                 // RaumdatenDialog - Details ... , layout: new MigLayout("fillx, wrap 2", "[fill],[fill]")
                 panel(id: "raumBearbeitenDetailsTab", title: "Details", constraints: "grow") {
                     jideScrollPane(constraints: "grow") {
-                        panel(id: "raumVsZuAbluftventileTabellePanel", constraints: "grow", layout: new MigLayout("", "[]")) {
+                        panel(id: "raumVsZuAbluftventileTabellePanel", constraints: "grow", layout: new MigLayout("fill", "[grow,fill]", "[]")) {
                         //panel(constraints: "grow", layout: new MigLayout("fill", "[fill]", "[]")) {
                             panel(id: "raumBearbeiten", border: titledBorder("Raum"), layout: new MigLayout("fillx", "[left]para[right]para[left]para[left]para[left,fill]para[left,fill]para[left]"), constraints: "span") {
                                 label(id: "", text: "Geschoss")
@@ -90,7 +90,7 @@ panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[f
                                 textField(id: "raumBearbeitenDetailsTurspalthohe", text: "10.0", constraints: "width 100px")
                                 button(id: "raumBearbeitenDetailsTurentfernen", text: "Tür entfernen", constraints: "wrap")
 
-                                jideScrollPane(constraints: "height 150px") {
+                                jideScrollPane(constraints: "height 150px, span") {
                                     table(id: "raumBearbeitenTurenTabelle", model: model.createRaumTurenTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
                                     }
                                 }
