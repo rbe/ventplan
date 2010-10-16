@@ -21,7 +21,7 @@ import javax.swing.DefaultComboBoxModel
  */
 class ProjektModel {
 	
-	public static boolean DEBUG = false
+	public static boolean DEBUG = true
 	
 	/**
 	 * The MVC id.
@@ -551,16 +551,16 @@ class ProjektModel {
             if (DEBUG) println "addRaum: isCopy -> ${isCopy}"
             if (isCopy || isCopy == "true") {
                 map.raum.raume.add(raum)
-                tableModels.raumeTuren.add(raum.turen)
+                if (DEBUG) println "addRaum: copy -> map: ${map.raum.raume}"
             } else {
                 def r = (raumMapTemplate + raum) as ObservableMap
                 if (DEBUG) println "addRaum: adding raum=${r?.dump()}"
                 // Raum in der Map hinzufügen
                 map.raum.raume << r
                 // Turen hinzufügen
-                tableModels.raumeTuren <<
-                    new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList
             }
+            tableModels.raumeTuren <<
+                new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList
 			// Sync table models
 			resyncRaumTableModels()
 			// Raumdaten - Geschoss
@@ -624,14 +624,18 @@ class ProjektModel {
 			tableModels.raume.clear()
 			tableModels.raume.addAll(map.raum.raume)
 			// Türen
+            if (DEBUG) println "tableModels.raume -> ${tableModels.raume}"
+            if (DEBUG) println "tableModels.raumeTuren -> BEFORE -> ${tableModels.raumeTuren}"
 			tableModels.raume.each {
-				def m = tableModels.raumeTuren[it.position]
+                def m = tableModels.raumeTuren[it.position]
 				// TODO NullPointer when loading data
 				try {
-					m.clear()
+                    m.clear()
 					m.addAll(it.turen)
+                    if (DEBUG) println "tableModels.raume.each -> raumeTuren: ${m}"
 				} catch (e) {}
 			}
+            if (DEBUG) println "tableModels.raumeTuren -> AFTER -> ${tableModels.raumeTuren}"
 			// Raumvolumentströme - Zu-/Abluftventile
 			tableModels.raumeVsZuAbluftventile.clear()
 			tableModels.raumeVsZuAbluftventile.addAll(map.raum.raume)
