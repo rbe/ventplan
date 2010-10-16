@@ -83,6 +83,16 @@ class Wac2Controller {
 	}
 	
 	/**
+	 * Shutdown application and all resources.
+	 */
+	def _shutdown() {
+		// Shutdown OpenOffice
+		oooService.shutdown()
+		// Shutdown application
+		app.shutdown()
+	}
+	
+	/**
 	 * Schliessen? Alle Projekte fragen, ob ungesicherte Daten existieren.
 	 */
 	boolean canClose() {
@@ -101,8 +111,7 @@ class Wac2Controller {
 		def canClose = canClose()
 		if (DEBUG) println "exitApplication: ${canClose}"
 		if (canClose) {
-			oooService.shutdown()
-			app.shutdown()
+			_shutdown()
 		} else {
 			if (DEBUG) println "exitApplication: there are unsaved changes"
 			// Show dialog: ask user for save all, cancel, quit
@@ -112,8 +121,7 @@ class Wac2Controller {
 				case 0:
 					if (DEBUG) println "Alles speichern"
 					// TODO rbe Projekte speichern aufrufen
-					oooService.shutdown()
-					app.shutdown()
+					_shutdown()
 					break
 				case 1: // Cancel: do nothing...
 					if (DEBUG) println "Abbrechen..."
@@ -121,8 +129,7 @@ class Wac2Controller {
 					break
 				case 2:
 					if (DEBUG) println "Schliessen"
-					oooService.shutdown()
-					app.shutdown()
+					_shutdown()
 					break
 			}
 		}
