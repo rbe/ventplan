@@ -87,7 +87,7 @@ class Wac2Controller {
 	 */
 	def _shutdown() {
 		// Shutdown OpenOffice
-		oooService.shutdown()
+		oooService.shutdownOCM()
 		// Shutdown application
 		app.shutdown()
 	}
