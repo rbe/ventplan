@@ -42,7 +42,7 @@ projektSpeichernAction = action(
 projektSpeichernAlsAction = action(
 		id: "aktivesProjektSpeichernAlsAction",
 		name: "Projekt speichern als...",
-		mnemonic: "A",
+		mnemonic: "L",
 		accelerator: shortcut("shift S"),
 		smallIcon: imageIcon("/menu/projektspeichern.png"),
 		enabled: bind { model.aktivesProjektGeandert },
@@ -61,6 +61,8 @@ projektSchliessenAction = action(
 projektSeitenansichtAction = action(
 		id: "seitenansichtAction",
 		name: "Seitenansicht",
+		mnemonic: "A",
+		accelerator: shortcut("A"),
 		smallIcon: imageIcon("/menu/seitenansicht.png"),
 		enabled: bind { model.aktivesProjekt != null },
 		closure: controller.projektSeitenansicht
