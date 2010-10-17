@@ -1,3 +1,4 @@
+@echo off
 rem
 rem /Users/rbe/project/wac2/wac.bat
 rem 
@@ -8,8 +9,12 @@ rem
 rem Created by: rbe
 rem
 
-rem Progam Files, Program Files (x86)??
-set OOO_HOME=C:\Program Files (x86)\OpenOffice.org 3
+rem Java 6
+set JAVA_HOME=Windows\jre6
+set PATH=%JAVA_HOME%\bin;%PATH%
+
+rem Use OpenOffice Portable -- batteries included.
+set OOO_HOME=Windows\OpenOfficePortable\App\openoffice
 set OOO_PROGRAM=%OOO_HOME%\program
 
 rem Java Classpath
@@ -22,9 +27,8 @@ set UNO_PATH=%OOO_PROGRAM%
 
 rem Copy juh.jar into program folder
 rem http://user.services.openoffice.org/en/forum/viewtopic.php?f=44&t=10825
-copy "%OOOJ%\juh.jar" "%OOO_PROGRAM%"
+copy "%OOOJ%\juh.jar" "%OOO_PROGRAM%" > nul
 
 rem Start
-set CLASSPATH=lib;%OOO_PROGRAM%\juh.jar;%OOOJ%\jurt.jar;%OOOJ%\ridl.jar;%OOOU%\unoil.jar
-cd lib
-java -cp "%CLASSPATH%" -Djava.library.path="%OOOL%" -jar wac2.jar
+set CLASSPATH=%OOO_PROGRAM%\juh.jar;%OOOJ%\jurt.jar;%OOOJ%\ridl.jar;%OOOU%\unoil.jar
+java -cp "%CLASSPATH%" -Djava.library.path="%OOOL%" -jar lib\wac2.jar

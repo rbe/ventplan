@@ -1,0 +1,57 @@
+#!/bin/bash
+# 
+# /Users/rbe/project/wac2/makeusbstick
+# 
+# Copyright (C) 2010 Informationssysteme Ralf Bensmann.
+# Alle Rechte vorbehalten. Nutzungslizenz siehe http://www.bensmann.com/license_de.html
+# All Rights Reserved. Use is subject to license terms, see http://www.bensmann.com/license_en.html
+# 
+# Created by: rbe
+# 
+
+# Base
+b=usbstick/wac2
+
+# Make directories
+mkdir -p ${b}/Darwin ${b}/Linux ${b}/Windows 2>/dev/null
+for dir in lib sql
+do
+	mkdir -p ${b}/${dir}
+done
+
+# JRE
+for dir in Linux Windows
+do
+	[ ! -d ${b}/${dir}/jre6 ] && mkdir -p ${b}/${dir}/jre6 2>/dev/null
+done
+
+# OOo
+ooo=${b}/Windows/OpenOfficePortable
+[ ! -d ${ooo} ] && mkdir -p ${ooo} 2>/dev/null
+
+# Copy Odisee jar into lib folder
+if [ -d ../odisee ]; then
+	echo "Building Odisee..."
+	pushd ../odisee 2>/dev/null 1>&2
+	bin/gbuild jar
+	popd 2>/dev/null 1>&2
+	cp ../odisee/dist/odisee.jar lib 2>/dev/null 1>&2
+fi
+
+# Build and copy jar
+echo "Cleaning up..."
+griffon clean
+echo "Packaging application..."
+griffon package
+
+# Copy jar into lib folder
+cp dist/jar/wac2.jar ${b}/lib 2>/dev/null 1>&2
+
+# Copy start scripts
+cp bin/* ${b}
+
+# Copy SQL data
+rm -rf ${b}/sql/*
+cp -R sql/* ${b}/sql
+
+exit 0

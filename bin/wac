@@ -9,44 +9,39 @@
 # Created by: rbe
 #
 
-#JAVA_HOME=
-#export JAVA_HOME
-#PATH=$JAVA_HOME/bin:$PATH
-#export PATH
-
 # Operating system
 OS=$(uname -s)
 
 # Installation directory
 case "${OS}" in
 	Darwin)
+		# Make an educated guess
 		OOO_HOME=${OOO_HOME:-/Applications/OpenOffice.org.app/Contents}
 		# MacOS X: Don't use program link
 		# http://www.openoffice.org/issues/show_bug.cgi?id=101203
 		OOO_PROGRAM=${OOO_HOME}/MacOS
 	;;
-	SunOS)
-		OOO_HOME=${OOO_HOME:-/opt/openoffice.org3}
-		OOO_PROGRAM=${OOO_HOME}/program
-	;;
 	Linux)
-		OOO_HOME=${OOO_HOME:-/usr/lib/openoffice}
+		# Where is OpenOffice?
+		OOO_HOME=
+		for dir in /usr/lib /opt
+		do
+			[ -d ${dir}/openoffice ] && OOO_HOME=${dir}; break
+			[ -d ${dir}/openoffice.org3 ] && OOO_HOME=${dir}; break
+		done
 		OOO_PROGRAM=${OOO_HOME}/program
-	;;
-	*BSD)
-		OOO_HOME=${OOO_HOME:-/opt/openoffice.org3}
-		OOO_PROGRAM=${OOO_HOME}/program
+		# Set JAVA_HOME
+		JAVA_HOME=${OS}/jre6
+		export JAVA_HOME
+		PATH=${JAVA_HOME}/bin:${PATH}
+		export PATH
 	;;
 esac
 
 # Libraries
-case "${OS}" in
-	Darwin | SunOS | Linux | *BSD)
-		OOOJ="${OOO_HOME}/basis-link/ure-link/share/java"
-		OOOU="${OOO_HOME}/basis-link/program/classes"
-		OOOL="${OOO_HOME}/basis-link/program:${OOO_HOME}/basis-link/program/components:${OOO_HOME}/basis-link/ure-link/lib"
-	;;
-esac
+OOOJ="${OOO_HOME}/basis-link/ure-link/share/java"
+OOOU="${OOO_HOME}/basis-link/program/classes"
+OOOL="${OOO_HOME}/basis-link/program:${OOO_HOME}/basis-link/program/components:${OOO_HOME}/basis-link/ure-link/lib"
 
 # Set UNO path
 UNO_PATH="${OOO_PROGRAM}"
@@ -59,9 +54,9 @@ if [ ! -f ${OOO_PROGRAM}/juh.jar ]; then
 fi
 
 # Start
-CLASSPATH="${CLASSPATH}${OOO_PROGRAM}/juh.jar:${OOOJ}/jurt.jar:${OOOJ}/ridl.jar:${OOOU}/unoil.jar"
+# ${CLASSPATH}???
+CLASSPATH="${OOO_PROGRAM}/juh.jar:${OOOJ}/jurt.jar:${OOOJ}/ridl.jar:${OOOU}/unoil.jar"
 export CLASSPATH
-cd dist
-java -cp "${CLASSPATH}" -Djava.library.path="${OOOL}" -d32 -jar wac2.jar
+java -cp "${CLASSPATH}" -Djava.library.path="${OOOL}" -d32 -jar lib/wac2.jar
 
 exit 0
