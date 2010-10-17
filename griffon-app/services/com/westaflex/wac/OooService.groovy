@@ -19,16 +19,12 @@ class OooService {
 	/**
 	 * OpenOffice connection manager.
 	 */
-	private def ocm =
-		new com.bensmann.odisee.server.OOoConnectionManager(
-			oooOptions: ["-nologo", "-nofirststartwizard", "-nodefault", "-nocrashreport", "-norestart", "-norestore", "-nolockcheck"],
-			group1: ["pipe1"]
-		)
+	private def ocm
 	
 	/**
 	 * OpenOffice template.
 	 */
-	def westaAuslegungTemplate
+	private def westaAuslegungTemplate
 	
 	/**
 	 * Constructor.
@@ -45,9 +41,24 @@ class OooService {
 	}
 	
 	/**
+	 * Setup OOo connection manager.
+	 */
+	def setupOCM = {
+		if (!ocm) ocm = new com.bensmann.odisee.server.OOoConnectionManager(
+				oooOptions: [
+						"-headless", "-nologo",
+						"-nofirststartwizard", "-nodefault",
+						"-nocrashreport", "-norestart", "-norestore",
+						"-nolockcheck"
+					],
+				group1: ["wac2-${new java.util.Date().format("yyyyMMddHHmmss")}"]
+			)
+	}
+	
+	/**
 	 * Shutdown OOo connection manager.
 	 */
-	def shutdown = {
+	def shutdownOCM = {
 		ocm.shutdown(true)
 	}
 	
@@ -55,8 +66,11 @@ class OooService {
 	 * 
 	 */
 	def performAngebot = { blanko = false, title = null ->
-		def oooConnection
 		try {
+			// Setup OCM
+			setupOCM()
+			// Get connection to OpenOffice
+			def oooConnection = ocm.acquire("group1")
 			// Which macro to call?
 			def macro = blanko ? "Westa.Main.silentMain" : "Westa.Main.silentMode"
 			// Get connection to OpenOffice
@@ -87,8 +101,8 @@ class OooService {
 			// Return file reference to generated document
 			file
 		} finally {
-			// Return connection to pool
-			ocm.release(oooConnection)
+			// Shutdown
+			shutdownOCM()
 		}
 	}
 	
@@ -96,16 +110,17 @@ class OooService {
 	 * 
 	 */
 	def performAuslegung = { blanko = false, title = null, map ->
-		def oooConnection
 		try {
+			// Setup OCM
+			setupOCM()
 			// Get connection to OpenOffice
-			oooConnection = ocm.acquire("group1")
+			def oooConnection = ocm.acquire("group1")
 			if (!oooConnection) throw new IllegalStateException("No connection to OpenOffice")
 			// Process template
 			def file
 			use (com.bensmann.odisee.category.OOoDocumentCategory) {
 				// Create new document from template
-				def doc = westaAuslegungTemplate.open(oooConnection, [Hidden: Boolean.FALSE])
+				def doc = westaAuslegungTemplate.open(oooConnection, [Hidden: Boolean.TRUE])
 				// Daten übergeben
 				println "projektdaten"
 				addProjektdaten(doc, map.kundendaten)
@@ -134,10 +149,8 @@ class OooService {
 			// Return file reference to generated document
 			file
 		} finally {
-			/* Return connection to pool
-			ocm.release(oooConnection)*/
-			// Shutdown pool without terminating OOo
-			ocm.shutdown(false)
+			// Shutdown
+			shutdownOCM()
 		}
 	}
 	

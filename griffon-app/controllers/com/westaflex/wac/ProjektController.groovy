@@ -219,11 +219,32 @@ class ProjektController {
 	 * Button "Seitenansicht".
 	 */
 	def seitenansicht = {
-		println model.map
-		// TODO mmu Dialog: Daten aus Auslegung, Blanko? Ticket #97.
-		def doc = oooService.performAuslegung(false, getProjektTitel(), model.map)
-		println "projektSeitenansicht: doc=${doc?.dump()}"
-		
+		doOutside {
+			println model.map
+			// TODO mmu Dialog: Daten aus Auslegung, Blanko? Ticket #97.
+			def doc = oooService.performAuslegung(false, getProjektTitel(), model.map)
+			println "projektSeitenansicht: doc=${doc?.dump()}"
+			// Open document
+			switch (System.getProperty("os.name")) {
+				case { it ==~ /Windows.*/ }:
+					def program = new java.io.File(System.getenv("OOO_HOME"), "program")
+					/*
+					java.lang.ProcessBuilder pb =
+						new java.lang.ProcessBuilder("soffice.exe" ,"-writer", "-o \"${doc.absolutePath}\"")
+					pb.directory(new java.io.File(System.getenv("OOO_HOME"), "program"))
+					def p = pb.start()
+					p.waitFor()
+					println "${pb.command()} = ${p.exitValue()}"
+					*/
+					def cmd = ["${program.absolutePath.replace('\\', '/')}/soffice.exe", "-nologo", "-writer", "-o \"${doc.absolutePath}\""]
+					def p = cmd.execute(null, program)
+					p.waitFor()
+					println "${cmd} = ${p.exitValue()}"
+					break
+				default:
+					java.awt.Desktop.desktop.open(doc)
+			}
+		}
 	}
 	
 	/**
