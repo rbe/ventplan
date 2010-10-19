@@ -150,7 +150,11 @@ class OooService {
 			file
 		} finally {
 			// Shutdown
-			shutdownOCM()
+			try {
+				shutdownOCM()
+			} catch (e) {
+				e.printStackTrace()
+			}
 		}
 	}
 	
