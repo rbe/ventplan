@@ -220,6 +220,7 @@ class ProjektController {
 	 */
 	def seitenansicht = {
 		doOutside {
+			// TODO Show informational dialog
 			println model.map
 			// TODO mmu Dialog: Daten aus Auslegung, Blanko? Ticket #97.
 			def doc = oooService.performAuslegung(false, getProjektTitel(), model.map)
@@ -244,6 +245,7 @@ class ProjektController {
 				default:
 					java.awt.Desktop.desktop.open(doc)
 			}
+			// TODO Close informational dialog
 		}
 	}
 	
