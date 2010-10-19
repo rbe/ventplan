@@ -17,7 +17,7 @@ import com.bensmann.griffon.GriffonHelper as GH
 @griffon.util.EventPublisher
 class RaumEvents {
 	
-	public static boolean DEBUG = false
+	public static boolean DEBUG = true
 	
 	def model
 	def wacCalculationService
@@ -35,6 +35,7 @@ class RaumEvents {
 	 */
 	def onRaumHinzufugen = { raum, view ->
 		if (DEBUG) println "processing event 'RaumHinzufugen': raum=${raum.dump()}"
+        if (DEBUG) println "processing event 'RaumHinzufugen': raum.turen=${raum.turen}"
 		// Standard-Werte setzen
 		raum.with {
 			// Übernehme Wert für Bezeichnung vom Typ?
@@ -55,6 +56,7 @@ class RaumEvents {
 		}
 		doLater {
 			// Raum im Model hinzufügen
+            if (DEBUG) println "onRaumHinzufugen: raum -> ${raum}"
 			model.addRaum(raum, view)
 			onRaumHinzugefugt(raum.position, view)
 		}
@@ -77,6 +79,7 @@ class RaumEvents {
 	 * Ein Raum wurde geändert - berechne alles, was von Räumen abhängt.
 	 */
 	def onRaumGeandert = { raumIndex ->
+        println "onRaumGeandert: raum -> ${model.map.raum.raume}"
 		doLater {
 			if (DEBUG) println "processing event 'RaumGeandert': raumIndex=${raumIndex}"
 			// Gebäude-Geometrie berechnen
