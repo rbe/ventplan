@@ -62,6 +62,7 @@ class ProjektModel {
 			raumVerteilebene: "",
 			raumAnzahlUberstromVentile: 0,
 			raumUberstromElement: "",
+			raumUberstromVolumenstrom: "",
 			raumNummer: "",
 			turen: [
 					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
