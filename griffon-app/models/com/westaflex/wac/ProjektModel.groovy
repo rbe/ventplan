@@ -571,7 +571,8 @@ class ProjektModel {
                 if (DEBUG) println "addRaum: adding raum=${r?.dump()}"
                 if (DEBUG) println "addRaum: raumMapTemplate=${raumMapTemplate.turen}"
                 // turen überschreiben!
-                r.turen = raumMapTemplate.turen
+                // TODO rbe: ebenfalls auskommentiert
+                //r.turen = raumMapTemplate.turen
                 if (DEBUG) println "addRaum: adding raum after editing r.turen=${r?.dump()}"
                 // Raum in der Map hinzufügen
                 map.raum.raume << r
