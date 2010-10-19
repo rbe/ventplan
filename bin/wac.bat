@@ -31,4 +31,4 @@ copy "%OOOJ%\juh.jar" "%OOO_PROGRAM%" > nul
 
 rem Start
 set CLASSPATH=%OOO_PROGRAM%\juh.jar;%OOOJ%\jurt.jar;%OOOJ%\ridl.jar;%OOOU%\unoil.jar
-java -cp "%CLASSPATH%" -Djava.library.path="%OOOL%" -jar lib\wac2.jar
+java -cp "%CLASSPATH%" -Djava.library.path="%OOOL%" -jar lib\wac2.jar >wac2.log

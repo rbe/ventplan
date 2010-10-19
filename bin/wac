@@ -57,6 +57,6 @@ fi
 # ${CLASSPATH}???
 CLASSPATH="${OOO_PROGRAM}/juh.jar:${OOOJ}/jurt.jar:${OOOJ}/ridl.jar:${OOOU}/unoil.jar"
 export CLASSPATH
-java -cp "${CLASSPATH}" -Djava.library.path="${OOOL}" -d32 -jar lib/wac2.jar
+java -cp "${CLASSPATH}" -Djava.library.path="${OOOL}" -d32 -jar lib/wac2.jar 2>wac2.log 1>&2
 
 exit 0
