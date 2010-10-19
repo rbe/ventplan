@@ -16,7 +16,7 @@ mvcGroups {
 		actions="Wac2Actions"
 		view="Wac2View"
 	}
-    Dialog {
-        controller="com.westaflex.wac.DialogController"
-    }
+	Dialog {
+		controller="com.westaflex.wac.DialogController"
+	}
 }

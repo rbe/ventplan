@@ -59,7 +59,12 @@ class OooService {
 	 * Shutdown OOo connection manager.
 	 */
 	def shutdownOCM = {
-		ocm.shutdown(true)
+		try {
+			ocm.shutdown(true)
+		} catch (e) {
+			println "OCM shutdown: ${e}"
+			ocm = null
+		}
 	}
 	
 	/**
@@ -110,6 +115,7 @@ class OooService {
 	 * 
 	 */
 	def performAuslegung = { blanko = false, title = null, map ->
+		def doc
 		try {
 			// Setup OCM
 			setupOCM()
@@ -120,7 +126,7 @@ class OooService {
 			def file
 			use (com.bensmann.odisee.category.OOoDocumentCategory) {
 				// Create new document from template
-				def doc = westaAuslegungTemplate.open(oooConnection, [Hidden: Boolean.TRUE])
+				doc = westaAuslegungTemplate.open(oooConnection, [Hidden: Boolean.TRUE])
 				// Daten übergeben
 				println "projektdaten"
 				addProjektdaten(doc, map.kundendaten)
@@ -141,16 +147,26 @@ class OooService {
 				println "dvbventileinstellung"
 				addDvbVentileinstellung(doc, map)
 				// Save generated document
-				file = java.io.File.createTempFile((title ?: "WAC_Auslegung") as String, ".odt")
+				file = new java.io.File(System.getProperty("user.home") + "/Desktop", "${(title ?: "WAC_Auslegung")}.odt" as String)
+				println "saveAs ${file}"
 				doc.saveAs(file)
-				// Close it
-				doc.close()
 			}
 			// Return file reference to generated document
 			file
 		} finally {
+			// Close document
+			try {
+				println "close"
+				use (com.bensmann.odisee.category.OOoDocumentCategory) { doc?.close() }
+			} catch (e) {
+				e.printStackTrace()
+			}
 			// Shutdown
-			shutdownOCM()
+			try {
+				shutdownOCM()
+			} catch (e) {
+				e.printStackTrace()
+			}
 		}
 	}
 	
@@ -258,6 +274,17 @@ class OooService {
 	def addRaumdaten = { doc, map ->
 		// Tabelle
 		use (com.bensmann.odisee.category.OOoTextTableCategory) {
+			def m = [:]
+			map.raum.raume.eachWithIndex { r, i ->
+				m << [
+					"B${i + 3}": r.raumBezeichnung,
+					"C${i + 3}": r.raumGeschoss,
+					"D${i + 3}": r.raumLuftart,
+					"E${i + 3}": GH.toString2Converter(r.raumFlache),
+					"F${i + 3}": GH.toString2Converter(r.raumHohe)
+				]
+			}
+			doc["wfTabelleTable"] = m
 		}
 		// Felder
 		use (com.bensmann.odisee.category.OOoFieldCategory) {
@@ -279,6 +306,38 @@ class OooService {
 	def addRaumvolumenstrome = { doc, map ->
 		// Tabelle
 		use (com.bensmann.odisee.category.OOoTextTableCategory) {
+			def m = [:]
+			map.raum.raume.eachWithIndex { r, i ->
+				// raumZuluft- oder raumAbluftvolumenstrom
+				// ZU/AB: größeren Wert nehmen
+				def vs
+				switch (r.raumLuftart) {
+					case "ZU":
+						vs = r.raumZuluftVolumenstrom
+						break
+					case "AB":
+						vs = r.raumAbluftVolumenstrom
+						break
+					case "ZU/AB":
+						vs = java.lang.Math.max(r.raumZuluftVolumenstrom, r.raumAbluftVolumenstrom)
+						break
+				}
+				m << [
+					"B${i + 3}": r.raumBezeichnung,
+					"C${i + 3}": GH.toString2Converter(r.raumVolumen),
+					"D${i + 3}": r.raumLuftart,
+					"E${i + 3}": GH.toString2Converter(vs),
+					"F${i + 3}": GH.toString2Converter(r.raumLuftwechsel),
+					"G${i + 3}": r.raumAnzahlZuluftventile,
+					"H${i + 3}": GH.toString2Converter(r.raumZuluftmengeJeVentil),
+					"I${i + 3}": r.raumBezeichnungZuluftventil,
+					"J${i + 3}": r.raumAnzahlAbluftventile,
+					"K${i + 3}": GH.toString2Converter(r.raumAbluftmengeJeVentil),
+					"L${i + 3}": r.raumBezeichnungAbluftventil,
+					"M${i + 3}": r.raumVerteilebene,
+				]
+			}
+			doc["lmeTabelleTable"] = m
 		}
 		// Felder
 		use (com.bensmann.odisee.category.OOoFieldCategory) {
@@ -295,15 +354,41 @@ class OooService {
 	def addUberstromelemente = { doc, map ->
 		// Tabelle
 		use (com.bensmann.odisee.category.OOoTextTableCategory) {
+			def m = [:]
+			map.raum.raume.eachWithIndex { r, i ->
+				// raumZuluft- oder raumAbluftvolumenstrom
+				// ZU/AB: größeren Wert nehmen
+				def vs
+				switch (r.raumLuftart) {
+					case "ZU":
+						vs = r.raumZuluftVolumenstrom
+						break
+					case "AB":
+						vs = r.raumAbluftVolumenstrom
+						break
+					case "ZU/AB":
+						vs = java.lang.Math.max(r.raumZuluftVolumenstrom, r.raumAbluftVolumenstrom)
+						break
+				}
+				m << [
+					"B${i + 3}": r.raumBezeichnung,
+					"C${i + 3}": GH.toString2Converter(r.raumVolumen),
+					"D${i + 3}": r.raumLuftart,
+					"E${i + 3}": GH.toString2Converter(r.raumUberstromVolumenstrom),
+					"F${i + 3}": r.raumAnzahlUberstromVentile,
+					"G${i + 3}": r.raumUberstromElement,
+				]
+			}
+			doc["lmeTabelleUeberstroemTable"] = m
 		}
 		// Felder
 		use (com.bensmann.odisee.category.OOoFieldCategory) {
 			// Einstellungen am Lüftungsgerät und an der Fernbedienung
 			doc["lmeZentralgeraetCombobox"]     = map.anlage.zentralgerat
-			doc["lmeFeuchteschutzWertLabel"]    = GH.toString2Round5Converter(map.aussenluftVs.raumVsAussenluftVsDerLtmFs)
-			doc["lmeMindestluftungWertLabel"]   = GH.toString2Round5Converter(map.aussenluftVs.raumVsAussenluftVsDerLtmRl)
-			doc["lmeGrundlueftungWertLabel"]    = GH.toString2Round5Converter(map.aussenluftVs.raumVsAussenluftVsDerLtmNl)
-			doc["lmeIntensivlueftungWertLabel"] = GH.toString2Round5Converter(map.aussenluftVs.raumVsAussenluftVsDerLtmIl)
+			doc["lmeFeuchteschutzWertLabel"]    = GH.toString2Round5Converter(map.aussenluftVs.gesamtLvsLtmLvsFs)
+			doc["lmeMindestluftungWertLabel"]   = GH.toString2Round5Converter(map.aussenluftVs.gesamtLvsLtmLvsRl)
+			doc["lmeGrundlueftungWertLabel"]    = GH.toString2Round5Converter(map.aussenluftVs.gesamtLvsLtmLvsNl)
+			doc["lmeIntensivlueftungWertLabel"] = GH.toString2Round5Converter(map.aussenluftVs.gesamtLvsLtmLvsIl)
 		}
 	}
 	
@@ -313,6 +398,51 @@ class OooService {
 	def addAkustikBerechnung = { doc, map ->
 		// Tabelle
 		use (com.bensmann.odisee.category.OOoTextTableCategory) {
+			// Zuluft
+			/* abZuTabelleTable:
+			A1, B1.1.1, B1.1.2, B1.2.2, B1.3.2, B1.4.2, B1.5.2, B1.6.2, C1
+			A2, B2, C2, D2, E2, F2, G2, H2
+			A3, B3, C3, D3, E3, F3, G3, H3
+			A4, B4, C4, D4, E4, F4, G4, H4
+			A5, B5, C5, D5, E5, F5, G5, H5
+			A6, B6, C6, D6, E6, F6, G6, H6
+			A7, B7, C7, D7, E7, F7, G7, H7
+			A8, B8, C8, D8, E8, F8, G8, H8
+			A9, B9, C9, D9, E9, F9, G9, H9
+			A10, B10, C10, D10, E10, F10, G10, H10
+			A11, B11, C11, D11, E11, F11, G11, H11
+			A12, B12, C12, D12, E12, F12, G12, H12
+			A13, B13, C13, D13, E13, F13, G13, H13
+			A14, B14, C14, D14, E14, F14, G14, H14
+			A15, B15, C15
+			*/
+			println map.akustik.zuluft
+			def mZuluft = [:]
+			map.akustik.zuluft.tabelle.eachWithIndex { ak, i ->
+				mZuluft << [
+					"B${i + 2}": GH.toString2Converter(ak.slp125),
+					"C${i + 2}": GH.toString2Converter(ak.slp250),
+					"D${i + 2}": GH.toString2Converter(ak.slp500),
+					"E${i + 2}": GH.toString2Converter(ak.slp1000),
+					"F${i + 2}": GH.toString2Converter(ak.slp2000),
+					"G${i + 2}": GH.toString2Converter(ak.slp4000)
+				]
+			}
+			doc['abZuTabelleTable'] = mZuluft
+			// Abluft
+			println map.akustik.abluft
+			def mAbluft = [:]
+			map.akustik.abluft.tabelle.eachWithIndex { ak, i ->
+				mZuluft << [
+					"B${i + 2}": GH.toString2Converter(ak.slp125),
+					"C${i + 2}": GH.toString2Converter(ak.slp250),
+					"D${i + 2}": GH.toString2Converter(ak.slp500),
+					"E${i + 2}": GH.toString2Converter(ak.slp1000),
+					"F${i + 2}": GH.toString2Converter(ak.slp2000),
+					"G${i + 2}": GH.toString2Converter(ak.slp4000)
+				]
+			}
+			doc['abAbTabelleTable'] = mAbluft
 		}
 		// Felder
 		use (com.bensmann.odisee.category.OOoFieldCategory) {
@@ -324,12 +454,13 @@ class OooService {
 			doc["abZuFilterverschmutzungComboBox"]                = map.akustik.zuluft.slpErhohungFilter as String
 			doc["abZuHauptschalldaempfer1ComboBox"]               = map.akustik.zuluft.hauptschalldampfer1
 			doc["abZuHauptschalldaempfer2ComboBox"]               = map.akustik.zuluft.hauptschalldampfer2
-			doc["abZuAnzahlUmlenkungenTextField"]                 = GH.toString2Converter(map.akustik.zuluft.anzahlUmlenkungen)
+			doc["abZuAnzahlUmlenkungenTextField"]                 = map.akustik.zuluft.anzahlUmlenkungen
 			doc["abZuLuftverteilerkastenTextField"]               = map.akustik.zuluft.luftverteilerkasten
 			doc["abZuLaengsdaempfungKanalComboBox"]               = map.akustik.zuluft.langsdampfungKanal
-			doc["abZuLaengsdaempfungKanalTextField"]              = GH.toString2Converter(map.akustik.zuluft.langsdampfungKanalLfdmMeter)
+			doc["abZuLaengsdaempfungKanalTextField"]              = map.akustik.zuluft.langsdampfungKanalLfdmMeter
 			doc["abZuSchalldaempferVentilComboBox"]               = map.akustik.zuluft.schalldampferVentil
 			doc["abZuEinfuegungswertLuftdurchlassComboBox"]       = map.akustik.zuluft.einfugungsdammwert
+			doc["abZuRaumabsorptionTextField"]                    = map.akustik.zuluft.raumabsorption
 			doc["abZuTabelleDezibelWertLabel"]                    = GH.toString2Converter(map.akustik.zuluft.dbA)
 			doc["abZuTabelleMittlererSchalddruckpegelWertLabel"]  = GH.toString2Converter(map.akustik.zuluft.mittlererSchalldruckpegel)
 			// Abluft
@@ -343,10 +474,11 @@ class OooService {
 			doc["abAbAnzahlUmlenkungenTextField"]                 = map.akustik.abluft.anzahlUmlenkungen as String
 			doc["abAbLuftverteilerkastenTextField"]               = map.akustik.abluft.luftverteilerkasten
 			doc["abAbLaengsdaempfungKanalComboBox"]               = map.akustik.abluft.langsdampfungKanal
-			doc["abAbLaengsdaempfungKanalTextField"]              = GH.toString2Converter(map.akustik.abluft.langsdampfungKanalLfdmMeter)
+			doc["abAbLaengsdaempfungKanalTextField"]              = map.akustik.abluft.langsdampfungKanalLfdmMeter
 			doc["abAbSchalldaempferVentilComboBox"]               = map.akustik.abluft.schalldampferVentil
-			doc["abAbEinfuegungswertLuftdurchlassComboBox"]       = GH.toString2Converter(map.akustik.abluft.einfugungsdammwert)
-			doc["abAbTabelleDezibelWertLabel"]                    = map.akustik.abluft.dbA
+			doc["abAbEinfuegungswertLuftdurchlassComboBox"]       = map.akustik.abluft.einfugungsdammwert
+			doc["abAbRaumabsorptionTextField"]                    = map.akustik.abluft.raumabsorption
+			doc["abAbTabelleDezibelWertLabel"]                    = GH.toString2Converter(map.akustik.abluft.dbA)
 			doc["abAbTabelleMittlererSchalddruckpegelWertLabel"]  = GH.toString2Converter(map.akustik.abluft.mittlererSchalldruckpegel)
 		}
 	}

@@ -1,0 +1,142 @@
+#!/bin/bash
+# 
+# /Users/rbe/project/wac2/makeusbstick
+# 
+# Copyright (C) 2010 Informationssysteme Ralf Bensmann.
+# Alle Rechte vorbehalten. Nutzungslizenz siehe http://www.bensmann.com/license_de.html
+# All Rights Reserved. Use is subject to license terms, see http://www.bensmann.com/license_en.html
+# 
+# Created by: rbe
+# 
+
+# Base
+USBSTICK=usbstick/wac2
+
+#
+# Parse application version
+#
+_parse_version() {
+	echo "$(grep app.version application.properties | awk -F= '{print $2}' | sed 's#\.# #g')"
+}
+
+#
+# Increase application version
+#
+_inc_version() {
+	version=($(_parse_version))
+	maj=${version[0]}
+	min=${version[1]}
+	pat=${version[2]}
+	for i in $*
+	do
+		eval "$i=$((i + 1))"
+	done
+	t=tmp.$$
+	# Search and replace
+	cat application.properties | sed "s#app.version.*#app.version=$maj.$min.$pat#g" > ${t}
+	mv ${t} application.properties
+	# Cleanup
+	rm ${t}
+	# Set version in conf/version
+	_conf_ver
+}
+
+#
+# Set version in conf/version
+#
+_conf_ver() {
+	# Write version into conf/version
+	cat application.properties | grep app.version | awk -F= '{print $2}' > ${USBSTICK}/conf/version
+}
+
+#
+# Build Odisee
+#
+_build_odisee() {
+	if [ -d ../odisee ]; then
+		echo "Building Odisee... see usbstick.log"
+		pushd ../odisee 2>/dev/null 1>&2
+		bin/gbuild jar 2>>usbstick.log 1>&2
+		popd 2>/dev/null 1>&2
+		# Copy Odisee jar into lib folder
+		cp ../odisee/dist/odisee.jar lib 2>/dev/null 1>&2
+	fi
+}
+
+#
+# 
+#
+_build_wac() {
+	echo "Building WAC..."
+	griffon clean 2>/dev/null 1>&2
+	echo "Packaging WAC... see usbstick.log"
+	griffon package 2>>usbstick.log 1>&2
+}
+
+#
+# Make directories for USB stick
+#
+_usbstick_make_dirs() {
+	mkdir -p ${USBSTICK}/Darwin ${USBSTICK}/Linux ${USBSTICK}/Windows 2>/dev/null
+	for dir in conf lib sql
+	do
+		mkdir -p ${USBSTICK}/${dir}
+	done
+	for dir in Linux Windows
+	do
+		[ ! -d ${USBSTICK}/${dir}/jre6 ] && mkdir -p ${USBSTICK}/${dir}/jre6 2>/dev/null
+	done
+	# Windows: OOo Portable
+	ooo=${USBSTICK}/Windows/OpenOfficePortable
+	[ ! -d ${ooo} ] && mkdir -p ${ooo} 2>/dev/null
+}
+
+#
+# Update SQL database in USB stick distribution
+#
+_usbstick_update_sql() {
+	# Copy SQL data
+	rm -rf ${USBSTICK}/sql/*
+	cp -R sql/* ${USBSTICK}/sql
+}
+
+#
+# Make USB stick distribution
+#
+_usbstick() {
+	# Make directories
+	_usbstick_make_dirs
+	# Build Odisee
+	_build_odisee
+	# Build WAC
+	_build_wac
+	r=$?
+	if [ $r -gt 0 ]; then
+		echo "Build unsuccessful, see usbstick.log"
+		exit $r
+	fi
+	# Copy jar into lib folder
+	cp dist/jar/wac2.jar ${USBSTICK}/lib 2>/dev/null 1>&2
+	# Copy start scripts
+	cp bin/* ${USBSTICK}
+	# Version
+	_conf_ver
+}
+
+case "$1" in
+	inc-version)
+		_inc_version $2
+	;;
+	usbstick)
+		: > usbstick.log
+		_usbstick
+	;;
+	usbstick-sql)
+		_usbstick_update_sql
+	;;
+	*)
+		echo "usage: $0 { inc-version <type> | usbstick }"
+	;;
+esac
+
+exit 0
