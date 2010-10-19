@@ -46,9 +46,9 @@ _inc_version() {
 #
 _build_odisee() {
 	if [ -d ../odisee ]; then
-		echo "Building Odisee..."
+		echo "Building Odisee... see usbstick.log"
 		pushd ../odisee 2>/dev/null 1>&2
-		bin/gbuild jar
+		bin/gbuild jar 2>>usbstick.log 1>&2
 		popd 2>/dev/null 1>&2
 		# Copy Odisee jar into lib folder
 		cp ../odisee/dist/odisee.jar lib 2>/dev/null 1>&2
@@ -85,9 +85,9 @@ _usbstick() {
 	_build_odisee
 	# Build and copy jar
 	echo "Cleaning up..."
-	griffon clean
-	echo "Packaging application..."
-	griffon package
+	griffon clean 2>/dev/null 1>&2
+	echo "Packaging application... see usbstick.log"
+	griffon package 2>>usbstick.log 1>&2
 	# Copy jar into lib folder
 	cp dist/jar/wac2.jar ${b}/lib 2>/dev/null 1>&2
 	# Copy start scripts
@@ -99,10 +99,12 @@ case "$1" in
 		_inc_version $2
 	;;
 	usbstick)
+		: > usbstick.log
 		_usbstick
 	;;
 	usbstick-sql)
 		_usbstick_update_sql
+	;;
 	*)
 		echo "usage: $0 { inc-version <type> | usbstick }"
 	;;
