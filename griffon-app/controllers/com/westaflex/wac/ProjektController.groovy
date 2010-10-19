@@ -221,7 +221,7 @@ class ProjektController {
 	def seitenansicht = {
 		doOutside {
 			// TODO Show informational dialog
-			println model.map
+			////println model.map
 			// TODO mmu Dialog: Daten aus Auslegung, Blanko? Ticket #97.
 			def doc = oooService.performAuslegung(false, getProjektTitel(), model.map)
 			println "projektSeitenansicht: doc=${doc?.dump()}"
@@ -721,6 +721,14 @@ class ProjektController {
 						view.raumVsZentralgerat.selectedItem =
 						zentralgerat
 				}
+				// Akustik Zuluft
+				//GH.withDisabledActionListeners view.akustikZuluftZuluftstutzenZentralgerat, {
+					view.akustikZuluftZuluftstutzenZentralgerat.selectedItem = zentralgerat
+				//}
+				// Akustik Abluft
+				//GH.withDisabledActionListeners view.akustikZuluftZuluftstutzenZentralgerat, {
+					view.akustikAbluftAbluftstutzenZentralgerat.selectedItem = zentralgerat
+				//}
 				// Aktualisiere Volumenstrom
 				GH.withDisabledActionListeners view.raumVsVolumenstrom, {
 					view.raumVsVolumenstrom.removeAllItems()
