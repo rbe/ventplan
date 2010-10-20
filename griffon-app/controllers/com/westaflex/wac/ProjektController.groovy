@@ -218,7 +218,7 @@ class ProjektController {
 			////println model.map
 			// TODO mmu Dialog: Daten aus Auslegung, Blanko? Ticket #97.
 			def doc = oooService.performAuslegung(false, getProjektTitel(), model.map)
-			println "projektSeitenansicht: doc=${doc?.dump()}"
+			if (DEBUG) println "projektSeitenansicht: doc=${doc?.dump()}"
 			// Open document
 			switch (System.getProperty("os.name")) {
 				case { it ==~ /Windows.*/ }:
@@ -232,7 +232,7 @@ class ProjektController {
 					]
 					def p = cmd.execute(null, program)
 					p.waitFor()
-					println "${cmd} = ${p.exitValue()}"
+					if (DEBUG) println "${cmd} = ${p.exitValue()}"
 					break
 				default:
 					java.awt.Desktop.desktop.open(doc)
@@ -815,7 +815,7 @@ class ProjektController {
 	def widerstandsbeiwerteBearbeiten = {
 		// Welche Teilstrecke ist ausgewählt? Index bestimmen
 		def index = view.dvbKanalnetzTabelle.selectedRow
-		println "widerstandsbeiwerteBearbeiten: index=${index}"
+		if (DEBUG) println "widerstandsbeiwerteBearbeiten: index=${index}"
 		// Setze Index des gewählten Kanalnetzes in Metadaten
 		model.meta.dvbKanalnetzGewahlt = index
 		// TableModel für WBW hinzufügen, wenn noch nicht vorhanden
@@ -837,7 +837,7 @@ class ProjektController {
 		def index = model.meta.dvbKanalnetzGewahlt //view.dvbKanalnetzTabelle.selectedRow
 		// Welche Zeile ist gewählt --> welcher Widerstand?
 		def wbwIndex = view.wbwTabelle.selectedRow
-		println "wbwInTabelleGewahlt: index=${index} wbwIndex=${wbwIndex}"
+		if (DEBUG) println "wbwInTabelleGewahlt: index=${index} wbwIndex=${wbwIndex}"
 		def wbw = model.tableModels.wbw[index][wbwIndex]
 		javax.swing.ImageIcon image = new javax.swing.ImageIcon(Wac2Resource.getWiderstandURL(wbw.id))
 		// Image und Text setzen
@@ -860,7 +860,7 @@ class ProjektController {
 	def wbwSaveButton = {
 		// Welche Teilstrecke ist ausgewählt? Index bestimmen
 		def index = model.meta.dvbKanalnetzGewahlt //view.dvbKanalnetzTabelle.selectedRow
-		println "wbwSaveButton: index=${index}"
+		if (DEBUG) println "wbwSaveButton: index=${index}"
 		def wbw = model.tableModels.wbw[index]
 		// Daten aus der Eingabemaske holen
 		def dialogWbw = [
@@ -870,7 +870,7 @@ class ProjektController {
 		]
 		// Wenn WBW noch nicht vorhanden, dann hinzufügen
 		if (!wbw.find { it.name == dialogWbw.name }) {
-			println "wbwSaveButton: adding ${dialogWbw.dump()} to model"
+			if (DEBUG) println "wbwSaveButton: adding ${dialogWbw.dump()} to model"
 			wbw << dialogWbw
 			model.resyncWbwTableModels()
 		}
@@ -882,7 +882,7 @@ class ProjektController {
 	def wbwSummieren = {
 		// Welche Teilstrecke ist ausgewählt? Index bestimmen
 		def index = model.meta.dvbKanalnetzGewahlt //view.dvbKanalnetzTabelle.selectedRow
-		println "wbwSummieren: index=${index}"
+		if (DEBUG) println "wbwSummieren: index=${index}"
 		def wbw = model.tableModels.wbw[index]
 		// Summiere WBW
 		def map = model.map.dvb.kanalnetz[index]
@@ -890,7 +890,7 @@ class ProjektController {
 			wbw.sum {
 				it.anzahl.toDouble2() * it.widerstandsbeiwert.toDouble2()
 			}
-		println "wbwSummieren: map.gesamtwiderstandszahl=${map.gesamtwiderstandszahl}"
+		if (DEBUG) println "wbwSummieren: map.gesamtwiderstandszahl=${map.gesamtwiderstandszahl}"
 	}
 	
 	/**
@@ -899,7 +899,7 @@ class ProjektController {
 	def wbwOkButton = {
 		// Welche Teilstrecke ist ausgewählt? Index bestimmen
 		def index = model.meta.dvbKanalnetzGewahlt //view.dvbKanalnetzTabelle.selectedRow
-		println "wbwOkButton: index=${index}"
+		if (DEBUG) println "wbwOkButton: index=${index}"
 		def wbw = model.tableModels.wbw[index]
 		def map = model.map.dvb.kanalnetz[index]
 		// Berechne Teilstrecke
@@ -1007,7 +1007,7 @@ class ProjektController {
     def teilstreckenNachAusgewahlteVerschieben = {
         // get selected items
         def selectedValues = view.teilstreckenVerfugbareListe.selectedValues as String[]
-        println "teilstreckenNachAusgewahlteVerschieben: selectedValues -> ${selectedValues}"
+        if (DEBUG) println "teilstreckenNachAusgewahlteVerschieben: selectedValues -> ${selectedValues}"
         // add to ausgewahlte list and remove from verfugbare list
         def aListModel = view.teilstreckenAusgewahlteListe.model
         selectedValues.each { aListModel.addElement(it) }
@@ -1018,7 +1018,7 @@ class ProjektController {
         selectedValues.each { vListModel.removeElement(it) }
         view.teilstreckenVerfugbareListe.setModel(vListModel)
 
-        println "view -> ${view}"
+        if (DEBUG) println "view -> ${view}"
 
         // set text
         def listArray = aListModel.toArray()

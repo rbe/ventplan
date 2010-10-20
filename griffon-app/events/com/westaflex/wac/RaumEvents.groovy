@@ -79,7 +79,7 @@ class RaumEvents {
 	 * Ein Raum wurde geändert - berechne alles, was von Räumen abhängt.
 	 */
 	def onRaumGeandert = { raumIndex ->
-        println "onRaumGeandert: raum -> ${model.map.raum.raume}"
+		if (DEBUG) println "onRaumGeandert: raum -> ${model.map.raum.raume}"
 		doLater {
 			if (DEBUG) println "processing event 'RaumGeandert': raumIndex=${raumIndex}"
 			// Gebäude-Geometrie berechnen
