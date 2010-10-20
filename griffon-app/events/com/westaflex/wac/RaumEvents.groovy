@@ -68,8 +68,6 @@ class RaumEvents {
 	def onRaumHinzugefugt = { raumIndex, view ->
 		doLater {
 			if (DEBUG) println "processing event 'RaumHinzugefugt': raumIndex=${raumIndex}"
-			// Add PropertyChangeListener to our model.map
-			GH.addMapPropertyChangeListener("map.raum.raume", model.map.raum.raume[raumIndex])
 			// Neu berechnen
 			onRaumGeandert(raumIndex)
 		}
