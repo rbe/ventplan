@@ -110,6 +110,7 @@ class ProjektModel {
 	 * dirty: Was the model changed (since last save)? This is set true by a PropertyChangeListener installed in ProjectController.addMapPropertyChangeListener().
 	 */
 	@Bindable map = [
+		messages: [ltm: ""] as ObservableMap,
 		dirty: false,
 		kundendaten: [
 			grosshandel: [:] as ObservableMap,

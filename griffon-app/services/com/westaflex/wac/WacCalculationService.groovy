@@ -320,14 +320,13 @@ class WacCalculationService {
 	 * Automatische Berechnung der Luftmenge und Luftwechsel pro Stunde
 	 * getrennt nach Abluft und Zuluft im Verhältnis der einzelnen Raumluftvolumenströme
 	 * zum Gesamt-Raumluftvolumenstrom.
+	 * @param map model.map
 	 * @param b true=Raumvolumenströme, false=Gesamtraumvolumenstrom
 	 */
 	void autoLuftmenge(map, Boolean b) {
-		// LTM erforderlich?
+		// LTM nicht erforderlich?
 		if (!ltmErforderlich(map)) {
-			def infoMsg = "autoLuftmenge: Es sind keine lüftungstechnischen Maßnahmen notwendig!"
-			app.controllers["Dialog"].showInformDialog(infoMsg as String)
-			if (DEBUG) println infoMsg
+			map.messages.ltm = "Es sind keine lüftungstechnischen Maßnahmen notwendig!"
 		}
 		// LTM: erste Berechnung für Raumvolumenströme
 		// Summiere Daten aus Raumdaten

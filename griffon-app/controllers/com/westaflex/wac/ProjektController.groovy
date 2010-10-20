@@ -53,9 +53,13 @@ class ProjektController {
 		//GH.addMapPropertyChangeListener("meta", model.meta)
 		// Add PropertyChangeListener to our model.map
 		GH.addMapPropertyChangeListener("map", model.map, { evt ->
+				// Show dialog only when property changes
+				if (evt.propertyName == "ltm") {
+					ltmErforderlichDialog()
+				}
 				// Only set dirty flag, when modified property is not the dirty flag
 				// Used for loading and saving
-				if (evt.propertyName != "dirty" && !model.map.dirty) {
+				else if (evt.propertyName != "dirty" && !model.map.dirty) {
 					// Dirty-flag im eigenen und Wac2Model setzen
 					model.map.dirty = true
 					app.models["wac2"].aktivesProjektGeandert = true
@@ -443,6 +447,15 @@ class ProjektController {
 					view.raumAbluftVs.text = ""
 			}
 		}
+	}
+	
+	/**
+	 * Zeige Dialog "lüftungstechnische Maßnahmen erforderlich."
+	 */
+	def ltmErforderlichDialog = {
+		def infoMsg = model.map.messages.ltm
+		app.controllers["Dialog"].showInformDialog(infoMsg as String)
+		if (DEBUG) println infoMsg
 	}
 	
 	/**
