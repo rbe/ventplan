@@ -229,7 +229,13 @@ class ProjektController {
 			switch (System.getProperty("os.name")) {
 				case { it ==~ /Windows.*/ }:
 					def program = new java.io.File(System.getenv("OOO_HOME"), "program")
-					def cmd = ["${program.absolutePath.replace('\\', '/')}/soffice.exe", "-nologo", "-writer", "-o \"${doc.absolutePath}\""]
+					def cmd = [
+						"${program.absolutePath.replace('\\', '/')}/soffice.exe",
+						"-nologo", "-nofirststartwizard", "-nodefault",
+						"-nocrashreport", "-norestart", "-norestore",
+						"-nolockcheck",
+						"-writer", "-o \"${doc.absolutePath}\""
+					]
 					def p = cmd.execute(null, program)
 					p.waitFor()
 					println "${cmd} = ${p.exitValue()}"

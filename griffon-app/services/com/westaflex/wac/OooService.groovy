@@ -53,6 +53,7 @@ class OooService {
 					],
 				group1: ["wac2-${new java.util.Date().format("yyyyMMddHHmmss")}"]
 			)
+		ocm.killallLocal()
 	}
 	
 	/**
@@ -60,7 +61,8 @@ class OooService {
 	 */
 	def shutdownOCM = {
 		try {
-			ocm.shutdown(true)
+			println "shutting down OCM"
+			ocm?.shutdown(true)
 		} catch (e) {
 			println "OCM shutdown: ${e}"
 			ocm = null
@@ -157,16 +159,14 @@ class OooService {
 			// Close document
 			try {
 				println "close"
-				use (com.bensmann.odisee.category.OOoDocumentCategory) { doc?.close() }
+				use (com.bensmann.odisee.category.OOoDocumentCategory) {
+					doc?.close()
+				}
 			} catch (e) {
 				e.printStackTrace()
 			}
 			// Shutdown
-			try {
-				shutdownOCM()
-			} catch (e) {
-				e.printStackTrace()
-			}
+			shutdownOCM()
 		}
 	}
 	
@@ -386,7 +386,7 @@ class OooService {
 			// Einstellungen am Lüftungsgerät und an der Fernbedienung
 			doc["lmeZentralgeraetCombobox"]     = map.anlage.zentralgerat
 			doc["lmeFeuchteschutzWertLabel"]    = GH.toString2Round5Converter(map.aussenluftVs.gesamtLvsLtmLvsFs)
-			doc["lmeMindestluftungWertLabel"]   = GH.toString2Round5Converter(map.aussenluftVs.gesamtLvsLtmLvsRl)
+			doc["lmeMindestlueftungWertLabel"]  = GH.toString2Round5Converter(map.aussenluftVs.gesamtLvsLtmLvsRl)
 			doc["lmeGrundlueftungWertLabel"]    = GH.toString2Round5Converter(map.aussenluftVs.gesamtLvsLtmLvsNl)
 			doc["lmeIntensivlueftungWertLabel"] = GH.toString2Round5Converter(map.aussenluftVs.gesamtLvsLtmLvsIl)
 		}
@@ -399,24 +399,6 @@ class OooService {
 		// Tabelle
 		use (com.bensmann.odisee.category.OOoTextTableCategory) {
 			// Zuluft
-			/* abZuTabelleTable:
-			A1, B1.1.1, B1.1.2, B1.2.2, B1.3.2, B1.4.2, B1.5.2, B1.6.2, C1
-			A2, B2, C2, D2, E2, F2, G2, H2
-			A3, B3, C3, D3, E3, F3, G3, H3
-			A4, B4, C4, D4, E4, F4, G4, H4
-			A5, B5, C5, D5, E5, F5, G5, H5
-			A6, B6, C6, D6, E6, F6, G6, H6
-			A7, B7, C7, D7, E7, F7, G7, H7
-			A8, B8, C8, D8, E8, F8, G8, H8
-			A9, B9, C9, D9, E9, F9, G9, H9
-			A10, B10, C10, D10, E10, F10, G10, H10
-			A11, B11, C11, D11, E11, F11, G11, H11
-			A12, B12, C12, D12, E12, F12, G12, H12
-			A13, B13, C13, D13, E13, F13, G13, H13
-			A14, B14, C14, D14, E14, F14, G14, H14
-			A15, B15, C15
-			*/
-			println map.akustik.zuluft
 			def mZuluft = [:]
 			map.akustik.zuluft.tabelle.eachWithIndex { ak, i ->
 				mZuluft << [
@@ -430,10 +412,9 @@ class OooService {
 			}
 			doc['abZuTabelleTable'] = mZuluft
 			// Abluft
-			println map.akustik.abluft
 			def mAbluft = [:]
 			map.akustik.abluft.tabelle.eachWithIndex { ak, i ->
-				mZuluft << [
+				mAbluft << [
 					"B${i + 2}": GH.toString2Converter(ak.slp125),
 					"C${i + 2}": GH.toString2Converter(ak.slp250),
 					"D${i + 2}": GH.toString2Converter(ak.slp500),
@@ -489,6 +470,20 @@ class OooService {
 	def addDvbKanalnetz = { doc, map ->
 		// Tabelle
 		use (com.bensmann.odisee.category.OOoTextTableCategory) {
+			def m = [:]
+			map.dvb.kanalnetz.eachWithIndex { kn, i ->
+				m["B${i + 3}"] = kn.luftart
+				m["C${i + 3}"] = kn.teilstrecke
+				m["D${i + 3}"] = GH.toString2Converter(kn.luftVs)
+				m["E${i + 3}"] = kn.kanalbezeichnung
+				m["F${i + 3}"] = GH.toString2Converter(kn.lange)
+				m["G${i + 3}"] = GH.toString2Converter(kn.geschwindigkeit)
+				m["H${i + 3}"] = GH.toString2Converter(kn.reibungswiderstand)
+				m["I${i + 3}"] = GH.toString2Converter(kn.gesamtwiderstandszahl)
+				m["J${i + 3}"] = GH.toString2Converter(kn.einzelwiderstand)
+				m["K${i + 3}"] = GH.toString2Converter(kn.widerstandTeilstrecke)
+			}
+			doc['dvbTeilstreckenTabelleTable'] = m
 		}
 	}
 	
@@ -498,6 +493,19 @@ class OooService {
 	def addDvbVentileinstellung = { doc, map ->
 		// Tabelle
 		use (com.bensmann.odisee.category.OOoTextTableCategory) {
+			def m = [:]
+			map.dvb.ventileinstellung.eachWithIndex { ve, i ->
+				m["B${i + 3}"] = ve.luftart
+				m["C${i + 3}"] = ve.raum
+				m["D${i + 3}"] = ve.teilstrecken
+				m["E${i + 3}"] = ve.ventilbezeichnung
+				m["F${i + 3}"] = GH.toString2Converter(ve.dpOffen)
+				m["G${i + 3}"] = GH.toString2Converter(ve.gesamtWiderstand)
+				m["H${i + 3}"] = GH.toString2Converter(ve.differenz)
+				m["I${i + 3}"] = GH.toString2Converter(ve.abgleich)
+				m["J${i + 3}"] = GH.toString2Converter(ve.einstellung)
+			}
+			doc['dvbVentileinstellungTabelleTable'] = m
 		}
 	}
 	
