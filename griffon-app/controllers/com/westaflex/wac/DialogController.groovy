@@ -26,8 +26,8 @@ class DialogController {
 						1,
 						[
 							new CommandLink("Alle Speichern", ""),
-							new CommandLink("Abbrechen", ""),
-							new CommandLink("Schliessen", "")
+							//new CommandLink("Abbrechen", ""),
+							new CommandLink("Ohne Speichern schliessen", "")
 						]
 					)
 		choice

@@ -130,7 +130,7 @@ class Wac2Controller {
 					break
 				case 1: // Cancel: do nothing...
 					if (DEBUG) println "Abbrechen..."
-					app.shutdown() // TODO mmu REMOVE THIS LATER
+					app.shutdown()
 					break
 				case 2:
 					if (DEBUG) println "Schliessen"
