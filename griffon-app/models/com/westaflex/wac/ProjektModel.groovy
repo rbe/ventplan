@@ -21,7 +21,7 @@ import javax.swing.DefaultComboBoxModel
  */
 class ProjektModel {
 	
-	public static boolean DEBUG = true
+	public static boolean DEBUG = false
 	
 	/**
 	 * The MVC id.
@@ -336,7 +336,7 @@ class ProjektModel {
 				getColumnName:  { columnIndex -> columnNames[columnIndex] },
 				getColumnValue: { object, columnIndex ->
                     try {
-                        println "###### gltmClosureCheckbox: object -> ${object}"
+                        if (DEBUG) println "###### gltmClosureCheckbox: object -> ${object?.dump()}"
                     } catch (e) {}
 					if (columnIndex == 4) {
 						def tempValue = object."${propertyNames[columnIndex]}"
