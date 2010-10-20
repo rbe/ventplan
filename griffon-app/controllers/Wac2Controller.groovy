@@ -335,9 +335,11 @@ class Wac2Controller {
 					if (DEBUG) println "projektOffnen: ProjektModel bidings/events fire now!?"
 					if (DEBUG) println "-" * 80
 					// HACK
-					doOutside {
-						try { Thread.sleep(1 * 1000) } catch (e) {}
-						projektController.afterLoading()
+					if (projektController) {
+						doOutside {
+							try { Thread.sleep(1 * 1000) } catch (e) {}
+							projektController.afterLoading()
+						}
 					}
 				}
 			}
