@@ -26,7 +26,8 @@ bind(source: model.meta.gewahlterRaum, sourceProperty: "raumAbluftVs",     targe
 }
 // TODO Durchlassposition
 // TODO Kanalanschluß
-// TODO Türen
+// Türen
+bind(source: model.meta.gewahlterRaum, sourceProperty: "raumMaxTurspaltHohe", target: raumBearbeitenDetailsTurspalthohe, targetProperty: "text", converter: GH.toString2Converter, mutual: true)
 // Optional
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumLange",   target: raumBearbeitenOptionalRaumlange,   targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumBreite",  target: raumBearbeitenOptionalRaumbreite,  targetProperty: "text", converter: GH.toString2Converter)
