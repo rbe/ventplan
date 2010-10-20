@@ -580,7 +580,7 @@ class WacCalculationService {
 	 * @param map One of map.dvb.kanalnetz
 	 */
 	def berechneTeilstrecke(map) {
-		/*if (DEBUG) */println "berechneTeilstrecke: map=${map.dump()}"
+		if (DEBUG) println "berechneTeilstrecke: map=${map.dump()}"
 		def kanal = wacModelService.getKanal(map.kanalbezeichnung)
 		map.geschwindigkeit = map.luftVs * 1000000 / (kanal.flaeche * 3600)
 		def lambda
