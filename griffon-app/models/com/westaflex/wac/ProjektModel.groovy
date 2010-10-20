@@ -65,14 +65,19 @@ class ProjektModel {
 			raumUberstromVolumenstrom: "",
 			raumNummer: "",
 			raumMaxTurspaltHohe: 10.0d,
-			turen: [
-					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
-				] as ObservableList
+			turen: []
 		]
+	
+	/**
+	 * Template für Türen eines Raumes.
+	 */
+	def raumTurenTemplate = [
+				[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+				[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+				[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+				[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+				[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
+			] /*as ObservableList*/
 	
 	/**
 	 * Template für alle Werte bei Druckverlust - Kanalnetz.
@@ -577,7 +582,7 @@ class ProjektModel {
                 //r.turen = raumMapTemplate.turen
                 if (DEBUG) println "addRaum: adding raum after editing r.turen=${r?.dump()}"
                 // Raum in der Map hinzufügen
-                map.raum.raume << r
+                map.raum.raume << raum
                 if (DEBUG) println "addRaum: adding raum.raume=${map.raum.raume}"
                 // Turen hinzufügen
             }
