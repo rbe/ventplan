@@ -38,7 +38,7 @@ _inc_version() {
 	# Set version in conf/version
 	_conf_ver
 	# Create update directory
-	u=_upd${maj}${min}${pat}
+	u=wacupdate/upd${maj}${min}${pat}
 	for d in conf lib sql
 	do
 		mkdir -p ${u}/${d}
