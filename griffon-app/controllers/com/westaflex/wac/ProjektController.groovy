@@ -171,16 +171,6 @@ class ProjektController {
 			publishEvent "RaumHinzugefugt", [raum.position, view]
 		}
 		model.resyncRaumTableModels()
-		/* HACK
-		def r = { ->
-			println "going to sleep"
-			try { Thread.sleep(2 * 1000) } catch (e) {}
-			if (DEBUG) println "afterLoading: setting model.map.dirty to false"
-			// Set dirty-flag in project's model to false
-			model.map.dirty = false
-		} as java.lang.Runnable
-		new java.lang.Thread(r).start()
-		*/
 		// Update tab title to ensure that no "unsaved-data-star" is displayed
 		setTabTitle()
 		// Close splash screen
