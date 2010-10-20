@@ -328,6 +328,9 @@ class ProjektModel {
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { columnIndex -> columnNames[columnIndex] },
 				getColumnValue: { object, columnIndex ->
+                    try {
+                        println "###### gltmClosureCheckbox: object -> ${object}"
+                    } catch (e) {}
 					if (columnIndex == 4) {
 						def tempValue = object."${propertyNames[columnIndex]}"
 						//println "tempValue ${tempValue}"
@@ -438,6 +441,9 @@ class ProjektModel {
 	def createRaumTurenTableModel() {
 		def index = meta.gewahlterRaum.position
 		println "createRaumTurenTableModel: index=${index}"
+        println "createRaumTurenTableModel: raumeTuren: ${tableModels.raumeTuren}"
+        println "#########"
+        println "createRaumTurenTableModel: raumeTuren[index]: ${tableModels.raumeTuren[index]}"
 		def columnNames =   ["Bezeichnung",    "Breite [mm]", "Querschnittsfläche [mm²]", "Spaltenhöhe [mm]", "mit Dichtung"] as String[]
 		def propertyNames = ["turBezeichnung", "turBreite",   "turQuerschnitt",           "turSpalthohe",     "turDichtung"] as String[]
 		def writable      = [true,             true,          false,                      false,              true] as boolean[]
@@ -554,10 +560,23 @@ class ProjektModel {
                 map.raum.raume.add(raum)
                 if (DEBUG) println "addRaum: copy -> map: ${map.raum.raume}"
             } else {
-                def r = (raumMapTemplate + raum) as ObservableMap
+                println "${raum}"
+                def r = ([turen: [
+                            [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+                            [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+                            [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+                            [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+                            [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
+                        ]] + raum) as ObservableMap
                 if (DEBUG) println "addRaum: adding raum=${r?.dump()}"
+                if (DEBUG) println "addRaum: raumMapTemplate=${raumMapTemplate.turen}"
+                // turen überschreiben!
+                // TODO rbe: ebenfalls auskommentiert
+                //r.turen = raumMapTemplate.turen
+                if (DEBUG) println "addRaum: adding raum after editing r.turen=${r?.dump()}"
                 // Raum in der Map hinzufügen
                 map.raum.raume << r
+                if (DEBUG) println "addRaum: adding raum.raume=${map.raum.raume}"
                 // Turen hinzufügen
             }
             tableModels.raumeTuren <<

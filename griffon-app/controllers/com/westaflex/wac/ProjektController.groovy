@@ -455,8 +455,42 @@ class ProjektController {
 	def raumHinzufugen = {
 		// Erstelle Model für Raum: Standardwerte überschreiben mit eingegebenen Werten
 		// Berechne Position: Raum wird unten angefügt
-		def raum = model.raumMapTemplate +
-					GH.getValuesFromView(view, "raum") +
+		//def raum = model.raumMapTemplate +
+		//			GH.getValuesFromView(view, "raum") +
+		//			[position: model.map.raum.raume.size()]
+        // TODO rbe: dies funktioniert jetzt !!! Wenn man allerdings model.raumMapTemplate
+        // benutzt, werden die schon gesetzten Werte aus "turen" genommen!
+        def raum = [
+			raumBezeichnung: "",
+			raumLuftart: "",
+			raumGeschoss: "",
+			raumFlache: 0.0d,
+			raumHohe: 0.0d,
+			raumZuluftfaktor: 0.0d,
+			raumAbluftVs: 0.0d,
+			raumVolumen: 0.0d,
+			raumLuftwechsel: 0.0d,
+			raumZuluftVolumenstrom: 0.0d,
+			raumAbluftVolumenstrom: 0.0d,
+			raumBezeichnungAbluftventile: "",
+			raumAnzahlAbluftventile: 0,
+			raumAbluftmengeJeVentil: 0.0d,
+			raumBezeichnungZuluftventile: "",
+			raumAnzahlZuluftventile: 0,
+			raumZuluftmengeJeVentil: 0.0d,
+			raumVerteilebene: "",
+			raumAnzahlUberstromVentile: 0,
+			raumUberstromElement: "",
+			raumUberstromVolumenstrom: "",
+			raumNummer: "",
+			turen: [
+					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
+				] as ObservableList
+		] + GH.getValuesFromView(view, "raum") +
 					[position: model.map.raum.raume.size()]
 		// Prüfe Toleranzwerte für Zuluftfaktor
 		if (raum.raumLuftart ==~ /ZU.*/) {
