@@ -240,8 +240,8 @@ class ProjektModelService {
 						ventileinstellung: []
 					],
 				akustik: [
-                    raumBezeichnung: []
-                ]
+						raumBezeichnung: []
+					]
 			]
 		}
 	}
