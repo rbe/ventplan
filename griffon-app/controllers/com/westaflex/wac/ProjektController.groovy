@@ -769,6 +769,9 @@ class ProjektController {
 					model.map.anlage.volumenstromZentralgerat =
 						view.raumVsVolumenstrom.selectedItem =
 						foundVs
+					// Akustik
+					view.akustikZuluftPegel.selectedItem = foundVs
+					view.akustikAbluftPegel.selectedItem = foundVs
 				}
 			}
 		}
