@@ -184,6 +184,7 @@ class WacModelService {
 					[ventilbezeichnung, luftart, luftmenge])
 			}
 		//println "getEinstellung: r=${r}"
+		if (r.size() == 0) return
 		// Suche die nächst höhere zum Parameter 'luftmenge' passende Luftmenge aus den Datenbankergebnissen
 		// Dies funktioniert nur mit einem in aufsteigender Reihenfolge sortierten Luftmengen!
 		def nahe = r.find {
