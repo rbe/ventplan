@@ -59,9 +59,9 @@ _conf_ver() {
 #
 _build_odisee() {
 	if [ -d ../odisee ]; then
-		echo "Building Odisee... see usbstick.log"
+		echo "Building Odisee... see bwac.log"
 		pushd ../odisee 2>/dev/null 1>&2
-		bin/gbuild jar 2>>usbstick.log 1>&2
+		bin/gbuild jar 2>>bwac.log 1>&2
 		popd 2>/dev/null 1>&2
 		# Copy Odisee jar into lib folder
 		cp ../odisee/dist/odisee.jar lib 2>/dev/null 1>&2
@@ -73,9 +73,9 @@ _build_odisee() {
 #
 _build_grootils() {
 	if [ -d ../grootils ]; then
-		echo "Building grootils... see usbstick.log"
+		echo "Building grootils... see bwac.log"
 		pushd ../grootils 2>/dev/null 1>&2
-		bin/gbuild jar 2>>usbstick.log 1>&2
+		bin/gbuild jar 2>>bwac.log 1>&2
 		popd 2>/dev/null 1>&2
 		# Copy Odisee jar into lib folder
 		cp ../grootils/dist/grootils.jar lib 2>/dev/null 1>&2
@@ -88,8 +88,8 @@ _build_grootils() {
 _build_wac() {
 	echo "Building WAC..."
 	griffon clean 2>/dev/null 1>&2
-	echo "Packaging WAC... see usbstick.log"
-	griffon package 2>>usbstick.log 1>&2
+	echo "Packaging WAC... see bwac.log"
+	griffon package 2>>bwac.log 1>&2
 }
 
 #
@@ -131,7 +131,7 @@ _usbstick() {
 	_build_wac
 	r=$?
 	if [ $r -gt 0 ]; then
-		echo "Build unsuccessful, see usbstick.log"
+		echo "Build unsuccessful, see bwac.log"
 		exit $r
 	fi
 	# Copy jar into lib folder
@@ -154,7 +154,7 @@ case "$1" in
 		_inc_version $2
 	;;
 	usbstick)
-		: > usbstick.log
+		: > bwac.log
 		_usbstick
 	;;
 	usbstick-sql)
