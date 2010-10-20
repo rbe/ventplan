@@ -35,10 +35,15 @@ _inc_version() {
 	# Search and replace
 	cat application.properties | sed "s#app.version.*#app.version=$maj.$min.$pat#g" > ${t}
 	mv ${t} application.properties
-	# Cleanup
-	rm ${t}
 	# Set version in conf/version
 	_conf_ver
+	# Create update directory
+	u=_upd${maj}${min}${pat}
+	for d in conf lib sql
+	do
+		mkdir -p ${u}/${d}
+	done
+	cp ${USBSTICK}/conf/version ${u}/conf
 }
 
 #
@@ -64,6 +69,20 @@ _build_odisee() {
 }
 
 #
+# Build grootils
+#
+_build_grootils() {
+	if [ -d ../grootils ]; then
+		echo "Building grootils... see usbstick.log"
+		pushd ../grootils 2>/dev/null 1>&2
+		bin/gbuild jar 2>>usbstick.log 1>&2
+		popd 2>/dev/null 1>&2
+		# Copy Odisee jar into lib folder
+		cp ../grootils/dist/grootils.jar lib 2>/dev/null 1>&2
+	fi
+}
+
+#
 # 
 #
 _build_wac() {
@@ -78,7 +97,7 @@ _build_wac() {
 #
 _usbstick_make_dirs() {
 	mkdir -p ${USBSTICK}/Darwin ${USBSTICK}/Linux ${USBSTICK}/Windows 2>/dev/null
-	for dir in conf lib sql
+	for dir in conf lib sql update
 	do
 		mkdir -p ${USBSTICK}/${dir}
 	done
@@ -116,11 +135,18 @@ _usbstick() {
 		exit $r
 	fi
 	# Copy jar into lib folder
-	cp dist/jar/wac2.jar ${USBSTICK}/lib 2>/dev/null 1>&2
+	rm -rf ${USBSTICK}/lib/*
+	cp dist/zip/lib/* ${USBSTICK}/lib 2>/dev/null 1>&2
 	# Copy start scripts
 	cp bin/* ${USBSTICK}
+	# SQL?
+	if [ ! -d ${USBSTICK}/sql ]; then
+		_usbstick_update_sql
+	fi
 	# Version
 	_conf_ver
+	#
+	echo "Done"
 }
 
 case "$1" in

@@ -53,9 +53,41 @@ if [ ! -f ${OOO_PROGRAM}/juh.jar ]; then
         cp ${OOOJ}/juh.jar ${OOO_PROGRAM}
 fi
 
-# Start
-CLASSPATH="${OOO_PROGRAM}/juh.jar:${OOOJ}/jurt.jar:${OOOJ}/ridl.jar:${OOOU}/unoil.jar"
+# Classpath
+for jar in lib/*
+do
+	exclude=0
+	for ex in juh.jar jurt.jar ridl.jar unoil.jar
+	do
+		if [ ${jar} == ${ex} ]; then
+			exclude=1
+			break
+		fi
+	done
+	[ ${exclude} -eq 0 ] && LIB_CLASSPATH="${LIB_CLASSPATH}:${jar}"
+done
+# Skip first colon
+LIB_CLASSPATH=$(echo ${LIB_CLASSPATH} | cut -c 2-)
+CLASSPATH="${OOO_PROGRAM}/juh.jar:${OOOJ}/jurt.jar:${OOOJ}/ridl.jar:${OOOU}/unoil.jar:${LIB_CLASSPATH}"
 export CLASSPATH
-java -cp "${CLASSPATH}" -Djava.library.path="${OOOL}" -d32 -jar lib/wac2.jar 2>wac2.log 1>&2
+
+# No OpenOffice running
+case "${OS}" in
+	Darwin | Linux | *BSD)
+		killall soffice 2>/dev/null 1>&2
+	;;
+	SunOS)
+		pkill soffice 2>/dev/null 1>&2
+	;;
+esac
+
+# Update
+mv update/conf/* conf 2>wac.log 1>&2
+mv update/lib/* lib 2>>wac.log 1>&2
+mv update/sql/* sql 2>>wac.log 1>&2
+rm -rf update 2>>wac.log 1>&2
+
+# Start
+java -cp "${CLASSPATH}" -Djava.library.path="${OOOL}" -d32 griffon.swing.SwingApplication 2>>wac.log 1>&2
 
 exit 0
