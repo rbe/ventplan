@@ -168,7 +168,7 @@ class ProjektModelService {
 						faktorBesondereAnforderungen: X.vd { gebaude."besAnfFaktor".text() },
 						geplanteBelegung: [
 								personenanzahl:         X.vi { gebaude."personenAnzahl".text() },
-								aussenluftVsProPerson:  X.vi { gebaude."personenVolumen".text() } / X.vi { gebaude."personenAnzahl".text() },
+								aussenluftVsProPerson:  X.vi { gebaude."personenVolumen".text() } / (X.vi { gebaude."personenAnzahl".text() } ?: 1),
 								// Will be calculated
 								//mindestaussenluftrate: 0.0d
 							],
@@ -240,8 +240,8 @@ class ProjektModelService {
 						ventileinstellung: []
 					],
 				akustik: [
-                    raumBezeichnung: []
-                ]
+						raumBezeichnung: []
+					]
 			]
 		}
 	}
@@ -312,19 +312,21 @@ class ProjektModelService {
 			X.tc { luftwechsel(map.raumLuftwechsel) }
 			X.tc { volumenstrom(map.raumVolumenstrom) }
 			X.tc { bezeichnungAbluftventile(map.raumBezeichnungAbluftventile) }
-			X.tc { anzahlAbluftventile(map.raumAnzahlAbluftventile) as Integer }
+			X.tc { anzahlAbluftventile(map.raumAnzahlAbluftventile as Integer) }
 			X.tc { abluftmengeJeVentil(map.raumAbluftmengeJeVentil) }
 			X.tc { bezeichnungZuluftventile(map.raumBezeichnungZuluftventile) }
-			X.tc { anzahlZuluftventile(map.raumAnzahlZuluftventile) as Integer }
+			X.tc { anzahlZuluftventile(map.raumAnzahlZuluftventile as Integer) }
 			X.tc { zuluftmengeJeVentil(map.raumZuluftmengeJeVentil) }
 			X.tc { ventilebene(map.raumVerteilebene) }
-			X.tc { anzahlUberstromventile(map.raumAnzahlUberstromVentile) as Integer }
+			X.tc { anzahlUberstromventile(map.raumAnzahlUberstromVentile as Integer) }
 			X.tc { uberstromelement(map.raumUberstromElement) }
 			// Türen
 			map.turen.eachWithIndex { t, i ->
-				tur() {
-					X.tc { name(t.turname) } { name("Tür ${i}") }
-					X.tc { breite(t.turbreite) } { breite(610.0) }
+				if (t.turname && t.turbreite) {
+					tur() {
+						X.tc { name(t.turname) } { name("Tür ${i}") }
+						X.tc { breite(t.turbreite) } { breite(0.0) }
+					}
 				}
 			}
 		}

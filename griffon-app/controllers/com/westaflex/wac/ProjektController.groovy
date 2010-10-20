@@ -749,7 +749,7 @@ class ProjektController {
 					model.meta.volumenstromZentralgerat = []
 					def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
 					def maxVsZentralgerat = volumenstromZentralgerat.toList().last() as Integer
-						(minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
+					(minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
 					// Füge Volumenströme in Combobox hinzu
 					model.meta.volumenstromZentralgerat.each { view.raumVsVolumenstrom.addItem(it) }
 					// Selektiere errechneten Volumenstrom
