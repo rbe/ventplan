@@ -43,8 +43,7 @@ def buildLayout(tabname) {
 	def tabTitleForeground = tabname == "Zuluft" ? GH.MY_RED : java.awt.Color.BLUE
 	// Akustikberechnung - Zuluft
     panel(layout: new MigLayout("fill, wrap", "[fill]", "[fill]")) {
-        panel(layout: new MigLayout("wrap 3", "[left]10[right]10[left]", "[fill]")) {
-
+        panel(layout: new MigLayout("wrap 3", "[left][center]5[left]", "[fill]")) {
             panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
                 label("Raumbezeichnung")
 
@@ -64,9 +63,7 @@ def buildLayout(tabname) {
             panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
                 label(" ")
             }
-        }
-        panel(layout: new MigLayout("wrap 3", "[left][right]5[left]", "[fill]")) {
-        //panel(layout: new MigLayout("debug, fill, wrap 3", "[left][right]5[left]", "[fill]")) {
+
             panel(layout: new MigLayout("fillx", "[fill]para[fill]para[right]", "3[fill]-1")) {
 
                 label(" ", constraints: "height 26px!, span 3, wrap")
@@ -170,7 +167,7 @@ def buildLayout(tabname) {
             panel() {
                 label("")
             }
-            panel(layout: new MigLayout("wrap", "[right]", "[fill]")) {
+            panel(layout: new MigLayout("wrap", "[450:480:650, right]", "[]")) {
                 label("Mittlerer Schalldruckpegel* dB(A) =", constraints: "right, wrap")
             }
             panel() {
