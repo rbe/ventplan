@@ -165,7 +165,7 @@ class ProjektController {
 	 * 
 	 */
 	def afterLoading = {
-		/*if (DEBUG)*/ println "afterLoading: fire RaumHinzufugen"
+		if (DEBUG) println "afterLoading: fire RaumHinzufugen"
 		// Räume
 		model.map.raum.raume.each { raum ->
 			publishEvent "RaumHinzugefugt", [raum.position, view]
