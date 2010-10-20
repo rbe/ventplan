@@ -32,7 +32,7 @@ panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[f
 
                                 comboBox(id: "raumBearbeitenRaumGeschoss", items: model.meta.raum.geschoss)
                                 button(id: "raumBearbeitenRaumLinks", text: " < ")
-                                textField(id: "raumBearbeitenRaumnummer"/*, text: model.meta.raum.s*/, constraints: "width 50px")
+                                textField(id: "raumBearbeitenRaumnummer", constraints: "width 50px")
                                 button(id: "raumBearbeitenRaumRechts", text: " > ")
                                 textField(id: "raumBearbeitenBezeichnung", text: "", constraints: "width 100px")
                                 comboBox(id: "raumBearbeitenRaumtyp", items: model.meta.raum.typ)
@@ -87,7 +87,7 @@ panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fillx", "[fill]", "[f
 
                             panel(id: "raumBearbeitenTabelle", layout: new MigLayout("fill", "[left]para[left]para[left]", "[fill]"), constraints: "span") {
                                 label(text: "Maximale Türspalthöhe [mm]")
-                                textField(id: "raumBearbeitenDetailsTurspalthohe", text: "10.0", constraints: "width 100px")
+                                textField(id: "raumBearbeitenDetailsTurspalthohe", text: "10,00", constraints: "width 100px")
                                 button(id: "raumBearbeitenDetailsTurentfernen", text: "Tür entfernen", constraints: "wrap")
 
                                 jideScrollPane(constraints: "height 150px, span") {

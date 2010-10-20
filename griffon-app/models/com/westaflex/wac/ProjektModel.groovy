@@ -64,6 +64,7 @@ class ProjektModel {
 			raumUberstromElement: "",
 			raumUberstromVolumenstrom: "",
 			raumNummer: "",
+			raumMaxTurspaltHohe: 10.0d,
 			turen: [
 					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
 					[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
