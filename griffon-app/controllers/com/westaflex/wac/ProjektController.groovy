@@ -755,8 +755,13 @@ class ProjektController {
 				GH.withDisabledActionListeners view.raumVsVolumenstrom, {
 					view.raumVsVolumenstrom.removeAllItems()
 					// Hole Volumenströme des Zentralgeräts
-					model.meta.volumenstromZentralgerat =
+					def volumenstromZentralgerat =
 						wacModelService.getVolumenstromFurZentralgerat(view.raumVsZentralgerat.selectedItem)
+					// 5er-Schritte
+					model.meta.volumenstromZentralgerat = []
+					def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
+					def maxVsZentralgerat = volumenstromZentralgerat.toList().last() as Integer
+						(minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
 					// Füge Volumenströme in Combobox hinzu
 					model.meta.volumenstromZentralgerat.each { view.raumVsVolumenstrom.addItem(it) }
 					// Selektiere errechneten Volumenstrom

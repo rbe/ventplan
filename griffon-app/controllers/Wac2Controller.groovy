@@ -48,9 +48,14 @@ class Wac2Controller {
 			model.meta.raumVsUberstromelemente = wacModelService.getUberstromelemente()
 			// Raumvolumenströme - Zentralgerät + Volumenstrom
 			model.meta.zentralgerat = wacModelService.getZentralgerat()
-			// Liste aller möglichen Volumenströme
-			model.meta.volumenstromZentralgerat =
+			// Liste aller möglichen Volumenströme des 1. Zentralgeräts
+			def volumenstromZentralgerat =
 				wacModelService.getVolumenstromFurZentralgerat(model.meta.zentralgerat[0])
+			// 5er-Schritte
+			model.meta.volumenstromZentralgerat = []
+			def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
+			def maxVsZentralgerat = volumenstromZentralgerat.toList().last() as Integer
+				(minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
 			// Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
 			model.meta.dvbKanalbezeichnung = wacModelService.getDvbKanalbezeichnung()
 			// Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte
