@@ -17,19 +17,5 @@ toolBar(id: 'toolbar', rollover: true) {
 	button(projektSpeichernAlsAction, text: null)
 	vertSep()
 	button(projektSeitenansichtAction, text: null)
-	button(projektDruckenAction, text: null)
-	/*
-	button(undoAction, text: null)
-	button(redoAction, text: null)
-	separator(orientation: SwingConstants.VERTICAL)
-	button(cutAction, text: null)
-	button(copyAction, text: null)
-	button(pasteAction, text: null)
-	separator(orientation: SwingConstants.VERTICAL)
-	button(findAction, text: null)
-	button(replaceAction, text: null)
-	separator(orientation: SwingConstants.VERTICAL)
-	button(toggleLayoutAction, text: null)
-	button(snapshotAction, text: null)
-	*/
+	// TODO button(projektDruckenAction, text: null)
 }
