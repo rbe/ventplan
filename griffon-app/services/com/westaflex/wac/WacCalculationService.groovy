@@ -379,8 +379,6 @@ class WacCalculationService {
 						it.raumLuftwechsel = (ltmAbluftRaum / it.raumVolumen)
 					}
 					ltmZuluftSumme += ltmAbluftRaum
-					// Überströmvolumenstrom = Vorschlag: Raumvolumenstrom
-					if (!it.raumUberstromVolumenstrom) it.raumUberstromVolumenstrom = it.raumVolumenstrom
 				}
 			} else {
 				ltmAbluftSumme += ltmAbluftRaum
@@ -403,19 +401,17 @@ class WacCalculationService {
 		}
 		// Überströmvolumenstrom = Vorschlag: Raumvolumenstrom
 		map.raum.raume.each {
-			if (!it.raumUberstromVolumenstrom) {
-				switch (it.raumLuftart) {
-					case "ZU":
-						it.raumUberstromVolumenstrom = it.raumZuluftVolumenstrom
-						break
-					case "AB":
-						it.raumUberstromVolumenstrom = it.raumAbluftVolumenstrom
-						break
-					case "ZU/AB":
-						it.raumUberstromVolumenstrom =
-							java.lang.Math.abs(it.raumZuluftVolumenstrom - it.raumAbluftVolumenstrom)
-						break
-				}
+			switch (it.raumLuftart) {
+				case "ZU":
+					it.raumUberstromVolumenstrom = it.raumZuluftVolumenstrom
+					break
+				case "AB":
+					it.raumUberstromVolumenstrom = it.raumAbluftVolumenstrom
+					break
+				case "ZU/AB":
+					it.raumUberstromVolumenstrom =
+						java.lang.Math.abs(it.raumZuluftVolumenstrom - it.raumAbluftVolumenstrom)
+					break
 			}
 		}
 	}
