@@ -89,10 +89,10 @@ class ProjektController {
 		model.map.anlage.zentralgerat = model.meta.zentralgerat[0]
 		// Raumvolumenströme, Volumenstrom des Zentralgeräts; default ist erster Wert der Liste
 		model.map.anlage.volumenstromZentralgerat = model.meta.volumenstromZentralgerat[0]
-		// Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
+		/* Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
 		model.map.dvb.kanalbezeichnung = model.meta.dvbKanalbezeichnung
 		// Druckverlustberechnung - Ventileinstellung - Ventilbezeichnung
-		// TODO Why this? model.map.dvb.ventileinstellung = model.meta.dvbVentileinstellung[]
+		// TODO Why this? model.map.dvb.ventileinstellung = model.meta.dvbVentileinstellung[]*/
 	}
 	
 	/**
