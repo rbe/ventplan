@@ -1,6 +1,6 @@
 #!/bin/bash
 # 
-# /Users/rbe/project/wac2/makeusbstick
+# /Users/rbe/project/wac2/bwac
 # 
 # Copyright (C) 2010 Informationssysteme Ralf Bensmann.
 # Alle Rechte vorbehalten. Nutzungslizenz siehe http://www.bensmann.com/license_de.html
@@ -135,7 +135,7 @@ case "$1" in
 		_usbstick_update_sql
 	;;
 	*)
-		echo "usage: $0 { inc-version <type> | usbstick }"
+		echo "usage: $0 { inc-version <type> | usbstick | usbstick-sql }"
 	;;
 esac
 
