@@ -55,7 +55,7 @@ class Wac2Controller {
 			model.meta.volumenstromZentralgerat = []
 			def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
 			def maxVsZentralgerat = volumenstromZentralgerat.toList().last() as Integer
-				(minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
+			(minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
 			// Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
 			model.meta.dvbKanalbezeichnung = wacModelService.getDvbKanalbezeichnung()
 			// Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte
