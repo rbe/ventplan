@@ -322,9 +322,11 @@ class ProjektModelService {
 			X.tc { uberstromelement(map.raumUberstromElement) }
 			// Türen
 			map.turen.eachWithIndex { t, i ->
-				tur() {
-					X.tc { name(t.turname) } { name("Tür ${i}") }
-					X.tc { breite(t.turbreite) } { breite(610.0) }
+				if (t.turname && t.turbreite) {
+					tur() {
+						X.tc { name(t.turname) } { name("Tür ${i}") }
+						X.tc { breite(t.turbreite) } { breite(0.0) }
+					}
 				}
 			}
 		}
