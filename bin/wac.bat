@@ -3,8 +3,8 @@ rem
 rem /Users/rbe/project/wac2/wac.bat
 rem 
 rem Copyright (C) 2010 Informationssysteme Ralf Bensmann.
-rem Alle Rechte vorbehalten. Nutzungslizenz siehe http://www.bensmann.com/license_de.html
-rem All Rights Reserved. Use is subject to license terms, see http://www.bensmann.com/license_en.html
+rem Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
+rem Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
 rem 
 rem Created by: rbe
 rem
