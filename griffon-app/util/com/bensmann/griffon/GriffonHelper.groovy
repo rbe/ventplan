@@ -203,8 +203,10 @@ class GriffonHelper {
 				try {
 					m[k] = v
 				} catch (e) {
-					println "deepCopyMap: else; v=$v k=$k m=$m"
-					println "deepCopyMap: ${e}"
+					if (DEBUG) {
+						println "deepCopyMap: else; v=$v k=$k m=$m"
+						println "deepCopyMap: ${e}"
+					}
 				}
 			}
 		}
@@ -335,8 +337,8 @@ class GriffonHelper {
 		try {
 			closure(component)
 		} catch (e) {
-			e.printStackTrace()
 			println "recurse(${component.class}): EXCEPTION=${e}"
+			e.printStackTrace()
 		}
 	}
 	

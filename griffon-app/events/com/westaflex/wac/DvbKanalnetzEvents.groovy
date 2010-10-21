@@ -32,7 +32,7 @@ class DvbKanalnetzEvents {
 	 * 
 	 */
 	def onDvbKanalnetzHinzufugen = { kanalnetz, view ->
-		println "onDvbKanalnetzHinzufugen"
+		//println "onDvbKanalnetzHinzufugen"
 		doLater {
 			// Map values from GUI
 			def k = [
@@ -67,13 +67,13 @@ class DvbKanalnetzEvents {
 			publishEvent "DvbKanalnetzInTabelleWahlen", [kanalnetzIndex]
 		}
 	}
-
-    /**
+	
+	/**
 	 * Zeile aus Druckverlustberechnung Kanalnetz entfernen.
 	 */
 	def onDvbKanalnetzEntfernen = { kanalnetzIndex ->
 		doLater {
-			println "onDvbKanalnetzEntfernen: kanalnetzIndex=${kanalnetzIndex}"
+			//println "onDvbKanalnetzEntfernen: kanalnetzIndex=${kanalnetzIndex}"
 			// Zeile aus Model entfernen
 			model.removeDvbKanalnetz(kanalnetzIndex)
 		}

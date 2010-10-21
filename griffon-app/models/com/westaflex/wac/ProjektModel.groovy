@@ -300,7 +300,7 @@ class ProjektModel {
 				isEditable:     { object, columnIndex -> writable[columnIndex] },
 				setColumnValue: { object, value, columnIndex ->
 					def property = propertyNames[columnIndex]
-					println "gltmClosure, setColumnValue: ${property}=${value}"
+					if (DEBUG) println "gltmClosure, setColumnValue: ${property}=${value}"
 					// Call pre-value-set closure
 					if (preValueSet) object = preValueSet(object, property, value, columnIndex)
 					else {
@@ -315,7 +315,7 @@ class ProjektModel {
 					null
 				},
 				getValueAt: { rowIndex, columnIndex ->
-					println "gltmClosure, getValueAt: rowIndex=${rowIndex}, columnIndex=${columnIndex}"
+					if (DEBUG) println "gltmClosure, getValueAt: rowIndex=${rowIndex}, columnIndex=${columnIndex}"
 					//no value to get...
 				}
 			] as ca.odell.glazedlists.gui.WritableTableFormat)
@@ -358,7 +358,7 @@ class ProjektModel {
 				isEditable:     { object, columnIndex -> writable[columnIndex] },
 				setColumnValue: { object, value, columnIndex ->
 					def property = propertyNames[columnIndex]
-					println "gltmClosureCheckbox, setColumnValue: ${property}=${value}"
+					if (DEBUG) println "gltmClosureCheckbox, setColumnValue: ${property}=${value}"
 					if (columnIndex == 4) {
 						object[property] = value
 					} else {
@@ -377,7 +377,7 @@ class ProjektModel {
 					null
 				},
 				getValueAt: { rowIndex, columnIndex ->
-					println "gltmClosureCheckbox, getValueAt: rowIndex=${rowIndex}, columnIndex=${columnIndex}"
+					if (DEBUG) println "gltmClosureCheckbox, getValueAt: rowIndex=${rowIndex}, columnIndex=${columnIndex}"
 					// No value to get...
 				},
 				getColumnClass: { columnIndex ->
@@ -447,10 +447,12 @@ class ProjektModel {
 	 */
 	def createRaumTurenTableModel() {
 		def index = meta.gewahlterRaum.position
-		println "createRaumTurenTableModel: index=${index}"
-        println "createRaumTurenTableModel: raumeTuren: ${tableModels.raumeTuren}"
-        println "#########"
-        println "createRaumTurenTableModel: raumeTuren[index]: ${tableModels.raumeTuren[index]}"
+		if (DEBUG) {
+			println "createRaumTurenTableModel: index=${index}"
+			println "createRaumTurenTableModel: raumeTuren: ${tableModels.raumeTuren}"
+			println "#########"
+			println "createRaumTurenTableModel: raumeTuren[index]: ${tableModels.raumeTuren[index]}"
+		}
 		def columnNames =   ["Bezeichnung",    "Breite [mm]", "Querschnittsfläche [mm²]", "Spaltenhöhe [mm]", "mit Dichtung"] as String[]
 		def propertyNames = ["turBezeichnung", "turBreite",   "turQuerschnitt",           "turSpalthohe",     "turDichtung"] as String[]
 		def writable      = [true,             true,          false,                      false,              true] as boolean[]
@@ -471,7 +473,7 @@ class ProjektModel {
 		def postValueSet  = { object, columnIndex, value ->
 			def myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
 			myTempMap[columnIndex] = value
-			println "Edited: map.dvb.kanalnetz -> ${map.dvb.kanalnetz}"
+			if (DEBUG) println "Edited: map.dvb.kanalnetz -> ${map.dvb.kanalnetz}"
 			// Call ProjektController
 			app.controllers[mvcId].dvbKanalnetzGeandert(object.position)
 			resyncDvbKanalnetzTableModels()
@@ -489,7 +491,7 @@ class ProjektModel {
 		def postValueSet  = { object, columnIndex, value ->
 			def myTempMap = map.dvb.ventileinstellung.find { it.position == object.position }
 			myTempMap[columnIndex] = value
-			println "Edited: map.dvb.ventileinstellung -> ${map.dvb.ventileinstellung}"
+			if (DEBUG) println "Edited: map.dvb.ventileinstellung -> ${map.dvb.ventileinstellung}"
 			// Call ProjektController
 			app.controllers[mvcId].dvbVentileinstellungGeandert(object.position)
 			resyncDvbVentileinstellungTableModels()
@@ -501,7 +503,7 @@ class ProjektModel {
 	 * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
 	 */
 	def addWbwTableModel(index) {
-		println "addWbwTableModel(${index}): ${tableModels.wbw[index]}"
+		if (DEBUG) println "addWbwTableModel(${index}): ${tableModels.wbw[index]}"
 		// TableModel schon vorhanden?
 		if (tableModels.wbw[index]) return
 		// Neues TableModel erstellen und füllen
@@ -524,7 +526,7 @@ class ProjektModel {
 	 */
 	def createWbwTableModel() {
 		def index = meta.dvbKanalnetzGewahlt
-		println "createWbwTableModel: index=${index}"
+		if (DEBUG) println "createWbwTableModel: index=${index}"
 		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"] as String[]
 		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"] as String[]
 		def writable      = [true, true, true] as boolean[]
@@ -567,7 +569,7 @@ class ProjektModel {
                 map.raum.raume.add(raum)
                 if (DEBUG) println "addRaum: copy -> map: ${map.raum.raume}"
             } else {
-                println "${raum}"
+                if (DEBUG) println "${raum}"
                 def r = ([turen: [
                             [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
                             [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],

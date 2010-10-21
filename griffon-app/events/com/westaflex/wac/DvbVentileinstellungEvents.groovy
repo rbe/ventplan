@@ -67,7 +67,7 @@ class DvbVentileinstellungEvents {
 	 */
 	def onDvbVentileinstellungEntfernen = { ventileinstellungIndex ->
 		doLater {
-			println "onDvbVentileinstellungEntfernen: ventileinstellungIndex=${ventileinstellungIndex}"
+			//println "onDvbVentileinstellungEntfernen: ventileinstellungIndex=${ventileinstellungIndex}"
 			// Zeile aus Model entfernen
 			model.removeDvbVentileinstellung(ventileinstellungIndex)
 		}

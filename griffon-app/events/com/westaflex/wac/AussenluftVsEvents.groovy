@@ -31,7 +31,7 @@ class AussenluftVsEvents {
 	 */
 	def onAussenluftVsBerechnen = {
 		doLater {
-			println "processing event 'AussenluftVsBerechnen'"
+			//println "processing event 'AussenluftVsBerechnen'"
 			wacCalculationService.aussenluftVs(model.map)
 			// Zentralgerät bestimmen
 			publishEvent "ZentralgeratAktualisieren"

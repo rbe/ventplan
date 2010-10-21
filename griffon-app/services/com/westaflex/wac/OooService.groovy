@@ -16,6 +16,8 @@ import com.bensmann.griffon.GriffonHelper as GH
  */
 class OooService {
 	
+	public static boolean DEBUG = false
+	
 	/**
 	 * OpenOffice connection manager.
 	 */
@@ -61,7 +63,7 @@ class OooService {
 	 */
 	def shutdownOCM = {
 		try {
-			println "shutting down OCM"
+			if (DEBUG) println "shutting down OCM"
 			ocm?.shutdown(true)
 		} catch (e) {
 			println "OCM shutdown: ${e}"
@@ -130,23 +132,14 @@ class OooService {
 				// Create new document from template
 				doc = westaAuslegungTemplate.open(oooConnection, [Hidden: Boolean.TRUE])
 				// Daten übergeben
-				println "projektdaten"
 				addProjektdaten(doc, map.kundendaten)
-				println "kundendaten"
 				addKundendaten(doc, map.kundendaten)
-				println "informationen"
 				addInformationen(doc, map)
-				println "raumdaten"
 				addRaumdaten(doc, map)
-				println "rauvolumenströme"
 				addRaumvolumenstrome(doc, map)
-				println "überströmelement"
 				addUberstromelemente(doc, map)
-				println "akustik"
 				addAkustikBerechnung(doc, map)
-				println "dvbkanalnetz"
 				addDvbKanalnetz(doc, map)
-				println "dvbventileinstellung"
 				addDvbVentileinstellung(doc, map)
 				// Save generated document
 				file = new java.io.File(System.getProperty("user.home") + "/Desktop", "${(title ?: "WAC_Auslegung")}.odt" as String)

@@ -31,7 +31,7 @@ class GebaudeEvents {
 	 */
 	def onGeometrieEingegeben = {
 		doLater {
-			println "processing event 'GeometrieEingegeben'"
+			//println "processing event 'GeometrieEingegeben'"
 			wacCalculationService.geometrie(model.map)
 			wacCalculationService.aussenluftVs(model.map)
 			// Zentralgerät bestimmen
