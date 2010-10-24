@@ -862,7 +862,8 @@ class ProjektController {
 		def wbw = model.tableModels.wbw[index]
 		// Summiere WBW
 		def map = model.map.dvb.kanalnetz[index]
-		model.meta.summeAktuelleWBW = map.gesamtwiderstandszahl =
+		model.meta.summeAktuelleWBW =
+			map.gesamtwiderstandszahl =
 			wbw.sum {
 				it.anzahl.toDouble2() * it.widerstandsbeiwert.toDouble2()
 			}
@@ -1075,8 +1076,7 @@ class ProjektController {
 			// Berechne Akustik
 			wacCalculationService.berechneAkustik(tabname, input, model.map)
 			// Zentralgerät, Überschrift
-			view."akustik${tabname}${tabname}Zentralgerat".text =
-				input.zentralgerat
+			view."akustik${tabname}${tabname}Zentralgerat".text = input.zentralgerat
 			// db(A)
 			view."akustik${tabname}dbA".text =
 				wacModelService.getDezibelZentralgerat(input.zentralgerat, input.volumenstrom, tabname).toString2()
