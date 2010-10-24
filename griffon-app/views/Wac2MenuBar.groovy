@@ -19,7 +19,7 @@ menuBar = menuBar {
 		menuItem(projektSchliessenAction)
 		separator()
 		menuItem(seitenansichtAction)
-		// TODO menuItem(druckenAction)
+		menuItem(druckenAction)
 		if (!isMacOSX) {
 			separator()
 			menuItem(exitAction)

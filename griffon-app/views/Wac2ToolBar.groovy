@@ -17,5 +17,5 @@ toolBar(id: 'toolbar', rollover: true) {
 	button(projektSpeichernAlsAction, text: null)
 	vertSep()
 	button(projektSeitenansichtAction, text: null)
-	// TODO button(projektDruckenAction, text: null)
+	button(projektDruckenAction, text: null)
 }

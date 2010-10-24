@@ -63,5 +63,23 @@ class DialogController {
 	def showErrorDialog = { errorMsg ->
 		inform("Fehler", errorMsg)
 	}
-	
+
+    /**
+     * Ticket #97
+     * Dialog zum Drucken anzeigen.
+     * Ja = Daten an OOo senden
+     * Nein = es wird ein Blanko Angebot geöffnet
+     */
+    def showPrintProjectDialog() {
+		def choice = choice(
+						"Angebot aus der aktuellen Auslegung erstellen?",
+						"Bitte wählen Sie.",
+						1,
+						[
+							new CommandLink("Ja", ""),
+							new CommandLink("Nein", ""),
+						]
+					)
+		choice
+	}
 }
