@@ -553,7 +553,7 @@ class ProjektController {
 				}
 				model.resyncRaumTableModels()
 				// Raum geändert
-				publishEvent "RaumGeandert", [row - 1]
+				publishEvent "RaumGeandert", [row + 1]
 			}
 		}
 	}
