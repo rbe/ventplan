@@ -428,7 +428,7 @@ class OooService {
 			doc["abZuFilterverschmutzungComboBox"]                = map.akustik.zuluft.slpErhohungFilter as String
 			doc["abZuHauptschalldaempfer1ComboBox"]               = map.akustik.zuluft.hauptschalldampfer1
 			doc["abZuHauptschalldaempfer2ComboBox"]               = map.akustik.zuluft.hauptschalldampfer2
-			doc["abZuAnzahlUmlenkungenTextField"]                 = map.akustik.zuluft.anzahlUmlenkungen
+			doc["abZuAnzahlUmlenkungenTextField"]                 = map.akustik.zuluft.anzahlUmlenkungen as String
 			doc["abZuLuftverteilerkastenTextField"]               = map.akustik.zuluft.luftverteilerkasten
 			doc["abZuLaengsdaempfungKanalComboBox"]               = map.akustik.zuluft.langsdampfungKanal
 			doc["abZuLaengsdaempfungKanalTextField"]              = map.akustik.zuluft.langsdampfungKanalLfdmMeter
