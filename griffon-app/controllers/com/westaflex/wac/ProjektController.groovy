@@ -218,10 +218,21 @@ class ProjektController {
 	}
 	
 	/**
-	 * TODO
+	 * Aktuelles Projekt drucken
 	 */
 	def drucken = {
-		
+		def choice = app.controllers["Dialog"].showPrintProjectDialog()
+        if (DEBUG) println "exitApplication: choice=${choice}"
+        switch (choice) {
+            case 0:
+                if (DEBUG) println "Ja = Daten an OOo senden"
+                // TODO rbe: Daten an OOo senden
+                break
+            case 1: // Cancel: do nothing...
+                if (DEBUG) println "Nein = es wird ein Blanko Angebot geöffnet"
+                // TODO rbe: Blanko Angebot öffnen
+                break
+        }
 	}
 	
 	/**

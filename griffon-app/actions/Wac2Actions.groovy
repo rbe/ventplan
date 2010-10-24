@@ -67,7 +67,7 @@ projektSeitenansichtAction = action(
 		enabled: bind { model.aktivesProjekt != null },
 		closure: controller.projektSeitenansicht
 	)
-/* TODO
+
 projektDruckenAction = action(
 		id: "druckenAction",
 		name: "Drucken",
@@ -77,7 +77,7 @@ projektDruckenAction = action(
 		enabled: bind { model.aktivesProjekt != null },
 		closure: controller.projektDrucken
 	)
-*/
+
 exitAction = action(
 		id: "exitAction",
 		name: "WestaWAC beenden",
