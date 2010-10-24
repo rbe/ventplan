@@ -1078,7 +1078,8 @@ class ProjektController {
 			// Zentralgerät, Überschrift
 			view."akustik${tabname}${tabname}Zentralgerat".text = input.zentralgerat
 			// db(A)
-			view."akustik${tabname}dbA".text =
+			m.dbA =
+				view."akustik${tabname}dbA".text =
 				wacModelService.getDezibelZentralgerat(input.zentralgerat, input.volumenstrom, tabname).toString2()
 			// Mittlerer Schalldruckpegel
 			view."akustik${tabname}MittlererSchalldruckpegel".text =
