@@ -261,8 +261,10 @@ class GriffonHelper {
 				] + dialogProp
 			// Create dialog instance
 			dialog = builder.dialog(prop) {
+                jideScrollPane() {
 					build(dialogClass)
 				}
+            }
 			// Cache dialog instance
 			//dialogCache[dialogClass] = dialog
 		//}
