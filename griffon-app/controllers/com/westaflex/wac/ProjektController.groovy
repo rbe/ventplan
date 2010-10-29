@@ -719,16 +719,11 @@ class ProjektController {
 						zentralgerat
 				}
 				// Akustik Zuluft
-				//GH.withDisabledActionListeners view.akustikZuluftZuluftstutzenZentralgerat, {
-					view.akustikZuluftZuluftstutzenZentralgerat.selectedItem = zentralgerat
-				//}
+				view.akustikZuluftZuluftstutzenZentralgerat.selectedItem = zentralgerat
 				// Akustik Abluft
-				//GH.withDisabledActionListeners view.akustikZuluftZuluftstutzenZentralgerat, {
-					view.akustikAbluftAbluftstutzenZentralgerat.selectedItem = zentralgerat
-				//}
+				view.akustikAbluftAbluftstutzenZentralgerat.selectedItem = zentralgerat
 				// Aktualisiere Volumenstrom
 				GH.withDisabledActionListeners view.raumVsVolumenstrom, {
-					view.raumVsVolumenstrom.removeAllItems()
 					// Hole Volumenströme des Zentralgeräts
 					def volumenstromZentralgerat =
 						wacModelService.getVolumenstromFurZentralgerat(view.raumVsZentralgerat.selectedItem)
@@ -737,8 +732,17 @@ class ProjektController {
 					def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
 					def maxVsZentralgerat = volumenstromZentralgerat.toList().last() as Integer
 					(minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
-					// Füge Volumenströme in Combobox hinzu
-					model.meta.volumenstromZentralgerat.each { view.raumVsVolumenstrom.addItem(it) }
+					// Füge Volumenströme in Comboboxen hinzu
+					view.raumVsVolumenstrom.removeAllItems()
+					view.akustikZuluftPegel.removeAllItems()
+					view.akustikAbluftPegel.removeAllItems()
+					model.meta.volumenstromZentralgerat.each {
+						// Raumvolumenströme
+						view.raumVsVolumenstrom.addItem(it)
+						// Akustikberechnung
+						view.akustikZuluftPegel.addItem(it)
+						view.akustikAbluftPegel.addItem(it)
+					}
 					// Selektiere errechneten Volumenstrom
 					def roundedVs = wacCalculationService.round5(nl)
 					def foundVs = model.meta.volumenstromZentralgerat.find { it.toInteger() == roundedVs }
@@ -1078,6 +1082,7 @@ class ProjektController {
 				einfugungsdammwert: view."akustik${tabname}EinfugungsdammwertLuftdurchlass".selectedItem,
 				raumabsorption: getInt(view."akustik${tabname}Raumabsorption")
 			]
+		// Nur berechnen, wenn Zentralgerät gesetzt
 		if (input.zentralgerat) {
 			// Volumenstrom gesetzt?
 			if (input.volumenstrom == 0) {
