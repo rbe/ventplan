@@ -435,8 +435,8 @@ class OooService {
 			doc["abZuSchalldaempferVentilComboBox"]               = map.akustik.zuluft.schalldampferVentil
 			doc["abZuEinfuegungswertLuftdurchlassComboBox"]       = map.akustik.zuluft.einfugungsdammwert
 			doc["abZuRaumabsorptionTextField"]                    = map.akustik.zuluft.raumabsorption
-			doc["abZuTabelleDezibelWertLabel"]                    = GH.toString2Converter(map.akustik.zuluft.dbA)
-			doc["abZuTabelleMittlererSchalddruckpegelWertLabel"]  = GH.toString2Converter(map.akustik.zuluft.mittlererSchalldruckpegel)
+			doc["abZuTabelleDezibelWertLabel"]                    = /*GH.toString2Converter(*/map.akustik.zuluft.dbA/*)*/
+			doc["abZuTabelleMittlererSchalldruckpegelWertLabel"]  = GH.toString2Converter(map.akustik.zuluft.mittlererSchalldruckpegel)
 			// Abluft
 			//abAbTabelleUberschrift2Label = "Abluft"
 			doc["abAbRaumbezeichnungComboBox"]                    = map.akustik.abluft.raumBezeichnung
@@ -452,8 +452,8 @@ class OooService {
 			doc["abAbSchalldaempferVentilComboBox"]               = map.akustik.abluft.schalldampferVentil
 			doc["abAbEinfuegungswertLuftdurchlassComboBox"]       = map.akustik.abluft.einfugungsdammwert
 			doc["abAbRaumabsorptionTextField"]                    = map.akustik.abluft.raumabsorption
-			doc["abAbTabelleDezibelWertLabel"]                    = GH.toString2Converter(map.akustik.abluft.dbA)
-			doc["abAbTabelleMittlererSchalddruckpegelWertLabel"]  = GH.toString2Converter(map.akustik.abluft.mittlererSchalldruckpegel)
+			doc["abAbTabelleDezibelWertLabel"]                    = /*GH.toString2Converter(*/map.akustik.zuluft.dbA/*)*/
+			doc["abAbTabelleMittlererSchalldruckpegelWertLabel"]  = GH.toString2Converter(map.akustik.abluft.mittlererSchalldruckpegel)
 		}
 	}
 	
