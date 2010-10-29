@@ -19,7 +19,7 @@ menuBar = menuBar {
 		menuItem(projektSchliessenAction)
 		separator()
 		menuItem(seitenansichtAction)
-		menuItem(druckenAction)
+		/* Später aktivieren, Angebote sind noch nicht verfügbar! menuItem(druckenAction)*/
 		if (!isMacOSX) {
 			separator()
 			menuItem(exitAction)
