@@ -20,37 +20,69 @@ _parse_version() {
 }
 
 #
-# Increase application version
+# Increase actual Griffon application version.
 #
 _inc_version() {
 	version=($(_parse_version))
 	maj=${version[0]}
 	min=${version[1]}
 	pat=${version[2]}
+	# Increase depending on parameter(s)
 	for i in $*
 	do
 		eval "$i=$((i + 1))"
 	done
-	t=tmp.$$
-	# Search and replace
-	cat application.properties | sed "s#app.version.*#app.version=$maj.$min.$pat#g" > ${t}
-	mv ${t} application.properties
-	# Set version in conf/version
-	_conf_ver
-	# Create update directory
+	echo "${maj}.${min}.${pat}"
+}
+
+#
+# Make update directory for actual version.
+#
+_make_update_dir() {
+	version=($(_parse_version))
+	maj=${version[0]}
+	min=${version[1]}
+	pat=${version[2]}
+	# Create update directory for actual version
 	u=wacupdate/upd${maj}${min}${pat}
 	for d in conf lib sql
 	do
 		mkdir -p ${u}/${d}
 	done
-	cp ${USBSTICK}/conf/version ${u}/conf
 }
 
 #
-# Set version in conf/version
+# Set next Griffon application version.
+#
+_set_next_version() {
+	# Make update directory for actual version; before version number is increased
+	_make_update_dir
+	# Set Griffon application version
+	nver=$(_inc_version $1)
+	griffon set-version ${nver}
+	# Parse new version number
+	version=($(_parse_version))
+	maj=${version[0]}
+	min=${version[1]}
+	pat=${version[2]}
+	##t=tmp.$$
+	##cat application.properties | sed "s#app.version.*#app.version=$maj.$min.$pat#g" > ${t}
+	##mv ${t} application.properties
+	# Copy next version into update directory
+	u=wacupdate/upd${maj}${min}${pat}
+	for i in conf lib sql
+	do
+		mkdir -p ${u}/${i}
+	done
+	echo "${maj}.${min}.${pat}" > ${u}/conf/version
+	#
+	echo "New version is ${nver}"
+}
+
+#
+# Set actual Griffon application version in conf/version.
 #
 _conf_ver() {
-	# Write version into conf/version
 	cat application.properties | grep app.version | awk -F= '{print $2}' > ${USBSTICK}/conf/version
 }
 
@@ -114,8 +146,10 @@ _usbstick_make_dirs() {
 # Update SQL database in USB stick distribution
 #
 _usbstick_update_sql() {
-	# Copy SQL data
+	mkdir -p ${USBSTICK}/sql
+	# Cleanup
 	rm -rf ${USBSTICK}/sql/*
+	# Copy SQL data
 	cp -R sql/* ${USBSTICK}/sql
 }
 
@@ -151,7 +185,11 @@ _usbstick() {
 
 case "$1" in
 	inc-version)
-		_inc_version $2
+		if [ $# -lt 2 ]; then
+			echo "inc-version needs parameter: <maj | min | pat>"
+			exit 1
+		fi
+		_set_next_version $2
 	;;
 	usbstick)
 		: > bwac.log
@@ -161,7 +199,7 @@ case "$1" in
 		_usbstick_update_sql
 	;;
 	*)
-		echo "usage: $0 { inc-version <type> | usbstick | usbstick-sql }"
+		echo "usage: $0 { inc-version <type> | usbstick | usbstick-sql | inc-version <maj | min | pat> }"
 	;;
 esac
 
