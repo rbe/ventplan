@@ -17,7 +17,7 @@ import com.bensmann.griffon.GriffonHelper as GH
 @griffon.util.EventPublisher
 class RaumEvents {
 	
-	public static boolean DEBUG = true
+	public static boolean DEBUG = false
 	
 	def model
 	def wacCalculationService
