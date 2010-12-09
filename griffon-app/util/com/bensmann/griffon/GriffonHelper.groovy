@@ -193,6 +193,8 @@ class GriffonHelper {
 	
 	/**
 	 * Copy all values from a map taking nested maps into account.
+	 * @param m Destination map.
+	 * @param x Source map.
 	 */
 	def static deepCopyMap = { m, x ->
 		x.each { k, v ->
