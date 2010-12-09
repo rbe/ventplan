@@ -374,7 +374,9 @@ class Wac2Controller {
 		// Open filechooser
 		def openResult = view.wpxFileChooserWindow.showSaveDialog(view.wac2Frame)
 		if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
-			mvc.model.wpxFilename = view.wpxFileChooserWindow.selectedFile.toString()
+			def fname = view.wpxFileChooserWindow.selectedFile.toString()
+			if (!fname.endsWith(".wpx")) fname += ".wpx"
+			mvc.model.wpxFilename = fname
 			if (DEBUG) println "projektSpeichernAls: wpxFilename=${mvc.model.wpxFilename?.dump()}"
 			// Save data
 			aktivesProjektSpeichern(evt)
