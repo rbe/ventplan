@@ -106,8 +106,9 @@
     </xs:complexType>
     <xs:complexType name="door">
         <xs:sequence>
-            <xs:element name="name"   type="xs:string"  default="T&#xFC;r"/>
-            <xs:element name="breite" type="xs:integer" default="610"/>
+            <xs:element name="name"     type="xs:string"  default="T&#xFC;r" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="breite"   type="xs:integer" default="610"      minOccurs="0" maxOccurs="1"/>
+            <xs:element name="dichtung" type="xs:boolean" default="true"     minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="company">
