@@ -337,7 +337,7 @@ class Wac2Controller {
 					// HACK
 					if (projektController) {
 						doOutside {
-							try { Thread.sleep(1 * 1000) } catch (e) {}
+							//try { Thread.sleep(1 * 1000) } catch (e) {}
 							projektController.afterLoading()
 						}
 					}
