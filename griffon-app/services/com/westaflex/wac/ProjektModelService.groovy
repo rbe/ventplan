@@ -109,9 +109,21 @@ class ProjektModelService {
 					raumVerteilebene: X.vs { room."ventilebene".text() },
 					raumAnzahlUberstromVentile: X.vi { room."anzahlUberstromventile".text() },
 					raumUberstromElement: X.vs { room."uberstromelement".text() },
-					turen: []
+					turen: [] /*as ObservableList*/
 				] as ObservableMap
-				//println "####!!!!!!! r=${r.dump()}"
+				// Türen
+				room."tur".each { tur ->
+					println tur
+					println tur."name".text()
+					println tur."breite".text()
+					println tur."dichtung".text()
+					r.turen << [
+							turBezeichnung: X.vs { tur."name".text() },
+							turBreite: X.vd { tur."breite".text() },
+							turDichtung: X.vb { tur."dichtung".text() == "true" }
+						]
+				}
+				println "####!!!!!!! r=${r.dump()}"
 				raume << r
 			}
 			def anlage = p."anlage"
@@ -321,11 +333,12 @@ class ProjektModelService {
 			X.tc { anzahlUberstromventile(map.raumAnzahlUberstromVentile as Integer) }
 			X.tc { uberstromelement(map.raumUberstromElement) }
 			// Türen
-			map.turen.eachWithIndex { t, i ->
-				if (t.turname && t.turbreite) {
+			map.turen?.eachWithIndex { t, i ->
+				if (t.turBezeichnung && t.turBreite) {
 					tur() {
-						X.tc { name(t.turname) } { name("Tür ${i}") }
-						X.tc { breite(t.turbreite) } { breite(0.0) }
+						X.tc { name(t.turBezeichnung) } { name("Tür ${i}") }
+						X.tc { breite(t.turBreite) } { breite(0.0) }
+						X.tc { dichtung(t.turDichtung) } { dichtung(true) }
 					}
 				}
 			}
