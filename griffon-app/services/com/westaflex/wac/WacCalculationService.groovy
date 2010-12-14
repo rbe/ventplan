@@ -562,8 +562,11 @@ class WacCalculationService {
 	def berechneUberstromelemente(map) {
 		// 1-3 wurden woanders erledigt
 		// 4
+		if (DEBUG) println "berechneUberstromelemente: map.raumUberstromElement=${map?.raumUberstromElement?.dump()}"
 		def maxVolumenstrom = wacModelService.getMaxVolumenstrom(map.raumUberstromElement)
 		// 5b
+		if (DEBUG) println "berechneUberstromelemente: map.turen=${map?.turen?.dump()}"
+		if (DEBUG) println "berechneUberstromelemente: map.raumMaxTurspaltHohe=${map.raumMaxTurspaltHohe}"
 		if (!map.raumMaxTurspaltHohe) {
 			println "WARNING: value for maxTurspaltHohe is missing, using default: 10.0 -> ${map?.dump()}"
 			map.raumMaxTurspaltHohe = 10.0
@@ -574,6 +577,7 @@ class WacCalculationService {
 		// 5a
 		def vsMaxTurspalt = (querschnitt + 2500 * anzTurenOhneDichtung) / 100 / 3.1 * java.lang.Math.sqrt(1.5d)
 		// 5
+		if (DEBUG) println "berechneUberstromelemente: map.raumUberstromVolumenstrom=${map.raumUberstromVolumenstrom?.dump()}"
 		def usRechenwert = map.raumUberstromVolumenstrom - vsMaxTurspalt
 		// 6
 		map.raumAnzahlUberstromVentile = java.lang.Math.ceil(usRechenwert / maxVolumenstrom)

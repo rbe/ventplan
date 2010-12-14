@@ -82,7 +82,7 @@ class CheckUpdate implements java.lang.Runnable {
 			println "update: nothing found for version ${version}"
 		} catch (e) {
 			//e.printStackTrace()
-			println e
+			println "update: ${e}"
 		}
 	}
 	

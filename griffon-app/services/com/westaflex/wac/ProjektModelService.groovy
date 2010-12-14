@@ -114,10 +114,6 @@ class ProjektModelService {
 				] as ObservableMap
 				// Türen
 				room."tur".each { tur ->
-					println tur
-					println tur."name".text()
-					println tur."breite".text()
-					println tur."dichtung".text()
 					r.turen << [
 							turBezeichnung: X.vs { tur."name".text() },
 							turBreite: X.vd { tur."breite".text() },
