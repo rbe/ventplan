@@ -47,8 +47,6 @@ public class WacConverter {
     private File griffonXmlFile;
     private File outputFile;
 
-    private Pattern pattern = Pattern.compile("^\\d*\\.{0,1}\\d+$");
-
     /*
     public static void main(String[] args)
     {
@@ -333,7 +331,7 @@ public class WacConverter {
                 {
                     try
                     {
-                        Matcher m = pattern.matcher(text);
+                        Matcher m = Constants.pattern.matcher(text);
                         if (m.matches())
                         {
                             text = text.replace(".", ",");
@@ -353,6 +351,67 @@ public class WacConverter {
             }
         }
         return "";
+    }
+
+    private String replaceRaumTypValue(String value)
+    {
+        if (value.equals(Constants.WOH))
+        {
+            value = Constants.WOHNZIMMER;
+        }
+        else if (value.equals(Constants.KIN))
+        {
+            value = Constants.KINDERZIMMER;
+        }
+        else if (value.equals(Constants.SLF))
+        {
+            value = Constants.SCHLAFZIMMER;
+        }
+        else if (value.equals(Constants.ESS))
+        {
+            value = Constants.ESSZIMMER;
+        }
+        else if (value.equals(Constants.ARB))
+        {
+            value = Constants.ARBEITSZIMMER;
+        }
+        else if (value.equals(Constants.GAS))
+        {
+            value = Constants.GAESTEZIMMER;
+        }
+        else if (value.equals(Constants.HAU))
+        {
+            value = Constants.HAUSARBEITSRAUM;
+        }
+        else if (value.equals(Constants.KEL))
+        {
+            value = Constants.KELLERRAUM;
+        }
+        else if (value.equals(Constants.KUC))
+        {
+            value = Constants.KUECHE;
+        }
+        else if (value.equals(Constants.BAD2))
+        {
+            value = Constants.BAD;
+        }
+        else if (value.equals(Constants.DUS))
+        {
+            value = Constants.DUSCHRAUM;
+        }
+        else if (value.equals(Constants.SAU))
+        {
+            value = Constants.SAUNA;
+        }
+        else if (value.equals(Constants.FLU))
+        {
+            value = Constants.FLUR;
+        }
+        else if (value.equals(Constants.DIE))
+        {
+            value = Constants.DIELE;
+        }
+        return value;
     }
     
 
@@ -855,7 +914,7 @@ public class WacConverter {
                        "//component[@name='wfHoeheTextField']",
                        oldWacDoc);
 
-
+        
         // seebassTabelleTable
         for (int i = 0; i < count; i++)
         {
@@ -868,6 +927,7 @@ public class WacConverter {
             seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "1", "" + i, text));
             // 3
             text = getTextContentFromNode("//raum[position='"+i+"']/raumtyp/text()", griffonDoc);
+            text = replaceRaumTypValue(text);
             seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "2", "" + i, text));
             // 4
             text = getTextContentFromNode("//raum[position='"+i+"']/geschoss/text()", griffonDoc);
