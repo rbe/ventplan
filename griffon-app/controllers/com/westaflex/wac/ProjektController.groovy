@@ -151,23 +151,36 @@ class ProjektController {
 		def raume = model.map.raum.raume.clone()
 		// Jeden Raum einzeln (ohne Events!) berechnen
 		raume.each { raum ->
-			model.addRaum(raum, view)
-			// TODO In einer Methode zusammenfassen: WacCalculationService.berechneRaume(model.map)
-			// Gebäude-Geometrie berechnen
-			wacCalculationService.geometrieAusRaumdaten(model.map)
+			model.addRaumTurenModel()
 			// Aussenluftvolumenströme berechnen
-			wacCalculationService.aussenluftVs(model.map)
+			//wacCalculationService.aussenluftVs(model.map)
 			// Nummern der Räume berechnen
 			wacCalculationService.berechneRaumnummer(model.map)
+		}
+		// Räume: set cell editors
+		model.setRaumEditors(view)
+		// Gebäude-Geometrie berechnen
+		wacCalculationService.geometrieAusRaumdaten(model.map)
+		// Zentralgerät bestimmen
+		onZentralgeratAktualisieren()
+		// Anlagendaten - Kennzeichen
+		berechneEnergieKennzeichen()
+		berechneHygieneKennzeichen()
+		berechneKennzeichenLuftungsanlage()
+		// Zu-/Abluftventile
+		wacCalculationService.berechneZuAbluftventile(model.map)
+		// Jeden Türspalt berechnen
+		raume.each { raum ->
+			// Überströmelemente
+			wacCalculationService.berechneUberstromelemente(raum)
 			// Türspalt berechnen
 			wacCalculationService.berechneTurspalt(raum)
 		}
-		// Zentralgerät bestimmen
-		onZentralgeratAktualisieren()
+		println model.map.anlage.fortluft
 		//
 		model.resyncRaumTableModels()
 		// Update tab title to ensure that no "unsaved-data-star" is displayed
-		model.dirty = false
+		model.map.dirty = false
 		setTabTitle()
 		// Close splash screen
 		Wac2Splash.instance.dispose()
