@@ -15,6 +15,8 @@ public class Constants {
 
     public final static Pattern pattern = Pattern.compile("^\\d*\\.{0,1}\\d+$");
 
+    public final static String TUR_VALUE = ";0;0.0;0.0;true";
+
     public final static String WOHNZIMMER = "Wohnzimmer";
     public final static String WOH = "WOH";
     public final static String KINDERZIMMER = "Kinderzimmer";

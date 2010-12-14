@@ -104,7 +104,7 @@ public class WacConverter {
                     String filename = System.currentTimeMillis() + "_" + griffonXmlFile.getName();
                     outputFile = new File(fullFolderPath, filename);
                 }
-                boolean gzip = false;
+                boolean gzip = true;
                 writeDocument(oldWacDoc, outputFile, gzip);
             }
             else
@@ -618,11 +618,16 @@ public class WacConverter {
         {
             personenVolumen = "";
         }
-
         replaceValueFromString(personenVolumen,
                      "//component[@name='volumenProPersonSpinner']", oldWacDoc);
         replaceValueFromString(personenVolumen,
                      "//component[@name='volumenProPersonSpinner']/spinnermodel/item", oldWacDoc);
+
+
+        //replaceValue("//gebaude/personenVolumen/text()", griffonDoc,
+        //             "//component[@name='volumenProPersonSpinner']", oldWacDoc);
+        //replaceValue("//gebaude/personenVolumen/text()", griffonDoc,
+        //             "//component[@name='volumenProPersonSpinner']/spinnermodel/item", oldWacDoc);
 
         String gsKellergeschossRadioButton = "false";
         String gsErdgeschossRadioButton = "false";
@@ -962,7 +967,9 @@ public class WacConverter {
             seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "10", "" + i, ""));
             seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "11", "" + i, ""));
             seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "12", "" + i, ""));
-            seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "13", "" + i, ""));
+
+            text = createTurValues(i, griffonDoc);
+            seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "13", "" + i, text));
             seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "14", "" + i, ""));
             // 16
             text = getTextContentFromNode("//raum[position='"+i+"']/raumlange/text()", griffonDoc, false);
@@ -1046,6 +1053,41 @@ public class WacConverter {
 
         }
 
+    }
+
+    private String createTurValues(int raumposition, Document griffonDoc)
+    {
+        String value = "";
+        int count = 6;
+        for (int i = 1; i <= count; i++)
+        {
+            String name = getTextContentFromNode("//raum[position='"+raumposition+"']/tur["+i+"]/name/text()", griffonDoc, false);
+            String breite = getTextContentFromNode("//raum[position='"+raumposition+"']/tur["+i+"]/breite/text()", griffonDoc, false);
+            String dichtung = getTextContentFromNode("//raum[position='"+raumposition+"']/tur["+i+"]/dichtung/text()", griffonDoc, false);
+            if (null != name && name.trim().equals(""))
+            {
+                if (value.trim().equals(""))
+                {
+                    value += Constants.TUR_VALUE;
+                }
+                else
+                {
+                    value += "|" + Constants.TUR_VALUE;
+                }
+            }
+            else
+            {
+                if (value.trim().equals(""))
+                {
+                    value += name + ";"+breite+";0.0;0.0;"+dichtung;
+                }
+                else
+                {
+                    value += "|" + name + ";"+breite+";0.0;0.0;"+dichtung;
+                }
+            }
+        }
+        return value;
     }
 
     private Element createRaumTableRowDataElement(Document oldWacDoc, String column, String row, String text)
