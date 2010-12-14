@@ -121,7 +121,7 @@ class ProjektModelService {
 							turDichtung: X.vb { tur."dichtung".text() == "true" }
 						]
 				}
-				println "####!!!!!!! r=${r.dump()}"
+				//println "####!!!!!!! r=${r.dump()}"
 				raume << r
 			}
 			def anlage = p."anlage"
