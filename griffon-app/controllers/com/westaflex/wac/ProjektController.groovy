@@ -147,11 +147,27 @@ class ProjektController {
 	def afterLoading = {
 		if (DEBUG) println "afterLoading: fire RaumHinzufugen"
 		// Räume
-		model.map.raum.raume.each { raum ->
-			publishEvent "RaumHinzugefugt", [raum.position, view]
+		// ConcurrentModificationException!
+		def raume = model.map.raum.raume.clone()
+		// Jeden Raum einzeln (ohne Events!) berechnen
+		raume.each { raum ->
+			model.addRaum(raum, view)
+			// TODO In einer Methode zusammenfassen: WacCalculationService.berechneRaume(model.map)
+			// Gebäude-Geometrie berechnen
+			wacCalculationService.geometrieAusRaumdaten(model.map)
+			// Aussenluftvolumenströme berechnen
+			wacCalculationService.aussenluftVs(model.map)
+			// Nummern der Räume berechnen
+			wacCalculationService.berechneRaumnummer(model.map)
+			// Türspalt berechnen
+			wacCalculationService.berechneTurspalt(raum)
 		}
+		// Zentralgerät bestimmen
+		onZentralgeratAktualisieren()
+		//
 		model.resyncRaumTableModels()
 		// Update tab title to ensure that no "unsaved-data-star" is displayed
+		model.dirty = false
 		setTabTitle()
 		// Close splash screen
 		Wac2Splash.instance.dispose()
