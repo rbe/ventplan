@@ -81,7 +81,8 @@ class CheckUpdate implements java.lang.Runnable {
 		} catch (java.io.FileNotFoundException e) {
 			println "update: nothing found for version ${version}"
 		} catch (e) {
-			e.printStackTrace()
+			//e.printStackTrace()
+			println e
 		}
 	}
 	
