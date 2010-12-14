@@ -564,6 +564,10 @@ class WacCalculationService {
 		// 4
 		def maxVolumenstrom = wacModelService.getMaxVolumenstrom(map.raumUberstromElement)
 		// 5b
+		if (!map.raumMaxTurspaltHohe) {
+			println "WARNING: value for maxTurspaltHohe is missing, using default: 10.0 -> ${map?.dump()}"
+			map.raumMaxTurspaltHohe = 10.0
+		}
 		def querschnitt = map.turen.inject(0.0d, { o, n -> o + n.turBreite * map.raumMaxTurspaltHohe })
 		// 5b
 		def anzTurenOhneDichtung = map.turen.findAll { !it.turDichtung }?.size() ?: 0

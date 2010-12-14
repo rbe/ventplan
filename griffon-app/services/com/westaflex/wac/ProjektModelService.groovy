@@ -109,6 +109,7 @@ class ProjektModelService {
 					raumVerteilebene: X.vs { room."ventilebene".text() },
 					raumAnzahlUberstromVentile: X.vi { room."anzahlUberstromventile".text() },
 					raumUberstromElement: X.vs { room."uberstromelement".text() },
+					raumMaxTurspaltHohe:          X.vd { room."maxTurspaltHohe".text() },
 					turen: [] /*as ObservableList*/
 				] as ObservableMap
 				// Türen
@@ -332,6 +333,7 @@ class ProjektModelService {
 			X.tc { ventilebene(map.raumVerteilebene) }
 			X.tc { anzahlUberstromventile(map.raumAnzahlUberstromVentile as Integer) }
 			X.tc { uberstromelement(map.raumUberstromElement) }
+			X.tc { maxTurspaltHohe(map.raumMaxTurspaltHohe) }
 			// Türen
 			map.turen?.eachWithIndex { t, i ->
 				if (t.turBezeichnung && t.turBreite) {

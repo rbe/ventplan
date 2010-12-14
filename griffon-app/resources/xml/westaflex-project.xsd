@@ -104,6 +104,7 @@
             <xs:element name="ventilebene"              type="xs:string"  minOccurs="0" maxOccurs="1"/>
             <xs:element name="anzahlUberstromventile"   type="xs:integer" minOccurs="0" maxOccurs="1"/>
             <xs:element name="uberstromelement"         type="xs:string"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="maxTurspaltHohe"          type="xs:double"  minOccurs="0" maxOccurs="1"/>
             <xs:element name="tur"                      type="door"       minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
