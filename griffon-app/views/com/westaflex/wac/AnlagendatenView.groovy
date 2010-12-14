@@ -88,7 +88,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
     panel(constraints: "grow", layout: new MigLayout("fillx", "[fill] 16 [fill] 16 [fill]", "[fill] -5 []")) {
         // Rückschlagkappe
         panel(id: "anlageRuckschlagPanel", border: titledBorder(title: "Rückschlagkappe"), layout: new MigLayout("wrap 1", "[]", "")) {
-            checkBox(id: "anlageRuckschlagkappe", text: "Lüftungsanlage mit Rückschlagkappe")
+            checkBox(id: "anlageruckschlagklappe", text: "Lüftungsanlage mit Rückschlagkappe")
         }
 
         // Schallschutz-Kennzeichnung

@@ -418,7 +418,7 @@ class ProjektModelService {
 				X.tc { keineVerschmutzung(h.keineVerschmutzung) }
 				X.tc { dichtheitsklasseB(h.dichtheitsklasseB) }
 			}
-			X.tc { ruckschlagkappe(a.ruckschlagkappe) }
+			X.tc { ruckschlagklappe(a.ruckschlagklappe) }
 			X.tc { schallschutz(a.schallschutz) }
 			X.tc { feuerstatte(a.feuerstatte) }
 		}

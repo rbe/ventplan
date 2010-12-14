@@ -386,7 +386,7 @@ class ProjektController {
 			def gebaudeTyp = model.map.gebaude.efh ? "EFH" : "WE"
 			def energieKz = model.map.anlage.energie.nachricht != " " ? "E" : "0"
 			def hygieneKz = model.map.anlage.hygiene.nachricht != " " ? "H" : "0"
-			def ruckschlag = model.map.anlage.ruckschlagkappe ? "RK" : "0"
+			def ruckschlag = model.map.anlage.ruckschlagklappe ? "RK" : "0"
 			def schallschutz = model.map.anlage.schallschutz ? "S" : "0"
 			def feuerstatte = model.map.anlage.feuerstatte ? "F" : "0"
 			model.map.anlage.kennzeichnungLuftungsanlage =

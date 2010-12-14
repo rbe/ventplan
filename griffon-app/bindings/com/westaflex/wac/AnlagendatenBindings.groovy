@@ -60,10 +60,10 @@ bind(source: model.map.anlage.hygiene, sourceProperty: "nachricht",     target: 
 	it.actionPerformed = controller.berechneHygieneKennzeichen
 }
 // Anlagendaten - Rückschlagkappe, Schallschutz-Kennzeichnung, Feuerstätten-Kennzeichnung, Kennzeichnung der Lüftungsanlage
-bind(source: model.map.anlage, sourceProperty: "ruckschlagkappe",             target: anlageRuckschlagkappe,             targetProperty: "selected", mutual: true)
+bind(source: model.map.anlage, sourceProperty: "ruckschlagklappe",             target: anlageruckschlagklappe,             targetProperty: "selected", mutual: true)
 bind(source: model.map.anlage, sourceProperty: "schallschutz",                target: anlageSchallschutz,                targetProperty: "selected", mutual: true)
 bind(source: model.map.anlage, sourceProperty: "feuerstatte",                 target: anlageFeuerstatte,                 targetProperty: "selected", mutual: true)
 bind(source: model.map.anlage, sourceProperty: "kennzeichnungLuftungsanlage", target: anlageKennzeichnungLuftungsanlage, targetProperty: "text")
-[anlageRuckschlagkappe, anlageSchallschutz, anlageFeuerstatte].each {
+[anlageruckschlagklappe, anlageSchallschutz, anlageFeuerstatte].each {
 	it.actionPerformed = controller.berechneKennzeichenLuftungsanlage
 }
