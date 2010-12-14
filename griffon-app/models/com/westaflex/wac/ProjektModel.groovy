@@ -565,32 +565,31 @@ class ProjektModel {
 	def addRaum = { raum, view, isCopy = false ->
 		synchronized (map.raum.raume) {
 			// Raumdaten mit Template zusammführen
-            if (DEBUG) println "addRaum: isCopy -> ${isCopy}"
-            if (isCopy || isCopy == "true") {
-                map.raum.raume.add(raum)
-                if (DEBUG) println "addRaum: copy -> map: ${map.raum.raume}"
-            } else {
-                if (DEBUG) println "${raum}"
-                def r = ([turen: [
-                            [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-                            [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-                            [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-                            [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-                            [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
-                        ]] + raum) as ObservableMap
-                if (DEBUG) println "addRaum: adding raum=${r?.dump()}"
-                if (DEBUG) println "addRaum: raumMapTemplate=${raumMapTemplate.turen}"
-                // turen überschreiben!
-                // TODO rbe: ebenfalls auskommentiert
-                //r.turen = raumMapTemplate.turen
-                if (DEBUG) println "addRaum: adding raum after editing r.turen=${r?.dump()}"
-                // Raum in der Map hinzufügen
-                map.raum.raume << raum
-                if (DEBUG) println "addRaum: adding raum.raume=${map.raum.raume}"
-                // Turen hinzufügen
-            }
-            tableModels.raumeTuren <<
-                new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList
+			if (DEBUG) println "addRaum: isCopy -> ${isCopy}"
+			if (isCopy || isCopy == "true") {
+				map.raum.raume.add(raum)
+				if (DEBUG) println "addRaum: copy -> map: ${map.raum.raume}"
+			} else {
+				if (DEBUG) println "${raum}"
+				// Türen erstellen und mit bereits vorhandenen überschreiben!
+				def r = ([turen:
+							[
+								[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+								[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+								[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+								[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+								[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
+							]
+						] + raum) as ObservableMap
+				if (DEBUG) println "addRaum: adding raum=${r?.dump()}"
+				if (DEBUG) println "addRaum: raumMapTemplate=${raumMapTemplate.turen}"
+				if (DEBUG) println "addRaum: adding raum after editing r.turen=${r?.dump()}"
+				// Raum in der Map hinzufügen
+				map.raum.raume << raum
+				if (DEBUG) println "addRaum: adding raum.raume=${map.raum.raume}"
+			}
+			tableModels.raumeTuren <<
+				new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList
 			// Sync table models
 			resyncRaumTableModels()
 			// Raumdaten - Geschoss
