@@ -317,6 +317,7 @@ class Wac2Controller {
 						// ATTENTION: DOES NOT fire bindings and events asynchronously/in background!
 						// They are fired after leaving this method.
 						GH.deepCopyMap projektModel.map, map
+						//println "projektOffnen: projektModel.map=${projektModel.map}"
 						// Splash screen
 						doLater {
 							Wac2Splash.instance.creatingUiForProject()
