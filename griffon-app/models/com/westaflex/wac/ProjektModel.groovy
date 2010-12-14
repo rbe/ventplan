@@ -592,27 +592,29 @@ class ProjektModel {
 				new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList
 			// Sync table models
 			resyncRaumTableModels()
-			// Raumdaten - Geschoss
-			GH.makeComboboxCellEditor view.raumTabelle.columnModel.getColumn(1), meta.raum.geschoss
-			// Raumdaten - Luftart
-			GH.makeComboboxCellEditor view.raumTabelle.columnModel.getColumn(2), meta.raum.luftart
-			// RaumVs Zu- und Abluftventile
-			// Combobox RaumVs - Luftart
-			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(1), meta.raum.luftart
-			// Combobox RaumVs - Bezeichnung Abluftmenge
-			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(5), meta.raumVsBezeichnungAbluftventile
-			// Combobox RaumVs - Bezeichnung Zuluftmenge
-			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(9), meta.raumVsBezeichnungZuluftventile
-			// Combobox RaumVs - Verteilebene
-			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(11), meta.raum.geschoss
-			// RaumVs Überströmventile
-			// Combobox RaumVs - Luftart
-			GH.makeComboboxCellEditor view.raumVsUberstromelementeTabelle.columnModel.getColumn(1), meta.raum.luftart
-			// Combobox RaumVs - Überströmelemente
-			GH.makeComboboxCellEditor view.raumVsUberstromelementeTabelle.columnModel.getColumn(4), meta.raumVsUberstromelemente
-			// TODO: Verbesserung! Später freischalten.
-			// Raum Typ für Druckverlustberechnung - Ventileinstellung Combobox.
-			//updateDvbVentileinstellungComboBoxModel(view)
+			javax.swing.SwingUtilities.invokeLater {
+				// Raumdaten - Geschoss
+				GH.makeComboboxCellEditor view.raumTabelle.columnModel.getColumn(1), meta.raum.geschoss
+				// Raumdaten - Luftart
+				GH.makeComboboxCellEditor view.raumTabelle.columnModel.getColumn(2), meta.raum.luftart
+				// RaumVs Zu- und Abluftventile
+				// Combobox RaumVs - Luftart
+				GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(1), meta.raum.luftart
+				// Combobox RaumVs - Bezeichnung Abluftmenge
+				GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(5), meta.raumVsBezeichnungAbluftventile
+				// Combobox RaumVs - Bezeichnung Zuluftmenge
+				GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(9), meta.raumVsBezeichnungZuluftventile
+				// Combobox RaumVs - Verteilebene
+				GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(11), meta.raum.geschoss
+				// RaumVs Überströmventile
+				// Combobox RaumVs - Luftart
+				GH.makeComboboxCellEditor view.raumVsUberstromelementeTabelle.columnModel.getColumn(1), meta.raum.luftart
+				// Combobox RaumVs - Überströmelemente
+				GH.makeComboboxCellEditor view.raumVsUberstromelementeTabelle.columnModel.getColumn(4), meta.raumVsUberstromelemente
+				// TODO: Verbesserung! Später freischalten.
+				// Raum Typ für Druckverlustberechnung - Ventileinstellung Combobox.
+				//updateDvbVentileinstellungComboBoxModel(view)
+			}
 		}
 	}
 	
