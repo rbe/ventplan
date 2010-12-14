@@ -398,7 +398,7 @@ class ProjektModel {
 	def createRaumTableModel() {
 		def columnNames =   ["Raum",            "Geschoss",     "Luftart",     ws("Raumfläche<br/>[m²]"), ws("Raumhöhe<br/>[m]"), "Zuluftfaktor",     "Abluftvolumenstrom"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumGeschoss", "raumLuftart", "raumFlache",              "raumHohe",             "raumZuluftfaktor", "raumAbluftVs"] as String[]
-		def writable      = [true, true, true, true, true, true, true] as boolean[]
+		def writable      = [true,              true,           false,         true,                      true,                   true,               true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			def myTempMap = map.raum.raume.find { it.position == object.position }
 			myTempMap[columnIndex] = value
