@@ -213,9 +213,9 @@ class ProjektModelService {
 								tellerventile: X.vb { gebaude."abluftdurchlasse".find { it.text() == "TEL" } == "TEL" }
 							],
 						fortluft: [
-								dach:         X.vb { gebaude."fortluft".find { it.text() == "DAC" } },
-								wand:         X.vb { gebaude."fortluft".find { it.text() == "WAN" } },
-								lichtschacht: X.vb { gebaude."fortluft".find { it.text() == "LIC" } },
+								dach:         X.vb { gebaude."fortluft".find { it.text() == "DAC" } == "DAC" },
+								wand:         X.vb { gebaude."fortluft".find { it.text() == "WAN" } == "WAN" },
+								lichtschacht: X.vb { gebaude."fortluft".find { it.text() == "LIC" } == "LIC" },
 							],
 						energie: [
 								zuAbluftWarme: X.vb { zentralgerat."energie"."zuAbluftWarme".text() == "true" },
