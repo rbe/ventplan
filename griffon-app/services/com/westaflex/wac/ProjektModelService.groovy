@@ -117,7 +117,7 @@ class ProjektModelService {
 				room."tur".each { tur ->
 					r.turen << [
 							turBezeichnung: X.vs { tur."name".text() },
-							turBreite: X.vd { tur."breite".text() },
+							turBreite: X.vi { tur."breite".text() },
 							turDichtung: X.vb { tur."dichtung".text() == "true" }
 						]
 				}
@@ -336,7 +336,7 @@ class ProjektModelService {
 				if (t.turBezeichnung && t.turBreite) {
 					tur() {
 						X.tc { name(t.turBezeichnung) } { name("Tür ${i}") }
-						X.tc { breite(t.turBreite) } { breite(0.0) }
+						X.tc { breite(t.turBreite as Integer) } { breite(610) }
 						X.tc { dichtung(t.turDichtung) } { dichtung(true) }
 					}
 				}
