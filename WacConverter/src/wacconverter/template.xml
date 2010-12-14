@@ -36,7 +36,7 @@
 						</component>
 						<component name="" type="com.westaflex.component.classes.SeePanel">
 							<component name="" type="com.westaflex.component.classes.SeePanel">
-								<component name="mindestaussenluftrateWertLabel" type="javax.swing.JLabel" value="50"/>
+								<component name="mindestaussenluftrateWertLabel" type="javax.swing.JLabel" value=""/>
 								<component name="personenanzahlSpinner" type="com.westaflex.component.classes.SeeSpinner" value="0">
 									<spinnermodel>
 										<item value="0"/>

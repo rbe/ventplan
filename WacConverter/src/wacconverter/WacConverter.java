@@ -14,7 +14,6 @@ import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -105,7 +104,7 @@ public class WacConverter {
                     String filename = System.currentTimeMillis() + "_" + griffonXmlFile.getName();
                     outputFile = new File(fullFolderPath, filename);
                 }
-                boolean gzip = true;
+                boolean gzip = false;
                 writeDocument(oldWacDoc, outputFile, gzip);
             }
             else
