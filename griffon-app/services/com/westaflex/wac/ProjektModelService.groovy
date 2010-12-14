@@ -229,6 +229,9 @@ class ProjektModelService {
 								keineVerschmutzung: X.vb { zentralgerat."hygiene"."keineVerschmutzung".text() == "true" },
 								dichtheitsklasseB:  X.vb { zentralgerat."hygiene"."dichtheitsklasseB".text() == "true" }
 							],
+						ruckschlagklappe: X.vb { zentralgerat."ruckschlagklappe".text() == "true" },
+						schallschutz:     X.vb { zentralgerat."schallschutz".text() == "true" },
+						feuerstatte:      X.vb { zentralgerat."feuerstatte".text() == "true" },
 						// Will be calculated
 						//kennzeichnungLuftungsanlage: "ZuAbLS-Z-WE-WÜT-0-0-0-0-0",
 						zentralgerat:             X.vs { anlage."zentralgerat"."name".text() },
