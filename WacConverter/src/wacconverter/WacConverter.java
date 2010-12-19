@@ -316,6 +316,12 @@ public class WacConverter {
 
     }
 
+    /**
+     *
+     * @param node
+     * @param convert Replace . with ,
+     * @return
+     */
     private String getTextContentFromNode(Node node, boolean convert)
     {
         if (null != node)
@@ -612,11 +618,18 @@ public class WacConverter {
                 persVolumenAsInt = Integer.parseInt(personenVolumen);
             }
 
-            personenVolumen = "" + (persVolumenAsInt / persAnzahlAsInt);
+            if (persVolumenAsInt > 0 || persAnzahlAsInt > 0)
+            {
+                personenVolumen = "" + (persVolumenAsInt / persAnzahlAsInt);
+            }
+            else
+            {
+                personenVolumen = "30";
+            }
         }
         catch (NumberFormatException e)
         {
-            personenVolumen = "";
+            personenVolumen = "30";
         }
         replaceValueFromString(personenVolumen,
                      "//component[@name='volumenProPersonSpinner']", oldWacDoc);
@@ -943,14 +956,14 @@ public class WacConverter {
             text = getTextContentFromNode("//raum[position='"+i+"']/zuluftfaktor/text()", griffonDoc, false);
             seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "5", "" + i, text));
             // 7
-            //tableModelNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "6", "" + i, getTextContentFromNode("//gebaude/raum["+tempCount+"]/", oldWacDoc, false)));
+            text = getTextContentFromNode("//raum[position='"+i+"']/abluftvolumenstrom/text()", griffonDoc);
             seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "6", "" + i, ""));
             // 8
             //tableModelNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "7", "" + i, getTextContentFromNode("//gebaude/raum["+tempCount+"]/", oldWacDoc, false)));
             seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "7", "" + i, ""));
             // 9
-            text = getTextContentFromNode("//raum[position='"+i+"']/abluftvolumenstrom/text()", griffonDoc);
-            seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "8", "" + i, text));
+            //text = getTextContentFromNode("//raum[position='"+i+"']/abluftvolumenstrom/text()", griffonDoc);
+            seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "8", "" + i, ""));
             // 10
             //tableModelNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "9", "" + i, getTextContentFromNode("//gebaude/raum["+tempCount+"]/", oldWacDoc)));
             // 11
@@ -970,21 +983,23 @@ public class WacConverter {
 
             text = createTurValues(i, griffonDoc);
             seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "13", "" + i, text));
-            seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "14", "" + i, ""));
+            // maxturspalthohe
+            text = getTextContentFromNode("//raum[position='"+i+"']/maxturspalthohe/text()", griffonDoc, false);
+            seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "14", "" + i, text));
             // 16
-            text = getTextContentFromNode("//raum[position='"+i+"']/raumlange/text()", griffonDoc, false);
+            text = getTextContentFromNode("//raum[position='"+i+"']/raumlange/text()", griffonDoc);
             seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "15", "" + i, text));
             // 17
-            text = getTextContentFromNode("//raum[position='"+i+"']/raumbreite/text()", griffonDoc, false);
+            text = getTextContentFromNode("//raum[position='"+i+"']/raumbreite/text()", griffonDoc);
             seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "16", "" + i, text));
             // 18
-            text = getTextContentFromNode("//raum[position='"+i+"']/raumflache/text()", griffonDoc, false);
+            text = getTextContentFromNode("//raum[position='"+i+"']/raumflache/text()", griffonDoc);
             seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "17", "" + i, text));
             // 19
-            text = getTextContentFromNode("//raum[position='"+i+"']/raumvolumen/text()", griffonDoc, false);
+            text = getTextContentFromNode("//raum[position='"+i+"']/raumvolumen/text()", griffonDoc);
             seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "18", "" + i, text));
             // 20
-            text = getTextContentFromNode("//raum[position='"+i+"']/raumhohe/text()", griffonDoc, false);
+            text = getTextContentFromNode("//raum[position='"+i+"']/raumhohe/text()", griffonDoc);
             seebassTableNode.appendChild(createRaumTableRowDataElement(oldWacDoc, "19", "" + i, text));
 
 
