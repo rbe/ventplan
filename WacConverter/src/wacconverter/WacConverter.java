@@ -1078,6 +1078,8 @@ public class WacConverter {
         {
             String name = getTextContentFromNode("//raum[position='"+raumposition+"']/tur["+i+"]/name/text()", griffonDoc, false);
             String breite = getTextContentFromNode("//raum[position='"+raumposition+"']/tur["+i+"]/breite/text()", griffonDoc, false);
+            String querschnitt = getTextContentFromNode("//raum[position='"+raumposition+"']/tur["+i+"]/querschnitt/text()", griffonDoc, false);
+            String spalthohe = getTextContentFromNode("//raum[position='"+raumposition+"']/tur["+i+"]/spalthohe/text()", griffonDoc, false);
             String dichtung = getTextContentFromNode("//raum[position='"+raumposition+"']/tur["+i+"]/dichtung/text()", griffonDoc, false);
             if (null != name && name.trim().equals(""))
             {
@@ -1094,11 +1096,11 @@ public class WacConverter {
             {
                 if (value.trim().equals(""))
                 {
-                    value += name + ";"+breite+";0.0;0.0;"+dichtung;
+                    value += name + ";"+breite+";"+querschnitt+";"+spalthohe+";"+dichtung;
                 }
                 else
                 {
-                    value += "|" + name + ";"+breite+";0.0;0.0;"+dichtung;
+                    value += "|" + name + ";"+breite+";"+querschnitt+";"+spalthohe+";"+dichtung;
                 }
             }
         }

@@ -121,6 +121,8 @@ class ProjektModelService {
 					r.turen << [
 							turBezeichnung: X.vs { tur."name".text() },
 							turBreite: X.vd { tur."breite".text() },
+                            turQuerschnitt: X.vd { tur."querschnitt".text() },
+                            turSpalthohe: X.vd { tur."spalthohe".text() },
 							turDichtung: X.vb { tur."dichtung".text() == "true" }
 						]
 				}
@@ -340,6 +342,8 @@ class ProjektModelService {
 					tur() {
 						X.tc { name(t.turBezeichnung) } { name("Tür ${i}") }
 						X.tc { breite(t.turBreite) } { breite(0.0) }
+                        X.tc { querschnitt(t.turQuerschnitt) } { querschnitt(0.0) }
+                        X.tc { spalthohe(t.turSpalthohe) } { spalthohe(0.0) }
 						X.tc { dichtung(t.turDichtung) } { dichtung(true) }
 					}
 				}
