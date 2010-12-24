@@ -55,7 +55,6 @@ class ProjektModelService {
 	}
 	
 	/**
-	 * Just load XML file and return parsed document.
 	 * @param file java.io.File or java.lang.String
 	 */
 	def load = { file ->
@@ -86,30 +85,30 @@ class ProjektModelService {
 			def raume = []
 			gebaude."raum".each { room ->
 				def r = [
-					position:                     X.vi { room."position".text() },
-					raumNummer:                   X.vs { room."raumnummer".text() },
-					raumBezeichnung:              X.vs { room."bezeichnung".text() },
-					raumTyp:                      X.vs { WX[room."raumtyp".text()] },
-					raumLuftart:                  X.vs { room."luftart".text() },
-					raumGeschoss:                 X.vs { room."geschoss".text() },
-					raumFlache:                   X.vd { room."raumflache".text() },
-					raumHohe:                     X.vd { room."raumhohe".text() },
-					raumLange:                    X.vd { room."raumlange".text() },
-					raumBreite:                   X.vd { room."raumbreite".text() },
-					raumVolumen:                  X.vd { room."raumvolumen".text() },
-					raumZuluftfaktor:             X.vd { room."zuluftfaktor".text() },
-					raumAbluftVs:                 X.vd { room."abluftvolumenstrom".text() },
-					raumLuftwechsel:              X.vd { room."luftwechsel".text() },
-					raumVolumenstrom:             X.vd { room."volumenstrom".text() },
+					position: X.vi { room."position".text() },
+					raumNummer: X.vs { room."raumnummer".text() },
+					raumBezeichnung: X.vs { room."bezeichnung".text() },
+					raumTyp: X.vs { WX[room."raumtyp".text()] },
+					raumLuftart: X.vs { room."luftart".text() },
+					raumGeschoss: X.vs { room."geschoss".text() },
+					raumFlache: X.vd { room."raumflache".text() },
+					raumHohe: X.vd { room."raumhohe".text() },
+					raumLange: X.vd { room."raumlange".text() },
+					raumBreite: X.vd { room."raumbreite".text() },
+					raumVolumen: X.vd { room."raumvolumen".text() },
+					raumZuluftfaktor: X.vd { room."zuluftfaktor".text() },
+					raumAbluftVs: X.vd { room."abluftvolumenstrom".text() },
+					raumLuftwechsel: X.vd { room."luftwechsel".text() },
+					raumVolumenstrom: X.vd { room."volumenstrom".text() },
 					raumBezeichnungAbluftventile: X.vs { room."bezeichnungAbluftventile".text() },
-					raumAnzahlAbluftventile:      X.vi { room."anzahlAbluftventile".text() },
-					raumAbluftmengeJeVentil:      X.vd { room."abluftmengeJeVentile".text() },
+					raumAnzahlAbluftventile: X.vi { room."anzahlAbluftventile".text() },
+					raumAbluftmengeJeVentil: X.vd { room."abluftmengeJeVentile".text() },
 					raumBezeichnungZuluftventile: X.vs { room."bezeichnungZuluftventile".text() },
-					raumAnzahlZuluftventile:      X.vi { room."anzahlAbluftventile".text() },
-					raumZuluftmengeJeVentil:      X.vd { room."zuluftmengeJeVentile".text() },
-					raumVerteilebene:             X.vs { room."ventilebene".text() },
-					raumAnzahlUberstromVentile:   X.vi { room."anzahlUberstromventile".text() },
-					raumUberstromElement:         X.vs { room."uberstromelement".text() },
+					raumAnzahlZuluftventile: X.vi { room."anzahlAbluftventile".text() },
+					raumZuluftmengeJeVentil: X.vd { room."zuluftmengeJeVentile".text() },
+					raumVerteilebene: X.vs { room."ventilebene".text() },
+					raumAnzahlUberstromVentile: X.vi { room."anzahlUberstromventile".text() },
+					raumUberstromElement: X.vs { room."uberstromelement".text() },
 					raumMaxTurspaltHohe:          X.vd { room."maxTurspaltHohe".text() },
 					turen: [] /*as ObservableList*/
 				] as ObservableMap
@@ -118,10 +117,12 @@ class ProjektModelService {
 					r.turen << [
 							turBezeichnung: X.vs { tur."name".text() },
 							turBreite: X.vi { tur."breite".text() },
+                                                        turQuerschnitt: X.vd { tur."querschnitt".text() },
+                                                        turSpalthohe: X.vd { tur."spalthohe".text() },
 							turDichtung: X.vb { tur."dichtung".text() == "true" }
 						]
 				}
-				//println "####!!!!!!! r=${r.dump()}"
+				println "####!!!!!!! r=${r.dump()}"
 				raume << r
 			}
 			def anlage = p."anlage"
@@ -340,6 +341,8 @@ class ProjektModelService {
 					tur() {
 						X.tc { name(t.turBezeichnung) } { name("Tür ${i}") }
 						X.tc { breite(t.turBreite as Integer) } { breite(610) }
+                                                X.tc { querschnitt(t.turQuerschnitt) } { querschnitt(0.0) }
+                                                X.tc { spalthohe(t.turSpalthohe) } { spalthohe(0.0) }
 						X.tc { dichtung(t.turDichtung) } { dichtung(true) }
 					}
 				}
@@ -420,7 +423,7 @@ class ProjektModelService {
 				X.tc { keineVerschmutzung(h.keineVerschmutzung) }
 				X.tc { dichtheitsklasseB(h.dichtheitsklasseB) }
 			}
-			X.tc { ruckschlagklappe(a.ruckschlagklappe) }
+			X.tc { ruckschlagkappe(a.ruckschlagkappe) }
 			X.tc { schallschutz(a.schallschutz) }
 			X.tc { feuerstatte(a.feuerstatte) }
 		}
