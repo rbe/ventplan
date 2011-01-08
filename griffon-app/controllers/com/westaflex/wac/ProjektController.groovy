@@ -635,7 +635,7 @@ class ProjektController {
 	}
 
     /**
-     * Tur Werte entfernen
+     * Tur Werte entfernen in Raum bearbeiten Dialog
      */
     def raumBearbeitenTurEntfernen = { raumIndex = null ->
         if (DEBUG) println "raumBearbeitenTurEntfernen: view.raumBearbeitenTurenTabelle.selectedRow -> ${view.raumBearbeitenTurenTabelle.selectedRow}"
