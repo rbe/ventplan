@@ -39,3 +39,6 @@ bind(source: model.meta.gewahlterRaum, sourceProperty: "raumVolumen", target: ra
 }
 // Schliessen
 raumBearbeitenSchliessen.actionPerformed = controller.raumBearbeitenSchliessen
+
+// Tur entfernen / Werte zuruecksetzen
+raumBearbeitenDetailsTurentfernen.actionPerformed = controller.raumBearbeitenTurEntfernen

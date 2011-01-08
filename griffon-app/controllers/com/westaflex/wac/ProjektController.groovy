@@ -633,6 +633,23 @@ class ProjektController {
 			wacCalculationService.berechneTurspalt(raum)
 		}
 	}
+
+    /**
+     * Tur Werte entfernen
+     */
+    def raumBearbeitenTurEntfernen = { raumIndex = null ->
+        if (DEBUG) println "raumBearbeitenTurEntfernen: view.raumBearbeitenTurenTabelle.selectedRow -> ${view.raumBearbeitenTurenTabelle.selectedRow}"
+        def turenIndex = view.raumBearbeitenTurenTabelle.selectedRow
+        try
+        {
+            def rowIndex = model.meta.gewahlterRaum.position
+            def raum = model.map.raum.raume[rowIndex]
+            raum.turen[turenIndex] = [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
+            if (DEBUG) println "raumBearbeitenTurEntfernen: ${raum}"
+        }
+        catch (e) {}
+        model.resyncRaumTableModels()
+    }
 	
 	/**
 	 * Raumvolumenströme - Zu/Abluftventile geändert.
