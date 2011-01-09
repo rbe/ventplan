@@ -875,20 +875,28 @@ class ProjektController {
 		// Welche Zeile ist gewählt --> welcher Widerstand?
 		def wbwIndex = view.wbwTabelle.selectedRow
 		if (DEBUG) println "wbwInTabelleGewahlt: index=${index} wbwIndex=${wbwIndex}"
-		def wbw = model.tableModels.wbw[index][wbwIndex]
-		javax.swing.ImageIcon image = new javax.swing.ImageIcon(Wac2Resource.getWiderstandURL(wbw.id))
-		// Image und Text setzen
-		if (image) {
-			view.wbwBild.text = ""
-			view.wbwBild.icon = image
-		} else {
-			view.wbwBild.text = "-- kein Bild --"
-			view.wbwBild.icon = null
-		}
-		// Daten in Eingabemaske setzen
-		view.wbwBezeichnung.text = wbw.name
-		view.wbwWert.text = wbw.widerstandsbeiwert.toString2(0)
-		view.wbwAnzahl.text = wbw.anzahl
+        
+        def wbw = model.tableModels.wbw[index][wbwIndex]
+        javax.swing.ImageIcon image = null
+        // Neu generierte WBWs haben kein Image. Exception abfangen.
+        try
+        {
+            def url = Wac2Resource.getWiderstandURL(wbw.id)
+            image = new javax.swing.ImageIcon(url)
+        }
+        catch (NullPointerException e) { }
+        // Image und Text setzen
+        if (image) {
+            view.wbwBild.text = ""
+            view.wbwBild.icon = image
+        } else {
+            view.wbwBild.text = "-- kein Bild --"
+            view.wbwBild.icon = null
+        }
+        // Daten in Eingabemaske setzen
+        view.wbwBezeichnung.text = wbw.name
+        view.wbwWert.text = wbw.widerstandsbeiwert.toString2(0)
+        view.wbwAnzahl.text = wbw.anzahl
 	}
 	
 	/**
