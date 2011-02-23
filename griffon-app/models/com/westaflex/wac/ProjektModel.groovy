@@ -248,7 +248,7 @@ class ProjektModel {
 	
 	/**
 	 * Prüfe Daten in einem Raum auf Plausibilität.
-	 * Siehe Ticket #66.
+	 * Siehe Ticket #60, #66.
 	 */
 	def checkRaum = { object, property, value, columnIndex ->
 		// Try to save double value; see ticket 60
