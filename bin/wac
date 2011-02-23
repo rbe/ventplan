@@ -17,6 +17,10 @@ case "${OS}" in
 	Darwin)
 		# Make an educated guess
 		OOO_HOME=${OOO_HOME:-/Applications/OpenOffice.org.app/Contents}
+		if [ ! -d ${OOO_HOME} ]; then
+			# Oracle Open Office?
+			OOO_HOME=${OOO_HOME:-/Applications/Oracle\ Open\ Office.app/Contents}
+		fi
 		# MacOS X: Don't use program link
 		# http://www.openoffice.org/issues/show_bug.cgi?id=101203
 		OOO_PROGRAM=${OOO_HOME}/MacOS
