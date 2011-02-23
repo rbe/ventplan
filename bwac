@@ -199,7 +199,7 @@ case "$1" in
 		_usbstick_update_sql
 	;;
 	*)
-		echo "usage: $0 { inc-version <type> | usbstick | usbstick-sql | inc-version <maj | min | pat> }"
+		echo "usage: $0 { usbstick | usbstick-sql | inc-version <maj | min | pat> }"
 	;;
 esac
 
