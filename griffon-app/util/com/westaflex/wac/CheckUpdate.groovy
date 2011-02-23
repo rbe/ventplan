@@ -50,7 +50,8 @@ class CheckUpdate implements java.lang.Runnable {
 		try {
 			// Download ZIP from webserver
 			version = new java.io.File("conf/version").text.trim()
-			def u = "http://service.bensmann.com/update/wac/${version}/wacupdate.zip"
+			// TODO Put into Griffon configuration!
+			def u = "http://files.art-of-coding.eu/westaflex/wac/update/${version}/wacupdate.zip"
 			println "update: trying to download ${u}"
 			def buf = new byte[512 * 1024]
 			// Destination for download
