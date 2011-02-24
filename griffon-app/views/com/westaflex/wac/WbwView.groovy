@@ -10,6 +10,7 @@
 package com.westaflex.wac
 
 import net.miginfocom.swing.MigLayout
+import javax.swing.text.*
 
 panel(id: "wbwPanel", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[fill][fill]")) {
 	
@@ -58,3 +59,32 @@ panel(id: "wbwPanel", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[f
 }
 // Bindings
 build(WbwBindings)
+
+/*Numeric document model*/
+class NumericDocument extends PlainDocument {
+
+     public NumericDocument() {
+          super();
+     }
+
+     //Insert string method
+     public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
+          if (str != null){
+               if (isNumeric(str) == true) {
+                    super.insertString(offset, str, attr);
+               }
+          }
+          return;
+     }
+
+    private boolean isNumeric(String str) {
+        try{
+            Integer.parseInt(str);
+        } catch(NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+}
+
+wbwAnzahl.setDocument(new NumericDocument())
