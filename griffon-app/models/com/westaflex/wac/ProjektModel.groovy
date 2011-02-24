@@ -39,6 +39,11 @@ class ProjektModel {
 	@Bindable meta
 	
 	/**
+	 * WAC calculation service.
+	 */
+	def wacCalculationService
+	
+	/**
 	 * Template für alle Werte eines Raumes.
 	 */
 	def raumMapTemplate = [
@@ -247,21 +252,29 @@ class ProjektModel {
 	def ws = GH.ws
 	
 	/**
-	 * Prüfe Daten in einem Raum auf Plausibilität.
-	 * Siehe Ticket #60, #66.
+	 * Prüfe Raumdaten auf Richtigkeit.
+	 * @return raum
 	 */
-	def checkRaum = { object, property, value, columnIndex ->
-		// Try to save double value; see ticket 60
-		object[property] = value.toDouble2()
-		def raum = map.raum.raume.find { it.position == object.position }
+	def prufeRaumdaten = { raum ->
 		switch (raum.raumLuftart) {
-			case "ZU":
+			case ~/ZU.*/:
 				raum.with {
 					raumAnzahlAbluftventile = 0
-					raumAbluftmengeJeVentil = 0.0d
+					raumAbluftmengeJeVentil = 0.0d 
 					raumBezeichnungAbluftventile = ""
+					raumAbluftVs = 0.0d
 					raumAbluftVolumenstrom = 0.0d
 				}
+				// Prüfe Toleranzwerte für Zuluftfaktor
+				def eingegebenerZuluftfaktor = raum.raumZuluftfaktor.toDouble2()
+				def (zuluftfaktor, neuerZuluftfaktor) =
+					wacCalculationService.prufeZuluftfaktor(raum.raumTyp, eingegebenerZuluftfaktor)
+				if (zuluftfaktor != neuerZuluftfaktor) {
+					def infoMsg = "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
+					app.controllers["Dialog"].showInformDialog(infoMsg as String)
+					if (DEBUG) println infoMsg
+				}
+				raum.raumZuluftfaktor = neuerZuluftfaktor
 				break
 			case "AB":
 				raum.with {
@@ -269,11 +282,24 @@ class ProjektModel {
 					raumZuluftmengeJeVentil = 0.0d
 					raumBezeichnungZuluftventile = ""
 					raumZuluftVolumenstrom = 0.0d
+					raumZuluftfaktor = 0.0d
 				}
 				break
 		}
 		if (DEBUG) println "checkRaum: ${raum}"
 		raum
+	}
+	
+	/**
+	 * Prüfe Daten in einem Raum auf Plausibilität.
+	 * @return raum
+	 * Siehe Ticket #60, #66.
+	 */
+	def checkRaum = { object, property, value, columnIndex ->
+		println "checkRaum: $object, $property, $value, $columnIndex"
+		// Try to save double value; see ticket 60
+		object[property] = value.toDouble2()
+		prufeRaumdaten(map.raum.raume.find { it.position == object.position })
 	}
 	
 	/**
@@ -304,7 +330,7 @@ class ProjektModel {
 					// Call pre-value-set closure
 					if (preValueSet) object = preValueSet(object, property, value, columnIndex)
 					else {
-						// Try to save double value; see ticket 60
+						// Try to save double value; see ticket #60
 						object[property] = value.toDouble2()
 					}
 					// Call post-value-set closure
@@ -601,6 +627,7 @@ class ProjektModel {
 	 */
 	def addRaum = { raum, view, isCopy = false ->
 		synchronized (map.raum.raume) {
+			raum = prufeRaumdaten(raum)
 			// Raumdaten mit Template zusammführen
 			if (DEBUG) println "addRaum: isCopy -> ${isCopy}"
 			if (isCopy || isCopy == "true") {

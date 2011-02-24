@@ -391,7 +391,6 @@ class WacCalculationService {
 			Double ltmZuluftRaum = Math.round(gesamtAvsLTM * it.raumZuluftfaktor / gesamtZuluftfaktor)
 			if (b) {
 				it.raumZuluftVolumenstrom = ltmZuluftRaum
-				//it.raumZuluftVs = ltmZuluftRaum
 				it.raumLuftwechsel = ltmZuluftRaum / it.raumVolumen
 			} else {
 				ltmZuluftSumme += ltmZuluftRaum

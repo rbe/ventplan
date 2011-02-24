@@ -504,18 +504,6 @@ class ProjektController {
 						[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
 						[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
 					] as ObservableList
-		// Prüfe Toleranzwerte für Zuluftfaktor
-		if (raum.raumLuftart ==~ /ZU.*/) {
-			def eingegebenerZuluftfaktor = raum.raumZuluftfaktor.toDouble2()
-			def (zuluftfaktor, neuerZuluftfaktor) =
-				wacCalculationService.prufeZuluftfaktor(raum.raumTyp, eingegebenerZuluftfaktor)
-			if (zuluftfaktor != neuerZuluftfaktor) {
-				def infoMsg = "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
-				app.controllers["Dialog"].showInformDialog(infoMsg as String)
-				if (DEBUG) println infoMsg
-			}
-			raum.raumZuluftfaktor = neuerZuluftfaktor
-		}
 		// Hole Werte für neuen Raum aus der View und füge Raum hinzu
 		if (DEBUG) println "raumHinzufugen: publishing event for raum.position=${raum.position}"
 		publishEvent "RaumHinzufugen", [raum, view]
