@@ -58,4 +58,13 @@ bind(source: model.map.gebaude.geplanteBelegung, sourceProperty: "aussenluftVsPr
 bind(source: model.map.gebaude.geplanteBelegung, sourceProperty: "mindestaussenluftrate", target: gebaudeGeplanteMindestaussenluftrate, targetProperty: "text",  converter: GH.toString2Converter)
 [gebaudeGeplantePersonenanzahl, gebaudeGeplanteAussenluftVsProPerson].each {
 	it.stateChanged = controller.berechneMindestaussenluftrate
+	it.editor.textField.addKeyListener(
+		[
+			keyReleased: { evt ->
+				println "evt=${evt}... keyCode=${evt.keyCode}"
+				// Calculate if keys 0..9 are pressed
+				if (evt.keyCode in 48..57) controller.berechneMindestaussenluftrate()
+			}
+		] as java.awt.event.KeyAdapter)
+	//it.editor.textField.addCaretListener({ evt -> println "caretlistener: ${evt}"} as javax.swing.event.CaretListener)
 }

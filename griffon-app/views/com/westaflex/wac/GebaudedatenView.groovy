@@ -103,6 +103,9 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
     }
     GH.doubleTextField(gebaudeGeplanteAussenluftVsProPerson)
 }
-
+GH.selectAllTextField(gebaudeGeplantePersonenanzahl.editor.textField)
+GH.yellowTextField(gebaudeGeplantePersonenanzahl.editor.textField)
+GH.selectAllTextField(gebaudeGeplanteAussenluftVsProPerson.editor.textField)
+GH.yellowTextField(gebaudeGeplanteAussenluftVsProPerson.editor.textField)
 // Bindings
 build(GebaudedatenBindings)

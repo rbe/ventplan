@@ -346,6 +346,14 @@ class ProjektController {
 	 */
 	def berechneMindestaussenluftrate = {
 		doLater {
+			// Save actual caret position
+			def personenanzahlCaretPos = view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition
+			def aussenluftVsProPersonCaretPos = view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition
+			println "view.gebaudeGeplantePersonenanzahl.caretPos 1=${view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition}"
+			// Hack: model is not updated when KeyListener is used on spinner.editor.textfield
+			model.map.gebaude.geplanteBelegung.personenanzahl = view.gebaudeGeplantePersonenanzahl.editor.textField.text?.toInteger() ?: 0
+			println "view.gebaudeGeplantePersonenanzahl.caretPos 2=${view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition}"
+			model.map.gebaude.geplanteBelegung.aussenluftVsProPerson = view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.text?.toInteger() ?: 0
 			model.map.gebaude.geplanteBelegung.with {
 				try {
 					mindestaussenluftrate = personenanzahl * aussenluftVsProPerson
@@ -355,6 +363,10 @@ class ProjektController {
 					mindestaussenluftrate = 0.0d
 				}
 			}
+			// Set caret to old position; is moved through model update?
+			println "view.gebaudeGeplantePersonenanzahl.editor.textField.selectedText=${view.gebaudeGeplantePersonenanzahl.editor.textField.selectedText}"
+			view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition = personenanzahlCaretPos
+			view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition = aussenluftVsProPersonCaretPos
 			publishEvent "AussenluftVsBerechnen"
 		}
 	}

@@ -331,6 +331,26 @@ class GriffonHelper {
 	}
 	
 	/**
+	 * Execute a closure with disabled ActionListener(s).
+	 */
+	def static withDisabledKeyListeners = { component, closure ->
+		// Save existing KeyListener(s)
+		def keyListeners = component.keyListeners
+		keyListeners.each {
+			if (GriffonHelper.DEBUG) println "withDisabledKeyListeners: removing ${it}"
+			component.removeKeyListener(it)
+		}
+		// Execute closure
+		closure.delegate = component
+		closure()
+		// Re-add ActionListener(s)
+		keyListeners.each {
+				if (GriffonHelper.DEBUG) println "withDisabledKeyListeners: re-adding ${it}"
+				component.addkeyListener(it)
+			}
+	}
+	
+	/**
 	 * Apply a closure to a component or recurse component's components and apply closure.
 	 */
 	def static recurse(component, closure) {
@@ -389,6 +409,34 @@ class GriffonHelper {
 	}
 	
 	/**
+	 * Select all when textfield is focussed.
+	 */
+	def static selectAllTextField = { component ->
+		// Add focus listener
+		component.addFocusListener({ evt ->
+			if (evt.id == java.awt.event.FocusEvent.FOCUS_GAINED) {
+				// If component is editable and 'is empty', select entire contents for easy editing
+				if (component.editable && isEmptyDouble(component)) {
+					//javax.swing.SwingUtilities.invokeLater {
+						//if (GriffonHelper.DEBUG)
+						println "selectAllTextField: selecting all: component.text = " + component.text + " -> isEmptyDouble=" + isEmptyDouble(component)
+						GriffonHelper.withDisabledKeyListeners component, { component.selectAll() }
+					//}
+				}
+			}
+			/* Is done via binding-converter-closure now (see **Binding scripts)
+			if (evt.id == java.awt.event.FocusEvent.FOCUS_LOST) {
+				if (component.text) {
+					javax.swing.SwingUtilities.invokeLater {
+						component.text = component.text.toDouble2().toString2()
+					}
+				}
+			}
+			*/
+		} as java.awt.event.FocusListener)
+	}
+	
+	/**
 	 * Set behaviour for Double-TextFields:
 	 * yellow background + right align, select all on focus gained
 	 */
@@ -399,27 +447,8 @@ class GriffonHelper {
 			GriffonHelper.yellowTextField(component)
 			// Right align the textfield
 			GriffonHelper.rightAlignTextField(component)
-			// Add focus listener
-			component.addFocusListener({ evt ->
-				if (evt.id == java.awt.event.FocusEvent.FOCUS_GAINED) {
-					// If component is editable and 'is empty', select entire contents for easy editing
-					if (component.editable && isEmptyDouble(component)) {
-						javax.swing.SwingUtilities.invokeLater {
-							//if (GriffonHelper.DEBUG) println "doubleTextField: selecting all: component.text = " + component.text + " -> isEmptyDouble=" + isEmptyDouble(component)
-							component.selectAll()
-						}
-					}
-				}
-				/* Is done via binding-converter-closure now (see **Binding scripts)
-				if (evt.id == java.awt.event.FocusEvent.FOCUS_LOST) {
-					if (component.text) {
-						javax.swing.SwingUtilities.invokeLater {
-							component.text = component.text.toDouble2().toString2()
-						}
-					}
-				}
-				*/
-			} as java.awt.event.FocusListener)
+			// Select all
+			GriffonHelper.selectAllTextField(component)
 		}
 	}
 	
