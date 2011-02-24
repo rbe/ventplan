@@ -533,8 +533,36 @@ class ProjektController {
 			// Raum anhand seiner Position finden und eine Kopie erzeugen
 			def x = model.map.raum.raume.find { it.position == row }
 
+
+
             def newMap = new ObservableMap()
-            x.collect{ newMap.put(it.key, it.value) }
+            x.collect{
+                //[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
+                // turen separat kopieren, da sonst Abhaengigkeiten zum Originalraum bestehen
+                if (it.key == 'turen') {
+                    if (DEBUG) println "raumKopieren turen -> key=${it.key} ::: value=${it.value}"
+                    def y = it.value
+                    if (DEBUG) println "turen dump ---> ${y.dump()}"
+                    def turenList = [] as ObservableList
+                    y.each() { i ->
+                        if (DEBUG) println "list=${i}"
+                        def tur = i
+                        def turenMap = new ObservableMap()
+                        tur.collect{
+                            turenMap.put(it.key, it.value)
+                        }
+                        turenList.add(turenMap)
+                    }
+                    if (DEBUG) println "turenList -> ${turenList}"
+                    newMap.put(it.key, turenList)
+                }
+                else {
+                    newMap.put(it.key, it.value)
+                }
+                if (DEBUG) println "raumKopieren -> key=${it.key} ::: value=${it.value}"
+
+            }
+            if (DEBUG) println "newMap -> ${newMap}"
 
 			// Neuen Namen und neue Position (Ende) setzen
 			newMap.raumBezeichnung = "Kopie von ${x.raumBezeichnung}"
