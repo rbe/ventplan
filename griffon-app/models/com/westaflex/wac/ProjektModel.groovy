@@ -53,7 +53,6 @@ class ProjektModel {
 			raumFlache: 0.0d,
 			raumHohe: 0.0d,
 			raumZuluftfaktor: 0.0d,
-			raumAbluftVs: 0.0d,
 			raumVolumen: 0.0d,
 			raumLuftwechsel: 0.0d,
 			raumZuluftVolumenstrom: 0.0d,
@@ -262,7 +261,6 @@ class ProjektModel {
 					raumAnzahlAbluftventile = 0
 					raumAbluftmengeJeVentil = 0.0d 
 					raumBezeichnungAbluftventile = ""
-					raumAbluftVs = 0.0d
 					raumAbluftVolumenstrom = 0.0d
 				}
 				// Prüfe Toleranzwerte für Zuluftfaktor
@@ -423,7 +421,7 @@ class ProjektModel {
 	 */
 	def createRaumTableModel() {
 		def columnNames =   ["Raum",            "Geschoss",     "Luftart",     ws("Raumfläche<br/>[m²]"), ws("Raumhöhe<br/>[m]"), "Zuluftfaktor",     "Abluftvolumenstrom"] as String[]
-		def propertyNames = ["raumBezeichnung", "raumGeschoss", "raumLuftart", "raumFlache",              "raumHohe",             "raumZuluftfaktor", "raumAbluftVs"] as String[]
+		def propertyNames = ["raumBezeichnung", "raumGeschoss", "raumLuftart", "raumFlache",              "raumHohe",             "raumZuluftfaktor", "raumAbluftVolumenstrom"] as String[]
 		def writable      = [true,              true,           false,         true,                      true,                   true,               true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			def myTempMap = map.raum.raume.find { it.position == object.position }

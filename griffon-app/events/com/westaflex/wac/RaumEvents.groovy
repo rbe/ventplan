@@ -50,7 +50,7 @@ class RaumEvents {
 			// Zuluftfaktor
 			raumZuluftfaktor = raumZuluftfaktor?.toDouble2() ?: 0.0d
 			// Abluftvolumenstrom
-			raumAbluftVs = raumAbluftVs?.toDouble2() ?: 0.0d
+			raumAbluftVolumenstrom = raumAbluftVolumenstrom?.toDouble2() ?: 0.0d
 			// Standard Türspalthöhe ist 10 mm
 			raumTurspaltHohe = 10.0d
 		}

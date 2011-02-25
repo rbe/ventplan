@@ -19,8 +19,8 @@ bind(source: model.meta.gewahlterRaum, sourceProperty: "raumGeschoss",    target
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumNummer",      target: raumBearbeitenRaumnummer,   targetProperty: "text",         mutual: true)
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumLuftart",     target: raumBearbeitenLuftart,      targetProperty: "text",         mutual: true)
 // Luftart
-bind(source: model.meta.gewahlterRaum, sourceProperty: "raumZuluftfaktor", target: raumBearbeitenLuftartFaktorZuluftverteilung, targetProperty: "text", converter: GH.toString2Converter)
-bind(source: model.meta.gewahlterRaum, sourceProperty: "raumAbluftVs",     target: raumBearbeitenLuftartAbluftVs,               targetProperty: "text", converter: GH.toString2Converter)
+bind(source: model.meta.gewahlterRaum, sourceProperty: "raumZuluftfaktor",       target: raumBearbeitenLuftartFaktorZuluftverteilung, targetProperty: "text", converter: GH.toString2Converter)
+bind(source: model.meta.gewahlterRaum, sourceProperty: "raumAbluftVolumenstrom", target: raumBearbeitenLuftartAbluftVs,               targetProperty: "text", converter: GH.toString2Converter)
 [raumBearbeitenLuftartFaktorZuluftverteilung, raumBearbeitenLuftartAbluftVs].each {
 	it.focusLost = controller.raumBearbeitenGeandert
 }

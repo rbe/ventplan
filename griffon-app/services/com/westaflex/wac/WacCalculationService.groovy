@@ -334,7 +334,7 @@ class WacCalculationService {
 				o + n.raumZuluftfaktor
 			}
 		Double gesamtAbluftVs = abluftRaume(map).inject(0.0d) { o, n ->
-				o + n.raumAbluftVs
+				o + n.raumAbluftVolumenstrom
 			}
 		// Gesamt-Außenluftvolumenstrom bestimmen
 		Double gesamtAussenluft =
@@ -355,8 +355,8 @@ class WacCalculationService {
 		Double ltmZuluftSumme = 0.0d
 		map.raum.ltmZuluftSumme = 0.0d
 		// Alle Räume, die einen Abluftvolumenstrom > 0 haben...
-		map.raum.raume.grep { it.raumAbluftVs > 0.0d }.each {
-			Double ltmAbluftRaum = Math.round(gesamtAvsLTM / gesamtAbluftVs * it.raumAbluftVs)
+		map.raum.raume.grep { it.raumAbluftVolumenstrom > 0.0d }.each {
+			Double ltmAbluftRaum = Math.round(gesamtAvsLTM / gesamtAbluftVs * it.raumAbluftVolumenstrom)
 			// Raumvolumenströme berechnen?
 			if (b) {
 				it.raumAbluftVolumenstrom = ltmAbluftRaum
@@ -451,7 +451,7 @@ class WacCalculationService {
 		map.aussenluftVs.gesamtAvsNeLwFs = feuchteluftung / geluftetesVolumen
 		// Ausgabe der Gesamt-Raumabluft-Volumenströme
 		grundluftung = abluftRaume(map).inject(0.0d) { o, n ->
-			o + n.raumAbluftVs
+			o + n.raumAbluftVolumenstrom
 		}
 		map.aussenluftVs.gesamtAvsRaumLvsNl = grundluftung
 		map.aussenluftVs.gesamtAvsRaumLwNl = grundluftung / geluftetesVolumen

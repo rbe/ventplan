@@ -40,7 +40,7 @@ panel(id: "raumPanel", layout: new MigLayout("fill", "[fill,grow]", "")) {
         textField(id: "raumFlache", constraints: "width 100px")
         textField(id: "raumHohe", text: "2,50", constraints: "width 100px")
         textField(id: "raumZuluftfaktor", text: "3,00", editable: bind { raumLuftart.selectedItem != "ÜB" }, constraints: "width 80px")
-        textField(id: "raumAbluftVs",                   editable: bind { raumLuftart.selectedItem != "ÜB" }, constraints: "width 80px")
+        textField(id: "raumAbluftVolumenstrom",         editable: bind { raumLuftart.selectedItem != "ÜB" }, constraints: "width 80px")
         // Hinzufügen-Button aktivieren, wenn Fläche eingegeben wurde
         button(id: "raumHinzufugen"/*, enabled: bind { !raumFlache.text.isEmpty() }*/, text: "Hinzufügen")
     }
@@ -74,7 +74,7 @@ panel(id: "raumPanel", layout: new MigLayout("fill", "[fill,grow]", "")) {
 }
 // Format fields
 GH.yellowTextField(raumBezeichnung)
-[raumFlache, raumHohe, raumZuluftfaktor, raumAbluftVs].each {
+[raumFlache, raumHohe, raumZuluftfaktor, raumAbluftVolumenstrom].each {
     GH.autoformatDoubleTextField(it)
 }
 // Bindings

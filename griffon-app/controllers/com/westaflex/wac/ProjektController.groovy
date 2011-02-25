@@ -439,15 +439,15 @@ class ProjektController {
 					view.raumLuftart.selectedItem = "ZU"
 					switch (view.raumTyp.selectedIndex) {
 						case 0:
-							view.raumAbluftVs.text = ""
+							view.raumAbluftVolumenstrom.text = ""
 							view.raumZuluftfaktor.text = "3,00"
 							break
 						case 1..2:
-							view.raumAbluftVs.text = ""
+							view.raumAbluftVolumenstrom.text = ""
 							view.raumZuluftfaktor.text = "2,00"
 							break
 						case 3..5:
-							view.raumAbluftVs.text = ""
+							view.raumAbluftVolumenstrom.text = ""
 							view.raumZuluftfaktor.text = "1,50"
 							break
 					}
@@ -458,15 +458,15 @@ class ProjektController {
 					switch (view.raumTyp.selectedIndex) {
 						case 6..8:
 							view.raumZuluftfaktor.text = ""
-							view.raumAbluftVs.text = "25"
+							view.raumAbluftVolumenstrom.text = "25"
 							break
 						case 9..12:
 							view.raumZuluftfaktor.text = ""
-							view.raumAbluftVs.text = "45"
+							view.raumAbluftVolumenstrom.text = "45"
 							break
 						case 13:
 							view.raumZuluftfaktor.text = ""
-							view.raumAbluftVs.text = "100"
+							view.raumAbluftVolumenstrom.text = "100"
 							break
 					}
 					break
@@ -474,7 +474,7 @@ class ProjektController {
 				case { it > 13 }:
 					view.raumLuftart.selectedItem = "ÜB"
 					view.raumZuluftfaktor.text = ""
-					view.raumAbluftVs.text = ""
+					view.raumAbluftVolumenstrom.text = ""
 			}
 		}
 	}

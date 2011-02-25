@@ -97,7 +97,7 @@ class ProjektModelService {
 					raumBreite: X.vd { room."raumbreite".text() },
 					raumVolumen: X.vd { room."raumvolumen".text() },
 					raumZuluftfaktor: X.vd { room."zuluftfaktor".text() },
-					raumAbluftVs: X.vd { room."abluftvolumenstrom".text() },
+					raumAbluftVolumenstrom: X.vd { room."abluftvolumenstrom".text() },
 					raumLuftwechsel: X.vd { room."luftwechsel".text() },
 					raumVolumenstrom: X.vd { room."volumenstrom".text() },
 					raumBezeichnungAbluftventile: X.vs { room."bezeichnungAbluftventile".text() },
@@ -322,7 +322,7 @@ class ProjektModelService {
 			X.tc { raumbreite(map.raumbreite) }
 			X.tc { raumvolumen(map.raumVolumen) }
 			X.tc { zuluftfaktor(map.raumZuluftfaktor) }
-			X.tc { abluftvolumenstrom(map.raumAbluftVs) }
+			X.tc { abluftvolumenstrom(map.raumAbluftVolumenstrom) }
 			X.tc { luftwechsel(map.raumLuftwechsel) }
 			X.tc { volumenstrom(map.raumVolumenstrom) }
 			X.tc { bezeichnungAbluftventile(map.raumBezeichnungAbluftventile) }
