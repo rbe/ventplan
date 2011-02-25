@@ -58,21 +58,23 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
         panel(id: "dvbVentileinstellungTab", title: "Ventileinstellung", layout: new MigLayout("fill", "[fill,grow]", "[fill]")) {
             // Druckverlustberechnung - Ventileinstellung
             jideScrollPane(constraints: "grow") {
-                panel(id: "dvbVentileinstellungPanel", layout: new MigLayout("", "[] 16 [] 16 [] 16 [] 16 [] 16 []", "")) {
+                panel(id: "dvbVentileinstellungPanel", layout: new MigLayout("", "[] 16 [] 16 [] 16 [] 16 [] 16 [] 16 []", "")) {
 
                     label("Luftart")
                     label("Raum")
                     label("Teilstrecken")
                     label("")
                     label("Ventilbezeichnung")
-                    label("", constraints: "wrap")
+                    label("")
+                    label("Hinweis:", foreground: java.awt.Color.RED, constraints: "wrap")
 
                     comboBox(id: "dvbVentileinstellungLuftart", items: ["ZU", "AB", "AU", "FO"])
                     comboBox(id: "dvbVentileinstellungRaum", items: model.meta.raum.typ + [/* items werden nach RaumHinzufugen aktualisiert, siehe Ticket#10 */])
                     textField(id: "dvbVentileinstellungTeilstrecken", constraints: "width 150px")
                     button(id: "dvbVentileinstellungAuswahlen", text: "Auswählen")
                     comboBox(id: "dvbVentileinstellungVentilbezeichnung", items: model.meta.dvbVentileinstellung)
-                    button(id: "dvbVentileinstellungHinzufugen", text: "Hinzufügen", constraints: "wrap")
+                    button(id: "dvbVentileinstellungHinzufugen", text: "Hinzufügen")
+                    label("Mindesteingabe 5 Teilstrecken", foreground: java.awt.Color.RED, constraints: "wrap")
 
                     panel(id: "dvbVentileinstellungTabellePanel", constraints: "span, grow", layout: new MigLayout("fill", "[fill,grow]", "")) {
                         jideScrollPane(constraints: "grow, width 600:1000:") {
