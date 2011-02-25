@@ -91,7 +91,23 @@ mv update/lib/* lib 2>>wac.log 1>&2
 mv update/sql/* sql 2>>wac.log 1>&2
 rm -rf update 2>>wac.log 1>&2
 
+# Set WAC temporary directory
+case "${OS}" in
+		Darwin | Linux | *BSD | SunOS)
+			WACTMP=${TMPDIR}
+		;;
+esac
+[ -z "${WACTMP}" ] && WACTMP=/tmp
+WACTMP=${WACTMP}/wac
+export WACTMP
+mkdir -p ${WACTMP} 2>/dev/null
+
 # Start
-java -cp "${CLASSPATH}" -Djava.library.path="${OOOL}" -d32 griffon.swing.SwingApplication 2>>wac.log 1>&2
+java -cp "${CLASSPATH}" -Djava.library.path="${OOOL}" -d32 griffon.swing.SwingApplication 2>>${WACTMP}/wac.log 1>&2
+
+# Remove temporary directory
+cd ${WACTMP}
+cd ..
+rm -rf wac
 
 exit 0
