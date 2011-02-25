@@ -44,6 +44,9 @@ class WpxConstants {
 			wand: "WAN",
 			erdwarme: "ERD",
 			lichtschacht: "LIC",
+			// Luftarten
+			"ÜB": "UB",
+			"ZU/AB": "ZUA",
 			// Raumtypen
 			"Wohnzimmer": "WOH",
 			"Kinderzimmer": "KIN",
