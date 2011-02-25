@@ -756,8 +756,7 @@ class ProjektController {
 			if (DEBUG) println "onZentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
 			if (!model.map.anlage.zentralgeratManuell) {
 				def (zentralgerat, nl) = wacCalculationService.berechneZentralgerat(model.map)
-				if (DEBUG) println "onZentralgeratAktualisieren: zentralgerat=${zentralgerat}," +
-					"nl=${nl}/${wacCalculationService.round5(nl)}"
+				if (DEBUG) println "onZentralgeratAktualisieren: zentralgerat=${zentralgerat}, nl=${nl}/${wacCalculationService.round5(nl)}"
 				// Aktualisiere Zentralgerät
 				GH.withDisabledActionListeners view.raumVsZentralgerat, {
 					model.map.anlage.zentralgerat =
