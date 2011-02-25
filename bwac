@@ -149,8 +149,12 @@ _usbstick_update_sql() {
 	mkdir -p ${USBSTICK}/sql
 	# Cleanup
 	rm -rf ${USBSTICK}/sql/*
+	# Create ZIP backup of database
+	cd sql
+	java -cp ../lib/h2*jar org.h2.tools.Backup -file westawac_db.zip -db westawac
+	cd ..
 	# Copy SQL data
-	cp -R sql/* ${USBSTICK}/sql
+	cp -R sql/westawac_db.zip ${USBSTICK}/sql
 }
 
 #
