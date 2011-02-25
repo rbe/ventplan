@@ -10,7 +10,7 @@
 # 
 
 # Base
-USBSTICK=usbstick/wac2
+USBSTICK=usbstick/wac
 
 #
 # Parse application version
