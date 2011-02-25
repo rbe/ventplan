@@ -76,14 +76,14 @@ CLASSPATH="${OOO_PROGRAM}/juh.jar:${OOOJ}/jurt.jar:${OOOJ}/ridl.jar:${OOOU}/unoi
 export CLASSPATH
 
 # No OpenOffice running
-case "${OS}" in
-	Darwin | Linux | *BSD)
-		killall soffice 2>/dev/null 1>&2
-	;;
-	SunOS)
-		pkill soffice 2>/dev/null 1>&2
-	;;
-esac
+#case "${OS}" in
+#	Darwin | Linux | *BSD)
+#		killall soffice 2>/dev/null 1>&2
+#	;;
+#	SunOS)
+#		pkill soffice 2>/dev/null 1>&2
+#	;;
+#esac
 
 # Update
 mv update/conf/* conf 2>wac.log 1>&2
