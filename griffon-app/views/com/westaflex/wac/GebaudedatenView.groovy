@@ -52,10 +52,11 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
             textField(id: "gebaudeGeometrieLuftvolumen", editable: false, constraints: "width 60px!")
             label("m³")
             label("Luftvolumen der Nutzungseinheit")
-            //
+            /* Auf Wunsch des Kunden entfernt, ist == gelüftetes Volumen
             textField(id: "gebaudeGeometrieGelufteteFlache", constraints: "width 60px!")
             label("m²")
             label("gelüftete Fläche")
+            */
             //
             textField(id: "gebaudeGeometrieGeluftetesVolumen", editable: false, constraints: "width 60px!")
             label("m³")

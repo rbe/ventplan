@@ -272,12 +272,14 @@ class ProjektController {
 		def g = [
 			wohnflache: view.gebaudeGeometrieWohnflache.text.toDouble2(),
 			raumhohe: view.gebaudeGeometrieMittlereRaumhohe.text.toDouble2(),
-			gelufteteFlache: view.gebaudeGeometrieGelufteteFlache.text.toDouble2()
+			//gelufteteFlache: view.gebaudeGeometrieGelufteteFlache.text.toDouble2()
+			gelufteteVolumen: view.gebaudeGeometrieGeluftetesVolumen.text.toDouble2()
 		]
 		// Write values into model
 		model.map.gebaude.geometrie.wohnflache = g.wohnflache
 		model.map.gebaude.geometrie.raumhohe = g.raumhohe
-		model.map.gebaude.geometrie.gelufteteFlache = g.gelufteteFlache
+		//model.map.gebaude.geometrie.gelufteteFlache = g.gelufteteFlache
+		model.map.gebaude.geometrie.gelufteteaVolumen = g.geluftetesVolumen
 		//
 		publishEvent "GeometrieEingegeben"
 	}

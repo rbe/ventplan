@@ -25,9 +25,10 @@ bind(source: model.map.gebaude.warmeschutz, sourceProperty: "niedrig", target: g
 bind(source: model.map.gebaude.geometrie, sourceProperty: "wohnflache",        target: gebaudeGeometrieWohnflache,        targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.gebaude.geometrie, sourceProperty: "raumhohe",          target: gebaudeGeometrieMittlereRaumhohe,  targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.gebaude.geometrie, sourceProperty: "luftvolumen",       target: gebaudeGeometrieLuftvolumen,       targetProperty: "text", converter: GH.toString2Converter)
-bind(source: model.map.gebaude.geometrie, sourceProperty: "gelufteteFlache",   target: gebaudeGeometrieGelufteteFlache,   targetProperty: "text", converter: GH.toString2Converter)
+// Auf Wunsch des Kunden entfernt, ist == gelüftetes Volumen
+// bind(source: model.map.gebaude.geometrie, sourceProperty: "gelufteteFlache",   target: gebaudeGeometrieGelufteteFlache,   targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.gebaude.geometrie, sourceProperty: "geluftetesVolumen", target: gebaudeGeometrieGeluftetesVolumen, targetProperty: "text", converter: GH.toString2Converter)
-[gebaudeGeometrieWohnflache, gebaudeGeometrieMittlereRaumhohe, gebaudeGeometrieGelufteteFlache].each {
+[gebaudeGeometrieWohnflache, gebaudeGeometrieMittlereRaumhohe/*, gebaudeGeometrieGelufteteFlache*/].each {
 	it.focusLost = controller.berechneGeometrie
 }
 // Luftdichtheit der Gebäudehülle
