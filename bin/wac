@@ -54,7 +54,7 @@ export UNO_PATH
 # Copy juh.jar into program folder
 # http://user.services.openoffice.org/en/forum/viewtopic.php?f=44&t=10825
 if [ ! -f ${OOO_PROGRAM}/juh.jar ]; then
-        cp ${OOOJ}/juh.jar ${OOO_PROGRAM}
+        cp ${OOOJ}/juh.jar ${OOO_PROGRAM} 2>/dev/null 1>&2
 fi
 
 # Classpath
