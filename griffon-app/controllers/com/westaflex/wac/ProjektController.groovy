@@ -567,7 +567,7 @@ class ProjektController {
             if (DEBUG) println "newMap -> ${newMap}"
 
 			// Neuen Namen und neue Position (Ende) setzen
-            // Ticket #151: Namen setzen. raumBezeichnung als String speichern (vorher GString).
+            // raumBezeichnung als String speichern (vorher GString).
 			newMap.raumBezeichnung = "Kopie von ${x.raumBezeichnung}".toString()
 			newMap.position = model.map.raum.raume.size()
 			// Raum zum Model hinzufügen
