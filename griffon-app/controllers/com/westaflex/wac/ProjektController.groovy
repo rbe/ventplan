@@ -1,11 +1,15 @@
-/**
- * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/controllers/com/westaflex/wac/ProjektController.groovy
- * 
- * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
- * Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
- * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
- * 
+/*
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
+ *
+ * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
+ * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
+ *
+ * Project wac
+ * /Users/rbe/project/wac/griffon-app/controllers/com/westaflex/wac/ProjektController.groovy
+ * Last modified at 09.03.2011 15:51:21 by rbe
  */
+
 package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
@@ -78,7 +82,6 @@ class ProjektController {
 		GH.tieEventListener(this, GebaudeEvents, props)
 		GH.tieEventListener(this, RaumEvents, props)
 		GH.tieEventListener(this, AussenluftVsEvents, props)
-		GH.tieEventListener(this, RaumVsEvents, props)
 		GH.tieEventListener(this, DvbKanalnetzEvents, props)
 		GH.tieEventListener(this, DvbVentileinstellungEvents, props)
 	}
@@ -764,17 +767,104 @@ class ProjektController {
 	/**
 	 * Raumvolumenströme - Zentralgerät: manuelle Auswahl des Zentralgeräts.
 	 */
-	def zentralgeratGewahlt = {
-		publishEvent "ZentralgeratGewahlt", [view.raumVsZentralgerat.selectedItem]
+	def zentralgeratManuellGewahlt = {
+		////publishEvent "ZentralgeratGewahlt", [view.raumVsZentralgerat.selectedItem]
+		doLater {
+			// Merken, dass das Zentralgerät manuell ausgewählt wurde
+			// -> keine automatische Auswahl des Zentralgeräts mehr durchführen
+			model.map.anlage.zentralgeratManuell = true
+			// Zentralgerät aus View in Model übernehmen
+			model.map.anlage.zentralgerat = view.raumVsZentralgerat.selectedItem
+			// Hole Volumenströme des Zentralgeräts
+			model.meta.volumenstromZentralgerat =
+				wacModelService.getVolumenstromFurZentralgerat(model.map.anlage.zentralgerat)
+			// Aussenluftvolumenströme neu berechnen
+			wacCalculationService.aussenluftVs(model.map)
+			// Neue Auswahl setzen
+			zentralgeratAktualisieren()
+		}
 	}
 	
 	/**
 	 * Raumvolumenströme - Zentralgerät: das Zentralgerat wurde geändert.
-	 */
 	def onZentralgeratGeandert = {
-		// Füge Volumenströme des aktuellen Zentralgeräts in Combobox hinzu
-		view.raumVsVolumenstrom.removeAllItems()
-		model.meta.volumenstromZentralgerat.each { view.raumVsVolumenstrom.addItem(it) }
+	}
+	 */
+	
+	/**
+	 * Aktualisiere Zentralgerät und Volumenstrom in allen Comboboxen
+	 */
+	def zentralgeratAktualisieren = {
+		doLater {
+			println "zentralgeratAktualisieren"
+			/*
+			// Füge Volumenströme des aktuellen Zentralgeräts in Combobox hinzu
+			// Raumvolumenströme
+			view.raumVsVolumenstrom.removeAllItems()
+			// Akustikberechnung Zu-/Abluft
+			view.akustikZuluftPegel.removeAllItems()
+			view.akustikAbluftPegel.removeAllItems()
+			model.meta.volumenstromZentralgerat.each {
+				// Raumvolumenströme
+				view.raumVsVolumenstrom.addItem(it)
+				// Akustikberechnung Zu-/Abluft
+				view.akustikZuluftPegel.addItem(it)
+				view.akustikAbluftPegel.addItem(it)
+			}
+			// Akustikberechnung Zu-/Abluft
+			view.akustikZuluftZuluftstutzenZentralgerat.selectedItem =
+				view.akustikAbluftAbluftstutzenZentralgerat.selectedItem =
+				model.meta.volumenstromZentralgerat
+			*/
+			// Aktualisiere Zentralgerät
+			GH.withDisabledActionListeners view.raumVsZentralgerat, {
+				// Raumvolumenströme
+				model.map.anlage.zentralgerat =
+					view.raumVsZentralgerat.selectedItem =
+					model.map.anlage.zentralgerat
+				// Akustik Zu-/Abluft
+				view.akustikZuluftZuluftstutzenZentralgerat.selectedItem =
+					view.akustikAbluftAbluftstutzenZentralgerat.selectedItem =
+					model.map.anlage.zentralgerat
+			}
+			// Aktualisiere Volumenstrom
+			GH.withDisabledActionListeners view.raumVsVolumenstrom, {
+				// Hole Volumenströme des Zentralgeräts
+				def volumenstromZentralgerat =
+					wacModelService.getVolumenstromFurZentralgerat(view.raumVsZentralgerat.selectedItem)
+				// 5er-Schritte
+				model.meta.volumenstromZentralgerat = []
+				def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
+				def maxVsZentralgerat = volumenstromZentralgerat.toList().last() as Integer
+				(minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
+				// Füge Volumenströme in Comboboxen hinzu
+				view.raumVsVolumenstrom.removeAllItems()
+				// Akustik
+				view.akustikZuluftPegel.removeAllItems()
+				view.akustikAbluftPegel.removeAllItems()
+				model.meta.volumenstromZentralgerat.each {
+					// Raumvolumenströme
+					view.raumVsVolumenstrom.addItem(it)
+					// Akustikberechnung
+					view.akustikZuluftPegel.addItem(it)
+					view.akustikAbluftPegel.addItem(it)
+				}
+				// Selektiere errechneten Volumenstrom
+				def roundedVs = wacCalculationService.round5(model.map.anlage.volumenstromZentralgerat)
+				println "model.map.anlage.volumenstromZentralgerat=${model.map.anlage.volumenstromZentralgerat} roundedVs=${roundedVs}"
+				def foundVs = model.meta.volumenstromZentralgerat.find { it.toInteger() == roundedVs }
+				// Wenn gerundeter Volumenstrom nicht gefunden wurde, setze Minimum des Zentralgeräts
+				if (!foundVs) {
+					foundVs = model.meta.volumenstromZentralgerat[0]
+				}
+				model.map.anlage.volumenstromZentralgerat =
+					view.raumVsVolumenstrom.selectedItem =
+					foundVs
+				// Akustik
+				view.akustikZuluftPegel.selectedItem = foundVs
+				view.akustikAbluftPegel.selectedItem = foundVs
+			}
+		}
 	}
 	
 	/**
@@ -784,55 +874,14 @@ class ProjektController {
 	 */
 	def onZentralgeratAktualisieren = {
 		doLater {
-			if (DEBUG) println "onZentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
+			/*if (DEBUG)*/ println "onZentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
 			if (!model.map.anlage.zentralgeratManuell) {
+				// Berechne Zentralgerät und Volumenstrom
 				def (zentralgerat, nl) = wacCalculationService.berechneZentralgerat(model.map)
-				if (DEBUG) println "onZentralgeratAktualisieren: zentralgerat=${zentralgerat}, nl=${nl}/${wacCalculationService.round5(nl)}"
-				// Aktualisiere Zentralgerät
-				GH.withDisabledActionListeners view.raumVsZentralgerat, {
-					model.map.anlage.zentralgerat =
-						view.raumVsZentralgerat.selectedItem =
-						zentralgerat
-				}
-				// Akustik Zuluft
-				view.akustikZuluftZuluftstutzenZentralgerat.selectedItem = zentralgerat
-				// Akustik Abluft
-				view.akustikAbluftAbluftstutzenZentralgerat.selectedItem = zentralgerat
-				// Aktualisiere Volumenstrom
-				GH.withDisabledActionListeners view.raumVsVolumenstrom, {
-					// Hole Volumenströme des Zentralgeräts
-					def volumenstromZentralgerat =
-						wacModelService.getVolumenstromFurZentralgerat(view.raumVsZentralgerat.selectedItem)
-					// 5er-Schritte
-					model.meta.volumenstromZentralgerat = []
-					def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
-					def maxVsZentralgerat = volumenstromZentralgerat.toList().last() as Integer
-					(minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
-					// Füge Volumenströme in Comboboxen hinzu
-					view.raumVsVolumenstrom.removeAllItems()
-					view.akustikZuluftPegel.removeAllItems()
-					view.akustikAbluftPegel.removeAllItems()
-					model.meta.volumenstromZentralgerat.each {
-						// Raumvolumenströme
-						view.raumVsVolumenstrom.addItem(it)
-						// Akustikberechnung
-						view.akustikZuluftPegel.addItem(it)
-						view.akustikAbluftPegel.addItem(it)
-					}
-					// Selektiere errechneten Volumenstrom
-					def roundedVs = wacCalculationService.round5(nl)
-					def foundVs = model.meta.volumenstromZentralgerat.find { it.toInteger() == roundedVs }
-					// Wenn gerundeter Volumenstrom nicht gefunden wurde, setze Minimum des Zentralgeräts
-					if (!foundVs) {
-						foundVs = model.meta.volumenstromZentralgerat[0]
-					}
-					model.map.anlage.volumenstromZentralgerat =
-						view.raumVsVolumenstrom.selectedItem =
-						foundVs
-					// Akustik
-					view.akustikZuluftPegel.selectedItem = foundVs
-					view.akustikAbluftPegel.selectedItem = foundVs
-				}
+				model.map.anlage.zentralgerat = zentralgerat
+				model.map.anlage.volumenstromZentralgerat = wacCalculationService.round5(nl)
+				/*if (DEBUG)*/ println "zentralgeratAktualisieren: zentralgerat=${model.map.anlage.zentralgerat}, nl=${nl}/${model.map.anlage.volumenstromZentralgerat}"
+				zentralgeratAktualisieren()
 			}
 		}
 	}
@@ -840,9 +889,10 @@ class ProjektController {
 	/**
 	 * Raumvolumenströme - Volumenstrom des Zentralgeräts.
 	 */
-	def volumenstromZentralgeratGewahlt = {
-		// Im Projekt-Model speichern
+	def volumenstromZentralgeratManuellGewahlt = {
+		// Aus der View im Projekt-Model speichern
 		model.map.anlage.volumenstromZentralgerat = view.raumVsVolumenstrom.selectedItem?.toInteger()
+		zentralgeratAktualisieren()
 	}
 	
 	/**
@@ -909,12 +959,10 @@ class ProjektController {
         def wbw = model.tableModels.wbw[index][wbwIndex]
         javax.swing.ImageIcon image = null
         // Neu generierte WBWs haben kein Image. Exception abfangen.
-        try
-        {
+        try {
             def url = Wac2Resource.getWiderstandURL(wbw.id)
             image = new javax.swing.ImageIcon(url)
-        }
-        catch (NullPointerException e) { }
+        } catch (NullPointerException e) { }
         // Image und Text setzen
         if (image) {
             view.wbwBild.text = ""
