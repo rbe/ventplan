@@ -9,11 +9,8 @@
 package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
+
 import groovy.beans.Bindable
-import ca.odell.glazedlists.GlazedLists
-import ca.odell.glazedlists.swing.AutoCompleteSupport
-import javax.swing.table.TableColumn
-import javax.swing.DefaultCellEditor
 import javax.swing.DefaultComboBoxModel
 
 /**
@@ -710,6 +707,31 @@ class ProjektModel {
 				map.raum.raume << raum
 				if (DEBUG) println "addRaum: adding raum.raume=${map.raum.raume}"
 			}
+
+			// disables sorting in raumTabelle
+            try {
+                view.raumTabelle.setSortable(false);
+                view.raumTabelle.getTableHeader().setDefaultRenderer(new javax.swing.table.JTableHeader().getDefaultRenderer());
+            } catch (e) {
+                println "ProjektModel: addRaum: Error while modifying raumTabelle: ${e}"
+            }
+
+            // disables sorting in raumVsUberstromelementeTabelle
+            try {
+                view.raumVsUberstromelementeTabelle.setSortable(false);
+                view.raumVsUberstromelementeTabelle.getTableHeader().setDefaultRenderer(new javax.swing.table.JTableHeader().getDefaultRenderer());
+            } catch (e) {
+                println "ProjektModel: addRaum: Error while modifying raumVsUberstromelementeTabelle: ${e}"
+            }
+
+            // disables sorting in raumVsZuAbluftventileTabelle
+            try {
+                view.raumVsZuAbluftventileTabelle.setSortable(false);
+                view.raumVsZuAbluftventileTabelle.getTableHeader().setDefaultRenderer(new javax.swing.table.JTableHeader().getDefaultRenderer());
+            } catch (e) {
+                println "ProjektModel: addRaum: Error while modifying raumVsZuAbluftventileTabelle: ${e}"
+            }
+
 			addRaumTurenModel()
 			// Sync table models
 			resyncRaumTableModels()
