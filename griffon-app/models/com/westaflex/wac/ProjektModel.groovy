@@ -344,6 +344,65 @@ class ProjektModel {
 				}
 			] as ca.odell.glazedlists.gui.WritableTableFormat)
 	}
+
+    /**
+	 * Closure to generate glazedlists EventTableModel.
+	 * @param columnNames String[]
+	 * @param propertyNames String[]
+     * @param propertyTypes String[] String array of the class types e.g. Integer.class.getName() etc.
+	 * @param writable boolean[]
+	 * @param tableModel ca.odell.glazedlists.EventList
+	 * @param postValueSet Closure to execute after value was set
+	 * @param preValueSet Closure to execute before value was set
+	 */
+	def gltmClosureWithTypes = { columnNames, propertyNames, propertyTypes, writable, tableModel, postValueSet = null, preValueSet = null ->
+		new ca.odell.glazedlists.swing.EventTableModel(tableModel, [
+				getColumnCount: { columnNames.size() },
+				getColumnName:  { columnIndex -> columnNames[columnIndex] },
+				getColumnValue: { object, columnIndex ->
+                    def isInt
+                    try {
+                        if (propertyTypes[columnIndex].equals(Integer.class.getName())) {
+                            isInt = true
+                        }
+                    } catch (e) {
+
+                    }
+					try {
+                        if (isInt || isInt == true) {
+                            object."${propertyNames[columnIndex]}"?.toString()
+                        }
+                        else {
+						    object."${propertyNames[columnIndex]}"?.toString2()
+                        }
+					} catch (e) {
+						println "gltmClosure, getColumnValue: ${e}: ${object?.dump()}"
+						object?.toString()
+					}
+				},
+				isEditable:     { object, columnIndex -> writable[columnIndex] },
+				setColumnValue: { object, value, columnIndex ->
+					def property = propertyNames[columnIndex]
+					if (DEBUG) println "gltmClosure, setColumnValue: ${property}=${value}"
+					// Call pre-value-set closure
+					if (preValueSet) object = preValueSet(object, property, value, columnIndex)
+					else {
+						// Try to save double value; see ticket #60
+						object[property] = value.toDouble2()
+					}
+					// Call post-value-set closure
+					if (postValueSet) postValueSet(object, columnIndex, value)
+					// VERY IMPORTANT: return null value to prevent e.g. returning
+					// a boolean value. Table would display the wrong value in all
+					// cells !!!
+					null
+				},
+				getValueAt: { rowIndex, columnIndex ->
+					if (DEBUG) println "gltmClosure, getValueAt: rowIndex=${rowIndex}, columnIndex=${columnIndex}"
+					//no value to get...
+				}
+			] as ca.odell.glazedlists.gui.WritableTableFormat)
+	}
 	
 	/**
 	 * ATTENTION: Used only within TableModel for Raume/Turen!
@@ -534,7 +593,7 @@ class ProjektModel {
 		// Neues TableModel erstellen und füllen
 		tableModels.wbw << new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNameComparator) as ca.odell.glazedlists.EventList
 		meta.wbw.each {
-			tableModels.wbw[index].add([id: it.id, anzahl: 0, name: it.bezeichnung, widerstandsbeiwert: it.wert])
+			tableModels.wbw[index].add([id: it.id, anzahl: 0 as Integer, name: it.bezeichnung, widerstandsbeiwert: it.wert])
 		}
 	}
 	
@@ -554,13 +613,14 @@ class ProjektModel {
 		if (DEBUG) println "createWbwTableModel: index=${index}"
 		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert"] as String[]
 		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert"] as String[]
+		def propertyTypes = [Integer.class.getName(), String.class.getName(), Double.class.getName()] as String[]
 		def writable      = [true, true, true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			app.controllers[mvcId].wbwSummieren()
 			app.controllers[mvcId].wbwInTabelleGewahlt()
 		}
 		// Widerstandsbeiwerte für die gewählte Kanalnetz in tableModels.wbw übertragen
-		gltmClosure(columnNames, propertyNames, writable, tableModels.wbw[index], postValueSet)
+		gltmClosureWithTypes(columnNames, propertyNames, propertyTypes, writable, tableModels.wbw[index], postValueSet)
 	}
 	
 	/**

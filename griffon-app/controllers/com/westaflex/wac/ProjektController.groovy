@@ -925,7 +925,7 @@ class ProjektController {
         }
         // Daten in Eingabemaske setzen
         view.wbwBezeichnung.text = wbw.name
-        view.wbwWert.text = wbw.widerstandsbeiwert.toString2(0)
+        view.wbwWert.text = wbw.widerstandsbeiwert.toString2()
         view.wbwAnzahl.text = wbw.anzahl
 	}
 	
@@ -941,15 +941,20 @@ class ProjektController {
 		def dialogWbw = [
 			name: view.wbwBezeichnung.text,
 			widerstandsbeiwert: view.wbwWert.text?.toDouble2() ?: 0.0d,
-			anzahl: view.wbwAnzahl.text?.toInteger() ?: 0
+			anzahl: view.wbwAnzahl.text?.toString() ?: "0"
 		]
 		// Wenn WBW noch nicht vorhanden, dann hinzufügen
-		if (!wbw.find { it.name == dialogWbw.name }) {
+        def editedWbw = wbw.find { it.name == dialogWbw.name }
+		if (!editedWbw) {
 			if (DEBUG) println "wbwSaveButton: adding ${dialogWbw.dump()} to model"
 			wbw << dialogWbw
-			model.resyncWbwTableModels()
-		}
-	}
+        } else {
+            editedWbw = wbw[view.wbwTabelle.selectedRow]
+            editedWbw.widerstandsbeiwert = dialogWbw.widerstandsbeiwert
+            editedWbw.anzahl = dialogWbw.anzahl
+        }
+        wbwSummieren()
+    }
 	
 	/**
 	 * Widerstandsbeiwerte: eingegebene Werte aufsummieren.
