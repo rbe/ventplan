@@ -7,7 +7,7 @@
  *
  * Project wac
  * /Users/rbe/project/wac/griffon-app/controllers/com/westaflex/wac/ProjektController.groovy
- * Last modified at 09.03.2011 17:42:25 by rbe
+ * Last modified at 09.03.2011 17:54:12 by rbe
  */
 
 package com.westaflex.wac
@@ -94,10 +94,6 @@ class ProjektController {
 		model.map.anlage.zentralgerat = model.meta.zentralgerat[0]
 		// Raumvolumenströme, Volumenstrom des Zentralgeräts; default ist erster Wert der Liste
 		model.map.anlage.volumenstromZentralgerat = model.meta.volumenstromZentralgerat[0]
-		/* Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
-		model.map.dvb.kanalbezeichnung = model.meta.dvbKanalbezeichnung
-		// Druckverlustberechnung - Ventileinstellung - Ventilbezeichnung
-		// TODO Why this? model.map.dvb.ventileinstellung = model.meta.dvbVentileinstellung[]*/
 	}
 	
 	/**
