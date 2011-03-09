@@ -1,10 +1,13 @@
-/**
- * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/bindings/com/westaflex/wac/RaumVsBindings.groovy
- * 
- * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
- * Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
- * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
- * 
+/*
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
+ *
+ * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
+ * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
+ *
+ * Project wac
+ * /Users/rbe/project/wac/griffon-app/bindings/com/westaflex/wac/RaumVsBindings.groovy
+ * Last modified at 09.03.2011 12:17:01 by rbe
  */
 package com.westaflex.wac
 
@@ -21,8 +24,8 @@ import com.bensmann.griffon.GriffonHelper as GH
 }
 // Comboboxes
 // Binding for items of comboboxes is done in RaumVsiew!
-raumVsZentralgerat.actionPerformed = controller.zentralgeratGewahlt
-raumVsVolumenstrom.actionPerformed = controller.volumenstromZentralgeratGewahlt
+raumVsZentralgerat.actionPerformed = controller.zentralgeratManuellGewahlt
+raumVsVolumenstrom.actionPerformed = controller.volumenstromZentralgeratManuellGewahlt
 //
 bind(source: model.map.raum.raumVs, sourceProperty: "gesamtVolumenNE",                   target: raumVsGesamtVolumenNE,                   targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.raum.raumVs, sourceProperty: "luftwechselNE",                     target: raumVsLuftwechselNE,                     targetProperty: "text", converter: GH.toString2Converter)
