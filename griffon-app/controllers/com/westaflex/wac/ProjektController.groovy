@@ -78,7 +78,6 @@ class ProjektController {
 				wacCalculationService: wacCalculationService,
 				wacModelService: wacModelService
 			]
-		GH.tieEventListener(this, GebaudeEvents, props)
 		GH.tieEventListener(this, RaumEvents, props)
 		GH.tieEventListener(this, DvbKanalnetzEvents, props)
 		GH.tieEventListener(this, DvbVentileinstellungEvents, props)
