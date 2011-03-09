@@ -1545,3 +1545,6 @@ org.h2.jdbc.JdbcSQLException: Database is already closed (to disable automatic c
 	at groovy.lang.Closure.call(Closure.java:271)
 	at groovy.lang.Closure.run(Closure.java:354)
 	at java.lang.Thread.run(Thread.java:637)
+03-03 14:10:32 jdbc[2]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "PAKETE[*] SELECT * FROM STUECKLISTE"; expected "PREPARE, {"; SQL statement:
+PAKETE SELECT * FROM STUECKLISTE [42001-147]

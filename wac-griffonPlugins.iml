@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/glazedlists-0.4">
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/glazedlists-0.4/target/classes" />
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/glazedlists-0.4/target/test-classes" />
+    </content>
+    <content url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/gsql-0.4">
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/gsql-0.4/target/classes" />
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/gsql-0.4/target/test-classes" />
+    </content>
+    <content url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/jide-builder-0.4">
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/jide-builder-0.4/target/classes" />
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/jide-builder-0.4/target/test-classes" />
+    </content>
+    <content url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/miglayout-0.1">
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/miglayout-0.1/target/classes" />
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/miglayout-0.1/target/test-classes" />
+    </content>
+    <content url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/oxbow-0.2">
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/oxbow-0.2/target/classes" />
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/oxbow-0.2/target/test-classes" />
+    </content>
+    <content url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/splash-0.1.4">
+      <sourceFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/splash-0.1.4/src/main" isTestSource="false" />
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/splash-0.1.4/target/classes" />
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/splash-0.1.4/target/test-classes" />
+    </content>
+    <content url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/spring-0.3">
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/spring-0.3/target/classes" />
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/spring-0.3/target/test-classes" />
+    </content>
+    <content url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/swingx-builder-0.2">
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/swingx-builder-0.2/target/classes" />
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/swingx-builder-0.2/target/test-classes" />
+    </content>
+    <content url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/swingxtras-builder-0.3">
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/swingxtras-builder-0.3/target/classes" />
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/swingxtras-builder-0.3/target/test-classes" />
+    </content>
+    <content url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/tray-builder-0.4">
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/tray-builder-0.4/target/classes" />
+      <excludeFolder url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/tray-builder-0.4/target/test-classes" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" scope="PROVIDED" name="griffon-0.9" level="application" />
+    <orderEntry type="module-library" exported="">
+      <library name="Griffon:lib">
+        <CLASSES>
+          <root url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/oxbow-0.2/lib" />
+          <root url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/miglayout-0.1/lib" />
+          <root url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/jide-builder-0.4/lib" />
+          <root url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/gsql-0.4/lib" />
+          <root url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/swingxtras-builder-0.3/lib" />
+          <root url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/swingx-builder-0.2/lib" />
+          <root url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/spring-0.3/lib" />
+          <root url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/splash-0.1.4/lib" />
+          <root url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/tray-builder-0.4/lib" />
+          <root url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/glazedlists-0.4/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/glazedlists-0.4/lib" recursive="false" />
+        <jarDirectory url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/gsql-0.4/lib" recursive="false" />
+        <jarDirectory url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/jide-builder-0.4/lib" recursive="false" />
+        <jarDirectory url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/miglayout-0.1/lib" recursive="false" />
+        <jarDirectory url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/oxbow-0.2/lib" recursive="false" />
+        <jarDirectory url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/splash-0.1.4/lib" recursive="false" />
+        <jarDirectory url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/spring-0.3/lib" recursive="false" />
+        <jarDirectory url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/swingx-builder-0.2/lib" recursive="false" />
+        <jarDirectory url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/swingxtras-builder-0.3/lib" recursive="false" />
+        <jarDirectory url="file://$USER_HOME$/.griffon/0.9/projects/wac/plugins/tray-builder-0.4/lib" recursive="false" />
+      </library>
+    </orderEntry>
+  </component>
+</module>
+
