@@ -7,7 +7,7 @@
  *
  * Project wac
  * /Users/rbe/project/wac/griffon-app/controllers/com/westaflex/wac/ProjektController.groovy
- * Last modified at 09.03.2011 15:51:21 by rbe
+ * Last modified at 09.03.2011 17:42:25 by rbe
  */
 
 package com.westaflex.wac
@@ -78,10 +78,8 @@ class ProjektController {
 				wacCalculationService: wacCalculationService,
 				wacModelService: wacModelService
 			]
-		GH.tieEventListener(this, ProjektEvents, props)
 		GH.tieEventListener(this, GebaudeEvents, props)
 		GH.tieEventListener(this, RaumEvents, props)
-		GH.tieEventListener(this, AussenluftVsEvents, props)
 		GH.tieEventListener(this, DvbKanalnetzEvents, props)
 		GH.tieEventListener(this, DvbVentileinstellungEvents, props)
 	}
@@ -284,7 +282,15 @@ class ProjektController {
 		//model.map.gebaude.geometrie.gelufteteFlache = g.gelufteteFlache
 		model.map.gebaude.geometrie.gelufteteaVolumen = g.geluftetesVolumen
 		//
-		publishEvent "GeometrieEingegeben"
+		///publishEvent "GeometrieEingegeben"
+        doLater {
+            //println "processing event 'GeometrieEingegeben'"
+            wacCalculationService.geometrie(model.map)
+            wacCalculationService.aussenluftVs(model.map)
+            // Zentralgerät bestimmen
+            ///publishEvent "ZentralgeratAktualisieren"
+            onZentralgeratAktualisieren()
+        }
 	}
 	
 	/**
@@ -372,7 +378,11 @@ class ProjektController {
 			println "view.gebaudeGeplantePersonenanzahl.editor.textField.selectedText=${view.gebaudeGeplantePersonenanzahl.editor.textField.selectedText}"
 			view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition = personenanzahlCaretPos
 			view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition = aussenluftVsProPersonCaretPos
-			publishEvent "AussenluftVsBerechnen"
+			///publishEvent "AussenluftVsBerechnen"
+            wacCalculationService.aussenluftVs(model.map)
+            // Zentralgerät bestimmen
+            ///publishEvent "ZentralgeratAktualisieren"
+            onZentralgeratAktualisieren()
 		}
 	}
 	
