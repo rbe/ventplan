@@ -2,62 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list id="64f43170-368e-4241-927c-d8f4ecc4a4e8" name="Default" comment="Events should be removed as possible (actions can be taken in ProjektController)">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/WAC2.cdd" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/WAC2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/todo/Beispiel_Stueckliste.ott" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/wac.tmproj" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/wac.iws" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/build.xml" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/pom.xml" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/build.xml" afterPath="$PROJECT_DIR$/src/WacConverter/build.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/manifest.mf" afterPath="$PROJECT_DIR$/src/WacConverter/manifest.mf" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/nbproject/build-impl.xml" afterPath="$PROJECT_DIR$/src/WacConverter/nbproject/build-impl.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/nbproject/configs/WacConverter.properties" afterPath="$PROJECT_DIR$/src/WacConverter/nbproject/configs/WacConverter.properties" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/nbproject/configs/WacConverterNEW.properties" afterPath="$PROJECT_DIR$/src/WacConverter/nbproject/configs/WacConverterNEW.properties" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/nbproject/genfiles.properties" afterPath="$PROJECT_DIR$/src/WacConverter/nbproject/genfiles.properties" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/nbproject/private/config.properties" afterPath="$PROJECT_DIR$/src/WacConverter/nbproject/private/config.properties" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/nbproject/private/private.properties" afterPath="$PROJECT_DIR$/src/WacConverter/nbproject/private/private.properties" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/nbproject/private/private.xml" afterPath="$PROJECT_DIR$/src/WacConverter/nbproject/private/private.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/nbproject/project.properties" afterPath="$PROJECT_DIR$/src/WacConverter/nbproject/project.properties" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/nbproject/project.xml" afterPath="$PROJECT_DIR$/src/WacConverter/nbproject/project.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/META-INF/services/org.jdesktop.application.Application" afterPath="$PROJECT_DIR$/src/WacConverter/src/META-INF/services/org.jdesktop.application.Application" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/Constants.java" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/Constants.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/WacConverter.java" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/WacConverter.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/WacConverterAboutBox.form" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/WacConverterAboutBox.form" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/WacConverterAboutBox.java" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/WacConverterAboutBox.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/WacConverterApp.java" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/WacConverterApp.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/WacConverterView.form" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/WacConverterView.form" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/WacConverterView.java" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/WacConverterView.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/WacConverterAboutBox.properties" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/WacConverterAboutBox.properties" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/WacConverterApp.properties" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/WacConverterApp.properties" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/WacConverterView.properties" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/WacConverterView.properties" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/about.png" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/about.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/busyicons/busy-icon0.png" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/busyicons/busy-icon0.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/busyicons/busy-icon1.png" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/busyicons/busy-icon1.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/busyicons/busy-icon10.png" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/busyicons/busy-icon10.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/busyicons/busy-icon11.png" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/busyicons/busy-icon11.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/busyicons/busy-icon12.png" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/busyicons/busy-icon12.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/busyicons/busy-icon13.png" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/busyicons/busy-icon13.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/busyicons/busy-icon14.png" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/busyicons/busy-icon14.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/busyicons/busy-icon2.png" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/busyicons/busy-icon2.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/busyicons/busy-icon3.png" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/busyicons/busy-icon3.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/busyicons/busy-icon4.png" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/busyicons/busy-icon4.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/busyicons/busy-icon5.png" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/busyicons/busy-icon5.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/busyicons/busy-icon6.png" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/busyicons/busy-icon6.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/busyicons/busy-icon7.png" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/busyicons/busy-icon7.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/busyicons/busy-icon8.png" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/busyicons/busy-icon8.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/busyicons/busy-icon9.png" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/busyicons/busy-icon9.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/busyicons/idle-icon.png" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/busyicons/idle-icon.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/resources/splash.png" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/resources/splash.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/WacConverter/src/wacconverter/template.xml" afterPath="$PROJECT_DIR$/src/WacConverter/src/wacconverter/template.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/bwac" afterPath="$PROJECT_DIR$/bin/bwac" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/conf/DataSource.groovy" afterPath="$PROJECT_DIR$/griffon-app/conf/DataSource.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wac.iml" afterPath="$PROJECT_DIR$/wac.iml" />
     </list>
     <list id="4cec792d-f34b-4c7d-86a8-845177da8bbc" name="Removed events" comment="Events should be removed as possible (actions can be taken in ProjektController)" />
     <list id="10690bd3-32c6-465c-9188-3ba6377b032a" name="Debug" comment="Changes for debugging (can be ignored)" />
-    <list default="true" id="56bb115a-3848-4b7a-aea4-537b557459fb" name="Dead Code" comment="Removed dead code" />
+    <list default="true" id="56bb115a-3848-4b7a-aea4-537b557459fb" name="Dead Code" comment="Removed dead code">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wac.iws" afterPath="$PROJECT_DIR$/wac.iws" />
+    </list>
     <ignored path="wac.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$USER_HOME$/.griffon/" />
@@ -134,7 +87,7 @@
       <file leaf-file-name="ProjektController.groovy" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/ProjektController.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="98" column="27" selection-start="2888" selection-end="2888" vertical-scroll-proportion="0.70884144">
+            <state line="97" column="10" selection-start="2883" selection-end="2883" vertical-scroll-proportion="0.67987806">
               <folding />
             </state>
           </provider>
@@ -629,9 +582,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1680" y="0" width="1920" height="1200" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32962963" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32962963" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32962963" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20523784" sideWeight="0.6703704" order="1" side_tool="false" content_ui="tabs" />
@@ -670,7 +623,7 @@
     <option name="SHOW_ONLY_CHANGED_IN_SELECTION_DIFF" value="true" />
     <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added some files (due to new IntelliJ project)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added WacConverter under src/" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -689,6 +642,8 @@
     <MESSAGE value="Changes for debugging (can be ignored)" />
     <MESSAGE value="Removed dead code" />
     <MESSAGE value="Added some files (due to new IntelliJ project)" />
+    <MESSAGE value="Moved/re-added more files..." />
+    <MESSAGE value="Added WacConverter under src/" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -786,7 +741,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/ProjektController.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="98" column="27" selection-start="2888" selection-end="2888" vertical-scroll-proportion="0.70884144">
+        <state line="97" column="10" selection-start="2883" selection-end="2883" vertical-scroll-proportion="0.67987806">
           <folding />
         </state>
       </provider>
