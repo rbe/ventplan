@@ -158,8 +158,9 @@ class Wac2Controller {
 	 * 
 	 */
 	def generateMVCId = {
-		"Projekt " + (Wac2Controller.projektCounter++)
-	}
+        def c = Wac2Controller.projektCounter++
+		"Projekt ${c.toString()}" as String
+    }
 	
 	/**
 	 * Ein neues Projekt erstellen.
@@ -348,13 +349,20 @@ class Wac2Controller {
 	}
 	
 	/**
-	 * Projekt speichern. Es wird der Dateiname aus dem ProjektModel 'wpxFilename' verwendet.
-	 * Ist er nicht gesetzt, wird "Projekt speichern als" aufgerufen.
+	 * Wird über action aufgerufen. Weiterleiten an projektSpeichern.
 	 * @return Boolean Was project saved sucessfully?
 	 */
 	def aktivesProjektSpeichern = { evt = null ->
 		def mvc = getMVCGroupAktivesProjekt()
-		def saved = mvc.controller.save()
+        projektSpeichern(mvc)
+	}
+
+    /**
+     * Projekt speichern. Es wird der Dateiname aus dem ProjektModel 'wpxFilename' verwendet.
+	 * Ist er nicht gesetzt, wird "Projekt speichern als" aufgerufen.
+     */
+    def projektSpeichern = { mvc ->
+        def saved = mvc.controller.save()
 		if (saved) {
 			if (DEBUG) println "aktivesProjektSpeichern: Projekt gespeichert in ${mvc.model.wpxFilename}"
 			saved
@@ -362,15 +370,22 @@ class Wac2Controller {
 			if (DEBUG) println "aktivesProjektSpeichern: Projekt nicht gespeichert, kein Dateiname (mvc.model.wpxFilename=${mvc.model.wpxFilename?.dump()})?"
 			aktivesProjektSpeichernAls(evt)
 		}
-	}
+    }
 	
 	/**
-	 * Zeige FileChooser, setze gewählten Dateinamen im ProjektModel und rufe "Projekt speichern".
+	 * Wird über action aufgerufen. Weiterleiten an projektSpeichernAls.
 	 * @return Boolean Was project saved sucessfully?
 	 */
 	def aktivesProjektSpeichernAls = { evt = null ->
 		def mvc = getMVCGroupAktivesProjekt()
-		// Reset selected filename
+		projektSpeichernAls(mvc)
+	}
+
+    /**
+     * Zeige FileChooser, setze gewählten Dateinamen im ProjektModel und rufe "Projekt speichern".
+     */
+    def projektSpeichernAls = { mvc ->
+        // Reset selected filename
 		view.wpxFileChooserWindow.selectedFile = null
 		// Open filechooser
 		def openResult = view.wpxFileChooserWindow.showSaveDialog(view.wac2Frame)
@@ -380,8 +395,27 @@ class Wac2Controller {
 			mvc.model.wpxFilename = fname
 			if (DEBUG) println "projektSpeichernAls: wpxFilename=${mvc.model.wpxFilename?.dump()}"
 			// Save data
-			aktivesProjektSpeichern(evt)
+			projektSpeichern(mvc)
 		}
+    }
+
+    /**
+	 * Projekt speichern. Es wird der Dateiname aus dem ProjektModel 'wpxFilename' verwendet.
+	 * Ist er nicht gesetzt, wird "Projekt speichern als" aufgerufen.
+	 * @return Boolean Was project saved sucessfully?
+	 */
+	def alleProjekteSpeichern = { evt = null ->
+        model.projekte.each {
+            def mvc = getMVCGroup(it)
+            def saved = mvc.controller.save()
+            if (saved) {
+                if (DEBUG) println "alleProjekteSpeichern: Projekt gespeichert in ${mvc.model.wpxFilename}"
+                saved
+            } else {
+                if (DEBUG) println "alleProjekteSpeichern: Projekt nicht gespeichert, kein Dateiname (mvc.model.wpxFilename=${mvc.model.wpxFilename?.dump()})?"
+                projektSpeichernAls(mvc)
+            }
+        }
 	}
 	
 	/**
