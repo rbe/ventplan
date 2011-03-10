@@ -33,11 +33,11 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
             }
             panel(id: "raumBearbeitenLuftartPanel", border: titledBorder("Luftart"), layout: new MigLayout("", "[]para[]para[]", ""), constraints: "cell 0 1, grow") {
                 comboBox(id: "raumBearbeitenLuftart", constraints: "width 100px", items: model.meta.raum.luftart, enabled: false)
-                textField(id: "raumBearbeitenLuftartFaktorZuluftverteilung", text: "", constraints: "width 100px")
+                textField(id: "raumBearbeitenLuftartFaktorZuluftverteilung", enabled: bind { (model.meta.gewahlterRaum?.raumLuftart == "ZU" || model.meta.gewahlterRaum?.raumLuftart == "ZU/AB" || model.meta.gewahlterRaum?.raumLuftart == "ÜB") ? true : false }, text: "", constraints: "width 100px")
                 label(id: "raumBearbeitenFaktorZuluftverteilungLabel", text: "Faktor Zuluftverteilung", constraints: "wrap")
 
                 label("")
-                textField(id: "raumBearbeitenLuftartAbluftVs", text: "", constraints: "width 100px")
+                textField(id: "raumBearbeitenLuftartAbluftVs", enabled: bind { (model.meta.gewahlterRaum?.raumLuftart == "AB" || model.meta.gewahlterRaum?.raumLuftart == "ÜB") ? true : false }, text: "", constraints: "width 100px")
                 label(id: "raumBearbeitenLuftartAbluftVsLabel", text: "Abluftvolumentstrom in m³/h", constraints: "cell 2 1")
             }
 
