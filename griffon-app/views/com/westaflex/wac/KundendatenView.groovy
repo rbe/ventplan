@@ -14,10 +14,8 @@ import net.miginfocom.swing.MigLayout
 
 
 // Großhandel
-// new MigLayout("wrap 2","[] [grow]","[] [grow] [grow] []")
-//panel(id: "kundendatenHauptPanel", constraints: "grow", layout: new MigLayout("wrap 2", "[300::, grow 50, fill][300::, grow 50, fill]", "[]15[]")) {
-panel(id: "kundendatenHauptPanel", layout: new MigLayout("wrap 2","[grow,fill] [grow,fill]")) {
-    panel(id: "kundendatenGrosshandel", border: titledBorder(title: "Kunde 1 (Großhandel)"), constraints: "grow", layout: new MigLayout("wrap 2, fill", "[right] 16 [grow,fill] []")) {
+panel(id: "kundendatenHauptPanel", layout: new MigLayout("wrap 2","[grow,fill] [grow,fill]"), constraints: "grow") {
+    panel(id: "kundendatenGrosshandel", border: titledBorder(title: "Kunde 1 (Großhandel)"), layout: new MigLayout("wrap 2, fill", "[right] 16 [grow,fill] []"), constraints: "grow") {
         // Row 1
         label("Firma 1")
         textField(id: "grosshandelFirma1")
@@ -29,9 +27,8 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("wrap 2","[grow,fill] [
         textField(id: "grosshandelStrasse")
         // Row 4
         label("PLZ / Ort")
-        //panel(constraints: "grow", layout: new MigLayout("fill, insets 2, gap 2", "[grow][grow]", "[grow]")) {
         textField(id: "grosshandelPlz", constraints: "split 2, width 80px!")
-        textField(id: "grosshandelOrt", constraints: "width :400:")
+        textField(id: "grosshandelOrt", constraints: "growx")
         //}
         // Row 5
         label("Telefon")
@@ -45,8 +42,7 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("wrap 2","[grow,fill] [
     }
     GH.recurse(kundendatenGrosshandel, GH.yellowTextField)
     // Ausführende Firma
-    //panel(id: "kundendatenAusfuhrendeFirma", border: titledBorder(title: "Kunde 2 (Ausführende Firma)"), layout: new MigLayout("fill, insets 5, gap 5, wrap 2", "[][grow]", "[][]")) {
-    panel(id: "kundendatenAusfuhrendeFirma", border: titledBorder(title: "Kunde 2 (Ausführende Firma)"), constraints: "grow", layout: new MigLayout("wrap 2, fill", "[right] 16 [grow,fill] []")) {
+    panel(id: "kundendatenAusfuhrendeFirma", border: titledBorder(title: "Kunde 2 (Ausführende Firma)"), layout: new MigLayout("wrap 2, fill", "[right] 16 [grow,fill] []"), constraints: "grow") {
         // Row 1
         label("Firma 1")
         textField(id: "ausfuhrendeFirmaFirma1")
@@ -58,9 +54,8 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("wrap 2","[grow,fill] [
         textField(id: "ausfuhrendeFirmaStrasse")
         // Row 4
         label("PLZ / Ort")
-        //panel(constraints: "grow", layout: new MigLayout("fill, insets 2, gap 2", "[grow][grow]", "[grow]")) {
         textField(id: "ausfuhrendeFirmaPlz", constraints: "split 2, width 80px!")
-        textField(id: "ausfuhrendeFirmaOrt", constraints: "width :400:")
+        textField(id: "ausfuhrendeFirmaOrt", constraints: "growx")
         //}
         // Row 5
         label("Telefon")
@@ -74,7 +69,7 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("wrap 2","[grow,fill] [
     }
     GH.recurse(kundendatenAusfuhrendeFirma, GH.yellowTextField)
     // Notizen
-    panel(id: "kundendatenNotizen", border: titledBorder(title: "Notizen"), constraints: "grow, span 2", layout: new MigLayout("wrap 2","[] 16 [grow,fill]")) {
+    panel(id: "kundendatenNotizen", border: titledBorder(title: "Notizen"), layout: new MigLayout("wrap 2","[] 16 [grow,fill]"), constraints: "grow, span 2") {
         // Bauvorhaben
         label("Bauvorhaben")
         textField(id: "bauvorhaben", constraints: "growx")

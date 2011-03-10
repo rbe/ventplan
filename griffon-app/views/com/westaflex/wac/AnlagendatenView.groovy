@@ -12,10 +12,10 @@ package com.westaflex.wac
 import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
-panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
-    panel(constraints: "grow", layout: new MigLayout("fillx", "[fill] 16 [fill] 16 [fill]", "[fill] -5 []")) {
+panel(layout: new MigLayout("fillx, wrap", "[grow]", "[fill]"), constraints: "grow") {
+    panel(layout: new MigLayout("fillx", "[fill,grow] [fill,grow] [fill,grow]", "[fill] -8 []"), constraints: "grow") {
         // Gerätestandort
-        panel(id: "anlageGeratestandortPanel", border: titledBorder(title: "Gerätestandort"), layout: new MigLayout("wrap 1", "[]", "")) {
+        panel(id: "anlageGeratestandortPanel", border: titledBorder(title: "Gerätestandort"), layout: new MigLayout("wrap 1", "[]")) {
             buttonGroup().with {
                 add radioButton(id: "anlageGeratestandortKG", text: "Kellergeschoss")
                 add radioButton(id: "anlageGeratestandortEG", text: "Erdgeschoss")
@@ -27,7 +27,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
         }
 
         // Luftkanalverlegung
-        panel(id: "anlageLuftkanalverlegungPanel", border: titledBorder(title: "Luftkanalverlegung"), layout: new MigLayout("wrap 1", "[]", "")) {
+        panel(id: "anlageLuftkanalverlegungPanel", border: titledBorder(title: "Luftkanalverlegung"), layout: new MigLayout("wrap 1", "[]")) {
             label("Quadroflexsysteme 100 mit nur 60 mm Aufbauhöhe")
             checkBox(id: "anlageLuftkanalverlegungAufputz",     text: "Aufputz (Abkastung)")
             checkBox(id: "anlageLuftkanalverlegungDammschicht", text: "Dämmschicht unter Estrich")
@@ -37,7 +37,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
         }
 
         // Außenluft
-        panel(id: "anlageAussenluftPanel", border: titledBorder(title: "Außenluft"), constraints: "wrap", layout: new MigLayout("wrap 1", "[]", "")) {
+        panel(id: "anlageAussenluftPanel", border: titledBorder(title: "Außenluft"), constraints: "wrap", layout: new MigLayout("wrap 1", "[]")) {
             buttonGroup().with {
                 add radioButton(id: "anlageAussenluftDach",     text: "Dachdurchführung")
                 add radioButton(id: "anlageAussenluftWand",     text: "Wand (Luftgitter)")
@@ -46,9 +46,9 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
             label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
         }
     }
-    panel(constraints: "grow", layout: new MigLayout("fillx", "[fill] 16 [fill] 16 [fill]", "[fill] -5 []")) {
+    panel(layout: new MigLayout("fillx", "[fill] [fill] [fill]", "[fill] -8 []"), constraints: "grow") {
         // Zuluftdurchlässe
-        panel(id: "anlageZuluftPanel", border: titledBorder(title: "Zuluftdurchlässe"), layout: new MigLayout("wrap 1", "[]", "")) {
+        panel(id: "anlageZuluftPanel", border: titledBorder(title: "Zuluftdurchlässe"), layout: new MigLayout("wrap 1", "[]")) {
             checkBox(id: "anlageZuluftTellerventile",  text: "Tellerventile")
             checkBox(id: "anlageZuluftSchlitzauslass", text: "Schlitzauslass (Weitwurfdüse)")
             checkBox(id: "anlageZuluftFussboden",      text: "Fußbodenauslass")
@@ -57,12 +57,12 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
         }
 
         // Abluftdurchlässe
-        panel(id: "anlageAbluft", border: titledBorder(title: "Abluftdurchlässe"), layout: new MigLayout("wrap 1", "[]", "")) {
+        panel(id: "anlageAbluft", border: titledBorder(title: "Abluftdurchlässe"), layout: new MigLayout("wrap 1", "[]")) {
             checkBox(id: "anlageAbluftTellerventile",  text: "Tellerventile (Standard)")
         }
 
         // Fortluft
-        panel(id: "anlageFortluftPanel", border: titledBorder(title: "Fortluft"), constraints: "wrap", layout: new MigLayout("wrap 1", "[]", "")) {
+        panel(id: "anlageFortluftPanel", border: titledBorder(title: "Fortluft"), constraints: "wrap", layout: new MigLayout("wrap 1", "[]")) {
             buttonGroup().with {
                 add radioButton(id: "anlageFortluftDach",         text: "Dachdurchführung")
                 add radioButton(id: "anlageFortluftWand",         text: "Wand (Luftgitter)")
@@ -71,9 +71,9 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
             label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
         }
     }
-    panel(layout: new MigLayout("fillx", "[fill] 16 [fill]", "[fill] -5 []"), constraints: "grow, span") {
+    panel(layout: new MigLayout("fillx", "[fill] [fill]", "[fill] -8 []"), constraints: "grow, span") {
         // Energie-Kennzeichen
-        panel(id: "anlageEnergiePanel", border: titledBorder(title: "Energie-Kennzeichen"), layout: new MigLayout("wrap 1", "[]", "")) {
+        panel(id: "anlageEnergiePanel", border: titledBorder(title: "Energie-Kennzeichen"), layout: new MigLayout("wrap 1", "[]")) {
             checkBox(id: "anlageEnergieZuAbluftWarme", text: "Zu-/Abluftgeräte mit Wärmerückgewinnung")
             checkBox(id: "anlageEnergieBemessung",     text: "Bemessung und Ausführung des Lüftungssystems")
             checkBox(id: "anlageEnergieRuckgewinnung", text: "Rückgewinnung von Abluftwärme")
@@ -83,7 +83,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
         }
 
         // Hygiene-Kennzeichen
-        panel(id: "anlageHygienePanel", border: titledBorder(title: "Hygiene-Kennzeichen"), constraints: "span 2, wrap", layout: new MigLayout("wrap 1", "[]", "")) {
+        panel(id: "anlageHygienePanel", border: titledBorder(title: "Hygiene-Kennzeichen"), constraints: "span 2, wrap", layout: new MigLayout("wrap 1", "[]")) {
             checkBox(id: "anlageHygieneAusfuhrung",         text: "Ausführung und Lage der Außenluftansaugung")
             checkBox(id: "anlageHygieneFilterung",          text: "Filterung der Außenluft und der Abluft")
             checkBox(id: "anlageHygieneKeineVerschmutzung", text: "möglichst keine Verschmutzung des Luftleitungsnetzes")
@@ -92,25 +92,25 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
             label("<html><p style='font-size: 9px;'>* Mehrfachauswahl möglich</p></html>", foreground: java.awt.Color.BLUE)
         }
     }
-    panel(constraints: "grow", layout: new MigLayout("fillx", "[fill] 16 [fill] 16 [fill]", "[fill] -5 []")) {
+    panel(layout: new MigLayout("fillx", "[fill] [fill] [fill]", "[fill] -8 []"), constraints: "grow") {
         // Rückschlagkappe
-        panel(id: "anlageRuckschlagPanel", border: titledBorder(title: "Rückschlagkappe"), layout: new MigLayout("wrap 1", "[]", "")) {
+        panel(id: "anlageRuckschlagPanel", border: titledBorder(title: "Rückschlagkappe"), layout: new MigLayout("wrap 1", "[]")) {
             checkBox(id: "anlageruckschlagklappe", text: "Lüftungsanlage mit Rückschlagkappe")
         }
 
         // Schallschutz-Kennzeichnung
-        panel(id: "anlageSchallschutzPanel", border: titledBorder(title: "Schallschutz-Kennzeichnung"), layout: new MigLayout("wrap 1", "[]", "")) {
+        panel(id: "anlageSchallschutzPanel", border: titledBorder(title: "Schallschutz-Kennzeichnung"), layout: new MigLayout("wrap 1", "[]")) {
             checkBox(id: "anlageSchallschutz", text: "Lüftungsanlage mit Schallschutz")
         }
 
         // Feuerstätten-Kennzeichnung
-        panel(id: "anlageFeuerstattePanel", border: titledBorder(title: "Feuerstätten-Kennzeichnung"), constraints: "wrap", layout: new MigLayout("wrap 1", "[]", "")) {
+        panel(id: "anlageFeuerstattePanel", border: titledBorder(title: "Feuerstätten-Kennzeichnung"), constraints: "wrap", layout: new MigLayout("wrap 1", "[]")) {
             checkBox(id: "anlageFeuerstatte", text: "Lüftungsanlage mit Sicherheitseinrichtung")
         }
     }
-    panel(constraints: "grow", layout: new MigLayout("fillx", "[fill] 16 [fill] 16 [fill]", "[fill] -5 []")) {
+    panel(layout: new MigLayout("fillx", "[fill] [fill] [fill]", "[fill] -8 []"), constraints: "grow") {
         // Kennzeichnung der Lüftungsanlage
-        panel(id: "anlageKennzeichnungPanel", border: titledBorder(title: "Kennzeichnung der Lüftungsanlage"), constraints: "span", layout: new MigLayout("wrap 1", "[]", "")) {
+        panel(id: "anlageKennzeichnungPanel", border: titledBorder(title: "Kennzeichnung der Lüftungsanlage"), constraints: "span", layout: new MigLayout("wrap 1", "[]")) {
             label(id: "anlageKennzeichnungLuftungsanlage", foreground: java.awt.Color.RED)
         }
     }

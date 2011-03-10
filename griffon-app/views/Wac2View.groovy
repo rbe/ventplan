@@ -31,6 +31,7 @@ wac2Frame = application(title: 'WestaWAC 2',
 		imageIcon('/griffon-icon-32x32.png').image,
 		imageIcon('/griffon-icon-16x16.png').image
 	],
+    layout: new MigLayout("fill", "[grow]"),
 	// Our window close listener
 	defaultCloseOperation: javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE,
 	windowClosing: controller.exitApplication
@@ -42,7 +43,7 @@ wac2Frame = application(title: 'WestaWAC 2',
 	// Content
     widget(
         // set scrollpane for all projects
-        jideScrollPane(id: "mainScrollPane") {
+        jideScrollPane(id: "mainScrollPane", constraints: "growx") {
             build(Wac2MainPane)
         }
     )

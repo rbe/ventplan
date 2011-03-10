@@ -13,14 +13,14 @@ import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
 // Akustikberechnung
-panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
-    panel(id: "akustikTabPanel", layout: new MigLayout("fill", "[]", "")) {
+panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]"), constraints: "grow") {
+    panel(id: "akustikTabPanel", layout: new MigLayout("fill", "[]", ""), constraints: "grow") {
         // Tabellen für
         jideTabbedPane(id: "akustikTabGroup", constraints: "grow, span") {
-            panel(id: "akustikZuluftTab", title: "Zuluft", layout: new MigLayout("fill", "[]", "")) {
+            panel(id: "akustikZuluftTab", title: "Zuluft", layout: new MigLayout("fill", "[]", ""), constraints: "grow") {
                 buildLayout("Zuluft")
             }
-            panel(id: "akustikAbluftTab", title: "Abluft", layout: new MigLayout("fill", "[]", "")) {
+            panel(id: "akustikAbluftTab", title: "Abluft", layout: new MigLayout("fill", "[]", ""), constraints: "grow") {
                 buildLayout("Abluft")
             }
         }
@@ -42,8 +42,8 @@ build(AkustikBindings)
 def buildLayout(tabname) {
 	def tabTitleForeground = tabname == "Zuluft" ? GH.MY_RED : java.awt.Color.BLUE
 	// Akustikberechnung - Zuluft
-    panel(layout: new MigLayout("fill, wrap", "[fill]", "[fill]")) {
-        panel(layout: new MigLayout("wrap 3", "[left][center]5[left]", "[fill]")) {
+    panel(layout: new MigLayout("fill, wrap", "[fill]", "[fill]"), constraints: "grow") {
+        panel(layout: new MigLayout("wrap 3", "[left][center]5[left]", "[fill]"), constraints: "grow") {
             panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
                 label("Raumbezeichnung")
 
