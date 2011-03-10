@@ -52,7 +52,7 @@ projektSpeichernAlsAction = action(
 alleProjekteSpeichernAction = action(
 		id: "alleProjekteSpeichernAction",
 		name: "Alle Projekte speichern",
-		mnemonic: "L",
+		mnemonic: "E",
 		accelerator: shortcut("shift A"),
 		smallIcon: imageIcon("/menu/alleprojektespeichern.png"),
 		enabled: bind { model.alleProjekteGeandert },
