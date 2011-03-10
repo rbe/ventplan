@@ -14,8 +14,9 @@ toolBar(id: 'toolbar', rollover: true) {
 	button(projektOeffnenAction, text: null)
 	vertSep()
 	button(projektSpeichernAction, text: null)
-	button(projektSpeichernAlsAction, text: null)
-	vertSep()
+    button(projektSpeichernAlsAction, text: null)
+    button(alleProjekteSpeichernAction, text: null)
+    vertSep()
 	button(projektSeitenansichtAction, text: null)
 	/* Später aktivieren, Angebote sind noch nicht verfügbar! button(projektDruckenAction, text: null)*/
 }

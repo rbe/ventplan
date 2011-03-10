@@ -16,6 +16,7 @@ menuBar = menuBar {
 		separator()
 		menuItem(projektSpeichernAction)
 		menuItem(projektSpeichernAlsAction)
+		menuItem(alleProjekteSpeichernAction)
 		menuItem(projektSchliessenAction)
 		separator()
 		menuItem(seitenansichtAction)
