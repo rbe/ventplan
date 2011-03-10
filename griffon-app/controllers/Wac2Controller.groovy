@@ -125,7 +125,7 @@ class Wac2Controller {
 			switch (choice) {
 				case 0:
 					if (DEBUG) println "Alles speichern"
-					// TODO rbe Projekte speichern aufrufen
+					alleProjekteSpeichern(evt)
 					_shutdown()
 					break
 				case 1: // Cancel: do nothing...
