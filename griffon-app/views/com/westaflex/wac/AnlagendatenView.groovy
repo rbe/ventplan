@@ -23,6 +23,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
                 add radioButton(id: "anlageGeratestandortDG", text: "Dachgeschoss")
                 add radioButton(id: "anlageGeratestandortSB", text: "Spitzboden")
             }
+            label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
         }
 
         // Luftkanalverlegung
@@ -32,6 +33,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
             checkBox(id: "anlageLuftkanalverlegungDammschicht", text: "Dämmschicht unter Estrich")
             checkBox(id: "anlageLuftkanalverlegungDecke",       text: "Decke (abgehängt)")
             checkBox(id: "anlageLuftkanalverlegungSpitzboden",  text: "Spitzboden")
+            label("<html><p style='font-size: 9px;'>* Mehrfachauswahl möglich</p></html>", foreground: java.awt.Color.BLUE)
         }
 
         // Außenluft
@@ -41,6 +43,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
                 add radioButton(id: "anlageAussenluftWand",     text: "Wand (Luftgitter)")
                 add radioButton(id: "anlageAussenluftErdwarme", text: "Erdwärmetauscher")
             }
+            label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
         }
     }
     panel(constraints: "grow", layout: new MigLayout("fillx", "[fill] 16 [fill] 16 [fill]", "[fill] -5 []")) {
@@ -50,6 +53,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
             checkBox(id: "anlageZuluftSchlitzauslass", text: "Schlitzauslass (Weitwurfdüse)")
             checkBox(id: "anlageZuluftFussboden",      text: "Fußbodenauslass")
             checkBox(id: "anlageZuluftSockel",         text: "Sockelquellauslass")
+            label("<html><p style='font-size: 9px;'>* Mehrfachauswahl möglich</p></html>", foreground: java.awt.Color.BLUE)
         }
 
         // Abluftdurchlässe
@@ -64,6 +68,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
                 add radioButton(id: "anlageFortluftWand",         text: "Wand (Luftgitter)")
                 add radioButton(id: "anlageFortluftLichtschacht", text: "Lichtschacht (Kellergeschoss)")
             }
+            label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
         }
     }
     panel(layout: new MigLayout("fillx", "[fill] 16 [fill]", "[fill] -5 []"), constraints: "grow, span") {
@@ -74,6 +79,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
             checkBox(id: "anlageEnergieRuckgewinnung", text: "Rückgewinnung von Abluftwärme")
             checkBox(id: "anlageEnergieRegelung",      text: "Zweckmäßige Relegung")
             label(id: "anlageEnergieNachricht", foreground: java.awt.Color.RED, text: " ")
+            label("<html><p style='font-size: 9px;'>* Mehrfachauswahl möglich</p></html>", foreground: java.awt.Color.BLUE)
         }
 
         // Hygiene-Kennzeichen
@@ -83,6 +89,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
             checkBox(id: "anlageHygieneKeineVerschmutzung", text: "möglichst keine Verschmutzung des Luftleitungsnetzes")
             checkBox(id: "anlageHygieneDichtheitsklasseB",  text: "Dichtheitsklasse B der Luftleitungen")
             label(id: "anlageHygieneNachricht", foreground: java.awt.Color.RED, text: " ")
+            label("<html><p style='font-size: 9px;'>* Mehrfachauswahl möglich</p></html>", foreground: java.awt.Color.BLUE)
         }
     }
     panel(constraints: "grow", layout: new MigLayout("fillx", "[fill] 16 [fill] 16 [fill]", "[fill] -5 []")) {

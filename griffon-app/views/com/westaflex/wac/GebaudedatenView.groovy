@@ -21,6 +21,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
                 add radioButton(id: "gebaudeTypEFH", text: "Einfamilienhaus EFH")
                 add radioButton(id: "gebaudeTypMaisonette", text: "Maisonette")
             }
+            label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
         }
         // Gebäudelage
         panel(id: "gebaudeLage", border: titledBorder(title: "Gebäudelage"), layout: new MigLayout("wrap", "[]", "")) {
@@ -28,6 +29,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
                 add radioButton(id: "gebaudeLageWindschwach", text: "windschwach")
                 add radioButton(id: "gebaudeLageWindstark", text: "windstark")
             }
+            label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
         }
         // Wärmeschutz
         panel(id: "gebaudewarmeschutz", border: titledBorder(title: "Wärmeschutz"), layout: new MigLayout("wrap 1", "[]", "")) {
@@ -35,6 +37,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
                 add radioButton(id: "gebaudeWarmeschutzHoch", text: "hoch (Neubau / Sanierung mind. WSchV 1995)")
                 add radioButton(id: "gebaudeWarmeschutzNiedrig", text: "niedrig (Gebäude bestand vor 1995)")
             }
+            label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
         }
     }
     // Geometrie
@@ -78,6 +81,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
                 textField(id: "gebaudeLuftdichtheitDruckexponent", constraints: "width 80px!, cell 1 3")
                 label("Druckexponent", constraints: "cell 2 3")
             }
+            label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
         }
         GH.recurse(gebaudeLuftdichtheit, GH.doubleTextField)
     }
