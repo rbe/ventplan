@@ -1,0 +1,13 @@
+<atlassian-ide-plugin>
+  <project-configuration>
+    <servers>
+      <jira>
+        <server-id>f9924c24-860c-408f-87b9-2df229b71c07</server-id>
+        <name>art of coding</name>
+        <url>http://team.art-of-coding.eu/jira</url>
+        <shared>false</shared>
+      </jira>
+    </servers>
+    <default-jira-server>f9924c24-860c-408f-87b9-2df229b71c07</default-jira-server>
+  </project-configuration>
+</atlassian-ide-plugin>
