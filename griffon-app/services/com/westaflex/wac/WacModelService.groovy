@@ -79,6 +79,32 @@ class WacModelService {
 		r
 	}
 	
+    /**
+     * Hole alle Zuluftventile.
+     */
+    List getZuluftventile() {
+        def r = withSql { sql ->
+                sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust WHERE luftart = 'ZU' AND ausblaswinkel <> ? ORDER BY artikelnummer", [180])
+            }?.collect {
+                it.artikelnummer
+            }
+        if (DEBUG) println "getZuluftventile: ${r?.dump()}"
+        r
+    }
+
+    /**
+     * Hole alle Abluftventile.
+     */
+    List getAbluftventile() {
+        def r = withSql { sql ->
+                sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust WHERE luftart = 'AB' AND ausblaswinkel <> ? ORDER BY artikelnummer", [180])
+            }?.collect {
+                it.artikelnummer
+            }
+        if (DEBUG) println "getZuluftventile: ${r?.dump()}"
+        r
+    }
+
 	/**
 	 * Hole alle Überströmelemente.
 	 */

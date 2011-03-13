@@ -1,10 +1,13 @@
-/**
- * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/controllers/Wac2Controller.groovy
- * 
- * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
- * Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
- * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
- * 
+/*
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
+ *
+ * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
+ * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
+ *
+ * Project wac
+ * /Users/rbe/project/wac/griffon-app/controllers/Wac2Controller.groovy
+ * Last modified at 13.03.2011 18:34:15 by rbe
  */
 import com.westaflex.wac.*
 import com.bensmann.griffon.GriffonHelper as GH
@@ -41,9 +44,8 @@ class Wac2Controller {
 		// Lookup values from database and put them into our model
 		doOutside {
 			// Raumvolumenströme - Bezeichnungen der Zu-/Abluftventile
-			model.meta.raumVsBezeichnungZuluftventile =
-				model.meta.raumVsBezeichnungAbluftventile =
-				wacModelService.getZuAbluftventile()
+			model.meta.raumVsBezeichnungZuluftventile = wacModelService.getZuluftventile()
+			model.meta.raumVsBezeichnungAbluftventile = wacModelService.getAbluftventile()
 			// Raumvolumenströme - Überströmelemente
 			model.meta.raumVsUberstromelemente = wacModelService.getUberstromelemente()
 			// Raumvolumenströme - Zentralgerät + Volumenstrom
@@ -381,7 +383,7 @@ class Wac2Controller {
 			saved
 		} else {
 			if (DEBUG) println "aktivesProjektSpeichern: Projekt nicht gespeichert, kein Dateiname (mvc.model.wpxFilename=${mvc.model.wpxFilename?.dump()})?"
-			aktivesProjektSpeichernAls(evt)
+			aktivesProjektSpeichernAls()
 		}
     }
 	
