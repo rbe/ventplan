@@ -12,21 +12,21 @@ import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
 // Raumvolumenströme
-panel(constraints: "grow", layout: new MigLayout("fill, wrap", "[fill, grow]", "[fill,grow]")) {
+panel(layout: new MigLayout("fill, wrap", "[fill, grow]", "[fill,grow]"), constraints: "grow") {
     // Tabellen für Zu-/Abluftventile, Überströmventile
-    panel(constraints: "grow", layout: new MigLayout("fill", "[fill, grow]", "[fill,grow]")) {
+    panel(layout: new MigLayout("fill", "[fill, grow]", "[fill,grow]"), constraints: "grow") {
         jideTabbedPane(id: "raumVsVentileTabGroup", constraints: "grow, span") {
             // Raumvolumenströme - Zu-/Abluftventile
-            panel(id: "raumVsZuAbluftventileTab", title: "Zu-/Abluftventile", constraints: "grow", layout: new MigLayout("fill", "[fill,grow]", "[fill,grow]")) {
-                panel(id: "raumVsZuAbluftventileTabellePanel", constraints: "grow", layout: new MigLayout("", "[fill, grow]")) {
+            panel(id: "raumVsZuAbluftventileTab", title: "Zu-/Abluftventile", layout: new MigLayout("fill", "[fill,grow]", "[fill,grow]"), constraints: "grow") {
+                panel(id: "raumVsZuAbluftventileTabellePanel", layout: new MigLayout("", "[fill, grow]"), constraints: "grow") {
                     jideScrollPane(constraints: "grow") {
                         table(id: 'raumVsZuAbluftventileTabelle', model: model.createRaumVsZuAbluftventileTableModel())
                     }
                 }
             }
             // Raumvolumenströme - Überströmventile
-            panel(id: "raumVsUberstromventileTab", title: "Überströmventile", constraints: "grow", layout: new MigLayout("fill", "[fill,grow]", "[fill,grow]")) {
-                panel(id: "raumVsUberstromelementeTabellePanel", constraints: "grow", layout: new MigLayout("fillx", "[fill]")) {
+            panel(id: "raumVsUberstromventileTab", title: "Überströmventile", layout: new MigLayout("fill", "[fill,grow]", "[fill,grow]"), constraints: "grow") {
+                panel(id: "raumVsUberstromelementeTabellePanel", layout: new MigLayout("fillx", "[fill]"), constraints: "grow") {
                     jideScrollPane(constraints: "grow") {
                         table(id: "raumVsUberstromelementeTabelle", model: model.createRaumVsUberstromelementeTableModel())
                     }
@@ -34,8 +34,8 @@ panel(constraints: "grow", layout: new MigLayout("fill, wrap", "[fill, grow]", "
             }
         }
     }
-    panel(constraints: "grow", layout: new MigLayout("fill", "[fill, grow] 16 [fill, grow] 16 [fill, grow]", "")) {
-        panel(layout: new MigLayout("", "[] 16 [] 16 []", "[] 16 []")) {
+    panel(layout: new MigLayout("", "[] [] [grow]")) {
+        panel(layout: new MigLayout("", "[] [] []", "[] 16 []")) {
             // Informationen
             label("Gesamtvolumen der Nutzungseinheit")
             label(id: "raumVsGesamtVolumenNE")
@@ -49,9 +49,8 @@ panel(constraints: "grow", layout: new MigLayout("fill, wrap", "[fill, grow]", "
             label(id: "raumVsGesamtaussenluftVsMitInfiltration", text: "0,00")
             label("m³/h", constraints: "wrap")
         }
-        panel(border: titledBorder("Außenluftvolumenstrom der lüftungstechnischen Massnahme"),
-                constraints: "grow, width 500", layout: new MigLayout("fill", "[]", "")) {
-            panel(constraints: "grow", layout: new MigLayout("fill, wrap 4", "[left] 16 [right] 16 [left] 16 [left]", "")) {
+        panel(border: titledBorder("Außenluftvolumenstrom der LTM"), layout: new MigLayout("fill", "[grow]")) {
+            panel(layout: new MigLayout("fill, wrap 4", "[left] [right] [left] [left]"), constraints: "grow") {
                 label("Feuchteschutz")
                 label(id: "raumVsAussenluftVsDerLtmFs", text: "0,00")
                 label("m³/h")
@@ -73,7 +72,7 @@ panel(constraints: "grow", layout: new MigLayout("fill, wrap", "[fill, grow]", "
                 comboBox(id: "raumVsVolumenstrom", items: model.meta.volumenstromZentralgerat)
             }
         }
-        panel(constraints: "wrap", layout: new MigLayout("", "[fill, grow]", "[] 10 []")) {
+        panel(layout: new MigLayout("", "[fill, grow]", "[] 10 []"), constraints: "wrap") {
             button(id: "raumVsRaumBearbeiten", text: "Raum bearbeiten", constraints: "wrap")
             //button(id: "raumVsZuAbluftventileSpeichern", text: "Speichern", constraints: "wrap")
             button(id: "raumVsZuAbluftventileAngebotErstellen", text: "Angebot erstellen", constraints: "wrap")
