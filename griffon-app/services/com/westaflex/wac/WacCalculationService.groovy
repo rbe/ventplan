@@ -581,9 +581,16 @@ class WacCalculationService {
 		def vsMaxTurspalt = (querschnitt + 2500 * anzTurenOhneDichtung) / 100 / 3.1 * java.lang.Math.sqrt(1.5d)
 		// 5
 		if (DEBUG) println "berechneUberstromelemente: map.raumUberstromVolumenstrom=${map.raumUberstromVolumenstrom?.dump()}"
-		def usRechenwert = map.raumUberstromVolumenstrom - vsMaxTurspalt
-		// 6
-		map.raumAnzahlUberstromVentile = java.lang.Math.ceil(usRechenwert / maxVolumenstrom)
+        // WAC-129: Gebäudedaten - Geplante Belegung -> map.raumUberstromVolumenstrom ist null!
+        // try-catch um map.raumUberstromVolumenstrom und als default Wert 0.00 als Double setzen.
+        try {
+            def usRechenwert = map.raumUberstromVolumenstrom - vsMaxTurspalt
+            // 6
+            map.raumAnzahlUberstromVentile = java.lang.Math.ceil(usRechenwert / maxVolumenstrom)
+        } catch (e) {
+            e.printStackTrace()
+            map.raumAnzahlUberstromVentile = 0.0d
+        }
 	}
 	
 	/**
