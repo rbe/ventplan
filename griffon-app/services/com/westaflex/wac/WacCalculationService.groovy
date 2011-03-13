@@ -428,6 +428,10 @@ class WacCalculationService {
 		if (ltmErforderlich(map)) {
 			map.aussenluftVs.massnahme = "Lüftungstechnische Maßnahmen erforderlich!"
 		}
+        else {
+            // WAC-115: Hinweis LTM erforderlich -> Meldung ausblenden!
+            map.aussenluftVs.massnahme = ""
+        }
 		//
 		autoLuftmenge(map, true)
 		autoLuftmenge(map, false)
