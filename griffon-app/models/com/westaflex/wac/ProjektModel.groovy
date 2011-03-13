@@ -513,7 +513,7 @@ class ProjektModel {
 	 * Raumvolumenströme, Zu-/Abluftventile - TableModel
 	 */
 	def createRaumVsZuAbluftventileTableModel() {
-		def columnNames =   ["Raum",            "Luftart",     ws("Raumvolumen<br/>[m³]"), ws("Luftwechsel<br/>[1/h]"), ws("Zuluft-<br/>Volumenstrom[m³/h]"), ws("Bezeichnung<br/>Zuluftventile"),    ws("Anzahl<br/>Zuluftventile"),    ws("Zuluftmenge<br/>je Ventil"), ws("Abluft-<br/>Volumenstrom[m³/h]"), ws("Bezeichnung<br/>Abluftventile"),    ws("Anzahl<br/>Abluftventile"), ws("Abluftmenge<br/>je Ventil"),   "Verteilebene"] as String[]
+		def columnNames =   ["Raum",            "Luftart",     ws("Raum [m³]"), ws("Luftwechsel<br/>[1/h]"), ws("Zuluft<br/>[m³/h]"), ws("Bezeichnung<br/>Zuluftventile"),    ws("Anzahl<br/>Zuluftventile"),    ws("Zuluftmenge<br/>je Ventil"), ws("Abluft<br/>[m³/h]"), ws("Bezeichnung<br/>Abluftventile"),    ws("Anzahl<br/>Abluftventile"), ws("Abluftmenge<br/>je Ventil"),   "Verteilebene"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",              "raumLuftwechsel",           "raumZuluftVolumenstrom",             "raumBezeichnungZuluftventile",         "raumAnzahlZuluftventile",         "raumZuluftmengeJeVentil",       "raumAbluftVolumenstrom",             "raumBezeichnungAbluftventile",         "raumAnzahlAbluftventile",      "raumAbluftmengeJeVentil",         "raumVerteilebene"] as String[]
 		def writable      = [true,              false,         false,                      false,                       false,                                true,                                   false,                             false,                           false,                                true,                                   false,                          false,                             true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
@@ -529,7 +529,7 @@ class ProjektModel {
 	 * Raumvolumenströme - Überströmventile TableModel
 	 */
 	def createRaumVsUberstromelementeTableModel() {
-		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",             "Überström-Volumenstrom [m³/h]", "Überström-Elemente"] as String[]
+		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",             "Überström [m³/h]", "Überström-Elemente"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile", "raumUberstromVolumenstrom",     "raumUberstromElement"] as String[]
 		def writable      = [true,              false,         false,                        true,                            true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
@@ -566,7 +566,7 @@ class ProjektModel {
 	 * Druckverlustberechnung - Kanalnetz.
 	 */
 	def createDvbKanalnetzTableModel() {
-		def columnNames =   ["Luftart",     "Teilstrecke",  ws("Luftvolumen-<br/>strom<br/>[m³/h]"), "Kanalbezeichnung", ws("Kanallänge<br/>[m]"), ws("Geschwindigkeit<br/>[m/s]"), ws("Reibungswiderstand<br/>gerader Kanal<br/>[Pa]"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>[Pa]"), ws("Widerstand<br/>Teilstrecke<br/><[Pa]")] as String[]
+		def columnNames =   ["Luftart",     "Teilstrecke",  ws("Luft [m³/h]"), "Kanalbezeichnung", ws("Kanallänge<br/>[m]"), ws("Geschwindigkeit<br/>[m/s]"), ws("Reibungswiderstand<br/>gerader Kanal<br/>[Pa]"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>[Pa]"), ws("Widerstand<br/>Teilstrecke<br/><[Pa]")] as String[]
 		def propertyNames = ["luftart",     "teilstrecke",  "luftVs",                                "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
 		def writable      = [false,         true,           true,                                    true,               true,                     false,                           false,                                               true/* TODO false*/,               false,                                 false] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
