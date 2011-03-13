@@ -185,8 +185,21 @@ class Wac2Controller {
 					model.projekte << mvcId
 					// Projekt aktivieren
 					projektAktivieren(mvcId)
-					// Splash screen
+                    // Splash screen
 					Wac2Splash.instance.dispose()
+                    // resize the frame to validate the components.
+                    try{
+                        def dim = wac2Frame.getSize()
+                        wac2Frame.setSize((int) dim.width + 1, (int) dim.height)
+                        wac2Frame.invalidate()
+                        wac2Frame.validate()
+                        wac2Frame.setSize(dim)
+                        wac2Frame.invalidate()
+                        wac2Frame.validate()
+
+                    } catch (e) {
+                        e.printStackTrace()
+                    }
 				}
 			}
 		}
