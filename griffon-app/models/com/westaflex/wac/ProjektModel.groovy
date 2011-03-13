@@ -252,6 +252,7 @@ class ProjektModel {
 	 * @return raum
 	 */
 	def prufeRaumdaten = { raum ->
+        // Anhand des Raumtyps nicht benötigte Werte löschen
 		switch (raum.raumLuftart) {
 			case ~/ZU.*/:
 				raum.with {
@@ -281,6 +282,23 @@ class ProjektModel {
 				}
 				break
 		}
+        // Wenn Raum = ÜB dann Zu/Abluftventile leeren
+        if (raum.raumLuftart == "ÜB") {
+            raum.with {
+                // Zuluft
+                raumAnzahlZuluftventile = 0
+                raumZuluftmengeJeVentil = 0.0d
+                raumBezeichnungZuluftventile = ""
+                raumZuluftVolumenstrom = 0.0d
+                raumZuluftfaktor = 0.0d
+                // Abluft
+                raumAnzahlAbluftventile = 0
+                raumAbluftmengeJeVentil = 0.0d
+                raumBezeichnungAbluftventile = ""
+                raumAbluftVolumenstrom = 0.0d
+            }
+        }
+        //
 		if (DEBUG) println "checkRaum: ${raum}"
 		raum
 	}

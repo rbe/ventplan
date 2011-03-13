@@ -48,7 +48,7 @@ class ProjektController {
 	 */
 	void mvcGroupInit(Map args) {
 		// Splash screen
-		Wac2Splash.instance.initializingProject()
+		try { Wac2Splash.instance.initializingProject() } catch (e) {}
 		// Save MVC id
 		model.mvcId = args.mvcId
 		// Set defaults
@@ -66,7 +66,10 @@ class ProjektController {
 				else if (evt.propertyName != "dirty" && !model.map.dirty) {
 					// Dirty-flag im eigenen und Wac2Model setzen
 					model.map.dirty = true
-					app.models["wac2"].aktivesProjektGeandert = true
+                    // Wac2Model über Änderung informieren
+					app.models["wac2"].aktivesProjektGeandert =
+                        app.models["wac2"].alleProjekteGeandert =
+                        true
 					// Change tab title (show a star)
 					setTabTitle()
 				}
@@ -138,7 +141,7 @@ class ProjektController {
 	}
 	
 	/**
-	 * 
+	 * TODO rbe Nachdem alle Events beseitigt wurden, überprüfen, ob notwendig!
 	 */
 	def afterLoading = {
 		if (DEBUG) println "afterLoading: fire RaumHinzufugen"
