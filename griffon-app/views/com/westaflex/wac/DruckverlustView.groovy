@@ -48,8 +48,8 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]"), cons
 
                     panel(layout: new MigLayout("fillx", "[left] 16 []", ""), constraints: "span, wrap") {
                         // TODO mmu Enable only when table isn't empty and row is selected
-                        button(id: "dvbKanalnetzEntfernen",        text: "Entfernen",               enabled: bind { 1 == 1 }, constraints: "split 2")
-                        button(id: "dvbKanalnetzWiderstandswerte", text: "Widerstandsbeiwerte..." , enabled: bind { 1 == 1 })
+                        button(id: "dvbKanalnetzEntfernen",        text: "Entfernen",               constraints: "split 2")
+                        button(id: "dvbKanalnetzWiderstandswerte", text: "Widerstandsbeiwerte...")
                     }
 
                 }
@@ -88,7 +88,7 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]"), cons
 
                     panel(layout: new MigLayout("fillx", "[left] 16 []", ""), constraints: "span, wrap") {
                         // TODO mmu Enable only when table isn't empty and row is selected
-                        button(id: "dvbVentileinstellungEntfernen", text: "Entfernen", enabled: bind { 1 == 1 })
+                        button(id: "dvbVentileinstellungEntfernen", text: "Entfernen", enabled: bind { dvbVentileinstellungTabelle?.selectedRow >= 0 ? true : false })
                     }
 
                 }
