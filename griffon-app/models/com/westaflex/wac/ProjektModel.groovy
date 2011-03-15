@@ -1,10 +1,13 @@
-/**
- * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/models/com/westaflex/wac/ProjektModel.groovy
- * 
- * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
- * Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
- * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
- * 
+/*
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
+ *
+ * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
+ * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
+ *
+ * Project wac
+ * /Users/rbe/project/wac/griffon-app/models/com/westaflex/wac/ProjektModel.groovy
+ * Last modified at 15.03.2011 10:52:25 by rbe
  */
 package com.westaflex.wac
 
@@ -252,26 +255,32 @@ class ProjektModel {
 	 * @return raum
 	 */
 	def prufeRaumdaten = { raum ->
+        def prufeFaktor = { r ->
+            // Prüfe Toleranzwerte für Zuluftfaktor
+            def eingegebenerZuluftfaktor = r.raumZuluftfaktor.toDouble2()
+            def (zuluftfaktor, neuerZuluftfaktor) =
+                wacCalculationService.prufeZuluftfaktor(r.raumTyp, eingegebenerZuluftfaktor)
+            if (zuluftfaktor != neuerZuluftfaktor) {
+                def infoMsg = "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
+                app.controllers["Dialog"].showInformDialog(infoMsg as String)
+                if (DEBUG) println infoMsg
+            }
+            r.raumZuluftfaktor = neuerZuluftfaktor
+        }
         // Anhand des Raumtyps nicht benötigte Werte löschen
 		switch (raum.raumLuftart) {
-			case ~/ZU.*/:
+			case "ZU":
 				raum.with {
 					raumAnzahlAbluftventile = 0
 					raumAbluftmengeJeVentil = 0.0d 
 					raumBezeichnungAbluftventile = ""
 					raumAbluftVolumenstrom = 0.0d
 				}
-				// Prüfe Toleranzwerte für Zuluftfaktor
-				def eingegebenerZuluftfaktor = raum.raumZuluftfaktor.toDouble2()
-				def (zuluftfaktor, neuerZuluftfaktor) =
-					wacCalculationService.prufeZuluftfaktor(raum.raumTyp, eingegebenerZuluftfaktor)
-				if (zuluftfaktor != neuerZuluftfaktor) {
-					def infoMsg = "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
-					app.controllers["Dialog"].showInformDialog(infoMsg as String)
-					if (DEBUG) println infoMsg
-				}
-				raum.raumZuluftfaktor = neuerZuluftfaktor
+                prufeFaktor(raum)
 				break
+            case "ZU/AB":
+                prufeFaktor(raum)
+                break
 			case "AB":
 				raum.with {
 					raumAnzahlZuluftventile = 0
@@ -679,9 +688,9 @@ class ProjektModel {
 			// Combobox RaumVs - Luftart
 			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(1), meta.raum.luftart
 			// Combobox RaumVs - Bezeichnung Abluftmenge
-			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(5), meta.raumVsBezeichnungAbluftventile
+			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(5), meta.raumVsBezeichnungZuluftventile
 			// Combobox RaumVs - Bezeichnung Zuluftmenge
-			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(9), meta.raumVsBezeichnungZuluftventile
+			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(9), meta.raumVsBezeichnungAbluftventile
 			// Combobox RaumVs - Verteilebene
 			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(12), meta.raum.geschoss
 			// RaumVs Überströmventile
