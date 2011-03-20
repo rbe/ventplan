@@ -132,10 +132,10 @@ def buildLayout(tabname) {
                 label("Raumabsorption (Annahme) BAD=0 WOHNEN=1", foreground: GH.MY_GREEN, constraints: "span 2, height 30px!")
                 switch (tabname) {
                     case "Zuluft":
-                        textField(id: "akustik${tabname}Raumabsorption", constraints: "width 80px!, wrap", text: "1")
+                        comboBox(id: "akustik${tabname}Raumabsorption", constraints: "wrap", items: ["0", "1"], selectedItem: "1")
                         break
                     case "Abluft":
-                        textField(id: "akustik${tabname}Raumabsorption", constraints: "width 80px!, wrap", text: "0")
+                        comboBox(id: "akustik${tabname}Raumabsorption", constraints: "wrap", items: ["0", "1"], selectedItem: "0")
                         break
                 }
 
@@ -186,7 +186,7 @@ def buildLayout(tabname) {
             }
 //            panel(layout: new MigLayout("wrap", "[450:480:650, right]", "[]")) {
             panel(layout: new MigLayout("wrap", "[right]", "[]")) {
-                label("Mittlerer Schalldruckpegel* dB(A) =", constraints: "right, wrap")
+                label("Mittlerer Schalldruckpegel* dB(A) =", constraints: "right, span 2, wrap")
             }
             panel() {
                 label(id: "akustik${tabname}MittlererSchalldruckpegel", text: "0,00", constraints: "left")

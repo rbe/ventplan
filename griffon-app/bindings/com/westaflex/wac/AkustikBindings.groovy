@@ -23,7 +23,7 @@ bind(source: model.map.akustik.zuluft, sourceProperty: "langsdampfungKanal",    
 bind(source: model.map.akustik.zuluft, sourceProperty: "langsdampfungKanalLfdmMeter", target: akustikZuluftLangsdampfungKanalLfdmMeter,     targetProperty: "text",         mutual: true)
 bind(source: model.map.akustik.zuluft, sourceProperty: "schalldampferVentil",         target: akustikZuluftSchalldampferVentil,             targetProperty: "selectedItem", mutual: true)
 bind(source: model.map.akustik.zuluft, sourceProperty: "einfugungsdammwert",          target: akustikZuluftEinfugungsdammwertLuftdurchlass, targetProperty: "selectedItem", mutual: true)
-bind(source: model.map.akustik.zuluft, sourceProperty: "raumabsorption",              target: akustikZuluftRaumabsorption,                  targetProperty: "text",         mutual: true)
+bind(source: model.map.akustik.zuluft, sourceProperty: "raumabsorption",              target: akustikZuluftRaumabsorption,                  targetProperty: "selectedItem", mutual: true)
 // Abluft
 bind(source: model.map.akustik.abluft, sourceProperty: "anzahlUmlenkungen",           target: akustikAbluftAnzahlUmlenkungen90GradStck,     targetProperty: "text",         mutual: true)
 bind(source: model.map.akustik.abluft, sourceProperty: "luftverteilerkastenStck",     target: akustikAbluftLuftverteilerkastenStck,         targetProperty: "text",         mutual: true)
@@ -38,7 +38,7 @@ bind(source: model.map.akustik.abluft, sourceProperty: "langsdampfungKanal",    
 bind(source: model.map.akustik.abluft, sourceProperty: "langsdampfungKanalLfdmMeter", target: akustikAbluftLangsdampfungKanalLfdmMeter,     targetProperty: "text",         mutual: true)
 bind(source: model.map.akustik.abluft, sourceProperty: "schalldampferVentil",         target: akustikAbluftSchalldampferVentil,             targetProperty: "selectedItem", mutual: true)
 bind(source: model.map.akustik.abluft, sourceProperty: "einfugungsdammwert",          target: akustikAbluftEinfugungsdammwertLuftdurchlass, targetProperty: "selectedItem", mutual: true)
-bind(source: model.map.akustik.abluft, sourceProperty: "raumabsorption",              target: akustikAbluftRaumabsorption,                  targetProperty: "text",         mutual: true)
+bind(source: model.map.akustik.abluft, sourceProperty: "raumabsorption",              target: akustikAbluftRaumabsorption,                  targetProperty: "selectedItem", mutual: true)
 // ActionListener
 def addActionListener = { comp, tabname ->
 	comp.addActionListener({ evt ->
