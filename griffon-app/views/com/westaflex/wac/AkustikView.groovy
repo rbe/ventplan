@@ -61,7 +61,7 @@ def buildLayout(tabname) {
 	def tabTitleForeground = tabname == "Zuluft" ? GH.MY_RED : java.awt.Color.BLUE
 	// Akustikberechnung - Zuluft
     panel(layout: new MigLayout("fill, wrap", "[]", "[fill]"), constraints: "grow") {
-        panel(layout: new MigLayout("wrap 3,debug", "[left]5[center]5[left]", "[fill]"), constraints: "grow") {
+        panel(layout: new MigLayout("wrap 3", "[left]5[center]5[left]", "[fill]"), constraints: "grow") {
             panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
                 label("Raumbezeichnung")
 
