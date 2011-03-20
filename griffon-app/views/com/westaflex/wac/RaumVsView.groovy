@@ -35,7 +35,7 @@ panel(layout: new MigLayout("fill, wrap", "[fill, grow]", "[fill,grow]"), constr
         }
     }
     panel(layout: new MigLayout("", "[] [] [grow]")) {
-        panel(layout: new MigLayout("", "[] [] []", "[] 16 []")) {
+        panel(layout: new MigLayout("", "[] [right] []", "[] 16 []")) {
             // Informationen
             label("Gesamtvolumen der Nutzungseinheit")
             label(id: "raumVsGesamtVolumenNE")
@@ -85,5 +85,22 @@ raumVsVentileTabGroup.with {
 	setTabColorProvider(com.jidesoft.swing.JideTabbedPane.ONENOTE_COLOR_PROVIDER)
 	setBoldActiveTab(true)
 }
+
+raumVsZuAbluftventileTabelle.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF)
+//raumVsZuAbluftventileTabelle.packTable(0)
+raumVsZuAbluftventileTabelle.packColumn(0, 10, 60)
+raumVsZuAbluftventileTabelle.packColumn(1, 10, 60)
+raumVsZuAbluftventileTabelle.packColumn(2, 10, 80)
+raumVsZuAbluftventileTabelle.packColumn(3, 10, 80)
+raumVsZuAbluftventileTabelle.packColumn(4, 10, 70)
+raumVsZuAbluftventileTabelle.packColumn(5, 10, 90)
+raumVsZuAbluftventileTabelle.packColumn(6, 10, 90)
+raumVsZuAbluftventileTabelle.packColumn(7, 10, 90)
+raumVsZuAbluftventileTabelle.packColumn(8, 10, 70)
+raumVsZuAbluftventileTabelle.packColumn(9, 10, 90)
+raumVsZuAbluftventileTabelle.packColumn(10, 10, 90)
+raumVsZuAbluftventileTabelle.packColumn(11, 10, 90)
+raumVsZuAbluftventileTabelle.packColumn(12, 10, 80)
+
 // Bindings
 build(RaumVsBindings)
