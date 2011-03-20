@@ -61,7 +61,7 @@ def buildLayout(tabname) {
 	def tabTitleForeground = tabname == "Zuluft" ? GH.MY_RED : java.awt.Color.BLUE
 	// Akustikberechnung - Zuluft
     panel(layout: new MigLayout("fill, wrap", "[]", "[fill]"), constraints: "grow") {
-        panel(layout: new MigLayout("wrap 3", "[left]5[center]5[left]", "[fill]"), constraints: "grow") {
+        panel(layout: new MigLayout("wrap 3,debug", "[left]5[center]5[left]", "[fill]"), constraints: "grow") {
             panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
                 label("Raumbezeichnung")
 
@@ -132,10 +132,10 @@ def buildLayout(tabname) {
                 label("Raumabsorption (Annahme) BAD=0 WOHNEN=1", foreground: GH.MY_GREEN, constraints: "span 2, height 30px!")
                 switch (tabname) {
                     case "Zuluft":
-                        comboBox(id: "akustik${tabname}Raumabsorption", constraints: "wrap", items: ["0", "1"], selectedItem: "1")
+                        comboBox(id: "akustik${tabname}Raumabsorption", constraints: "wrap", items: [0, 1], selectedItem: "1")
                         break
                     case "Abluft":
-                        comboBox(id: "akustik${tabname}Raumabsorption", constraints: "wrap", items: ["0", "1"], selectedItem: "0")
+                        comboBox(id: "akustik${tabname}Raumabsorption", constraints: "wrap", items: [0, 1], selectedItem: "0")
                         break
                 }
 
@@ -181,12 +181,12 @@ def buildLayout(tabname) {
                 label("dB(A)")
                 label(id: "akustik${tabname}dbA", text: "0,00", constraints: "height 30px!")
             }
-            panel() {
-                label("")
-            }
+            //panel() {
+            //    label("")
+            //}
 //            panel(layout: new MigLayout("wrap", "[450:480:650, right]", "[]")) {
-            panel(layout: new MigLayout("wrap", "[right]", "[]")) {
-                label("Mittlerer Schalldruckpegel* dB(A) =", constraints: "right, span 2, wrap")
+            panel(layout: new MigLayout("fillx, wrap", "[fill, right]", "[]"), constraints: "right, span 2") {
+                label("Mittlerer Schalldruckpegel* dB(A) =", constraints: "right, wrap")
             }
             panel() {
                 label(id: "akustik${tabname}MittlererSchalldruckpegel", text: "0,00", constraints: "left")
