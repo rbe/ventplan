@@ -13,7 +13,7 @@ import net.miginfocom.swing.MigLayout
 
 panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
     // Notwendigkeit der lüftungstechnischen Maßnahme
-    panel(id: "aussenluftVsNotwendigkeitLuftungstechnischeMassnahme", border: titledBorder(title: "Notwendigkeit der lüftungstechnischen Maßnahme"), layout: new MigLayout("wrap", "[left,320px!]para[right]para[left]para[left]", "[]")) {
+    panel(id: "aussenluftVsNotwendigkeitLuftungstechnischeMassnahme", border: titledBorder(title: "Notwendigkeit der lüftungstechnischen Maßnahme"), layout: new MigLayout("wrap", "[left,320px!]para[right]para[left]44[left]", "[]")) {
         label("Feuchteschutz: Gesamt-Außenluftvolumenstrom", constraints: "width 320px!")
         label(id: "aussenluftVsGesamt", text: "000,00")
         label("m³/h")
@@ -22,7 +22,7 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
         label("Luftvolumenstrom durch Infiltration", constraints: "width 320px!")
         label(id: "aussenluftVsInfiltration", text: "0,00")
         label("m³/h")
-        label("")
+        checkBox(id: "aussenluftVsGesamtLtmInfiltrationsanteil", selected: false, text: "mit Infiltrationsanteil berechnen")
     }
 
     // Gesamt-Außenluftvolumenströme für Nutzungseinheit
@@ -101,25 +101,29 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
     }
 
     // Gesamt-Luftvolumenstrom für lüftungstechnische Maßnahmen
-    panel(id: "aussenluftVsGesamtLTM", border: titledBorder(title: "Gesamt-Luftvolumenstrom für lüftungstechnische Maßnahmen"), layout: new MigLayout("wrap", "[left,236px!]30[right]para[left]72[right]para[left]30[right]para[left]30[left]", "rel[]rel")) {
+    //panel(id: "aussenluftVsGesamtLTM", border: titledBorder(title: "Gesamt-Luftvolumenstrom für lüftungstechnische Maßnahmen"), layout: new MigLayout("wrap", "[left,236px!]30[right]para[left]72[right]para[left]30[right]para[left]30[left]", "rel[]rel")) {
+    panel(id: "aussenluftVsGesamtLTM", border: titledBorder(title: "Gesamt-Luftvolumenstrom für lüftungstechnische Maßnahmen"), layout: new MigLayout("wrap", "[left,182px!]30[right]para[left]30[right]para[left]44[right]para[left]30[right]para[left]", "rel[]rel")) {
+        label("")
+        label(id: "aussenluftVsGesamtLTMZumFeuchteschutzLabel", "Lüftung zum Feuchteschutz")
         label("")
         label(id: "aussenluftVsGesamtLTMLabel", "Reduzierte Lüftung")
         label("")
         label("Nennlüftung")
         label("")
         label("Intensivlüftung")
-        label("", constraints: "span")
+        label("")
 
         label("Luftvolumenstrom", constraints: "width 120px!")
+        label(id: "gesamtLvsLtmLvsFs", text: "0,00"); label("m³/h")
         label(id: "gesamtLvsLtmLvsRl", text: "0,00"); label("m³/h")
         label(id: "gesamtLvsLtmLvsNl", text: "0,00"); label("m³/h")
         label(id: "gesamtLvsLtmLvsIl", text: "0,00"); label("m³/h")
-        checkBox(id: "aussenluftVsGesamtLtmInfiltrationsanteil", selected: false, text: "mit Infiltrationsanteil berechnen")
 
         label("Luftwechsel")
+        label(id: "gesamtLvsLtmLwFs", text: "0,00"); label("l/h")
         label(id: "gesamtLvsLtmLwRl", text: "0,00"); label("l/h")
         label(id: "gesamtLvsLtmLwNl", text: "0,00"); label("l/h")
-        label(id: "gesamtLvsLtmLwIl", text: "0,00"); label("l/h", constraints: "span")
+        label(id: "gesamtLvsLtmLwIl", text: "0,00"); label("l/h")
     }
 }
 
