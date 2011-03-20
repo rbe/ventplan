@@ -14,13 +14,13 @@ import net.miginfocom.swing.MigLayout
 
 // Akustikberechnung
 panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]"), constraints: "grow") {
-    panel(id: "akustikTabPanel", layout: new MigLayout("fill", "[]", ""), constraints: "grow") {
+    panel(id: "akustikTabPanel", layout: new MigLayout("fill", "[grow]", ""), constraints: "grow") {
         // Tabellen für
         jideTabbedPane(id: "akustikTabGroup", constraints: "grow, span") {
-            panel(id: "akustikZuluftTab", title: "Zuluft", layout: new MigLayout("fill", "[]", ""), constraints: "grow") {
+            panel(id: "akustikZuluftTab", title: "Zuluft", layout: new MigLayout("fill", "[fill]", ""), constraints: "grow") {
                 buildLayout("Zuluft")
             }
-            panel(id: "akustikAbluftTab", title: "Abluft", layout: new MigLayout("fill", "[]", ""), constraints: "grow") {
+            panel(id: "akustikAbluftTab", title: "Abluft", layout: new MigLayout("fill", "[fill]", ""), constraints: "grow") {
                 buildLayout("Abluft")
             }
         }
@@ -36,14 +36,32 @@ GH.recurse(akustikTabPanel, GH.yellowTextField)
 // Bindings
 build(AkustikBindings)
 
+
+akustikZuluftTabelle.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF)
+akustikZuluftTabelle.packColumn(0, 10, 100)
+akustikZuluftTabelle.packColumn(1, 10, 100)
+akustikZuluftTabelle.packColumn(2, 10, 100)
+akustikZuluftTabelle.packColumn(3, 10, 100)
+akustikZuluftTabelle.packColumn(4, 10, 100)
+akustikZuluftTabelle.packColumn(5, 10, 100)
+
+akustikAbluftTabelle.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF)
+akustikAbluftTabelle.packColumn(0, 10, 80)
+akustikAbluftTabelle.packColumn(1, 10, 80)
+akustikAbluftTabelle.packColumn(2, 10, 80)
+akustikAbluftTabelle.packColumn(3, 10, 80)
+akustikAbluftTabelle.packColumn(4, 10, 80)
+akustikAbluftTabelle.packColumn(5, 10, 80)
+
+
 /**
  * Synchronize all Swing table models depending on map.raum.raume.
  */
 def buildLayout(tabname) {
 	def tabTitleForeground = tabname == "Zuluft" ? GH.MY_RED : java.awt.Color.BLUE
 	// Akustikberechnung - Zuluft
-    panel(layout: new MigLayout("fill, wrap", "[fill]", "[fill]"), constraints: "grow") {
-        panel(layout: new MigLayout("wrap 3", "[left][center]5[left]", "[fill]"), constraints: "grow") {
+    panel(layout: new MigLayout("fill, wrap", "[]", "[fill]"), constraints: "grow") {
+        panel(layout: new MigLayout("wrap 3", "[left]5[center]5[left]", "[fill]"), constraints: "grow") {
             panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
                 label("Raumbezeichnung")
 
@@ -111,8 +129,7 @@ def buildLayout(tabname) {
                 label("Einfügungsdämmwert Luftdurchlass", foreground: GH.MY_GREEN, constraints: "height 30px!")
                 comboBox(id: "akustik${tabname}EinfugungsdammwertLuftdurchlass", constraints: "span 2, wrap", items: model.meta.dvbVentileinstellung, selectedItem: "100ALSQ3W002")
 
-                label("Raumabsorption (Annahme) BAD=0 WOHNEN=1", foreground: GH.MY_GREEN, constraints: "height 30px!")
-                label("")
+                label("Raumabsorption (Annahme) BAD=0 WOHNEN=1", foreground: GH.MY_GREEN, constraints: "span 2, height 30px!")
                 switch (tabname) {
                     case "Zuluft":
                         textField(id: "akustik${tabname}Raumabsorption", constraints: "width 80px!, wrap", text: "1")
@@ -126,7 +143,7 @@ def buildLayout(tabname) {
 
                 label("Bewerteter Schallpegel", constraints: "height 30px!, wrap")
             }
-            panel(layout: new MigLayout("fill, wrap", "[fill,right]", "[fill]")) {
+            panel(layout: new MigLayout("fill, wrap", "[right]", "[fill]")) {
                 if (System.properties.'os.name'.contains("Windows")) {
                     jideScrollPane(constraints: "grow, height 500px!") {
                         def tm
@@ -167,7 +184,8 @@ def buildLayout(tabname) {
             panel() {
                 label("")
             }
-            panel(layout: new MigLayout("wrap", "[450:480:650, right]", "[]")) {
+//            panel(layout: new MigLayout("wrap", "[450:480:650, right]", "[]")) {
+            panel(layout: new MigLayout("wrap", "[right]", "[]")) {
                 label("Mittlerer Schalldruckpegel* dB(A) =", constraints: "right, wrap")
             }
             panel() {
@@ -184,4 +202,3 @@ def buildLayout(tabname) {
     }
     return "akustik${tabname}Tab"
 }
-
