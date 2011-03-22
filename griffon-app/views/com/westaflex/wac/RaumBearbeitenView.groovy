@@ -1,10 +1,13 @@
-/**
- * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/views/com/westaflex/wac/RaumBearbeitenDialog.groovy
- * 
- * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
- * Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
- * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
- * 
+/*
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
+ *
+ * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
+ * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
+ *
+ * Project wac
+ * /Users/rbe/project/wac/griffon-app/views/com/westaflex/wac/RaumBearbeitenView.groovy
+ * Last modified at 22.03.2011 13:07:54 by rbe
  */
 package com.westaflex.wac
 
@@ -32,7 +35,7 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
                 button(id: "raumdatenDialogRaumButton", text: "...")
             }
             panel(id: "raumBearbeitenLuftartPanel", border: titledBorder("Luftart"), layout: new MigLayout("", "[]para[]para[]", ""), constraints: "cell 0 1, grow") {
-                comboBox(id: "raumBearbeitenLuftart", constraints: "width 100px", items: model.meta.raum.luftart, enabled: false)
+                comboBox(id: "raumBearbeitenLuftart", constraints: "width 100px", items: model.meta.raum.luftart)
                 textField(id: "raumBearbeitenLuftartFaktorZuluftverteilung", enabled: bind { (model.meta.gewahlterRaum?.raumLuftart == "ZU" || model.meta.gewahlterRaum?.raumLuftart == "ZU/AB") ? true : false }, text: "", constraints: "width 100px")
                 label(id: "raumBearbeitenFaktorZuluftverteilungLabel", text: "Faktor Zuluftverteilung", constraints: "wrap")
 

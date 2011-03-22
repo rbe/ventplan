@@ -1,11 +1,13 @@
-/**
- * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/events/com/westaflex/wac/RaumEvents.groovy
- * 
- * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
- * Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
- * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
- * 
- * Created by: rbe
+/*
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
+ *
+ * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
+ * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
+ *
+ * Project wac
+ * /Users/rbe/project/wac/griffon-app/events/com/westaflex/wac/RaumEvents.groovy
+ * Last modified at 22.03.2011 13:07:54 by rbe
  */
 package com.westaflex.wac
 
@@ -80,12 +82,33 @@ class RaumEvents {
 		if (DEBUG) println "onRaumGeandert: raum -> ${model.map.raum.raume}"
 		doLater {
 			if (DEBUG) println "processing event 'RaumGeandert': raumIndex=${raumIndex}"
+            // WAC-65: Errechnete Werte zurücksetzen
+            model.map.raum.raume[raumIndex].with {
+                raumVolumen = raumFlache * raumHohe
+                raumLuftwechsel = 0.0d
+                raumAbluftVolumenstromInfiltration = 0.0d // Abluftvs abzgl. Infiltration
+                raumAnzahlAbluftventile = 0
+                raumAbluftmengeJeVentil = 0.0d
+                raumAnzahlZuluftventile = 0
+                raumZuluftmengeJeVentil = 0.0d
+                raumAnzahlUberstromVentile = 0
+                raumUberstromVolumenstrom = 0.0d
+            }
+			// Nummern der Räume berechnen
+			wacCalculationService.berechneRaumnummer(model.map)
 			// Gebäude-Geometrie berechnen
 			wacCalculationService.geometrieAusRaumdaten(model.map)
 			// Aussenluftvolumenströme berechnen
 			wacCalculationService.aussenluftVs(model.map)
-			// Nummern der Räume berechnen
-			wacCalculationService.berechneRaumnummer(model.map)
+            // Zu-/Abluftventile
+            model.map.raum.raume[raumIndex] =
+                wacCalculationService.berechneZuAbluftventile(model.map.raum.raume[raumIndex])
+            // Türspalt
+            model.map.raum.raume[raumIndex] =
+                wacCalculationService.berechneTurspalt(model.map.raum.raume[raumIndex])
+            // Überströmelement berechnen
+            model.map.raum.raume[raumIndex] =
+                wacCalculationService.berechneUberstromelemente(model.map.raum.raume[raumIndex])
 			// Zentralgerät bestimmen
 			publishEvent "ZentralgeratAktualisieren"
 			// Diesen Raum in allen Tabellen anwählen
