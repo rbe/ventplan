@@ -441,7 +441,7 @@ class ProjektModel {
 	 * @param preValueSet Closure to execute before value was set
 	 */
 	def gltmClosureCheckbox = { columnNames, propertyNames, writable, tableModel, postValueSet = null, preValueSet = null ->
-		println "gltmClosureCheckbox: tablelModel=${tableModel?.dump()}"
+		if (DEBUG) println "gltmClosureCheckbox: tablelModel=${tableModel?.dump()}"
 		new ca.odell.glazedlists.swing.EventTableModel(tableModel, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { columnIndex -> columnNames[columnIndex] },
