@@ -1193,6 +1193,7 @@ class ProjektController {
 		GH.withDisabledActionListeners p, {
 			p.removeAllItems()
 			// Hole Volumenströme des Zentralgeräts und füge diese in Combobox hinzu
+            // TODO 5er-Schritte
 			wacModelService.getVolumenstromFurZentralgerat(zg.selectedItem).each { p.addItem(it) }
 		}
 	}
