@@ -132,10 +132,10 @@ def buildLayout(tabname) {
                 label("Raumabsorption (Annahme) BAD=0 WOHNEN=1", foreground: GH.MY_GREEN, constraints: "span 2, height 30px!")
                 switch (tabname) {
                     case "Zuluft":
-                        comboBox(id: "akustik${tabname}Raumabsorption", constraints: "wrap", items: [0, 1], selectedItem: "1")
+                        comboBox(id: "akustik${tabname}Raumabsorption", constraints: "wrap", items: ["BAD", "WOHNEN"], selectedItem: "WOHNEN")
                         break
                     case "Abluft":
-                        comboBox(id: "akustik${tabname}Raumabsorption", constraints: "wrap", items: [0, 1], selectedItem: "0")
+                        comboBox(id: "akustik${tabname}Raumabsorption", constraints: "wrap", items: ["BAD", "WOHNEN"], selectedItem: "BAD")
                         break
                 }
 

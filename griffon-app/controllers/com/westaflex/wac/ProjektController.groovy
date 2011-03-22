@@ -1225,7 +1225,7 @@ class ProjektController {
 				langsdampfungKanalLfdmMeter: getInt(view."akustik${tabname}LangsdampfungKanalLfdmMeter"),
 				schalldampferVentil: view."akustik${tabname}SchalldampferVentil".selectedItem,
 				einfugungsdammwert: view."akustik${tabname}EinfugungsdammwertLuftdurchlass".selectedItem,
-				raumabsorption: getInt(view."akustik${tabname}Raumabsorption")
+				raumabsorption: view."akustik${tabname}Raumabsorption".selectedItem
 			]
 		// Nur berechnen, wenn Zentralgerät gesetzt
 		if (input.zentralgerat) {

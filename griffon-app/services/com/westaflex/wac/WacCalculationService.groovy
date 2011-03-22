@@ -825,10 +825,10 @@ class WacCalculationService {
 		t[9] = minus1(wacModelService.getSchallleistungspegel(input.einfugungsdammwert)) ?: zero
 		// Row 11
 		switch (input.raumabsorption) {
-			case 0:
+			case "BAD":
 				t[10] = zero
 				break
-			case 1:
+			case "WOHNEN":
 				t[10] = [slp125: -4d, slp250: -4d, slp500: -4d, slp1000: -4d, slp2000: -4d, slp4000: -4d]
 				break
 		}
