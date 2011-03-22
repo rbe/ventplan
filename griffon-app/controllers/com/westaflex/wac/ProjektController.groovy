@@ -436,7 +436,10 @@ class ProjektController {
 	 * Aussenluftvolumenströme - Mit/ohne Infiltrationsanteil berechnen.
 	 */
 	def berechneAussenluftVs = {
-		publishEvent "AussenluftVsBerechnen"
+		//publishEvent "AussenluftVsBerechnen"
+        wacCalculationService.aussenluftVs(model.map)
+        // Zentralgerät bestimmen
+        onZentralgeratAktualisieren()
 	}
 	
 	/**
