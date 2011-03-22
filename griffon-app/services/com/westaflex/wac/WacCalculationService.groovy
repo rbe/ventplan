@@ -323,17 +323,20 @@ class WacCalculationService {
 	 * @param map model.map
 	 * @param b true=Raumvolumenströme, false=Gesamtraumvolumenstrom
 	 */
-	void autoLuftmenge(map, Boolean b) {
+	void autoLuftmenge(map/*, Boolean b*/) {
 		// LTM nicht erforderlich?
 		if (!ltmErforderlich(map)) {
 			map.messages.ltm = "Es sind keine lüftungstechnischen Maßnahmen notwendig!"
 		}
 		// LTM: erste Berechnung für Raumvolumenströme
 		// Summiere Daten aus Raumdaten
-		Double gesamtZuluftfaktor = zuluftRaume(map).inject(0.0d) { o, n ->
+		Double gesamtZuluftfaktor = 0.0d
+        gesamtZuluftfaktor = zuluftRaume(map)?.inject(0.0d) { o, n ->
 				o + n.raumZuluftfaktor
 			}
-		Double gesamtAbluftVs = abluftRaume(map).inject(0.0d) { o, n ->
+        // Eingegebener oder berechneter Wert? Eingegebener, wird erst weiter unten errechnet!
+		Double gesamtAbluftVs = 0.0d
+        gesamtAbluftVs = abluftRaume(map)?.inject(0.0d) { o, n ->
 				o + n.raumAbluftVolumenstrom
 			}
 		// Gesamt-Außenluftvolumenstrom bestimmen
@@ -344,8 +347,10 @@ class WacCalculationService {
 					) * (map.gebaude.faktorBesondereAnforderungen ?: 1.0d)
 		// Gesamt-Außenluftvolumenstrom für lüftungstechnische Maßnahmen
 		Double gesamtAvsLTM = 0.0d
-		if (map.aussenluftVs.infiltrationBerechnen && b) {
-			gesamtAvsLTM = gesamtAussenluft - infiltration(map, true)
+        def infilt = infiltration(map, true)
+        if (DEBUG) println "autoLuftmenge: infilt=${infilt}"
+		if (map.aussenluftVs.infiltrationBerechnen/* && b*/) {
+			gesamtAvsLTM = gesamtAussenluft - infilt
 		} else {
 			gesamtAvsLTM = gesamtAussenluft
 		}
@@ -356,10 +361,12 @@ class WacCalculationService {
 		map.raum.ltmZuluftSumme = 0.0d
 		// Alle Räume, die einen Abluftvolumenstrom > 0 haben...
 		map.raum.raume.grep { it.raumAbluftVolumenstrom > 0.0d }.each {
+            // Abluftvolumenstrom abzgl. Infiltration errechnen
 			Double ltmAbluftRaum = Math.round(gesamtAvsLTM / gesamtAbluftVs * it.raumAbluftVolumenstrom)
+            if (DEBUG) println "autoLuftmenge: Math.round(${gesamtAvsLTM} / ${gesamtAbluftVs} * ${it.raumAbluftVolumenstrom})=${ltmAbluftRaum}"
 			// Raumvolumenströme berechnen?
-			if (b) {
-				it.raumAbluftVolumenstrom = ltmAbluftRaum
+//			if (b) {
+				it.raumAbluftVolumenstromInfiltration = ltmAbluftRaum
 				if (it.raumVolumen > 0) {
 					it.raumLuftwechsel = (ltmAbluftRaum / it.raumVolumen)
 				} else {
@@ -368,9 +375,10 @@ class WacCalculationService {
 				// ZU/AB
 				if (it.raumLuftart.contains("ZU/AB")) {
 					Double ltmZuluftRaum = Math.round(gesamtAvsLTM * it.raumZuluftfaktor / gesamtZuluftfaktor)
+                    // TODO Auch abzgl. Infiltration als eigener Wert?
 					it.raumZuluftVolumenstrom = ltmZuluftRaum
-					it.raumAbluftVolumenstrom = ltmAbluftRaum
-					if (ltmZuluftRaum > ltmAbluftRaum) {
+////					it.raumAbluftVolumenstromInfiltration = ltmAbluftRaum
+                    if (ltmZuluftRaum > ltmAbluftRaum) {
 						//it.raumVolumenstrom = ltmZuluftRaum
 						it.raumLuftwechsel = (ltmZuluftRaum / it.raumVolumen)
 					} else {
@@ -379,9 +387,9 @@ class WacCalculationService {
 					}
 					ltmZuluftSumme += ltmAbluftRaum
 				}
-			} else {
-				ltmAbluftSumme += ltmAbluftRaum
-			}
+//			} else {
+//				ltmAbluftSumme += ltmAbluftRaum
+//			}
 			map.raum.ltmAbluftSumme = ltmAbluftSumme
 		}
 		// LTM: zweite Berechnung für Raumvolumenströme
@@ -389,12 +397,13 @@ class WacCalculationService {
 			it.raumZuluftfaktor > 0.0d && it.raumLuftart != "ZU/AB"
 		}.each {
 			Double ltmZuluftRaum = Math.round(gesamtAvsLTM * it.raumZuluftfaktor / gesamtZuluftfaktor)
-			if (b) {
+//			if (b) {
+                // TODO Auch abzgl. Infiltration berechnen?
 				it.raumZuluftVolumenstrom = ltmZuluftRaum
 				it.raumLuftwechsel = ltmZuluftRaum / it.raumVolumen
-			} else {
-				ltmZuluftSumme += ltmZuluftRaum
-			}
+//			} else {
+//				ltmZuluftSumme += ltmZuluftRaum
+//			}
 			map.raum.ltmZuluftSumme = ltmZuluftSumme
 		}
 		// Überströmvolumenstrom = Vorschlag: Raumvolumenstrom
@@ -404,11 +413,13 @@ class WacCalculationService {
 					it.raumUberstromVolumenstrom = it.raumZuluftVolumenstrom
 					break
 				case "AB":
-					it.raumUberstromVolumenstrom = it.raumAbluftVolumenstrom
+                    // TODO Auch abzgl. Infiltration?
+					it.raumUberstromVolumenstrom = it.raumAbluftVolumenstromInfiltration
 					break
 				case "ZU/AB":
+                    // TODO Auch abzgl. Infiltration?
 					it.raumUberstromVolumenstrom =
-						java.lang.Math.abs(it.raumZuluftVolumenstrom - it.raumAbluftVolumenstrom)
+						java.lang.Math.abs(it.raumZuluftVolumenstrom - it.raumAbluftVolumenstromInfiltration)
 					break
 			}
 		}
@@ -433,8 +444,8 @@ class WacCalculationService {
             map.aussenluftVs.massnahme = ""
         }
 		//
-		autoLuftmenge(map, true)
-		autoLuftmenge(map, false)
+		autoLuftmenge(map/*, true*/)
+		//autoLuftmenge(map, false)
 		//
 		Double grundluftung = gesamtAvs //gesamtAussenluftVs(map)
 		Double geluftetesVolumen = map.gebaude.geometrie.geluftetesVolumen ?: 0.0d
@@ -454,8 +465,10 @@ class WacCalculationService {
 		map.aussenluftVs.gesamtAvsNeLvsFs = feuchteluftung
 		map.aussenluftVs.gesamtAvsNeLwFs = feuchteluftung / geluftetesVolumen
 		// Ausgabe der Gesamt-Raumabluft-Volumenströme
-		grundluftung = abluftRaume(map).inject(0.0d) { o, n ->
-			o + n.raumAbluftVolumenstrom
+		grundluftung = 0.0d
+        grundluftung = abluftRaume(map)?.inject(0.0d) { o, n ->
+            // TODO Auch abzgl. Infiltration?
+			o + n.raumAbluftVolumenstromInfiltration
 		}
 		map.aussenluftVs.gesamtAvsRaumLvsNl = grundluftung
 		map.aussenluftVs.gesamtAvsRaumLwNl = grundluftung / geluftetesVolumen
@@ -549,9 +562,11 @@ class WacCalculationService {
 			if (ventil) {
 				def maxVolumenstrom = wacModelService.getMaxVolumenstrom(ventil)
 				// Anzahl Ventile
-				map.raumAnzahlAbluftventile = java.lang.Math.ceil(map.raumAbluftVolumenstrom / maxVolumenstrom)
+                // TODO Auch abzgl. Infiltration?
+				map.raumAnzahlAbluftventile = java.lang.Math.ceil(map.raumAbluftVolumenstromInfiltration / maxVolumenstrom)
 				// Luftmenge je Ventil
-				map.raumAbluftmengeJeVentil = map.raumAbluftVolumenstrom / map.raumAnzahlAbluftventile
+                // TODO Auch abzgl. Infiltration?
+				map.raumAbluftmengeJeVentil = map.raumAbluftVolumenstromInfiltration / map.raumAnzahlAbluftventile
 			}
 		}
 		if (DEBUG) println "berechneZuAbluftventile: ${map}"
