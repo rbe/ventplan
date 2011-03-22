@@ -565,32 +565,35 @@ class WacCalculationService {
 	def berechneUberstromelemente(map) {
 		// 1-3 wurden woanders erledigt
 		// 4
-		if (DEBUG) println "berechneUberstromelemente: map.raumUberstromElement=${map?.raumUberstromElement?.dump()}"
-		def maxVolumenstrom = wacModelService.getMaxVolumenstrom(map.raumUberstromElement)
-		// 5b
-		if (DEBUG) println "berechneUberstromelemente: map.turen=${map?.turen?.dump()}"
-		if (DEBUG) println "berechneUberstromelemente: map.raumMaxTurspaltHohe=${map.raumMaxTurspaltHohe}"
-		if (!map.raumMaxTurspaltHohe) {
-			println "WARNING: value for maxTurspaltHohe is missing, using default: 10.0 -> ${map?.dump()}"
-			map.raumMaxTurspaltHohe = 10.0
-		}
-		def querschnitt = map.turen.inject(0.0d, { o, n -> o + n.turBreite * map.raumMaxTurspaltHohe })
-		// 5b
-		def anzTurenOhneDichtung = map.turen.findAll { !it.turDichtung }?.size() ?: 0
-		// 5a
-		def vsMaxTurspalt = (querschnitt + 2500 * anzTurenOhneDichtung) / 100 / 3.1 * java.lang.Math.sqrt(1.5d)
-		// 5
-		if (DEBUG) println "berechneUberstromelemente: map.raumUberstromVolumenstrom=${map.raumUberstromVolumenstrom?.dump()}"
-        // WAC-129: Gebäudedaten - Geplante Belegung -> map.raumUberstromVolumenstrom ist null!
-        // try-catch um map.raumUberstromVolumenstrom und als default Wert 0.00 als Double setzen.
-        try {
-            def usRechenwert = map.raumUberstromVolumenstrom - vsMaxTurspalt
-            // 6
-            map.raumAnzahlUberstromVentile = java.lang.Math.ceil(usRechenwert / maxVolumenstrom)
-        } catch (e) {
-            e.printStackTrace()
-            map.raumAnzahlUberstromVentile = 0.0d
+		if (DEBUG) println "berechneUberstromelemente: map.raumUberstromElement=${map?.raumUberstromElement?.dump()} map=${map?.dump()}"
+        if (map.raumUberstromElement) {
+            def maxVolumenstrom = wacModelService.getMaxVolumenstrom(map.raumUberstromElement)
+            // 5b
+            if (DEBUG) println "berechneUberstromelemente: map.turen=${map?.turen?.dump()}"
+            if (DEBUG) println "berechneUberstromelemente: map.raumMaxTurspaltHohe=${map.raumMaxTurspaltHohe}"
+            if (!map.raumMaxTurspaltHohe) {
+                println "WARNING: value for maxTurspaltHohe is missing, using default: 10.0 -> ${map?.dump()}"
+                map.raumMaxTurspaltHohe = 10.0
+            }
+            def querschnitt = map.turen.inject(0.0d, { o, n -> o + n.turBreite * map.raumMaxTurspaltHohe })
+            // 5b
+            def anzTurenOhneDichtung = map.turen.findAll { !it.turDichtung }?.size() ?: 0
+            // 5a
+            def vsMaxTurspalt = (querschnitt + 2500 * anzTurenOhneDichtung) / 100 / 3.1 * java.lang.Math.sqrt(1.5d)
+            // 5
+            if (DEBUG) println "berechneUberstromelemente: map.raumUberstromVolumenstrom=${map.raumUberstromVolumenstrom?.dump()}"
+            // WAC-129: Gebäudedaten - Geplante Belegung -> map.raumUberstromVolumenstrom ist null!
+            // try-catch um map.raumUberstromVolumenstrom und als default Wert 0.00 als Double setzen.
+            try {
+                def usRechenwert = map.raumUberstromVolumenstrom - vsMaxTurspalt
+                // 6
+                map.raumAnzahlUberstromVentile = java.lang.Math.ceil(usRechenwert / maxVolumenstrom)
+            } catch (e) {
+                e.printStackTrace()
+                map.raumAnzahlUberstromVentile = 0.0d
+            }
         }
+        map
 	}
 	
 	/**
@@ -759,20 +762,23 @@ class WacCalculationService {
 		// Gilt nicht für Überström-Räume
 		if (DEBUG) println "berechneTurspalt: map=${map.dump()}"
 		if (map.raumLuftart.contains("ÜB")) {
-			return
+            if (DEBUG) println "berechneTurspalt: Keine Berechnung von ÜB-Räumen"
+			return map
 		} else {
 			def anzTurenOhneDichtung = map.turen.findAll { it.turDichtung == false }?.size() ?: 0
 			def summeTurBreiten = map.turen.sum { it.turBreite.toDouble2() }
+            if (DEBUG) println "berechneTurspalt: anzTurenOhneDichtung=${anzTurenOhneDichtung} summeTurBreiten=${summeTurBreiten}"
 			map.turen.findAll { it.turBreite > 0 }?.each {
 				// Existiert ein Durchgang? Ja, überspringen
 				if (it.turBezeichnung ==~ /.*Durchgang.*/) return
-				def tsqf =
-					(100 * 3.1d * map.raumUberstromVolumenstrom / java.lang.Math.sqrt(1.5d))
-					- 2500 * anzTurenOhneDichtung
+                def abziehen = 2500 * anzTurenOhneDichtung
+				def tsqf = (100 * 3.1d * map.raumUberstromVolumenstrom / java.lang.Math.sqrt(1.5d)) - abziehen
 				it.turSpalthohe = tsqf / summeTurBreiten
 				it.turQuerschnitt = tsqf * it.turBreite / summeTurBreiten
+                if (DEBUG) println "berechneTurspalt: abziehen=${abziehen} tsqf=${tsqf} turSpalthohe=${it.turSpalthohe} turQuerschnitt=${it.turQuerschnitt}"
 			}
 		}
+        map
 	}
 	
 	/**
