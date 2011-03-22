@@ -668,7 +668,7 @@ class ProjektController {
 	}
 	
 	/**
-	 * 
+	 * Berechne Türen eines bestimmten Raumes.
 	 */
 	def berechneTuren = { raumIndex = null ->
 		// Hole gewählten Raum
