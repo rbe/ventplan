@@ -675,6 +675,8 @@ class ProjektController {
 		def raum = model.map.raum.raume[raumIndex ?: view.raumTabelle.selectedRow]
 		// Türen berechnen?
 		if (raum.turen.findAll { it.turBreite > 0 }?.size() > 0 && raum.raumUberstromVolumenstrom) {
+            // TODO WAC-126 Keine Berechnung wenn Türdichtung-Checkbox geklickt
+            println "WAC-126: berechneTuren=${raum}"
 			wacCalculationService.berechneTurspalt(raum)
 		}
 	}
