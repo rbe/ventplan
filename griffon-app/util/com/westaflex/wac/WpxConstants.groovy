@@ -17,6 +17,8 @@ import com.bensmann.griffon.GriffonHelper as GH
  * Siehe Ticket #20.
  */
 class WpxConstants {
+
+    private static boolean DEBUG = false
 	
 	private static final m = [
 			// Gebäudetyp
@@ -70,12 +72,13 @@ class WpxConstants {
 	 * Ticket #20
 	 */
 	def static get(String p) {
-		print "WpxConstants: mapping ${p?.dump()}"
+		if (DEBUG) print "WpxConstants: mapping ${p?.dump()}"
 		def r = WpxConstants.m[p]
-		if (!r) {
-			r = GH.invertMap(WpxConstants.m)[p]
-		}
-		println " -> ${r?.dump()}"
+        // Search reverse (value -> key)
+		if (!r) r = GH.invertMap(WpxConstants.m)[p]
+        // No result? Return input.
+        if (!r) r = p
+		if (DEBUG) println " -> ${r?.dump()}"
 		r
 	}
 	
