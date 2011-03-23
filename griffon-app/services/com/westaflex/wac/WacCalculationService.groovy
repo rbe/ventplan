@@ -1,10 +1,13 @@
-/**
- * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/services/com/westaflex/wac/WacCalculationService.groovy
- * 
- * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
- * Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
- * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
- * 
+/*
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
+ *
+ * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
+ * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
+ *
+ * Project wac
+ * /Users/rbe/project/wac/griffon-app/services/com/westaflex/wac/WacCalculationService.groovy
+ * Last modified at 23.03.2011 13:15:26 by rbe
  */
 package com.westaflex.wac
 
@@ -494,7 +497,7 @@ class WacCalculationService {
 		feuchteluftung = wsFaktor * grundluftung
 		map.aussenluftVs.gesamtAvsPersonLvsFs = feuchteluftung
 		map.aussenluftVs.gesamtAvsPersonLwFs = feuchteluftung / geluftetesVolumen
-		// Ausgabe der Volumenströme für LTM
+		// Ausgabe der Gesamt-Luftvolumenströme für LTM
 		grundluftung = Math.max(map.raum.ltmAbluftSumme, map.raum.ltmZuluftSumme)
 		grundluftung = Math.max(gesamtAvs/*gesamtAussenluftVs(map)*/, grundluftung)
 		grundluftung = Math.max(map.gebaude.geplanteBelegung.mindestaussenluftrate, grundluftung)
@@ -508,6 +511,9 @@ class WacCalculationService {
 		map.aussenluftVs.gesamtLvsLtmLvsIl = intensivluftung
 		map.aussenluftVs.gesamtLvsLtmLwIl = intensivluftung / geluftetesVolumen
 		map.aussenluftVs.gesamtLvsLtmLvsFs = wsFaktor * grundluftung - infiltration
+        // Lüftung zum Feuchteschutz = Nennlüftung / 1.3
+        map.aussenluftVs.gesamtLvsLtmLvsFs = map.aussenluftVs.gesamtLvsLtmLvsNl / 1.3f
+        map.aussenluftVs.gesamtLvsLtmLwFs = map.aussenluftVs.gesamtLvsLtmLwNl / 1.3f
 		// Raumvolumenströme - Gesamtaussenluftvolumentrom mit Infiltration
 		map.raum.raumVs.gesamtaussenluftVsMitInfiltration = grundluftung
 		// Raumvolumenströme - Luftwechsel der Nutzungseinheit
