@@ -81,7 +81,7 @@ class ProjektController {
 				wacCalculationService: wacCalculationService,
 				wacModelService: wacModelService
 			]
-		GH.tieEventListener(this, RaumEvents, props)
+		////GH.tieEventListener(this, RaumEvents, props)
 		GH.tieEventListener(this, DvbKanalnetzEvents, props)
 		GH.tieEventListener(this, DvbVentileinstellungEvents, props)
 	}
@@ -520,23 +520,92 @@ class ProjektController {
 						[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
 						[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
 					] as ObservableList
+		////if (DEBUG) println "raumHinzufugen: publishing event for raum.position=${raum.position}"
+		////publishEvent "RaumHinzufugen", [raum, view]
 		// Hole Werte für neuen Raum aus der View und füge Raum hinzu
-		if (DEBUG) println "raumHinzufugen: publishing event for raum.position=${raum.position}"
-		publishEvent "RaumHinzufugen", [raum, view]
+		raum.with {
+			// Übernehme Wert für Bezeichnung vom Typ?
+			raumBezeichnung = raumBezeichnung ?: raumTyp
+			// Länge + Breite
+			raumLange = 0.0d
+			raumBreite = 0.0d
+			// Fläche, Höhe, Volumen
+			raumFlache = raumFlache.toDouble2()
+			raumHohe = raumHohe.toDouble2()
+			raumVolumen = raumFlache * raumHohe
+			// Zuluftfaktor
+			raumZuluftfaktor = raumZuluftfaktor?.toDouble2() ?: 0.0d
+			// Abluftvolumenstrom
+			raumAbluftVolumenstrom = raumAbluftVolumenstrom?.toDouble2() ?: 0.0d
+			// Standard Türspalthöhe ist 10 mm
+			raumTurspaltHohe = 10.0d
+		}
+		doLater {
+			// Raum im Model hinzufügen
+            if (DEBUG) println "onRaumHinzufugen: raum -> ${raum}"
+			model.addRaum(raum, view)
+			////onRaumHinzugefugt(raum.position, view)
+            raumGeandert(model.map.raum.raume.size() - 1)
+		}
 	}
 	
 	/**
 	 * Raumdarten - ein Raum wurde geändert.
 	 */
-	def raumGeandert = {
-		publishEvent "RaumGeandert", [view.raumTabelle.selectedRow]
+	def raumGeandert = { raumIndex = null ->
+		////publishEvent "RaumGeandert", [view.raumTabelle.selectedRow]
+        /*if (DEBUG)*/ println "raumGeandert: raum[${raumIndex}] ${model.map.raum.raume}"
+        doLater {
+            if (raumIndex) {
+                // WAC-65: Errechnete Werte zurücksetzen
+                model.map.raum.raume[raumIndex].with {
+                    raumVolumen = raumFlache * raumHohe
+                    raumLuftwechsel = 0.0d
+                    // Abluft
+                    raumAbluftVolumenstromInfiltration = 0.0d // Abluftvs abzgl. Infiltration
+                    raumAnzahlAbluftventile = 0
+                    raumAbluftmengeJeVentil = 0.0d
+                    // Zuluft
+                    raumZuluftVolumenstromInfiltration = 0.0d // Zuluftvs abzgl. Infiltration
+                    raumAnzahlZuluftventile = 0
+                    raumZuluftmengeJeVentil = 0.0d
+                    raumAnzahlUberstromVentile = 0
+                    raumUberstromVolumenstrom = 0.0d
+                }
+                // Zu-/Abluftventile
+                model.map.raum.raume[raumIndex] =
+                    wacCalculationService.berechneZuAbluftventile(model.map.raum.raume[raumIndex])
+                // Türspalt
+                model.map.raum.raume[raumIndex] =
+                    wacCalculationService.berechneTurspalt(model.map.raum.raume[raumIndex])
+                // Überströmelement berechnen
+                model.map.raum.raume[raumIndex] =
+                    wacCalculationService.berechneUberstromelemente(model.map.raum.raume[raumIndex])
+            }
+            // Nummern der Räume berechnen
+            wacCalculationService.berechneRaumnummer(model.map)
+            // Gebäude-Geometrie berechnen
+            wacCalculationService.geometrieAusRaumdaten(model.map)
+            // Aussenluftvolumenströme berechnen
+            wacCalculationService.aussenluftVs(model.map)
+            // Zentralgerät bestimmen
+            ////publishEvent "ZentralgeratAktualisieren"
+            onZentralgeratAktualisieren()
+            // Diesen Raum in allen Tabellen anwählen
+            ////publishEvent "RaumInTabelleWahlen", [raumIndex]
+            onRaumInTabelleWahlen(raumIndex)
+        }
 	}
 	
 	/**
 	 * Raumdaten - einen Raum entfernen.
 	 */
 	def raumEntfernen = {
-		publishEvent "RaumEntfernen", [view.raumTabelle.selectedRow, view]
+		////publishEvent "RaumEntfernen", [view.raumTabelle.selectedRow, view]
+        // Raum aus Model entfernen
+        model.removeRaum(raumIndex, view)
+        // Es hat sich was geändert...
+        raumGeandert(raumIndex)
 	}
 	
 	/**
@@ -546,11 +615,9 @@ class ProjektController {
 		doLater {
 			// Get selected row
 			def row = view.raumTabelle.selectedRow
-			// Raum anhand seiner Position finden und eine Kopie erzeugen
+			// Raum anhand seiner Position finden
 			def x = model.map.raum.raume.find { it.position == row }
-
-
-
+            // Kopie erzeugen
             def newMap = new ObservableMap()
             x.collect{
                 //[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
@@ -579,16 +646,15 @@ class ProjektController {
 
             }
             if (DEBUG) println "newMap -> ${newMap}"
-
 			// Neuen Namen und neue Position (Ende) setzen
             // raumBezeichnung als String speichern (vorher GString).
 			newMap.raumBezeichnung = "Kopie von ${x.raumBezeichnung}".toString()
 			newMap.position = model.map.raum.raume.size()
 			// Raum zum Model hinzufügen
-            
 			model.addRaum(newMap, view, true)
 			// Raum hinzugefügt
-			publishEvent "RaumHinzugefugt", [newMap.position, view]
+			////publishEvent "RaumHinzugefugt", [newMap.position, view]
+            raumGeandert(newMap.position)
 		}
 	}
 	
@@ -607,7 +673,8 @@ class ProjektController {
 				}
 				model.resyncRaumTableModels()
 				// Raum geändert
-				publishEvent "RaumGeandert", [row - 1]
+				////publishEvent "RaumGeandert", [row - 1]
+                raumGeandert(row - 1)
 			}
 		}
 	}
@@ -627,7 +694,8 @@ class ProjektController {
 				}
 				model.resyncRaumTableModels()
 				// Raum geändert
-				publishEvent "RaumGeandert", [row + 1]
+				////publishEvent "RaumGeandert", [row + 1]
+                raumGeandert(row + 1)
 			}
 		}
 	}
@@ -657,7 +725,8 @@ class ProjektController {
 		if (DEBUG) println "raumBearbeitenSchliessen: closing dialog '${raumBearbeitenDialog.title}'"
 		raumBearbeitenDialog.dispose()
 		// Berechne alles, was von Räumen abhängt
-		publishEvent "RaumGeandert", [view.raumTabelle.selectedRow]
+		////publishEvent "RaumGeandert", [view.raumTabelle.selectedRow]
+        raumGeandert(view.raumTabelle.selectedRow)
 	}
 	
 	/**
@@ -665,6 +734,7 @@ class ProjektController {
 	 */
 	def raumBearbeitenGeandert = {
 		if (DEBUG) println "TODO raumBearbeitenGeandert"
+        raumGeandert(view.raumTabelle.selectedRow)
 	}
 	
 	/**
