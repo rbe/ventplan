@@ -89,7 +89,7 @@ class ProjektModelService {
 					raumNummer: X.vs { room."raumnummer".text() },
 					raumBezeichnung: X.vs { room."bezeichnung".text() },
 					raumTyp: X.vs { WX[room."raumtyp".text()] },
-					raumLuftart: X.vs { room."luftart".text() },
+					raumLuftart: X.vs { WX[room."luftart".text()] },
 					raumGeschoss: X.vs { room."geschoss".text() },
 					raumFlache: X.vd { room."raumflache".text() },
 					raumHohe: X.vd { room."raumhohe".text() },
@@ -315,7 +315,7 @@ class ProjektModelService {
 			X.tc { bezeichnung(map.raumBezeichnung) }
 			X.tc { raumtyp(WX[map.raumTyp]) }
 			X.tc { geschoss(map.raumGeschoss) }
-			X.tc { luftart(map.raumLuftart) }
+			X.tc { luftart(WX[map.raumLuftart]) }
 			X.tc { raumflache(map.raumFlache) }
 			X.tc { raumhohe(map.raumHohe) }
 			X.tc { raumlange(map.raumLange) }
@@ -337,15 +337,15 @@ class ProjektModelService {
 			X.tc { maxTurspaltHohe(map.raumMaxTurspaltHohe) }
 			// Türen
 			map.turen?.eachWithIndex { t, i ->
-				if (t.turBezeichnung && t.turBreite) {
-					tur() {
-						X.tc { name(t.turBezeichnung) } { name("Tür ${i}") }
-						X.tc { breite(t.turBreite as Integer) } { breite(610) }
-                                                X.tc { querschnitt(t.turQuerschnitt) } { querschnitt(0.0) }
-                                                X.tc { spalthohe(t.turSpalthohe) } { spalthohe(0.0) }
-						X.tc { dichtung(t.turDichtung) } { dichtung(true) }
-					}
-				}
+////				if (t.turBezeichnung && t.turBreite) {
+                tur() {
+                    X.tc { name(t.turBezeichnung) } { name("Tür ${i}") }
+                    X.tc { breite(t.turBreite as Integer) } { breite(0) }
+                    X.tc { querschnitt(t.turQuerschnitt) } { querschnitt(0.0) }
+                    X.tc { spalthohe(t.turSpalthohe) } { spalthohe(0.0) }
+                    X.tc { dichtung(t.turDichtung) } { dichtung(true) }
+                }
+////				}
 			}
 		}
 	}
