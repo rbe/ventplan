@@ -109,7 +109,7 @@ class ProjektModelService {
 					raumVerteilebene: X.vs { room."ventilebene".text() },
 					raumAnzahlUberstromVentile: X.vi { room."anzahlUberstromventile".text() },
 					raumUberstromElement: X.vs { room."uberstromelement".text() },
-					raumMaxTurspaltHohe:          X.vd { room."maxTurspaltHohe".text() },
+					raumMaxTurspaltHohe: X.vd { room."maxTurspaltHohe".text() },
 					turen: [] /*as ObservableList*/
 				] as ObservableMap
 				// Türen
@@ -117,12 +117,12 @@ class ProjektModelService {
 					r.turen << [
 							turBezeichnung: X.vs { tur."name".text() },
 							turBreite: X.vi { tur."breite".text() },
-                                                        turQuerschnitt: X.vd { tur."querschnitt".text() },
-                                                        turSpalthohe: X.vd { tur."spalthohe".text() },
+                            turQuerschnitt: X.vd { tur."querschnitt".text() },
+                            turSpalthohe: X.vd { tur."spalthohe".text() },
 							turDichtung: X.vb { tur."dichtung".text() == "true" }
 						]
 				}
-				println "####!!!!!!! r=${r.dump()}"
+				println "toMap: r=${r.dump()}"
 				raume << r
 			}
 			def anlage = p."anlage"
