@@ -778,7 +778,6 @@ class WacCalculationService {
 		if (DEBUG) println "berechneTurspalt: map=${map.dump()}"
 		if (map.raumLuftart.contains("ÜB")) {
             if (DEBUG) println "berechneTurspalt: Keine Berechnung von ÜB-Räumen"
-			return map
 		} else {
 			def anzTurenOhneDichtung = map.turen.findAll { it.turDichtung == false }?.size() ?: 0
 			def summeTurBreiten = map.turen.sum { it.turBreite.toDouble2() }

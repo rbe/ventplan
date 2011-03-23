@@ -321,7 +321,7 @@ class ProjektModel {
 	 * Siehe Ticket #60, #66.
 	 */
 	def checkRaum = { object, property, value, columnIndex ->
-		println "checkRaum: $object, $property, $value, $columnIndex"
+		if (DEBUG) println "checkRaum: $object, $property, $value, $columnIndex"
 		// Try to save double value; see ticket 60
 		object[property] = value.toDouble2()
 		prufeRaumdaten(map.raum.raume.find { it.position == object.position })
@@ -739,31 +739,28 @@ class ProjektModel {
 				map.raum.raume << raum
 				if (DEBUG) println "addRaum: adding raum.raume=${map.raum.raume}"
 			}
-
-			// disables sorting in raumTabelle
+			// Disables sorting in raumTabelle
             try {
                 view.raumTabelle.setSortable(false);
                 view.raumTabelle.getTableHeader().setDefaultRenderer(new javax.swing.table.JTableHeader().getDefaultRenderer());
             } catch (e) {
                 println "ProjektModel: addRaum: Error while modifying raumTabelle: ${e}"
             }
-
-            // disables sorting in raumVsUberstromelementeTabelle
+            // Disables sorting in raumVsUberstromelementeTabelle
             try {
                 view.raumVsUberstromelementeTabelle.setSortable(false);
                 view.raumVsUberstromelementeTabelle.getTableHeader().setDefaultRenderer(new javax.swing.table.JTableHeader().getDefaultRenderer());
             } catch (e) {
                 println "ProjektModel: addRaum: Error while modifying raumVsUberstromelementeTabelle: ${e}"
             }
-
-            // disables sorting in raumVsZuAbluftventileTabelle
+            // Disables sorting in raumVsZuAbluftventileTabelle
             try {
                 view.raumVsZuAbluftventileTabelle.setSortable(false);
                 view.raumVsZuAbluftventileTabelle.getTableHeader().setDefaultRenderer(new javax.swing.table.JTableHeader().getDefaultRenderer());
             } catch (e) {
                 println "ProjektModel: addRaum: Error while modifying raumVsZuAbluftventileTabelle: ${e}"
             }
-
+            // Türen
 			addRaumTurenModel()
 			// Sync table models
 			resyncRaumTableModels()

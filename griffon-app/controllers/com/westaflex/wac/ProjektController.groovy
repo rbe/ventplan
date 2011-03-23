@@ -175,7 +175,7 @@ class ProjektController {
 			// Türspalt berechnen
 			wacCalculationService.berechneTurspalt(raum)
 		}
-		println model.map.anlage.fortluft
+		println "afterLoading: model.map.anlage.fortluft=${model.map.anlage.fortluft}"
 		//
 		model.resyncRaumTableModels()
 		// Update tab title to ensure that no "unsaved-data-star" is displayed
@@ -358,10 +358,8 @@ class ProjektController {
 			// Save actual caret position
 			def personenanzahlCaretPos = view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition
 			def aussenluftVsProPersonCaretPos = view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition
-			println "view.gebaudeGeplantePersonenanzahl.caretPos 1=${view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition}"
 			// Hack: model is not updated when KeyListener is used on spinner.editor.textfield
 			model.map.gebaude.geplanteBelegung.personenanzahl = view.gebaudeGeplantePersonenanzahl.editor.textField.text?.toInteger() ?: 0
-			println "view.gebaudeGeplantePersonenanzahl.caretPos 2=${view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition}"
 			model.map.gebaude.geplanteBelegung.aussenluftVsProPerson = view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.text?.toInteger() ?: 0
 			model.map.gebaude.geplanteBelegung.with {
 				try {
@@ -373,7 +371,6 @@ class ProjektController {
 				}
 			}
 			// Set caret to old position; is moved through model update?
-			println "view.gebaudeGeplantePersonenanzahl.editor.textField.selectedText=${view.gebaudeGeplantePersonenanzahl.editor.textField.selectedText}"
 			view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition = personenanzahlCaretPos
 			view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition = aussenluftVsProPersonCaretPos
 			///publishEvent "AussenluftVsBerechnen"
@@ -757,14 +754,12 @@ class ProjektController {
     def raumBearbeitenTurEntfernen = { raumIndex = null ->
         if (DEBUG) println "raumBearbeitenTurEntfernen: view.raumBearbeitenTurenTabelle.selectedRow -> ${view.raumBearbeitenTurenTabelle.selectedRow}"
         def turenIndex = view.raumBearbeitenTurenTabelle.selectedRow
-        try
-        {
+        try {
             def rowIndex = model.meta.gewahlterRaum.position
             def raum = model.map.raum.raume[rowIndex]
             raum.turen[turenIndex] = [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
             if (DEBUG) println "raumBearbeitenTurEntfernen: ${raum}"
-        }
-        catch (e) {}
+        } catch (e) {}
         model.resyncRaumTableModels()
     }
 	
@@ -867,19 +862,12 @@ class ProjektController {
 			zentralgeratAktualisieren()
 		}
 	}
-	
-	/**
-	 * Raumvolumenströme - Zentralgerät: das Zentralgerat wurde geändert.
-	def onZentralgeratGeandert = {
-	}
-	 */
-	
+
 	/**
 	 * Aktualisiere Zentralgerät und Volumenstrom in allen Comboboxen
 	 */
 	def zentralgeratAktualisieren = {
 		doLater {
-			println "zentralgeratAktualisieren"
 			/*
 			// Füge Volumenströme des aktuellen Zentralgeräts in Combobox hinzu
 			// Raumvolumenströme
@@ -934,7 +922,8 @@ class ProjektController {
 				}
 				// Selektiere errechneten Volumenstrom
 				def roundedVs = wacCalculationService.round5(model.map.anlage.volumenstromZentralgerat)
-				println "model.map.anlage.volumenstromZentralgerat=${model.map.anlage.volumenstromZentralgerat} roundedVs=${roundedVs}"
+                // TODO if (DEBUG)
+				println "zentralgeratAktualisieren: model.map.anlage.volumenstromZentralgerat=${model.map.anlage.volumenstromZentralgerat} roundedVs=${roundedVs}"
 				def foundVs = model.meta.volumenstromZentralgerat.find { it.toInteger() == roundedVs }
 				// Wenn gerundeter Volumenstrom nicht gefunden wurde, setze Minimum des Zentralgeräts
 				if (!foundVs) {
@@ -957,13 +946,13 @@ class ProjektController {
 	 */
 	def onZentralgeratAktualisieren = {
 		doLater {
-			/*if (DEBUG)*/ println "onZentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
+			if (DEBUG) println "onZentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
 			if (!model.map.anlage.zentralgeratManuell) {
 				// Berechne Zentralgerät und Volumenstrom
 				def (zentralgerat, nl) = wacCalculationService.berechneZentralgerat(model.map)
 				model.map.anlage.zentralgerat = zentralgerat
 				model.map.anlage.volumenstromZentralgerat = wacCalculationService.round5(nl)
-				/*if (DEBUG)*/ println "zentralgeratAktualisieren: zentralgerat=${model.map.anlage.zentralgerat}, nl=${nl}/${model.map.anlage.volumenstromZentralgerat}"
+				/*if (DEBUG)*/ println "onZentralgeratAktualisieren: zentralgerat=${model.map.anlage.zentralgerat}, nl=${nl}/${model.map.anlage.volumenstromZentralgerat}"
 				zentralgeratAktualisieren()
 			}
 		}
