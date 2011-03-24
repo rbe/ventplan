@@ -1,10 +1,13 @@
-/**
- * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/services/com/westaflex/wac/WacCalculationService.groovy
- * 
- * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
- * Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
- * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
- * 
+/*
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
+ *
+ * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
+ * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
+ *
+ * Project wac
+ * /Users/rbe/project/wac/griffon-app/services/com/westaflex/wac/WacCalculationService.groovy
+ * Last modified at 23.03.2011 13:15:26 by rbe
  */
 package com.westaflex.wac
 
@@ -323,17 +326,20 @@ class WacCalculationService {
 	 * @param map model.map
 	 * @param b true=Raumvolumenströme, false=Gesamtraumvolumenstrom
 	 */
-	void autoLuftmenge(map, Boolean b) {
+	void autoLuftmenge(map/*, Boolean b*/) {
 		// LTM nicht erforderlich?
 		if (!ltmErforderlich(map)) {
 			map.messages.ltm = "Es sind keine lüftungstechnischen Maßnahmen notwendig!"
 		}
 		// LTM: erste Berechnung für Raumvolumenströme
 		// Summiere Daten aus Raumdaten
-		Double gesamtZuluftfaktor = zuluftRaume(map).inject(0.0d) { o, n ->
+		Double gesamtZuluftfaktor = 0.0d
+        gesamtZuluftfaktor = zuluftRaume(map)?.inject(0.0d) { o, n ->
 				o + n.raumZuluftfaktor
 			}
-		Double gesamtAbluftVs = abluftRaume(map).inject(0.0d) { o, n ->
+        // Eingegebener oder berechneter Wert? Eingegebener, wird erst weiter unten errechnet!
+		Double gesamtAbluftVs = 0.0d
+        gesamtAbluftVs = abluftRaume(map)?.inject(0.0d) { o, n ->
 				o + n.raumAbluftVolumenstrom
 			}
 		// Gesamt-Außenluftvolumenstrom bestimmen
@@ -344,8 +350,10 @@ class WacCalculationService {
 					) * (map.gebaude.faktorBesondereAnforderungen ?: 1.0d)
 		// Gesamt-Außenluftvolumenstrom für lüftungstechnische Maßnahmen
 		Double gesamtAvsLTM = 0.0d
-		if (map.aussenluftVs.infiltrationBerechnen && b) {
-			gesamtAvsLTM = gesamtAussenluft - infiltration(map, true)
+        def infilt = infiltration(map, true)
+        if (DEBUG) println "autoLuftmenge: infilt=${infilt}"
+		if (map.aussenluftVs.infiltrationBerechnen/* && b*/) {
+			gesamtAvsLTM = gesamtAussenluft - infilt
 		} else {
 			gesamtAvsLTM = gesamtAussenluft
 		}
@@ -356,10 +364,12 @@ class WacCalculationService {
 		map.raum.ltmZuluftSumme = 0.0d
 		// Alle Räume, die einen Abluftvolumenstrom > 0 haben...
 		map.raum.raume.grep { it.raumAbluftVolumenstrom > 0.0d }.each {
+            // Abluftvolumenstrom abzgl. Infiltration errechnen
 			Double ltmAbluftRaum = Math.round(gesamtAvsLTM / gesamtAbluftVs * it.raumAbluftVolumenstrom)
+            if (DEBUG) println "autoLuftmenge: Math.round(${gesamtAvsLTM} / ${gesamtAbluftVs} * ${it.raumAbluftVolumenstrom})=${ltmAbluftRaum}"
 			// Raumvolumenströme berechnen?
-			if (b) {
-				it.raumAbluftVolumenstrom = ltmAbluftRaum
+//			if (b) {
+				it.raumAbluftVolumenstromInfiltration = ltmAbluftRaum
 				if (it.raumVolumen > 0) {
 					it.raumLuftwechsel = (ltmAbluftRaum / it.raumVolumen)
 				} else {
@@ -368,9 +378,10 @@ class WacCalculationService {
 				// ZU/AB
 				if (it.raumLuftart.contains("ZU/AB")) {
 					Double ltmZuluftRaum = Math.round(gesamtAvsLTM * it.raumZuluftfaktor / gesamtZuluftfaktor)
+                    // TODO Auch abzgl. Infiltration als eigener Wert?
 					it.raumZuluftVolumenstrom = ltmZuluftRaum
-					it.raumAbluftVolumenstrom = ltmAbluftRaum
-					if (ltmZuluftRaum > ltmAbluftRaum) {
+////					it.raumAbluftVolumenstromInfiltration = ltmAbluftRaum
+                    if (ltmZuluftRaum > ltmAbluftRaum) {
 						//it.raumVolumenstrom = ltmZuluftRaum
 						it.raumLuftwechsel = (ltmZuluftRaum / it.raumVolumen)
 					} else {
@@ -379,9 +390,9 @@ class WacCalculationService {
 					}
 					ltmZuluftSumme += ltmAbluftRaum
 				}
-			} else {
-				ltmAbluftSumme += ltmAbluftRaum
-			}
+//			} else {
+//				ltmAbluftSumme += ltmAbluftRaum
+//			}
 			map.raum.ltmAbluftSumme = ltmAbluftSumme
 		}
 		// LTM: zweite Berechnung für Raumvolumenströme
@@ -389,12 +400,13 @@ class WacCalculationService {
 			it.raumZuluftfaktor > 0.0d && it.raumLuftart != "ZU/AB"
 		}.each {
 			Double ltmZuluftRaum = Math.round(gesamtAvsLTM * it.raumZuluftfaktor / gesamtZuluftfaktor)
-			if (b) {
+//			if (b) {
+                // TODO Auch abzgl. Infiltration berechnen?
 				it.raumZuluftVolumenstrom = ltmZuluftRaum
 				it.raumLuftwechsel = ltmZuluftRaum / it.raumVolumen
-			} else {
-				ltmZuluftSumme += ltmZuluftRaum
-			}
+//			} else {
+//				ltmZuluftSumme += ltmZuluftRaum
+//			}
 			map.raum.ltmZuluftSumme = ltmZuluftSumme
 		}
 		// Überströmvolumenstrom = Vorschlag: Raumvolumenstrom
@@ -404,11 +416,13 @@ class WacCalculationService {
 					it.raumUberstromVolumenstrom = it.raumZuluftVolumenstrom
 					break
 				case "AB":
-					it.raumUberstromVolumenstrom = it.raumAbluftVolumenstrom
+                    // TODO Auch abzgl. Infiltration?
+					it.raumUberstromVolumenstrom = it.raumAbluftVolumenstromInfiltration
 					break
 				case "ZU/AB":
+                    // TODO Auch abzgl. Infiltration?
 					it.raumUberstromVolumenstrom =
-						java.lang.Math.abs(it.raumZuluftVolumenstrom - it.raumAbluftVolumenstrom)
+						java.lang.Math.abs(it.raumZuluftVolumenstrom - it.raumAbluftVolumenstromInfiltration)
 					break
 			}
 		}
@@ -433,8 +447,8 @@ class WacCalculationService {
             map.aussenluftVs.massnahme = ""
         }
 		//
-		autoLuftmenge(map, true)
-		autoLuftmenge(map, false)
+		autoLuftmenge(map/*, true*/)
+		//autoLuftmenge(map, false)
 		//
 		Double grundluftung = gesamtAvs //gesamtAussenluftVs(map)
 		Double geluftetesVolumen = map.gebaude.geometrie.geluftetesVolumen ?: 0.0d
@@ -454,8 +468,10 @@ class WacCalculationService {
 		map.aussenluftVs.gesamtAvsNeLvsFs = feuchteluftung
 		map.aussenluftVs.gesamtAvsNeLwFs = feuchteluftung / geluftetesVolumen
 		// Ausgabe der Gesamt-Raumabluft-Volumenströme
-		grundluftung = abluftRaume(map).inject(0.0d) { o, n ->
-			o + n.raumAbluftVolumenstrom
+		grundluftung = 0.0d
+        grundluftung = abluftRaume(map)?.inject(0.0d) { o, n ->
+            // TODO Auch abzgl. Infiltration?
+			o + n.raumAbluftVolumenstromInfiltration
 		}
 		map.aussenluftVs.gesamtAvsRaumLvsNl = grundluftung
 		map.aussenluftVs.gesamtAvsRaumLwNl = grundluftung / geluftetesVolumen
@@ -481,7 +497,7 @@ class WacCalculationService {
 		feuchteluftung = wsFaktor * grundluftung
 		map.aussenluftVs.gesamtAvsPersonLvsFs = feuchteluftung
 		map.aussenluftVs.gesamtAvsPersonLwFs = feuchteluftung / geluftetesVolumen
-		// Ausgabe der Volumenströme für LTM
+		// Ausgabe der Gesamt-Luftvolumenströme für LTM
 		grundluftung = Math.max(map.raum.ltmAbluftSumme, map.raum.ltmZuluftSumme)
 		grundluftung = Math.max(gesamtAvs/*gesamtAussenluftVs(map)*/, grundluftung)
 		grundluftung = Math.max(map.gebaude.geplanteBelegung.mindestaussenluftrate, grundluftung)
@@ -495,6 +511,9 @@ class WacCalculationService {
 		map.aussenluftVs.gesamtLvsLtmLvsIl = intensivluftung
 		map.aussenluftVs.gesamtLvsLtmLwIl = intensivluftung / geluftetesVolumen
 		map.aussenluftVs.gesamtLvsLtmLvsFs = wsFaktor * grundluftung - infiltration
+        // Lüftung zum Feuchteschutz = Nennlüftung / 1.3
+        map.aussenluftVs.gesamtLvsLtmLvsFs = map.aussenluftVs.gesamtLvsLtmLvsNl / 1.3f
+        map.aussenluftVs.gesamtLvsLtmLwFs = map.aussenluftVs.gesamtLvsLtmLwNl / 1.3f
 		// Raumvolumenströme - Gesamtaussenluftvolumentrom mit Infiltration
 		map.raum.raumVs.gesamtaussenluftVsMitInfiltration = grundluftung
 		// Raumvolumenströme - Luftwechsel der Nutzungseinheit
@@ -549,9 +568,11 @@ class WacCalculationService {
 			if (ventil) {
 				def maxVolumenstrom = wacModelService.getMaxVolumenstrom(ventil)
 				// Anzahl Ventile
-				map.raumAnzahlAbluftventile = java.lang.Math.ceil(map.raumAbluftVolumenstrom / maxVolumenstrom)
+                // TODO Auch abzgl. Infiltration?
+				map.raumAnzahlAbluftventile = java.lang.Math.ceil(map.raumAbluftVolumenstromInfiltration / maxVolumenstrom)
 				// Luftmenge je Ventil
-				map.raumAbluftmengeJeVentil = map.raumAbluftVolumenstrom / map.raumAnzahlAbluftventile
+                // TODO Auch abzgl. Infiltration?
+				map.raumAbluftmengeJeVentil = map.raumAbluftVolumenstromInfiltration / map.raumAnzahlAbluftventile
 			}
 		}
 		if (DEBUG) println "berechneZuAbluftventile: ${map}"
@@ -565,32 +586,35 @@ class WacCalculationService {
 	def berechneUberstromelemente(map) {
 		// 1-3 wurden woanders erledigt
 		// 4
-		if (DEBUG) println "berechneUberstromelemente: map.raumUberstromElement=${map?.raumUberstromElement?.dump()}"
-		def maxVolumenstrom = wacModelService.getMaxVolumenstrom(map.raumUberstromElement)
-		// 5b
-		if (DEBUG) println "berechneUberstromelemente: map.turen=${map?.turen?.dump()}"
-		if (DEBUG) println "berechneUberstromelemente: map.raumMaxTurspaltHohe=${map.raumMaxTurspaltHohe}"
-		if (!map.raumMaxTurspaltHohe) {
-			println "WARNING: value for maxTurspaltHohe is missing, using default: 10.0 -> ${map?.dump()}"
-			map.raumMaxTurspaltHohe = 10.0
-		}
-		def querschnitt = map.turen.inject(0.0d, { o, n -> o + n.turBreite * map.raumMaxTurspaltHohe })
-		// 5b
-		def anzTurenOhneDichtung = map.turen.findAll { !it.turDichtung }?.size() ?: 0
-		// 5a
-		def vsMaxTurspalt = (querschnitt + 2500 * anzTurenOhneDichtung) / 100 / 3.1 * java.lang.Math.sqrt(1.5d)
-		// 5
-		if (DEBUG) println "berechneUberstromelemente: map.raumUberstromVolumenstrom=${map.raumUberstromVolumenstrom?.dump()}"
-        // WAC-129: Gebäudedaten - Geplante Belegung -> map.raumUberstromVolumenstrom ist null!
-        // try-catch um map.raumUberstromVolumenstrom und als default Wert 0.00 als Double setzen.
-        try {
-            def usRechenwert = map.raumUberstromVolumenstrom - vsMaxTurspalt
-            // 6
-            map.raumAnzahlUberstromVentile = java.lang.Math.ceil(usRechenwert / maxVolumenstrom)
-        } catch (e) {
-            e.printStackTrace()
-            map.raumAnzahlUberstromVentile = 0.0d
+		if (DEBUG) println "berechneUberstromelemente: map.raumUberstromElement=${map?.raumUberstromElement?.dump()} map=${map?.dump()}"
+        if (map.raumUberstromElement) {
+            def maxVolumenstrom = wacModelService.getMaxVolumenstrom(map.raumUberstromElement)
+            // 5b
+            if (DEBUG) println "berechneUberstromelemente: map.turen=${map?.turen?.dump()}"
+            if (DEBUG) println "berechneUberstromelemente: map.raumMaxTurspaltHohe=${map.raumMaxTurspaltHohe}"
+            if (!map.raumMaxTurspaltHohe) {
+                println "WARNING: value for maxTurspaltHohe is missing, using default: 10.0 -> ${map?.dump()}"
+                map.raumMaxTurspaltHohe = 10.0
+            }
+            def querschnitt = map.turen.inject(0.0d, { o, n -> o + n.turBreite * map.raumMaxTurspaltHohe })
+            // 5b
+            def anzTurenOhneDichtung = map.turen.findAll { !it.turDichtung }?.size() ?: 0
+            // 5a
+            def vsMaxTurspalt = (querschnitt + 2500 * anzTurenOhneDichtung) / 100 / 3.1 * java.lang.Math.sqrt(1.5d)
+            // 5
+            if (DEBUG) println "berechneUberstromelemente: map.raumUberstromVolumenstrom=${map.raumUberstromVolumenstrom?.dump()}"
+            // WAC-129: Gebäudedaten - Geplante Belegung -> map.raumUberstromVolumenstrom ist null!
+            // try-catch um map.raumUberstromVolumenstrom und als default Wert 0.00 als Double setzen.
+            try {
+                def usRechenwert = map.raumUberstromVolumenstrom - vsMaxTurspalt
+                // 6
+                map.raumAnzahlUberstromVentile = java.lang.Math.ceil(usRechenwert / maxVolumenstrom)
+            } catch (e) {
+                e.printStackTrace()
+                map.raumAnzahlUberstromVentile = 0.0d
+            }
         }
+        map
 	}
 	
 	/**
@@ -759,20 +783,22 @@ class WacCalculationService {
 		// Gilt nicht für Überström-Räume
 		if (DEBUG) println "berechneTurspalt: map=${map.dump()}"
 		if (map.raumLuftart.contains("ÜB")) {
-			return
+            if (DEBUG) println "berechneTurspalt: Keine Berechnung von ÜB-Räumen"
 		} else {
 			def anzTurenOhneDichtung = map.turen.findAll { it.turDichtung == false }?.size() ?: 0
 			def summeTurBreiten = map.turen.sum { it.turBreite.toDouble2() }
+            if (DEBUG) println "berechneTurspalt: anzTurenOhneDichtung=${anzTurenOhneDichtung} summeTurBreiten=${summeTurBreiten}"
 			map.turen.findAll { it.turBreite > 0 }?.each {
 				// Existiert ein Durchgang? Ja, überspringen
 				if (it.turBezeichnung ==~ /.*Durchgang.*/) return
-				def tsqf =
-					(100 * 3.1d * map.raumUberstromVolumenstrom / java.lang.Math.sqrt(1.5d))
-					- 2500 * anzTurenOhneDichtung
+                def abziehen = 2500 * anzTurenOhneDichtung
+				def tsqf = (100 * 3.1d * map.raumUberstromVolumenstrom / java.lang.Math.sqrt(1.5d)) - abziehen
 				it.turSpalthohe = tsqf / summeTurBreiten
 				it.turQuerschnitt = tsqf * it.turBreite / summeTurBreiten
+                if (DEBUG) println "berechneTurspalt: abziehen=${abziehen} tsqf=${tsqf} turSpalthohe=${it.turSpalthohe} turQuerschnitt=${it.turQuerschnitt}"
 			}
 		}
+        map
 	}
 	
 	/**

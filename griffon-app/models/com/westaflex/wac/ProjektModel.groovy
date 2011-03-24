@@ -57,6 +57,7 @@ class ProjektModel {
 			raumLuftwechsel: 0.0d,
 			raumZuluftVolumenstrom: 0.0d,
 			raumAbluftVolumenstrom: 0.0d,
+            raumAbluftVolumenstromInfiltration: 0.0d, // Abluftvs abzgl. Infiltration
 			raumBezeichnungAbluftventile: "",
 			raumAnzahlAbluftventile: 0,
 			raumAbluftmengeJeVentil: 0.0d,
@@ -66,7 +67,7 @@ class ProjektModel {
 			raumVerteilebene: "",
 			raumAnzahlUberstromVentile: 0,
 			raumUberstromElement: "",
-			raumUberstromVolumenstrom: "",
+			raumUberstromVolumenstrom: 0.0d,
 			raumNummer: "",
 			raumMaxTurspaltHohe: 10.0d,
 			turen: []
@@ -275,6 +276,7 @@ class ProjektModel {
 					raumAbluftmengeJeVentil = 0.0d 
 					raumBezeichnungAbluftventile = ""
 					raumAbluftVolumenstrom = 0.0d
+                    raumAbluftVolumenstromInfiltration = 0.0d
 				}
                 prufeFaktor(raum)
 				break
@@ -305,6 +307,7 @@ class ProjektModel {
                 raumAbluftmengeJeVentil = 0.0d
                 raumBezeichnungAbluftventile = ""
                 raumAbluftVolumenstrom = 0.0d
+                raumAbluftVolumenstromInfiltration = 0.0d
             }
         }
         //
@@ -318,7 +321,7 @@ class ProjektModel {
 	 * Siehe Ticket #60, #66.
 	 */
 	def checkRaum = { object, property, value, columnIndex ->
-		println "checkRaum: $object, $property, $value, $columnIndex"
+		if (DEBUG) println "checkRaum: $object, $property, $value, $columnIndex"
 		// Try to save double value; see ticket 60
 		object[property] = value.toDouble2()
 		prufeRaumdaten(map.raum.raume.find { it.position == object.position })
@@ -438,7 +441,7 @@ class ProjektModel {
 	 * @param preValueSet Closure to execute before value was set
 	 */
 	def gltmClosureCheckbox = { columnNames, propertyNames, writable, tableModel, postValueSet = null, preValueSet = null ->
-		println "gltmClosureCheckbox: tablelModel=${tableModel?.dump()}"
+		if (DEBUG) println "gltmClosureCheckbox: tablelModel=${tableModel?.dump()}"
 		new ca.odell.glazedlists.swing.EventTableModel(tableModel, [
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { columnIndex -> columnNames[columnIndex] },
@@ -500,12 +503,13 @@ class ProjektModel {
 	}
 	
 	/**
-	 * Raumdaten - TableModel
+	 * Raumdaten - TableModel.
+     * Eingegebenen Abluftvolumenstrom (ohne Abzug Infiltration) anzeigen
 	 */
 	def createRaumTableModel() {
 		def columnNames =   ["Raum",            "Geschoss",     "Luftart",     ws("Raumfläche<br/>[m²]"), ws("Raumhöhe<br/>[m]"), "Zuluftfaktor",     "Abluftvolumenstrom"] as String[]
 		def propertyNames = ["raumBezeichnung", "raumGeschoss", "raumLuftart", "raumFlache",              "raumHohe",             "raumZuluftfaktor", "raumAbluftVolumenstrom"] as String[]
-		def writable      = [true,              true,           false,         true,                      true,                   true,               true] as boolean[]
+		def writable      = [true,              true,           true,          true,                      true,                   true,               true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			def myTempMap = map.raum.raume.find { it.position == object.position }
 			myTempMap[columnIndex] = value
@@ -520,11 +524,12 @@ class ProjektModel {
 	
 	/**
 	 * Raumvolumenströme, Zu-/Abluftventile - TableModel
+     * Abluftvolumenstrom abzgl. Infiltration anzeigen (nicht änderbar).
 	 */
 	def createRaumVsZuAbluftventileTableModel() {
-		def columnNames =   ["Raum",            "Luftart",     ws("Raum [m³]"), ws("Luftwechsel<br/>[1/h]"), ws("Zuluft<br/>[m³/h]"), ws("Bezeichnung<br/>Zuluftventile"),    ws("Anzahl<br/>Zuluftventile"),    ws("Zuluftmenge<br/>je Ventil"), ws("Abluft<br/>[m³/h]"), ws("Bezeichnung<br/>Abluftventile"),    ws("Anzahl<br/>Abluftventile"), ws("Abluftmenge<br/>je Ventil"),   ws("Verteil-<br/>ebene")] as String[]
-		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",              "raumLuftwechsel",           "raumZuluftVolumenstrom",             "raumBezeichnungZuluftventile",         "raumAnzahlZuluftventile",         "raumZuluftmengeJeVentil",       "raumAbluftVolumenstrom",             "raumBezeichnungAbluftventile",         "raumAnzahlAbluftventile",      "raumAbluftmengeJeVentil",         "raumVerteilebene"] as String[]
-		def writable      = [true,              false,         false,                      false,                       false,                                true,                                   false,                             false,                           false,                                true,                                   false,                          false,                             true] as boolean[]
+		def columnNames =   ["Raum",            "Luftart",     ws("Raum [m³]"), ws("Luftwechsel<br/>[1/h]"), ws("Zuluft<br/>[m³/h]"),  ws("Bezeichnung<br/>Zuluftventile"),    ws("Anzahl<br/>Zuluftventile"),    ws("Zuluftmenge<br/>je Ventil"), ws("Abluft<br/>[m³/h]"),               ws("Bezeichnung<br/>Abluftventile"),  ws("Anzahl<br/>Abluftventile"), ws("Abluftmenge<br/>je Ventil"), "Verteilebene"] as String[]
+		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen",   "raumLuftwechsel",           "raumZuluftVolumenstrom", "raumBezeichnungZuluftventile",         "raumAnzahlZuluftventile",         "raumZuluftmengeJeVentil",       "raumAbluftVolumenstromInfiltration",  "raumBezeichnungAbluftventile",       "raumAnzahlAbluftventile",      "raumAbluftmengeJeVentil",       "raumVerteilebene"] as String[]
+		def writable      = [true,              true,          false,           false,                       false,                    true,                                   false,                             false,                           false,                                 true,                                 false,                          false,                           true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			// Call ProjektController
 			app.controllers[mvcId].raumGeandert()
@@ -538,9 +543,9 @@ class ProjektModel {
 	 * Raumvolumenströme - Überströmventile TableModel
 	 */
 	def createRaumVsUberstromelementeTableModel() {
-		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",             "Überström [m³/h]", "Überström-Elemente"] as String[]
-		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile", "raumUberstromVolumenstrom",     "raumUberstromElement"] as String[]
-		def writable      = [true,              false,         false,                        true,                            true] as boolean[]
+		def columnNames =   ["Raum",            "Luftart",     "Anzahl Ventile",             "Überström [m³/h]",            "Überström-Elemente"] as String[]
+		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile", "raumUberstromVolumenstrom",   "raumUberstromElement"] as String[]
+		def writable      = [true,              true,          false,                        true,                          true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			// Call ProjektController
 			app.controllers[mvcId].raumGeandert()
@@ -734,31 +739,28 @@ class ProjektModel {
 				map.raum.raume << raum
 				if (DEBUG) println "addRaum: adding raum.raume=${map.raum.raume}"
 			}
-
-			// disables sorting in raumTabelle
+			// Disables sorting in raumTabelle
             try {
                 view.raumTabelle.setSortable(false);
                 view.raumTabelle.getTableHeader().setDefaultRenderer(new javax.swing.table.JTableHeader().getDefaultRenderer());
             } catch (e) {
                 println "ProjektModel: addRaum: Error while modifying raumTabelle: ${e}"
             }
-
-            // disables sorting in raumVsUberstromelementeTabelle
+            // Disables sorting in raumVsUberstromelementeTabelle
             try {
                 view.raumVsUberstromelementeTabelle.setSortable(false);
                 view.raumVsUberstromelementeTabelle.getTableHeader().setDefaultRenderer(new javax.swing.table.JTableHeader().getDefaultRenderer());
             } catch (e) {
                 println "ProjektModel: addRaum: Error while modifying raumVsUberstromelementeTabelle: ${e}"
             }
-
-            // disables sorting in raumVsZuAbluftventileTabelle
+            // Disables sorting in raumVsZuAbluftventileTabelle
             try {
                 view.raumVsZuAbluftventileTabelle.setSortable(false);
                 view.raumVsZuAbluftventileTabelle.getTableHeader().setDefaultRenderer(new javax.swing.table.JTableHeader().getDefaultRenderer());
             } catch (e) {
                 println "ProjektModel: addRaum: Error while modifying raumVsZuAbluftventileTabelle: ${e}"
             }
-
+            // Türen
 			addRaumTurenModel()
 			// Sync table models
 			resyncRaumTableModels()

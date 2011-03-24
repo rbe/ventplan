@@ -1,11 +1,13 @@
-/**
- * /Users/rbe/project/wac2/griffon-app/bindings/com/westaflex/wac/AussenluftVsBindings.groovy
- * 
- * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
- * Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
- * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
- * 
- * Created by: rbe
+/*
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
+ *
+ * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
+ * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
+ *
+ * Project wac
+ * /Users/rbe/project/wac/griffon-app/bindings/com/westaflex/wac/AussenluftVsBindings.groovy
+ * Last modified at 23.03.2011 13:16:37 by rbe
  */
 package com.westaflex.wac
 
@@ -45,13 +47,14 @@ bind(source: model.map.aussenluftVs, sourceProperty: "gesamtAvsPersonLwRl",  tar
 bind(source: model.map.aussenluftVs, sourceProperty: "gesamtAvsPersonLwNl",  target: gesamtAvsPersonLwNl,  targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.aussenluftVs, sourceProperty: "gesamtAvsPersonLwIl",  target: gesamtAvsPersonLwIl,  targetProperty: "text", converter: GH.toString2Converter)
 // Gesamt-Luftvolumenstrom für lüftungstechnische Maßnahmen
+bind(source: model.map.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsFs", target: gesamtLvsLtmLvsFs, targetProperty: "text", converter: GH.toString2Round5Converter)
 bind(source: model.map.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsRl", target: gesamtLvsLtmLvsRl, targetProperty: "text", converter: GH.toString2Round5Converter)
 bind(source: model.map.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsNl", target: gesamtLvsLtmLvsNl, targetProperty: "text", converter: GH.toString2Round5Converter)
 bind(source: model.map.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsIl", target: gesamtLvsLtmLvsIl, targetProperty: "text", converter: GH.toString2Round5Converter)
+bind(source: model.map.aussenluftVs, sourceProperty: "gesamtLvsLtmLwFs",  target: gesamtLvsLtmLwFs,  targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.aussenluftVs, sourceProperty: "gesamtLvsLtmLwRl",  target: gesamtLvsLtmLwRl,  targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.aussenluftVs, sourceProperty: "gesamtLvsLtmLwNl",  target: gesamtLvsLtmLwNl,  targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.aussenluftVs, sourceProperty: "gesamtLvsLtmLwIl",  target: gesamtLvsLtmLwIl,  targetProperty: "text", converter: GH.toString2Converter)
-
 // Mit Infiltrationsanteil berechnen
 bind(source: model.map.aussenluftVs, sourceProperty: "infiltrationBerechnen", target: aussenluftVsGesamtLtmInfiltrationsanteil, targetProperty: "selected", mutual: true)
 aussenluftVsGesamtLtmInfiltrationsanteil.actionPerformed = controller.berechneAussenluftVs

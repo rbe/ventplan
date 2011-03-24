@@ -32,14 +32,6 @@ class OooService {
 	 * Constructor.
 	 */
 	def OooService() {
-		// Get template and temporary file
-		def stream = Wac2Resource.getOOoAsStream("WestaAuslegung")
-		westaAuslegungTemplate = java.io.File.createTempFile("wacauslegung", ".ott")
-		westaAuslegungTemplate.deleteOnExit()
-		// Copy stream from jar into temporary file
-		westaAuslegungTemplate.newOutputStream().write(stream.bytes)
-		// Close stream
-		stream.close()
 	}
 	
 	/**
@@ -56,6 +48,14 @@ class OooService {
 				group1: ["wac2-${new java.util.Date().format("yyyyMMddHHmmss")}"]
 			)
 		ocm.killallLocal()
+		// Get template and temporary file
+		def stream = Wac2Resource.getOOoAsStream("WestaAuslegung")
+		westaAuslegungTemplate = java.io.File.createTempFile("wacauslegung", ".ott")
+		westaAuslegungTemplate.deleteOnExit()
+		// Copy stream from jar into temporary file
+		westaAuslegungTemplate.newOutputStream().write(stream.bytes)
+		// Close stream
+		stream.close()
 	}
 	
 	/**

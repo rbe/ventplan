@@ -1,11 +1,13 @@
-/**
- * /Users/rbe/project/wac2/griffon-app/util/com/bensmann/griffon/WpxConstants.groovy
- * 
- * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
- * Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
- * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
- * 
- * Created by: rbe
+/*
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
+ *
+ * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
+ * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
+ *
+ * Project wac
+ * /Users/rbe/project/wac/griffon-app/util/com/westaflex/wac/WpxConstants.groovy
+ * Last modified at 23.03.2011 12:55:41 by rbe
  */
 package com.westaflex.wac
 
@@ -17,6 +19,8 @@ import com.bensmann.griffon.GriffonHelper as GH
  * Siehe Ticket #20.
  */
 class WpxConstants {
+
+    private static boolean DEBUG = false
 	
 	private static final m = [
 			// Gebäudetyp
@@ -58,6 +62,7 @@ class WpxConstants {
 			"Kellerraum": "KEL",
 			"WC": "WC",
 			"Küche": "KUC",
+            "Kochnische": "KUC",
 			"Bad mit/ohne WC": "BAD",
 			"Duschraum": "DUS",
 			"Sauna": "SAU",
@@ -70,12 +75,13 @@ class WpxConstants {
 	 * Ticket #20
 	 */
 	def static get(String p) {
-		print "WpxConstants: mapping ${p?.dump()}"
+		if (DEBUG) print "WpxConstants: mapping ${p?.dump()}"
 		def r = WpxConstants.m[p]
-		if (!r) {
-			r = GH.invertMap(WpxConstants.m)[p]
-		}
-		println " -> ${r?.dump()}"
+        // Search reverse (value -> key)
+		if (!r) r = GH.invertMap(WpxConstants.m)[p]
+        // No result? Return input.
+        if (!r) r = p
+		if (DEBUG) println " -> ${r?.dump()}"
 		r
 	}
 	

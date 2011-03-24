@@ -1,11 +1,13 @@
-/**
- * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/bindings/com/westaflex/wac/RaumBearbeitenBindings.groovy
- * 
- * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
- * Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
- * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
- * 
- * Created by: rbe
+/*
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
+ *
+ * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
+ * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
+ *
+ * Project wac
+ * /Users/rbe/project/wac/griffon-app/bindings/com/westaflex/wac/RaumBearbeitenBindings.groovy
+ * Last modified at 22.03.2011 13:07:54 by rbe
  */
 package com.westaflex.wac
 
@@ -24,8 +26,6 @@ bind(source: model.meta.gewahlterRaum, sourceProperty: "raumAbluftVolumenstrom",
 [raumBearbeitenLuftartFaktorZuluftverteilung, raumBearbeitenLuftartAbluftVs].each {
 	it.focusLost = controller.raumBearbeitenGeandert
 }
-// TODO Durchlassposition
-// TODO Kanalanschluß
 // Türen
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumMaxTurspaltHohe", target: raumBearbeitenDetailsTurspalthohe, targetProperty: "text", converter: GH.toString2Converter, mutual: true)
 // Optional
@@ -39,6 +39,5 @@ bind(source: model.meta.gewahlterRaum, sourceProperty: "raumVolumen", target: ra
 }
 // Schliessen
 raumBearbeitenSchliessen.actionPerformed = controller.raumBearbeitenSchliessen
-
 // Tur entfernen / Werte zuruecksetzen
 raumBearbeitenDetailsTurentfernen.actionPerformed = controller.raumBearbeitenTurEntfernen
