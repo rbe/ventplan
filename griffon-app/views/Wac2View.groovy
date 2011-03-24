@@ -55,5 +55,7 @@ wac2Frame = application(title: 'WestaWAC 2',
 	// The status bar
 	jxstatusBar(id: "mainStatusBar") {
 		label(id: "mainStatusBarText", text: bind { model.statusBarText })
+
+        progressBar(id: "mainStatusProgressBar", minimum: 0, maximum: 100, indeterminate: bind { model.statusProgressBarIndeterminate } )
 	}
 }
