@@ -46,13 +46,16 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
 
             panel(id: "raumBearbeitenTabelle", layout: new MigLayout("", "[left]para[left]para[left]", "[]0[]"), constraints: "cell 0 2") {
                 label(text: "Maximale Türspalthöhe [mm]")
-                textField(id: "raumBearbeitenDetailsTurspalthohe", text: "10,00", constraints: "width 100px")
+                textField(id: "raumBearbeitenDetailsTurspalthohe"/*, text: "10,00"*/, constraints: "width 100px")
                 button(id: "raumBearbeitenDetailsTurentfernen", text: "Tür entfernen", constraints: "wrap")
 
                 jideScrollPane(constraints: "height 150px, span") {
                     table(id: "raumBearbeitenTurenTabelle", model: model.createRaumTurenTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
                     }
                 }
+                
+                // WAC-165
+                label(id: "raumBearbeitenTurspaltHinweis", foreground: java.awt.Color.RED, constraints: "span 2")
             }
 
             panel(id: "raumBearbeitenOptional", border: titledBorder("Optional"), layout: new MigLayout("", "[left]para[right]para[left]para[left]para[right]para[left]para[left]para[right]para[left]", "[]0[]"), constraints: "cell 0 3") {

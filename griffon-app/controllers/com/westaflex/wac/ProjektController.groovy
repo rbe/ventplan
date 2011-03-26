@@ -737,14 +737,21 @@ class ProjektController {
 	/**
 	 * Berechne Türen eines bestimmten Raumes.
 	 */
-	def berechneTuren = { raumIndex = null ->
+	def berechneTuren = { evt = null, raumIndex = null ->
 		// Hole gewählten Raum
 		def raum = model.map.raum.raume[raumIndex ?: view.raumTabelle.selectedRow]
 		// Türen berechnen?
 		if (raum.turen.findAll { it.turBreite > 0 }?.size() > 0 && raum.raumUberstromVolumenstrom) {
-            // TODO WAC-126 Keine Berechnung wenn Türdichtung-Checkbox geklickt
-            println "WAC-126: berechneTuren=${raum}"
 			wacCalculationService.berechneTurspalt(raum)
+            // WAC-165: Hinweis: Türspalt > max. Türspalthöhe?
+            def turSpalthoheUberschritten = raum.turen.findAll {
+                it.turSpalthohe > model.meta.gewahlterRaum.raumMaxTurspaltHohe.toDouble2()
+            }?.size() ?: 0
+            if (turSpalthoheUberschritten > 0) {
+                model.meta.gewahlterRaum.raumTurspaltHinweis = "Hinweis: Maximale Türspalthöhe überschritten!"
+            } else {
+                model.meta.gewahlterRaum.raumTurspaltHinweis = ""
+            }
 		}
 	}
 
@@ -761,6 +768,7 @@ class ProjektController {
             if (DEBUG) println "raumBearbeitenTurEntfernen: ${raum}"
         } catch (e) {}
         model.resyncRaumTableModels()
+        berechneTuren()
     }
 	
 	/**
