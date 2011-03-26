@@ -1,11 +1,13 @@
-/**
- * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/views/com/westaflex/wac/GebaudedatenView.groovy
- * 
- * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
- * Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
- * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
- * 
- * Created by: rbe
+/*
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
+ *
+ * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
+ * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
+ *
+ * Project wac
+ * /Users/rbe/project/wac/griffon-app/views/com/westaflex/wac/GebaudedatenView.groovy
+ * Last modified at 27.03.2011 19:22:24 by rbe
  */
 package com.westaflex.wac
 
@@ -65,7 +67,6 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
             label("m³")
             label("gelüftetes Volumen")
         }
-        GH.recurse(gebaudeGeometrie, GH.doubleTextField)
         // Luftdichtheit der Gebäudehülle
         panel(id: "gebaudeLuftdichtheit", border: titledBorder(title: "Luftdichtheit der Gebäudehülle"), layout: new MigLayout("wrap 1", "[]para[]", "")) {
             buttonGroup().with {
@@ -83,7 +84,6 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
             }
             label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
         }
-        GH.recurse(gebaudeLuftdichtheit, GH.doubleTextField)
     }
     // Besondere Anforderungen
     panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill] -5 []"), constraints: "span, wrap") {
@@ -92,7 +92,6 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
             label("Faktor für besondere bauphysikalische oder hygienische Anforderungen")
         }
     }
-    GH.doubleTextField(faktorBesondereAnforderungen)
     // Geplante Belegung
     panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill] -5 []"), constraints: "wrap") {
         panel(id: "gebaudeGeplanteBelegung", border: titledBorder(title: "Geplante Belegung"), constraints: "span", layout: new MigLayout("", "[]para[right]para[]", "")) {
@@ -106,11 +105,16 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
             label("m³/h", foreground: java.awt.Color.RED)
         }
     }
-    GH.doubleTextField(gebaudeGeplanteAussenluftVsProPerson)
 }
+// Format fields
+GH.autoformatDoubleTextField(gebaudeGeometrieWohnflache)
+GH.autoformatDoubleTextField(gebaudeGeometrieMittlereRaumhohe)
+GH.autoformatDoubleTextField(gebaudeGeometrieLuftvolumen)
+GH.autoformatDoubleTextField(gebaudeGeometrieGeluftetesVolumen)
+GH.autoformatDoubleTextField(gebaudeLuftdichtheitDruckexponent)
+GH.autoformatDoubleTextField(faktorBesondereAnforderungen)
 GH.selectAllTextField(gebaudeGeplantePersonenanzahl.editor.textField)
 GH.yellowTextField(gebaudeGeplantePersonenanzahl.editor.textField)
-GH.selectAllTextField(gebaudeGeplanteAussenluftVsProPerson.editor.textField)
-GH.yellowTextField(gebaudeGeplanteAussenluftVsProPerson.editor.textField)
+GH.autoformatDoubleTextField(gebaudeGeplanteAussenluftVsProPerson.editor.textField)
 // Bindings
 build(GebaudedatenBindings)

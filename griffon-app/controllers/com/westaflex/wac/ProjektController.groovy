@@ -91,7 +91,33 @@ class ProjektController {
 	 */
 	def setDefaultValues() {
 		// Reference meta values
-		model.meta = app.models["wac2"].meta
+		////model.meta = app.models["wac2"].meta
+		// Lookup values from database and put them into our model
+		doOutside {
+			// Raumvolumenströme - Bezeichnungen der Zu-/Abluftventile
+			model.meta.raumVsBezeichnungZuluftventile = wacModelService.getZuluftventile()
+			model.meta.raumVsBezeichnungAbluftventile = wacModelService.getAbluftventile()
+			// Raumvolumenströme - Überströmelemente
+			model.meta.raumVsUberstromelemente = wacModelService.getUberstromelemente()
+			// Raumvolumenströme - Zentralgerät + Volumenstrom
+			model.meta.zentralgerat = wacModelService.getZentralgerat()
+			// Liste aller möglichen Volumenströme des 1. Zentralgeräts
+			def volumenstromZentralgerat =
+				wacModelService.getVolumenstromFurZentralgerat(model.meta.zentralgerat[0])
+			// 5er-Schritte
+			model.meta.volumenstromZentralgerat = []
+			def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
+			def maxVsZentralgerat = volumenstromZentralgerat.toList().last() as Integer
+			(minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
+			// Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
+			model.meta.dvbKanalbezeichnung = wacModelService.getDvbKanalbezeichnung()
+			// Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte
+			model.meta.wbw = wacModelService.getWbw()
+			// Druckverlustberechnung - Ventileinstellung - Ventilbezeichnung
+			model.meta.dvbVentileinstellung = wacModelService.getDvbVentileinstellung()
+			// Akustikberechnung - 1. Hauptschalldämpfer
+			model.meta.akustikSchalldampfer = wacModelService.getSchalldampfer()
+		}
 		// Raumvolumenströme, Zentralgerät
 		model.map.anlage.zentralgerat = model.meta.zentralgerat[0]
 		// Raumvolumenströme, Volumenstrom des Zentralgeräts; default ist erster Wert der Liste
@@ -182,7 +208,7 @@ class ProjektController {
 		model.map.dirty = false
 		setTabTitle()
 		// Close splash screen
-		Wac2Splash.instance.dispose()
+		try { Wac2Splash.instance.dispose() } catch (e) { println "${this}: Cannot find Wac2Splash: ${e}" }
 	}
 	
 	/**
@@ -359,8 +385,8 @@ class ProjektController {
 			def personenanzahlCaretPos = view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition
 			def aussenluftVsProPersonCaretPos = view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition
 			// Hack: model is not updated when KeyListener is used on spinner.editor.textfield
-			model.map.gebaude.geplanteBelegung.personenanzahl = view.gebaudeGeplantePersonenanzahl.editor.textField.text?.toInteger() ?: 0
-			model.map.gebaude.geplanteBelegung.aussenluftVsProPerson = view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.text?.toInteger() ?: 0
+			model.map.gebaude.geplanteBelegung.personenanzahl = view.gebaudeGeplantePersonenanzahl.editor.textField.text?.toDouble2(0) ?: 0
+            model.map.gebaude.geplanteBelegung.aussenluftVsProPerson = view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.text?.toDouble2() ?: 0.0d
 			model.map.gebaude.geplanteBelegung.with {
 				try {
 					mindestaussenluftrate = personenanzahl * aussenluftVsProPerson
@@ -440,7 +466,7 @@ class ProjektController {
 	}
 	
 	/**
-	 * Raumdaten - Raumtyp in Combobox ausgewählt.
+	 * Raumdaten - Eingabe - Raumtyp in Combobox ausgewählt.
 	 */
 	def raumTypGeandert = {
 		doLater {
@@ -553,7 +579,7 @@ class ProjektController {
 		////publishEvent "RaumGeandert", [view.raumTabelle.selectedRow]
         /*if (DEBUG)*/ println "raumGeandert: raum[${raumIndex}] ${model.map.raum.raume}"
         doLater {
-            if (raumIndex) {
+            if (raumIndex > -1) {
                 // WAC-65: Errechnete Werte zurücksetzen
                 model.map.raum.raume[raumIndex].with {
                     raumVolumen = raumFlache * raumHohe
@@ -567,6 +593,7 @@ class ProjektController {
                     raumAnzahlZuluftventile = 0
                     raumZuluftmengeJeVentil = 0.0d
                     raumAnzahlUberstromVentile = 0
+                    // Überström
                     raumUberstromVolumenstrom = 0.0d
                 }
                 // Zu-/Abluftventile
@@ -600,9 +627,9 @@ class ProjektController {
 	def raumEntfernen = {
 		////publishEvent "RaumEntfernen", [view.raumTabelle.selectedRow, view]
         // Raum aus Model entfernen
-        model.removeRaum(raumIndex, view)
+        model.removeRaum(view.raumTabelle.selectedRow, view)
         // Es hat sich was geändert...
-        raumGeandert(raumIndex)
+        raumGeandert(view.raumTabelle.selectedRow)
 	}
 	
 	/**
@@ -721,37 +748,49 @@ class ProjektController {
 	def raumBearbeitenSchliessen = {
 		if (DEBUG) println "raumBearbeitenSchliessen: closing dialog '${raumBearbeitenDialog.title}'"
 		raumBearbeitenDialog.dispose()
+        // TODO Daten aus Dialog übertragen und neu berechnen
 		// Berechne alles, was von Räumen abhängt
 		////publishEvent "RaumGeandert", [view.raumTabelle.selectedRow]
-        raumGeandert(view.raumTabelle.selectedRow)
+        println "raumBearbeitenGeandert: ${model.meta?.dump()}"
+        //raumGeandert(view.raumTabelle.selectedRow)
 	}
 	
 	/**
-	 * TODO Raum bearbeiten - Daten eingegeben.
+	 * TODO Raum bearbeiten - Daten eingegeben. Mit raumBearbeitenSchliessen zusammenlegen?
 	 */
 	def raumBearbeitenGeandert = {
 		if (DEBUG) println "TODO raumBearbeitenGeandert"
-        raumGeandert(view.raumTabelle.selectedRow)
+        // TODO Daten aus Dialog übertragen und neu berechnen
+        println "raumBearbeitenGeandert: ${model.meta?.dump()}"
+        //raumGeandert(view.raumTabelle.selectedRow)
 	}
 	
 	/**
 	 * Berechne Türen eines bestimmten Raumes.
 	 */
-	def berechneTuren = { raumIndex = null ->
+	def berechneTuren = { evt = null, raumIndex = null ->
 		// Hole gewählten Raum
 		def raum = model.map.raum.raume[raumIndex ?: view.raumTabelle.selectedRow]
 		// Türen berechnen?
 		if (raum.turen.findAll { it.turBreite > 0 }?.size() > 0 && raum.raumUberstromVolumenstrom) {
-            // TODO WAC-126 Keine Berechnung wenn Türdichtung-Checkbox geklickt
-            println "WAC-126: berechneTuren=${raum}"
 			wacCalculationService.berechneTurspalt(raum)
+            // WAC-165: Hinweis: Türspalt > max. Türspalthöhe?
+            def turSpalthoheUberschritten = raum.turen.findAll {
+                it.turSpalthohe > model.meta.gewahlterRaum.raumMaxTurspaltHohe.toDouble2()
+            }?.size() ?: 0
+            if (turSpalthoheUberschritten > 0) {
+                model.meta.gewahlterRaum.raumTurspaltHinweis = "Hinweis: Maximale Türspalthöhe überschritten!"
+            } else {
+                model.meta.gewahlterRaum.raumTurspaltHinweis = ""
+            }
 		}
 	}
 
     /**
      * Tur Werte entfernen in Raum bearbeiten Dialog
      */
-    def raumBearbeitenTurEntfernen = { raumIndex = null ->
+    def raumBearbeitenTurEntfernen = { evt = null ->
+        println "raumBearbeitenTurEntfernen: raumIndex=${raumIndex}"
         if (DEBUG) println "raumBearbeitenTurEntfernen: view.raumBearbeitenTurenTabelle.selectedRow -> ${view.raumBearbeitenTurenTabelle.selectedRow}"
         def turenIndex = view.raumBearbeitenTurenTabelle.selectedRow
         try {
@@ -761,6 +800,7 @@ class ProjektController {
             if (DEBUG) println "raumBearbeitenTurEntfernen: ${raum}"
         } catch (e) {}
         model.resyncRaumTableModels()
+        berechneTuren()
     }
 	
 	/**
@@ -814,7 +854,7 @@ class ProjektController {
 			}
 		}
 	}
-	
+
 	/**
 	 * Einen bestimmten Raum in allen Raum-Tabellen markieren.
 	 */
@@ -829,8 +869,9 @@ class ProjektController {
 					GH.withDisabledListSelectionListeners t, { -> changeSelection(row, 0, false, false) }
 				}
 				// Aktuellen Raum in Metadaten setzen
-				model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
-				model.meta.gewahlterRaum.raumNummer = row + 1
+                model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
+				// TODO Warum wird das hier gemacht??? WacCalculationService.berechneRaumnummer ist zuständig!
+                ////model.meta.gewahlterRaum.raumNummer = row + 1
 			} else {
 				// Remove selection in all tables
 				withAllRaumTables { t ->
@@ -922,8 +963,7 @@ class ProjektController {
 				}
 				// Selektiere errechneten Volumenstrom
 				def roundedVs = wacCalculationService.round5(model.map.anlage.volumenstromZentralgerat)
-                // TODO if (DEBUG)
-				println "zentralgeratAktualisieren: model.map.anlage.volumenstromZentralgerat=${model.map.anlage.volumenstromZentralgerat} roundedVs=${roundedVs}"
+				if (DEBUG) println "zentralgeratAktualisieren: model.map.anlage.volumenstromZentralgerat=${model.map.anlage.volumenstromZentralgerat} roundedVs=${roundedVs}"
 				def foundVs = model.meta.volumenstromZentralgerat.find { it.toInteger() == roundedVs }
 				// Wenn gerundeter Volumenstrom nicht gefunden wurde, setze Minimum des Zentralgeräts
 				if (!foundVs) {
@@ -952,7 +992,7 @@ class ProjektController {
 				def (zentralgerat, nl) = wacCalculationService.berechneZentralgerat(model.map)
 				model.map.anlage.zentralgerat = zentralgerat
 				model.map.anlage.volumenstromZentralgerat = wacCalculationService.round5(nl)
-				/*if (DEBUG)*/ println "onZentralgeratAktualisieren: zentralgerat=${model.map.anlage.zentralgerat}, nl=${nl}/${model.map.anlage.volumenstromZentralgerat}"
+				if (DEBUG) println "onZentralgeratAktualisieren: zentralgerat=${model.map.anlage.zentralgerat}, nl=${nl}/${model.map.anlage.volumenstromZentralgerat}"
 				zentralgeratAktualisieren()
 			}
 		}

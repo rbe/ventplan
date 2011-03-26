@@ -594,7 +594,7 @@ class WacCalculationService {
             if (DEBUG) println "berechneUberstromelemente: map.raumMaxTurspaltHohe=${map.raumMaxTurspaltHohe}"
             if (!map.raumMaxTurspaltHohe) {
                 println "WARNING: value for maxTurspaltHohe is missing, using default: 10.0 -> ${map?.dump()}"
-                map.raumMaxTurspaltHohe = 10.0
+                map.raumMaxTurspaltHohe = 10.0d
             }
             def querschnitt = map.turen.inject(0.0d, { o, n -> o + n.turBreite * map.raumMaxTurspaltHohe })
             // 5b
@@ -786,17 +786,21 @@ class WacCalculationService {
             if (DEBUG) println "berechneTurspalt: Keine Berechnung von ÜB-Räumen"
 		} else {
 			def anzTurenOhneDichtung = map.turen.findAll { it.turDichtung == false }?.size() ?: 0
+            def abziehenTurenOhneDichtung = 2500 * anzTurenOhneDichtung
 			def summeTurBreiten = map.turen.sum { it.turBreite.toDouble2() }
             if (DEBUG) println "berechneTurspalt: anzTurenOhneDichtung=${anzTurenOhneDichtung} summeTurBreiten=${summeTurBreiten}"
 			map.turen.findAll { it.turBreite > 0 }?.each {
 				// Existiert ein Durchgang? Ja, überspringen
 				if (it.turBezeichnung ==~ /.*Durchgang.*/) return
-                def abziehen = 2500 * anzTurenOhneDichtung
-				def tsqf = (100 * 3.1d * map.raumUberstromVolumenstrom / java.lang.Math.sqrt(1.5d)) - abziehen
+                // Zuerst Überströmventile berechnen!
+                if (DEBUG) println "berechneTurspalt: map.raumUberstromVolumenstrom=${map.raumUberstromVolumenstrom}"
+				def tsqf = (100 * 3.1d * map.raumUberstromVolumenstrom / java.lang.Math.sqrt(1.5d)) - abziehenTurenOhneDichtung
 				it.turSpalthohe = tsqf / summeTurBreiten
 				it.turQuerschnitt = tsqf * it.turBreite / summeTurBreiten
                 if (DEBUG) println "berechneTurspalt: abziehen=${abziehen} tsqf=${tsqf} turSpalthohe=${it.turSpalthohe} turQuerschnitt=${it.turQuerschnitt}"
 			}
+            // WAC-165: Hinweis: Türspalt > max. Türspalthöhe?
+            // TODO Zugriff auf model.meta notwendig! Alternativ Property pro Raum.
 		}
         map
 	}

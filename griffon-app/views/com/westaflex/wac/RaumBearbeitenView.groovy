@@ -7,7 +7,7 @@
  *
  * Project wac
  * /Users/rbe/project/wac/griffon-app/views/com/westaflex/wac/RaumBearbeitenView.groovy
- * Last modified at 22.03.2011 13:07:54 by rbe
+ * Last modified at 27.03.2011 19:22:23 by rbe
  */
 package com.westaflex.wac
 
@@ -35,7 +35,7 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
                 button(id: "raumdatenDialogRaumButton", text: "...")
             }
             panel(id: "raumBearbeitenLuftartPanel", border: titledBorder("Luftart"), layout: new MigLayout("", "[]para[]para[]", ""), constraints: "cell 0 1, grow") {
-                comboBox(id: "raumBearbeitenLuftart", constraints: "width 100px", items: model.meta.raum.luftart)
+                comboBox(id: "raumBearbeitenLuftart", constraints: "width 100px", items: model.meta.raum.luftart, selectedItem: model.meta.gewahlterRaum.raumLuftart)
                 textField(id: "raumBearbeitenLuftartFaktorZuluftverteilung", enabled: bind { (model.meta.gewahlterRaum?.raumLuftart == "ZU" || model.meta.gewahlterRaum?.raumLuftart == "ZU/AB") ? true : false }, text: "", constraints: "width 100px")
                 label(id: "raumBearbeitenFaktorZuluftverteilungLabel", text: "Faktor Zuluftverteilung", constraints: "wrap")
 
@@ -46,16 +46,19 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
 
             panel(id: "raumBearbeitenTabelle", layout: new MigLayout("", "[left]para[left]para[left]", "[]0[]"), constraints: "cell 0 2") {
                 label(text: "Maximale Türspalthöhe [mm]")
-                textField(id: "raumBearbeitenDetailsTurspalthohe", text: "10,00", constraints: "width 100px")
+                textField(id: "raumBearbeitenDetailsTurspalthohe"/*, text: "10,00"*/, constraints: "width 100px")
                 button(id: "raumBearbeitenDetailsTurentfernen", text: "Tür entfernen", constraints: "wrap")
 
                 jideScrollPane(constraints: "height 150px, span") {
                     table(id: "raumBearbeitenTurenTabelle", model: model.createRaumTurenTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
                     }
                 }
+                
+                // WAC-165
+                label(id: "raumBearbeitenTurspaltHinweis", foreground: java.awt.Color.RED, constraints: "span 2")
             }
 
-            panel(id: "raumBearbeitenOptional", border: titledBorder("Optional"), layout: new MigLayout("", "[left]para[right]para[left]para[left]para[right]para[left]para[left]para[right]para[left]", "[]0[]"), constraints: "cell 0 3") {
+            panel(id: "raumBearbeitenOptionalPanel", border: titledBorder("Optional"), layout: new MigLayout("", "[left]para[right]para[left]para[left]para[right]para[left]para[left]para[right]para[left]", "[]0[]"), constraints: "cell 0 3") {
                 label(text: "Raumlänge")
                 textField(id: "raumBearbeitenOptionalRaumlange", constraints: "width 100px")
                 label(text: "m")
@@ -67,10 +70,10 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
                 label(text: "m", constraints: "wrap")
 
                 label(text: "Raumfläche")
-                textField(id: "raumBearbeitenOptionalRaumflache", constraints: "width 100px")
+                textField(id: "raumBearbeitenOptionalRaumflache", constraints: "width 100px", editable: false)
                 label(text: "m²")
                 label(text: "Raumvolumen")
-                textField(id: "raumBearbeitenOptionalRaumvolumen", constraints: "width 100px")
+                textField(id: "raumBearbeitenOptionalRaumvolumen", constraints: "width 100px", editable: false)
                 label(text: "m³")
                 label("")
                 label("")
@@ -118,7 +121,16 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
 }
 
 // Format fields
-GH.recurse(raumBearbeitenTabPanel, GH.yellowTextField)
+GH.yellowTextField(raumBearbeitenRaumnummer)
+GH.yellowTextField(raumBearbeitenBezeichnung)
+GH.autoformatDoubleTextField(raumBearbeitenLuftartFaktorZuluftverteilung)
+GH.autoformatDoubleTextField(raumBearbeitenLuftartAbluftVs)
+GH.autoformatDoubleTextField(raumBearbeitenDetailsTurspalthohe)
+GH.autoformatDoubleTextField(raumBearbeitenOptionalRaumlange)
+GH.autoformatDoubleTextField(raumBearbeitenOptionalRaumbreite)
+GH.autoformatDoubleTextField(raumBearbeitenOptionalRaumhohe)
+GH.autoformatDoubleTextField(raumBearbeitenOptionalRaumflache)
+GH.autoformatDoubleTextField(raumBearbeitenOptionalRaumvolumen)
 // Bindings
 build(RaumBearbeitenBindings)
 

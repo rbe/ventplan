@@ -37,14 +37,19 @@ class GriffonHelper {
 	 * Cache for created dialog instances.
 	 */
 	private static dialogCache = [:]
-	
+
 	/**
 	 * Colors.
 	 */
 	private static final java.awt.Color MY_YELLOW = new java.awt.Color(255, 255, 180)
 	private static final java.awt.Color MY_RED = new java.awt.Color(255, 0, 0)
 	private static final java.awt.Color MY_GREEN = new java.awt.Color(51, 153, 0)
-	
+
+    /**
+     * Key codes: Backspace, Comma, 0 .. 9.
+     */
+    def static final NUMBER_KEY_CODES =  48..57 //(([8, 44] as List) << (48..57 as Integer[])).flatten() as Integer[]
+
 	/**
 	 * Number -> Formatted German String
 	 */
@@ -72,9 +77,10 @@ class GriffonHelper {
 			try {
 				r = nf.format(d)
 			} catch (e) {
-				if (GriffonHelper.DEBUG) println "toString2(): Exception while converting number ${d?.dump()}: ${e}"
+				println "toString2(): Exception while converting number ${d?.dump()} to string: ${e}"
 			}
 		}
+        ////println "toString2: ${d?.dump()} -> ${r?.dump()}"
 		r
 	}
 	
@@ -124,6 +130,8 @@ class GriffonHelper {
 		// Does String contain a character?
 		def charList = (["a".."z"] + ["A".."Z"]).flatten()
 		if (d.any { it in charList }) return d
+        // TODO HACK: Convert dot into comma (we expect german format, not english)
+        d = d.collect { it == "." ? "," : it }.join()
 		// Parse number
 		if (d in ["NaN", "Inf"]) {
 			//r = 0.0d
@@ -135,7 +143,7 @@ class GriffonHelper {
 			try {
 				r = nf.parse(d) as Double
 			} catch (e) {
-				println "toDouble2: d=${delegate} digits=${digits} e=${e}"
+				println "toDouble2: Exception while converting string ${d?.dump()} to double: d=${delegate} digits=${digits} e=${e}"
 				//e.printStackTrace()
 				return d
 			}
@@ -182,7 +190,6 @@ class GriffonHelper {
 		// This map
 		if (GriffonHelper.DEBUG) println "addMapPropertyChangeListener: adding PropertyChangeListener for ${name}"
 		map.addPropertyChangeListener({ evt ->
-				// TODO rbe print if debug flag is set
 				if (GriffonHelper.DEBUG) println "C! ${name}.${evt.propertyName}: ${evt.oldValue?.dump()} -> ${evt.newValue?.dump()}"
 				if (closure) closure(evt)
 			} as java.beans.PropertyChangeListener)
@@ -349,23 +356,24 @@ class GriffonHelper {
 		// Re-add ActionListener(s)
 		keyListeners.each {
 				if (GriffonHelper.DEBUG) println "withDisabledKeyListeners: re-adding ${it}"
-				component.addkeyListener(it)
+				component.addKeyListener(it)
 			}
 	}
 	
 	/**
-	 * Apply a closure to a component or recurse component's components and apply closure.
+	 * Apply a closure to a component (JTextField/JTextArea) or recurse component's components and apply closure.
 	 */
 	def static recurse(component, closure) {
-		//if (GriffonHelper.DEBUG) println "recurseComponent: ${component.class}"
-		if (component instanceof java.awt.Container) {
-			component.components.each { recurse(it, closure) }
-		}
-		try {
-			closure(component)
-		} catch (e) {
-			println "recurse(${component.class}): EXCEPTION=${e}"
-			e.printStackTrace()
+		//if (GriffonHelper.DEBUG) println "recurse: ${component.getClass()} ${component instanceof javax.swing.JTextField} ${component instanceof javax.swing.JPanel}"
+        if (component instanceof javax.swing.JTextField || component instanceof javax.swing.JTextArea || component instanceof javax.swing.JComboBox) {
+            try {
+                closure(component)
+            } catch (e) {
+                println "recurse(${component.class}): EXCEPTION=${e}"
+                e.printStackTrace()
+            }
+        } else if (component instanceof javax.swing.JPanel || component instanceof javax.swing.JTabbedPane) { /*java.awt.Container*/
+			component.components.each { GriffonHelper.recurse(it, closure) }
 		}
 	}
 	
@@ -426,15 +434,6 @@ class GriffonHelper {
 					//}
 				}
 			}
-			/* Is done via binding-converter-closure now (see **Binding scripts)
-			if (evt.id == java.awt.event.FocusEvent.FOCUS_LOST) {
-				if (component.text) {
-					javax.swing.SwingUtilities.invokeLater {
-						component.text = component.text.toDouble2().toString2()
-					}
-				}
-			}
-			*/
 		} as java.awt.event.FocusListener)
 	}
 	
@@ -509,5 +508,57 @@ class GriffonHelper {
 		javax.swing.DefaultCellEditor cellEditor = ca.odell.glazedlists.swing.AutoCompleteSupport.createTableCellEditor(eventList)
 		column.setCellEditor(cellEditor)
 	}
+
+    /**
+     * Install a key listener/adapter: execute code when a key was released.
+     * @param closure Takes one argument: evt
+     */
+    def static installKeyAdapter = { component, keyCodes = null, closure = null ->
+        component.addKeyListener(
+            [
+                keyReleased: { evt ->
+                    // Calculate if: closure is not null and (if no keycodes given or certain keys are pressed)
+                    println evt.keyCode
+                    if (closure && (!keyCodes || (keyCodes && evt.keyCode in keyCodes))) closure(evt)
+                }
+            ] as java.awt.event.KeyAdapter)
+    }
 	
+    /**
+     * Install a focus listener/adapter: execute code when focus is lost.
+     * @param closure Takes one argument: evt
+     */
+    def static installFocusLostAdapter = { component, closure = null ->
+        component.addFocusListener(
+            [
+                focusLost: { evt ->
+                    // Calculate if focu lost
+                    if (closure) closure(evt)
+                }
+            ] as java.awt.event.FocusAdapter)
+    }
+
+    /**
+     * Execute code on change of component:
+     *   textField: focusLost, keyReleased
+     *   combobox: stateChanged
+     */
+    def static onChange = { component, keyCodes = null, closure = null ->
+        if (closure) {
+            switch (component) {
+                case { it instanceof javax.swing.JTextArea || it instanceof javax.swing.JTextField }:
+                    GriffonHelper.installKeyAdapter(component, keyCodes, closure)
+                    break
+                case { it instanceof javax.swing.JComboBox }:
+                    component.addActionListener(
+                        [
+                            actionPerformed: { evt ->
+                                closure(evt)
+                            }
+                        ] as java.awt.event.ActionListener)
+                    break
+            }
+        }
+    }
+
 }

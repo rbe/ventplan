@@ -54,18 +54,12 @@ gebaudeLuftdichtheitKategorieC.actionPerformed = controller.luftdichtheitKategor
 bind(source: model.map.gebaude, sourceProperty: "faktorBesondereAnforderungen", target: faktorBesondereAnforderungen, targetProperty: "text", converter: GH.toString2Converter)
 faktorBesondereAnforderungen.focusLost = controller.speichereFaktorBesondereAnforderungen
 // Geplante Belegung
-bind(source: model.map.gebaude.geplanteBelegung, sourceProperty: "personenanzahl",        target: gebaudeGeplantePersonenanzahl,        targetProperty: "value", mutual: true)
-bind(source: model.map.gebaude.geplanteBelegung, sourceProperty: "aussenluftVsProPerson", target: gebaudeGeplanteAussenluftVsProPerson, targetProperty: "value", mutual: true)
+bind(source: model.map.gebaude.geplanteBelegung, sourceProperty: "personenanzahl",        target: gebaudeGeplantePersonenanzahl,        targetProperty: "value")
+bind(source: model.map.gebaude.geplanteBelegung, sourceProperty: "aussenluftVsProPerson", target: gebaudeGeplanteAussenluftVsProPerson, targetProperty: "value")
 bind(source: model.map.gebaude.geplanteBelegung, sourceProperty: "mindestaussenluftrate", target: gebaudeGeplanteMindestaussenluftrate, targetProperty: "text",  converter: GH.toString2Converter)
 [gebaudeGeplantePersonenanzahl, gebaudeGeplanteAussenluftVsProPerson].each {
 	it.stateChanged = controller.berechneMindestaussenluftrate
-	it.editor.textField.addKeyListener(
-		[
-			keyReleased: { evt ->
-				println "evt=${evt}... keyCode=${evt.keyCode}"
-				// Calculate if keys 0..9 are pressed
-				if (evt.keyCode in 48..57) controller.berechneMindestaussenluftrate()
-			}
-		] as java.awt.event.KeyAdapter)
-	//it.editor.textField.addCaretListener({ evt -> println "caretlistener: ${evt}"} as javax.swing.event.CaretListener)
+    GH.installKeyAdapter(it.editor.textField, GH.NUMBER_KEY_CODES, { evt ->
+            controller.berechneMindestaussenluftrate()
+        })
 }

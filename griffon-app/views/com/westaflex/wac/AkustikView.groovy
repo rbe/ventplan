@@ -1,11 +1,13 @@
-/**
- * /Users/rbe/project/wac2/griffon-app/views/com/westaflex/wac/AkustikView.groovy
- * 
- * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
- * Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
- * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
- * 
- * Created by: rbe
+/*
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
+ *
+ * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
+ * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
+ *
+ * Project wac
+ * /Users/rbe/project/wac/griffon-app/views/com/westaflex/wac/AkustikView.groovy
+ * Last modified at 27.03.2011 19:30:22 by rbe
  */
 package com.westaflex.wac
 
@@ -32,10 +34,14 @@ akustikTabGroup.with {
 	setBoldActiveTab(true)
 }
 // Format fields
-GH.recurse(akustikTabPanel, GH.yellowTextField)
+GH.yellowTextField(akustikZuluftAnzahlUmlenkungen90GradStck)
+GH.yellowTextField(akustikZuluftLuftverteilerkastenStck)
+GH.yellowTextField(akustikZuluftLangsdampfungKanalLfdmMeter)
+GH.yellowTextField(akustikAbluftAnzahlUmlenkungen90GradStck)
+GH.yellowTextField(akustikAbluftLuftverteilerkastenStck)
+GH.yellowTextField(akustikAbluftLangsdampfungKanalLfdmMeter)
 // Bindings
 build(AkustikBindings)
-
 
 akustikZuluftTabelle.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF)
 akustikZuluftTabelle.packColumn(0, 10, 100)
@@ -52,7 +58,6 @@ akustikAbluftTabelle.packColumn(2, 10, 80)
 akustikAbluftTabelle.packColumn(3, 10, 80)
 akustikAbluftTabelle.packColumn(4, 10, 80)
 akustikAbluftTabelle.packColumn(5, 10, 80)
-
 
 /**
  * Synchronize all Swing table models depending on map.raum.raume.

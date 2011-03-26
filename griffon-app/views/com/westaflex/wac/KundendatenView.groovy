@@ -1,11 +1,13 @@
-/**
- * /Users/rbe/project/wac2/griffon-app/views/com/westaflex/wac/KundendatenView.groovy
- * 
- * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
- * Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
- * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
- * 
- * Created by: rbe
+/*
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
+ *
+ * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
+ * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
+ *
+ * Project wac
+ * /Users/rbe/project/wac/griffon-app/views/com/westaflex/wac/KundendatenView.groovy
+ * Last modified at 27.03.2011 17:04:51 by rbe
  */
 package com.westaflex.wac
 
@@ -40,7 +42,6 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("wrap 2","[grow,fill] [
         label("Ansprechpartner")
         textField(id: "grosshandelAnsprechpartner")
     }
-    GH.recurse(kundendatenGrosshandel, GH.yellowTextField)
     // Ausführende Firma
     panel(id: "kundendatenAusfuhrendeFirma", border: titledBorder(title: "Kunde 2 (Ausführende Firma)"), layout: new MigLayout("wrap 2, fill", "[right] 16 [grow,fill] []"), constraints: "grow") {
         // Row 1
@@ -67,7 +68,6 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("wrap 2","[grow,fill] [
         label("Ansprechpartner")
         textField(id: "ausfuhrendeFirmaAnsprechpartner")
     }
-    GH.recurse(kundendatenAusfuhrendeFirma, GH.yellowTextField)
     // Notizen
     panel(id: "kundendatenNotizen", border: titledBorder(title: "Notizen"), layout: new MigLayout("wrap 2","[] 16 [grow,fill]"), constraints: "grow, span 2") {
         // Bauvorhaben
@@ -79,8 +79,24 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("wrap 2","[grow,fill] [
             textArea(id: "notizen", rows: 13)
         }
     }
-    GH.recurse(kundendatenNotizen, GH.yellowTextField)
 }
-
+GH.yellowTextField(grosshandelFirma1)
+GH.yellowTextField(grosshandelFirma2)
+GH.yellowTextField(grosshandelStrasse)
+GH.yellowTextField(grosshandelPlz)
+GH.yellowTextField(grosshandelOrt)
+GH.yellowTextField(grosshandelTelefon)
+GH.yellowTextField(grosshandelTelefax)
+GH.yellowTextField(grosshandelAnsprechpartner)
+GH.yellowTextField(ausfuhrendeFirmaFirma1)
+GH.yellowTextField(ausfuhrendeFirmaFirma2)
+GH.yellowTextField(ausfuhrendeFirmaStrasse)
+GH.yellowTextField(ausfuhrendeFirmaPlz)
+GH.yellowTextField(ausfuhrendeFirmaOrt)
+GH.yellowTextField(ausfuhrendeFirmaTelefon)
+GH.yellowTextField(ausfuhrendeFirmaTelefax)
+GH.yellowTextField(ausfuhrendeFirmaAnsprechpartner)
+GH.yellowTextField(bauvorhaben)
+textArea(id: "notizen", rows: 13)
 // Bindings
 build(KundendatenBindings)
