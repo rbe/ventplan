@@ -466,7 +466,7 @@ class ProjektController {
 	}
 	
 	/**
-	 * Raumdaten - Raumtyp in Combobox ausgewählt.
+	 * Raumdaten - Eingabe - Raumtyp in Combobox ausgewählt.
 	 */
 	def raumTypGeandert = {
 		doLater {
@@ -579,7 +579,7 @@ class ProjektController {
 		////publishEvent "RaumGeandert", [view.raumTabelle.selectedRow]
         /*if (DEBUG)*/ println "raumGeandert: raum[${raumIndex}] ${model.map.raum.raume}"
         doLater {
-            if (raumIndex) {
+            if (raumIndex > -1) {
                 // WAC-65: Errechnete Werte zurücksetzen
                 model.map.raum.raume[raumIndex].with {
                     raumVolumen = raumFlache * raumHohe
@@ -593,6 +593,7 @@ class ProjektController {
                     raumAnzahlZuluftventile = 0
                     raumZuluftmengeJeVentil = 0.0d
                     raumAnzahlUberstromVentile = 0
+                    // Überström
                     raumUberstromVolumenstrom = 0.0d
                 }
                 // Zu-/Abluftventile
@@ -626,9 +627,9 @@ class ProjektController {
 	def raumEntfernen = {
 		////publishEvent "RaumEntfernen", [view.raumTabelle.selectedRow, view]
         // Raum aus Model entfernen
-        model.removeRaum(raumIndex, view)
+        model.removeRaum(view.raumTabelle.selectedRow, view)
         // Es hat sich was geändert...
-        raumGeandert(raumIndex)
+        raumGeandert(view.raumTabelle.selectedRow)
 	}
 	
 	/**
@@ -747,17 +748,21 @@ class ProjektController {
 	def raumBearbeitenSchliessen = {
 		if (DEBUG) println "raumBearbeitenSchliessen: closing dialog '${raumBearbeitenDialog.title}'"
 		raumBearbeitenDialog.dispose()
+        // TODO Daten aus Dialog übertragen und neu berechnen
 		// Berechne alles, was von Räumen abhängt
 		////publishEvent "RaumGeandert", [view.raumTabelle.selectedRow]
-        raumGeandert(view.raumTabelle.selectedRow)
+        println "raumBearbeitenGeandert: ${model.meta?.dump()}"
+        //raumGeandert(view.raumTabelle.selectedRow)
 	}
 	
 	/**
-	 * TODO Raum bearbeiten - Daten eingegeben.
+	 * TODO Raum bearbeiten - Daten eingegeben. Mit raumBearbeitenSchliessen zusammenlegen?
 	 */
 	def raumBearbeitenGeandert = {
 		if (DEBUG) println "TODO raumBearbeitenGeandert"
-        raumGeandert(view.raumTabelle.selectedRow)
+        // TODO Daten aus Dialog übertragen und neu berechnen
+        println "raumBearbeitenGeandert: ${model.meta?.dump()}"
+        //raumGeandert(view.raumTabelle.selectedRow)
 	}
 	
 	/**
@@ -784,7 +789,8 @@ class ProjektController {
     /**
      * Tur Werte entfernen in Raum bearbeiten Dialog
      */
-    def raumBearbeitenTurEntfernen = { raumIndex = null ->
+    def raumBearbeitenTurEntfernen = { evt = null ->
+        println "raumBearbeitenTurEntfernen: raumIndex=${raumIndex}"
         if (DEBUG) println "raumBearbeitenTurEntfernen: view.raumBearbeitenTurenTabelle.selectedRow -> ${view.raumBearbeitenTurenTabelle.selectedRow}"
         def turenIndex = view.raumBearbeitenTurenTabelle.selectedRow
         try {
@@ -848,7 +854,7 @@ class ProjektController {
 			}
 		}
 	}
-	
+
 	/**
 	 * Einen bestimmten Raum in allen Raum-Tabellen markieren.
 	 */
@@ -863,8 +869,9 @@ class ProjektController {
 					GH.withDisabledListSelectionListeners t, { -> changeSelection(row, 0, false, false) }
 				}
 				// Aktuellen Raum in Metadaten setzen
-				model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
-				model.meta.gewahlterRaum.raumNummer = row + 1
+                model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
+				// TODO Warum wird das hier gemacht??? WacCalculationService.berechneRaumnummer ist zuständig!
+                ////model.meta.gewahlterRaum.raumNummer = row + 1
 			} else {
 				// Remove selection in all tables
 				withAllRaumTables { t ->
@@ -956,8 +963,7 @@ class ProjektController {
 				}
 				// Selektiere errechneten Volumenstrom
 				def roundedVs = wacCalculationService.round5(model.map.anlage.volumenstromZentralgerat)
-                // TODO if (DEBUG)
-				println "zentralgeratAktualisieren: model.map.anlage.volumenstromZentralgerat=${model.map.anlage.volumenstromZentralgerat} roundedVs=${roundedVs}"
+				if (DEBUG) println "zentralgeratAktualisieren: model.map.anlage.volumenstromZentralgerat=${model.map.anlage.volumenstromZentralgerat} roundedVs=${roundedVs}"
 				def foundVs = model.meta.volumenstromZentralgerat.find { it.toInteger() == roundedVs }
 				// Wenn gerundeter Volumenstrom nicht gefunden wurde, setze Minimum des Zentralgeräts
 				if (!foundVs) {
@@ -986,7 +992,7 @@ class ProjektController {
 				def (zentralgerat, nl) = wacCalculationService.berechneZentralgerat(model.map)
 				model.map.anlage.zentralgerat = zentralgerat
 				model.map.anlage.volumenstromZentralgerat = wacCalculationService.round5(nl)
-				/*if (DEBUG)*/ println "onZentralgeratAktualisieren: zentralgerat=${model.map.anlage.zentralgerat}, nl=${nl}/${model.map.anlage.volumenstromZentralgerat}"
+				if (DEBUG) println "onZentralgeratAktualisieren: zentralgerat=${model.map.anlage.zentralgerat}, nl=${nl}/${model.map.anlage.volumenstromZentralgerat}"
 				zentralgeratAktualisieren()
 			}
 		}
