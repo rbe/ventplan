@@ -156,8 +156,8 @@ class ProjektModel {
 				faktorBesondereAnforderungen: 1.0d,
 				geplanteBelegung: [
 						personenanzahl: 0,
-						aussenluftVsProPerson: 30,
-						mindestaussenluftrate: 0
+						aussenluftVsProPerson: 30.0d,
+						mindestaussenluftrate: 0.0d
 					] as ObservableMap,
 			] as ObservableMap,
 		anlage: [
