@@ -40,7 +40,6 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("wrap 2","[grow,fill] [
         label("Ansprechpartner")
         textField(id: "grosshandelAnsprechpartner")
     }
-    GH.recurse(kundendatenGrosshandel, GH.yellowTextField)
     // Ausführende Firma
     panel(id: "kundendatenAusfuhrendeFirma", border: titledBorder(title: "Kunde 2 (Ausführende Firma)"), layout: new MigLayout("wrap 2, fill", "[right] 16 [grow,fill] []"), constraints: "grow") {
         // Row 1
@@ -67,7 +66,6 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("wrap 2","[grow,fill] [
         label("Ansprechpartner")
         textField(id: "ausfuhrendeFirmaAnsprechpartner")
     }
-    GH.recurse(kundendatenAusfuhrendeFirma, GH.yellowTextField)
     // Notizen
     panel(id: "kundendatenNotizen", border: titledBorder(title: "Notizen"), layout: new MigLayout("wrap 2","[] 16 [grow,fill]"), constraints: "grow, span 2") {
         // Bauvorhaben
@@ -79,8 +77,9 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("wrap 2","[grow,fill] [
             textArea(id: "notizen", rows: 13)
         }
     }
-    GH.recurse(kundendatenNotizen, GH.yellowTextField)
 }
-
+GH.recurse(kundendatenGrosshandel, GH.yellowTextField)
+GH.recurse(kundendatenAusfuhrendeFirma, GH.yellowTextField)
+GH.recurse(kundendatenNotizen, GH.yellowTextField)
 // Bindings
 build(KundendatenBindings)

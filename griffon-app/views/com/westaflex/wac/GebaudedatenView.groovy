@@ -65,7 +65,6 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
             label("m³")
             label("gelüftetes Volumen")
         }
-        GH.recurse(gebaudeGeometrie, GH.doubleTextField)
         // Luftdichtheit der Gebäudehülle
         panel(id: "gebaudeLuftdichtheit", border: titledBorder(title: "Luftdichtheit der Gebäudehülle"), layout: new MigLayout("wrap 1", "[]para[]", "")) {
             buttonGroup().with {
@@ -83,7 +82,6 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
             }
             label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
         }
-        GH.recurse(gebaudeLuftdichtheit, GH.doubleTextField)
     }
     // Besondere Anforderungen
     panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill] -5 []"), constraints: "span, wrap") {
@@ -92,7 +90,6 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
             label("Faktor für besondere bauphysikalische oder hygienische Anforderungen")
         }
     }
-    GH.doubleTextField(faktorBesondereAnforderungen)
     // Geplante Belegung
     panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill] -5 []"), constraints: "wrap") {
         panel(id: "gebaudeGeplanteBelegung", border: titledBorder(title: "Geplante Belegung"), constraints: "span", layout: new MigLayout("", "[]para[right]para[]", "")) {
@@ -106,11 +103,12 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
             label("m³/h", foreground: java.awt.Color.RED)
         }
     }
-    GH.doubleTextField(gebaudeGeplanteAussenluftVsProPerson)
 }
+GH.recurse(gebaudeGeometrie, GH.doubleTextField)
+GH.recurse(gebaudeLuftdichtheit, GH.doubleTextField)
+GH.recurse(gebaudeBesondereAnforderungen, GH.doubleTextField) //(faktorBesondereAnforderungen)
 GH.selectAllTextField(gebaudeGeplantePersonenanzahl.editor.textField)
 GH.yellowTextField(gebaudeGeplantePersonenanzahl.editor.textField)
-GH.selectAllTextField(gebaudeGeplanteAussenluftVsProPerson.editor.textField)
-GH.yellowTextField(gebaudeGeplanteAussenluftVsProPerson.editor.textField)
+GH.doubleTextField(gebaudeGeplanteAussenluftVsProPerson.editor.textField)
 // Bindings
 build(GebaudedatenBindings)
