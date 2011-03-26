@@ -41,6 +41,7 @@ class Wac2Controller {
 	 * Initialize wac2 MVC group.
 	 */
 	void mvcGroupInit(Map args) {
+        /*
 		// Lookup values from database and put them into our model
 		doOutside {
 			// Raumvolumenströme - Bezeichnungen der Zu-/Abluftventile
@@ -67,6 +68,7 @@ class Wac2Controller {
 			// Akustikberechnung - 1. Hauptschalldämpfer
 			model.meta.akustikSchalldampfer = wacModelService.getSchalldampfer()
 		}
+		*/
 	}
 	
 	/**

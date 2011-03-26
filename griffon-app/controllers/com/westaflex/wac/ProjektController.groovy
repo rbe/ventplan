@@ -91,7 +91,33 @@ class ProjektController {
 	 */
 	def setDefaultValues() {
 		// Reference meta values
-		model.meta = app.models["wac2"].meta
+		////model.meta = app.models["wac2"].meta
+		// Lookup values from database and put them into our model
+		doOutside {
+			// Raumvolumenströme - Bezeichnungen der Zu-/Abluftventile
+			model.meta.raumVsBezeichnungZuluftventile = wacModelService.getZuluftventile()
+			model.meta.raumVsBezeichnungAbluftventile = wacModelService.getAbluftventile()
+			// Raumvolumenströme - Überströmelemente
+			model.meta.raumVsUberstromelemente = wacModelService.getUberstromelemente()
+			// Raumvolumenströme - Zentralgerät + Volumenstrom
+			model.meta.zentralgerat = wacModelService.getZentralgerat()
+			// Liste aller möglichen Volumenströme des 1. Zentralgeräts
+			def volumenstromZentralgerat =
+				wacModelService.getVolumenstromFurZentralgerat(model.meta.zentralgerat[0])
+			// 5er-Schritte
+			model.meta.volumenstromZentralgerat = []
+			def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
+			def maxVsZentralgerat = volumenstromZentralgerat.toList().last() as Integer
+			(minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
+			// Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
+			model.meta.dvbKanalbezeichnung = wacModelService.getDvbKanalbezeichnung()
+			// Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte
+			model.meta.wbw = wacModelService.getWbw()
+			// Druckverlustberechnung - Ventileinstellung - Ventilbezeichnung
+			model.meta.dvbVentileinstellung = wacModelService.getDvbVentileinstellung()
+			// Akustikberechnung - 1. Hauptschalldämpfer
+			model.meta.akustikSchalldampfer = wacModelService.getSchalldampfer()
+		}
 		// Raumvolumenströme, Zentralgerät
 		model.map.anlage.zentralgerat = model.meta.zentralgerat[0]
 		// Raumvolumenströme, Volumenstrom des Zentralgeräts; default ist erster Wert der Liste

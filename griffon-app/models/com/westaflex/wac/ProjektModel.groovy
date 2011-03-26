@@ -34,11 +34,6 @@ class ProjektModel {
 	String wpxFilename
 	
 	/**
-	 * Meta-data: will be initialized by ProjektController.
-	 */
-	@Bindable meta
-	
-	/**
 	 * WAC calculation service.
 	 */
 	def wacCalculationService
@@ -114,6 +109,24 @@ class ProjektModel {
 			abgleich: 0.0d,
 			einstellung: 0
 		]
+
+    /**
+     * Meta-data: will be initialized by ProjektController.
+     */
+    @Bindable meta = [
+		raum: [
+				typ: ["Wohnzimmer", "Kinderzimmer", "Schlafzimmer", "Esszimmer", "Arbeitszimmer", "Gästezimmer", "Hausarbeitsraum", "Kellerraum", "WC", "Küche", "Kochnische", "Bad mit/ohne WC", "Duschraum", "Sauna", "Flur", "Diele"],
+				geschoss: ["KG", "EG", "OG", "DG", "SB"],
+				luftart: ["ZU", "AB", "ZU/AB", "ÜB"],
+				raumVsBezeichnungZuluftventile: [/* initialized in Wac2Controller.mvcGroupInit */],
+				raumVsBezeichnungAbluftventile: [/* initialized in Wac2Controller.mvcGroupInit */],
+				raumVsUberstromelemente: [/* initialized in Wac2Controller.mvcGroupInit */],
+				raumVsVerteilebene: ["KG", "EG", "OG", "DG", "SB"],
+			],
+		gewahlterRaum: [:] as ObservableMap,
+		summeAktuelleWBW: 0.0d,
+		wbw: [] as ObservableList, /* initialized in Wac2Controller.mvcGroupInit */
+	] as ObservableMap
 	
 	/**
 	 * Our central model.
