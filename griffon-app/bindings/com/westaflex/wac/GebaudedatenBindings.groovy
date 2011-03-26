@@ -54,8 +54,8 @@ gebaudeLuftdichtheitKategorieC.actionPerformed = controller.luftdichtheitKategor
 bind(source: model.map.gebaude, sourceProperty: "faktorBesondereAnforderungen", target: faktorBesondereAnforderungen, targetProperty: "text", converter: GH.toString2Converter)
 faktorBesondereAnforderungen.focusLost = controller.speichereFaktorBesondereAnforderungen
 // Geplante Belegung
-bind(source: model.map.gebaude.geplanteBelegung, sourceProperty: "personenanzahl",        target: gebaudeGeplantePersonenanzahl,        targetProperty: "value", mutual: true)
-bind(source: model.map.gebaude.geplanteBelegung, sourceProperty: "aussenluftVsProPerson", target: gebaudeGeplanteAussenluftVsProPerson, targetProperty: "value", mutual: true)
+bind(source: model.map.gebaude.geplanteBelegung, sourceProperty: "personenanzahl",        target: gebaudeGeplantePersonenanzahl,        targetProperty: "value")
+bind(source: model.map.gebaude.geplanteBelegung, sourceProperty: "aussenluftVsProPerson", target: gebaudeGeplanteAussenluftVsProPerson, targetProperty: "value")
 bind(source: model.map.gebaude.geplanteBelegung, sourceProperty: "mindestaussenluftrate", target: gebaudeGeplanteMindestaussenluftrate, targetProperty: "text",  converter: GH.toString2Converter)
 [gebaudeGeplantePersonenanzahl, gebaudeGeplanteAussenluftVsProPerson].each {
 	it.stateChanged = controller.berechneMindestaussenluftrate
