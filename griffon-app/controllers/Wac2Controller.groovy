@@ -168,27 +168,34 @@ class Wac2Controller {
 	 * Ein neues Projekt erstellen.
 	 */
 	def neuesProjekt = { evt = null ->
-		// Splash screen
-		doLater {
-			Wac2Splash.instance.setup()
-			Wac2Splash.instance.creatingProject()
-			doOutside {
-				// Die hier vergebene MVC ID wird immer genutzt, selbst wenn das Projekt anders benannt wird!
-				// (durch Bauvorhaben, Speichern)
-				// Es wird also immer "Projekt 1", "Projekt 2" etc. genutzt, nach Reihenfolge der Erstellung
-				String mvcId = generateMVCId()
-				def (m, v, c) =
-					createMVCGroup("Projekt", mvcId,
-									[projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
-				doLater {
-					// Splash screen
-					Wac2Splash.instance.creatingUiForProject()
-					// MVC ID zur Liste der Projekte hinzufügen
-					model.projekte << mvcId
-					// Projekt aktivieren
-					projektAktivieren(mvcId)
-                    // Splash screen
-					Wac2Splash.instance.dispose()
+
+        // Progress bar in Wac2View.
+        jxwithWorker(start: true) {
+            // initialize the worker
+            onInit {
+                model.statusProgressBarIndeterminate = true
+                model.statusBarText = "Phase 1/3: Erstelle ein neues Projekt..."
+            }
+
+            // do the task
+            work {
+                // Die hier vergebene MVC ID wird immer genutzt, selbst wenn das Projekt anders benannt wird!
+                // (durch Bauvorhaben, Speichern)
+                // Es wird also immer "Projekt 1", "Projekt 2" etc. genutzt, nach Reihenfolge der Erstellung
+                model.statusBarText = "Phase 2/3: Initialisiere das Projekt..."
+
+                String mvcId = generateMVCId()
+                def (m, v, c) =
+                    createMVCGroup("Projekt", mvcId,
+                                    [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+                model.statusBarText = "Phase 3/3: Erstelle Benutzeroberfläche für das Projekt..."
+                doLater {
+
+                    // MVC ID zur Liste der Projekte hinzufügen
+                    model.projekte << mvcId
+                    // Projekt aktivieren
+                    projektAktivieren(mvcId)
+
                     // resize the frame to validate the components.
                     try{
                         def dim = wac2Frame.getSize()
@@ -202,9 +209,16 @@ class Wac2Controller {
                     } catch (e) {
                         e.printStackTrace()
                     }
-				}
-			}
-		}
+                }
+            }
+
+            // do sth. when the task is done.
+            onDone {
+                model.statusProgressBarIndeterminate = false
+                model.statusBarText = "Bereit."
+            }
+        }
+
 	}
 	
 	/**

@@ -39,14 +39,14 @@ class Wac2Model {
 	/**
 	 * Status bar.
 	 */
-	def statusBarText = "Bereit."
+	@Bindable def statusBarText = "Bereit."
 
     /**
      * Progress bar in status bar.
      * Wert auf true setzen bewirkt, dass die Progress bar "unendlich" durchläuft.
      * Wert auf false setzen beendet das Ganze wieder.
      */
-	def statusProgressBarIndeterminate = false
+	@Bindable def statusProgressBarIndeterminate = false
 
 	/**
 	 * Liste aller offenen Projekte - MVC IDs.
