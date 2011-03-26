@@ -23,8 +23,9 @@ bind(source: model.meta.gewahlterRaum, sourceProperty: "raumLuftart",     target
 // Luftart
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumZuluftfaktor",       target: raumBearbeitenLuftartFaktorZuluftverteilung, targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumAbluftVolumenstrom", target: raumBearbeitenLuftartAbluftVs,               targetProperty: "text", converter: GH.toString2Converter)
-[raumBearbeitenLuftartFaktorZuluftverteilung, raumBearbeitenLuftartAbluftVs].each {
-	it.focusLost = controller.raumBearbeitenGeandert
+/*
+[raumBearbeitenRaumtyp, raumBearbeitenBezeichnung, raumBearbeitenRaumGeschoss, raumBearbeitenLuftartFaktorZuluftverteilung, raumBearbeitenLuftartAbluftVs].each {
+    GH.onChange(component: it, closure: controller.raumBearbeitenGeandert)
 }
 // Türen
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumMaxTurspaltHohe", target: raumBearbeitenDetailsTurspalthohe, targetProperty: "text", converter: GH.toString2Converter)
@@ -34,9 +35,15 @@ bind(source: model.meta.gewahlterRaum, sourceProperty: "raumBreite",  target: ra
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumHohe",    target: raumBearbeitenOptionalRaumhohe,    targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumFlache",  target: raumBearbeitenOptionalRaumflache,  targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumVolumen", target: raumBearbeitenOptionalRaumvolumen, targetProperty: "text", converter: GH.toString2Converter)
-[raumBearbeitenOptionalRaumlange, raumBearbeitenOptionalRaumbreite].each {
-	it.focusLost = controller.raumBearbeitenGeandert
+/*
+[raumBearbeitenOptionalRaumlange, raumBearbeitenOptionalRaumbreite, raumBearbeitenOptionalRaumhohe].each {
+    GH.onChange(component: it, closure: controller.raumBearbeitenGeandert)
 }
+*/
+// onChange
+GH.recurse(raumBearbeitenTabPanel, { component ->
+    GH.onChange(component, null, controller.raumBearbeitenGeandert)
+})
 // Schliessen
 raumBearbeitenSchliessen.actionPerformed = controller.raumBearbeitenSchliessen
 // Tur entfernen / Werte zuruecksetzen
