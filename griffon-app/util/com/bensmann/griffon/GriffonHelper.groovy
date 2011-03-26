@@ -77,9 +77,10 @@ class GriffonHelper {
 			try {
 				r = nf.format(d)
 			} catch (e) {
-				if (GriffonHelper.DEBUG) println "toString2(): Exception while converting number ${d?.dump()}: ${e}"
+				println "toString2(): Exception while converting number ${d?.dump()} to string: ${e}"
 			}
 		}
+        ////println "toString2: ${d?.dump()} -> ${r?.dump()}"
 		r
 	}
 	
@@ -129,6 +130,8 @@ class GriffonHelper {
 		// Does String contain a character?
 		def charList = (["a".."z"] + ["A".."Z"]).flatten()
 		if (d.any { it in charList }) return d
+        // TODO HACK: Convert dot into comma (we expect german format, not english)
+        d = d.collect { it == "." ? "," : it }.join()
 		// Parse number
 		if (d in ["NaN", "Inf"]) {
 			//r = 0.0d
@@ -140,7 +143,7 @@ class GriffonHelper {
 			try {
 				r = nf.parse(d) as Double
 			} catch (e) {
-				println "toDouble2: d=${delegate} digits=${digits} e=${e}"
+				println "toDouble2: Exception while converting string ${d?.dump()} to double: d=${delegate} digits=${digits} e=${e}"
 				//e.printStackTrace()
 				return d
 			}
@@ -187,7 +190,6 @@ class GriffonHelper {
 		// This map
 		if (GriffonHelper.DEBUG) println "addMapPropertyChangeListener: adding PropertyChangeListener for ${name}"
 		map.addPropertyChangeListener({ evt ->
-				// TODO rbe print if debug flag is set
 				if (GriffonHelper.DEBUG) println "C! ${name}.${evt.propertyName}: ${evt.oldValue?.dump()} -> ${evt.newValue?.dump()}"
 				if (closure) closure(evt)
 			} as java.beans.PropertyChangeListener)
@@ -432,15 +434,6 @@ class GriffonHelper {
 					//}
 				}
 			}
-			/* Is done via binding-converter-closure now (see **Binding scripts)
-			if (evt.id == java.awt.event.FocusEvent.FOCUS_LOST) {
-				if (component.text) {
-					javax.swing.SwingUtilities.invokeLater {
-						component.text = component.text.toDouble2().toString2()
-					}
-				}
-			}
-			*/
 		} as java.awt.event.FocusListener)
 	}
 	
