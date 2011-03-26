@@ -208,7 +208,7 @@ class ProjektController {
 		model.map.dirty = false
 		setTabTitle()
 		// Close splash screen
-		Wac2Splash.instance.dispose()
+		try { Wac2Splash.instance.dispose() } catch (e) { println "${this}: Cannot find Wac2Splash: ${e}" }
 	}
 	
 	/**
