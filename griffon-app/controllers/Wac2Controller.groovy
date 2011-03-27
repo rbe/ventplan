@@ -462,5 +462,12 @@ class Wac2Controller {
 	def projektDrucken = { evt = null ->
 		getMVCGroupAktivesProjekt().controller.drucken()
 	}
+
+    /**
+     * WAC-151: Automatische und manuelle Berechnung
+     */
+    def automatischeBerechnung = { evt = null ->
+        // TODO...
+    }
 	
 }

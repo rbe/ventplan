@@ -20,6 +20,9 @@ menuBar = menuBar {
 		menuItem(projektSchliessenAction)
 		separator()
 		menuItem(seitenansichtAction)
+        // WAC-151: Automatische und manuelle Berechnung
+//        separator()
+//        menuItem(automatischeBerechnungAction)
 		/* Später aktivieren, Angebote sind noch nicht verfügbar! menuItem(druckenAction)*/
 		if (!isMacOSX) {
 			separator()

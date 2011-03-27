@@ -96,3 +96,14 @@ exitAction = action(
 		enabled: true,
 		closure: controller.exitApplication
 	)
+
+// WAC-151: Automatische und manuelle Berechnung
+//automatischeBerechnungAction = action(
+//		id: "automatischeBerechnungAction",
+//		name: "Automatische Berechnung",
+//		mnemonic: "B",
+//		accelerator: shortcut("B"),
+//		smallIcon: imageIcon(resource: "/menu/automatischeBerechnung.png"),
+//		enabled: true,
+//		closure: controller.automatischeBerechnung
+//	)

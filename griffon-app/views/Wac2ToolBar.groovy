@@ -18,5 +18,8 @@ toolBar(id: 'toolbar', rollover: true) {
     button(alleProjekteSpeichernAction, text: null)
     vertSep()
 	button(projektSeitenansichtAction, text: null)
+    // WAC-151: Automatische und manuelle Berechnung
+//    vertSep()
+//	button(automatischeBerechnungAction, text: null)
 	/* Später aktivieren, Angebote sind noch nicht verfügbar! button(projektDruckenAction, text: null)*/
 }
