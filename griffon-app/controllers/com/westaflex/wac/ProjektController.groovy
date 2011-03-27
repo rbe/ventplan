@@ -20,6 +20,7 @@ import javax.swing.table.AbstractTableModel
 import javax.swing.event.TableModelListener
 import java.awt.Component
 import javax.swing.DefaultListModel
+import javax.swing.event.TableModelEvent
 
 /**
  * 
@@ -738,6 +739,16 @@ class ProjektController {
 			// TODO Move values into model.meta
 			GH.makeComboboxCellEditor columnModel.getColumn(0), ["Tür", "Durchgang"]
 			GH.makeComboboxCellEditor columnModel.getColumn(1), [610, 735, 860, 985, 1110, 1235, 1485, 1735, 1985]
+
+            view.raumBearbeitenTurenTabelle.getModel().addTableModelListener({ TableModelEvent e ->
+                println "test"
+                println "test"
+                println "test e -> ${e.dump()}"
+                println "test"
+                println "test"
+            } as TableModelListener);
+
+
 			raumBearbeitenDialog.show()
 		}
 	}
@@ -784,6 +795,11 @@ class ProjektController {
                 model.meta.gewahlterRaum.raumTurspaltHinweis = ""
             }
 		}
+        // WAC-165: Bugfix: Werte in der Türen-Tabelle werden erst dann aktualisiert, wenn die Maus über einzelne Zeilen bewegt wird
+        try {
+            view.raumBearbeitenTurenTabelle.repaint()
+        }
+        catch (e) {}
 	}
 
     /**
