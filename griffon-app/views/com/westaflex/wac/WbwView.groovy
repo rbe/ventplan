@@ -1,11 +1,13 @@
-/**
- * /Users/rbe/project/wac2/griffon-app/views/com/westaflex/wac/WbwView.groovy
- * 
- * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
- * Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
- * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
- * 
- * Created by: rbe
+/*
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
+ *
+ * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
+ * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
+ *
+ * Project wac
+ * /Users/rbe/project/wac/griffon-app/views/com/westaflex/wac/WbwView.groovy
+ * Last modified at 27.03.2011 19:22:24 by rbe
  */
 package com.westaflex.wac
 
@@ -57,6 +59,8 @@ panel(id: "wbwPanel", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[f
 	}
 	
 }
+// Format fields
+GH.autoformatDoubleTextField(wbwWert)
 // Bindings
 build(WbwBindings)
 

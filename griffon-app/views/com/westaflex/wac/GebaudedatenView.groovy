@@ -1,11 +1,13 @@
-/**
- * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/views/com/westaflex/wac/GebaudedatenView.groovy
- * 
- * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
- * Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
- * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
- * 
- * Created by: rbe
+/*
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
+ *
+ * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
+ * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
+ *
+ * Project wac
+ * /Users/rbe/project/wac/griffon-app/views/com/westaflex/wac/GebaudedatenView.groovy
+ * Last modified at 27.03.2011 19:22:24 by rbe
  */
 package com.westaflex.wac
 
@@ -104,11 +106,15 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
         }
     }
 }
-GH.recurse(gebaudeGeometrie, GH.doubleTextField)
-GH.recurse(gebaudeLuftdichtheit, GH.doubleTextField)
-GH.recurse(gebaudeBesondereAnforderungen, GH.doubleTextField) //(faktorBesondereAnforderungen)
+// Format fields
+GH.autoformatDoubleTextField(gebaudeGeometrieWohnflache)
+GH.autoformatDoubleTextField(gebaudeGeometrieMittlereRaumhohe)
+GH.autoformatDoubleTextField(gebaudeGeometrieLuftvolumen)
+GH.autoformatDoubleTextField(gebaudeGeometrieGeluftetesVolumen)
+GH.autoformatDoubleTextField(gebaudeLuftdichtheitDruckexponent)
+GH.autoformatDoubleTextField(faktorBesondereAnforderungen)
 GH.selectAllTextField(gebaudeGeplantePersonenanzahl.editor.textField)
 GH.yellowTextField(gebaudeGeplantePersonenanzahl.editor.textField)
-GH.doubleTextField(gebaudeGeplanteAussenluftVsProPerson.editor.textField)
+GH.autoformatDoubleTextField(gebaudeGeplanteAussenluftVsProPerson.editor.textField)
 // Bindings
 build(GebaudedatenBindings)

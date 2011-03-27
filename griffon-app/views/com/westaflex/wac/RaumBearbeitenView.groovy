@@ -7,7 +7,7 @@
  *
  * Project wac
  * /Users/rbe/project/wac/griffon-app/views/com/westaflex/wac/RaumBearbeitenView.groovy
- * Last modified at 22.03.2011 13:07:54 by rbe
+ * Last modified at 27.03.2011 19:22:23 by rbe
  */
 package com.westaflex.wac
 
@@ -121,7 +121,16 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
 }
 
 // Format fields
-GH.recurse(raumBearbeitenTabPanel, GH.doubleTextField)
+GH.yellowTextField(raumBearbeitenRaumnummer)
+GH.yellowTextField(raumBearbeitenBezeichnung)
+GH.autoformatDoubleTextField(raumBearbeitenLuftartFaktorZuluftverteilung)
+GH.autoformatDoubleTextField(raumBearbeitenLuftartAbluftVs)
+GH.autoformatDoubleTextField(raumBearbeitenDetailsTurspalthohe)
+GH.autoformatDoubleTextField(raumBearbeitenOptionalRaumlange)
+GH.autoformatDoubleTextField(raumBearbeitenOptionalRaumbreite)
+GH.autoformatDoubleTextField(raumBearbeitenOptionalRaumhohe)
+GH.autoformatDoubleTextField(raumBearbeitenOptionalRaumflache)
+GH.autoformatDoubleTextField(raumBearbeitenOptionalRaumvolumen)
 // Bindings
 build(RaumBearbeitenBindings)
 
