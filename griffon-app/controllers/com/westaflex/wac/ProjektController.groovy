@@ -7,7 +7,7 @@
  *
  * Project wac
  * /Users/rbe/project/wac/griffon-app/controllers/com/westaflex/wac/ProjektController.groovy
- * Last modified at 28.03.2011 12:53:04 by rbe
+ * Last modified at 28.03.2011 13:31:40 by rbe
  */
 
 package com.westaflex.wac
@@ -82,7 +82,6 @@ class ProjektController {
 				wacCalculationService: wacCalculationService,
 				wacModelService: wacModelService
 			]
-		////GH.tieEventListener(this, RaumEvents, props)
 		GH.tieEventListener(this, DvbKanalnetzEvents, props)
 		GH.tieEventListener(this, DvbVentileinstellungEvents, props)
 	}
