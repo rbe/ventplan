@@ -307,13 +307,10 @@ class ProjektController {
 		//model.map.gebaude.geometrie.gelufteteFlache = g.gelufteteFlache
 		model.map.gebaude.geometrie.gelufteteaVolumen = g.geluftetesVolumen
 		//
-		///publishEvent "GeometrieEingegeben"
         doLater {
-            //println "processing event 'GeometrieEingegeben'"
             wacCalculationService.geometrie(model.map)
             wacCalculationService.aussenluftVs(model.map)
             // Zentralgerät bestimmen
-            ///publishEvent "ZentralgeratAktualisieren"
             onZentralgeratAktualisieren()
         }
 	}
@@ -404,11 +401,8 @@ class ProjektController {
 			// Set caret to old position; is moved through model update?
 			view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition = personenanzahlCaretPos
 			view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition = aussenluftVsProPersonCaretPos
-			///publishEvent "AussenluftVsBerechnen"
-            wacCalculationService.aussenluftVs(model.map)
-            // Zentralgerät bestimmen
-            ///publishEvent "ZentralgeratAktualisieren"
-            onZentralgeratAktualisieren()
+            // Berechnen
+            berechneAussenluftVs()
 		}
 	}
 	
