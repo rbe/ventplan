@@ -363,10 +363,6 @@ class Wac2Controller {
 						app.controllers["Dialog"].showErrorDialog(errorMsg as String)
 						if (DEBUG) println errorMsg
 					}
-					// Bindings and events of ProjektModel are fired now!?
-					if (DEBUG) println "-" * 80
-					if (DEBUG) println "projektOffnen: ProjektModel bidings/events fire now!?"
-					if (DEBUG) println "-" * 80
 					// HACK
 					if (projektController) {
 						doOutside {

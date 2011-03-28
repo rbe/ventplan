@@ -542,8 +542,6 @@ class ProjektController {
 						[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
 						[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
 					] as ObservableList
-		////if (DEBUG) println "raumHinzufugen: publishing event for raum.position=${raum.position}"
-		////publishEvent "RaumHinzufugen", [raum, view]
 		// Hole Werte für neuen Raum aus der View und füge Raum hinzu
 		raum.with {
 			// Übernehme Wert für Bezeichnung vom Typ?
@@ -566,7 +564,6 @@ class ProjektController {
 			// Raum im Model hinzufügen
             if (DEBUG) println "onRaumHinzufugen: raum -> ${raum}"
 			model.addRaum(raum, view)
-			////onRaumHinzugefugt(raum.position, view)
             raumGeandert(model.map.raum.raume.size() - 1)
 		}
 	}
@@ -575,7 +572,6 @@ class ProjektController {
 	 * Raumdarten - ein Raum wurde geändert.
 	 */
 	def raumGeandert = { raumIndex = null ->
-		////publishEvent "RaumGeandert", [view.raumTabelle.selectedRow]
         /*if (DEBUG)*/ println "raumGeandert: raum[${raumIndex}] ${model.map.raum.raume}"
         doLater {
             if (raumIndex > -1) {
@@ -676,7 +672,6 @@ class ProjektController {
 			// Raum zum Model hinzufügen
 			model.addRaum(newMap, view, true)
 			// Raum hinzugefügt
-			////publishEvent "RaumHinzugefugt", [newMap.position, view]
             raumGeandert(newMap.position)
 		}
 	}
@@ -696,7 +691,6 @@ class ProjektController {
 				}
 				model.resyncRaumTableModels()
 				// Raum geändert
-				////publishEvent "RaumGeandert", [row - 1]
                 raumGeandert(row - 1)
 			}
 		}
@@ -717,7 +711,6 @@ class ProjektController {
 				}
 				model.resyncRaumTableModels()
 				// Raum geändert
-				////publishEvent "RaumGeandert", [row + 1]
                 raumGeandert(row + 1)
 			}
 		}
