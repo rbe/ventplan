@@ -717,9 +717,8 @@ class ProjektModel {
 			GH.makeComboboxCellEditor view.raumVsUberstromelementeTabelle.columnModel.getColumn(1), meta.raum.luftart
 			// Combobox RaumVs - Überströmelemente
 			GH.makeComboboxCellEditor view.raumVsUberstromelementeTabelle.columnModel.getColumn(4), meta.raumVsUberstromelemente
-			// TODO WAC-7 Verbesserung! Später freischalten.
-			// Raum Typ für Druckverlustberechnung - Ventileinstellung Combobox.
-			//updateDvbVentileinstellungComboBoxModel(view)
+			// WAC-7: Raumtyp für Druckverlustberechnung - Ventileinstellung Combobox.
+			updateDvbVentileinstellungComboBoxModel(view)
 		}
 	}
 	
@@ -794,8 +793,8 @@ class ProjektModel {
 			[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
 				it.remove(raumIndex)
 			}
-			// TODO WAC-7 Verbesserung! Später freischalten.
-			//updateDvbVentileinstellungComboBoxModel(view)
+			// WAC-7
+			updateDvbVentileinstellungComboBoxModel(view)
 		}
 	}
 	
@@ -898,9 +897,10 @@ class ProjektModel {
 	
 	/**
 	 * ComboBox Model für die Räume in der Druckverlustberechnung Ventileinstellung setzen.
+     * WAC-7.
 	 */
 	def updateDvbVentileinstellungComboBoxModel = { view ->
-		def newComboBoxModel = meta.raum.typ + map.raum.raume.raumBezeichnung as Set
+		def newComboBoxModel = ["-- Eingegebene Räume --"] + map.raum.raume.raumBezeichnung + ["-- Raumtypen --"] + meta.raum.typ /*as Set*/
 		view.dvbVentileinstellungRaum.setModel(new DefaultComboBoxModel(newComboBoxModel.toArray()))
 	}
 	
