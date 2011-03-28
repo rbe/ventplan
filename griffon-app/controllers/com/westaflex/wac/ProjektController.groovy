@@ -7,7 +7,7 @@
  *
  * Project wac
  * /Users/rbe/project/wac/griffon-app/controllers/com/westaflex/wac/ProjektController.groovy
- * Last modified at 28.03.2011 11:00:09 by rbe
+ * Last modified at 28.03.2011 12:53:04 by rbe
  */
 
 package com.westaflex.wac
@@ -118,11 +118,13 @@ class ProjektController {
 			model.meta.dvbVentileinstellung = wacModelService.getDvbVentileinstellung()
 			// Akustikberechnung - 1. Hauptschalldämpfer
 			model.meta.akustikSchalldampfer = wacModelService.getSchalldampfer()
+            doLater {
+                // Raumvolumenströme, Zentralgerät
+                model.map.anlage.zentralgerat = model.meta.zentralgerat[0]
+                // Raumvolumenströme, Volumenstrom des Zentralgeräts; default ist erster Wert der Liste
+                model.map.anlage.volumenstromZentralgerat = model.meta.volumenstromZentralgerat[0]
+            }
 		}
-		// Raumvolumenströme, Zentralgerät
-		model.map.anlage.zentralgerat = model.meta.zentralgerat[0]
-		// Raumvolumenströme, Volumenstrom des Zentralgeräts; default ist erster Wert der Liste
-		model.map.anlage.volumenstromZentralgerat = model.meta.volumenstromZentralgerat[0]
 	}
 	
 	/**
