@@ -1,11 +1,13 @@
-/**
- * /Users/rbe/project/wac2/griffon-app/services/com/westaflex/wac/OOoService.groovy
- * 
- * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
- * Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
- * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
- * 
- * Created by: rbe
+/*
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
+ *
+ * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
+ * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
+ *
+ * Project wac
+ * /Users/rbe/project/wac/griffon-app/services/com/westaflex/wac/OooService.groovy
+ * Last modified at 28.03.2011 14:43:30 by rbe
  */
 package com.westaflex.wac
 
@@ -352,6 +354,7 @@ class OooService {
 				// raumZuluft- oder raumAbluftvolumenstrom
 				// ZU/AB: größeren Wert nehmen
 				def vs
+                // TODO Wert abzgl. Infiltration?
 				switch (r.raumLuftart) {
 					case "ZU":
 						vs = r.raumZuluftVolumenstrom

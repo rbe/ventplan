@@ -7,7 +7,7 @@
  *
  * Project wac
  * /Users/rbe/project/wac/griffon-app/services/com/westaflex/wac/WacCalculationService.groovy
- * Last modified at 23.03.2011 13:15:26 by rbe
+ * Last modified at 28.03.2011 14:40:58 by rbe
  */
 package com.westaflex.wac
 
@@ -379,8 +379,8 @@ class WacCalculationService {
 				if (it.raumLuftart.contains("ZU/AB")) {
 					Double ltmZuluftRaum = Math.round(gesamtAvsLTM * it.raumZuluftfaktor / gesamtZuluftfaktor)
                     // TODO Auch abzgl. Infiltration als eigener Wert?
-					it.raumZuluftVolumenstrom = ltmZuluftRaum
-////					it.raumAbluftVolumenstromInfiltration = ltmAbluftRaum
+					it.raumZuluftVolumenstromInfiltration = ltmZuluftRaum
+					it.raumAbluftVolumenstromInfiltration = ltmAbluftRaum
                     if (ltmZuluftRaum > ltmAbluftRaum) {
 						//it.raumVolumenstrom = ltmZuluftRaum
 						it.raumLuftwechsel = (ltmZuluftRaum / it.raumVolumen)
@@ -402,7 +402,7 @@ class WacCalculationService {
 			Double ltmZuluftRaum = Math.round(gesamtAvsLTM * it.raumZuluftfaktor / gesamtZuluftfaktor)
 //			if (b) {
                 // TODO Auch abzgl. Infiltration berechnen?
-				it.raumZuluftVolumenstrom = ltmZuluftRaum
+				it.raumZuluftVolumenstromInfiltration = ltmZuluftRaum
 				it.raumLuftwechsel = ltmZuluftRaum / it.raumVolumen
 //			} else {
 //				ltmZuluftSumme += ltmZuluftRaum
@@ -413,7 +413,8 @@ class WacCalculationService {
 		map.raum.raume.each {
 			switch (it.raumLuftart) {
 				case "ZU":
-					it.raumUberstromVolumenstrom = it.raumZuluftVolumenstrom
+                    // TODO Auch abzgl. Infiltration?
+					it.raumUberstromVolumenstrom = it.raumZuluftVolumenstromInfiltration
 					break
 				case "AB":
                     // TODO Auch abzgl. Infiltration?
@@ -422,7 +423,7 @@ class WacCalculationService {
 				case "ZU/AB":
                     // TODO Auch abzgl. Infiltration?
 					it.raumUberstromVolumenstrom =
-						java.lang.Math.abs(it.raumZuluftVolumenstrom - it.raumAbluftVolumenstromInfiltration)
+						java.lang.Math.abs(it.raumZuluftVolumenstromInfiltration - it.raumAbluftVolumenstromInfiltration)
 					break
 			}
 		}
@@ -557,21 +558,19 @@ class WacCalculationService {
 			def ventil = map.raumBezeichnungZuluftventile
 			if (ventil) {
 				def maxVolumenstrom = wacModelService.getMaxVolumenstrom(ventil)
-				// Anzahl Ventile
-				map.raumAnzahlZuluftventile = java.lang.Math.ceil(map.raumZuluftVolumenstrom / maxVolumenstrom)
-				// Luftmenge je Ventil
-				map.raumZuluftmengeJeVentil = map.raumZuluftVolumenstrom / map.raumAnzahlZuluftventile
+				// Anzahl Ventile; abzgl. Infiltration
+				map.raumAnzahlZuluftventile = java.lang.Math.ceil(map.raumZuluftVolumenstromInfiltration / maxVolumenstrom)
+				// Luftmenge je Ventil; abzgl. Infiltration
+				map.raumZuluftmengeJeVentil = map.raumZuluftVolumenstromInfiltration / map.raumAnzahlZuluftventile
 			}
 		}
 		if (map.raumLuftart in ["AB", "ZU/AB"]) {
 			def ventil = map.raumBezeichnungAbluftventile
 			if (ventil) {
 				def maxVolumenstrom = wacModelService.getMaxVolumenstrom(ventil)
-				// Anzahl Ventile
-                // TODO Auch abzgl. Infiltration?
+				// Anzahl Ventile; abzgl. Infiltration
 				map.raumAnzahlAbluftventile = java.lang.Math.ceil(map.raumAbluftVolumenstromInfiltration / maxVolumenstrom)
-				// Luftmenge je Ventil
-                // TODO Auch abzgl. Infiltration?
+				// Luftmenge je Ventil; abzgl. Infiltration
 				map.raumAbluftmengeJeVentil = map.raumAbluftVolumenstromInfiltration / map.raumAnzahlAbluftventile
 			}
 		}

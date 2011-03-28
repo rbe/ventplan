@@ -7,7 +7,7 @@
  *
  * Project wac
  * /Users/rbe/project/wac/griffon-app/models/com/westaflex/wac/ProjektModel.groovy
- * Last modified at 28.03.2011 13:34:00 by rbe
+ * Last modified at 28.03.2011 13:52:55 by rbe
  */
 package com.westaflex.wac
 
@@ -51,6 +51,7 @@ class ProjektModel {
 			raumVolumen: 0.0d,
 			raumLuftwechsel: 0.0d,
 			raumZuluftVolumenstrom: 0.0d,
+            raumZuluftVolumenstromInfiltration: 0.0d, // Zuluftfaktor abzgl. Infiltration
 			raumAbluftVolumenstrom: 0.0d,
             raumAbluftVolumenstromInfiltration: 0.0d, // Abluftvs abzgl. Infiltration
 			raumBezeichnungAbluftventile: "",
