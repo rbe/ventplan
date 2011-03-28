@@ -169,52 +169,7 @@ class ProjektController {
 	boolean canClose() {
 		model.map.dirty == false
 	}
-	
-	/**
-	 * TODO rbe Nachdem alle Events beseitigt wurden, überprüfen, ob notwendig!
-	 */
-	def afterLoading = {
-		if (DEBUG) println "afterLoading: fire RaumHinzufugen"
-		// Räume
-		// ConcurrentModificationException!
-		def raume = model.map.raum.raume.clone()
-		// Jeden Raum einzeln (ohne Events!) berechnen
-		raume.each { raum ->
-			model.addRaumTurenModel()
-			// Aussenluftvolumenströme berechnen
-			//wacCalculationService.aussenluftVs(model.map)
-			// Nummern der Räume berechnen
-			wacCalculationService.berechneRaumnummer(model.map)
-		}
-		// Räume: set cell editors
-		model.setRaumEditors(view)
-		// Gebäude-Geometrie berechnen
-		wacCalculationService.geometrieAusRaumdaten(model.map)
-		// Zentralgerät bestimmen
-		onZentralgeratAktualisieren()
-		// Anlagendaten - Kennzeichen
-		berechneEnergieKennzeichen()
-		berechneHygieneKennzeichen()
-		berechneKennzeichenLuftungsanlage()
-		// Zu-/Abluftventile
-		wacCalculationService.berechneZuAbluftventile(model.map)
-		// Jeden Türspalt berechnen
-		raume.each { raum ->
-			// Überströmelemente
-			wacCalculationService.berechneUberstromelemente(raum)
-			// Türspalt berechnen
-			wacCalculationService.berechneTurspalt(raum)
-		}
-		println "afterLoading: model.map.anlage.fortluft=${model.map.anlage.fortluft}"
-		//
-		model.resyncRaumTableModels()
-		// Update tab title to ensure that no "unsaved-data-star" is displayed
-		model.map.dirty = false
-		setTabTitle()
-		// Close splash screen
-		try { Wac2Splash.instance.dispose() } catch (e) { println "${this}: Cannot find Wac2Splash: ${e}" }
-	}
-	
+
 	/**
 	 * Save this project.
 	 * @return Boolean Was project successfully saved to a file?
@@ -291,7 +246,50 @@ class ProjektController {
                 break
         }
 	}
-	
+
+    /**
+     *
+     */
+    def berechneAlles = {
+        if (DEBUG) println "berechneAlles: fire RaumHinzufugen"
+        // Räume; ConcurrentModificationException!
+        def raume = model.map.raum.raume.clone()
+        // Jedem Raum ein TableModel für Türen hinzufügen
+        raume.each { raum ->
+            model.addRaumTurenModel()
+        }
+        // Räume: set cell editors
+        model.setRaumEditors(view)
+        // Nummern der Räume berechnen
+        wacCalculationService.berechneRaumnummer(model.map)
+        // Gebäude-Geometrie berechnen
+        wacCalculationService.geometrieAusRaumdaten(model.map)
+        // Anlagendaten - Kennzeichen
+        berechneEnergieKennzeichen()
+        berechneHygieneKennzeichen()
+        berechneKennzeichenLuftungsanlage()
+        // Aussenluftvolumenströme berechnen
+        berechneAussenluftVs()
+        // Zu-/Abluftventile
+        wacCalculationService.berechneZuAbluftventile(model.map)
+        // Jeden Türspalt berechnen
+        model.map.raum.raume.each { raum ->
+            // Überströmelemente
+            wacCalculationService.berechneUberstromelemente(raum)
+            // Türspalt berechnen
+            wacCalculationService.berechneTurspalt(raum)
+        }
+        //
+        model.resyncRaumTableModels()
+    }
+
+    /**
+     * Gebäudedaten wurden geändert - Aussenluftvolumenströme berechnen.
+     */
+    def gebaudedatenGeandert = { evt = null ->
+        berechneAussenluftVs()
+    }
+
 	/**
 	 * Gebäudedaten - Geometrie wurde manuell eingegeben.
 	 */

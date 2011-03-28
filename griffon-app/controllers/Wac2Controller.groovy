@@ -170,7 +170,6 @@ class Wac2Controller {
 	 * Ein neues Projekt erstellen.
 	 */
 	def neuesProjekt = { evt = null ->
-
         // Progress bar in Wac2View.
         jxwithWorker(start: true) {
             // initialize the worker
@@ -178,26 +177,22 @@ class Wac2Controller {
                 model.statusProgressBarIndeterminate = true
                 model.statusBarText = "Phase 1/3: Erstelle ein neues Projekt..."
             }
-
             // do the task
             work {
                 // Die hier vergebene MVC ID wird immer genutzt, selbst wenn das Projekt anders benannt wird!
                 // (durch Bauvorhaben, Speichern)
                 // Es wird also immer "Projekt 1", "Projekt 2" etc. genutzt, nach Reihenfolge der Erstellung
                 model.statusBarText = "Phase 2/3: Initialisiere das Projekt..."
-
                 String mvcId = generateMVCId()
                 def (m, v, c) =
                     createMVCGroup("Projekt", mvcId,
                                     [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
                 model.statusBarText = "Phase 3/3: Erstelle Benutzeroberfläche für das Projekt..."
                 doLater {
-
                     // MVC ID zur Liste der Projekte hinzufügen
                     model.projekte << mvcId
                     // Projekt aktivieren
                     projektAktivieren(mvcId)
-
                     // resize the frame to validate the components.
                     try{
                         def dim = wac2Frame.getSize()
@@ -207,20 +202,17 @@ class Wac2Controller {
                         wac2Frame.setSize(dim)
                         wac2Frame.invalidate()
                         wac2Frame.validate()
-
                     } catch (e) {
                         e.printStackTrace()
                     }
                 }
             }
-
             // do sth. when the task is done.
             onDone {
                 model.statusProgressBarIndeterminate = false
                 model.statusBarText = "Bereit."
             }
         }
-
 	}
 	
 	/**
@@ -316,63 +308,68 @@ class Wac2Controller {
 	 * aus dem XML in das ProjektModel.
 	 */
 	def projektOffnen = { evt = null ->
-		// Splash screen
-		doLater {
-			// Choose file
-			def openResult = view.wpxFileChooserWindow.showOpenDialog(view.wac2Frame)
-			if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
-				// Save selected file
-				def file = view.wpxFileChooserWindow.selectedFile.toString()
-				// ... and reset it in FileChooser
-				view.wpxFileChooserWindow.selectedFile = null
-				if (DEBUG) println "projektOffnen: file=${file?.dump()}"
-				// Load data
-				Wac2Splash.instance.setup()
-				Wac2Splash.instance.loadingProject()
-				// Start thread
-				def projektModel, projektView, projektController
-				doOutside {
-					// May return null due to org.xml.sax.SAXParseException while validating against XSD
-					def document = projektModelService.load(file)
-					if (document) {
-						//if (DEBUG) println "projektOffnen: document=${document?.dump()}"
-						// Create new Projekt MVC group
-						String mvcId = generateMVCId()
-						(projektModel, projektView, projektController) =
-							createMVCGroup("Projekt", mvcId,
-											[projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
-						// Set filename in model
-						projektModel.wpxFilename = file
-						// Convert loaded XML into map
-						def map = projektModelService.toMap(document)
-						// Recursively copy map to model
-						// ATTENTION: DOES NOT fire bindings and events asynchronously/in background!
-						// They are fired after leaving this method.
-						GH.deepCopyMap projektModel.map, map
-						//println "projektOffnen: projektModel.map=${projektModel.map}"
-						// Splash screen
-						doLater {
-							Wac2Splash.instance.creatingUiForProject()
-						}
-						// MVC ID zur Liste der Projekte hinzufügen
-						model.projekte << mvcId
-						// Projekt aktivieren
-						projektAktivieren(mvcId)
-					} else {
-						def errorMsg = "projektOffnen: Konnte Projekt nicht öffnen!"
-						app.controllers["Dialog"].showErrorDialog(errorMsg as String)
-						if (DEBUG) println errorMsg
-					}
-					// HACK
-					if (projektController) {
-						doOutside {
-							//try { Thread.sleep(1 * 1000) } catch (e) {}
-							projektController.afterLoading()
-						}
-					}
-				}
-			}
-		}
+        // Choose file
+        def openResult = view.wpxFileChooserWindow.showOpenDialog(view.wac2Frame)
+        if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
+
+        }
+		jxwithWorker(start: true) {
+            // initialize the worker
+            onInit {
+                model.statusProgressBarIndeterminate = true
+                model.statusBarText = "Phase 1/3: Projektdatei wählen..."
+            }
+            // do the task
+            work {
+                // Save selected file
+                def file = view.wpxFileChooserWindow.selectedFile.toString()
+                // ... and reset it in FileChooser
+                view.wpxFileChooserWindow.selectedFile = null
+                if (DEBUG) println "projektOffnen: file=${file?.dump()}"
+                // Load data; start thread
+                model.statusBarText = "Phase 2/3: Lade Daten..."
+                def projektModel, projektView, projektController
+                // May return null due to org.xml.sax.SAXParseException while validating against XSD
+                def document = projektModelService.load(file)
+                if (document) {
+                    //if (DEBUG) println "projektOffnen: document=${document?.dump()}"
+                    // Create new Projekt MVC group
+                    String mvcId = generateMVCId()
+                    (projektModel, projektView, projektController) =
+                        createMVCGroup("Projekt", mvcId,
+                                        [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+                    // Set filename in model
+                    projektModel.wpxFilename = file
+                    // Convert loaded XML into map
+                    def map = projektModelService.toMap(document)
+                    // Recursively copy map to model
+                    // ATTENTION: DOES NOT fire bindings and events asynchronously/in background!
+                    // They are fired after leaving this method.
+                    GH.deepCopyMap projektModel.map, map
+                    //println "projektOffnen: projektModel.map=${projektModel.map}"
+                    // MVC ID zur Liste der Projekte hinzufügen
+                    model.projekte << mvcId
+                    // Projekt aktivieren
+                    projektAktivieren(mvcId)
+                } else {
+                    def errorMsg = "projektOffnen: Konnte Projekt nicht öffnen!"
+                    app.controllers["Dialog"].showErrorDialog(errorMsg as String)
+                    if (DEBUG) println errorMsg
+                }
+                if (projektController) {
+                    model.statusBarText = "Phase 3/3: Berechne Projekt..."
+                    projektController.berechneAlles()
+                    // Update tab title to ensure that no "unsaved-data-star" is displayed
+                    projektModel.map.dirty = false
+                    projektController.setTabTitle()
+                }
+            }
+            // do sth. when the task is done.
+            onDone {
+                model.statusProgressBarIndeterminate = false
+                model.statusBarText = "Bereit."
+            }
+        }
 	}
 	
 	/**
