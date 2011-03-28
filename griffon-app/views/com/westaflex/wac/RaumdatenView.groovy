@@ -19,8 +19,6 @@ import ca.odell.glazedlists.BasicEventList
 import ca.odell.glazedlists.*
 import javax.swing.JComboBox
 
-
-
 panel(id: "raumPanel", layout: new MigLayout("fill", "[fill,grow]", "")) {
     borderLayout()
     // Raum anlegen
