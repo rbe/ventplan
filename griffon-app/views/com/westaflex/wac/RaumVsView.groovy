@@ -86,6 +86,7 @@ raumVsVentileTabGroup.with {
 	setBoldActiveTab(true)
 }
 
+/*
 raumVsZuAbluftventileTabelle.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF)
 //raumVsZuAbluftventileTabelle.packTable(0)
 raumVsZuAbluftventileTabelle.packColumn(0, 10, 60)
@@ -101,6 +102,7 @@ raumVsZuAbluftventileTabelle.packColumn(9, 10, 90)
 raumVsZuAbluftventileTabelle.packColumn(10, 10, 90)
 raumVsZuAbluftventileTabelle.packColumn(11, 10, 90)
 raumVsZuAbluftventileTabelle.packColumn(12, 10, 80)
+*/
 
 // Bindings
 build(RaumVsBindings)
