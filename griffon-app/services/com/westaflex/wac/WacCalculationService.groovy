@@ -791,12 +791,16 @@ class WacCalculationService {
 			map.turen.findAll { it.turBreite > 0 }?.each {
 				// Existiert ein Durchgang? Ja, überspringen
 				if (it.turBezeichnung ==~ /.*Durchgang.*/) return
-                // Zuerst Überströmventile berechnen!
-                if (DEBUG) println "berechneTurspalt: map.raumUberstromVolumenstrom=${map.raumUberstromVolumenstrom}"
-				def tsqf = (100 * 3.1d * map.raumUberstromVolumenstrom / java.lang.Math.sqrt(1.5d)) - abziehenTurenOhneDichtung
-				it.turSpalthohe = tsqf / summeTurBreiten
-				it.turQuerschnitt = tsqf * it.turBreite / summeTurBreiten
-                if (DEBUG) println "berechneTurspalt: abziehen=${abziehen} tsqf=${tsqf} turSpalthohe=${it.turSpalthohe} turQuerschnitt=${it.turQuerschnitt}"
+                try {
+                    // Zuerst Überströmventile berechnen!
+                    if (DEBUG) println "berechneTurspalt: map.raumUberstromVolumenstrom=${map.raumUberstromVolumenstrom}"
+                    def tsqf = (100 * 3.1d * map.raumUberstromVolumenstrom / java.lang.Math.sqrt(1.5d)) - abziehenTurenOhneDichtung
+                    it.turSpalthohe = tsqf / summeTurBreiten
+                    it.turQuerschnitt = tsqf * it.turBreite / summeTurBreiten
+                    if (DEBUG) println "berechneTurspalt: abziehen=${abziehen} tsqf=${tsqf} turSpalthohe=${it.turSpalthohe} turQuerschnitt=${it.turQuerschnitt}"
+                } catch (e) {
+                    println "berechneTurspalt: ${e}"
+                }
 			}
             // WAC-165: Hinweis: Türspalt > max. Türspalthöhe?
             // TODO Zugriff auf model.meta notwendig! Alternativ Property pro Raum.
