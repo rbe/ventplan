@@ -328,6 +328,7 @@ class ProjektController {
 				luftwechsel = 1.0d
 				druckexponent = 0.666f
 			}
+            berechneAussenluftVs()
 		}
 	}
 	
@@ -341,6 +342,7 @@ class ProjektController {
 				luftwechsel = 1.5f
 				druckexponent = 0.666f
 			}
+            berechneAussenluftVs()
 		}
 	}
 	
@@ -354,6 +356,7 @@ class ProjektController {
 				luftwechsel = 2.0d
 				druckexponent = 0.666f
 			}
+            berechneAussenluftVs()
 		}
 	}
 	
@@ -366,6 +369,7 @@ class ProjektController {
 			model.map.gebaude.luftdichtheit.luftwechsel = view.gebaudeLuftdichtheitLuftwechsel.text.toDouble2()
 			model.map.gebaude.luftdichtheit.druckexponent = view.gebaudeLuftdichtheitDruckexponent.text.toDouble2()
 		}
+        berechneAussenluftVs()
 	}
 	
 	/**
@@ -457,10 +461,10 @@ class ProjektController {
 	}
 	
 	/**
-	 * Aussenluftvolumenströme - Mit/ohne Infiltrationsanteil berechnen.
+	 * Aussenluftvolumenströme berechnen.
 	 */
 	def berechneAussenluftVs = {
-		//publishEvent "AussenluftVsBerechnen"
+        // Mit/ohne Infiltrationsanteil berechnen
         wacCalculationService.aussenluftVs(model.map)
         // Zentralgerät bestimmen
         onZentralgeratAktualisieren()
