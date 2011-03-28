@@ -7,7 +7,7 @@
  *
  * Project wac
  * /Users/rbe/project/wac/griffon-app/models/com/westaflex/wac/ProjektModel.groovy
- * Last modified at 15.03.2011 10:52:25 by rbe
+ * Last modified at 28.03.2011 13:34:00 by rbe
  */
 package com.westaflex.wac
 
@@ -118,14 +118,14 @@ class ProjektModel {
 				typ: ["Wohnzimmer", "Kinderzimmer", "Schlafzimmer", "Esszimmer", "Arbeitszimmer", "Gästezimmer", "Hausarbeitsraum", "Kellerraum", "WC", "Küche", "Kochnische", "Bad mit/ohne WC", "Duschraum", "Sauna", "Flur", "Diele"],
 				geschoss: ["KG", "EG", "OG", "DG", "SB"],
 				luftart: ["ZU", "AB", "ZU/AB", "ÜB"],
-				raumVsBezeichnungZuluftventile: [/* initialized in Wac2Controller.mvcGroupInit */],
-				raumVsBezeichnungAbluftventile: [/* initialized in Wac2Controller.mvcGroupInit */],
-				raumVsUberstromelemente: [/* initialized in Wac2Controller.mvcGroupInit */],
+				raumVsBezeichnungZuluftventile: [/* initialized in ProjektController.mvcGroupInit */],
+				raumVsBezeichnungAbluftventile: [/* initialized in ProjektController.mvcGroupInit */],
+				raumVsUberstromelemente: [/* initialized in ProjektController.mvcGroupInit */],
 				raumVsVerteilebene: ["KG", "EG", "OG", "DG", "SB"],
 			],
 		gewahlterRaum: [:] as ObservableMap,
 		summeAktuelleWBW: 0.0d,
-		wbw: [] as ObservableList, /* initialized in Wac2Controller.mvcGroupInit */
+		wbw: [] as ObservableList, /* initialized in ProjektController.mvcGroupInit */
 	] as ObservableMap
 	
 	/**

@@ -7,7 +7,7 @@
  *
  * Project wac
  * /Users/rbe/project/wac/griffon-app/controllers/com/westaflex/wac/ProjektController.groovy
- * Last modified at 28.03.2011 13:31:40 by rbe
+ * Last modified at 28.03.2011 13:34:00 by rbe
  */
 
 package com.westaflex.wac
@@ -90,8 +90,6 @@ class ProjektController {
 	 * Setze Standardwerte (meist in Comboboxen).
 	 */
 	def setDefaultValues() {
-		// Reference meta values
-		////model.meta = app.models["wac2"].meta
 		// Lookup values from database and put them into our model
 		doOutside {
 			// Raumvolumenströme - Bezeichnungen der Zu-/Abluftventile
