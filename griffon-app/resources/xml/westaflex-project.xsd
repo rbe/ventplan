@@ -31,7 +31,7 @@
             <xs:element name="luftdichtheitDruckexponent"  type="xs:double"      minOccurs="0" maxOccurs="1"/>
             <xs:element name="besAnfFaktor"                type="xs:double"      minOccurs="0" maxOccurs="1"/>
             <xs:element name="personenAnzahl"              type="xs:integer"     minOccurs="0" maxOccurs="1"/>
-            <xs:element name="personenVolumen"             type="xs:integer"     minOccurs="0" maxOccurs="1"/>
+            <xs:element name="personenVolumen"             type="xs:double"      minOccurs="0" maxOccurs="1"/>
             <xs:element name="aussenluft"                  type="aussenluft"     minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="fortluft"                    type="fortluft"       minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="luftkanalverlegung"          type="xs:string"      minOccurs="0" maxOccurs="unbounded"/>
