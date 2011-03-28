@@ -7,7 +7,7 @@
  *
  * Project wac
  * /Users/rbe/project/wac/griffon-app/controllers/com/westaflex/wac/ProjektController.groovy
- * Last modified at 09.03.2011 17:54:12 by rbe
+ * Last modified at 28.03.2011 11:00:09 by rbe
  */
 
 package com.westaflex.wac
@@ -739,7 +739,7 @@ class ProjektController {
 			// TODO Move values into model.meta
 			GH.makeComboboxCellEditor columnModel.getColumn(0), ["Tür", "Durchgang"]
 			GH.makeComboboxCellEditor columnModel.getColumn(1), [610, 735, 860, 985, 1110, 1235, 1485, 1735, 1985]
-
+            /*
             view.raumBearbeitenTurenTabelle.getModel().addTableModelListener({ TableModelEvent e ->
                 println "test"
                 println "test"
@@ -747,8 +747,7 @@ class ProjektController {
                 println "test"
                 println "test"
             } as TableModelListener);
-
-
+            */
 			raumBearbeitenDialog.show()
 		}
 	}
