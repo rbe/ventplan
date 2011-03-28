@@ -34,7 +34,7 @@ bind(source: model.map.anlage.abluft, sourceProperty: "tellerventile" , target: 
 // Anlagendaten - Fortluft
 bind(source: model.map.anlage.fortluft, sourceProperty: "dach",         target: anlageFortluftDach,         targetProperty: "selected", mutual: true)
 bind(source: model.map.anlage.fortluft, sourceProperty: "wand",         target: anlageFortluftWand,         targetProperty: "selected", mutual: true)
-bind(source: model.map.anlage.fortluft, sourceProperty: "lichtschacht", target: anlageFortluftLichtschacht, targetProperty: "selected", mutual: true)
+bind(source: model.map.anlage.fortluft, sourceProperty: "bogen135",     target: anlageFortluftBogen135,     targetProperty: "selected", mutual: true)
 // Anlagendaten - Energie-Kennzeichen
 bind(source: model.map.anlage.energie, sourceProperty: "zuAbluftWarme", target: anlageEnergieZuAbluftWarme, targetProperty: "selected", mutual: true)
 bind(source: model.map.anlage.energie, sourceProperty: "bemessung",     target: anlageEnergieBemessung,     targetProperty: "selected", mutual: true)

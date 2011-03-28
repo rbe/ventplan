@@ -203,6 +203,7 @@
             <xs:enumeration value="DAC"/>
             <xs:enumeration value="WAN"/>
             <xs:enumeration value="LIC"/>
+            <xs:enumeration value="BOG135"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="raumtyp">

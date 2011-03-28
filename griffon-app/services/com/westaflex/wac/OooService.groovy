@@ -237,7 +237,7 @@ class OooService {
 			// Fortluft
 			doc["flDachdurchfuehrungRadioButton"]  = gt(map.anlage.fortluft, "dach", "Dachdurchführung")
 			doc["flWandRadioButton"]               = gt(map.anlage.fortluft, "wand", "Wand (Luftgitter)")
-			doc["flLichtschachtRadioButton"]       = gt(map.anlage.fortluft, "lichtschacht", "Lichtschacht (Kellergeschoss)")
+			doc["flLichtschachtRadioButton"]       = gt(map.anlage.fortluft, "bogen135", "Bogen 135°")
 			// Luftauslässe
 			doc["laTellerventileCheckbox"]         = gt(map.anlage.abluft, "tellerventile", "Tellerventile")
 			// Lufteinlässe

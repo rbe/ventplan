@@ -48,6 +48,7 @@ class WpxConstants {
 			wand: "WAN",
 			erdwarme: "ERD",
 			lichtschacht: "LIC",
+            bogen135: "BOG135",
 			// Luftarten
 			"ÜB": "UB",
 			"ZU/AB": "ZUA",

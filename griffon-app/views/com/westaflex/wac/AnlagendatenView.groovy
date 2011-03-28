@@ -66,7 +66,7 @@ panel(layout: new MigLayout("fillx, wrap", "[grow]", "[fill]"), constraints: "gr
             buttonGroup().with {
                 add radioButton(id: "anlageFortluftDach",         text: "Dachdurchführung")
                 add radioButton(id: "anlageFortluftWand",         text: "Wand (Luftgitter)")
-                add radioButton(id: "anlageFortluftLichtschacht", text: "Lichtschacht (Kellergeschoss)")
+                add radioButton(id: "anlageFortluftBogen135",     text: "Bogen 135°")
             }
             label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
         }
