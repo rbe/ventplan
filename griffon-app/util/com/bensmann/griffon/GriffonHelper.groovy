@@ -549,7 +549,7 @@ class GriffonHelper {
                 case { it instanceof javax.swing.JTextArea || it instanceof javax.swing.JTextField }:
                     GriffonHelper.installKeyAdapter(component, keyCodes, closure)
                     break
-                case { it instanceof javax.swing.JComboBox }:
+                case { it instanceof javax.swing.JComboBox || it instanceof javax.swing.JRadioButton}:
                     component.addActionListener(
                         [
                             actionPerformed: { evt ->
