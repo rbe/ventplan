@@ -244,8 +244,7 @@ class ProjektController {
 	 */
 	def seitenansicht = {
 		doOutside {
-			// TODO Show informational dialog
-			////println model.map
+			// TODO mmu Show informational dialog
 			// TODO mmu Dialog: Daten aus Auslegung, Blanko? Ticket #97.
 			def doc = oooService.performAuslegung(false, getProjektTitel(), model.map)
 			if (DEBUG) println "projektSeitenansicht: doc=${doc?.dump()}"
@@ -267,12 +266,12 @@ class ProjektController {
 				default:
 					java.awt.Desktop.desktop.open(doc)
 			}
-			// TODO Close informational dialog
+			// TODO mmu Close informational dialog
 		}
 	}
 	
 	/**
-	 * Aktuelles Projekt drucken
+	 * Aktuelles Projekt drucken.
 	 */
 	def drucken = {
 		def choice = app.controllers["Dialog"].showPrintProjectDialog()

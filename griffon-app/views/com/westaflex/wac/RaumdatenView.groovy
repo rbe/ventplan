@@ -63,7 +63,7 @@ panel(id: "raumPanel", layout: new MigLayout("fill", "[fill,grow]", "")) {
         */
     }
     vbox(constraints: EAST) {
-        // TODO mmu Buttons "nach oben" und "nach unten" müssen rechts neben die Tabelle
+        // TODO mmu Buttons "nach oben" und "nach unten" müssen rechts neben die Tabelle; vertikal in die Mitte!
         button(id: "raumNachObenVerschieben",  enabled: bind {1==1}, text: "^")
         button(id: "raumNachUntenVerschieben", enabled: bind {1==1}, text: "v")
         /*

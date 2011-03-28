@@ -241,7 +241,7 @@ class ProjektModel {
 							]
 					] as ObservableMap,
 			] as ObservableMap,
-			raumBezeichnung: [] as ObservableList // TODO Wofür wird er genutzt?
+			raumBezeichnung: [] as ObservableList // TODO Wofür genutzt?
 	] as ObservableMap
 	
 	// TableModels
@@ -717,7 +717,7 @@ class ProjektModel {
 			GH.makeComboboxCellEditor view.raumVsUberstromelementeTabelle.columnModel.getColumn(1), meta.raum.luftart
 			// Combobox RaumVs - Überströmelemente
 			GH.makeComboboxCellEditor view.raumVsUberstromelementeTabelle.columnModel.getColumn(4), meta.raumVsUberstromelemente
-			// TODO: Verbesserung! Später freischalten.
+			// TODO WAC-7 Verbesserung! Später freischalten.
 			// Raum Typ für Druckverlustberechnung - Ventileinstellung Combobox.
 			//updateDvbVentileinstellungComboBoxModel(view)
 		}
@@ -794,7 +794,7 @@ class ProjektModel {
 			[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
 				it.remove(raumIndex)
 			}
-			// TODO: Verbesserung! Später freischalten.
+			// TODO WAC-7 Verbesserung! Später freischalten.
 			//updateDvbVentileinstellungComboBoxModel(view)
 		}
 	}

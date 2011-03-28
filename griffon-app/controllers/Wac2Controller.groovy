@@ -467,7 +467,7 @@ class Wac2Controller {
      * WAC-151: Automatische und manuelle Berechnung
      */
     def automatischeBerechnung = { evt = null ->
-        // TODO...
+        // TODO WAC-151
     }
 	
 }

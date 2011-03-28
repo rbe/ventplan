@@ -378,7 +378,7 @@ class WacCalculationService {
 				// ZU/AB
 				if (it.raumLuftart.contains("ZU/AB")) {
 					Double ltmZuluftRaum = Math.round(gesamtAvsLTM * it.raumZuluftfaktor / gesamtZuluftfaktor)
-                    // TODO Auch abzgl. Infiltration als eigener Wert?
+                    // Abzgl. Infiltration
 					it.raumZuluftVolumenstromInfiltration = ltmZuluftRaum
 					it.raumAbluftVolumenstromInfiltration = ltmAbluftRaum
                     if (ltmZuluftRaum > ltmAbluftRaum) {
@@ -401,7 +401,7 @@ class WacCalculationService {
 		}.each {
 			Double ltmZuluftRaum = Math.round(gesamtAvsLTM * it.raumZuluftfaktor / gesamtZuluftfaktor)
 //			if (b) {
-                // TODO Auch abzgl. Infiltration berechnen?
+                // Abzgl. Infiltration berechnen
 				it.raumZuluftVolumenstromInfiltration = ltmZuluftRaum
 				it.raumLuftwechsel = ltmZuluftRaum / it.raumVolumen
 //			} else {
@@ -413,15 +413,15 @@ class WacCalculationService {
 		map.raum.raume.each {
 			switch (it.raumLuftart) {
 				case "ZU":
-                    // TODO Auch abzgl. Infiltration?
+                    // Abzgl. Infiltration
 					it.raumUberstromVolumenstrom = it.raumZuluftVolumenstromInfiltration
 					break
 				case "AB":
-                    // TODO Auch abzgl. Infiltration?
+                    // Abzgl. Infiltration
 					it.raumUberstromVolumenstrom = it.raumAbluftVolumenstromInfiltration
 					break
 				case "ZU/AB":
-                    // TODO Auch abzgl. Infiltration?
+                    // Abzgl. Infiltration
 					it.raumUberstromVolumenstrom =
 						java.lang.Math.abs(it.raumZuluftVolumenstromInfiltration - it.raumAbluftVolumenstromInfiltration)
 					break
@@ -471,7 +471,7 @@ class WacCalculationService {
 		// Ausgabe der Gesamt-Raumabluft-Volumenströme
 		grundluftung = 0.0d
         grundluftung = abluftRaume(map)?.inject(0.0d) { o, n ->
-            // TODO Auch abzgl. Infiltration?
+            // Abzgl. Infiltration
 			o + n.raumAbluftVolumenstromInfiltration
 		}
 		map.aussenluftVs.gesamtAvsRaumLvsNl = grundluftung
