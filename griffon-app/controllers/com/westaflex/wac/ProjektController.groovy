@@ -92,6 +92,9 @@ class ProjektController {
 	def setDefaultValues() {
 		// Lookup values from database and put them into our model
 		doOutside {
+            // Raumdaten - Türen
+            model.meta.raumTurTyp = ["Tür", "Durchgang"]
+            model.meta.raumTurbreiten = [610, 735, 860, 985, 1110, 1235, 1485, 1735, 1985]
 			// Raumvolumenströme - Bezeichnungen der Zu-/Abluftventile
 			model.meta.raumVsBezeichnungZuluftventile = wacModelService.getZuluftventile()
 			model.meta.raumVsBezeichnungAbluftventile = wacModelService.getAbluftventile()
@@ -115,6 +118,7 @@ class ProjektController {
 			model.meta.dvbVentileinstellung = wacModelService.getDvbVentileinstellung()
 			// Akustikberechnung - 1. Hauptschalldämpfer
 			model.meta.akustikSchalldampfer = wacModelService.getSchalldampfer()
+            //
             doLater {
                 // Raumvolumenströme, Zentralgerät
                 model.map.anlage.zentralgerat = model.meta.zentralgerat[0]
@@ -727,9 +731,8 @@ class ProjektController {
 			raumBearbeitenDialog = GH.createDialog(builder, RaumBearbeitenView, [title: "Raum bearbeiten", pack: true])
 			// Modify TableModel for Turen
 			def columnModel = view.raumBearbeitenTurenTabelle.columnModel
-			// TODO Move values into model.meta
-			GH.makeComboboxCellEditor columnModel.getColumn(0), ["Tür", "Durchgang"]
-			GH.makeComboboxCellEditor columnModel.getColumn(1), [610, 735, 860, 985, 1110, 1235, 1485, 1735, 1985]
+			GH.makeComboboxCellEditor columnModel.getColumn(0), model.meta.raumTurTyp
+			GH.makeComboboxCellEditor columnModel.getColumn(1), model.meta.raumTurbreiten
             /*
             view.raumBearbeitenTurenTabelle.getModel().addTableModelListener({ TableModelEvent e ->
                 println "test"
