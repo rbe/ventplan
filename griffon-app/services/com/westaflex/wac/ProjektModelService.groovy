@@ -179,7 +179,7 @@ class ProjektModelService {
 						faktorBesondereAnforderungen: X.vd { gebaude."besAnfFaktor".text() },
 						geplanteBelegung: [
 								personenanzahl:         X.vi { gebaude."personenAnzahl".text() },
-								aussenluftVsProPerson:  X.vi { gebaude."personenVolumen".text() } / (X.vi { gebaude."personenAnzahl".text() } ?: 1),
+								aussenluftVsProPerson:  X.vd { gebaude."personenVolumen".text() } / (X.vi { gebaude."personenAnzahl".text() } ?: 1),
 								// Will be calculated
 								//mindestaussenluftrate: 0.0d
 							],
@@ -216,7 +216,7 @@ class ProjektModelService {
 						fortluft: [
 								dach:         X.vb { gebaude."fortluft".find { it.text() == "DAC" } == "DAC" },
 								wand:         X.vb { gebaude."fortluft".find { it.text() == "WAN" } == "WAN" },
-								lichtschacht: X.vb { gebaude."fortluft".find { it.text() == "LIC" } == "LIC" },
+								lichtschacht: X.vb { gebaude."fortluft".find { it.text() == "LIC" } == "LIC" || gebaude."fortluft".find { it.text() == "BOG135" } == "BOG135" },
 							],
 						energie: [
 								zuAbluftWarme: X.vb { zentralgerat."energie"."zuAbluftWarme".text() == "true" },
@@ -368,8 +368,9 @@ class ProjektModelService {
 			X.tc { luftdichtheitLuftwechsel(g.luftdichtheit.luftwechsel) }
 			X.tc { luftdichtheitDruckexponent(g.luftdichtheit.druckexponent) }
 			X.tc { besAnfFaktor(g.faktorBesondereAnforderungen) }
-			X.tc { personenAnzahl(g.geplanteBelegung.personenanzahl) }
-			X.tc { personenVolumen(g.geplanteBelegung.mindestaussenluftrate) }
+			X.tc { personenAnzahl(g.geplanteBelegung.personenanzahl as Integer) }
+			X.tc { personenVolumen(g.geplanteBelegung.aussenluftVsProPerson) }
+            // mindestaussenluftrate
 			// TODO move into zentralgerat
 			X.tc { aussenluft(WX[a.aussenluft.grep { it.value == true }?.key[0]]) }
 			X.tc { fortluft(WX[a.fortluft.grep { it.value == true }?.key[0]]) }
