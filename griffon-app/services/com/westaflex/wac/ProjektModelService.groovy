@@ -122,7 +122,6 @@ class ProjektModelService {
 							turDichtung: X.vb { tur."dichtung".text() == "true" }
 						]
 				}
-				println "toMap: r=${r.dump()}"
 				raume << r
 			}
 			def anlage = p."anlage"

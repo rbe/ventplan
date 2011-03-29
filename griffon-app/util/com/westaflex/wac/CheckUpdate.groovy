@@ -22,7 +22,7 @@ class CheckUpdate implements java.lang.Runnable {
 		if (!destFile.exists()) {
 			destFile.mkdir()
 		}
-		result.withStream{
+		result.withStream {
 			def entry
 			while (entry = result.nextEntry) {
 				if (!entry.isDirectory()) {

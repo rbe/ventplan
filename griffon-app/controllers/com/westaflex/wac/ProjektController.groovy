@@ -160,6 +160,10 @@ class ProjektController {
 	 * Titel des Projekts für Tab setzen.
 	 */
 	def setTabTitle() {
+        /* TODO java.lang.ArrayIndexOutOfBoundsException: -1
+         * at com.jidesoft.swing.JideTabbedPane.setTitleAt(Unknown Source)
+         * at com.westaflex.wac.ProjektController.setTabTitle(ProjektController.groovy:163)
+         */
 		view.projektTabGroup.setTitleAt(view.projektTabGroup.selectedIndex, makeTabTitle().toString())
 	}
 	
@@ -582,10 +586,12 @@ class ProjektController {
 	/**
 	 * Raumdarten - ein Raum wurde geändert.
 	 */
-	def raumGeandert = { raumIndex = null ->
-        /*if (DEBUG)*/ println "raumGeandert: raum[${raumIndex}] ${model.map.raum.raume}"
+	def raumGeandert = { raumIndex ->
+        assert raumIndex != null
         doLater {
+            println "raumGeandert: raum[${raumIndex}]"
             if (raumIndex > -1) {
+                /*if (DEBUG)*/ println "raumGeandert: raum[${raumIndex}] ${model.map.raum.raume[raumIndex]}"
                 // WAC-65: Errechnete Werte zurücksetzen
                 model.map.raum.raume[raumIndex].with {
                     raumVolumen = raumFlache * raumHohe
@@ -622,11 +628,9 @@ class ProjektController {
             // Aussenluftvolumenströme berechnen
             wacCalculationService.aussenluftVs(model.map)
             // Zentralgerät bestimmen
-            ////publishEvent "ZentralgeratAktualisieren"
             onZentralgeratAktualisieren()
             // Diesen Raum in allen Tabellen anwählen
-            ////publishEvent "RaumInTabelleWahlen", [raumIndex]
-            onRaumInTabelleWahlen(raumIndex)
+            ////onRaumInTabelleWahlen(raumIndex)
         }
 	}
 	
@@ -634,7 +638,6 @@ class ProjektController {
 	 * Raumdaten - einen Raum entfernen.
 	 */
 	def raumEntfernen = {
-		////publishEvent "RaumEntfernen", [view.raumTabelle.selectedRow, view]
         // Raum aus Model entfernen
         model.removeRaum(view.raumTabelle.selectedRow, view)
         // Es hat sich was geändert...
@@ -762,21 +765,14 @@ class ProjektController {
 	def raumBearbeitenSchliessen = {
 		if (DEBUG) println "raumBearbeitenSchliessen: closing dialog '${raumBearbeitenDialog.title}'"
 		raumBearbeitenDialog.dispose()
-        // TODO Daten aus Dialog übertragen und neu berechnen
-		// Berechne alles, was von Räumen abhängt
-		////publishEvent "RaumGeandert", [view.raumTabelle.selectedRow]
-        println "raumBearbeitenGeandert: ${model.meta?.dump()}"
-        //raumGeandert(view.raumTabelle.selectedRow)
 	}
 	
 	/**
-	 * TODO Raum bearbeiten - Daten eingegeben. Mit raumBearbeitenSchliessen zusammenlegen?
+	 * Raum bearbeiten - Daten eingegeben. Mit raumBearbeitenSchliessen zusammenlegen?
 	 */
 	def raumBearbeitenGeandert = {
 		if (DEBUG) println "TODO raumBearbeitenGeandert"
         // TODO Daten aus Dialog übertragen und neu berechnen
-        println "raumBearbeitenGeandert: ${model.meta?.dump()}"
-        //raumGeandert(view.raumTabelle.selectedRow)
 	}
 	
 	/**
@@ -830,7 +826,6 @@ class ProjektController {
 		if (DEBUG) println "raumZuAbluftventileGeandert: raumIndex=${raumIndex}"
 		if (raumIndex > -1) {
 			wacCalculationService.berechneZuAbluftventile(model.map.raum.raume[raumIndex])
-			//publishEvent "RaumZuAbluftventileLuftmengeBerechnen", [raumIndex]
 		} else {
 			if (DEBUG) println "raumZuAbluftventileGeandert: Kein Raum ausgewählt, es wird nichts berechnet"
 		}
@@ -843,7 +838,6 @@ class ProjektController {
 		def raumIndex = view.raumVsUberstromelementeTabelle.selectedRow
 		if (raumIndex > -1) {
 			wacCalculationService.berechneUberstromelemente(model.map.raum.raume[raumIndex])
-			//publishEvent "RaumUberstromelementeLuftmengeBerechnen", [raumIndex]
 		} else {
 			if (DEBUG) println "raumUberstromelementeLuftmengeBerechnen: Kein Raum ausgewählt, es wird nichts berechnet"
 		}

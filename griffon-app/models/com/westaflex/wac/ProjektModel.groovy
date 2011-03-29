@@ -518,7 +518,7 @@ class ProjektModel {
 	
 	/**
 	 * Raumdaten - TableModel.
-     * Eingegebenen Abluftvolumenstrom (ohne Abzug Infiltration) anzeigen
+     * Eingegebenen Abluftvolumenstrom (ohne Abzug Infiltration) anzeigen.
 	 */
 	def createRaumTableModel() {
 		def columnNames =   ["Raum",            "Geschoss",     "Luftart",     ws("Raumfläche<br/>[m²]"), ws("Raumhöhe<br/>[m]"), "Zuluftfaktor",     "Abluftvolumenstrom"] as String[]
