@@ -128,17 +128,17 @@ _build_wac() {
 # Make directories for USB stick
 #
 _usbstick_make_dirs() {
-	mkdir -p ${USBSTICK}/Darwin ${USBSTICK}/Linux ${USBSTICK}/Windows 2>/dev/null
-	for dir in conf lib sql update
+    # OS
+    mkdir -p ${USBSTICK}/../mac/wac/Darwin/jre6 2>/dev/null
+    mkdir -p ${USBSTICK}/../linux/wac/Linux/jre6 2>/dev/null
+    mkdir -p ${USBSTICK}/../win/wac/Windows/jre6 2>/dev/null
+    # Software
+	for dir in conf lib update
 	do
 		mkdir -p ${USBSTICK}/${dir}
 	done
-	for dir in Linux Windows
-	do
-		[ ! -d ${USBSTICK}/${dir}/jre6 ] && mkdir -p ${USBSTICK}/${dir}/jre6 2>/dev/null
-	done
 	# Windows: OOo Portable
-	ooo=${USBSTICK}/Windows/OpenOfficePortable
+	ooo=${USBSTICK}/../win/wac/Windows/OpenOfficePortable
 	[ ! -d ${ooo} ] && mkdir -p ${ooo} 2>/dev/null
 }
 
@@ -146,15 +146,18 @@ _usbstick_make_dirs() {
 # Update SQL database in USB stick distribution
 #
 _usbstick_update_sql() {
-	mkdir -p ${USBSTICK}/sql
-	# Cleanup
-	rm -rf ${USBSTICK}/sql/*
 	# Create ZIP backup of database
 	cd sql
-	java -cp ../lib/h2*jar org.h2.tools.Backup -file westawac_db.zip -db westawac
+    java -cp ../lib/h2*.jar org.h2.tools.Recover -db westawac
+    java -cp ../lib/h2*.jar org.h2.tools.Backup -file dtmp.zip -db westawac
+    for os in linux mac win
+    do
+        dest=${USBSTICK}/../${os}/wac/lib
+        mkdir -p ${dest}
+        cp -v dtmp.zip ${dest}
+    done
+    cp -v dtmp.zip ${USBSTICK}/lib
 	cd ..
-	# Copy SQL data
-	cp -R sql/westawac_db.zip ${USBSTICK}/sql
 }
 
 #
@@ -174,11 +177,15 @@ _usbstick() {
 	fi
 	# Copy jar into lib folder
 	rm -rf ${USBSTICK}/lib/*
-	cp dist/zip/lib/* ${USBSTICK}/lib 2>/dev/null 1>&2
+	cp -v dist/zip/lib/* ${USBSTICK}/lib 2>/dev/null 1>&2
 	# Copy start scripts
-	cp bin/* ${USBSTICK}
+	for os in linux mac
+	do
+	    cp -v bin/wac ${USBSTICK}/../${os}/wac
+	done
+    cp -v bin/wac.bat ${USBSTICK}/../win/wac
 	# SQL?
-	if [ ! -d ${USBSTICK}/sql ]; then
+	if [ ! -d ${USBSTICK}/lib/dtmp.zip ]; then
 		_usbstick_update_sql
 	fi
 	# Version
@@ -187,6 +194,7 @@ _usbstick() {
 	echo "Done"
 }
 
+rm bwac.log
 case "$1" in
 	inc-version)
 		if [ $# -lt 2 ]; then
@@ -196,14 +204,17 @@ case "$1" in
 		_set_next_version $2
 	;;
 	usbstick)
-		: > bwac.log
 		_usbstick
 	;;
 	usbstick-sql)
 		_usbstick_update_sql
 	;;
+	distrib)
+		_usbstick
+		_usbstick_update_sql
+    ;;
 	*)
-		echo "usage: $0 { usbstick | usbstick-sql | inc-version <maj | min | pat> }"
+		echo "usage: $0 { usbstick | usbstick-sql | distrib | inc-version <maj | min | pat> }"
 	;;
 esac
 
