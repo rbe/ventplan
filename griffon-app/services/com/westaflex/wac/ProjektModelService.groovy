@@ -85,31 +85,31 @@ class ProjektModelService {
 			def raume = []
 			gebaude."raum".each { room ->
 				def r = [
-					position: X.vi { room."position".text() },
-					raumNummer: X.vs { room."raumnummer".text() },
-					raumBezeichnung: X.vs { room."bezeichnung".text() },
-					raumTyp: X.vs { WX[room."raumtyp".text()] },
-					raumLuftart: X.vs { WX[room."luftart".text()] },
-					raumGeschoss: X.vs { room."geschoss".text() },
-					raumFlache: X.vd { room."raumflache".text() },
-					raumHohe: X.vd { room."raumhohe".text() },
-					raumLange: X.vd { room."raumlange".text() },
-					raumBreite: X.vd { room."raumbreite".text() },
-					raumVolumen: X.vd { room."raumvolumen".text() },
-					raumZuluftfaktor: X.vd { room."zuluftfaktor".text() },
-					raumAbluftVolumenstrom: X.vd { room."abluftvolumenstrom".text() },
-					raumLuftwechsel: X.vd { room."luftwechsel".text() },
-					raumVolumenstrom: X.vd { room."volumenstrom".text() },
+					position:                     X.vi { room."position".text() },
+					raumNummer:                   X.vs { room."raumnummer".text() },
+					raumBezeichnung:              X.vs { room."bezeichnung".text() },
+					raumTyp:                      X.vs { WX[room."raumtyp".text()] },
+					raumLuftart:                  X.vs { WX[room."luftart".text()] },
+					raumGeschoss:                 X.vs { room."geschoss".text() },
+					raumFlache:                   X.vd { room."raumflache".text() },
+					raumHohe:                     X.vd { room."raumhohe".text() },
+					raumLange:                    X.vd { room."raumlange".text() },
+					raumBreite:                   X.vd { room."raumbreite".text() },
+					raumVolumen:                  X.vd { room."raumvolumen".text() },
+					raumZuluftfaktor:             X.vd { room."zuluftfaktor".text() },
+					raumAbluftVolumenstrom:       X.vd { room."abluftvolumenstrom".text() },
+					raumLuftwechsel:              X.vd { room."luftwechsel".text() },
+					raumVolumenstrom:             X.vd { room."volumenstrom".text() },
 					raumBezeichnungAbluftventile: X.vs { room."bezeichnungAbluftventile".text() },
-					raumAnzahlAbluftventile: X.vi { room."anzahlAbluftventile".text() },
-					raumAbluftmengeJeVentil: X.vd { room."abluftmengeJeVentile".text() },
+					raumAnzahlAbluftventile:      X.vi { room."anzahlAbluftventile".text() },
+					raumAbluftmengeJeVentil:      X.vd { room."abluftmengeJeVentile".text() },
 					raumBezeichnungZuluftventile: X.vs { room."bezeichnungZuluftventile".text() },
-					raumAnzahlZuluftventile: X.vi { room."anzahlAbluftventile".text() },
-					raumZuluftmengeJeVentil: X.vd { room."zuluftmengeJeVentile".text() },
-					raumVerteilebene: X.vs { room."ventilebene".text() },
-					raumAnzahlUberstromVentile: X.vi { room."anzahlUberstromventile".text() },
-					raumUberstromElement: X.vs { room."uberstromelement".text() },
-					raumMaxTurspaltHohe: X.vd { room."maxTurspaltHohe".text() },
+					raumAnzahlZuluftventile:      X.vi { room."anzahlZuluftventile".text() },
+					raumZuluftmengeJeVentil:      X.vd { room."zuluftmengeJeVentile".text() },
+					raumVerteilebene:             X.vs { room."ventilebene".text() },
+					raumAnzahlUberstromVentile:   X.vi { room."anzahlUberstromventile".text() },
+					raumUberstromElement:         X.vs { room."uberstromelement".text() },
+					raumMaxTurspaltHohe:          X.vd { room."maxTurspaltHohe".text() },
 					turen: [] /*as ObservableList*/
 				] as ObservableMap
 				// Türen
@@ -125,6 +125,7 @@ class ProjektModelService {
 				raume << r
 			}
 			def anlage = p."anlage"
+            // Build map; return value
 			[
 				kundendaten: [
 					bauvorhaben: X.vs { p."bauvorhaben".text() },
