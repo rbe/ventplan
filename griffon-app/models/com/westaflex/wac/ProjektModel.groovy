@@ -530,7 +530,7 @@ class ProjektModel {
 			meta.gewahlterRaum[columnIndex] = value
 			//println "Edited: map.raum.raume -> ${map.raum.raume}"
 			// Call ProjektController
-			app.controllers[mvcId].raumGeandert()
+			app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position)
 			resyncRaumTableModels()
 		}
 		gltmClosure(columnNames, propertyNames, writable, tableModels.raume, postValueSet, checkRaum)
@@ -546,8 +546,8 @@ class ProjektModel {
 		def writable      = [true,              true,          false,           false,              false,                    true,                                false,                          false,                           false,                                 true,                              false,                       false,                           true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			// Call ProjektController
-			app.controllers[mvcId].raumGeandert()
-			app.controllers[mvcId].raumZuAbluftventileGeandert()
+			app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position)
+			////app.controllers[mvcId].raumZuAbluftventileGeandert()
 			resyncRaumTableModels()
 		}
 		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsZuAbluftventile, postValueSet, checkRaum)
@@ -562,8 +562,8 @@ class ProjektModel {
 		def writable      = [true,              true,          false,                        true,                          true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			// Call ProjektController
-			app.controllers[mvcId].raumGeandert()
-			app.controllers[mvcId].raumUberstromelementeGeandert()
+			app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position)
+			////app.controllers[mvcId].raumUberstromelementeGeandert()
 			resyncRaumTableModels()
 		}
 		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsUberstromventile, postValueSet, checkRaum)
@@ -585,7 +585,7 @@ class ProjektModel {
 		def writable      = [true,             true,          false,                      false,              true] as boolean[]
 		def postValueSet  = { object, columnIndex, value -> 
 			// Call ProjektController
-			app.controllers[mvcId].berechneTuren()
+			app.controllers[mvcId].berechneTuren(null, meta.gewahlterRaum.position)
 		}
 		gltmClosureCheckbox(columnNames, propertyNames, writable, tableModels.raumeTuren[index], postValueSet)
 	}
