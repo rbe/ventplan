@@ -249,6 +249,10 @@ class Wac2Controller {
 		}
 		// Projekt zur aktiven Tab finden
 		def mvc = getMVCGroupAktivesProjekt()
+        if (!mvc) {
+            println "projektSchliessen: kein aktives Projekt!"
+            return
+        }
 		if (DEBUG) println "projektSchliessen: model.aktivesProjekt=${model.aktivesProjekt} mvc=${mvc}"
 		def canClose = mvc.controller.canClose()
 		if (!canClose) {
