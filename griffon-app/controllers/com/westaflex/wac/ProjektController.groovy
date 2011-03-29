@@ -602,9 +602,12 @@ class ProjektController {
                     // Überström
                     raumUberstromVolumenstrom = 0.0d
                 }
+                // Raumvolumenströme, (Werte abzgl. Infiltration werden zur Berechnung der Ventile benötigt) berechnen
+                wacCalculationService.autoLuftmenge(model.map)
                 // Zu-/Abluftventile
                 model.map.raum.raume[raumIndex] =
                     wacCalculationService.berechneZuAbluftventile(model.map.raum.raume[raumIndex])
+                println model.map.raum.raume[raumIndex].anzahlZuluftventile
                 // Türspalt
                 model.map.raum.raume[raumIndex] =
                     wacCalculationService.berechneTurspalt(model.map.raum.raume[raumIndex])
