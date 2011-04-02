@@ -107,3 +107,14 @@ exitAction = action(
 //		enabled: true,
 //		closure: controller.automatischeBerechnung
 //	)
+
+// WAC-167: Info-Menü mit Über-Dialog
+aboutAction = action(
+		id: "aboutAction",
+		name: "Über",
+		mnemonic: "I",
+		accelerator: shortcut("I"),
+		enabled: true,
+		closure: controller.aboutDialogOeffnen
+	)
+

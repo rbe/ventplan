@@ -29,6 +29,12 @@ menuBar = menuBar {
 			menuItem(exitAction)
 		}
 	}
+
+    // WAC-167: Info-Menü mit Über-Dialog
+    menu(text: '?', mnemonic: 'I') {
+        menuItem(aboutAction)
+    }
+
 	/*
 	menu(text: 'Edit', mnemonic: 'E') {
 		menuItem(undoAction)

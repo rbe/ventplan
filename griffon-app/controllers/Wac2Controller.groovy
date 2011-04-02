@@ -25,6 +25,7 @@ class Wac2Controller {
 	def view
 	def wacCalculationService
 	def oooService
+    def builder
 	
 	/**
 	 * Zähler für erstellte/geladene Projekte. Wird als "unique id" verwendet.
@@ -442,6 +443,15 @@ class Wac2Controller {
      */
     def automatischeBerechnung = { evt = null ->
         // TODO WAC-151
+    }
+
+    /**
+     * WAC-167: Info-Menü mit Über-Dialog
+     * Dialog mit Logo und Versionsnummer
+     */
+    def aboutDialogOeffnen = { evt = null ->
+        def aboutDialog = GH.createDialog(builder, AboutView, [title: "Über", resizable: false, pack: true])
+        aboutDialog.show()
     }
 	
 }
