@@ -245,10 +245,10 @@ class WacCalculationService {
 		def r = map.gebaude.lage.with {
 			if (windschwach) 2.0d
 			else if (windstark) 4.0d
-			else {
+			/*else {
 				if (DEBUG) println "wacCalculation/diffDruck: Gebäudelage unbekannt, 0.0"
 				0.0d
-			}
+			}*/
 		}
 		if (DEBUG) println "wacCalculation/diffDruck: ${r?.dump()}"
 		r
