@@ -574,7 +574,7 @@ class ProjektController {
 	 */
 	def raumGeandert = { raumIndex ->
         assert raumIndex != null
-        doLater {
+        //doLater {
             if (DEBUG) println "raumGeandert: raum[${raumIndex}]"
             if (raumIndex > -1) {
                 if (DEBUG) println "raumGeandert: raum[${raumIndex}] ${model.map.raum.raume[raumIndex]}"
@@ -600,8 +600,7 @@ class ProjektController {
                 // Zu-/Abluftventile
                 model.map.raum.raume[raumIndex] =
                     wacCalculationService.berechneZuAbluftventile(model.map.raum.raume[raumIndex])
-                println "anzahlZuluftventile=${model.map.raum.raume[raumIndex].anzahlZuluftventile}"
-                // Türspalt
+                // Türspalt und Türen
                 model.map.raum.raume[raumIndex] =
                     wacCalculationService.berechneTurspalt(model.map.raum.raume[raumIndex])
                 // Überströmelement berechnen
@@ -618,7 +617,7 @@ class ProjektController {
             onZentralgeratAktualisieren()
             // Diesen Raum in allen Tabellen anwählen
             ////onRaumInTabelleWahlen(raumIndex)
-        }
+        //}
 	}
 	
 	/**
@@ -760,41 +759,39 @@ class ProjektController {
 	 */
 	def raumBearbeitenGeandert = { evt = null ->
         def raumIndex = view.raumTabelle.selectedRow
-        // TODO Daten aus Dialog übertragen und neu berechnen
-        doOutside {
-            println "raumBearbeitenGeandert: 1 ${model.meta.gewahlterRaum.dump()}"
+        // Daten aus Dialog übertragen und neu berechnen
+        doLater {
+            def m = model.map.raum.raume[raumIndex]
             model.meta.gewahlterRaum.raumNummer =
-                model.map.raum.raume[raumIndex].raumNummer =
+                m.raumNummer =
                 view.raumBearbeitenRaumnummer.text
             model.meta.gewahlterRaum.raumBezeichnung =
-                model.map.raum.raume[raumIndex].raumBezeichnung =
+                m.raumBezeichnung =
                 view.raumBearbeitenBezeichnung.text
             model.meta.gewahlterRaum.raumZuluftfaktor =
-                model.map.raum.raume[raumIndex].raumZuluftfaktor =
+                m.raumZuluftfaktor =
                 view.raumBearbeitenLuftartFaktorZuluftverteilung.text?.toDouble2()
             model.meta.gewahlterRaum.raumAbluftVolumenstrom =
-                model.map.raum.raume[raumIndex].raumAbluftVolumenstrom =
+                m.raumAbluftVolumenstrom =
                 view.raumBearbeitenLuftartAbluftVs.text?.toDouble2()
             model.meta.gewahlterRaum.raumMaxTurspaltHohe =
-                model.map.raum.raume[raumIndex].raumMaxTurspaltHohe =
+                m.raumMaxTurspaltHohe =
                 view.raumBearbeitenDetailsTurspalthohe.text?.toDouble2()
             model.meta.gewahlterRaum.raumLange =
-                model.map.raum.raume[raumIndex].raumLange =
+                m.raumLange =
                 view.raumBearbeitenOptionalRaumlange.text?.toDouble2()
             model.meta.gewahlterRaum.raumBreite =
-                model.map.raum.raume[raumIndex].raumBreite =
+                m.raumBreite =
                 view.raumBearbeitenOptionalRaumbreite.text?.toDouble2()
             model.meta.gewahlterRaum.raumHohe =
-                model.map.raum.raume[raumIndex].raumHohe =
+                m.raumHohe =
                 view.raumBearbeitenOptionalRaumhohe.text?.toDouble2()
-            println "raumBearbeitenGeandert: 2 ${model.meta.gewahlterRaum.dump()}"
-            // TODO Daten aus Model in den Dialog übertragen
-            doLater {
-                raumGeandert(raumIndex)
-                view.raumBearbeitenRaumnummer.text = model.meta.gewahlterRaum.raumNummer
-                view.raumBearbeitenOptionalRaumflache.text = model.meta.gewahlterRaum.raumFlache.toString2()
-                view.raumBearbeitenOptionalRaumvolumen.text = model.meta.gewahlterRaum.raumVolumen.toString2()
-            }
+            // Raum neu berechnen
+            raumGeandert(raumIndex)
+            // Daten aus Model in den Dialog übertragen
+            model.meta.gewahlterRaum.raumFlache = m.raumFlache
+            model.meta.gewahlterRaum.raumVolumen = m.raumVolumen
+            model.meta.gewahlterRaum.raumNummer = m.raumNummer
         }
 	}
 	
