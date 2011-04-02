@@ -206,31 +206,41 @@ class ProjektController {
 	 * Button "Seitenansicht".
 	 */
 	def seitenansicht = {
-		doOutside {
-			// TODO mmu Show informational dialog
-			// TODO mmu Dialog: Daten aus Auslegung, Blanko? Ticket #97.
-			def doc = oooService.performAuslegung(false, getProjektTitel(), model.map)
-			if (DEBUG) println "projektSeitenansicht: doc=${doc?.dump()}"
-			// Open document
-			switch (System.getProperty("os.name")) {
-				case { it ==~ /Windows.*/ }:
-					def program = new java.io.File(System.getenv("OOO_HOME"), "program")
-					def cmd = [
-						"${program.absolutePath.replace('\\', '/')}/soffice.exe",
-						"-nologo", "-nofirststartwizard", "-nodefault",
-						"-nocrashreport", "-norestart", "-norestore",
-						"-nolockcheck",
-						"-writer", "-o \"${doc.absolutePath}\""
-					]
-					def p = cmd.execute(null, program)
-					p.waitFor()
-					if (DEBUG) println "${cmd} = ${p.exitValue()}"
-					break
-				default:
-					java.awt.Desktop.desktop.open(doc)
-			}
-			// TODO mmu Close informational dialog
-		}
+        jxwithWorker(start: true) {
+            onInit {
+                app.models["wac2"].statusProgressBarIndeterminate = true
+                app.models["wac2"].statusBarText = "Erstelle Seitenansicht..."
+            }
+            work {
+                // TODO mmu Dialog: Daten aus Auslegung, Blanko? Ticket #97.
+                def doc = oooService.performAuslegung(false, getProjektTitel(), model.map)
+                if (DEBUG) println "projektSeitenansicht: doc=${doc?.dump()}"
+                // Open document
+                switch (System.getProperty("os.name")) {
+                    case { it ==~ /Windows.*/ }:
+                        def program = new java.io.File(System.getenv("OOO_HOME"), "program")
+                        def cmd = [
+                            "${program.absolutePath.replace('\\', '/')}/soffice.exe",
+                            "-nologo", "-nofirststartwizard", "-nodefault",
+                            "-nocrashreport", "-norestart", "-norestore",
+                            "-nolockcheck",
+                            "-writer", "-o \"${doc.absolutePath}\""
+                        ]
+                        def p = cmd.execute(null, program)
+                        p.waitFor()
+                        if (DEBUG) println "${cmd} = ${p.exitValue()}"
+                        break
+                    default:
+                        java.awt.Desktop.desktop.open(doc)
+                }
+            }
+            onUpdate {
+            }
+            onDone {
+                app.models["wac2"].statusBarText = ""
+                app.models["wac2"].statusProgressBarIndeterminate = false
+            }
+        }
 	}
 	
 	/**
