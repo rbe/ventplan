@@ -575,11 +575,12 @@ class ProjektController {
 	def raumGeandert = { raumIndex ->
         assert raumIndex != null
         doLater {
-            println "raumGeandert: raum[${raumIndex}]"
+            if (DEBUG) println "raumGeandert: raum[${raumIndex}]"
             if (raumIndex > -1) {
-                /*if (DEBUG)*/ println "raumGeandert: raum[${raumIndex}] ${model.map.raum.raume[raumIndex]}"
+                if (DEBUG) println "raumGeandert: raum[${raumIndex}] ${model.map.raum.raume[raumIndex]}"
                 // WAC-65: Errechnete Werte zurücksetzen
                 model.map.raum.raume[raumIndex].with {
+                    if (raumBreite && raumLange) raumFlache = raumBreite * raumLange
                     raumVolumen = raumFlache * raumHohe
                     raumLuftwechsel = 0.0d
                     // Abluft
@@ -599,7 +600,7 @@ class ProjektController {
                 // Zu-/Abluftventile
                 model.map.raum.raume[raumIndex] =
                     wacCalculationService.berechneZuAbluftventile(model.map.raum.raume[raumIndex])
-                println model.map.raum.raume[raumIndex].anzahlZuluftventile
+                println "anzahlZuluftventile=${model.map.raum.raume[raumIndex].anzahlZuluftventile}"
                 // Türspalt
                 model.map.raum.raume[raumIndex] =
                     wacCalculationService.berechneTurspalt(model.map.raum.raume[raumIndex])
