@@ -584,6 +584,8 @@ class ProjektController {
             if (DEBUG) println "onRaumHinzufugen: raum -> ${raum}"
 			model.addRaum(raum, view)
             raumGeandert(model.map.raum.raume.size() - 1)
+            // WAC-170: abw. Raumbezeichnung leeren
+            view.raumBezeichnung.text = ""
 		}
 	}
 	
