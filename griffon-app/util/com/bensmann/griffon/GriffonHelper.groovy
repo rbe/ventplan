@@ -520,8 +520,11 @@ class GriffonHelper {
             [
                 keyReleased: { evt ->
                     // Calculate if: closure is not null and (if no keycodes given or certain keys are pressed)
-                    println evt.keyCode
-                    if (closure && (!keyCodes || (keyCodes && evt.keyCode in keyCodes))) closure(evt)
+                    //println evt.keyCode
+                    if (closure && (!keyCodes || (keyCodes && evt.keyCode in keyCodes))) {
+                        //println "installKeyAdapter: executing"
+                        closure(evt)
+                    }
                 }
             ] as java.awt.event.KeyAdapter)
     }
@@ -534,8 +537,11 @@ class GriffonHelper {
         component.addFocusListener(
             [
                 focusLost: { evt ->
-                    // Calculate if focu lost
-                    if (closure) closure(evt)
+                    // Calculate if focus lost
+                    if (closure) {
+                        //println "installFocusLostAdapter: executing"
+                        closure(evt)
+                    }
                 }
             ] as java.awt.event.FocusAdapter)
     }
