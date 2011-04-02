@@ -809,7 +809,6 @@ class ProjektController {
      * Tur Werte entfernen in Raum bearbeiten Dialog
      */
     def raumBearbeitenTurEntfernen = { evt = null ->
-        println "raumBearbeitenTurEntfernen: raumIndex=${raumIndex}"
         if (DEBUG) println "raumBearbeitenTurEntfernen: view.raumBearbeitenTurenTabelle.selectedRow -> ${view.raumBearbeitenTurenTabelle.selectedRow}"
         def turenIndex = view.raumBearbeitenTurenTabelle.selectedRow
         try {
