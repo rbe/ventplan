@@ -97,6 +97,5 @@ GH.yellowTextField(ausfuhrendeFirmaTelefon)
 GH.yellowTextField(ausfuhrendeFirmaTelefax)
 GH.yellowTextField(ausfuhrendeFirmaAnsprechpartner)
 GH.yellowTextField(bauvorhaben)
-textArea(id: "notizen", rows: 13)
 // Bindings
 build(KundendatenBindings)
