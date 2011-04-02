@@ -123,8 +123,10 @@ class GriffonHelper {
 	def static toDouble2 = { digits = 2, roundingMode = null ->
 		def d = delegate
 		def r = 0.0d
+        // Null?
+        if (d == null) return r
 		// Stop in case of we got a float/double
-		if (!(d.class in [java.lang.String]) || d.class in [java.lang.Float, java.lang.Double, java.math.BigDecimal]) {
+		if (!(d.getClass() in [java.lang.String]) || d.getClass() in [java.lang.Float, java.lang.Double, java.math.BigDecimal]) {
 			return d
 		}
 		// Does String contain a character?
