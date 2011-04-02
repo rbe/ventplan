@@ -337,7 +337,7 @@ class ProjektModel {
 	def checkRaum = { object, property, value, columnIndex ->
 		if (DEBUG) println "checkRaum: $object, $property, $value, $columnIndex"
 		// Try to save double value; see ticket 60
-		object[property] = value.toDouble2()
+		object[property] = value?.toDouble2()
 		prufeRaumdaten(map.raum.raume.find { it.position == object.position })
 	}
 	
@@ -356,7 +356,7 @@ class ProjektModel {
 				getColumnName:  { columnIndex -> columnNames[columnIndex] },
 				getColumnValue: { object, columnIndex ->
 					try {
-						object."${propertyNames[columnIndex]}"?.toString2()
+						object?."${propertyNames[columnIndex]}"?.toString2()
 					} catch (e) {
 						println "gltmClosure, getColumnValue: ${e}: ${object?.dump()}"
 						object?.toString()
