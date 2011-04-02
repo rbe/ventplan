@@ -14,6 +14,9 @@ package com.westaflex.wac
 import com.bensmann.griffon.GriffonHelper as GH
 
 // Raumvolumenströme
+// WAC-171: Hinweis für Türen und ÜB-Elemente
+bind(source: model.map.raum.raumVs, sourceProperty: "turenHinweis",      target: raumVsTurenHinweis,      targetProperty: "text")
+bind(source: model.map.raum.raumVs, sourceProperty: "ubElementeHinweis", target: raumVsUbElementeHinweis, targetProperty: "text")
 // Add list selection listener to synchronize every table's selection and model.meta.gewahlterRaum
 [raumVsZuAbluftventileTabelle, raumVsUberstromelementeTabelle].each {
 	it.selectionModel.addListSelectionListener([

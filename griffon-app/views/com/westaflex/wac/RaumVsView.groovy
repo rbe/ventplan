@@ -14,7 +14,13 @@ import net.miginfocom.swing.MigLayout
 // Raumvolumenströme
 panel(layout: new MigLayout("fill, wrap", "[fill, grow]", "[fill,grow]"), constraints: "grow") {
     // Tabellen für Zu-/Abluftventile, Überströmventile
-    panel(layout: new MigLayout("fill", "[fill, grow]", "[fill,grow]"), constraints: "grow") {
+    panel(layout: new MigLayout("fill, wrap 1", "[fill, grow]", "[fill,grow]"), constraints: "grow") {
+        // WAC-171
+        label(id: "raumVsTurenHinweis", foreground: java.awt.Color.RED)
+
+        // WAC-171
+        label(id: "raumVsUbElementeHinweis", foreground: java.awt.Color.RED)
+
         jideTabbedPane(id: "raumVsVentileTabGroup", constraints: "grow, span") {
             // Raumvolumenströme - Zu-/Abluftventile
             panel(id: "raumVsZuAbluftventileTab", title: "Zu-/Abluftventile", layout: new MigLayout("fill", "[fill,grow]", "[fill,grow]"), constraints: "grow") {

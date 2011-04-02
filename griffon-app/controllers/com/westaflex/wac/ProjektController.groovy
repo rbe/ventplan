@@ -627,6 +627,17 @@ class ProjektController {
         wacCalculationService.aussenluftVs(model.map)
         // Zentralgerät bestimmen
         onZentralgeratAktualisieren()
+        // WAC-171: Finde Räume ohne Türen oder ÜB-Elemente
+        def raumeOhneTuren = model.map.raum.raume.findAll { raum ->
+            raum.raumUberstromVolumenstrom > 0 && !raum.turen.any { it.turBreite > 0 }
+        }
+        def raumeOhneUbElemente = model.map.raum.raume.findAll { raum ->
+            raum.raumUberstromVolumenstrom > 0 && !raum.raumUberstromElement
+        }
+        model.map.raum.raumVs.turenHinweis = raumeOhneTuren.size() > 0 ?
+            "Hinweis: bitte Türen prüfen: ${raumeOhneTuren.collect { it.raumBezeichnung }.join(", ")}" : ""
+        model.map.raum.raumVs.ubElementeHinweis = raumeOhneUbElemente.size() > 0 ?
+            "Hinweis: bitte ÜB-Elemente prüfen: ${raumeOhneUbElemente.collect { it.raumBezeichnung }.join(", ")}" : ""
 	}
 	
 	/**
