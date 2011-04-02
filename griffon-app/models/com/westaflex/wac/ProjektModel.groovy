@@ -45,6 +45,8 @@ class ProjektModel {
 			raumBezeichnung: "",
 			raumLuftart: "",
 			raumGeschoss: "",
+            raumLange: 0.0d,
+            raumBreite: 0.0d,
 			raumFlache: 0.0d,
 			raumHohe: 0.0d,
 			raumZuluftfaktor: 0.0d,
