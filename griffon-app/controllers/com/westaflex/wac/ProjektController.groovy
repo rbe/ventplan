@@ -770,6 +770,7 @@ class ProjektController {
 	 */
 	def raumBearbeitenSchliessen = {
 		if (DEBUG) println "raumBearbeitenSchliessen: closing dialog '${raumBearbeitenDialog.title}'"
+        raumBearbeitenGeandert()
 		raumBearbeitenDialog.dispose()
 	}
 	
