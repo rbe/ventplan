@@ -584,51 +584,49 @@ class ProjektController {
 	 */
 	def raumGeandert = { raumIndex ->
         assert raumIndex != null
-        //doLater {
-            if (DEBUG) println "raumGeandert: raum[${raumIndex}]"
-            if (raumIndex > -1) {
-                if (DEBUG) println "raumGeandert: raum[${raumIndex}] ${model.map.raum.raume[raumIndex]}"
-                // WAC-65: Errechnete Werte zurücksetzen
-                model.map.raum.raume[raumIndex].with {
-                    if (raumBreite && raumLange) raumFlache = raumBreite * raumLange
-                    raumVolumen = raumFlache * raumHohe
-                    raumLuftwechsel = 0.0d
-                    // Abluft
-                    raumAbluftVolumenstromInfiltration = 0.0d // Abluftvs abzgl. Infiltration
-                    raumAnzahlAbluftventile = 0
-                    raumAbluftmengeJeVentil = 0.0d
-                    // Zuluft
-                    raumZuluftVolumenstromInfiltration = 0.0d // Zuluftvs abzgl. Infiltration
-                    raumAnzahlZuluftventile = 0
-                    raumZuluftmengeJeVentil = 0.0d
-                    raumAnzahlUberstromVentile = 0
-                    // Überström
-                    raumUberstromVolumenstrom = 0.0d
-                }
-                // Raumvolumenströme, (Werte abzgl. Infiltration werden zur Berechnung der Ventile benötigt) berechnen
-                wacCalculationService.autoLuftmenge(model.map)
-                // Zu-/Abluftventile
-                model.map.raum.raume[raumIndex] =
-                    wacCalculationService.berechneZuAbluftventile(model.map.raum.raume[raumIndex])
-                // Türspalt und Türen
-                model.map.raum.raume[raumIndex] =
-                    wacCalculationService.berechneTurspalt(model.map.raum.raume[raumIndex])
-                berechneTuren(null, raumIndex)
-                // Überströmelement berechnen
-                model.map.raum.raume[raumIndex] =
-                    wacCalculationService.berechneUberstromelemente(model.map.raum.raume[raumIndex])
-            }
-            // Nummern der Räume berechnen
-            wacCalculationService.berechneRaumnummer(model.map)
-            // Gebäude-Geometrie berechnen
-            wacCalculationService.geometrieAusRaumdaten(model.map)
-            // Aussenluftvolumenströme berechnen
-            wacCalculationService.aussenluftVs(model.map)
-            // Zentralgerät bestimmen
-            onZentralgeratAktualisieren()
+        if (DEBUG) println "raumGeandert: raum[${raumIndex}]"
+        if (raumIndex > -1) {
+            if (DEBUG) println "raumGeandert: raum[${raumIndex}] ${model.map.raum.raume[raumIndex]}"
             // Diesen Raum in allen Tabellen anwählen
-            ////onRaumInTabelleWahlen(raumIndex)
-        //}
+            onRaumInTabelleWahlen(raumIndex)
+            // WAC-65: Errechnete Werte zurücksetzen
+            model.map.raum.raume[raumIndex].with {
+                if (raumBreite && raumLange) raumFlache = raumBreite * raumLange
+                raumVolumen = raumFlache * raumHohe
+                raumLuftwechsel = 0.0d
+                // Abluft
+                raumAbluftVolumenstromInfiltration = 0.0d // Abluftvs abzgl. Infiltration
+                raumAnzahlAbluftventile = 0
+                raumAbluftmengeJeVentil = 0.0d
+                // Zuluft
+                raumZuluftVolumenstromInfiltration = 0.0d // Zuluftvs abzgl. Infiltration
+                raumAnzahlZuluftventile = 0
+                raumZuluftmengeJeVentil = 0.0d
+                raumAnzahlUberstromVentile = 0
+                // Überström
+                raumUberstromVolumenstrom = 0.0d
+            }
+            // Raumvolumenströme, (Werte abzgl. Infiltration werden zur Berechnung der Ventile benötigt) berechnen
+            wacCalculationService.autoLuftmenge(model.map)
+            // Zu-/Abluftventile
+            model.map.raum.raume[raumIndex] =
+                wacCalculationService.berechneZuAbluftventile(model.map.raum.raume[raumIndex])
+            // Türspalt und Türen
+            model.map.raum.raume[raumIndex] =
+                wacCalculationService.berechneTurspalt(model.map.raum.raume[raumIndex])
+            berechneTuren(null, raumIndex)
+            // Überströmelement berechnen
+            model.map.raum.raume[raumIndex] =
+                wacCalculationService.berechneUberstromelemente(model.map.raum.raume[raumIndex])
+        }
+        // Nummern der Räume berechnen
+        wacCalculationService.berechneRaumnummer(model.map)
+        // Gebäude-Geometrie berechnen
+        wacCalculationService.geometrieAusRaumdaten(model.map)
+        // Aussenluftvolumenströme berechnen
+        wacCalculationService.aussenluftVs(model.map)
+        // Zentralgerät bestimmen
+        onZentralgeratAktualisieren()
 	}
 	
 	/**
