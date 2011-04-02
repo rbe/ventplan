@@ -9,12 +9,14 @@
  */
 package com.westaflex.wac
 
+import com.bensmann.griffon.GriffonHelper as GH
+
 /**
  * Check for an update.
  */
 class CheckUpdate implements java.lang.Runnable {
-	
-	def static unzip = { String dest ->
+
+    def static unzip = { String dest ->
 		//in metaclass added methods, 'delegate' is the object on which 
 		//the method is called. Here it's the file to unzip
 		def result = new java.util.zip.ZipInputStream(new java.io.FileInputStream(delegate))
@@ -49,7 +51,7 @@ class CheckUpdate implements java.lang.Runnable {
 		def version
 		try {
 			// Download ZIP from webserver
-			version = new java.io.File("conf/version").text.trim()
+			version = GH.localVersion()
 			// TODO Put into Griffon configuration!
 			def u = "http://files.art-of-coding.eu/westaflex/wac/update/${version}/wacupdate.zip"
 			println "update: trying to download ${u}"
