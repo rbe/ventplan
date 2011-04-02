@@ -239,6 +239,7 @@ class WacCalculationService {
 	
 	/**
 	 * DiffDruck ist abhängig von der Gebäudelage.
+     * TODO rbe DIN1946, Seite 37, Tabelle 10, Freie Lüftung
 	 */
 	Double diffDruck(map) {
 		def r = map.gebaude.lage.with {
@@ -255,12 +256,13 @@ class WacCalculationService {
 	
 	/**
 	 * Wirksamen Infiltrationsanteil berechnen.
+     * TODO rbe DIN1946, Seite 34
 	 */
 	Double infiltration(map, Boolean ventilator) {
 		def m = [
 			sys: 0.6f,
 			inf: 1.0d,
-			n50: 1.0d,
+			n50: 1.0d, // Je nach Kategorie (A,B,C) setzen (Tabelle 9)
 			druckExpo: 2.0d / 3,
 			diffDruck: diffDruck(map)
 		]
@@ -351,7 +353,8 @@ class WacCalculationService {
 		// Gesamt-Außenluftvolumenstrom für lüftungstechnische Maßnahmen
 		Double gesamtAvsLTM = 0.0d
         def infilt = infiltration(map, true)
-        /*if (DEBUG)*/ println "autoLuftmenge: infilt=${infilt}"
+        /*if (DEBUG)*/ println "autoLuftmenge: infiltration(map, true)=${infilt}"
+        /*if (DEBUG)*/ println "autoLuftmenge: infiltration(map, false)=${infiltration(map, false)}"
 		if (map.aussenluftVs.infiltrationBerechnen/* && b*/) {
 			gesamtAvsLTM = gesamtAussenluft - infilt
 		} else {
@@ -447,6 +450,7 @@ class WacCalculationService {
 		map.aussenluftVs.gesamt = (gesamtAvs * wsFaktor * map.gebaude.faktorBesondereAnforderungen)
 		// Infiltration
 		map.aussenluftVs.infiltration = infiltration(map, false)
+        println "aussenluftVs: map.aussenluftVs.infiltration=${map.aussenluftVs.infiltration}"
 		// Lüftungstechnische Maßnahmen erforderlich?
 		if (ltmErforderlich(map)) {
 			map.aussenluftVs.massnahme = "Lüftungstechnische Maßnahmen erforderlich!"
