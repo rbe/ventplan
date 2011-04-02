@@ -415,22 +415,25 @@ class WacCalculationService {
 		}
 		// Überströmvolumenstrom = Vorschlag: Raumvolumenstrom
 		map.raum.raume.each {
-			switch (it.raumLuftart) {
-				case "ZU":
-                    // Abzgl. Infiltration
-					it.raumUberstromVolumenstrom = it.raumZuluftVolumenstromInfiltration
-					break
-				case "AB":
-                    // Abzgl. Infiltration
-					it.raumUberstromVolumenstrom = it.raumAbluftVolumenstromInfiltration
-					break
-				case "ZU/AB":
-                    // Abzgl. Infiltration
-					it.raumUberstromVolumenstrom =
-						java.lang.Math.abs(it.raumZuluftVolumenstromInfiltration - it.raumAbluftVolumenstromInfiltration)
-					break
-			}
-            /*if (DEBUG)*/ println "${it.raumBezeichnung}: raumUberstromVolumenstrom=${it.raumUberstromVolumenstrom}"
+            // WAC-151: Wegen manueller Änderung nur vorschlagen, wenn kein Wert vorhanden ist
+            if (!it.raumUberstromVolumenstrom || it.raumUberstromVolumenstrom == 0) {
+                switch (it.raumLuftart) {
+                    case "ZU":
+                        // Abzgl. Infiltration
+                        it.raumUberstromVolumenstrom = it.raumZuluftVolumenstromInfiltration
+                        break
+                    case "AB":
+                        // Abzgl. Infiltration
+                        it.raumUberstromVolumenstrom = it.raumAbluftVolumenstromInfiltration
+                        break
+                    case "ZU/AB":
+                        // Abzgl. Infiltration
+                        it.raumUberstromVolumenstrom =
+                            java.lang.Math.abs(it.raumZuluftVolumenstromInfiltration - it.raumAbluftVolumenstromInfiltration)
+                        break
+                }
+                /*if (DEBUG)*/ println "${it.raumBezeichnung}: raumUberstromVolumenstrom=${it.raumUberstromVolumenstrom}"
+            }
 		}
 	}
 	
