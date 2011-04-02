@@ -320,13 +320,13 @@ class ProjektController {
 			//gelufteteFlache: view.gebaudeGeometrieGelufteteFlache.text.toDouble2()
 			gelufteteVolumen: view.gebaudeGeometrieGeluftetesVolumen.text.toDouble2()
 		]
-		// Write values into model
-		model.map.gebaude.geometrie.wohnflache = g.wohnflache
-		model.map.gebaude.geometrie.raumhohe = g.raumhohe
-		//model.map.gebaude.geometrie.gelufteteFlache = g.gelufteteFlache
-		model.map.gebaude.geometrie.gelufteteaVolumen = g.geluftetesVolumen
-		//
         doLater {
+            // Write values into model
+            model.map.gebaude.geometrie.wohnflache = g.wohnflache
+            model.map.gebaude.geometrie.raumhohe = g.raumhohe
+            //model.map.gebaude.geometrie.gelufteteFlache = g.gelufteteFlache
+            model.map.gebaude.geometrie.gelufteteaVolumen = g.geluftetesVolumen
+            //
             wacCalculationService.geometrie(model.map)
             wacCalculationService.aussenluftVs(model.map)
             // Zentralgerät bestimmen
