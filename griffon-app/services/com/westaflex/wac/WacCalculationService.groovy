@@ -515,7 +515,9 @@ class WacCalculationService {
 		grundluftung = Math.max(gesamtAvs/*gesamtAussenluftVs(map)*/, grundluftung)
 		grundluftung = Math.max(map.gebaude.geplanteBelegung.mindestaussenluftrate, grundluftung)
 		def infiltration = map.aussenluftVs.infiltrationBerechnen ? infiltration(map, true) : 0.0d
-		map.aussenluftVs.gesamtLvsLtmLvsNl = grundluftung - infiltration
+        map.aussenluftVs.gesamtLvsLtmLvsNl = map.aussenluftVs.with {
+                Math.max(Math.max(gesamtAvsNeLvsNl, gesamtAvsRaumLvsNl), gesamtAvsPersonLvsNl)
+            } - infiltration
 		map.aussenluftVs.gesamtLvsLtmLwNl = (grundluftung - infiltration) / geluftetesVolumen
 		mindestluftung = 0.7f * grundluftung - infiltration
 		map.aussenluftVs.gesamtLvsLtmLvsRl = mindestluftung
