@@ -302,6 +302,10 @@ class ProjektController {
      * Gebäudedaten wurden geändert - Aussenluftvolumenströme berechnen.
      */
     def gebaudedatenGeandert = { evt = null ->
+        if (model.map.gebaude.lage.windstark) {
+            // WAC-169: Änderung der Druckdifferenz durch Gebäudelage windstark
+            doLater { model.map.gebaude.luftdichtheit.druckdifferenz = 4.0d }
+        }
         berechneAussenluftVs()
     }
 
