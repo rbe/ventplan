@@ -603,6 +603,7 @@ class ProjektController {
                 // Türspalt und Türen
                 model.map.raum.raume[raumIndex] =
                     wacCalculationService.berechneTurspalt(model.map.raum.raume[raumIndex])
+                berechneTuren(null, raumIndex)
                 // Überströmelement berechnen
                 model.map.raum.raume[raumIndex] =
                     wacCalculationService.berechneUberstromelemente(model.map.raum.raume[raumIndex])
@@ -741,6 +742,7 @@ class ProjektController {
                 println "test"
             } as TableModelListener);
             */
+            berechneTuren(null, row)
 			raumBearbeitenDialog.show()
 		}
 	}
