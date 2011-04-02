@@ -483,8 +483,8 @@ class WacCalculationService {
 		// Ausgabe der Gesamt-Raumabluft-Volumenströme
 		grundluftung = 0.0d
         grundluftung = abluftRaume(map)?.inject(0.0d) { o, n ->
-            // Abzgl. Infiltration
-			o + n.raumAbluftVolumenstromInfiltration
+            // Ohne Infiltration abzuziehen!
+			o + n.raumAbluftVolumenstrom
 		}
 		map.aussenluftVs.gesamtAvsRaumLvsNl = grundluftung
 		map.aussenluftVs.gesamtAvsRaumLwNl = grundluftung / geluftetesVolumen
