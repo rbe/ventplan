@@ -573,7 +573,8 @@ class GriffonHelper {
      * Returns the current installed version.
      */
     def static localVersion = {
-        def version = new java.io.File("/home/manu/Entwicklung/git/wac2/usbstick/wac/conf/version").text.trim()
+        // For development only: new java.io.File("/home/manu/Entwicklung/git/wac2/usbstick/wac/conf/version").text.trim()
+        def version = new java.io.File("conf/version").text.trim()
         println "version -> ${version}"
         version
     }
