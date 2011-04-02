@@ -165,7 +165,8 @@ class WacCalculationService {
 				}?.sort { raum ->
 					raum.position
 				}?.eachWithIndex { raum, raumIndex ->
-					raum.raumNummer = String.format("%s%02d", geschossIndex, raumIndex + 1)
+                    // WAC-151: Nur berechnen, wenn keine Daten eingegeben wurden
+					if (!raum.raumNummer) raum.raumNummer = String.format("%s%02d", geschossIndex, raumIndex + 1)
 				}
 		}
 	}
