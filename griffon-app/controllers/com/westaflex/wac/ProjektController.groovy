@@ -808,7 +808,7 @@ class ProjektController {
 			wacCalculationService.berechneTurspalt(raum)
             // WAC-165: Hinweis: Türspalt > max. Türspalthöhe?
             def turSpalthoheUberschritten = raum.turen.findAll {
-                it.turSpalthohe > model.meta.gewahlterRaum.raumMaxTurspaltHohe.toDouble2()
+                it.turSpalthohe > raum.raumMaxTurspaltHohe.toDouble2()
             }?.size() ?: 0
             if (turSpalthoheUberschritten > 0) {
                 model.meta.gewahlterRaum.raumTurspaltHinweis = "Hinweis: Maximale Türspalthöhe überschritten!"
