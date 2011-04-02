@@ -757,9 +757,44 @@ class ProjektController {
 	/**
 	 * Raum bearbeiten - Daten eingegeben. Mit raumBearbeitenSchliessen zusammenlegen?
 	 */
-	def raumBearbeitenGeandert = {
-		if (DEBUG) println "TODO raumBearbeitenGeandert"
+	def raumBearbeitenGeandert = { evt = null ->
+        def raumIndex = view.raumTabelle.selectedRow
         // TODO Daten aus Dialog übertragen und neu berechnen
+        doOutside {
+            println "raumBearbeitenGeandert: 1 ${model.meta.gewahlterRaum.dump()}"
+            model.meta.gewahlterRaum.raumNummer =
+                model.map.raum.raume[raumIndex].raumNummer =
+                view.raumBearbeitenRaumnummer.text
+            model.meta.gewahlterRaum.raumBezeichnung =
+                model.map.raum.raume[raumIndex].raumBezeichnung =
+                view.raumBearbeitenBezeichnung.text
+            model.meta.gewahlterRaum.raumZuluftfaktor =
+                model.map.raum.raume[raumIndex].raumZuluftfaktor =
+                view.raumBearbeitenLuftartFaktorZuluftverteilung.text?.toDouble2()
+            model.meta.gewahlterRaum.raumAbluftVolumenstrom =
+                model.map.raum.raume[raumIndex].raumAbluftVolumenstrom =
+                view.raumBearbeitenLuftartAbluftVs.text?.toDouble2()
+            model.meta.gewahlterRaum.raumMaxTurspaltHohe =
+                model.map.raum.raume[raumIndex].raumMaxTurspaltHohe =
+                view.raumBearbeitenDetailsTurspalthohe.text?.toDouble2()
+            model.meta.gewahlterRaum.raumLange =
+                model.map.raum.raume[raumIndex].raumLange =
+                view.raumBearbeitenOptionalRaumlange.text?.toDouble2()
+            model.meta.gewahlterRaum.raumBreite =
+                model.map.raum.raume[raumIndex].raumBreite =
+                view.raumBearbeitenOptionalRaumbreite.text?.toDouble2()
+            model.meta.gewahlterRaum.raumHohe =
+                model.map.raum.raume[raumIndex].raumHohe =
+                view.raumBearbeitenOptionalRaumhohe.text?.toDouble2()
+            println "raumBearbeitenGeandert: 2 ${model.meta.gewahlterRaum.dump()}"
+            // TODO Daten aus Model in den Dialog übertragen
+            doLater {
+                raumGeandert(raumIndex)
+                view.raumBearbeitenRaumnummer.text = model.meta.gewahlterRaum.raumNummer
+                view.raumBearbeitenOptionalRaumflache.text = model.meta.gewahlterRaum.raumFlache.toString2()
+                view.raumBearbeitenOptionalRaumvolumen.text = model.meta.gewahlterRaum.raumVolumen.toString2()
+            }
+        }
 	}
 	
 	/**
