@@ -27,12 +27,13 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
                 label("", constraints: "wrap")
 
                 comboBox(id: "raumBearbeitenRaumGeschoss", items: model.meta.raum.geschoss)
-                button(id: "raumBearbeitenRaumLinks", text: " < ")
+                // TODO mmu
+                button(id: "raumBearbeitenRaumLinks", text: " < ", visible: false)
                 textField(id: "raumBearbeitenRaumnummer", constraints: "width 50px")
-                button(id: "raumBearbeitenRaumRechts", text: " > ")
+                // TODO mmu
+                button(id: "raumBearbeitenRaumRechts", text: " > ", visible: false)
                 textField(id: "raumBearbeitenBezeichnung", text: "", constraints: "width 100px")
                 comboBox(id: "raumBearbeitenRaumtyp", items: model.meta.raum.typ)
-                button(id: "raumdatenDialogRaumButton", text: "...")
             }
             panel(id: "raumBearbeitenLuftartPanel", border: titledBorder("Luftart"), layout: new MigLayout("", "[]para[]para[]", ""), constraints: "cell 0 1, grow") {
                 comboBox(id: "raumBearbeitenLuftart", constraints: "width 100px", items: model.meta.raum.luftart, selectedItem: model.meta.gewahlterRaum.raumLuftart)
