@@ -353,8 +353,8 @@ class WacCalculationService {
 		// Gesamt-Außenluftvolumenstrom für lüftungstechnische Maßnahmen
 		Double gesamtAvsLTM = 0.0d
         def infilt = infiltration(map, true)
-        /*if (DEBUG)*/ println "autoLuftmenge: infiltration(map, true)=${infilt}"
-        /*if (DEBUG)*/ println "autoLuftmenge: infiltration(map, false)=${infiltration(map, false)}"
+        if (DEBUG) println "autoLuftmenge: infiltration(map, true)=${infilt}"
+        if (DEBUG) println "autoLuftmenge: infiltration(map, false)=${infiltration(map, false)}"
 		if (map.aussenluftVs.infiltrationBerechnen/* && b*/) {
 			gesamtAvsLTM = gesamtAussenluft - infilt
 		} else {
@@ -367,7 +367,7 @@ class WacCalculationService {
 		map.raum.ltmZuluftSumme = 0.0d
 		// Alle Räume, die einen Abluftvolumenstrom > 0 haben...
 		map.raum.raume.grep { it.raumAbluftVolumenstrom > 0.0d }.each {
-            println "autoLuftmenge: raum mit Abluftvolumenstrom > 0: ${it.raumBezeichnung}"
+            if (DEBUG) println "autoLuftmenge: raum mit Abluftvolumenstrom > 0: ${it.raumBezeichnung}"
             // Abluftvolumenstrom abzgl. Infiltration errechnen
 			Double ltmAbluftRaum = Math.round(gesamtAvsLTM / gesamtAbluftVs * it.raumAbluftVolumenstrom)
             Double ltmZuluftRaum = 0.0d
@@ -398,8 +398,8 @@ class WacCalculationService {
 //				ltmAbluftSumme += ltmAbluftRaum
 //			}
 			map.raum.ltmAbluftSumme = ltmAbluftSumme
-            /*if (DEBUG)*/ println "autoLuftmenge: ${it.raumBezeichnung}: raumAbluftVolumenstromInfiltration: Math.round(${gesamtAvsLTM} / ${gesamtAbluftVs} * ${it.raumAbluftVolumenstrom})=${ltmAbluftRaum}"
-            /*if (DEBUG)*/ println "autoLuftmenge: ${it.raumBezeichnung}: raumZuluftVolumenstromInfiltration: Math.round(${gesamtAvsLTM} * ${it.raumZuluftfaktor} / ${gesamtZuluftfaktor})  =${ltmZuluftRaum}"
+            if (DEBUG) println "autoLuftmenge: ${it.raumBezeichnung}: raumAbluftVolumenstromInfiltration: Math.round(${gesamtAvsLTM} / ${gesamtAbluftVs} * ${it.raumAbluftVolumenstrom})=${ltmAbluftRaum}"
+            if (DEBUG) println "autoLuftmenge: ${it.raumBezeichnung}: raumZuluftVolumenstromInfiltration: Math.round(${gesamtAvsLTM} * ${it.raumZuluftfaktor} / ${gesamtZuluftfaktor})  =${ltmZuluftRaum}"
 		}
 		// LTM: zweite Berechnung für Raumvolumenströme
 		map.raum.raume.grep {
@@ -414,7 +414,7 @@ class WacCalculationService {
 //				ltmZuluftSumme += ltmZuluftRaum
 //			}
 			map.raum.ltmZuluftSumme = ltmZuluftSumme
-            /*if (DEBUG)*/ println "autoLuftmenge: ${it.raumBezeichnung}: raumZuluftVolumenstromInfiltration: Math.round(${gesamtAvsLTM} * ${it.raumZuluftfaktor} / ${gesamtZuluftfaktor})  =${ltmZuluftRaum}"
+            if (DEBUG) println "autoLuftmenge: ${it.raumBezeichnung}: raumZuluftVolumenstromInfiltration: Math.round(${gesamtAvsLTM} * ${it.raumZuluftfaktor} / ${gesamtZuluftfaktor})  =${ltmZuluftRaum}"
 		}
 		// Überströmvolumenstrom = Vorschlag: Raumvolumenstrom
 		map.raum.raume.each {
@@ -435,7 +435,7 @@ class WacCalculationService {
                             java.lang.Math.abs(it.raumZuluftVolumenstromInfiltration - it.raumAbluftVolumenstromInfiltration)
                         break
                 }
-                /*if (DEBUG)*/ println "${it.raumBezeichnung}: raumUberstromVolumenstrom=${it.raumUberstromVolumenstrom}"
+                if (DEBUG) println "${it.raumBezeichnung}: raumUberstromVolumenstrom=${it.raumUberstromVolumenstrom}"
             }
 		}
 	}
@@ -450,7 +450,7 @@ class WacCalculationService {
 		map.aussenluftVs.gesamt = (gesamtAvs * wsFaktor * map.gebaude.faktorBesondereAnforderungen)
 		// Infiltration
 		map.aussenluftVs.infiltration = infiltration(map, false)
-        println "aussenluftVs: map.aussenluftVs.infiltration=${map.aussenluftVs.infiltration}"
+        if (DEBUG) println "aussenluftVs: map.aussenluftVs.infiltration=${map.aussenluftVs.infiltration}"
 		// Lüftungstechnische Maßnahmen erforderlich?
 		if (ltmErforderlich(map)) {
 			map.aussenluftVs.massnahme = "Lüftungstechnische Maßnahmen erforderlich!"
@@ -570,28 +570,28 @@ class WacCalculationService {
 	def berechneZuAbluftventile(map) {
 		if (map.raumLuftart in ["ZU", "ZU/AB"]) {
 			def ventil = map.raumBezeichnungZuluftventile
-            println "berechneZuAbluftventile: ${map.raumBezeichnung}: raumBezeichnungZuluftventile=${ventil}"
+            if (DEBUG) println "berechneZuAbluftventile: ${map.raumBezeichnung}: raumBezeichnungZuluftventile=${ventil}"
 			if (ventil) {
 				def maxVolumenstrom = wacModelService.getMaxVolumenstrom(ventil)
 				// Anzahl Ventile; abzgl. Infiltration
 				map.raumAnzahlZuluftventile = java.lang.Math.ceil(map.raumZuluftVolumenstromInfiltration / maxVolumenstrom)
-                println "berechneZuAbluftventile: ${map.raumBezeichnung}: raumAnzahlZuluftventile=java.lang.Math.ceil(${map.raumZuluftVolumenstromInfiltration} / ${maxVolumenstrom})=${map.raumAnzahlZuluftventile}"
+                if (DEBUG) println "berechneZuAbluftventile: ${map.raumBezeichnung}: raumAnzahlZuluftventile=java.lang.Math.ceil(${map.raumZuluftVolumenstromInfiltration} / ${maxVolumenstrom})=${map.raumAnzahlZuluftventile}"
 				// Luftmenge je Ventil; abzgl. Infiltration
 				map.raumZuluftmengeJeVentil = map.raumZuluftVolumenstromInfiltration / map.raumAnzahlZuluftventile
-                println "berechneZuAbluftventile: ${map.raumBezeichnung}: ${map.raumZuluftVolumenstromInfiltration} / ${map.raumAnzahlZuluftventile}=${map.raumZuluftmengeJeVentil}"
+                if (DEBUG) println "berechneZuAbluftventile: ${map.raumBezeichnung}: ${map.raumZuluftVolumenstromInfiltration} / ${map.raumAnzahlZuluftventile}=${map.raumZuluftmengeJeVentil}"
 			}
 		}
 		if (map.raumLuftart in ["AB", "ZU/AB"]) {
 			def ventil = map.raumBezeichnungAbluftventile
-            println "berechneZuAbluftventile: ${map.raumBezeichnung}: raumBezeichnungAbluftventile=${ventil}"
+            if (DEBUG) println "berechneZuAbluftventile: ${map.raumBezeichnung}: raumBezeichnungAbluftventile=${ventil}"
 			if (ventil) {
 				def maxVolumenstrom = wacModelService.getMaxVolumenstrom(ventil)
 				// Anzahl Ventile; abzgl. Infiltration
 				map.raumAnzahlAbluftventile = java.lang.Math.ceil(map.raumAbluftVolumenstromInfiltration / maxVolumenstrom)
-                println "berechneZuAbluftventile: ${map.raumBezeichnung}: raumAnzahlAbluftventile=java.lang.Math.ceil(${map.raumAbluftVolumenstromInfiltration} / ${maxVolumenstrom})=${map.raumAnzahlAbluftventile}"
+                if (DEBUG) println "berechneZuAbluftventile: ${map.raumBezeichnung}: raumAnzahlAbluftventile=java.lang.Math.ceil(${map.raumAbluftVolumenstromInfiltration} / ${maxVolumenstrom})=${map.raumAnzahlAbluftventile}"
 				// Luftmenge je Ventil; abzgl. Infiltration
 				map.raumAbluftmengeJeVentil = map.raumAbluftVolumenstromInfiltration / map.raumAnzahlAbluftventile
-                println "berechneZuAbluftventile: ${map.raumBezeichnung}: ${map.raumAbluftVolumenstromInfiltration} / ${map.raumAnzahlAbluftventile}=${map.raumAbluftmengeJeVentil}"
+                if (DEBUG) println "berechneZuAbluftventile: ${map.raumBezeichnung}: ${map.raumAbluftVolumenstromInfiltration} / ${map.raumAnzahlAbluftventile}=${map.raumAbluftmengeJeVentil}"
 			}
 		}
 		if (DEBUG) println "berechneZuAbluftventile: ${map}"
@@ -612,7 +612,7 @@ class WacCalculationService {
             if (DEBUG) println "berechneUberstromelemente: map.turen=${map?.turen?.dump()}"
             if (DEBUG) println "berechneUberstromelemente: map.raumMaxTurspaltHohe=${map.raumMaxTurspaltHohe}"
             if (!map.raumMaxTurspaltHohe) {
-                println "WARNING: value for maxTurspaltHohe is missing, using default: 10.0 -> ${map?.dump()}"
+                if (DEBUG) println "WARNING: value for maxTurspaltHohe is missing, using default: 10.0 -> ${map?.dump()}"
                 map.raumMaxTurspaltHohe = 10.0d
             }
             def querschnitt = map.turen.inject(0.0d, { o, n -> o + n.turBreite * map.raumMaxTurspaltHohe })
@@ -629,7 +629,7 @@ class WacCalculationService {
                 // 6
                 map.raumAnzahlUberstromVentile = java.lang.Math.ceil(usRechenwert / maxVolumenstrom)
             } catch (e) {
-                println "berechneUberstromelemente: ${e}"
+                if (DEBUG) println "berechneUberstromelemente: ${e}"
                 e.printStackTrace()
                 map.raumAnzahlUberstromVentile = 0.0d
             }
@@ -820,7 +820,7 @@ class WacCalculationService {
                     it.turQuerschnitt = tsqf * it.turBreite / summeTurBreiten
                     if (DEBUG) println "berechneTurspalt: abziehen=${abziehen} tsqf=${tsqf} turSpalthohe=${it.turSpalthohe} turQuerschnitt=${it.turQuerschnitt}"
                 } catch (e) {
-                    println "berechneTurspalt: ${e}"
+                    println "berechneTurspalt: EXCEPTION=${e}"
                 }
 			}
             // WAC-165: Hinweis: Türspalt > max. Türspalthöhe?
