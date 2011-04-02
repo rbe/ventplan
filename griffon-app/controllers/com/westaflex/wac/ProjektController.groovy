@@ -267,35 +267,15 @@ class ProjektController {
         }
         // Räume: set cell editors
         model.setRaumEditors(view)
-        /*
-        // Nummern der Räume berechnen
-        wacCalculationService.berechneRaumnummer(model.map)
-        // Gebäude-Geometrie berechnen
-        wacCalculationService.geometrieAusRaumdaten(model.map)
-        // Zu-/Abluftventile
-        model.map.raum.raume.each {
-            wacCalculationService.berechneZuAbluftventile(it)
-        }
-        */
         //
         model.resyncRaumTableModels()
         //
         model.map.raum.raume.each { raum ->
-            /*
-            // Überströmelemente
-            wacCalculationService.berechneUberstromelemente(raum)
-            // Türspalt berechnen
-            wacCalculationService.berechneTurspalt(raum)
-            */
-            println "berechneAlles: BERECHNE RAUM ${raum.position}"
+            if (DEBUG) println "berechneAlles: BERECHNE RAUM ${raum.position}"
             raumGeandert(raum.position)
         }
         //
         model.resyncRaumTableModels()
-        /*
-        // Aussenluftvolumenströme berechnen
-        berechneAussenluftVs()
-        */
     }
 
     /**
