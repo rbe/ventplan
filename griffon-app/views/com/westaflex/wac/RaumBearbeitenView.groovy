@@ -55,8 +55,8 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
                     }
                 }
                 
-                // WAC-165
-                label(id: "raumBearbeitenTurspaltHinweis", foreground: java.awt.Color.RED, constraints: "span 2")
+                // WAC-165 - feste Höhe eingestellt. Unter Mac anpassen? TODO rbe
+                label(id: "raumBearbeitenTurspaltHinweis", foreground: java.awt.Color.RED, constraints: "height 14px!, span 2")
             }
 
             panel(id: "raumBearbeitenOptionalPanel", border: titledBorder("Optional"), layout: new MigLayout("", "[left]para[right]para[left]para[left]para[right]para[left]para[left]para[right]para[left]", "[]0[]"), constraints: "cell 0 3") {
