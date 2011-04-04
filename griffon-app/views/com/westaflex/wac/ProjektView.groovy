@@ -52,8 +52,10 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount, constra
     }
 
 }
+
 // Bindings
 build(ProjektBindings)
+
 //
 // JIDE
 //
