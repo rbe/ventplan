@@ -16,6 +16,9 @@ import net.miginfocom.swing.MigLayout
 
 // Akustikberechnung
 panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]"), constraints: "grow") {
+    // TODO rbe Speichern!
+    label(text: "Hinweis: diese Tab ist zur Berechnung, die Daten werden nicht gespeichert!", foreground: java.awt.Color.RED)
+
     panel(id: "akustikTabPanel", layout: new MigLayout("fill", "[grow]", ""), constraints: "grow") {
         // Tabellen für
         jideTabbedPane(id: "akustikTabGroup", constraints: "grow, span") {

@@ -13,7 +13,12 @@ import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
 // Druckverlustberechnung
-panel(id: "dvbTabPanel", layout: new MigLayout("fill", "[fill]", "[fill]"), constraints: "grow") {
+panel(id: "dvbTabPanel", layout: new MigLayout("fill, wrap 1", "[fill]", "[fill]"), constraints: "grow") {
+
+    // TODO rbe Temporär ausgeschaltet; mit Sukemeier besprechen
+    label(text: "***", foreground: java.awt.Color.RED)
+    label(text: "Hinweis: diese Tab ist zur Demonstration zukünftiger Funktionalität und ist noch nicht nutzbar!", foreground: java.awt.Color.RED)
+    label(text: "***", foreground: java.awt.Color.RED)
 
     // Tabellen für Druckverlustberechnung
     jideTabbedPane(id: "dvbTabGroup", constraints: "grow, span") {
@@ -106,4 +111,5 @@ dvbTabGroup.with {
 	setBoldActiveTab(true)
 }
 // Bindings
-build(DruckverlustBindings)
+// TODO rbe Temporär ausgeschaltet; mit Sukemeier besprechen
+// build(DruckverlustBindings)
