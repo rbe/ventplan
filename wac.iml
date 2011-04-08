@@ -16,6 +16,7 @@
       <sourceFolder url="file://$MODULE_DIR$/griffon-app/util" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/scripts" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/staging" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
     </content>
@@ -33,6 +34,7 @@
     </orderEntry>
     <orderEntry type="library" name="griffon-0.9" level="application" />
     <orderEntry type="module" module-name="wac-griffonPlugins" />
+    <orderEntry type="library" name="groovy-1.7.3" level="application" />
   </component>
   <component name="org.twodividedbyzero.idea.findbugs">
     <option name="_basePreferences">

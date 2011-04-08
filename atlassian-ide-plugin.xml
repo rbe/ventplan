@@ -1,13 +1,16 @@
 <atlassian-ide-plugin>
   <project-configuration>
     <servers>
-      <jira>
-        <server-id>f9924c24-860c-408f-87b9-2df229b71c07</server-id>
+      <bamboo>
+        <server-id>0581acc9-8177-4e25-814b-deafab44c30d</server-id>
         <name>art of coding</name>
-        <url>http://team.art-of-coding.eu/jira</url>
+        <url>http://team.art-of-coding.eu/bamboo</url>
         <shared>false</shared>
-      </jira>
+        <use-favourites>false</use-favourites>
+        <bamboo2>false</bamboo2>
+        <plans />
+      </bamboo>
     </servers>
-    <default-jira-server>f9924c24-860c-408f-87b9-2df229b71c07</default-jira-server>
+    <default-jira-server>46232fe2-9ecf-4e16-b92e-7300ce910c93</default-jira-server>
   </project-configuration>
 </atlassian-ide-plugin>

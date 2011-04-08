@@ -717,6 +717,7 @@ class ProjektModel {
 	 * TODO mmu Dokumentation!
 	 */
 	def setRaumEditors(view) {
+        println "setRaumEditors"
 		////javax.swing.SwingUtilities.invokeLater {
 			// Raumdaten - Geschoss
 			GH.makeComboboxCellEditor view.raumTabelle.columnModel.getColumn(1), meta.raum.geschoss
