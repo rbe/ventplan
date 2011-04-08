@@ -25,7 +25,6 @@ import javax.swing.event.TableModelEvent
 /**
  * 
  */
-@griffon.util.EventPublisher
 class ProjektController {
 	
 	public static boolean DEBUG = false
@@ -75,15 +74,6 @@ class ProjektController {
 					setTabTitle()
 				}
 			})
-		// Setup private event listener
-		// This properties are used with constructor of the event listener
-		def props = [
-				model: model,
-				wacCalculationService: wacCalculationService,
-				wacModelService: wacModelService
-			]
-		GH.tieEventListener(this, DvbKanalnetzEvents, props)
-		GH.tieEventListener(this, DvbVentileinstellungEvents, props)
 	}
 	
 	/**
@@ -1065,7 +1055,31 @@ class ProjektController {
 	 */
 	def dvbKanalnetzHinzufugen = {
 		def kanalnetz = GH.getValuesFromView(view, "dvbKanalnetz")
-		publishEvent "DvbKanalnetzHinzufugen", [kanalnetz, view]
+		////publishEvent "DvbKanalnetzHinzufugen", [kanalnetz, view]
+        doLater {
+            // Map values from GUI
+            def k = [
+                    luftart: kanalnetz.dvbKanalnetzLuftart,
+                    teilstrecke: kanalnetz.dvbKanalnetzNrTeilstrecke?.toInteger(),
+                    luftVs: kanalnetz.dvbKanalnetzLuftmenge?.toDouble2(),
+                    kanalbezeichnung: kanalnetz.dvbKanalnetzKanalbezeichnung,
+                    lange: kanalnetz.dvbKanalnetzLange?.toDouble2(),
+                    position: model.map.dvb.kanalnetz.size(),
+                    gesamtwiderstandszahl: 0.0d
+                ] as ObservableMap
+            // Berechne die Teilstrecke
+            k = wacCalculationService.berechneTeilstrecke(k)
+            // Add values to model
+            model.addDvbKanalnetz(k, view)
+            // Add PropertyChangeListener to our model.map
+            GH.addMapPropertyChangeListener("map.dvb.kanalnetz", k)
+            //
+            dvbKanalnetzGeandert(k.position)
+        }
+        // Reset values in view
+        view.dvbKanalnetzNrTeilstrecke.text = ""
+        view.dvbKanalnetzLuftmenge.text = ""
+        view.dvbKanalnetzLange.text = ""
 	}
 	
 	/**
@@ -1081,14 +1095,28 @@ class ProjektController {
 	 * Druckverlustberechnung - Kanalnetz - Geändert.
 	 */
 	def dvbKanalnetzGeandert = { kanalnetzIndex ->
-		publishEvent "DvbKanalnetzGeandert", [kanalnetzIndex]
+		///publishEvent "DvbKanalnetzGeandert", [kanalnetzIndex]
+        doLater {
+            // Berechne die Teilstrecke
+            model.map.dvb.kanalnetz[kanalnetzIndex] =
+                wacCalculationService.berechneTeilstrecke(model.map.dvb.kanalnetz[kanalnetzIndex])
+            //
+            ////publishEvent "DvbKanalnetzInTabelleWahlen", [kanalnetzIndex]
+            onDvbKanalnetzInTabelleWahlen(kanalnetzIndex)
+        }
 	}
 	
 	/**
 	 * Druckverlustberechnung - Kanalnetz - Entfernen.
 	 */
 	def dvbKanalnetzEntfernen = {
-		publishEvent "DvbKanalnetzEntfernen", [view.dvbKanalnetzTabelle.selectedRow]
+		///publishEvent "DvbKanalnetzEntfernen", [view.dvbKanalnetzTabelle.selectedRow]
+        def kanalnetzIndex = view.dvbKanalnetzTabelle.selectedRow
+        doLater {
+            //println "onDvbKanalnetzEntfernen: kanalnetzIndex=${kanalnetzIndex}"
+            // Zeile aus Model entfernen
+            model.removeDvbKanalnetz(kanalnetzIndex)
+        }
 	}
 
     /**
@@ -1218,7 +1246,24 @@ class ProjektController {
 	 */
 	def dvbVentileinstellungHinzufugen = {
 		def ventileinstellung = GH.getValuesFromView(view, "dvbVentileinstellung")
-		publishEvent "DvbVentileinstellungHinzufugen", [ventileinstellung, view]
+		////publishEvent "DvbVentileinstellungHinzufugen", [ventileinstellung, view]
+        doLater {
+            // Map values from GUI
+            def v = [
+                    luftart: ventileinstellung.dvbVentileinstellungLuftart,
+                    raum: ventileinstellung.dvbVentileinstellungRaum,
+                    teilstrecken: ventileinstellung.dvbVentileinstellungTeilstrecken,
+                    ventilbezeichnung: ventileinstellung.dvbVentileinstellungVentilbezeichnung,
+                    position: model.map.dvb.ventileinstellung.size() ?: 0
+                ] as ObservableMap
+            model.addDvbVentileinstellung(v, view)
+            def index = v.position
+            // Add PropertyChangeListener to our model.map
+            GH.addMapPropertyChangeListener("map.dvb.ventileinstellung",
+                model.map.dvb.ventileinstellung[index])
+            //
+            dvbVentileinstellungGeandert(index)
+        }
 	}
 	
 	/**
@@ -1242,14 +1287,25 @@ class ProjektController {
 	 * Druckverlustberechnung - Ventileinstellung - Geändert.
 	 */
 	def dvbVentileinstellungGeandert = { ventileinstellungIndex ->
-		publishEvent "DvbVentileinstellungGeandert", [ventileinstellungIndex]
+		////publishEvent "DvbVentileinstellungGeandert", [ventileinstellungIndex]
+        doLater {
+            wacCalculationService.berechneVentileinstellung(model.map)
+            //
+            ////publishEvent "DvbVentileinstellungInTabelleWahlen", [ventileinstellungIndex]
+            onDvbVentileinstellungInTabelleWahlen(ventileinstellungIndex)
+        }
 	}
 	
 	/**
 	 * Druckverlustberechnung - Ventileinstellung - Entfernen.
 	 */
 	def dvbVentileinstellungEntfernen = {
-		publishEvent "DvbVentileinstellungEntfernen", [view.dvbVentileinstellungTabelle.selectedRow]
+		////publishEvent "DvbVentileinstellungEntfernen", [view.dvbVentileinstellungTabelle.selectedRow]
+        doLater {
+            //println "onDvbVentileinstellungEntfernen: ventileinstellungIndex=${ventileinstellungIndex}"
+            // Zeile aus Model entfernen
+            model.removeDvbVentileinstellung(ventileinstellungIndex)
+        }
 	}
 	
 	/**
