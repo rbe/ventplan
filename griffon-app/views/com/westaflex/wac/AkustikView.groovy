@@ -137,7 +137,7 @@ def buildLayout(tabname) {
                 label("Einfügungsdämmwert Luftdurchlass", foreground: GH.MY_GREEN, constraints: "height 30px!")
                 comboBox(id: "akustik${tabname}EinfugungsdammwertLuftdurchlass", constraints: "span 2, wrap", items: model.meta.druckverlust.ventileinstellung.ventilbezeichnung, selectedItem: "100ALSQ3W002")
 
-                label("Raumabsorption (Annahme) BAD=0 WOHNEN=1", foreground: GH.MY_GREEN, constraints: "span 2, height 30px!")
+                label("Raumabsorption (Annahme)", foreground: GH.MY_GREEN, constraints: "span 2, height 30px!")
                 switch (tabname) {
                     case "Zuluft":
                         comboBox(id: "akustik${tabname}Raumabsorption", constraints: "wrap", items: ["BAD", "WOHNEN"], selectedItem: "WOHNEN")
