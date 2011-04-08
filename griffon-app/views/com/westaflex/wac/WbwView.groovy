@@ -11,6 +11,7 @@
  */
 package com.westaflex.wac
 
+import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 import javax.swing.text.*
 
