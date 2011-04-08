@@ -77,7 +77,7 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill, wrap 1", "[fill]", "[fill]
                         button(id: "dvbVentileinstellungAuswahlen", text: "Auswählen")
                         comboBox(id: "dvbVentileinstellungVentilbezeichnung", items: model.meta.druckverlust.ventileinstellung.ventilbezeichnung)
                         button(id: "dvbVentileinstellungHinzufugen", text: "Hinzufügen")
-                        label("Mindesteingabe 5 Teilstrecken", foreground: java.awt.Color.RED, constraints: "wrap")
+                        // Nach Rücksprache mit Stukemeier erstmal ausblenden; label("Mindesteingabe 5 Teilstrecken", foreground: java.awt.Color.RED, constraints: "wrap")
                     }
 
                     panel(id: "dvbVentileinstellungTabellePanel", layout: new MigLayout("fill", "[fill,grow]", ""), constraints: "span, grow, wrap") {
