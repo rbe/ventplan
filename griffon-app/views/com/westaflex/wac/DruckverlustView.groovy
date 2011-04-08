@@ -88,7 +88,7 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill, wrap 1", "[fill]", "[fill]
 
                     panel(layout: new MigLayout("fillx", "[left] 16 []", ""), constraints: "span, wrap") {
                         // TODO mmu Enable only when table isn't empty and row is selected
-                        button(id: "dvbVentileinstellungEntfernen", text: "Entfernen", enabled: bind { dvbVentileinstellungTabelle?.selectedRow >= 0 ? true : false })
+                        button(id: "dvbVentileinstellungEntfernen", text: "Entfernen"/*, enabled: bind { dvbVentileinstellungTabelle?.selectedRow >= 0 ? true : false }*/)
                     }
 
                 }
