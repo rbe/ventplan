@@ -880,8 +880,7 @@ class ProjektModel {
 				it.add(map.dvb.kanalnetz[kanalnetz.position])
 			}
 			// Comboboxen in den Tabellen hinzufügen
-			GH.makeComboboxCellEditor view.dvbKanalnetzTabelle.getColumnModel().getColumn(0), meta.raum.luftart
-			GH.makeComboboxCellEditor view.dvbKanalnetzTabelle.getColumnModel().getColumn(3), meta.dvbKanalbezeichnung
+            setDvbKanalnetzEditors(view)
 		}
 	}
 	
@@ -911,8 +910,7 @@ class ProjektModel {
 			it.add(map.dvb.ventileinstellung[ventileinstellung.position])
 		}
 		// Comboboxen in den Tabellen hinzufügen
-		GH.makeComboboxCellEditor view.dvbVentileinstellungTabelle.getColumnModel().getColumn(1), meta.raum.luftart
-		GH.makeComboboxCellEditor view.dvbVentileinstellungTabelle.getColumnModel().getColumn(3), meta.dvbVentileinstellung
+        setDvbVentileinstellungEditors(view)
 	}
 	
 	/**
@@ -979,5 +977,27 @@ class ProjektModel {
 			map.akustik.abluft.tabelle.each { tableModels.akustikAbluft.addAll(it) }
 		}
 	}
+
+    /**
+     *
+     */
+    def setDvbKanalnetzEditors(view) {
+        println "setDvbKanalnetzEditors"
+		javax.swing.SwingUtilities.invokeLater {
+            GH.makeComboboxCellEditor view.dvbKanalnetzTabelle.columnModel.getColumn(0), meta.druckverlust.kanalnetz.luftart
+            GH.makeComboboxCellEditor view.dvbKanalnetzTabelle.columnModel.getColumn(3), meta.druckverlust.kanalnetz.kanalbezeichnung
+        }
+    }
 	
+    /**
+     *
+     */
+    def setDvbVentileinstellungEditors(view) {
+        println "setDvbVentileinstellungEditors"
+		javax.swing.SwingUtilities.invokeLater {
+            GH.makeComboboxCellEditor view.dvbVentileinstellungTabelle.columnModel.getColumn(1), meta.druckverlust.ventileinstellung.luftart
+            GH.makeComboboxCellEditor view.dvbVentileinstellungTabelle.columnModel.getColumn(3), meta.druckverlust.ventileinstellung.ventilbezeichnung
+        }
+    }
+
 }
