@@ -35,7 +35,7 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill, wrap 1", "[fill]", "[fill]
                         comboBox(id: "dvbKanalnetzLuftart", items: ["ZU", "AB"])
                         textField(id: "dvbKanalnetzNrTeilstrecke", constraints: "width 80px")
                         textField(id: "dvbKanalnetzLuftmenge", constraints: "width 100px")
-                        comboBox(id: "dvbKanalnetzKanalbezeichnung", items: model.meta.dvbKanalbezeichnung)
+                        comboBox(id: "dvbKanalnetzKanalbezeichnung", items: model.meta.druckverlust.kanalnetz.kanalbezeichnung)
                         textField(id: "dvbKanalnetzLange", constraints: "width 80px")
                         button(id: "dvbKanalnetzHinzufugen", text: "Hinzufügen", constraints: "wrap")
                     }
@@ -72,10 +72,10 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill, wrap 1", "[fill]", "[fill]
                         label("Hinweis:", foreground: java.awt.Color.RED, constraints: "wrap")
 
                         comboBox(id: "dvbVentileinstellungLuftart", items: ["ZU", "AB", "AU", "FO"])
-                        comboBox(id: "dvbVentileinstellungRaum", items: model.meta.raum.typ + [/* items werden nach RaumHinzufugen aktualisiert, siehe Ticket#10 */])
+                        comboBox(id: "dvbVentileinstellungRaum", items: model.meta.raum.typ + [/* items werden nach RaumHinzufugen aktualisiert, siehe WAC-7 */])
                         textField(id: "dvbVentileinstellungTeilstrecken", constraints: "width 150px")
                         button(id: "dvbVentileinstellungAuswahlen", text: "Auswählen")
-                        comboBox(id: "dvbVentileinstellungVentilbezeichnung", items: model.meta.dvbVentileinstellung)
+                        comboBox(id: "dvbVentileinstellungVentilbezeichnung", items: model.meta.druckverlust.ventileinstellung.ventilbezeichnung)
                         button(id: "dvbVentileinstellungHinzufugen", text: "Hinzufügen")
                         label("Mindesteingabe 5 Teilstrecken", foreground: java.awt.Color.RED, constraints: "wrap")
                     }

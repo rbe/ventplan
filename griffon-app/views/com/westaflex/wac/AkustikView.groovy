@@ -109,15 +109,15 @@ def buildLayout(tabname) {
                 label("1. Hauptschalldämpfer", foreground: GH.MY_GREEN, constraints: "height 30px!")
                 switch (tabname) {
                     case "Zuluft":
-                        comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "span 2, wrap", items: model.meta.akustikSchalldampfer, selectedItem: "100150TYP4A")
+                        comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "span 2, wrap", items: model.meta.akustik.schalldampfer, selectedItem: "100150TYP4A")
                         break
                     case "Abluft":
-                        comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "span 2, wrap", items: model.meta.akustikSchalldampfer, selectedItem: "")
+                        comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "span 2, wrap", items: model.meta.akustik.schalldampfer, selectedItem: "")
                         break
                 }
 
                 label("2. Hauptschalldämpfer", foreground: GH.MY_GREEN, constraints: "height 30px!")
-                comboBox(id: "akustik${tabname}2Hauptschalldampfer", constraints: "span 2, wrap", items: model.meta.akustikSchalldampfer)
+                comboBox(id: "akustik${tabname}2Hauptschalldampfer", constraints: "span 2, wrap", items: model.meta.akustik.schalldampfer)
 
                 label("Anzahl der Umlenkungen 90° Stck.", foreground: GH.MY_GREEN, constraints: "height 30px!")
                 label("")
@@ -128,14 +128,14 @@ def buildLayout(tabname) {
                 textField(id: "akustik${tabname}LuftverteilerkastenStck", constraints: "width 80px!, wrap")
 
                 label("Längsdämpfung Kanal lfdm.", foreground: GH.MY_GREEN, constraints: "height 30px!")
-                comboBox(id: "akustik${tabname}LangsdampfungKanal", items: model.meta.dvbKanalbezeichnung)
+                comboBox(id: "akustik${tabname}LangsdampfungKanal", items: model.meta.druckverlust.kanalnetz.kanalbezeichnung)
                 textField(id: "akustik${tabname}LangsdampfungKanalLfdmMeter", constraints: "width 80px!, wrap")
 
                 label("Schalldämpfer Ventil", foreground: GH.MY_GREEN, constraints: "height 30px!")
-                comboBox(id: "akustik${tabname}SchalldampferVentil", constraints: "span 2, wrap", items: model.meta.akustikSchalldampfer)
+                comboBox(id: "akustik${tabname}SchalldampferVentil", constraints: "span 2, wrap", items: model.meta.akustik.schalldampfer)
 
                 label("Einfügungsdämmwert Luftdurchlass", foreground: GH.MY_GREEN, constraints: "height 30px!")
-                comboBox(id: "akustik${tabname}EinfugungsdammwertLuftdurchlass", constraints: "span 2, wrap", items: model.meta.dvbVentileinstellung, selectedItem: "100ALSQ3W002")
+                comboBox(id: "akustik${tabname}EinfugungsdammwertLuftdurchlass", constraints: "span 2, wrap", items: model.meta.druckverlust.ventileinstellung.ventilbezeichnung, selectedItem: "100ALSQ3W002")
 
                 label("Raumabsorption (Annahme) BAD=0 WOHNEN=1", foreground: GH.MY_GREEN, constraints: "span 2, height 30px!")
                 switch (tabname) {

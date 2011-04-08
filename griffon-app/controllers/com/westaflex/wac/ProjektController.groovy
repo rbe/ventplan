@@ -84,10 +84,10 @@ class ProjektController {
             model.meta.raumTurTyp = ["Tür", "Durchgang"]
             model.meta.raumTurbreiten = [610, 735, 860, 985, 1110, 1235, 1485, 1735, 1985]
 			// Raumvolumenströme - Bezeichnungen der Zu-/Abluftventile
-			model.meta.raumVsBezeichnungZuluftventile = wacModelService.getZuluftventile()
-			model.meta.raumVsBezeichnungAbluftventile = wacModelService.getAbluftventile()
+			model.meta.raum.raumVsBezeichnungZuluftventile = wacModelService.getZuluftventile()
+			model.meta.raum.raumVsBezeichnungAbluftventile = wacModelService.getAbluftventile()
 			// Raumvolumenströme - Überströmelemente
-			model.meta.raumVsUberstromelemente = wacModelService.getUberstromelemente()
+			model.meta.raum.raumVsUberstromelemente = wacModelService.getUberstromelemente()
 			// Raumvolumenströme - Zentralgerät + Volumenstrom
 			model.meta.zentralgerat = wacModelService.getZentralgerat()
 			// Liste aller möglichen Volumenströme des 1. Zentralgeräts
@@ -99,13 +99,13 @@ class ProjektController {
 			def maxVsZentralgerat = volumenstromZentralgerat.toList().last() as Integer
 			(minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
 			// Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
-			model.meta.dvbKanalbezeichnung = wacModelService.getDvbKanalbezeichnung()
+			model.meta.druckverlust.kanalnetz.kanalbezeichnung = wacModelService.getDvbKanalbezeichnung()
 			// Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte
 			model.meta.wbw = wacModelService.getWbw()
 			// Druckverlustberechnung - Ventileinstellung - Ventilbezeichnung
-			model.meta.dvbVentileinstellung = wacModelService.getDvbVentileinstellung()
+			model.meta.druckverlust.ventileinstellung.ventilbezeichnung = wacModelService.getDvbVentileinstellung()
 			// Akustikberechnung - 1. Hauptschalldämpfer
-			model.meta.akustikSchalldampfer = wacModelService.getSchalldampfer()
+			model.meta.akustik.schalldampfer = wacModelService.getSchalldampfer()
             //
             ////doLater {
                 // Raumvolumenströme, Zentralgerät

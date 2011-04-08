@@ -118,7 +118,9 @@ class ProjektModel {
      */
     @Bindable meta = [
 		raum: [
-				typ: ["Wohnzimmer", "Kinderzimmer", "Schlafzimmer", "Esszimmer", "Arbeitszimmer", "Gästezimmer", "Hausarbeitsraum", "Kellerraum", "WC", "Küche", "Kochnische", "Bad mit/ohne WC", "Duschraum", "Sauna", "Flur", "Diele"],
+				typ: ["Wohnzimmer", "Kinderzimmer", "Schlafzimmer", "Esszimmer", "Arbeitszimmer", "Gästezimmer",
+                      "Hausarbeitsraum", "Kellerraum", "WC", "Küche", "Kochnische", "Bad mit/ohne WC", "Duschraum",
+                      "Sauna", "Flur", "Diele"],
 				geschoss: ["KG", "EG", "OG", "DG", "SB"],
 				luftart: ["ZU", "AB", "ZU/AB", "ÜB"],
 				raumVsBezeichnungZuluftventile: [/* initialized in ProjektController.mvcGroupInit */],
@@ -127,13 +129,28 @@ class ProjektModel {
 				raumVsVerteilebene: ["KG", "EG", "OG", "DG", "SB"],
 			],
 		gewahlterRaum: [:] as ObservableMap,
+        druckverlust: [
+                kanalnetz: [
+                        luftart: ["ZU", "AB"],
+                        kanalbezeichnung: [/* initialized in ProjektController.mvcGroupInit */]
+                ],
+                ventileinstellung: [
+                        luftart: ["ZU", "AB", "AU", "FO"],
+                        ventilbezeichnung: [/* initialized in ProjektController.mvcGroupInit */]
+                ]
+            ],
 		summeAktuelleWBW: 0.0d,
-		wbw: [] as ObservableList, /* initialized in ProjektController.mvcGroupInit */
+		wbw: [] as ObservableList,
+        akustik: [
+                schalldampfer: [/* initialized in ProjektController.mvcGroupInit */]
+            ]
 	] as ObservableMap
 	
 	/**
 	 * Our central model.
-	 * dirty: Was the model changed (since last save)? This is set true by a PropertyChangeListener installed in ProjectController.addMapPropertyChangeListener().
+	 * dirty: Was the model changed (since last save)?
+     *        This is set true by a PropertyChangeListener installed in
+     *        ProjectController.addMapPropertyChangeListener().
 	 */
 	@Bindable map = [
 		messages: [ltm: ""] as ObservableMap,
@@ -709,16 +726,16 @@ class ProjektModel {
 			// Combobox RaumVs - Luftart
 			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(1), meta.raum.luftart
 			// Combobox RaumVs - Bezeichnung Abluftmenge
-			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(5), meta.raumVsBezeichnungZuluftventile
+			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(5), meta.raum.raumVsBezeichnungZuluftventile
 			// Combobox RaumVs - Bezeichnung Zuluftmenge
-			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(9), meta.raumVsBezeichnungAbluftventile
+			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(9), meta.raum.raumVsBezeichnungAbluftventile
 			// Combobox RaumVs - Verteilebene
 			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(12), meta.raum.geschoss
 			// RaumVs Überströmventile
 			// Combobox RaumVs - Luftart
 			GH.makeComboboxCellEditor view.raumVsUberstromelementeTabelle.columnModel.getColumn(1), meta.raum.luftart
 			// Combobox RaumVs - Überströmelemente
-			GH.makeComboboxCellEditor view.raumVsUberstromelementeTabelle.columnModel.getColumn(4), meta.raumVsUberstromelemente
+			GH.makeComboboxCellEditor view.raumVsUberstromelementeTabelle.columnModel.getColumn(4), meta.raum.raumVsUberstromelemente
 			// WAC-7: Raumtyp für Druckverlustberechnung - Ventileinstellung Combobox.
 			updateDvbVentileinstellungComboBoxModel(view)
 		////}
