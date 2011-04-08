@@ -47,8 +47,6 @@ class ProjektController {
 	 * Initialize MVC group.
 	 */
 	void mvcGroupInit(Map args) {
-		// Splash screen
-		try { Wac2Splash.instance.initializingProject() } catch (e) {}
 		// Save MVC id
 		model.mvcId = args.mvcId
 		// Set defaults
@@ -109,12 +107,12 @@ class ProjektController {
 			// Akustikberechnung - 1. Hauptschalldämpfer
 			model.meta.akustikSchalldampfer = wacModelService.getSchalldampfer()
             //
-            doLater {
+            ////doLater {
                 // Raumvolumenströme, Zentralgerät
                 model.map.anlage.zentralgerat = model.meta.zentralgerat[0]
                 // Raumvolumenströme, Volumenstrom des Zentralgeräts; default ist erster Wert der Liste
                 model.map.anlage.volumenstromZentralgerat = model.meta.volumenstromZentralgerat[0]
-            }
+            ////}
 		}
 	}
 	
@@ -252,7 +250,7 @@ class ProjektController {
 	}
 
     /**
-     *
+     * Alles neu berechnen.
      */
     def berechneAlles = {
         // Anlagendaten - Kennzeichen
@@ -267,15 +265,13 @@ class ProjektController {
         }
         // Räume: set cell editors
         model.setRaumEditors(view)
-        //
         model.resyncRaumTableModels()
         //
         model.map.raum.raume.each { raum ->
             if (DEBUG) println "berechneAlles: BERECHNE RAUM ${raum.position}"
             raumGeandert(raum.position)
         }
-        //
-        model.resyncRaumTableModels()
+        ////model.resyncRaumTableModels()
     }
 
     /**

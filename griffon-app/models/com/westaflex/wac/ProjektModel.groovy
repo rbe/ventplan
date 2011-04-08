@@ -700,7 +700,7 @@ class ProjektModel {
 	 * TODO mmu Dokumentation!
 	 */
 	def setRaumEditors(view) {
-		javax.swing.SwingUtilities.invokeLater {
+		////javax.swing.SwingUtilities.invokeLater {
 			// Raumdaten - Geschoss
 			GH.makeComboboxCellEditor view.raumTabelle.columnModel.getColumn(1), meta.raum.geschoss
 			// Raumdaten - Luftart
@@ -721,7 +721,7 @@ class ProjektModel {
 			GH.makeComboboxCellEditor view.raumVsUberstromelementeTabelle.columnModel.getColumn(4), meta.raumVsUberstromelemente
 			// WAC-7: Raumtyp für Druckverlustberechnung - Ventileinstellung Combobox.
 			updateDvbVentileinstellungComboBoxModel(view)
-		}
+		////}
 	}
 	
 	/**
@@ -754,6 +754,7 @@ class ProjektModel {
 				map.raum.raume << raum
 				if (DEBUG) println "addRaum: adding raum.raume=${map.raum.raume}"
 			}
+            // TODO mmu Sortierung funktioniert aber!?
 			// Disables sorting in raumTabelle
             try {
                 view.raumTabelle.setSortable(false);
@@ -898,8 +899,7 @@ class ProjektModel {
 	}
 	
 	/**
-	 * ComboBox Model für die Räume in der Druckverlustberechnung Ventileinstellung setzen.
-     * WAC-7.
+	 * WAC-7: ComboBox model für die Räume in der Druckverlustberechnung Ventileinstellung setzen.
 	 */
 	def updateDvbVentileinstellungComboBoxModel = { view ->
 		def newComboBoxModel = ["-- Eingegebene Räume --"] + map.raum.raume.raumBezeichnung + ["-- Raumtypen --"] + meta.raum.typ /*as Set*/
