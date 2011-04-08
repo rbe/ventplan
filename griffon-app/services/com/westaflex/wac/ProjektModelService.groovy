@@ -82,6 +82,7 @@ class ProjektModelService {
 			def grosshandel = p."firma".find { it."rolle".text() == "Grosshandel" }
 			def gebaude = p."gebaude"
 			def zentralgerat = p."zentralgerat"
+            // Räume
 			def raume = []
 			gebaude."raum".each { room ->
 				def r = [
@@ -116,14 +117,56 @@ class ProjektModelService {
 				room."tur".each { tur ->
 					r.turen << [
 							turBezeichnung: X.vs { tur."name".text() },
-							turBreite: X.vi { tur."breite".text() },
+							turBreite:      X.vi { tur."breite".text() },
                             turQuerschnitt: X.vd { tur."querschnitt".text() },
-                            turSpalthohe: X.vd { tur."spalthohe".text() },
-							turDichtung: X.vb { tur."dichtung".text() == "true" }
+                            turSpalthohe:   X.vd { tur."spalthohe".text() },
+							turDichtung:    X.vb { tur."dichtung".text() == "true" }
 						]
 				}
 				raume << r
 			}
+            // Druckverlustberechnung - Kanalnetz
+            def kanalnetze = []
+            p."druckverlust"?."kanalnetz"?.each { kanalnetz ->
+                def k = [
+                    luftart:          X.vs { kanalnetz."luftart".text() },
+                    nrTeilstrecke:    X.vi { kanalnetz."nrTeilstrecke".text() },
+                    luftmenge:        X.vd { kanalnetz."luftmenge".text() },
+                    kanalbezeichnung: X.vs { kanalnetz."kanalbezeichnung".text() },
+                ] as ObservableMap
+                println "kanalnetz: ${k}"
+                kanalnetze << k
+            }
+            // Druckverlustberechnung - Ventileinstellung
+            def ventileinstellungen = []
+            p."druckverlust"?."ventileinstellung"?.each { ventileinstellung ->
+                def v = [
+                    luftart:           X.vs { ventileinstellung."luftart".text() },
+                    raum:              X.vs { ventileinstellung."raum".text() },
+                    teilstrecken:      X.vs { ventileinstellung."teilstrecken".text() },
+                    ventilbezeichnung: X.vs { ventileinstellung."ventilbezeichnung".text() },
+                ] as ObservableMap
+                println "ventileinstellung: ${v}"
+                ventileinstellungen << v
+            }
+            // Akustikberechnung
+            def makeAkustik = { node ->
+                [
+                    raum:                      X.vs { node."raum".text() },
+                    slpErhohungKanalnetz:      X.vi { node."slpErhohungKanalnetz".text() },
+                    slpErhohungFilter:         X.vi { node."slpErhohungFilter".text() },
+                    hauptschalldampfer1:       X.vs { node."hauptschalldampfer1".text() },
+                    hauptschalldampfer2:       X.vs { node."hauptschalldampfer2".text() },
+                    anzahlUmlenkungen:         X.vi { node."anzahlUmlenkungen".text() },
+                    luftverteilerkastenStck:   X.vi { node."luftverteilerkastenStck".text() },
+                    langsdampfungKanal:        X.vs { node."langsdampfungKanal".text() },
+                    langsdampfungKanalLfdm:    X.vi { node."langsdampfungKanalLfdm".text() },
+                    schalldampferVentil:       X.vs { node."schalldampferVentil".text() },
+                    einfugungsdammwert:        X.vs { node."einfugungsdammwert".text() },
+                    raumabsorption:            X.vs { node."raumabsorption".text() },
+                ]
+            }
+            //
 			def anlage = p."anlage"
             // Build map; return value
 			[
@@ -165,8 +208,7 @@ class ProjektModelService {
 								hoch:    X.vb { gebaude."warmeschutz".text() == "HOC" },
 								niedrig: X.vb { gebaude."warmeschutz".text() == "NIE" },
 							],
-						// Will be calculated after loading
-						geometrie: [:],
+						geometrie: [:], // Will be calculated
 						luftdichtheit: [
 								kategorieA:     X.vb { gebaude."luftdichtheit".text() == "A" },
 								kategorieB:     X.vb { gebaude."luftdichtheit".text() == "B" },
@@ -233,29 +275,24 @@ class ProjektModelService {
 						ruckschlagklappe: X.vb { zentralgerat."ruckschlagklappe".text() == "true" },
 						schallschutz:     X.vb { zentralgerat."schallschutz".text() == "true" },
 						feuerstatte:      X.vb { zentralgerat."feuerstatte".text() == "true" },
-						// Will be calculated
-						//kennzeichnungLuftungsanlage: "ZuAbLS-Z-WE-WÜT-0-0-0-0-0",
+						//kennzeichnungLuftungsanlage: "ZuAbLS-Z-WE-WÜT-0-0-0-0-0", // Will be calculated
 						zentralgerat:             X.vs { anlage."zentralgerat"."name".text() },
 						zentralgeratManuell:      X.vb { anlage."zentralgerat"."manuell".text() == "true" },
 						volumenstromZentralgerat: X.vi { anlage."zentralgerat"."volumenstrom".text() },
 					],
 				raum: [
 						raume: raume,
-						// Will be calculated
-						//ltmZuluftSumme: 0.0d,
-						//ltmAbluftSumme: 0.0d,
-						// Will be calculated
-						raumVs: [:]
+						raumVs: [:] // Will be calculated
 					],
-				// Will be calculated
-				aussenluftVs: [:],
+				aussenluftVs: [:], // Will be calculated
 				dvb: [
-						kanalnetz: [],
-						ventileinstellung: []
+						kanalnetz: kanalnetze,
+						ventileinstellung: ventileinstellungen
 					],
 				akustik: [
-						raumBezeichnung: []
-					]
+                        zuluft: makeAkustik(p."akustik"?."akustikZuluft"),
+                        abluft: makeAkustik(p."akustik"?."akustikAbluft"),
+				    ]
 			]
 		}
 	}
@@ -429,9 +466,56 @@ class ProjektModelService {
 			X.tc { feuerstatte(a.feuerstatte) }
 		}
 	}
-	
+
+    /**
+     *
+     */
+    def makeDruckverlust = { dvb ->
+        def makeKanalnetz = { k ->
+            domBuilder.kanalnetz() {
+                X.tc { luftart(k.luftart) }
+                X.tc { nrTeilstrecke(k.teilstrecke) }
+                X.tc { luftmenge(k.luftVs) }
+                X.tc { kanalbezeichnung(k.kanalbezeichnung) }
+                X.tc { kanallange(k.lange) }
+            }
+        }
+        def makeVentileinstellung = { v ->
+            domBuilder.druckverlust() {
+                X.tc { luftart(v.luftart) }
+                X.tc { raum(v.raum) }
+                X.tc { teilstrecken(v.teilstrecken) }
+                X.tc { ventilbezeichnung(v.ventilbezeichnung) }
+            }
+        }
+        domBuilder.druckverlust() {
+            dvb.kanalnetz.each { makeKanalnetz(it) }
+            dvb.ventileinstellung.each { makeVentileinstellung(it) }
+        }
+    }
+
+    /**
+     *
+     */
+    def makeAkustik = { akustik, typ ->
+        domBuilder.akustik"${typ}"() {
+            X.tc { raum(akustik.raum) }
+            X.tc { slpErhohungKanalnetz(akustik.slpErhohungKanalnetz as Integer) }
+            X.tc { slpErhohungFilter(akustik.slpErhohungFilter as Integer) }
+            X.tc { hauptschalldampfer1(akustik.hauptschalldampfer1) }
+            X.tc { hauptschalldampfer2(akustik.hauptschalldampfer2) }
+            X.tc { anzahlUmlenkungen(akustik.anzahlUmlenkungen as Integer) }
+            X.tc { luftverteilerkastenStck(akustik.luftverteilerkastenStck as Integer) }
+            X.tc { langsdampfungKanal(akustik.langsdampfungKanal) }
+            X.tc { langsdampfungKanalLfdm(akustik.langsdampfungKanalLfdm as Integer) }
+            X.tc { schalldampferVentil(akustik.schalldampferVentil) }
+            X.tc { einfugungsdammwert(akustik.einfugungsdammwert) }
+            X.tc { raubabsorption(akustik.raubabsorption) }
+        }
+    }
+
 	/**
-	 * 
+	 *
 	 */
 	def save = { map, file ->
 		def wpx = domBuilder."westaflex-wpx" {
@@ -442,6 +526,9 @@ class ProjektModelService {
 				X.tc { bauvorhaben(map.kundendaten.bauvorhaben) } { bauvorhaben() }
 				X.tc { notizen(map.kundendaten.notizen) }
 				makeGebaude(map)
+                makeDruckverlust(map.dvb)
+                makeAkustik(map.akustik.zuluft, "Zuluft")
+                makeAkustik(map.akustik.abluft, "Abluft")
 				makeFirma("Grosshandel", map.kundendaten.grosshandel)
 				makeFirma("Ausfuhrende", map.kundendaten.ausfuhrendeFirma)
 			}

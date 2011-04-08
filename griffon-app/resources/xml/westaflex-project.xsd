@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <!--
+
+        Root element: westaflex-wpx
+
+    -->
     <xs:element name="westaflex-wpx">
         <xs:complexType>
             <xs:sequence minOccurs="1" maxOccurs="1">
@@ -7,19 +12,30 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+    <!--
+
+        Complex type: project
+
+    -->
     <xs:complexType name="project">
         <xs:sequence>
-            <xs:element name="ersteller"    type="contact"     minOccurs="1" maxOccurs="1"/>
-            <xs:element name="erstellt"     type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="bearbeitet"   type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="geschickt"    type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="bauvorhaben"  type="xs:string"   minOccurs="1" maxOccurs="1"/>
-            <xs:element name="notizen"      type="xs:string"   minOccurs="0" maxOccurs="1"/>
-            <xs:element name="gebaude"      type="building"    minOccurs="1" maxOccurs="1"/>
-            <xs:element name="zentralgerat" type="device"      minOccurs="1" maxOccurs="1"/>
-            <xs:element name="firma"        type="company"     minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="ersteller"    type="contact"      minOccurs="1" maxOccurs="1"/>
+            <xs:element name="erstellt"     type="xs:dateTime"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bearbeitet"   type="xs:dateTime"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="geschickt"    type="xs:dateTime"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bauvorhaben"  type="xs:string"    minOccurs="1" maxOccurs="1"/>
+            <xs:element name="notizen"      type="xs:string"    minOccurs="0" maxOccurs="1"/>
+            <xs:element name="gebaude"      type="building"     minOccurs="1" maxOccurs="1"/>
+            <xs:element name="zentralgerat" type="device"       minOccurs="1" maxOccurs="1"/>
+            <xs:element name="druckverlust" type="druckverlust" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="firma"        type="company"      minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
+    <!--
+
+        Complex type: building
+
+    -->
     <xs:complexType name="building">
         <xs:sequence>
             <xs:element name="gebaudeTyp"                  type="gebaudeTyp"     minOccurs="0" maxOccurs="1"/>
@@ -41,6 +57,11 @@
             <xs:element name="raum"                        type="room"           minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
+    <!--
+
+        Complex type: geometrie
+
+    -->
     <xs:complexType name="geometrie">
         <xs:sequence>
             <xs:element name="wohnflache"        type="xs:double" minOccurs="0" maxOccurs="1"/>
@@ -50,6 +71,11 @@
             <xs:element name="gelufteteFlache"   type="xs:double" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
+    <!--
+
+        Complex type: device
+
+    -->
     <xs:complexType name="device">
         <xs:sequence>
             <xs:element name="name"            type="xs:string"      minOccurs="0" maxOccurs="1"/>
@@ -79,6 +105,11 @@
             <xs:element name="dichtheitsklasseB"  type="xs:boolean" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
+    <!--
+
+        Complex type: room
+
+    -->
     <xs:complexType name="room">
         <xs:sequence>
             <xs:element name="position"                 type="xs:integer" minOccurs="0" maxOccurs="1"/>
@@ -117,6 +148,82 @@
             <xs:element name="dichtung"     type="xs:boolean" default="true"     minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
+    <!--
+
+        Complex type: druckverlust
+
+    -->
+    <xs:complexType name="druckverlust">
+        <xs:sequence>
+            <xs:element name="kanalnetz"         type="kanalnetz"         minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="ventileinstellung" type="ventileinstellung" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!--
+
+        Complex type: kanalnetz
+
+    -->
+    <xs:complexType name="kanalnetz">
+        <xs:sequence>
+            <xs:element name="luftart"          type="kanalnetzLuftart" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="nrTeilstrecke"    type="xs:integer"       minOccurs="1" maxOccurs="1"/>
+            <xs:element name="luftmenge"        type="xs:double"        minOccurs="1" maxOccurs="1"/>
+            <xs:element name="kanalbezeichnung" type="xs:string"        minOccurs="1" maxOccurs="1"/>
+            <xs:element name="kanallange"       type="xs:double"        minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!--
+
+        Complex type: ventileinstellung
+
+    -->
+    <xs:complexType name="ventileinstellung">
+        <xs:sequence>
+            <xs:element name="luftart"           type="ventileinstellungLuftart" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="raum"              type="xs:string"                minOccurs="1" maxOccurs="1"/>
+            <xs:element name="teilstrecken"      type="xs:string"                minOccurs="1" maxOccurs="1"/>
+            <xs:element name="ventilbezeichnung" type="xs:string"                minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!--
+
+        Complex type: akustik
+
+    -->
+    <xs:complexType name="akustik">
+        <xs:sequence>
+            <xs:element name="akustikZuluft" type="akustikberechnung" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="akustikAbluft" type="akustikberechnung" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="akustikberechnung">
+        <xs:sequence>
+            <xs:element name="raum"                      type="xs:string"      minOccurs="1" maxOccurs="1"/>
+            <xs:element name="slpErhohungKanalnetz"      type="xs:integer"     minOccurs="1" maxOccurs="1"/>
+            <xs:element name="slpErhohungFilter"         type="xs:integer"     minOccurs="1" maxOccurs="1"/>
+            <xs:element name="hauptschalldampfer1"       type="xs:string"      minOccurs="1" maxOccurs="1"/>
+            <xs:element name="hauptschalldampfer2"       type="xs:string"      minOccurs="1" maxOccurs="1"/>
+            <xs:element name="anzahlUmlenkungen"         type="xs:integer"     minOccurs="1" maxOccurs="1"/>
+            <xs:element name="luftverteilerkastenStck"   type="xs:integer"     minOccurs="1" maxOccurs="1"/>
+            <xs:element name="langsdampfungKanal"        type="xs:string"      minOccurs="1" maxOccurs="1"/>
+            <xs:element name="langsdampfungKanalLfdm"    type="xs:integer"     minOccurs="1" maxOccurs="1"/>
+            <xs:element name="schalldampferVentil"       type="xs:string"      minOccurs="1" maxOccurs="1"/>
+            <xs:element name="einfugungsdammwert"        type="xs:string"      minOccurs="1" maxOccurs="1"/>
+            <xs:element name="raubabsorption"            type="raumabsorption" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="raumabsorption">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="WOHNEN"/>
+            <xs:enumeration value="BAD"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--
+
+        Complex type: company
+
+    -->
     <xs:complexType name="company">
         <xs:sequence>
             <xs:element name="firma1"  type="xs:string" minOccurs="0" maxOccurs="1"/>
@@ -129,12 +236,22 @@
             <xs:element name="kontakt" type="contact"   minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
+    <!--
+
+        Complex type: contact
+
+    -->
     <xs:complexType name="contact">
         <xs:sequence>
             <xs:element name="rolle"  type="xs:string" minOccurs="0" maxOccurs="1"/>
             <xs:element name="person" type="person"    minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
+    <!--
+
+        Complex type: person
+
+    -->
     <xs:complexType name="person">
         <xs:sequence>
             <xs:element name="benutzername" type="xs:string" minOccurs="0" maxOccurs="1"/>
@@ -147,6 +264,11 @@
             <xs:element name="adresse"      type="address"   minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
+    <!--
+
+        Complex type: address
+
+    -->
     <xs:complexType name="address">
         <xs:sequence>
             <xs:element name="strasse"      type="xs:string" minOccurs="0" maxOccurs="1"/>
@@ -155,6 +277,11 @@
             <xs:element name="land"         type="xs:string" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
+    <!--
+
+        Complex type: gebaudeTyp
+
+    -->
     <xs:simpleType name="gebaudeTyp">
         <xs:restriction base="xs:string">
             <xs:enumeration value="MFH"/>
@@ -162,18 +289,33 @@
             <xs:enumeration value="MAI"/>
         </xs:restriction>
     </xs:simpleType>
+    <!--
+
+        Complex type: gebaudeLage
+
+    -->
     <xs:simpleType name="gebaudeLage">
         <xs:restriction base="xs:string">
             <xs:enumeration value="SCH"/>
             <xs:enumeration value="STA"/>
         </xs:restriction>
     </xs:simpleType>
+    <!--
+
+        Complex type: warmeschutz
+
+    -->
     <xs:simpleType name="warmeschutz">
         <xs:restriction base="xs:string">
             <xs:enumeration value="HOC"/>
             <xs:enumeration value="NIE"/>
         </xs:restriction>
     </xs:simpleType>
+    <!--
+
+        Complex type: luftdichtheit
+
+    -->
     <xs:simpleType name="luftdichtheit">
         <xs:restriction base="xs:string">
             <xs:enumeration value="A"/>
@@ -182,6 +324,11 @@
             <xs:enumeration value="M"/>
         </xs:restriction>
     </xs:simpleType>
+    <!--
+
+        Complex type: geratestandort
+
+    -->
     <xs:simpleType name="geratestandort">
         <xs:restriction base="xs:string">
             <xs:enumeration value="KG"/>
@@ -191,6 +338,11 @@
             <xs:enumeration value="SB"/>
         </xs:restriction>
     </xs:simpleType>
+    <!--
+
+        Complex type: aussenluft
+
+    -->
     <xs:simpleType name="aussenluft">
         <xs:restriction base="xs:string">
             <xs:enumeration value="DAC"/>
@@ -198,6 +350,11 @@
             <xs:enumeration value="ERD"/>
         </xs:restriction>
     </xs:simpleType>
+    <!--
+
+        Complex type: fortluft
+
+    -->
     <xs:simpleType name="fortluft">
         <xs:restriction base="xs:string">
             <xs:enumeration value="DAC"/>
@@ -206,6 +363,11 @@
             <xs:enumeration value="BOG135"/>
         </xs:restriction>
     </xs:simpleType>
+    <!--
+
+        Complex type: raumtyp
+
+    -->
     <xs:simpleType name="raumtyp">
         <xs:restriction base="xs:string">
             <xs:enumeration value="WOH"/>
@@ -225,6 +387,11 @@
             <xs:enumeration value="DIE"/>
         </xs:restriction>
     </xs:simpleType>
+    <!--
+
+        Complex type: geschoss
+
+    -->
     <xs:simpleType name="geschoss">
         <xs:restriction base="xs:string">
             <xs:enumeration value="KG"/>
@@ -234,12 +401,41 @@
             <xs:enumeration value="SB"/>
         </xs:restriction>
     </xs:simpleType>
+    <!--
+
+        Complex type: luftart
+
+    -->
     <xs:simpleType name="luftart">
         <xs:restriction base="xs:string">
             <xs:enumeration value="ZU"/>
             <xs:enumeration value="AB"/>
             <xs:enumeration value="ZUA"/>
             <xs:enumeration value="UB"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--
+
+        Complex type: kanalnetzLuftart
+
+    -->
+    <xs:simpleType name="kanalnetzLuftart">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ZU"/>
+            <xs:enumeration value="AB"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--
+
+        Complex type: ventileinstellungLuftart
+
+    -->
+    <xs:simpleType name="ventileinstellungLuftart">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ZU"/>
+            <xs:enumeration value="AB"/>
+            <xs:enumeration value="AU"/>
+            <xs:enumeration value="FO"/>
         </xs:restriction>
     </xs:simpleType>
 </xs:schema>

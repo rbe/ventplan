@@ -272,6 +272,11 @@ class ProjektController {
             raumGeandert(raum.position)
         }
         ////model.resyncRaumTableModels()
+        // Druckverlustberechnung
+        model.setDvbKanalnetzEditors(view)
+        model.setDvbVentileinstellungEditors(view)
+        model.resyncDvbKanalnetzTableModels()
+        model.resyncDvbVentileinstellungTableModels()
     }
 
     /**
