@@ -744,7 +744,9 @@ class WacCalculationService {
 		def luftVsLetzteTeilstrecke = { ve ->
 			// Hole Luftvolumenstrom der letzten Teilstrecke
 			def letzteTeilstrecke = teilstrecken(ve.teilstrecken).last().toInteger()
-			def teilstrecke = map.dvb.kanalnetz.find { it.teilstrecke == letzteTeilstrecke }
+			def teilstrecke = map.dvb.kanalnetz.find {
+                    it.teilstrecke == letzteTeilstrecke
+            }
 			if (teilstrecke.luftart == ve.luftart) {
 				teilstrecke.luftVs
 			} else {

@@ -79,15 +79,15 @@
     -->
     <xs:complexType name="device">
         <xs:sequence>
-            <xs:element name="name"            type="xs:string"      minOccurs="0" maxOccurs="1"/>
-            <xs:element name="manuell"         type="xs:boolean"     minOccurs="0" maxOccurs="1"/>
-            <xs:element name="volumenstrom"    type="xs:integer"     minOccurs="0" maxOccurs="1"/>
-            <xs:element name="geratestandort"  type="geratestandort" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="energie"         type="deviceEnergy"   minOccurs="0" maxOccurs="1"/>
-            <xs:element name="hygiene"         type="deviceHygiene"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="name"             type="xs:string"      minOccurs="0" maxOccurs="1"/>
+            <xs:element name="manuell"          type="xs:boolean"     minOccurs="0" maxOccurs="1"/>
+            <xs:element name="volumenstrom"     type="xs:integer"     minOccurs="0" maxOccurs="1"/>
+            <xs:element name="geratestandort"   type="geratestandort" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="energie"          type="deviceEnergy"   minOccurs="0" maxOccurs="1"/>
+            <xs:element name="hygiene"          type="deviceHygiene"  minOccurs="0" maxOccurs="1"/>
             <xs:element name="ruckschlagklappe" type="xs:boolean"     minOccurs="0" maxOccurs="1"/>
-            <xs:element name="schallschutz"    type="xs:boolean"     minOccurs="0" maxOccurs="1"/>
-            <xs:element name="feuerstatte"     type="xs:boolean"     minOccurs="0" maxOccurs="1"/>
+            <xs:element name="schallschutz"     type="xs:boolean"     minOccurs="0" maxOccurs="1"/>
+            <xs:element name="feuerstatte"      type="xs:boolean"     minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="deviceEnergy">
@@ -201,14 +201,14 @@
     <xs:complexType name="akustikberechnung">
         <xs:sequence>
             <xs:element name="raum"                      type="xs:string"      minOccurs="1" maxOccurs="1"/>
-            <xs:element name="slpErhohungKanalnetz"      type="xs:integer"     minOccurs="1" maxOccurs="1"/>
-            <xs:element name="slpErhohungFilter"         type="xs:integer"     minOccurs="1" maxOccurs="1"/>
+            <xs:element name="slpErhohungKanalnetz"      type="xs:integer"     minOccurs="1" maxOccurs="1" nillable="true"/>
+            <xs:element name="slpErhohungFilter"         type="xs:integer"     minOccurs="1" maxOccurs="1" nillable="true"/>
             <xs:element name="hauptschalldampfer1"       type="xs:string"      minOccurs="1" maxOccurs="1"/>
             <xs:element name="hauptschalldampfer2"       type="xs:string"      minOccurs="1" maxOccurs="1"/>
-            <xs:element name="anzahlUmlenkungen"         type="xs:integer"     minOccurs="1" maxOccurs="1"/>
-            <xs:element name="luftverteilerkastenStck"   type="xs:integer"     minOccurs="1" maxOccurs="1"/>
+            <xs:element name="anzahlUmlenkungen"         type="xs:integer"     minOccurs="1" maxOccurs="1" nillable="true"/>
+            <xs:element name="luftverteilerkastenStck"   type="xs:integer"     minOccurs="1" maxOccurs="1" nillable="true"/>
             <xs:element name="langsdampfungKanal"        type="xs:string"      minOccurs="1" maxOccurs="1"/>
-            <xs:element name="langsdampfungKanalLfdm"    type="xs:integer"     minOccurs="1" maxOccurs="1"/>
+            <xs:element name="langsdampfungKanalLfdm"    type="xs:integer"     minOccurs="1" maxOccurs="1" nillable="true"/>
             <xs:element name="schalldampferVentil"       type="xs:string"      minOccurs="1" maxOccurs="1"/>
             <xs:element name="einfugungsdammwert"        type="xs:string"      minOccurs="1" maxOccurs="1"/>
             <xs:element name="raubabsorption"            type="raumabsorption" minOccurs="1" maxOccurs="1"/>

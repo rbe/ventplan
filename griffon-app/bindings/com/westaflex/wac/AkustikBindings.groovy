@@ -10,7 +10,7 @@
 package com.westaflex.wac
 
 // Zuluft
-bind(source: model.map.akustik.zuluft, sourceProperty: "anzahlUmlenkungen",           target: akustikZuluftAnzahlUmlenkungen90GradStck,     targetProperty: "text",         mutual: true)
+bind(source: model.map.akustik.zuluft, sourceProperty: "anzahlUmlenkungen",           target: akustikZuluftAnzahlUmlenkungen90GradStck,     targetProperty: "text")
 bind(source: model.map.akustik.zuluft, sourceProperty: "luftverteilerkastenStck",     target: akustikZuluftLuftverteilerkastenStck,         targetProperty: "text",         mutual: true)
 bind(source: model.map.akustik.zuluft, sourceProperty: "raumBezeichnung",             target: akustikZuluftRaumbezeichnung,                 targetProperty: "selectedItem", mutual: true)
 bind(source: model.map.akustik.zuluft, sourceProperty: "zentralgerat",                target: akustikZuluftZuluftstutzenZentralgerat,       targetProperty: "selectedItem", mutual: true)

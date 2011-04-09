@@ -31,6 +31,7 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill, wrap 1", "[fill]", "[fill]
                         label("Länge (m)")
                         label("")
                         label("", constraints: "wrap")
+                        label("")
 
                         comboBox(id: "dvbKanalnetzLuftart", items: ["ZU", "AB"])
                         textField(id: "dvbKanalnetzNrTeilstrecke", constraints: "width 80px")
@@ -69,7 +70,6 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill, wrap 1", "[fill]", "[fill]
                         label("")
                         label("Ventilbezeichnung")
                         label("")
-                        label("Hinweis:", foreground: java.awt.Color.RED, constraints: "wrap")
 
                         comboBox(id: "dvbVentileinstellungLuftart", items: ["ZU", "AB", "AU", "FO"])
                         comboBox(id: "dvbVentileinstellungRaum", items: model.meta.raum.typ + [/* items werden nach RaumHinzufugen aktualisiert, siehe WAC-7 */])

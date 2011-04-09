@@ -717,7 +717,6 @@ class ProjektModel {
 	 * TODO mmu Dokumentation!
 	 */
 	def setRaumEditors(view) {
-        println "setRaumEditors"
 		////javax.swing.SwingUtilities.invokeLater {
 			// Raumdaten - Geschoss
 			GH.makeComboboxCellEditor view.raumTabelle.columnModel.getColumn(1), meta.raum.geschoss
@@ -983,7 +982,6 @@ class ProjektModel {
      *
      */
     def setDvbKanalnetzEditors(view) {
-        println "setDvbKanalnetzEditors"
 		javax.swing.SwingUtilities.invokeLater {
             GH.makeComboboxCellEditor view.dvbKanalnetzTabelle.columnModel.getColumn(0), meta.druckverlust.kanalnetz.luftart
             GH.makeComboboxCellEditor view.dvbKanalnetzTabelle.columnModel.getColumn(3), meta.druckverlust.kanalnetz.kanalbezeichnung
@@ -994,7 +992,6 @@ class ProjektModel {
      *
      */
     def setDvbVentileinstellungEditors(view) {
-        println "setDvbVentileinstellungEditors"
 		javax.swing.SwingUtilities.invokeLater {
             GH.makeComboboxCellEditor view.dvbVentileinstellungTabelle.columnModel.getColumn(1), meta.druckverlust.ventileinstellung.luftart
             GH.makeComboboxCellEditor view.dvbVentileinstellungTabelle.columnModel.getColumn(3), meta.druckverlust.ventileinstellung.ventilbezeichnung

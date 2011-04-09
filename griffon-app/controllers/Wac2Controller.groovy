@@ -331,22 +331,15 @@ class Wac2Controller {
                         app.controllers["Dialog"].showErrorDialog(errorMsg as String)
                         if (DEBUG) println errorMsg
                     }
-                    if (projektController) {
-                        model.statusBarText = "Phase 3/3: Berechne Projekt..."
-                        projektController.berechneAlles()
-                        // HACK
-                        doOutside {
-                            // Update tab title to ensure that no "unsaved-data-star" is displayed
-                            try { Thread.sleep(2 * 1000) } catch (e) {}
-                            doLater {
-                                projektModel.map.dirty = false
-                                projektController.setTabTitle()
-                            }
-                        }
-                    }
                 }
                 // do sth. when the task is done.
                 onDone {
+                    def mvc = getMVCGroupAktivesProjekt()
+                    model.statusBarText = "Phase 3/3: Berechne Projekt..."
+                    //
+                    ///println "calling berechneAlles()"
+                    mvc.controller.berechneAlles()
+                    //
                     model.statusProgressBarIndeterminate = false
                     model.statusBarText = "Bereit."
                 }

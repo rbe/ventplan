@@ -260,15 +260,20 @@ class ProjektController {
      * Alles neu berechnen.
      */
     def berechneAlles = {
+        loadMode = true
+        println "berechneAlles"
         // Anlagendaten - Kennzeichen
         berechneEnergieKennzeichen()
         berechneHygieneKennzeichen()
         berechneKennzeichenLuftungsanlage()
-        // Räume; ConcurrentModificationException!
-        def raume = model.map.raum.raume.clone()
-        // Jedem Raum ein TableModel für Türen hinzufügen
-        raume.each { raum ->
-            model.addRaumTurenModel()
+        // Projekt wird geladen, Räume: Türen-TableModels hinzufügen
+        if (loadMode) {
+            // Räume; ConcurrentModificationException!
+            def raume = model.map.raum.raume.clone()
+            // Jedem Raum ein TableModel für Türen hinzufügen
+            raume.each { raum ->
+                model.addRaumTurenModel()
+            }
         }
         // Räume: set cell editors
         model.setRaumEditors(view)
@@ -278,12 +283,26 @@ class ProjektController {
             if (DEBUG) println "berechneAlles: BERECHNE RAUM ${raum.position}"
             raumGeandert(raum.position)
         }
-        ////model.resyncRaumTableModels()
+        model.resyncRaumTableModels()
         // Druckverlustberechnung
-        model.setDvbKanalnetzEditors(view)
-        model.setDvbVentileinstellungEditors(view)
+        // Kanalnetze berechnen
+        model.map.dvb.kanalnetz.each {
+            dvbKanalnetzGeandert(it.position)
+        }
+        // Ventile berechnen
+        wacCalculationService.berechneVentileinstellung(model.map)
+        // CellEditors, TableModels aktualisieren
         model.resyncDvbKanalnetzTableModels()
         model.resyncDvbVentileinstellungTableModels()
+        model.setDvbKanalnetzEditors(view)
+        model.setDvbVentileinstellungEditors(view)
+        // Akustik
+        berechneAkustik("Zuluft")
+        berechneAkustik("Abluft")
+        // Dirty flag
+        model.map.dirty = false
+        setTabTitle()
+        loadMode = false
     }
 
     /**
