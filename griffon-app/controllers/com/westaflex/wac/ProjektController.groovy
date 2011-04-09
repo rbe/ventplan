@@ -28,6 +28,7 @@ import javax.swing.event.TableModelEvent
 class ProjektController {
 	
 	public static boolean DEBUG = false
+    Boolean loadMode = false
 	
 	def builder
 	
