@@ -8,47 +8,53 @@
  */
 
 menuBar = menuBar {
-
+	
     menu(text: 'Auslegung', mnemonic: 'A') {
-        menuItem(neuesProjektAction)
-        menuItem(projektOeffnenAction)
+		menuItem(neuesProjektAction)
+		menuItem(projektOeffnenAction)
+		separator()
+		menuItem(projektSpeichernAction)
+		menuItem(projektSpeichernAlsAction)
+		menuItem(alleProjekteSpeichernAction)
+		menuItem(projektSchliessenAction)
+		separator()
+		menuItem(seitenansichtAction)
         separator()
-        menuItem(projektSpeichernAction)
-        menuItem(projektSpeichernAlsAction)
-        menuItem(alleProjekteSpeichernAction)
-        menuItem(projektSchliessenAction)
+        // WAC-161: Zuletzt geöffnete Projekte
+        // Position i=7
         separator()
-        menuItem(seitenansichtAction)
         // WAC-151: Automatische und manuelle Berechnung
-        separator()
-        menuItem(automatischeBerechnungAction)
-        /* Später aktivieren, Angebote sind noch nicht verfügbar! menuItem(druckenAction)*/
-//        if (!isMacOSX) {
-            separator()
-            menuItem(exitAction)
-//        }
-    }
+//        separator()
+//        menuItem(automatischeBerechnungAction)
+		/* Später aktivieren, Angebote sind noch nicht verfügbar! menuItem(druckenAction)*/
+		if (!isMacOSX) {
+			separator()
+			menuItem(exitAction)
+		}
+	}
 
     // WAC-167: Info-Menü mit Über-Dialog
-    menu(text: '?', mnemonic: 'I') { menuItem(aboutAction) }
+    menu(text: '?', mnemonic: 'I') {
+        menuItem(aboutAction)
+    }
 
-    /*
-     menu(text: 'Edit', mnemonic: 'E') {
-     menuItem(undoAction)
-     menuItem(redoAction)
-     separator()
-     menuItem(cutAction)
-     menuItem(copyAction)
-     menuItem(pasteAction)
-     separator()
-     menuItem(selectAllAction)
-     separator()
-     menuItem(findAction)
-     menuItem(findNextAction)
-     menuItem(findPreviousAction)
-     menuItem(replaceAction)
-     }
-     */
+	/*
+	menu(text: 'Edit', mnemonic: 'E') {
+		menuItem(undoAction)
+		menuItem(redoAction)
+		separator()
+		menuItem(cutAction)
+		menuItem(copyAction)
+		menuItem(pasteAction)
+		separator()
+		menuItem(selectAllAction)
+		separator()
+		menuItem(findAction)
+		menuItem(findNextAction)
+		menuItem(findPreviousAction)
+		menuItem(replaceAction)
+	}
+	*/
 }
 
 return menuBar

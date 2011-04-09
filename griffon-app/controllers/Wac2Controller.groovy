@@ -17,132 +17,135 @@ import com.bensmann.griffon.GriffonHelper as GH
  */
 class Wac2Controller {
 	
-    public static boolean DEBUG = false
+	public static boolean DEBUG = false
 	
-    def model
-    def wacModelService
-    def projektModelService
-    def view
-    def wacCalculationService
-    def oooService
+	def model
+	def wacModelService
+	def projektModelService
+	def view
+	def wacCalculationService
+	def oooService
     def builder
 	
-    /**
-     * Zähler für erstellte/geladene Projekte. Wird als "unique id" verwendet.
-     * Siehe generateMVCId().
-     */
-    def static projektCounter = 1
+	/**
+	 * Zähler für erstellte/geladene Projekte. Wird als "unique id" verwendet.
+	 * Siehe generateMVCId().
+	 */
+	def static projektCounter = 1
 	
-    /**
-     * User's settings.
-     */
-    private def prefs = java.util.prefs.Preferences.userNodeForPackage(Wac2Controller)
+	/**
+	 * User's settings.
+	 */
+	private def prefs = java.util.prefs.Preferences.userNodeForPackage(Wac2Controller)
 	
-    /**
-     * Initialize wac2 MVC group.
-     */
-    void mvcGroupInit(Map args) {
-    }
+    def static mruFileManager = new MRUFileManager()
+
+	/**
+	 * Initialize wac2 MVC group.
+	 */
+	void mvcGroupInit(Map args) {
+	}
 	
-    /**
-     * Get access to all components of a MVC group by its ID.
-     */
-    def getMVCGroup(mvcId) {
-        [
-            mvcId: mvcId,
-            model: app.models[mvcId],
-            view: app.views[mvcId],
-            controller: app.controllers[mvcId]
-        ]
-    }
+	/**
+	 * Get access to all components of a MVC group by its ID.
+	 */
+	def getMVCGroup(mvcId) {
+		[
+			mvcId: mvcId,
+			model: app.models[mvcId],
+			view: app.views[mvcId],
+			controller: app.controllers[mvcId]
+		]
+	}
 	
-    /**
-     * Hole MVC Group des aktiven Projekts.
-     */
-    def getMVCGroupAktivesProjekt = {
-        if (DEBUG) println "getMVCGroupAktivesProjekt: model.aktivesProjekt=${model.aktivesProjekt}"
-        getMVCGroup(model.aktivesProjekt)
-    }
+	/**
+	 * Hole MVC Group des aktiven Projekts.
+	 */
+	def getMVCGroupAktivesProjekt = {
+		if (DEBUG) println "getMVCGroupAktivesProjekt: model.aktivesProjekt=${model.aktivesProjekt}"
+		getMVCGroup(model.aktivesProjekt)
+	}
 	
-    /**
-     * Shutdown application and all resources.
-     */
-    def _shutdown() {
-        // Shutdown OpenOffice
-        oooService.shutdownOCM()
-        // Shutdown application
-        app.shutdown()
-    }
+	/**
+	 * Shutdown application and all resources.
+	 */
+	def _shutdown() {
+		// Shutdown OpenOffice
+		oooService.shutdownOCM()
+		// Shutdown application
+		app.shutdown()
+	}
 	
-    /**
-     * Schliessen? Alle Projekte fragen, ob ungesicherte Daten existieren.
-     */
-    boolean canClose() {
-        model.projekte.inject(true) { o, n ->
-            def c = getMVCGroup(n).controller
-            if (DEBUG) println "o=${o} c.canClose=${c.canClose()}"
-            o &= c.canClose()
-        }
-    }
+	/**
+	 * Schliessen? Alle Projekte fragen, ob ungesicherte Daten existieren.
+	 */
+	boolean canClose() {
+		model.projekte.inject(true) { o, n ->
+			def c = getMVCGroup(n).controller
+			if (DEBUG) println "o=${o} c.canClose=${c.canClose()}"
+			o &= c.canClose()
+		}
+	}
 	
-    /**
-     *
-     */
-    def exitApplication = { evt = null ->
-        // Ask if we can close
-        def canClose = canClose()
-        if (DEBUG) println "exitApplication: ${canClose}"
-        if (canClose) {
-            _shutdown()
-        } else {
-            if (DEBUG) println "exitApplication: there are unsaved changes"
-            // Show dialog: ask user for save all, cancel, quit
-            def choice = app.controllers["Dialog"].showApplicationCloseDialog()
-            if (DEBUG) println "exitApplication: choice=${choice}"
-            switch (choice) {
-                case 0:
-                if (DEBUG) println "Alles speichern"
-                alleProjekteSpeichern(evt)
-                _shutdown()
-                break
-                case 1: // Cancel: do nothing...
-                if (DEBUG) println "Abbrechen..."
-                app.shutdown()
-                break
-                case 2:
-                if (DEBUG) println "Schliessen"
-                _shutdown()
-                break
-            }
-        }
-    }
+	/**
+	 * 
+	 */
+	def exitApplication = { evt = null ->
+		// Ask if we can close
+		def canClose = canClose()
+		if (DEBUG) println "exitApplication: ${canClose}"
+		if (canClose) {
+			_shutdown()
+		} else {
+			if (DEBUG) println "exitApplication: there are unsaved changes"
+			// Show dialog: ask user for save all, cancel, quit
+			def choice = app.controllers["Dialog"].showApplicationCloseDialog()
+			if (DEBUG) println "exitApplication: choice=${choice}"
+			switch (choice) {
+				case 0:
+					if (DEBUG) println "Alles speichern"
+					alleProjekteSpeichern(evt)
+					_shutdown()
+					break
+				case 1: // Cancel: do nothing...
+					if (DEBUG) println "Abbrechen..."
+					app.shutdown()
+					break
+				case 2:
+					if (DEBUG) println "Schliessen"
+					_shutdown()
+					break
+			}
+		}
+        mruFileManager.save()
+	}
 	
-    /**
-     * Disable last tab of JTabbedPane 'projektTabGroup'.
-     */
-    def disableLastProjektTab = {
-        view.projektTabGroup.setEnabledAt(view.projektTabGroup.tabCount - 1, false)
-    }
+	/**
+	 * Disable last tab of JTabbedPane 'projektTabGroup'.
+	 */
+	def disableLastProjektTab = {
+		view.projektTabGroup.setEnabledAt(view.projektTabGroup.tabCount - 1, false)
+	}
 	
-    /**
-     * Enable last tab of JTabbedPane 'projektTabGroup'.
-     */
-    def enableLastProjektTab = {
-        view.projektTabGroup.setEnabledAt(view.projektTabGroup.tabCount - 1, true)
-    }
+	/**
+	 * Enable last tab of JTabbedPane 'projektTabGroup'.
+	 */
+	def enableLastProjektTab = {
+		view.projektTabGroup.setEnabledAt(view.projektTabGroup.tabCount - 1, true)
+	}
 	
-    /**
-     *
-     */
-    def generateMVCId = {
+	/**
+	 * 
+	 */
+	def generateMVCId = {
         def c = Wac2Controller.projektCounter++
 		"Projekt ${c.toString()}" as String
     }
 	
-    /**
-     * Ein neues Projekt erstellen.
-     */
-    def neuesProjekt = { evt = null ->
+	/**
+	 * Ein neues Projekt erstellen.
+	 */
+	def neuesProjekt = { evt = null ->
         // Progress bar in Wac2View.
         jxwithWorker(start: true) {
             // initialize the worker
@@ -158,8 +161,8 @@ class Wac2Controller {
                 model.statusBarText = "Phase 2/3: Initialisiere das Projekt..."
                 String mvcId = generateMVCId()
                 def (m, v, c) =
-                createMVCGroup("Projekt", mvcId,
-                    [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+                    createMVCGroup("Projekt", mvcId,
+                                    [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
                 model.statusBarText = "Phase 3/3: Erstelle Benutzeroberfläche für das Projekt..."
                 doLater {
                     // MVC ID zur Liste der Projekte hinzufügen
@@ -186,105 +189,105 @@ class Wac2Controller {
                 model.statusBarText = "Bereit."
             }
         }
-    }
+	}
 	
-    /**
-     * Ein Projekt aktivieren -- MVC ID an Wac2Model übergeben.
-     */
-    def projektAktivieren = { mvcId ->
-        //if (DEBUG) println "projektAktivieren: mvcId=${mvcId} model.aktivesProjekt=${model.aktivesProjekt}"
-        // Anderes Projekt wurde aktiviert?
-        if (mvcId && mvcId != model.aktivesProjekt) {
-            // MVC ID merken
-            model.aktivesProjekt = mvcId
-            // Dirty-flag aus Projekt-Model übernehmen
-            try {
-                def mvcGroup = getMVCGroup(mvcId)
-                //if (DEBUG) println "projektAktivieren: getMVCGroup(mvcId)=${mvcGroup}, wpx=${mvcGroup.model?.wpxFilename}"
-                model.aktivesProjektGeandert = mvcGroup.model?.map.dirty
-            } catch (e) {
-                e.printStackTrace()
-            }
-            //if (DEBUG) println "projektAktivieren: mvcId=${model.aktivesProjekt}"
-        }
-        /*
-        else {
-        if (DEBUG) println "projektAktivieren: no change"
-        }
-         */
-    }
+	/**
+	 * Ein Projekt aktivieren -- MVC ID an Wac2Model übergeben.
+	 */
+	def projektAktivieren = { mvcId ->
+		//if (DEBUG) println "projektAktivieren: mvcId=${mvcId} model.aktivesProjekt=${model.aktivesProjekt}"
+		// Anderes Projekt wurde aktiviert?
+		if (mvcId && mvcId != model.aktivesProjekt) {
+			// MVC ID merken
+			model.aktivesProjekt = mvcId
+			// Dirty-flag aus Projekt-Model übernehmen
+			try {
+				def mvcGroup = getMVCGroup(mvcId)
+				//if (DEBUG) println "projektAktivieren: getMVCGroup(mvcId)=${mvcGroup}, wpx=${mvcGroup.model?.wpxFilename}"
+				model.aktivesProjektGeandert = mvcGroup.model?.map.dirty
+			} catch (e) {
+				e.printStackTrace()
+			}
+			//if (DEBUG) println "projektAktivieren: mvcId=${model.aktivesProjekt}"
+		}
+		/*
+		else {
+			if (DEBUG) println "projektAktivieren: no change"
+		}
+		*/
+	}
 	
-    /**
-     * Ein Projekt aktivieren -- MVC ID an Wac2Model übergeben.
-     */
-    def projektIndexAktivieren = { index ->
-        if (index > -1) {
-            //if (DEBUG) println "projektIndexAktivieren: model.projekte=${model.projekte.dump()}"
-            projektAktivieren(model.projekte[index])
-            //if (DEBUG) println "projektIndexAktivieren: index=${index} -> ${model.aktivesProjekt}"
-        }
-        /*
-        else {
-        if (DEBUG) println "projektIndexAktivieren: index=${index}: Kein Projekt vorhanden!"
-        }
-         */
-    }
+	/**
+	 * Ein Projekt aktivieren -- MVC ID an Wac2Model übergeben.
+	 */
+	def projektIndexAktivieren = { index ->
+		if (index > -1) {
+			//if (DEBUG) println "projektIndexAktivieren: model.projekte=${model.projekte.dump()}"
+			projektAktivieren(model.projekte[index])
+			//if (DEBUG) println "projektIndexAktivieren: index=${index} -> ${model.aktivesProjekt}"
+		}
+		/*
+		else {
+			if (DEBUG) println "projektIndexAktivieren: index=${index}: Kein Projekt vorhanden!"
+		}
+		*/
+	}
 	
-    /**
-     * Das aktive Projekt schliessen.
-     */
-    def projektSchliessen = { evt = null ->
-        // Closure for closing the active project
-        def clacpr = { mvc ->
-            // Tab entfernen
-            view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
-            // MVC Gruppe zerstören
-            destroyMVCGroup(mvc.mvcId)
-            // Aus Liste der Projekte entfernen
-            if (DEBUG) println "projektSchliessen: removing ${model.aktivesProjekt} from model.projekte=${model.projekte.dump()}"
-            model.projekte.remove(mvc.mvcId)
-            if (DEBUG) println "projektSchliessen: model.projekte=${model.projekte.dump()}"
-            // Anderes Projekt aktivieren?
-            // NOT NEEDED projektIndexAktivieren(view.projektTabGroup.selectedIndex)
-            // Wird durch die Tab und den ChangeListener erledigt.
-        }
-        // Projekt zur aktiven Tab finden
-        def mvc = getMVCGroupAktivesProjekt()
+	/**
+	 * Das aktive Projekt schliessen.
+	 */
+	def projektSchliessen = { evt = null ->
+		// Closure for closing the active project
+		def clacpr = { mvc ->
+			// Tab entfernen
+			view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
+			// MVC Gruppe zerstören
+			destroyMVCGroup(mvc.mvcId)
+			// Aus Liste der Projekte entfernen
+			if (DEBUG) println "projektSchliessen: removing ${model.aktivesProjekt} from model.projekte=${model.projekte.dump()}"
+			model.projekte.remove(mvc.mvcId)
+			if (DEBUG) println "projektSchliessen: model.projekte=${model.projekte.dump()}"
+			// Anderes Projekt aktivieren?
+			// NOT NEEDED projektIndexAktivieren(view.projektTabGroup.selectedIndex)
+			// Wird durch die Tab und den ChangeListener erledigt.
+		}
+		// Projekt zur aktiven Tab finden
+		def mvc = getMVCGroupAktivesProjekt()
         if (!mvc) {
             println "projektSchliessen: kein aktives Projekt!"
             return
         }
-        if (DEBUG) println "projektSchliessen: model.aktivesProjekt=${model.aktivesProjekt} mvc=${mvc}"
-        def canClose = mvc.controller.canClose()
-        if (!canClose) {
-            if (DEBUG) println "projektSchliessen: canClose=${canClose}, there's unsaved data"
-            def choice = app.controllers["Dialog"].showCloseProjectDialog()
-            if (DEBUG) println "projektSchliessen: choice=${choice}"
-            switch (choice) {
-                case 0: // Save: save and close project
-                if (DEBUG) println "projektSchliessen: save and close"
-                aktivesProjektSpeichern(evt)
-                clacpr(mvc)
-                break
-                case 1: // Cancel: do nothing...
-                if (DEBUG) println "projektSchliessen: cancel"
-                break
-                case 2: // Close: just close the tab...
-                if (DEBUG) println "projektSchliessen: close without save"
-                clacpr(mvc)
-                break
-            }
-        } else {
-            if (DEBUG) println "projektSchliessen: else... close!!"
-            clacpr(mvc)
-        }
-    }
+		if (DEBUG) println "projektSchliessen: model.aktivesProjekt=${model.aktivesProjekt} mvc=${mvc}"
+		def canClose = mvc.controller.canClose()
+		if (!canClose) {
+			if (DEBUG) println "projektSchliessen: canClose=${canClose}, there's unsaved data"
+			def choice = app.controllers["Dialog"].showCloseProjectDialog()
+			if (DEBUG) println "projektSchliessen: choice=${choice}"
+			switch (choice) {
+				case 0: // Save: save and close project
+					if (DEBUG) println "projektSchliessen: save and close"
+					aktivesProjektSpeichern(evt)
+					clacpr(mvc)
+					break
+				case 1: // Cancel: do nothing...
+					if (DEBUG) println "projektSchliessen: cancel"
+					break
+				case 2: // Close: just close the tab...
+					if (DEBUG) println "projektSchliessen: close without save"
+					clacpr(mvc)
+					break
+			}
+		} else {
+			if (DEBUG) println "projektSchliessen: else... close!!"
+			clacpr(mvc)
+		}
+	}
 	
-    /**
-     * Projekt öffnen: zeige FileChooser, lese XML, erstelle eine MVC Group und übertrage die Werte
-     * aus dem XML in das ProjektModel.
-     */
-    def projektOffnen = { evt = null ->
+	/**
+	 * Projekt öffnen: zeige FileChooser, lese XML, erstelle eine MVC Group und übertrage die Werte
+	 * aus dem XML in das ProjektModel.
+	 */
+	def projektOffnen = { evt = null ->
         // Choose file
         def openResult = view.wpxFileChooserWindow.showOpenDialog(view.wac2Frame)
         if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
@@ -298,6 +301,8 @@ class Wac2Controller {
                 work {
                     // Save selected file
                     def file = view.wpxFileChooserWindow.selectedFile.toString()
+                    // Add file to MRU list
+                    MRUFileManager.getInstance().setMRU(file);
                     // ... and reset it in FileChooser
                     view.wpxFileChooserWindow.selectedFile = null
                     if (DEBUG) println "projektOffnen: file=${file?.dump()}"
@@ -311,8 +316,8 @@ class Wac2Controller {
                         // Create new Projekt MVC group
                         String mvcId = generateMVCId()
                         (projektModel, projektView, projektController) =
-                        createMVCGroup("Projekt", mvcId,
-                            [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+                            createMVCGroup("Projekt", mvcId,
+                                            [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
                         // Set filename in model
                         projektModel.wpxFilename = file
                         // Convert loaded XML into map
@@ -345,65 +350,68 @@ class Wac2Controller {
                 }
             }
         }
-    }
+	}
 	
-    /**
-     * Wird über action aufgerufen. Weiterleiten an projektSpeichern.
-     * @return Boolean Was project saved sucessfully?
-     */
-    def aktivesProjektSpeichern = { evt = null ->
-        def mvc = getMVCGroupAktivesProjekt()
+	/**
+	 * Wird über action aufgerufen. Weiterleiten an projektSpeichern.
+	 * @return Boolean Was project saved sucessfully?
+	 */
+	def aktivesProjektSpeichern = { evt = null ->
+		def mvc = getMVCGroupAktivesProjekt()
         projektSpeichern(mvc)
-    }
+	}
 
     /**
      * Projekt speichern. Es wird der Dateiname aus dem ProjektModel 'wpxFilename' verwendet.
-     * Ist er nicht gesetzt, wird "Projekt speichern als" aufgerufen.
+	 * Ist er nicht gesetzt, wird "Projekt speichern als" aufgerufen.
      */
     def projektSpeichern = { mvc ->
         def saved = mvc.controller.save()
-        if (saved) {
-            if (DEBUG) println "aktivesProjektSpeichern: Projekt gespeichert in ${mvc.model.wpxFilename}"
-            saved
-        } else {
-            if (DEBUG) println "aktivesProjektSpeichern: Projekt nicht gespeichert, kein Dateiname (mvc.model.wpxFilename=${mvc.model.wpxFilename?.dump()})?"
-            aktivesProjektSpeichernAls()
-        }
+		if (saved) {
+			if (DEBUG) println "aktivesProjektSpeichern: Projekt gespeichert in ${mvc.model.wpxFilename}"
+			saved
+		} else {
+			if (DEBUG) println "aktivesProjektSpeichern: Projekt nicht gespeichert, kein Dateiname (mvc.model.wpxFilename=${mvc.model.wpxFilename?.dump()})?"
+			aktivesProjektSpeichernAls()
+		}
+        // Add file to MRU list
+        MRUFileManager.getInstance().setMRU(mvc.model.wpxFilename);
+        view.mainMenu.add(builder.menuItem(mvc.model.wpxFilename));
     }
 	
-    /**
-     * Wird über action aufgerufen. Weiterleiten an projektSpeichernAls.
-     * @return Boolean Was project saved sucessfully?
-     */
-    def aktivesProjektSpeichernAls = { evt = null ->
-        def mvc = getMVCGroupAktivesProjekt()
-        projektSpeichernAls(mvc)
-    }
+	/**
+	 * Wird über action aufgerufen. Weiterleiten an projektSpeichernAls.
+	 * @return Boolean Was project saved sucessfully?
+	 */
+	def aktivesProjektSpeichernAls = { evt = null ->
+		def mvc = getMVCGroupAktivesProjekt()
+		projektSpeichernAls(mvc)
+	}
 
     /**
      * Zeige FileChooser, setze gewählten Dateinamen im ProjektModel und rufe "Projekt speichern".
      */
     def projektSpeichernAls = { mvc ->
         // Reset selected filename
-        view.wpxFileChooserWindow.selectedFile = null
-        // Open filechooser
-        def openResult = view.wpxFileChooserWindow.showSaveDialog(view.wac2Frame)
-        if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
-            def fname = view.wpxFileChooserWindow.selectedFile.toString()
-            if (!fname.endsWith(".wpx")) fname += ".wpx"
-            mvc.model.wpxFilename = fname
-            if (DEBUG) println "projektSpeichernAls: wpxFilename=${mvc.model.wpxFilename?.dump()}"
-            // Save data
-            projektSpeichern(mvc)
-        }
+		view.wpxFileChooserWindow.selectedFile = null
+		// Open filechooser
+		def openResult = view.wpxFileChooserWindow.showSaveDialog(view.wac2Frame)
+		if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
+			def fname = view.wpxFileChooserWindow.selectedFile.toString()
+			if (!fname.endsWith(".wpx")) fname += ".wpx"
+			mvc.model.wpxFilename = fname
+			if (DEBUG) println "projektSpeichernAls: wpxFilename=${mvc.model.wpxFilename?.dump()}"
+			// Save data
+			projektSpeichern(mvc)
+		}
     }
 
     /**
-     * Projekt speichern. Es wird der Dateiname aus dem ProjektModel 'wpxFilename' verwendet.
-     * Ist er nicht gesetzt, wird "Projekt speichern als" aufgerufen.
-     * @return Boolean Was project saved sucessfully?
-     */
-    def alleProjekteSpeichern = { evt = null ->
+	 * Projekt speichern. Es wird der Dateiname aus dem ProjektModel 'wpxFilename' verwendet.
+	 * Ist er nicht gesetzt, wird "Projekt speichern als" aufgerufen.
+	 * @return Boolean Was project saved sucessfully?
+	 */
+	def alleProjekteSpeichern = { evt = null ->
         model.projekte.each {
             def mvc = getMVCGroup(it)
             def saved = mvc.controller.save()
@@ -415,21 +423,21 @@ class Wac2Controller {
                 projektSpeichernAls(mvc)
             }
         }
-    }
+	}
 	
-    /**
-     * Seitenansicht öffnen.
-     */
-    def projektSeitenansicht = { evt = null ->
-        getMVCGroupAktivesProjekt().controller.seitenansicht()
-    }
+	/**
+	 * Seitenansicht öffnen.
+	 */
+	def projektSeitenansicht = { evt = null ->
+		getMVCGroupAktivesProjekt().controller.seitenansicht()
+	}
 	
-    /**
-     * Projekt drucken.
-     */
-    def projektDrucken = { evt = null ->
-        getMVCGroupAktivesProjekt().controller.drucken()
-    }
+	/**
+	 * Projekt drucken.
+	 */
+	def projektDrucken = { evt = null ->
+		getMVCGroupAktivesProjekt().controller.drucken()
+	}
 
     /**
      * WAC-151: Automatische und manuelle Berechnung
