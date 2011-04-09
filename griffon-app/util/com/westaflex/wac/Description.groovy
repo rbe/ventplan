@@ -7,7 +7,7 @@
  * 
  * Created by: rbe
  */
-package com.westaflex.image;
+package com.westaflex.wac;
 
 import java.awt.Color;
 import java.awt.Font;
