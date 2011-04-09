@@ -442,7 +442,7 @@ class Wac2Controller {
      * WAC-151: Automatische und manuelle Berechnung
      */
     def automatischeBerechnung = { evt = null ->
-        // TODO WAC-151
+        getMVCGroupAktivesProjekt().controller.automatischeBerechnung()
     }
 
     /**

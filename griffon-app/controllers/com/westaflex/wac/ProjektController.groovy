@@ -189,6 +189,13 @@ class ProjektController {
 			false
 		}
 	}
+    /**
+     * WAC-151: Perform automatic calculations of 'everything'.
+     */
+    def automatischeBerechnung = {
+        model.map.anlage.zentralgeratManuell = false
+        berechneAlles()
+    }
 	
 	/**
 	 * Button "Seitenansicht".

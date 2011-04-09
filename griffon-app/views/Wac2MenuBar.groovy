@@ -6,52 +6,49 @@
  * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
  * 
  */
-import static griffon.util.GriffonApplicationUtils.*
 
 menuBar = menuBar {
-	
-	menu(text: 'Auslegung', mnemonic: 'A') {
-		menuItem(neuesProjektAction)
-		menuItem(projektOeffnenAction)
-		separator()
-		menuItem(projektSpeichernAction)
-		menuItem(projektSpeichernAlsAction)
-		menuItem(alleProjekteSpeichernAction)
-		menuItem(projektSchliessenAction)
-		separator()
-		menuItem(seitenansichtAction)
-        // WAC-151: Automatische und manuelle Berechnung
-//        separator()
-//        menuItem(automatischeBerechnungAction)
-		/* Später aktivieren, Angebote sind noch nicht verfügbar! menuItem(druckenAction)*/
-		if (!isMacOSX) {
-			separator()
-			menuItem(exitAction)
-		}
-	}
 
-    // WAC-167: Info-Menü mit Über-Dialog
-    menu(text: '?', mnemonic: 'I') {
-        menuItem(aboutAction)
+    menu(text: 'Auslegung', mnemonic: 'A') {
+        menuItem(neuesProjektAction)
+        menuItem(projektOeffnenAction)
+        separator()
+        menuItem(projektSpeichernAction)
+        menuItem(projektSpeichernAlsAction)
+        menuItem(alleProjekteSpeichernAction)
+        menuItem(projektSchliessenAction)
+        separator()
+        menuItem(seitenansichtAction)
+        // WAC-151: Automatische und manuelle Berechnung
+        separator()
+        menuItem(automatischeBerechnungAction)
+        /* Später aktivieren, Angebote sind noch nicht verfügbar! menuItem(druckenAction)*/
+//        if (!isMacOSX) {
+            separator()
+            menuItem(exitAction)
+//        }
     }
 
-	/*
-	menu(text: 'Edit', mnemonic: 'E') {
-		menuItem(undoAction)
-		menuItem(redoAction)
-		separator()
-		menuItem(cutAction)
-		menuItem(copyAction)
-		menuItem(pasteAction)
-		separator()
-		menuItem(selectAllAction)
-		separator()
-		menuItem(findAction)
-		menuItem(findNextAction)
-		menuItem(findPreviousAction)
-		menuItem(replaceAction)
-	}
-	*/
+    // WAC-167: Info-Menü mit Über-Dialog
+    menu(text: '?', mnemonic: 'I') { menuItem(aboutAction) }
+
+    /*
+     menu(text: 'Edit', mnemonic: 'E') {
+     menuItem(undoAction)
+     menuItem(redoAction)
+     separator()
+     menuItem(cutAction)
+     menuItem(copyAction)
+     menuItem(pasteAction)
+     separator()
+     menuItem(selectAllAction)
+     separator()
+     menuItem(findAction)
+     menuItem(findNextAction)
+     menuItem(findPreviousAction)
+     menuItem(replaceAction)
+     }
+     */
 }
 
 return menuBar
