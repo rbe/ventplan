@@ -9,5 +9,4 @@
  */
 package com.westaflex.wac
 
-import static griffon.util.GriffonApplicationUtils.*
 import groovy.ui.Console
