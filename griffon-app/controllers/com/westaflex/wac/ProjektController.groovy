@@ -81,6 +81,26 @@ class ProjektController {
 	def setDefaultValues() {
 		// Lookup values from database and put them into our model
 		doOutside {
+                // Nur ausführen, wenn Projekt nicht gerade geladen wird
+                if (!loadMode) {
+                    // Show dialog only when property changes
+                    if (evt.propertyName == "ltm") {
+                        ltmErforderlichDialog()
+                    }
+                    // Only set dirty flag, when modified property is not the dirty flag
+                    // Used for loading and saving
+                    else if (evt.propertyName != "dirty" && !model.map.dirty && evt.propertyName != "ltm") {
+                        // Dirty-flag im eigenen und Wac2Model setzen
+                        model.map.dirty = true
+                        // Wac2Model über Änderung informieren
+                        app.models["wac2"].aktivesProjektGeandert =
+                            app.models["wac2"].alleProjekteGeandert =
+                            true
+                        // Change tab title (show a star)
+                        ////println "popertyChangeListener: calling setTabTitle: ${evt.propertyName}"
+                        setTabTitle()
+                    }
+                }
             // Raumdaten - Türen
             model.meta.raumTurTyp = ["Tür", "Durchgang"]
             model.meta.raumTurbreiten = [610, 735, 860, 985, 1110, 1235, 1485, 1735, 1985]
