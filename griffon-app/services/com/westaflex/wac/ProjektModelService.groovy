@@ -498,7 +498,7 @@ class ProjektModelService {
      *
      */
     def makeAkustik = { akustik, typ ->
-        domBuilder.akustik"${typ}"() {
+        domBuilder."${typ}"() {
             X.tc { raum(akustik.raum) }
             X.tc { slpErhohungKanalnetz(akustik.slpErhohungKanalnetz as Integer) }
             X.tc { slpErhohungFilter(akustik.slpErhohungFilter as Integer) }
@@ -527,8 +527,12 @@ class ProjektModelService {
 				X.tc { notizen(map.kundendaten.notizen) }
 				makeGebaude(map)
                 makeDruckverlust(map.dvb)
-                makeAkustik(map.akustik.zuluft, "Zuluft")
-                makeAkustik(map.akustik.abluft, "Abluft")
+                X.tc {
+                    akustik() {
+                        makeAkustik(map.akustik.zuluft, "zuluft")
+                        makeAkustik(map.akustik.abluft, "abluft")
+                    }
+                }
 				makeFirma("Grosshandel", map.kundendaten.grosshandel)
 				makeFirma("Ausfuhrende", map.kundendaten.ausfuhrendeFirma)
 			}

@@ -194,8 +194,8 @@
     -->
     <xs:complexType name="akustik">
         <xs:sequence>
-            <xs:element name="akustikZuluft" type="akustikberechnung" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="akustikAbluft" type="akustikberechnung" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="zuluft" type="akustikberechnung" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="abluft" type="akustikberechnung" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="akustikberechnung">
