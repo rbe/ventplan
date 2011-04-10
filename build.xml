@@ -2,6 +2,17 @@
 
 <project name="WAC">
 
+	<!--
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="ant-contrib-1.0b3.jar" />
+		</classpath>
+	</taskdef>
+    -->
+
+	<loadproperties srcfile="application.properties">
+	</loadproperties>
+
 	<!-- Griffon, Groovy -->
 	<property name="myapp.home" value="/Users/rbe/app" />
 	<property name="groovy.home" value="${myapp.home}/groovy/1.7.3" />
@@ -73,6 +84,7 @@
     
     -->
 	<target name="usbstick" depends="package">
+		<echo file="griffon-app/conf/version">${app.version}</echo>
 		<!-- wac -->
 		<mkdir dir="${usbstick.base.dir}" />
 		<mkdir dir="${usbstick.base.dir}/wac/conf" />
@@ -96,7 +108,7 @@
 				<include name="**" />
 			</fileset>
 			<fileset dir="${bin.dir}">
-				<include name="wac" />
+				<include name="wac.bat" />
 			</fileset>
 		</copy>
 		<!-- Linux -->
@@ -111,6 +123,7 @@
 				<include name="wac" />
 			</fileset>
 		</copy>
+		<chmod perm="a+rx" file="${bin.dir}/wac" />
 		<!-- Mac -->
 		<mkdir dir="${usbstick.mac.dir}/wac/Darwin/jre6" />
 		<mkdir dir="${usbstick.mac.dir}/wac/conf" />
@@ -123,6 +136,7 @@
 				<include name="wac" />
 			</fileset>
 		</copy>
+		<chmod perm="a+rx" file="${bin.dir}/wac" />
 	</target>
 
 	<!--
@@ -151,44 +165,45 @@
 
 	<!--
     
-    -->
 	<target name="copysql-to-usbstick" depends="exportsql">
-		<!-- Windows -->
-		<copy todir="${usbstick.win.dir}/wac/lib">
-			<fileset dir="${usbstick.base.dir}/wac/lib">
-				<include name="dtmp.zip" />
-			</fileset>
-		</copy>
-		<!-- Linux -->
-		<copy todir="${usbstick.linux.dir}/wac/lib">
-			<fileset dir="${usbstick.base.dir}/wac/lib">
-				<include name="dtmp.zip" />
-			</fileset>
-		</copy>
-		<!-- Mac -->
-		<copy todir="${usbstick.mac.dir}/wac/lib">
-			<fileset dir="${usbstick.base.dir}/wac/lib">
-				<include name="dtmp.zip" />
-			</fileset>
-		</copy>
-	</target>
+    	<copy todir="${usbstick.win.dir}/wac/lib">
+    		<fileset dir="${usbstick.base.dir}/wac/lib">
+    			<include name="dtmp.zip" />
+    		</fileset>
+    	</copy>
+    	<copy todir="${usbstick.linux.dir}/wac/lib">
+    		<fileset dir="${usbstick.base.dir}/wac/lib">
+    			<include name="dtmp.zip" />
+    		</fileset>
+    	</copy>
+    	<copy todir="${usbstick.mac.dir}/wac/lib">
+    		<fileset dir="${usbstick.base.dir}/wac/lib">
+    			<include name="dtmp.zip" />
+    		</fileset>
+    	</copy>
+    </target>
+    -->
 
 	<!--
-    
+     
     -->
 	<target name="world" depends="usbstick,exportsql">
+		<!--propertyregex property="app.version2" input="${app.version}" regexp="\d" select="\1"
+		<echo>${app.version2}</echo>-->
 		<!-- Windows -->
-		<zip destfile="${usbstick.base.dir}/wac_6010_win.zip" whenempty="fail">
+		<zip destfile="${usbstick.base.dir}/wac_${app.version}_win.zip" whenempty="fail">
 			<zipfileset dir="${usbstick.win.dir}/wac" includes="**" prefix="wac" />
 			<zipfileset dir="${usbstick.base.dir}/Windows" includes="**" prefix="Windows" />
 		</zip>
 		<!-- Linux -->
-		<zip destfile="${usbstick.base.dir}/wac_6010_linux.zip" whenempty="fail">
+		<zip destfile="${usbstick.base.dir}/wac_${app.version}_linux.zip" whenempty="fail">
 			<zipfileset dir="${usbstick.linux.dir}/wac" includes="**" prefix="wac" />
+			<zipfileset dir="${usbstick.linux.dir}/wac" includes="wac" prefix="wac" filemode="555" />
 		</zip>
 		<!-- Mac -->
-		<zip destfile="${usbstick.base.dir}/wac_6010_mac.zip" whenempty="fail">
+		<zip destfile="${usbstick.base.dir}/wac_${app.version}_mac.zip" whenempty="fail">
 			<zipfileset dir="${usbstick.mac.dir}/wac" includes="**" prefix="wac" />
+			<zipfileset dir="${usbstick.linux.dir}/wac" includes="wac" prefix="wac" filemode="555" />
 		</zip>
 		<antcall target="clean" />
 	</target>
