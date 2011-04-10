@@ -211,7 +211,7 @@
             <xs:element name="langsdampfungKanalLfdm"    type="xs:integer"     minOccurs="1" maxOccurs="1" nillable="true"/>
             <xs:element name="schalldampferVentil"       type="xs:string"      minOccurs="1" maxOccurs="1"/>
             <xs:element name="einfugungsdammwert"        type="xs:string"      minOccurs="1" maxOccurs="1"/>
-            <xs:element name="raubabsorption"            type="raumabsorption" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="raumabsorption"            type="raumabsorption" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
     <xs:simpleType name="raumabsorption">

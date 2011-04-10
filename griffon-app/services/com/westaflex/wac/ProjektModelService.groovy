@@ -51,7 +51,12 @@ class ProjektModelService {
      * @param xml java.lang.String
      */
     def validateWpx = { String xml ->
-        validator.validate(new javax.xml.transform.stream.StreamSource(new java.io.StringReader(xml)))
+        try {
+            validator.validate(
+                new javax.xml.transform.stream.StreamSource(new java.io.StringReader(xml)))
+        } catch (e) {
+            println "Kann Projekt nicht öffnen: ${e}"
+        }
     }
     
     /**
@@ -497,7 +502,7 @@ class ProjektModelService {
             }
         }
         def makeVentileinstellung = { v ->
-            domBuilder.druckverlust() {
+            domBuilder.ventileinstellung() {
                 X.tc { luftart(v.luftart) }
                 X.tc { raum(v.raum) }
                 X.tc { teilstrecken(v.teilstrecken) }
@@ -515,18 +520,18 @@ class ProjektModelService {
      */
     def makeAkustik = { akustik, typ ->
         domBuilder."${typ}"() {
-            X.tc { raum(akustik.raum) }
-            X.tc { slpErhohungKanalnetz(akustik.slpErhohungKanalnetz as Integer) }
-            X.tc { slpErhohungFilter(akustik.slpErhohungFilter as Integer) }
+            X.tc { raum(akustik.raumBezeichnung) }
+            X.tc { slpErhohungKanalnetz(akustik.slpErhohungKanalnetz as Integer ?: 0) }
+            X.tc { slpErhohungFilter(akustik.slpErhohungFilter as Integer ?: 0) }
             X.tc { hauptschalldampfer1(akustik.hauptschalldampfer1) }
             X.tc { hauptschalldampfer2(akustik.hauptschalldampfer2) }
-            X.tc { anzahlUmlenkungen(akustik.anzahlUmlenkungen as Integer) }
-            X.tc { luftverteilerkastenStck(akustik.luftverteilerkastenStck as Integer) }
+            X.tc { anzahlUmlenkungen(akustik.anzahlUmlenkungen as Integer ?: 0) }
+            X.tc { luftverteilerkastenStck(akustik.luftverteilerkastenStck as Integer ?: 0) }
             X.tc { langsdampfungKanal(akustik.langsdampfungKanal) }
-            X.tc { langsdampfungKanalLfdm(akustik.langsdampfungKanalLfdm as Integer) }
+            X.tc { langsdampfungKanalLfdm(akustik.langsdampfungKanalLfdmMeter as Integer ?: 0) }
             X.tc { schalldampferVentil(akustik.schalldampferVentil) }
             X.tc { einfugungsdammwert(akustik.einfugungsdammwert) }
-            X.tc { raubabsorption(akustik.raubabsorption) }
+            X.tc { raumabsorption(akustik.raumabsorption) }
         }
     }
 

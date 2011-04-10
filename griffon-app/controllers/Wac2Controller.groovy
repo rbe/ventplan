@@ -315,7 +315,7 @@ class Wac2Controller {
                 // do the task
                 work {
                     // Add file to MRU list
-                addRecentlyOpenedFile(file)
+                    addRecentlyOpenedFile(file)
                     // ... and reset it in FileChooser
                     view.wpxFileChooserWindow.selectedFile = null
                     if (DEBUG) println "projektOffnen: file=${file?.dump()}"
@@ -355,8 +355,10 @@ class Wac2Controller {
                     def mvc = getMVCGroupAktivesProjekt()
                     model.statusBarText = "Phase 3/3: Berechne Projekt..."
                     //
-                    ///println "calling berechneAlles()"
-                    mvc.controller.berechneAlles()
+                    try {
+                        ///println "calling berechneAlles()"
+                        mvc.controller.berechneAlles()
+                    } catch (e) {}
                     //
                     model.statusProgressBarIndeterminate = false
                     model.statusBarText = "Bereit."
