@@ -288,6 +288,7 @@ class Wac2Controller {
      * aus dem XML in das ProjektModel.
      */
     def projektOffnen = { evt = null ->
+        def openResult = view.wpxFileChooserWindow.showOpenDialog(view.wac2Frame)
         if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
             def file = view.wpxFileChooserWindow.selectedFile
             projektOffnenClosure(file)
