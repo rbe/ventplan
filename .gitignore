@@ -6,6 +6,7 @@ build/
 target/
 staging/
 usbstick/
+wacupdate/
 Thumbs.db
 out/
 *.iws
