@@ -18,11 +18,11 @@ menuBar = menuBar {
 		menuItem(alleProjekteSpeichernAction)
 		menuItem(projektSchliessenAction)
 		separator()
-		menuItem(seitenansichtAction)
-        separator()
         // WAC-161: Zuletzt geöffnete Projekte
-        // Position i=7
+        // Position i=10
+        menu(id: 'recentlyOpenedMenu', text: 'Zuletzt geöffnete Projekte')
         separator()
+        menuItem(seitenansichtAction)
         // WAC-151: Automatische und manuelle Berechnung
 //        separator()
 //        menuItem(automatischeBerechnungAction)

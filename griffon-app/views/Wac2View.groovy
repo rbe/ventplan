@@ -58,4 +58,7 @@ wac2Frame = application(title: 'WestaWAC 2',
 
         progressBar(id: "mainStatusProgressBar", minimum: 0, maximum: 100, indeterminate: bind { model.statusProgressBarIndeterminate } )
 	}
+    
+    // WAC-161: Zuletzt geöffnete Projekte in das Menu laden
+    controller.buildRecentlyOpenedMenuItems()
 }

@@ -9,7 +9,6 @@
  */
 package com.westaflex.wac
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.prefs.BackingStoreException
 
@@ -18,11 +17,12 @@ import java.util.prefs.BackingStoreException
  * Save and load preferences for a Most Recently Used (MRU) list.
  */
 class MRUFileManager {
-    
+
+    public static boolean DEBUG = false    
     
     private static final String LAST_TEN_OPEN_PROJECTS = "LastTenWacProjects"
-    private static final String PREFS_USER_NODE = "/wac/projects";
-    private static final int DEFAULT_MAX_SIZE = 10;
+    private static final String PREFS_USER_NODE = "/wacprojects";
+    public static final int DEFAULT_MAX_SIZE = 10;
 
     private int currentMaxSize = 0;
     private LinkedList mruFileList;
@@ -38,21 +38,10 @@ class MRUFileManager {
         }
     }
 
-    //--------------------------------------------------------------------------
-    //   Constructors:
-    //--------------------------------------------------------------------------
-    public MRUFileManager() {
+    private MRUFileManager() {
         load();
         setMaxSize(DEFAULT_MAX_SIZE);
     }
-
-    public MRUFileManager(int maxSize) {
-        load();
-        setMaxSize(maxSize);
-    }
-    //--------------------------------------------------------------------------
-    //   Public Methods:
-    //--------------------------------------------------------------------------
 
     /**
      * Saves a list of MRU files out to a file.
@@ -121,7 +110,9 @@ class MRUFileManager {
      * @param index The index to be first in the mru list
      */
     public void moveToTop(int index) {
-        mruFileList.add(0, mruFileList.remove(index));
+        def o = mruFileList.get(index)
+        mruFileList.remove(o);
+        mruFileList.addFirst(o);
     }
 
     /**
@@ -130,21 +121,30 @@ class MRUFileManager {
     protected void setMRU(Object o) {
         int index = mruFileList.indexOf(o);
 
-        if (index == -1) {
-            mruFileList.add(0, o);
-            setMaxSize(currentMaxSize);
-        } else {
-            moveToTop(index);
+        def file = new java.io.File(o.toString())
+        if (file.exists()) {
+            if (index == -1) {
+                if (DEBUG) println "setMRU: add file to list -> ${mruFileList.dump()}"
+                mruFileList.add(0, o);
+                setMaxSize(DEFAULT_MAX_SIZE);
+            } else {
+                if (DEBUG) println "setMRU: move file to top -> ${mruFileList.dump()}"
+                moveToTop(index);
+            }
+        }
+        else {
+            if (DEBUG) println "setMRU: file does not exists. Could not add. ${file?.dump()}"
         }
     }
     
     public String getPrefValue(int i) {
         String value = null;
         try{
-            value = getPrefs().get("" + i);
+            value = getPrefs().get("" + i, "");
+            if (DEBUG) println "getPrefValue value -> ${value}, index=${index}"
         }
         catch (Exception e) {
-            
+            if (DEBUG) println "getPrefValue -> ${e}"
         }
         return value;
     }
@@ -155,18 +155,24 @@ class MRUFileManager {
      */
     protected void load() {
         
-        mruFileList = new LinkedList();
+        if (DEBUG) println "preferences absolute path -> ${getPrefs().absolutePath()}"
+        println "preferences absolute path -> ${getPrefs().absolutePath()}"
+        
+        if (null == mruFileList) {
+            mruFileList = new LinkedList();
+        }
         for (int i = 0; i < DEFAULT_MAX_SIZE; i++)
         {
             try{
                 String value = getPrefValue(i);
-                if (null != value)
+                if (null != value && value.length() > 0)
                 {
                     setMRU(value);
                 }
             }
             catch (Exception e) {
                 // key is not in prefs...
+                break
             }
         }
 
@@ -180,8 +186,12 @@ class MRUFileManager {
      * Ensures that the MRU list will have a MaxSize.
      */
     protected void setMaxSize(int maxSize) {
+        if (DEBUG) println "setMaxSize ... ${maxSize < mruFileList.size()}"
+        if (DEBUG) println "setMaxSize ...maxSize = ${maxSize}"
+        if (DEBUG) println "setMaxSize ...mruFileList.size() = ${mruFileList.size()}"
         if (maxSize < mruFileList.size()) {
             for (int i = 0; i < mruFileList.size() - maxSize; i++) {
+                if (DEBUG) println "removeLast ... ${mruFileList.dump()}"
                 mruFileList.removeLast();
             }
         }
