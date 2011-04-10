@@ -27,10 +27,10 @@ menuBar = menuBar {
 //        separator()
 //        menuItem(automatischeBerechnungAction)
 		/* Später aktivieren, Angebote sind noch nicht verfügbar! menuItem(druckenAction)*/
-		if (!isMacOSX) {
+//		if (!isMacOSX) {
 			separator()
 			menuItem(exitAction)
-		}
+//		}
 	}
 
     // WAC-167: Info-Menü mit Über-Dialog
