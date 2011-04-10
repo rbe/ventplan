@@ -490,7 +490,7 @@ class Wac2Controller {
             def mruList = mruFileManager.getMRUFileList()
             
             mruList.each() { f -> 
-                println "buildRecentlyOpenedMenuItems -> f = ${f}".toString()
+                if (DEBUG) println "buildRecentlyOpenedMenuItems -> f = ${f}".toString()
                 def newMenuItem = builder.menuItem(f)
                 newMenuItem.setAction(builder.action(
                     id: "zuletztGeoffnetesProjektAction" as String,
