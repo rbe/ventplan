@@ -53,7 +53,13 @@ class MRUFileManager {
             for (int i = 0; i < mruFileList.size(); i++)
             {
                 if (i < DEFAULT_MAX_SIZE) {
-                    getPrefs().put("" + i, mruFileList.get(i));
+                    def f = mruFileList.get(i)
+                    if (f instanceof java.io.File) {
+                        getPrefs().put("" + i, f.getAbsolutePath());
+                    }
+                    else {
+                        getPrefs().put("" + i, f);
+                    }
                 }
             }
             getPrefs().flush();
@@ -156,7 +162,6 @@ class MRUFileManager {
     protected void load() {
         
         if (DEBUG) println "preferences absolute path -> ${getPrefs().absolutePath()}"
-        println "preferences absolute path -> ${getPrefs().absolutePath()}"
         
         if (null == mruFileList) {
             mruFileList = new LinkedList();
