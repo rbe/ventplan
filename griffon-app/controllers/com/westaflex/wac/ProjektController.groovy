@@ -984,10 +984,12 @@ class ProjektController {
 	 */
 	def zentralgeratManuellGewahlt = {
 		////publishEvent "ZentralgeratGewahlt", [view.raumVsZentralgerat.selectedItem]
-		doLater {
+//		doLater {
 			// Merken, dass das Zentralgerät manuell ausgewählt wurde
 			// -> keine automatische Auswahl des Zentralgeräts mehr durchführen
+            /*if (DEBUG)*/ println "zentralgeratManuellGewahlt: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
 			model.map.anlage.zentralgeratManuell = true
+            /*if (DEBUG)*/ println "zentralgeratManuellGewahlt: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
 			// Zentralgerät aus View in Model übernehmen
 			model.map.anlage.zentralgerat = view.raumVsZentralgerat.selectedItem
 			// Hole Volumenströme des Zentralgeräts
@@ -997,13 +999,14 @@ class ProjektController {
 			wacCalculationService.aussenluftVs(model.map)
 			// Neue Auswahl setzen
 			zentralgeratAktualisieren()
-		}
+//		}
 	}
 
 	/**
 	 * Aktualisiere Zentralgerät und Volumenstrom in allen Comboboxen
 	 */
 	def zentralgeratAktualisieren = {
+        /*if (DEBUG)*/ println "zentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
 		doLater {
 			/*
 			// Füge Volumenströme des aktuellen Zentralgeräts in Combobox hinzu
@@ -1081,8 +1084,8 @@ class ProjektController {
 	 * verändert hat!
 	 */
 	def onZentralgeratAktualisieren = {
-		doLater {
-			if (DEBUG) println "onZentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
+//		doLater {
+			/*if (DEBUG)*/ println "onZentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
 			if (!model.map.anlage.zentralgeratManuell) {
 				// Berechne Zentralgerät und Volumenstrom
 				def (zentralgerat, nl) = wacCalculationService.berechneZentralgerat(model.map)
@@ -1091,13 +1094,18 @@ class ProjektController {
 				if (DEBUG) println "onZentralgeratAktualisieren: zentralgerat=${model.map.anlage.zentralgerat}, nl=${nl}/${model.map.anlage.volumenstromZentralgerat}"
 				zentralgeratAktualisieren()
 			}
-		}
+//		}
 	}
 	
 	/**
 	 * Raumvolumenströme - Volumenstrom des Zentralgeräts.
 	 */
 	def volumenstromZentralgeratManuellGewahlt = {
+        // Merken, dass das Zentralgerät manuell ausgewählt wurde
+        // -> keine automatische Auswahl des Zentralgeräts mehr durchführen
+        /*if (DEBUG)*/ println "zentralgeratManuellGewahlt: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
+        model.map.anlage.zentralgeratManuell = true
+        /*if (DEBUG)*/ println "zentralgeratManuellGewahlt: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
 		// Aus der View im Projekt-Model speichern
 		model.map.anlage.volumenstromZentralgerat = view.raumVsVolumenstrom.selectedItem?.toInteger()
 		zentralgeratAktualisieren()

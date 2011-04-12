@@ -455,7 +455,25 @@ class Wac2Controller {
      * WAC-151: Automatische und manuelle Berechnung
      */
     def automatischeBerechnung = { evt = null ->
-        // TODO WAC-151
+        def mvc = getMVCGroupAktivesProjekt()
+        
+        jxwithWorker(start: true) {
+            // initialize the worker
+            onInit {
+                model.statusProgressBarIndeterminate = true
+                model.statusBarText = "Berechne..."
+            }
+            work {
+                // Flags setzen
+                mvc.model.map.anlage.zentralgeratManuell = false
+                // Neu berechnen
+                mvc.controller.berechneAlles()
+            }
+            onDone {
+                model.statusProgressBarIndeterminate = false
+                model.statusBarText = "Bereit."
+            }
+        }
     }
 
     /**

@@ -419,8 +419,8 @@ class WacCalculationService {
 		}
 		// Überströmvolumenstrom = Vorschlag: Raumvolumenstrom
 		map.raum.raume.each {
-            // WAC-151: Wegen manueller Änderung nur vorschlagen, wenn kein Wert vorhanden ist
-            if (!it.raumUberstromVolumenstrom || it.raumUberstromVolumenstrom == 0) {
+            // WAC-151: Wegen manueller Änderung nur vorschlagen, wenn kein Wert vorhanden ist oder zentralgeratManuell == false
+            if (!it.raumUberstromVolumenstrom || it.raumUberstromVolumenstrom == 0 || model.map.anlage.zentralgeratManuell) {
                 switch (it.raumLuftart) {
                     case "ZU":
                         // Abzgl. Infiltration
