@@ -418,27 +418,31 @@ class WacCalculationService {
             if (DEBUG) println "autoLuftmenge: ${it.raumBezeichnung}: raumZuluftVolumenstromInfiltration: Math.round(${gesamtAvsLTM} * ${it.raumZuluftfaktor} / ${gesamtZuluftfaktor})  =${ltmZuluftRaum}"
 		}
 		// Überströmvolumenstrom = Vorschlag: Raumvolumenstrom
-		map.raum.raume.each {
-            // WAC-151: Wegen manueller Änderung nur vorschlagen, wenn kein Wert vorhanden ist oder zentralgeratManuell == false
-            if (!it.raumUberstromVolumenstrom || it.raumUberstromVolumenstrom == 0 || model.map.anlage.zentralgeratManuell) {
-                switch (it.raumLuftart) {
-                    case "ZU":
-                        // Abzgl. Infiltration
-                        it.raumUberstromVolumenstrom = it.raumZuluftVolumenstromInfiltration
-                        break
-                    case "AB":
-                        // Abzgl. Infiltration
-                        it.raumUberstromVolumenstrom = it.raumAbluftVolumenstromInfiltration
-                        break
-                    case "ZU/AB":
-                        // Abzgl. Infiltration
-                        it.raumUberstromVolumenstrom =
-                            java.lang.Math.abs(it.raumZuluftVolumenstromInfiltration - it.raumAbluftVolumenstromInfiltration)
-                        break
+        // WAC-151
+        if (!map.anlage.zentralgeratManuell) {
+            println "WAC-151: Errechne Überströmvolumenstrom"
+            map.raum.raume.each {
+                // WAC-151: Wegen manueller Änderung nur vorschlagen, wenn kein Wert vorhanden ist
+                if (!it.raumUberstromVolumenstrom || it.raumUberstromVolumenstrom == 0) {
+                    switch (it.raumLuftart) {
+                        case "ZU":
+                            // Abzgl. Infiltration
+                            it.raumUberstromVolumenstrom = it.raumZuluftVolumenstromInfiltration
+                            break
+                        case "AB":
+                            // Abzgl. Infiltration
+                            it.raumUberstromVolumenstrom = it.raumAbluftVolumenstromInfiltration
+                            break
+                        case "ZU/AB":
+                            // Abzgl. Infiltration
+                            it.raumUberstromVolumenstrom =
+                                java.lang.Math.abs(it.raumZuluftVolumenstromInfiltration - it.raumAbluftVolumenstromInfiltration)
+                            break
+                    }
+                    if (DEBUG) println "${it.raumBezeichnung}: raumUberstromVolumenstrom=${it.raumUberstromVolumenstrom}"
                 }
-                if (DEBUG) println "${it.raumBezeichnung}: raumUberstromVolumenstrom=${it.raumUberstromVolumenstrom}"
             }
-		}
+        }
 	}
 	
 	/**
