@@ -464,10 +464,8 @@ class Wac2Controller {
                 model.statusBarText = "Berechne..."
             }
             work {
-                // Flags setzen
-                mvc.model.map.anlage.zentralgeratManuell = false
                 // Neu berechnen
-                mvc.controller.berechneAlles()
+                mvc.controller.automatischeBerechnung()
             }
             onDone {
                 model.statusProgressBarIndeterminate = false

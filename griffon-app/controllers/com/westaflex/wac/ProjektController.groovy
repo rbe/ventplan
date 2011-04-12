@@ -173,7 +173,9 @@ class ProjektController {
      * WAC-151: Perform automatic calculations of 'everything'.
      */
     def automatischeBerechnung = {
+        // Flags setzen
         model.map.anlage.zentralgeratManuell = false
+        // Neu berechnen
         berechneAlles()
     }
     
@@ -633,7 +635,7 @@ class ProjektController {
             // Überströmvolumenstrom
             // WAC-151
             if (!model.map.anlage.zentralgeratManuell) {
-                model.map.raum.raume[raumIndex]raumUberstromVolumenstrom = 0.0d
+                model.map.raum.raume[raumIndex].raumUberstromVolumenstrom = 0.0d
             }
             // Raumvolumenströme, (Werte abzgl. Infiltration werden zur Berechnung der Ventile benötigt) berechnen
             wacCalculationService.autoLuftmenge(model.map)
