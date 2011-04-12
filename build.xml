@@ -197,12 +197,12 @@
 		</zip>
 		<!-- Linux -->
 		<zip destfile="${usbstick.base.dir}/wac_${app.version}_linux.zip" whenempty="fail">
-			<zipfileset dir="${usbstick.linux.dir}/wac" includes="**" prefix="wac" />
+			<zipfileset dir="${usbstick.linux.dir}/wac" includes="**" excludes="wac" prefix="wac" />
 			<zipfileset dir="${usbstick.linux.dir}/wac" includes="wac" prefix="wac" filemode="555" />
 		</zip>
 		<!-- Mac -->
 		<zip destfile="${usbstick.base.dir}/wac_${app.version}_mac.zip" whenempty="fail">
-			<zipfileset dir="${usbstick.mac.dir}/wac" includes="**" prefix="wac" />
+			<zipfileset dir="${usbstick.mac.dir}/wac" includes="**" excludes="wac" prefix="wac" />
 			<zipfileset dir="${usbstick.linux.dir}/wac" includes="wac" prefix="wac" filemode="555" />
 		</zip>
 		<antcall target="clean" />
