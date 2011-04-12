@@ -629,8 +629,11 @@ class ProjektController {
                 raumAnzahlZuluftventile = 0
                 raumZuluftmengeJeVentil = 0.0d
                 raumAnzahlUberstromVentile = 0
-                // Überström
-                raumUberstromVolumenstrom = 0.0d
+            }
+            // Überströmvolumenstrom
+            // WAC-151
+            if (!model.map.anlage.zentralgeratManuell) {
+                model.map.raum.raume[raumIndex]raumUberstromVolumenstrom = 0.0d
             }
             // Raumvolumenströme, (Werte abzgl. Infiltration werden zur Berechnung der Ventile benötigt) berechnen
             wacCalculationService.autoLuftmenge(model.map)

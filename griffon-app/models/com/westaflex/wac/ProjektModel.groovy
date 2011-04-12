@@ -580,10 +580,18 @@ class ProjektModel {
 		def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile", "raumUberstromVolumenstrom",   "raumUberstromElement"] as String[]
 		def writable      = [true,              true,          false,                        true,                          true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
-			// Call ProjektController
-			app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position)
-			////app.controllers[mvcId].raumUberstromelementeGeandert()
+			// WAC-151: zentralgeratManuell = true setzen, wenn Überströmvolumenstrom geändert wurde
+            println "WAC-151: propertyNames[${columnIndex}]=${propertyNames[columnIndex]}"
+            if (propertyNames[columnIndex] == "raumUberstromVolumenstrom") {
+                app.models[mvcId].map.anlage.zentralgeratManuell = true
+            }
+            // Call ProjektController
+            app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position)
+            // Update TableModels, select row
+            def view = app.views[mvcId]
+            def selected = view.raumVsUberstromelementeTabelle.selectedRow
 			resyncRaumTableModels()
+            view.raumVsUberstromelementeTabelle.changeSelection(selected, 0, false, false)
 		}
 		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsUberstromventile, postValueSet, checkRaum)
 	}
