@@ -657,8 +657,15 @@ class ProjektController {
         def raumeOhneTuren = model.map.raum.raume.findAll { raum ->
             raum.raumUberstromVolumenstrom > 0 && !raum.turen.any { it.turBreite > 0 }
         }
-        def raumeOhneUbElemente = model.map.raum.raume.findAll { raum ->
-            raum.raumUberstromVolumenstrom > 0 && !raum.raumUberstromElement
+        def raumeOhneUbElemente = []
+        raumeOhneUbElemente = model.map.raum.raume.findAll { raum ->
+            println "WAC-171: Raum=${raum.raumBezeichnung}"
+            def turSpalthoheUberschritten = raum.turen.findAll {
+                it.turSpalthohe > raum.raumMaxTurspaltHohe.toDouble2()
+            }?.size() ?: 0
+            println "WAC-171: Raum=${raum.raumBezeichnung}, tuspalthoheUberschritten=${turSpalthoheUberschritten}"
+            println "WAC-171: ${raum.raumUberstromVolumenstrom > 0} && ${turSpalthoheUberschritten > 0} && ${!raum.raumUberstromElement}"
+            raum.raumUberstromVolumenstrom > 0 && turSpalthoheUberschritten > 0 /*&& !raum.raumUberstromElement*/
         }
         model.map.raum.raumVs.turenHinweis = raumeOhneTuren.size() > 0 ?
             "Hinweis: bitte Türen prüfen: ${raumeOhneTuren.collect { it.raumBezeichnung }.join(", ")}" : ""
