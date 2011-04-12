@@ -808,13 +808,18 @@ class WacCalculationService {
 		if (map.raumLuftart.contains("ÜB")) {
             if (DEBUG) println "berechneTurspalt: Keine Berechnung von ÜB-Räumen"
 		} else {
+            // WAC-173: Existiert ein Durchgang? Ja, dann gesamte Berechnung nicht stattfinden, ÜB-Menge = 0 setzen
+            def durchgang = map.turen.findAll { it.turBezeichnung ==~ /.*Durchgang.*/ }?.size() ?: 0
+            if (durchgang) {
+                // TODO Nicht setzen, wenn Werte manuell geändert wurden (WAC-151)?
+                map.raumUberstromVolumenstrom = 0
+                return
+            }
 			def anzTurenOhneDichtung = map.turen.findAll { it.turDichtung == false }?.size() ?: 0
             def abziehenTurenOhneDichtung = 2500 * anzTurenOhneDichtung
 			def summeTurBreiten = map.turen.sum { it.turBreite.toDouble2() }
             if (DEBUG) println "berechneTurspalt: anzTurenOhneDichtung=${anzTurenOhneDichtung} summeTurBreiten=${summeTurBreiten}"
 			map.turen.findAll { it.turBreite > 0 }?.each {
-				// Existiert ein Durchgang? Ja, überspringen
-				if (it.turBezeichnung ==~ /.*Durchgang.*/) return
                 try {
                     // Zuerst Überströmventile berechnen!
                     if (DEBUG) println "berechneTurspalt: map.raumUberstromVolumenstrom=${map.raumUberstromVolumenstrom}"
