@@ -619,10 +619,9 @@ class ProjektController {
 	/**
 	 * Raumdarten - ein Raum wurde geändert.
 	 */
-	def raumGeandert = { raumIndex ->
-        // WAC-174
-        if (!raumIndex) raumIndex = view.raumTabelle.selectedRow
-        /*if (DEBUG) println*/ "raumGeandert: raum[${raumIndex}]"
+	def raumGeandert = { Integer raumIndex ->
+        // WAC-174 (raumIndex kann == 0 sein!)
+        if (raumIndex < 0) raumIndex = view.raumTabelle.selectedRow
         if (DEBUG) println "raumGeandert: raum[${raumIndex}]"
         if (raumIndex > -1) {
             if (DEBUG) println "raumGeandert: raum[${raumIndex}] ${model.map.raum.raume[raumIndex]}"
