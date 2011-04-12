@@ -222,21 +222,21 @@
 		</exec>
 	</target>
 
-    <!--
+	<!--
     
        Run WAC in debug mode.
     
     -->
-    <target name="debug" depends="compile">
-        <property environment="env" />
-        <exec dir="." executable="bash">
-            <env key="GROOVY_HOME" value="${groovy.home}" />
-            <env key="GRIFFON_HOME" value="${griffon.home}" />
-            <env key="PATH" path="${GRIFFON_HOME}/bin:${GROOVY_HOME}/bin:${env.PATH}" />
-            <arg value="${griffon.home}/bin/griffon" />
-            <arg value="run-app" />
-            <arg value="-debug" />
-        </exec>
-    </target>
-	
+	<target name="debug" depends="compile">
+		<property environment="env" />
+		<exec dir="." executable="bash">
+			<env key="GROOVY_HOME" value="${groovy.home}" />
+			<env key="GRIFFON_HOME" value="${griffon.home}" />
+			<env key="PATH" path="${GRIFFON_HOME}/bin:${GROOVY_HOME}/bin:${env.PATH}" />
+			<arg value="${griffon.home}/bin/griffon" />
+			<arg value="run-app" />
+			<arg value="-debug" />
+		</exec>
+	</target>
+
 </project>
