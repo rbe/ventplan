@@ -608,8 +608,9 @@ class ProjektController {
 	 * Raumdarten - ein Raum wurde geändert.
 	 */
 	def raumGeandert = { raumIndex ->
-        assert raumIndex != null
-        if (DEBUG) println "raumGeandert: raum[${raumIndex}]"
+        // WAC-174
+        if (!raumIndex) raumIndex = view.raumTabelle.selectedRow
+        /*if (DEBUG) println*/ "raumGeandert: raum[${raumIndex}]"
         if (raumIndex > -1) {
             if (DEBUG) println "raumGeandert: raum[${raumIndex}] ${model.map.raum.raume[raumIndex]}"
             // Diesen Raum in allen Tabellen anwählen
@@ -804,7 +805,9 @@ class ProjektController {
 	 * Raum bearbeiten - Daten eingegeben. Mit raumBearbeitenSchliessen zusammenlegen?
 	 */
 	def raumBearbeitenGeandert = { evt = null ->
-        def raumIndex = view.raumTabelle.selectedRow
+        // WAC-174: Immer Raum Index/Position aus Metadaten nehmen
+        //def raumIndex = view.raumTabelle.selectedRow
+        def raumIndex = model.meta.gewahlterRaum.position
         // Daten aus Dialog übertragen und neu berechnen
         doLater {
             def m = model.map.raum.raume[raumIndex]
@@ -845,8 +848,12 @@ class ProjektController {
 	 * Berechne Türen eines bestimmten Raumes.
 	 */
 	def berechneTuren = { evt = null, raumIndex = null ->
+        println "WAC-174: berechneTuren: evt=${evt?.dump()} raumIndex=${raumIndex?.dump()}"
 		// Hole gewählten Raum
-		def raum = model.map.raum.raume[raumIndex ?: view.raumTabelle.selectedRow]
+        if (!raumIndex) raumIndex = view.raumTabelle.selectedRow
+        println "WAC-174: berechneTuren: raumIndex=${raumIndex?.dump()}"
+		def raum = model.map.raum.raume[raumIndex]
+        println "WAC-174: berechneTuren: raum=${raum?.dump()}"
 		// Türen berechnen?
 		if (raum.turen.findAll { it.turBreite > 0 }?.size() > 0 && raum.raumUberstromVolumenstrom) {
 			wacCalculationService.berechneTurspalt(raum)
@@ -873,14 +880,17 @@ class ProjektController {
     def raumBearbeitenTurEntfernen = { evt = null ->
         if (DEBUG) println "raumBearbeitenTurEntfernen: view.raumBearbeitenTurenTabelle.selectedRow -> ${view.raumBearbeitenTurenTabelle.selectedRow}"
         def turenIndex = view.raumBearbeitenTurenTabelle.selectedRow
+        def raumIndex = model.meta.gewahlterRaum.position
         try {
-            def rowIndex = model.meta.gewahlterRaum.position
-            def raum = model.map.raum.raume[rowIndex]
+            def raum = model.map.raum.raume[raumIndex]
             raum.turen[turenIndex] = [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
             if (DEBUG) println "raumBearbeitenTurEntfernen: ${raum}"
         } catch (e) {}
+        // WAC-174: resyncTableModels ist notwendig, selectedRow wird auf 0 gesetzt, daher selectedRow setzen
         model.resyncRaumTableModels()
-        berechneTuren()
+        view.raumTabelle.changeSelection(model.meta.gewahlterRaum.position, 0, false, false) 
+        // WAC-174: Parameter fehlten!
+        berechneTuren(null, raumIndex)
     }
 	
 	/**

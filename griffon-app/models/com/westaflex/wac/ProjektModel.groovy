@@ -494,7 +494,7 @@ class ProjektModel {
 						try {
 							object."${propertyNames[columnIndex]}"?.toString2()
 						} catch (e) {
-							println "gltmClosureCheckbox, getColumnValue: ${e}: ${object?.dump()}"
+							println "WAC-174: gltmClosureCheckbox, getColumnValue: ${e}: object=${object}"
 							object?.toString()
 						}
 					}
