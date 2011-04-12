@@ -892,8 +892,7 @@ class ProjektController {
         // WAC-165: Bugfix: Werte in der Türen-Tabelle werden erst dann aktualisiert, wenn die Maus über einzelne Zeilen bewegt wird
         try {
             view.raumBearbeitenTurenTabelle.repaint()
-        }
-        catch (e) {}
+        } catch (e) {}
 	}
 
     /**
