@@ -205,7 +205,9 @@
 			<zipfileset dir="${usbstick.mac.dir}/wac" includes="**" excludes="wac" prefix="wac" />
 			<zipfileset dir="${usbstick.linux.dir}/wac" includes="wac" prefix="wac" filemode="555" />
 		</zip>
-		<antcall target="clean" />
+		<!--antcall target="clean"/-->
+	</target>
+
 	<!--
 	
 	   Run WAC.
