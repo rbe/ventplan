@@ -816,39 +816,40 @@ class ProjektController {
         //def raumIndex = view.raumTabelle.selectedRow
         def raumIndex = model.meta.gewahlterRaum.position
         // Daten aus Dialog übertragen und neu berechnen
-        doLater {
-            def m = model.map.raum.raume[raumIndex]
-            model.meta.gewahlterRaum.raumNummer =
-                m.raumNummer =
-                view.raumBearbeitenRaumnummer.text
-            model.meta.gewahlterRaum.raumBezeichnung =
-                m.raumBezeichnung =
-                view.raumBearbeitenBezeichnung.text
-            model.meta.gewahlterRaum.raumZuluftfaktor =
-                m.raumZuluftfaktor =
-                view.raumBearbeitenLuftartFaktorZuluftverteilung.text?.toDouble2()
-            model.meta.gewahlterRaum.raumAbluftVolumenstrom =
-                m.raumAbluftVolumenstrom =
-                view.raumBearbeitenLuftartAbluftVs.text?.toDouble2()
-            model.meta.gewahlterRaum.raumMaxTurspaltHohe =
-                m.raumMaxTurspaltHohe =
-                view.raumBearbeitenDetailsTurspalthohe.text?.toDouble2()
-            model.meta.gewahlterRaum.raumLange =
-                m.raumLange =
-                view.raumBearbeitenOptionalRaumlange.text?.toDouble2()
-            model.meta.gewahlterRaum.raumBreite =
-                m.raumBreite =
-                view.raumBearbeitenOptionalRaumbreite.text?.toDouble2()
-            model.meta.gewahlterRaum.raumHohe =
-                m.raumHohe =
-                view.raumBearbeitenOptionalRaumhohe.text?.toDouble2()
-            // Raum neu berechnen
-            raumGeandert(raumIndex)
-            // Daten aus Model in den Dialog übertragen
-            model.meta.gewahlterRaum.raumFlache = m.raumFlache
-            model.meta.gewahlterRaum.raumVolumen = m.raumVolumen
-            model.meta.gewahlterRaum.raumNummer = m.raumNummer
-        }
+        def m = model.map.raum.raume[raumIndex]
+        model.meta.gewahlterRaum.raumNummer =
+            m.raumNummer =
+            view.raumBearbeitenRaumnummer.text
+        model.meta.gewahlterRaum.raumBezeichnung =
+            m.raumBezeichnung =
+            view.raumBearbeitenBezeichnung.text
+        model.meta.gewahlterRaum.raumGeschoss =
+            m.raumGeschoss =
+            view.raumBearbeitenRaumGeschoss.selectedItem
+        model.meta.gewahlterRaum.raumZuluftfaktor =
+            m.raumZuluftfaktor =
+            view.raumBearbeitenLuftartFaktorZuluftverteilung.text?.toDouble2()
+        model.meta.gewahlterRaum.raumAbluftVolumenstrom =
+            m.raumAbluftVolumenstrom =
+            view.raumBearbeitenLuftartAbluftVs.text?.toDouble2()
+        model.meta.gewahlterRaum.raumMaxTurspaltHohe =
+            m.raumMaxTurspaltHohe =
+            view.raumBearbeitenDetailsTurspalthohe.text?.toDouble2()
+        model.meta.gewahlterRaum.raumLange =
+            m.raumLange =
+            view.raumBearbeitenOptionalRaumlange.text?.toDouble2()
+        model.meta.gewahlterRaum.raumBreite =
+            m.raumBreite =
+            view.raumBearbeitenOptionalRaumbreite.text?.toDouble2()
+        model.meta.gewahlterRaum.raumHohe =
+            m.raumHohe =
+            view.raumBearbeitenOptionalRaumhohe.text?.toDouble2()
+        // Raum neu berechnen
+        raumGeandert(raumIndex)
+        // Daten aus Model in den Dialog übertragen
+        model.meta.gewahlterRaum.raumFlache = m.raumFlache
+        model.meta.gewahlterRaum.raumVolumen = m.raumVolumen
+        model.meta.gewahlterRaum.raumNummer = m.raumNummer
 	}
 	
 	/**
