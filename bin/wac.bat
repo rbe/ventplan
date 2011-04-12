@@ -36,10 +36,11 @@ rem No OpenOffice running
 rem taskkill /f /im soffice* 1>nul 2>&1
 
 rem Update
-xcopy update\conf\* conf /e /c /i /f /r /y 1>wac.log 2>&1
-xcopy update\sql\* sql /e /c /i /f /r /y 1>wac.log 2>&1
-xcopy update\lib\* lib /e /c /i /f /r /y 1>wac.log 2>&1
-rmdir /s /q update 1>wac.log 2>&1
+xcopy update\conf\* conf /e /c /i /f /r /y 1>%TEMP%\wac.log 2>&1
+xcopy update\sql\* sql /e /c /i /f /r /y 1>>%TEMP%\wac.log 2>&1
+xcopy update\lib\* lib /e /c /i /f /r /y 1>>%TEMP%\wac.log 2>&1
+rmdir /s /q update 1>>%TEMP%\wac.log 2>&1
 
 rem Start
-java -cp "%CLASSPATH%" -Djava.library.path="%OOOL%" griffon.swing.SwingApplication 1>>wac.log 2>&1
+start javaw -cp "%CLASSPATH%" -Djava.library.path="%OOOL%" griffon.swing.SwingApplication 1>>%TEMP%\wac.log 2>&1
+stop
