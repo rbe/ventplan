@@ -193,7 +193,7 @@
 		<!-- Windows -->
 		<zip destfile="${usbstick.base.dir}/wac_${app.version}_win.zip" whenempty="fail">
 			<zipfileset dir="${usbstick.win.dir}/wac" includes="**" prefix="wac" />
-			<zipfileset dir="${usbstick.base.dir}/Windows" includes="**" prefix="Windows" />
+			<zipfileset dir="${usbstick.base.dir}/Windows" includes="**" prefix="wac/Windows" />
 		</zip>
 		<!-- Linux -->
 		<zip destfile="${usbstick.base.dir}/wac_${app.version}_linux.zip" whenempty="fail">
