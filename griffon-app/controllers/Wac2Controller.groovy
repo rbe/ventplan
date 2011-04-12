@@ -357,7 +357,7 @@ class Wac2Controller {
                     //
                     try {
                         ///println "calling berechneAlles()"
-                        mvc.controller.berechneAlles()
+                        mvc.controller.berechneAlles(true)
                     } catch (e) {}
                     //
                     model.statusProgressBarIndeterminate = false

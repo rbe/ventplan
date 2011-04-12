@@ -269,9 +269,8 @@ class ProjektController {
     /**
      * Alles neu berechnen.
      */
-    def berechneAlles = {
-        loadMode = true
-        println "berechneAlles"
+    def berechneAlles = { loadMode = false ->
+        this.loadMode = loadMode
         if (DEBUG) println "berechneAlles: loadMode=${loadMode}"
         // Anlagendaten - Kennzeichen
         berechneEnergieKennzeichen()
@@ -279,16 +278,15 @@ class ProjektController {
         berechneKennzeichenLuftungsanlage()
         // Projekt wird geladen, Räume: Türen-TableModels hinzufügen
         if (loadMode) {
-        // Räume; ConcurrentModificationException!
-        def raume = model.map.raum.raume.clone()
-        // Jedem Raum ein TableModel für Türen hinzufügen
-        raume.each { raum ->
-            model.addRaumTurenModel()
-        }
+            // Räume; ConcurrentModificationException!
+            def raume = model.map.raum.raume.clone()
+            // Jedem Raum ein TableModel für Türen hinzufügen
+            raume.each { raum ->
+                model.addRaumTurenModel()
+            }
         }
         // Räume: set cell editors
-        model.setRaumEditors(view)
-        model.resyncRaumTableModels()
+        if (loadMode) model.setRaumEditors(view)
         try {
             model.resyncRaumTableModels()
         } catch (e) {
@@ -315,15 +313,16 @@ class ProjektController {
         // CellEditors, TableModels aktualisieren
         model.resyncDvbKanalnetzTableModels()
         model.resyncDvbVentileinstellungTableModels()
-        model.setDvbKanalnetzEditors(view)
-        model.setDvbVentileinstellungEditors(view)
+        if (loadMode) model.setDvbKanalnetzEditors(view)
+        if (loadMode) model.setDvbVentileinstellungEditors(view)
         // Akustik
         berechneAkustik("Zuluft")
         berechneAkustik("Abluft")
         // Dirty flag
         model.map.dirty = false
         setTabTitle()
-        loadMode = false
+        //
+        this.loadMode = false
     }
 
     /**
