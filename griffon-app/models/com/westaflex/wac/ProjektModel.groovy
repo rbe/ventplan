@@ -587,11 +587,8 @@ class ProjektModel {
             }
             // Call ProjektController
             app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position)
-            // Update TableModels, select row
-            def view = app.views[mvcId]
-            def selected = view.raumVsUberstromelementeTabelle.selectedRow
+            // Update TableModels
 			resyncRaumTableModels()
-            view.raumVsUberstromelementeTabelle.changeSelection(selected, 0, false, false)
 		}
 		gltmClosure(columnNames, propertyNames, writable, tableModels.raumeVsUberstromventile, postValueSet, checkRaum)
 	}
@@ -841,6 +838,9 @@ class ProjektModel {
 		}
 		*/
 		synchronized (tableModels) {
+            // Remember selected row
+            def view = app.views[mvcId]
+            def selected = view.raumTabelle.selectedRow
 			//println "-" * 80
 			//println "resyncRaumTableModels"
 			// Raumdaten
@@ -870,6 +870,8 @@ class ProjektModel {
 			// Quickfix: added null-safe-operator
 			tableModels.raumeBearbeiten?.addAll(map.raum.raume)
 			//println "-" * 80
+            // Select previously selected row
+            if (selected && selected > -1) view.raumTabelle.changeSelection(selected, 0, false, false)
 		}
 	}
 	
