@@ -357,7 +357,7 @@ class Wac2Controller {
                     //
                     try {
                         ///println "calling berechneAlles()"
-                        mvc.controller.berechneAlles()
+                        mvc.controller.berechneAlles(true)
                     } catch (e) {}
                     //
                     model.statusProgressBarIndeterminate = false
@@ -464,10 +464,8 @@ class Wac2Controller {
                 model.statusBarText = "Berechne..."
             }
             work {
-                // Flags setzen
-                mvc.model.map.anlage.zentralgeratManuell = false
                 // Neu berechnen
-                mvc.controller.berechneAlles()
+                mvc.controller.automatischeBerechnung()
             }
             onDone {
                 model.statusProgressBarIndeterminate = false

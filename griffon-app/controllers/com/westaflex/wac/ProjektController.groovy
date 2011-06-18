@@ -173,7 +173,9 @@ class ProjektController {
      * WAC-151: Perform automatic calculations of 'everything'.
      */
     def automatischeBerechnung = {
+        // Flags setzen
         model.map.anlage.zentralgeratManuell = false
+        // Neu berechnen
         berechneAlles()
     }
     
@@ -267,34 +269,43 @@ class ProjektController {
     /**
      * Alles neu berechnen.
      */
-    def berechneAlles = {
-        loadMode = true
-        println "berechneAlles"
+    def berechneAlles = { loadMode = false ->
+        this.loadMode = loadMode
+        if (DEBUG) println "berechneAlles: loadMode=${loadMode}"
         // Anlagendaten - Kennzeichen
         berechneEnergieKennzeichen()
         berechneHygieneKennzeichen()
         berechneKennzeichenLuftungsanlage()
         // Projekt wird geladen, Räume: Türen-TableModels hinzufügen
         if (loadMode) {
-        // Räume; ConcurrentModificationException!
-        def raume = model.map.raum.raume.clone()
-        // Jedem Raum ein TableModel für Türen hinzufügen
-        raume.each { raum ->
-            model.addRaumTurenModel()
-        }
+            // Räume; ConcurrentModificationException!
+            def raume = model.map.raum.raume.clone()
+            // Jedem Raum ein TableModel für Türen hinzufügen
+            raume.each { raum ->
+                model.addRaumTurenModel()
+            }
         }
         // Räume: set cell editors
-        model.setRaumEditors(view)
-        model.resyncRaumTableModels()
+        if (loadMode) model.setRaumEditors(view)
+        try {
+            model.resyncRaumTableModels()
+        } catch (e) {
+            println "berechneAlles: resyncRaumTableModels: ${e}"
+        }
         //
         model.map.raum.raume.each { raum ->
             if (DEBUG) println "berechneAlles: BERECHNE RAUM ${raum.position}"
-            raumGeandert(raum.position)
+            try {
+                raumGeandert(raum.position)
+            } catch (e) {
+                println "berechneAlles: ${raum.raumBezeichnung} ${e}"
+            }
         }
         model.resyncRaumTableModels()
         // Druckverlustberechnung
         // Kanalnetze berechnen
         model.map.dvb.kanalnetz.each {
+            if (DEBUG) println "berechneAlles: BERECHNE KANALNETZ ${it}"
             dvbKanalnetzGeandert(it.position)
         }
         // Ventile berechnen
@@ -302,15 +313,16 @@ class ProjektController {
         // CellEditors, TableModels aktualisieren
         model.resyncDvbKanalnetzTableModels()
         model.resyncDvbVentileinstellungTableModels()
-        model.setDvbKanalnetzEditors(view)
-        model.setDvbVentileinstellungEditors(view)
+        if (loadMode) model.setDvbKanalnetzEditors(view)
+        if (loadMode) model.setDvbVentileinstellungEditors(view)
         // Akustik
         berechneAkustik("Zuluft")
         berechneAkustik("Abluft")
         // Dirty flag
         model.map.dirty = false
         setTabTitle()
-        loadMode = false
+        //
+        this.loadMode = false
     }
 
     /**
@@ -607,10 +619,10 @@ class ProjektController {
 	/**
 	 * Raumdarten - ein Raum wurde geändert.
 	 */
-	def raumGeandert = { raumIndex ->
-        // WAC-174
-        if (!raumIndex) raumIndex = view.raumTabelle.selectedRow
-        /*if (DEBUG) println*/ "raumGeandert: raum[${raumIndex}]"
+	def raumGeandert = { Integer raumIndex ->
+        // WAC-174 (raumIndex kann == 0 sein!)
+        if (raumIndex < 0) raumIndex = view.raumTabelle.selectedRow
+        if (DEBUG) println "raumGeandert: raum[${raumIndex}]"
         if (raumIndex > -1) {
             if (DEBUG) println "raumGeandert: raum[${raumIndex}] ${model.map.raum.raume[raumIndex]}"
             // Diesen Raum in allen Tabellen anwählen
@@ -633,7 +645,7 @@ class ProjektController {
             // Überströmvolumenstrom
             // WAC-151
             if (!model.map.anlage.zentralgeratManuell) {
-                model.map.raum.raume[raumIndex]raumUberstromVolumenstrom = 0.0d
+                model.map.raum.raume[raumIndex].raumUberstromVolumenstrom = 0.0d
             }
             // Raumvolumenströme, (Werte abzgl. Infiltration werden zur Berechnung der Ventile benötigt) berechnen
             wacCalculationService.autoLuftmenge(model.map)
@@ -662,12 +674,11 @@ class ProjektController {
         }
         def raumeOhneUbElemente = []
         raumeOhneUbElemente = model.map.raum.raume.findAll { raum ->
-            println "WAC-171: Raum=${raum.raumBezeichnung}"
             def turSpalthoheUberschritten = raum.turen.findAll {
                 it.turSpalthohe > raum.raumMaxTurspaltHohe.toDouble2()
             }?.size() ?: 0
-            println "WAC-171: Raum=${raum.raumBezeichnung}, tuspalthoheUberschritten=${turSpalthoheUberschritten}"
-            println "WAC-171: ${raum.raumUberstromVolumenstrom > 0} && ${turSpalthoheUberschritten > 0} && ${!raum.raumUberstromElement}"
+            if (DEBUG) println "WAC-171: Raum=${raum.raumBezeichnung}, tuspalthoheUberschritten=${turSpalthoheUberschritten}"
+            if (DEBUG) println "WAC-171: ${raum.raumUberstromVolumenstrom > 0} && ${turSpalthoheUberschritten > 0} && ${!raum.raumUberstromElement}"
             raum.raumUberstromVolumenstrom > 0 && turSpalthoheUberschritten > 0 /*&& !raum.raumUberstromElement*/
         }
         model.map.raum.raumVs.turenHinweis = raumeOhneTuren.size() > 0 ?
@@ -881,8 +892,7 @@ class ProjektController {
         // WAC-165: Bugfix: Werte in der Türen-Tabelle werden erst dann aktualisiert, wenn die Maus über einzelne Zeilen bewegt wird
         try {
             view.raumBearbeitenTurenTabelle.repaint()
-        }
-        catch (e) {}
+        } catch (e) {}
 	}
 
     /**
@@ -990,9 +1000,9 @@ class ProjektController {
 //		doLater {
 			// Merken, dass das Zentralgerät manuell ausgewählt wurde
 			// -> keine automatische Auswahl des Zentralgeräts mehr durchführen
-            /*if (DEBUG)*/ println "zentralgeratManuellGewahlt: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
+            if (DEBUG) println "zentralgeratManuellGewahlt: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
 			model.map.anlage.zentralgeratManuell = true
-            /*if (DEBUG)*/ println "zentralgeratManuellGewahlt: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
+            if (DEBUG) println "zentralgeratManuellGewahlt: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
 			// Zentralgerät aus View in Model übernehmen
 			model.map.anlage.zentralgerat = view.raumVsZentralgerat.selectedItem
 			// Hole Volumenströme des Zentralgeräts
@@ -1009,7 +1019,7 @@ class ProjektController {
 	 * Aktualisiere Zentralgerät und Volumenstrom in allen Comboboxen
 	 */
 	def zentralgeratAktualisieren = {
-        /*if (DEBUG)*/ println "zentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
+        if (DEBUG) println "zentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
 		doLater {
 			/*
 			// Füge Volumenströme des aktuellen Zentralgeräts in Combobox hinzu
@@ -1088,7 +1098,7 @@ class ProjektController {
 	 */
 	def onZentralgeratAktualisieren = {
 //		doLater {
-			/*if (DEBUG)*/ println "onZentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
+			if (DEBUG) println "onZentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
 			if (!model.map.anlage.zentralgeratManuell) {
 				// Berechne Zentralgerät und Volumenstrom
 				def (zentralgerat, nl) = wacCalculationService.berechneZentralgerat(model.map)
@@ -1106,9 +1116,9 @@ class ProjektController {
 	def volumenstromZentralgeratManuellGewahlt = {
         // Merken, dass das Zentralgerät manuell ausgewählt wurde
         // -> keine automatische Auswahl des Zentralgeräts mehr durchführen
-        /*if (DEBUG)*/ println "zentralgeratManuellGewahlt: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
+        if (DEBUG) println "zentralgeratManuellGewahlt: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
         model.map.anlage.zentralgeratManuell = true
-        /*if (DEBUG)*/ println "zentralgeratManuellGewahlt: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
+        if (DEBUG) println "zentralgeratManuellGewahlt: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
 		// Aus der View im Projekt-Model speichern
 		model.map.anlage.volumenstromZentralgerat = view.raumVsVolumenstrom.selectedItem?.toInteger()
 		zentralgeratAktualisieren()

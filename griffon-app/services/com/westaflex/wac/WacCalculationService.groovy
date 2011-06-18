@@ -573,6 +573,7 @@ class WacCalculationService {
 	 * @param map One of map.raum.raume
 	 */
 	def berechneZuAbluftventile(map) {
+        if (DEBUG) println "berechneZuAbluftventile: ${map.raumBezeichnung}"
 		if (map.raumLuftart in ["ZU", "ZU/AB"]) {
 			def ventil = map.raumBezeichnungZuluftventile
             if (DEBUG) println "berechneZuAbluftventile: ${map.raumBezeichnung}: raumBezeichnungZuluftventile=${ventil}"

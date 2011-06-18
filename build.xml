@@ -193,19 +193,52 @@
 		<!-- Windows -->
 		<zip destfile="${usbstick.base.dir}/wac_${app.version}_win.zip" whenempty="fail">
 			<zipfileset dir="${usbstick.win.dir}/wac" includes="**" prefix="wac" />
-			<zipfileset dir="${usbstick.base.dir}/Windows" includes="**" prefix="Windows" />
+			<zipfileset dir="${usbstick.base.dir}/Windows" includes="**" prefix="wac/Windows" />
 		</zip>
 		<!-- Linux -->
 		<zip destfile="${usbstick.base.dir}/wac_${app.version}_linux.zip" whenempty="fail">
-			<zipfileset dir="${usbstick.linux.dir}/wac" includes="**" prefix="wac" />
+			<zipfileset dir="${usbstick.linux.dir}/wac" includes="**" excludes="wac" prefix="wac" />
 			<zipfileset dir="${usbstick.linux.dir}/wac" includes="wac" prefix="wac" filemode="555" />
 		</zip>
 		<!-- Mac -->
 		<zip destfile="${usbstick.base.dir}/wac_${app.version}_mac.zip" whenempty="fail">
-			<zipfileset dir="${usbstick.mac.dir}/wac" includes="**" prefix="wac" />
+			<zipfileset dir="${usbstick.mac.dir}/wac" includes="**" excludes="wac" prefix="wac" />
 			<zipfileset dir="${usbstick.linux.dir}/wac" includes="wac" prefix="wac" filemode="555" />
 		</zip>
-		<antcall target="clean" />
+		<!--antcall target="clean"/-->
+	</target>
+
+	<!--
+	
+	   Run WAC.
+	
+	-->
+	<target name="run" depends="compile">
+		<property environment="env" />
+		<exec dir="." executable="bash">
+			<env key="GROOVY_HOME" value="${groovy.home}" />
+			<env key="GRIFFON_HOME" value="${griffon.home}" />
+			<env key="PATH" path="${GRIFFON_HOME}/bin:${GROOVY_HOME}/bin:${env.PATH}" />
+			<arg value="${griffon.home}/bin/griffon" />
+			<arg value="run-app" />
+		</exec>
+	</target>
+
+	<!--
+    
+       Run WAC in debug mode.
+    
+    -->
+	<target name="debug" depends="compile">
+		<property environment="env" />
+		<exec dir="." executable="bash">
+			<env key="GROOVY_HOME" value="${groovy.home}" />
+			<env key="GRIFFON_HOME" value="${griffon.home}" />
+			<env key="PATH" path="${GRIFFON_HOME}/bin:${GROOVY_HOME}/bin:${env.PATH}" />
+			<arg value="${griffon.home}/bin/griffon" />
+			<arg value="run-app" />
+			<arg value="-debug" />
+		</exec>
 	</target>
 
 </project>
