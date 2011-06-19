@@ -27,6 +27,9 @@ menuBar = menuBar {
 //        separator()
 //        menuItem(automatischeBerechnungAction)
 		/* Später aktivieren, Angebote sind noch nicht verfügbar! menuItem(druckenAction)*/
+        // WAC-177: Angebotsverfolgung
+        separator()
+        menuItem(angebotsverfolgungAction)
 //		if (!isMacOSX) {
 			separator()
 			menuItem(exitAction)
