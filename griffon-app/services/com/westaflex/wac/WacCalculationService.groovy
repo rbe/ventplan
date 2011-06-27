@@ -420,7 +420,7 @@ class WacCalculationService {
 		// Überströmvolumenstrom = Vorschlag: Raumvolumenstrom
         // WAC-151
         if (!map.anlage.zentralgeratManuell) {
-            println "WAC-151: Errechne Überströmvolumenstrom"
+            if (DEBUG) println "WAC-151: Errechne Überströmvolumenstrom"
             map.raum.raume.each {
                 // WAC-151: Wegen manueller Änderung nur vorschlagen, wenn kein Wert vorhanden ist
                 if (!it.raumUberstromVolumenstrom || it.raumUberstromVolumenstrom == 0) {

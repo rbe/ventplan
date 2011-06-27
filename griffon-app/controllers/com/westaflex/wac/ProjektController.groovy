@@ -870,12 +870,12 @@ class ProjektController {
 	 * Berechne Türen eines bestimmten Raumes.
 	 */
 	def berechneTuren = { evt = null, raumIndex = null ->
-        println "WAC-174: berechneTuren: evt=${evt?.dump()} raumIndex=${raumIndex?.dump()}"
+        if (DEBUG) println "WAC-174: berechneTuren: evt=${evt?.dump()} raumIndex=${raumIndex?.dump()}"
 		// Hole gewählten Raum
         if (!raumIndex) raumIndex = view.raumTabelle.selectedRow
-        println "WAC-174: berechneTuren: raumIndex=${raumIndex?.dump()}"
+        if (DEBUG) println "WAC-174: berechneTuren: raumIndex=${raumIndex?.dump()}"
 		def raum = model.map.raum.raume[raumIndex]
-        println "WAC-174: berechneTuren: raum=${raum?.dump()}"
+        if (DEBUG) println "WAC-174: berechneTuren: raum=${raum?.dump()}"
 		// Türen berechnen?
 		if (raum.turen.findAll { it.turBreite > 0 }?.size() > 0 && raum.raumUberstromVolumenstrom) {
 			wacCalculationService.berechneTurspalt(raum)

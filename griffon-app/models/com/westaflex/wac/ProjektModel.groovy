@@ -494,7 +494,7 @@ class ProjektModel {
 						try {
 							object."${propertyNames[columnIndex]}"?.toString2()
 						} catch (e) {
-							println "WAC-174: gltmClosureCheckbox, getColumnValue: ${e}: object=${object}"
+							if (DEBUG) println "WAC-174: gltmClosureCheckbox, getColumnValue: ${e}: object=${object}"
 							object?.toString()
 						}
 					}
@@ -581,7 +581,7 @@ class ProjektModel {
 		def writable      = [true,              true,          false,                        true,                          true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			// WAC-151: zentralgeratManuell = true setzen, wenn Überströmvolumenstrom geändert wurde
-            println "WAC-151: propertyNames[${columnIndex}]=${propertyNames[columnIndex]}"
+            if (DEBUG) println "WAC-151: propertyNames[${columnIndex}]=${propertyNames[columnIndex]}"
             if (propertyNames[columnIndex] == "raumUberstromVolumenstrom") {
                 app.models[mvcId].map.anlage.zentralgeratManuell = true
             }

@@ -53,15 +53,12 @@ class Wac2Resource {
 	 */
 	def static getWiderstandURL = { n ->
         def r
-        try
-        {
+        try {
             // dev
             r = Wac2Resource.class.getResource("../resources/widerstand/${n}.jpg")
             // prod
             if (!r) r = Wac2Resource.class.getResource("/widerstand/${n}.jpg")
-        }
-        catch (NullPointerException e)
-        { 
+        } catch (NullPointerException e) { 
             r = ""
         }
         r
