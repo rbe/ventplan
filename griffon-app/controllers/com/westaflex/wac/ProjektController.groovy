@@ -56,8 +56,8 @@ class ProjektController {
 		//GH.addMapPropertyChangeListener("meta", model.meta)
 		// Add PropertyChangeListener to our model.map
 		GH.addMapPropertyChangeListener("map", model.map, { evt ->
-                // Nur ausführen, wenn Projekt nicht gerade geladen wird
-                if (!loadMode) {
+            // Nur ausführen, wenn Projekt nicht gerade geladen wird
+            if (!loadMode) {
 				// Show dialog only when property changes
 				if (evt.propertyName == "ltm") {
 					ltmErforderlichDialog()
@@ -75,8 +75,8 @@ class ProjektController {
                         ////println "popertyChangeListener: calling setTabTitle: ${evt.propertyName}"
 					setTabTitle()
 				}
-                }
-			})
+            }
+        })
 	}
 	
 	/**
@@ -613,6 +613,8 @@ class ProjektController {
             raumGeandert(model.map.raum.raume.size() - 1)
             // WAC-170: abw. Raumbezeichnung leeren
             view.raumBezeichnung.text = ""
+            // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
+            berechneAlles()
 		}
 	}
 	
@@ -699,6 +701,8 @@ class ProjektController {
         model.removeRaum(view.raumTabelle.selectedRow, view)
         // Es hat sich was geändert...
         raumGeandert(view.raumTabelle.selectedRow)
+        // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
+        berechneAlles()
 	}
 	
 	/**
@@ -747,6 +751,8 @@ class ProjektController {
 			model.addRaum(newMap, view, true)
 			// Raum hinzugefügt
             raumGeandert(newMap.position)
+            // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
+            berechneAlles()
 		}
 	}
 	

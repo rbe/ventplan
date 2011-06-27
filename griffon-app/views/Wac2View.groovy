@@ -21,6 +21,18 @@ wpxFileChooserWindow = fileChooser(
 				} ] as javax.swing.filechooser.FileFilter
 	)
 
+// WAC-177: Angebotsverfolgung
+angebotsverfolgungChooserWindow = fileChooser(
+		dialogTitle: "Bitte wählen Sie eine WPX-Datei oder Verzeichnis mit WPX-Dateien aus",
+		multiSelectionEnabled: true,
+		fileFilter: [
+				getDescription: { -> "WestaWAC Projekt XML" },
+				accept: { file ->
+					//println "wpxFileChooser: filtering ${file.dump()} isDirectory=${file.isDirectory()} endsWith(wpx)=${file.name.endsWith(".wpx")}"
+					return file.isDirectory() || file.name.toLowerCase().endsWith(".wpx")
+				} ] as javax.swing.filechooser.FileFilter
+	)
+
 wac2Frame = application(title: 'WestaWAC 2',
 	size: [screen.width as int, screen.height as int],
 	pack: false,

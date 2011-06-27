@@ -103,18 +103,18 @@ class Wac2Controller {
             if (DEBUG) println "exitApplication: choice=${choice}"
             switch (choice) {
                 case 0:
-                    if (DEBUG) println "Alles speichern"
-                    alleProjekteSpeichern(evt)
-                    _shutdown()
-                    break
+                	if (DEBUG) println "Alles speichern"
+                	alleProjekteSpeichern(evt)
+                	_shutdown()
+                	break
                 case 1: // Cancel: do nothing...
-                    if (DEBUG) println "Abbrechen..."
-                    app.shutdown()
-                    break
+                	if (DEBUG) println "Abbrechen..."
+                	app.shutdown()
+                	break
                 case 2:
-                    if (DEBUG) println "Schliessen"
-                    _shutdown()
-                    break
+                	if (DEBUG) println "Schliessen"
+                	_shutdown()
+                	break
             }
         }
         mruFileManager.save()
@@ -138,7 +138,7 @@ class Wac2Controller {
      * 
      */
     def generateMVCId = {
-    def c = Wac2Controller.projektCounter++
+        def c = Wac2Controller.projektCounter++
         "Projekt ${c.toString()}" as String
     }
 	
@@ -161,8 +161,8 @@ class Wac2Controller {
                 model.statusBarText = "Phase 2/3: Initialisiere das Projekt..."
                 String mvcId = generateMVCId()
                 def (m, v, c) =
-                    createMVCGroup("Projekt", mvcId,
-                                    [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+                createMVCGroup("Projekt", mvcId,
+                    			[projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
                 model.statusBarText = "Phase 3/3: Erstelle Benutzeroberfläche für das Projekt..."
                 doLater {
                     // MVC ID zur Liste der Projekte hinzufügen
@@ -212,9 +212,9 @@ class Wac2Controller {
         }
         /*
         else {
-                if (DEBUG) println "projektAktivieren: no change"
+        	if (DEBUG) println "projektAktivieren: no change"
         }
-        */
+         */
     }
 
     /**
@@ -222,15 +222,15 @@ class Wac2Controller {
      */
     def projektIndexAktivieren = { index ->
         if (index > -1) {
-                //if (DEBUG) println "projektIndexAktivieren: model.projekte=${model.projekte.dump()}"
-                projektAktivieren(model.projekte[index])
-                //if (DEBUG) println "projektIndexAktivieren: index=${index} -> ${model.aktivesProjekt}"
+            //if (DEBUG) println "projektIndexAktivieren: model.projekte=${model.projekte.dump()}"
+            projektAktivieren(model.projekte[index])
+            //if (DEBUG) println "projektIndexAktivieren: index=${index} -> ${model.aktivesProjekt}"
         }
         /*
         else {
-                if (DEBUG) println "projektIndexAktivieren: index=${index}: Kein Projekt vorhanden!"
+        if (DEBUG) println "projektIndexAktivieren: index=${index}: Kein Projekt vorhanden!"
         }
-        */
+         */
     }
 
     /**
@@ -265,17 +265,17 @@ class Wac2Controller {
             if (DEBUG) println "projektSchliessen: choice=${choice}"
             switch (choice) {
                 case 0: // Save: save and close project
-                    if (DEBUG) println "projektSchliessen: save and close"
-                    aktivesProjektSpeichern(evt)
-                    clacpr(mvc)
-                    break
+                	if (DEBUG) println "projektSchliessen: save and close"
+                	aktivesProjektSpeichern(evt)
+                	clacpr(mvc)
+                	break
                 case 1: // Cancel: do nothing...
-                    if (DEBUG) println "projektSchliessen: cancel"
-                    break
+                	if (DEBUG) println "projektSchliessen: cancel"
+                	break
                 case 2: // Close: just close the tab...
-                    if (DEBUG) println "projektSchliessen: close without save"
-                    clacpr(mvc)
-                    break
+                	if (DEBUG) println "projektSchliessen: close without save"
+               		clacpr(mvc)
+                	break
             }
         } else {
             if (DEBUG) println "projektSchliessen: else... close!!"
@@ -306,65 +306,65 @@ class Wac2Controller {
     }
     
     def projektOffnenClosure = { file ->
-            jxwithWorker(start: true) {
-                // initialize the worker
-                onInit {
-                    model.statusProgressBarIndeterminate = true
-                    model.statusBarText = "Phase 1/3: Projektdatei wählen..."
-                }
-                // do the task
-                work {
-                    // Add file to MRU list
-                    addRecentlyOpenedFile(file)
-                    // ... and reset it in FileChooser
-                    view.wpxFileChooserWindow.selectedFile = null
-                    if (DEBUG) println "projektOffnen: file=${file?.dump()}"
-                    // Load data; start thread
-                    model.statusBarText = "Phase 2/3: Lade Daten..."
-                    def projektModel, projektView, projektController
-                    // May return null due to org.xml.sax.SAXParseException while validating against XSD
-                    def document = projektModelService.load(file)
-                    if (document) {
-                        //if (DEBUG) println "projektOffnen: document=${document?.dump()}"
-                        // Create new Projekt MVC group
-                        String mvcId = generateMVCId()
-                        (projektModel, projektView, projektController) =
-                            createMVCGroup("Projekt", mvcId,
-                                            [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
-                        // Set filename in model
-                        projektModel.wpxFilename = file
-                        // Convert loaded XML into map
-                        def map = projektModelService.toMap(document)
-                        // Recursively copy map to model
-                        // ATTENTION: DOES NOT fire bindings and events asynchronously/in background!
-                        // They are fired after leaving this method.
-                        GH.deepCopyMap projektModel.map, map
-                        //println "projektOffnen: projektModel.map=${projektModel.map}"
-                        // MVC ID zur Liste der Projekte hinzufügen
-                        model.projekte << mvcId
-                        // Projekt aktivieren
-                        projektAktivieren(mvcId)
-                    } else {
-                        def errorMsg = "projektOffnen: Konnte Projekt nicht öffnen!"
-                        app.controllers["Dialog"].showErrorDialog(errorMsg as String)
-                        if (DEBUG) println errorMsg
-                    }
-                }
-                // do sth. when the task is done.
-                onDone {
-                    def mvc = getMVCGroupAktivesProjekt()
-                    model.statusBarText = "Phase 3/3: Berechne Projekt..."
-                    //
-                    try {
-                        ///println "calling berechneAlles()"
-                        mvc.controller.berechneAlles(true)
-                    } catch (e) {}
-                    //
-                    model.statusProgressBarIndeterminate = false
-                    model.statusBarText = "Bereit."
+        jxwithWorker(start: true) {
+            // initialize the worker
+            onInit {
+                model.statusProgressBarIndeterminate = true
+                model.statusBarText = "Phase 1/3: Projektdatei wählen..."
+            }
+            // do the task
+            work {
+                // Add file to MRU list
+                addRecentlyOpenedFile(file)
+                // ... and reset it in FileChooser
+                view.wpxFileChooserWindow.selectedFile = null
+                if (DEBUG) println "projektOffnen: file=${file?.dump()}"
+                // Load data; start thread
+                model.statusBarText = "Phase 2/3: Lade Daten..."
+                def projektModel, projektView, projektController
+                // May return null due to org.xml.sax.SAXParseException while validating against XSD
+                def document = projektModelService.load(file)
+                if (document) {
+                    //if (DEBUG) println "projektOffnen: document=${document?.dump()}"
+                    // Create new Projekt MVC group
+                    String mvcId = generateMVCId()
+                    (projektModel, projektView, projektController) =
+                    createMVCGroup("Projekt", mvcId,
+                        [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+                    // Set filename in model
+                    projektModel.wpxFilename = file
+                    // Convert loaded XML into map
+                    def map = projektModelService.toMap(document)
+                    // Recursively copy map to model
+                    // ATTENTION: DOES NOT fire bindings and events asynchronously/in background!
+                    // They are fired after leaving this method.
+                    GH.deepCopyMap projektModel.map, map
+                    //println "projektOffnen: projektModel.map=${projektModel.map}"
+                    // MVC ID zur Liste der Projekte hinzufügen
+                    model.projekte << mvcId
+                    // Projekt aktivieren
+                    projektAktivieren(mvcId)
+                } else {
+                    def errorMsg = "projektOffnen: Konnte Projekt nicht öffnen!"
+                    app.controllers["Dialog"].showErrorDialog(errorMsg as String)
+                    if (DEBUG) println errorMsg
                 }
             }
+            // do sth. when the task is done.
+            onDone {
+                def mvc = getMVCGroupAktivesProjekt()
+                model.statusBarText = "Phase 3/3: Berechne Projekt..."
+                //
+                try {
+                    ///println "calling berechneAlles()"
+                    mvc.controller.berechneAlles(true)
+                } catch (e) {}
+                //
+                model.statusProgressBarIndeterminate = false
+                model.statusBarText = "Bereit."
+            }
         }
+    }
 
     /**
      * Wird über action aufgerufen. Weiterleiten an projektSpeichern.
@@ -441,14 +441,14 @@ class Wac2Controller {
      * Seitenansicht öffnen.
      */
     def projektSeitenansicht = { evt = null ->
-            getMVCGroupAktivesProjekt().controller.seitenansicht()
+        getMVCGroupAktivesProjekt().controller.seitenansicht()
     }
 
     /**
      * Projekt drucken.
      */
     def projektDrucken = { evt = null ->
-            getMVCGroupAktivesProjekt().controller.drucken()
+        getMVCGroupAktivesProjekt().controller.drucken()
     }
 
     /**
@@ -512,14 +512,92 @@ class Wac2Controller {
                 if (DEBUG) println "buildRecentlyOpenedMenuItems -> f = ${f}".toString()
                 def newMenuItem = builder.menuItem(f)
                 newMenuItem.setAction(builder.action(
-                    id: "zuletztGeoffnetesProjektAction" as String,
-                    name: "${f}".toString(),
-                    enabled: true,
-                    closure: zuletztGeoffnetesProjekt
-                ))
+                        id: "zuletztGeoffnetesProjektAction" as String,
+                        name: "${f}".toString(),
+                        enabled: true,
+                        closure: zuletztGeoffnetesProjekt
+                    ))
                 view.recentlyOpenedMenu.add(newMenuItem)
             }
         }
+    }
+    
+    /**
+     * WAC-177: Angebotsverfolgung
+     */
+    def angebotsverfolgung = {
+        
+        def openResult = view.angebotsverfolgungChooserWindow.showOpenDialog(view.wac2Frame)
+        if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
+            def files = view.angebotsverfolgungChooserWindow.selectedFiles
+            angebotsverfolgungFilesClosure(files)
+        }
+    }
+    
+    def angebotsverfolgungFilesClosure = { files ->
+        jxwithWorker(start: true) {
+            // initialize the worker
+            onInit {
+                model.statusProgressBarIndeterminate = true
+                model.statusBarText = "WPX-Dateien werden hochgeladen..."
+            }
+            // do the task
+            work {
+                // ... and reset it in FileChooser
+                view.angebotsverfolgungChooserWindow.selectedFile = null
+                // check if files array is directory
+                if (files?.length > 0) {
+                    
+                    files.each {
+                        if (it.isDirectory()) {
+                            model.statusBarText = "Lade WPX-Dateien aus Verzeichnis ${$file.path} hoch..." as String
+                            
+                            // Dateien aus Verzeichnis holen und hochladen
+                            def listFiles = it.listFiles(fileFilter: [
+                                    getDescription: { -> "WestaWAC Projekt XML" },
+                                    accept: { file ->
+                                        return file.name.toLowerCase().endsWith(".wpx")
+                                    } ] as javax.swing.filechooser.FileFilter)
+                                        
+                            listFiles.each { f -> 
+                                model.statusBarText = "Lade WPX-Datei hoch..." as String
+                                postWpxFile(f)
+                            }
+                        }
+                        else {
+                            model.statusBarText = "Lade WPX-Datei hoch..." as String
+                            postWpxFile(it)
+                        }
+                    }
+                }
+            }
+            // do sth. when the task is done.
+            onDone {
+                def mvc = getMVCGroupAktivesProjekt()
+                model.statusBarText = "Alle WPX-Dateien hochgeladen..."
+                //
+                model.statusProgressBarIndeterminate = false
+                model.statusBarText = "Bereit."
+            }
+        }
+    }
+    
+    def postWpxFile = { f -> 
+        println "postWpxFile to webservice ${file.name}" as String
+        /*
+        doOutside {
+            try {
+                def result = withWs(wsdl: "http://localhost:8080/XcfTest/services/cxftest?wsdl") {
+                    uploadWpx(f?.text)
+                }
+                doLater {
+                    println "RESTful Webservice response is: ${result}" as String
+                }
+            } finally {
+                println "End of postWpxFile file ${f.name}..." as String
+            }
+        }
+        */
     }
 	
 }

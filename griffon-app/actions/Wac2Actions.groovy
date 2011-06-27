@@ -120,3 +120,13 @@ aboutAction = action(
         closure: controller.aboutDialogOeffnen
         )
 
+// WAC-177: Angebotsverfolgung
+angebotsverfolgungAction = action(
+    id: "angebotsverfolgungAction",
+    name: "Angebotsverfolgung",
+    mnemonic: "U",
+    accelerator: shortcut("U"),
+    enabled: true,
+    closure: controller.wpxDateienUpload
+)
+

@@ -56,7 +56,7 @@ panel(layout: new MigLayout("fill, wrap", "[fill, grow]", "[fill,grow]"), constr
             label("m³/h", constraints: "wrap")
         }
         panel(border: titledBorder("Außenluftvolumenstrom der LTM"), layout: new MigLayout("fill", "[grow]")) {
-            panel(layout: new MigLayout("fill, wrap 4", "[left] [right] [left] [left]"), constraints: "grow") {
+            panel(layout: new MigLayout("fill, wrap 4", "[left] 20 [right] [left] 20 [left]"), constraints: "grow") {
                 label("Feuchteschutz")
                 label(id: "raumVsAussenluftVsDerLtmFs", text: "0,00")
                 label("m³/h")
