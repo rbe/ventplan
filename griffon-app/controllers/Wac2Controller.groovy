@@ -529,12 +529,14 @@ class Wac2Controller {
         
         def openResult = view.angebotsverfolgungChooserWindow.showOpenDialog(view.wac2Frame)
         if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
+            println "openResult -> ${openResult}"
             def files = view.angebotsverfolgungChooserWindow.selectedFiles
             angebotsverfolgungFilesClosure(files)
         }
     }
     
     def angebotsverfolgungFilesClosure = { files ->
+        println "files -> ${files.dump()}"
         jxwithWorker(start: true) {
             // initialize the worker
             onInit {
@@ -543,14 +545,15 @@ class Wac2Controller {
             }
             // do the task
             work {
+                println "do the task"
                 // ... and reset it in FileChooser
                 view.angebotsverfolgungChooserWindow.selectedFile = null
                 // check if files array is directory
-                if (files?.length > 0) {
+                if (files?.class.isArray()) {
                     
                     files.each {
                         if (it.isDirectory()) {
-                            model.statusBarText = "Lade WPX-Dateien aus Verzeichnis ${$file.path} hoch..." as String
+                            model.statusBarText = "Lade WPX-Dateien aus Verzeichnis ${$it.path} hoch..." as String
                             
                             // Dateien aus Verzeichnis holen und hochladen
                             def listFiles = it.listFiles(fileFilter: [
@@ -570,6 +573,10 @@ class Wac2Controller {
                         }
                     }
                 }
+                else {
+                    model.statusBarText = "Lade WPX-Datei hoch..." as String
+                    postWpxFile(it)
+                }
             }
             // do sth. when the task is done.
             onDone {
@@ -583,11 +590,10 @@ class Wac2Controller {
     }
     
     def postWpxFile = { f -> 
-        println "postWpxFile to webservice ${file.name}" as String
-        /*
+        println "postWpxFile to webservice ${f.name}" as String
         doOutside {
             try {
-                def result = withWs(wsdl: "http://localhost:8080/XcfTest/services/cxftest?wsdl") {
+                def result = withWs(wsdl: "http://localhost:8080/wacws/services/WpxUploadService?wsdl") {
                     uploadWpx(f?.text)
                 }
                 doLater {
@@ -597,7 +603,6 @@ class Wac2Controller {
                 println "End of postWpxFile file ${f.name}..." as String
             }
         }
-        */
     }
 	
 }

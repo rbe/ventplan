@@ -32,3 +32,5 @@ root.'GsqlGriffonAddon'.addon=true
 
 
 root.'SpringGriffonAddon'.addon=true
+
+root.'WsclientGriffonAddon'.addon=true

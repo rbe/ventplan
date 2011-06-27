@@ -127,6 +127,6 @@ angebotsverfolgungAction = action(
     mnemonic: "U",
     accelerator: shortcut("U"),
     enabled: true,
-    closure: controller.wpxDateienUpload
+    closure: controller.angebotsverfolgung
 )
 
