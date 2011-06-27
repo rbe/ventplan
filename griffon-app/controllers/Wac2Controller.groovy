@@ -529,14 +529,12 @@ class Wac2Controller {
         
         def openResult = view.angebotsverfolgungChooserWindow.showOpenDialog(view.wac2Frame)
         if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
-            println "openResult -> ${openResult}"
-            def files = view.angebotsverfolgungChooserWindow.selectedFiles
+            def files = view.angebotsverfolgungChooserWindow.selectedFiles as java.io.File[]
             angebotsverfolgungFilesClosure(files)
         }
     }
     
     def angebotsverfolgungFilesClosure = { files ->
-        println "files -> ${files.dump()}"
         jxwithWorker(start: true) {
             // initialize the worker
             onInit {
@@ -545,35 +543,32 @@ class Wac2Controller {
             }
             // do the task
             work {
-                println "do the task"
                 // ... and reset it in FileChooser
                 view.angebotsverfolgungChooserWindow.selectedFile = null
                 // check if files array is directory
                 if (files?.class.isArray()) {
-                    
-                    files.each {
-                        if (it.isDirectory()) {
-                            model.statusBarText = "Lade WPX-Dateien aus Verzeichnis ${$it.path} hoch..." as String
-                            
-                            // Dateien aus Verzeichnis holen und hochladen
-                            def listFiles = it.listFiles(fileFilter: [
-                                    getDescription: { -> "WestaWAC Projekt XML" },
-                                    accept: { file ->
-                                        return file.name.toLowerCase().endsWith(".wpx")
-                                    } ] as javax.swing.filechooser.FileFilter)
-                                        
-                            listFiles.each { f -> 
+                    files.each { file -> 
+                        try {
+                            if (file.isDirectory()) {
+                                model.statusBarText = "Lade WPX-Dateien aus Verzeichnis ${file.path} hoch..." as String
+
+                                def listFiles = file.listFiles()
+
+                                listFiles.each { f -> 
+                                    if (f.name.toLowerCase().endsWith(".wpx")) {
+                                        model.statusBarText = "Lade WPX-Datei hoch..." as String
+                                        postWpxFile(f)
+                                    }
+                                }
+                            } else {
                                 model.statusBarText = "Lade WPX-Datei hoch..." as String
-                                postWpxFile(f)
+                                postWpxFile(file)
                             }
-                        }
-                        else {
-                            model.statusBarText = "Lade WPX-Datei hoch..." as String
-                            postWpxFile(it)
+                        } catch (e) {
+                            println "catching inner each... ${e}"
                         }
                     }
-                }
-                else {
+                } else {
                     model.statusBarText = "Lade WPX-Datei hoch..." as String
                     postWpxFile(it)
                 }
@@ -590,7 +585,6 @@ class Wac2Controller {
     }
     
     def postWpxFile = { f -> 
-        println "postWpxFile to webservice ${f.name}" as String
         doOutside {
             try {
                 def result = withWs(wsdl: "http://localhost:8080/wacws/services/WpxUploadService?wsdl") {

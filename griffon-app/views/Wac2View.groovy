@@ -25,6 +25,7 @@ wpxFileChooserWindow = fileChooser(
 angebotsverfolgungChooserWindow = fileChooser(
 		dialogTitle: "Bitte wählen Sie eine WPX-Datei oder Verzeichnis mit WPX-Dateien aus",
 		multiSelectionEnabled: true,
+        fileSelectionMode: javax.swing.JFileChooser.FILES_AND_DIRECTORIES,
 		fileFilter: [
 				getDescription: { -> "WestaWAC Projekt XML" },
 				accept: { file ->
