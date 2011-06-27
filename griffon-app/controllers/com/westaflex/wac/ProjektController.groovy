@@ -627,6 +627,10 @@ class ProjektController {
             if (DEBUG) println "raumGeandert: raum[${raumIndex}] ${model.map.raum.raume[raumIndex]}"
             // Diesen Raum in allen Tabellen anwählen
             onRaumInTabelleWahlen(raumIndex)
+            // Raum holen
+            ////def raum = model.map.raum.raume[raumIndex]
+            // Raumdaten prüfen
+            model.prufeRaumdaten(model.map.raum.raume[raumIndex])
             // WAC-65: Errechnete Werte zurücksetzen
             model.map.raum.raume[raumIndex].with {
                 if (raumBreite && raumLange) raumFlache = raumBreite * raumLange
@@ -831,24 +835,42 @@ class ProjektController {
         def raumIndex = model.meta.gewahlterRaum.position
         // Daten aus Dialog übertragen und neu berechnen
         def m = model.map.raum.raume[raumIndex]
+        // Raumnummer
         model.meta.gewahlterRaum.raumNummer =
             m.raumNummer =
             view.raumBearbeitenRaumnummer.text
+        // Raumbezeichnung
         model.meta.gewahlterRaum.raumBezeichnung =
             m.raumBezeichnung =
             view.raumBearbeitenBezeichnung.text
+        // Raumtyp
+        // Geschoss
         model.meta.gewahlterRaum.raumGeschoss =
             m.raumGeschoss =
             view.raumBearbeitenRaumGeschoss.selectedItem
+        // Luftart
+        try {
+            //println "!!!: ${view.raumBearbeitenLuftart.selectedItem?.dump()}"
+            model.meta.gewahlterRaum.raumLuftart =
+                m.raumLuftart =
+                view.raumBearbeitenLuftart.selectedItem
+        } catch (e) {
+            // TODO Warum, funktioniert trotzdem? groovy.lang.MissingPropertyException: No such property: text for class: javax.swing.JComboBox
+            //println "raumBearbeitenGeandert: EXCEPTION: ${e}"
+        }
+        // Zuluftfaktor
         model.meta.gewahlterRaum.raumZuluftfaktor =
             m.raumZuluftfaktor =
             view.raumBearbeitenLuftartFaktorZuluftverteilung.text?.toDouble2()
+        // Abluftvolumenstrom
         model.meta.gewahlterRaum.raumAbluftVolumenstrom =
             m.raumAbluftVolumenstrom =
             view.raumBearbeitenLuftartAbluftVs.text?.toDouble2()
+        // Max. Türspalthöhe
         model.meta.gewahlterRaum.raumMaxTurspaltHohe =
             m.raumMaxTurspaltHohe =
             view.raumBearbeitenDetailsTurspalthohe.text?.toDouble2()
+        // Geometrie
         model.meta.gewahlterRaum.raumLange =
             m.raumLange =
             view.raumBearbeitenOptionalRaumlange.text?.toDouble2()
@@ -861,6 +883,11 @@ class ProjektController {
         // Raum neu berechnen
         raumGeandert(raumIndex)
         // Daten aus Model in den Dialog übertragen
+        // Zuluft/Abluft
+        model.meta.gewahlterRaum.raumZuluftfaktor = m.raumZuluftfaktor
+        model.meta.gewahlterRaum.raumAbluftvolumenstrom = m.raumAbluftvolumenstrom
+        ////if (model.meta.gewahlterRaum.)
+        // Geometrie
         model.meta.gewahlterRaum.raumFlache = m.raumFlache
         model.meta.gewahlterRaum.raumVolumen = m.raumVolumen
         model.meta.gewahlterRaum.raumNummer = m.raumNummer
