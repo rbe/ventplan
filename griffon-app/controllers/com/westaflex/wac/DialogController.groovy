@@ -82,4 +82,12 @@ class DialogController {
                 )
         choice
     }
+    
+    /**
+     * Zeige Informationsdialog für Angebotsverfolgung mit mitgegebener Nachricht an.
+     */
+    def showCustomInformDialog = { titel, infoMsg ->
+        inform(titel as String, infoMsg)
+    }
+    
 }

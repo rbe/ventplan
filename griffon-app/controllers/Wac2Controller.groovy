@@ -535,6 +535,7 @@ class Wac2Controller {
     }
     
     def angebotsverfolgungFilesClosure = { files ->
+        boolean isError = false
         jxwithWorker(start: true) {
             // initialize the worker
             onInit {
@@ -565,7 +566,10 @@ class Wac2Controller {
                                 postWpxFile(file)
                             }
                         } catch (e) {
-                            println "catching inner each... ${e}"
+                            if (DEBUG) println "catching inner each... ${e}"
+                            def errMsg = "Fehler beim Übermitteln der WPX-Datei."
+                            app.controllers["Dialog"].showErrorDialog("Fehler bei Angebotsverfolgung" as String, errMsg as String)
+                            isError = true
                         }
                     }
                 } else {
@@ -580,6 +584,12 @@ class Wac2Controller {
                 //
                 model.statusProgressBarIndeterminate = false
                 model.statusBarText = "Bereit."
+                
+                def infoMsg = "Übermittlung der WPX-Dateien erfolgreich abgeschlossen."
+                if (isError) {
+                    infoMsg = "Übermittlung der WPX-Dateien mit Fehler abgeschlossen."
+                }
+                app.controllers["Dialog"].showCustomInformDialog("Angebotsverfolgung" as String, infoMsg as String)
             }
         }
     }
@@ -587,11 +597,11 @@ class Wac2Controller {
     def postWpxFile = { f -> 
         doOutside {
             try {
-                def result = withWs(wsdl: "http://localhost:8080/wacws/services/WpxUploadService?wsdl") {
+                def result = withWs(wsdl: "http://localhost:8080/wacws/services/wpxUpload?wsdl") {
                     uploadWpx(f?.text)
                 }
                 doLater {
-                    println "RESTful Webservice response is: ${result}" as String
+                    println "SOAP Webservice response is: ${result}" as String
                 }
             } finally {
                 println "End of postWpxFile file ${f.name}..." as String
