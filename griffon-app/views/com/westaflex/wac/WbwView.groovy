@@ -21,8 +21,11 @@ panel(id: "wbwPanel", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[f
 	panel(id: "wbwTabellePanel", layout: new MigLayout("fill", "[fill]", "[fill]")) {
 		jideScrollPane() {
 			table(id: "wbwTabelle", model: model.createWbwTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-				current.columnModel.getColumn(0).setWidth(15)
-				current.columnModel.getColumn(2).setWidth(30)
+                // WAC-160: Feste Spaltenbreiten vergeben.
+				current.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+                current.columnModel.getColumn(0).setPreferredWidth(60)
+                current.columnModel.getColumn(1).setPreferredWidth(200)
+				current.columnModel.getColumn(2).setPreferredWidth(120)
 			}
 		}
 	}
