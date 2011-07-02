@@ -85,5 +85,16 @@ class Wac2Resource {
 		if (!r) r = Wac2Resource.class.getResourceAsStream("/ooo/${t}.ott")
 		r
 	}
+    
+    /**
+	 * Get template for OpenOffice.
+	 */
+	def static getPdfLogo = {
+		// dev
+		def r = Wac2Resource.class.getResource("../resources/image/westaflex_logo.png")
+		// prod
+		if (!r) r = Wac2Resource.class.getResource("/image/westaflex_logo.png")
+		r
+	}
 	
 }

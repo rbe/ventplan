@@ -13,6 +13,7 @@
 package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
+import com.bensmann.griffon.PdfCreator
 import javax.swing.DefaultCellEditor
 import javax.swing.JComboBox
 import javax.swing.JTable
@@ -1569,5 +1570,63 @@ class ProjektController {
 			model.resyncAkustikTableModels()
 		}
 	}
+    
+    
+    /**
+     *
+     */
+    def generiereStuckliste = {
+        
+        try {
+            PdfCreator pdfCreator = new PdfCreator()
+            // Create a new pdf document
+            def userDir = System.getProperty("user.home")
+            userDir = userDir + "/" + System.currentTimeMillis() + ".pdf"
+            pdfCreator.createDocument(userDir)
+
+            def logourl = Wac2Resource.getPdfLogo()
+            println "logourl -> ${logourl.dump()}"
+            pdfCreator.addLogo(logourl)
+
+            pdfCreator.createTable(3)
+            // Add a table for the items
+            pdfCreator.addTable(3)
+            model.map.raum.raume.each { r -> erzeugeStuckliste(r, pdfCreator) }
+            // Add table to the document
+            pdfCreator.addTable()
+            // Close the pdf document
+            pdfCreator.closeDocument()
+            
+            def successMsg = "Stückliste '${userDir}' erfolgreich generiert"
+            app.controllers["Dialog"].showInformDialog(successMsg as String)
+        } catch (e) {
+            println "Error generating document: ${e}"
+            
+            def errorMsg = "Beim generieren der Stückliste ist ein Fehler aufgetreten"
+            app.controllers["Dialog"].showErrorDialog(errorMsg as String)
+        }
+        
+    }
+    
+    
+    def erzeugeStuckliste = { map, pdfCreator -> 
+        
+        if (DEBUG) println "map -> ${map.dump()}"
+        
+        def luftart = "Abluft"
+        def ventil = map.raumBezeichnungAbluftventile
+        def anzahl = map.raumAnzahlAbluftventile
+        if (!ventil) {
+            luftart = "Zuluft"
+            ventil = map.raumBezeichnungZuluftventile
+            anzahl = map.raumAnzahlZuluftventile
+        }
+        
+        if (ventil && anzahl > 0) {
+            //pdfCreator.addRaum(map.raumBezeichnung)
+            pdfCreator.addArtikel(map.raumBezeichnung, luftart, ventil, anzahl)
+        }
+        
+    }
 	
 }

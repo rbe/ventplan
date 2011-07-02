@@ -27,8 +27,10 @@ menuBar = menuBar {
 //        separator()
 //        menuItem(automatischeBerechnungAction)
 		/* Später aktivieren, Angebote sind noch nicht verfügbar! menuItem(druckenAction)*/
-        // WAC-177: Angebotsverfolgung
         separator()
+        // WAC-108: Stückliste generieren
+        menuItem(stucklisteAction)
+        // WAC-177: Angebotsverfolgung
         menuItem(angebotsverfolgungAction)
 //		if (!isMacOSX) {
 			separator()

@@ -594,9 +594,11 @@ class Wac2Controller {
         }
     }
     
+    // Post text of file object.
     def postWpxFile = { f -> 
         doOutside {
             try {
+                // call webservice with paramter
                 def result = withWs(wsdl: "http://localhost:8080/wacws/services/wpxUpload?wsdl") {
                     uploadWpx(f?.text)
                 }
@@ -608,5 +610,18 @@ class Wac2Controller {
             }
         }
     }
+    
+    /**
+     * WAC-108: Stückliste generieren
+     */
+    def stuckliste = {
+        // Projekt zur aktiven Tab finden
+        def mvc = getMVCGroupAktivesProjekt()
+        
+        // Erzeuge Stückliste für aktives Projekt.
+        mvc.controller.generiereStuckliste()
+    }
+    
+    
 	
 }

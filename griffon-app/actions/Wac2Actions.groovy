@@ -130,3 +130,12 @@ angebotsverfolgungAction = action(
     closure: controller.angebotsverfolgung
 )
 
+// WAC-108: Stückliste generieren
+stucklisteAction = action(
+    id: "stucklisteAction",
+    name: "Stückliste generieren",
+    mnemonic: "G",
+    accelerator: shortcut("G"),
+    enabled: true,
+    closure: controller.stuckliste
+)
