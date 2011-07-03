@@ -12,7 +12,7 @@ package com.westaflex.wac
 import net.miginfocom.swing.MigLayout
 import com.bensmann.griffon.GriffonHelper as GH
 
-// Raumvolumenströme
+// About view
 panel(layout: new MigLayout("wrap", "[center]", "[fill]"), constraints: "grow") {
 
 
@@ -24,4 +24,3 @@ panel(layout: new MigLayout("wrap", "[center]", "[fill]"), constraints: "grow") 
 
 
 }
-

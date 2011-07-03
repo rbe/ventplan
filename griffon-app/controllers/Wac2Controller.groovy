@@ -526,12 +526,16 @@ class Wac2Controller {
      * WAC-177: Angebotsverfolgung
      */
     def angebotsverfolgung = {
+        // TODO: change dialog call
+        //def angebotsverfolgungDialog = GH.createDialogNoScrollPane(builder, AngebotsverfolgungView, [title: "Angebotsverfolgung", resizable: false, pack: true])
+        //angebotsverfolgungDialog.show()
         
         def openResult = view.angebotsverfolgungChooserWindow.showOpenDialog(view.wac2Frame)
         if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
             def files = view.angebotsverfolgungChooserWindow.selectedFiles as java.io.File[]
             angebotsverfolgungFilesClosure(files)
         }
+        
     }
     
     def angebotsverfolgungFilesClosure = { files ->

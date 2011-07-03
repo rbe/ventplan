@@ -106,7 +106,7 @@ automatischeBerechnungAction = action(
         mnemonic: "B",
         accelerator: shortcut("B"),
         smallIcon: imageIcon(resource: "/menu/automatischeBerechnung.png"),
-        enabled: true,
+        enabled: bind { model.aktivesProjekt != null },
         closure: controller.automatischeBerechnung
         )
 
@@ -136,6 +136,6 @@ stucklisteAction = action(
     name: "Stückliste generieren",
     mnemonic: "G",
     accelerator: shortcut("G"),
-    enabled: true,
+    enabled: bind { model.aktivesProjekt != null },
     closure: controller.stuckliste
 )

@@ -1578,19 +1578,25 @@ class ProjektController {
     def generiereStuckliste = {
         
         try {
+            
+            def title = getProjektTitel() as String
+            
+            // Save document in user home dir
+            def userDir = System.getProperty("user.home")
+            userDir = userDir + "/" + title + "_" + System.currentTimeMillis() + ".pdf"
+            
             PdfCreator pdfCreator = new PdfCreator()
             // Create a new pdf document
-            def userDir = System.getProperty("user.home")
-            userDir = userDir + "/" + System.currentTimeMillis() + ".pdf"
             pdfCreator.createDocument(userDir)
 
             def logourl = Wac2Resource.getPdfLogo()
-            println "logourl -> ${logourl.dump()}"
+            if (DEBUG) println "logourl -> ${logourl.dump()}"
             pdfCreator.addLogo(logourl)
-
-            pdfCreator.createTable(3)
-            // Add a table for the items
-            pdfCreator.addTable(3)
+            // Add title to document
+            pdfCreator.addTitle(title)
+            // create table with relative column width
+            pdfCreator.createTable([2f, 1f, 3f, 1f] as float[])
+            
             model.map.raum.raume.each { r -> erzeugeStuckliste(r, pdfCreator) }
             // Add table to the document
             pdfCreator.addTable()
@@ -1628,5 +1634,93 @@ class ProjektController {
         }
         
     }
+    
+    // TODO: change dialog call
+    /*
+    def openAngebotsverfolgungFileChooser = {
+        def openResult = view.angebotsverfolgungChooserWindow.showOpenDialog(view.wac2Frame)
+        if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
+            def files = view.angebotsverfolgungChooserWindow.selectedFiles as java.io.File[]
+            angebotsverfolgungFilesClosure(files)
+        }
+    }
+    
+    def angebotsverfolgungFilesClosure = { files ->
+        boolean isError = false
+        jxwithWorker(start: true) {
+            // initialize the worker
+            onInit {
+                model.statusProgressBarIndeterminate = true
+                model.statusBarText = "WPX-Dateien werden hochgeladen..."
+            }
+            // do the task
+            work {
+                // ... and reset it in FileChooser
+                view.angebotsverfolgungChooserWindow.selectedFile = null
+                // check if files array is directory
+                if (files?.class.isArray()) {
+                    files.each { file -> 
+                        try {
+                            if (file.isDirectory()) {
+                                model.statusBarText = "Lade WPX-Dateien aus Verzeichnis ${file.path} hoch..." as String
+
+                                def listFiles = file.listFiles()
+
+                                listFiles.each { f -> 
+                                    if (f.name.toLowerCase().endsWith(".wpx")) {
+                                        model.statusBarText = "Lade WPX-Datei hoch..." as String
+                                        postWpxFile(f)
+                                    }
+                                }
+                            } else {
+                                model.statusBarText = "Lade WPX-Datei hoch..." as String
+                                postWpxFile(file)
+                            }
+                        } catch (e) {
+                            if (DEBUG) println "catching inner each... ${e}"
+                            def errMsg = "Fehler beim Übermitteln der WPX-Datei."
+                            app.controllers["Dialog"].showErrorDialog("Fehler bei Angebotsverfolgung" as String, errMsg as String)
+                            isError = true
+                        }
+                    }
+                } else {
+                    model.statusBarText = "Lade WPX-Datei hoch..." as String
+                    postWpxFile(it)
+                }
+            }
+            // do sth. when the task is done.
+            onDone {
+                def mvc = getMVCGroupAktivesProjekt()
+                model.statusBarText = "Alle WPX-Dateien hochgeladen..."
+                //
+                model.statusProgressBarIndeterminate = false
+                model.statusBarText = "Bereit."
+                
+                def infoMsg = "Übermittlung der WPX-Dateien erfolgreich abgeschlossen."
+                if (isError) {
+                    infoMsg = "Übermittlung der WPX-Dateien mit Fehler abgeschlossen."
+                }
+                app.controllers["Dialog"].showCustomInformDialog("Angebotsverfolgung" as String, infoMsg as String)
+            }
+        }
+    }
+    
+    // Post text of file object.
+    def postWpxFile = { f -> 
+        doOutside {
+            try {
+                // call webservice with paramter
+                def result = withWs(wsdl: "http://localhost:8080/wacws/services/wpxUpload?wsdl") {
+                    uploadWpx(f?.text)
+                }
+                doLater {
+                    println "SOAP Webservice response is: ${result}" as String
+                }
+            } finally {
+                println "End of postWpxFile file ${f.name}..." as String
+            }
+        }
+    }
+    */
 	
 }

@@ -285,6 +285,31 @@ class GriffonHelper {
 		// Return dialog instance
 		dialog
 	}
+    
+    /**
+	 * Create a dialog. Please call .show() yourself as this call blocks until the dialog is closed.
+	 */
+	def static createDialogNoScrollPane = { builder, dialogClass, dialogProp = [:] ->
+		def dialog = dialogCache[dialogClass]
+		//if (!dialog) {
+			// Properties for dialog
+			def prop = [
+					title: "Ein Dialog",
+					visible: false,
+					modal: true,
+					pack: false,
+					locationByPlatform: true
+				] + dialogProp
+			// Create dialog instance
+			dialog = builder.dialog(prop) {
+                build(dialogClass)
+            }
+			// Cache dialog instance
+			//dialogCache[dialogClass] = dialog
+		//}
+		// Return dialog instance
+		dialog
+	}
 	
 	/**
 	 * Check row to select in a table.
