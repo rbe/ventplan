@@ -1597,7 +1597,16 @@ class ProjektController {
             // create table with relative column width
             pdfCreator.createTable([2f, 1f, 3f, 1f] as float[])
             
-            model.map.raum.raume.each { r -> erzeugeStuckliste(r, pdfCreator) }
+            // Zentralgerät
+            pdfCreator.addArtikel("", "", model.map.anlage.zentralgerat, 1)
+            
+            model.map.raum.raume.each { r -> erzeugeRaumStuckliste(r, pdfCreator) }
+            
+            erzeugeDruckverlustStuckliste(model.map.dvb, pdfCreator)
+            
+            erzeugeSchalldampferStuckliste(model.map.akustik.zuluft, "zuluft", pdfCreator)
+            erzeugeSchalldampferStuckliste(model.map.akustik.abluft, "abluft", pdfCreator)
+            
             // Add table to the document
             pdfCreator.addTable()
             // Close the pdf document
@@ -1615,7 +1624,7 @@ class ProjektController {
     }
     
     
-    def erzeugeStuckliste = { map, pdfCreator -> 
+    def erzeugeRaumStuckliste = { map, pdfCreator -> 
         
         if (DEBUG) println "map -> ${map.dump()}"
         
@@ -1633,6 +1642,27 @@ class ProjektController {
             pdfCreator.addArtikel(map.raumBezeichnung, luftart, ventil, anzahl)
         }
         
+        // Überströmventile hinzufügen
+        anzahl = map.raumAnzahlUberstromVentile
+        ventil = map.raumUberstromElement
+        luftart = "Überström"
+        
+        if (ventil && anzahl > 0) {
+            //pdfCreator.addRaum(map.raumBezeichnung)
+            pdfCreator.addArtikel("", luftart, ventil, anzahl)
+        }
+        
+    }
+    
+    def erzeugeDruckverlustStuckliste = { dvb, pdfCreator ->
+        dvb.kanalnetz.each { 
+            pdfCreator.addArtikel("", "", it.kanalbezeichnung, it.lange)
+        }
+    }
+    
+    def erzeugeSchalldampferStuckliste = { akustik, luftart, pdfCreator ->
+        pdfCreator.addArtikel("", "", akustik.hauptschalldampfer1, 1)
+        pdfCreator.addArtikel("", "", akustik.hauptschalldampfer2, 1)
     }
     
     // TODO: change dialog call
