@@ -158,5 +158,14 @@ class PdfCreator {
             println "Error adding content to document ${e}"
         }
     }
+    
+    def addArtikelToDocument = { artikel ->
+        try {
+            // Add paragraph for artikel
+            document.add(new Paragraph(artikel))
+        } catch (Exception e) {
+            
+        }
+    }
 
 }

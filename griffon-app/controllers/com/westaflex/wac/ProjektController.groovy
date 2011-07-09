@@ -1598,7 +1598,8 @@ class ProjektController {
             pdfCreator.createTable([2f, 1f, 3f, 1f] as float[])
             
             // Zentralgerät
-            pdfCreator.addArtikel("", "", model.map.anlage.zentralgerat, 1)
+            def zentralgerat = "Zentralgerät: ${model.map.anlage.zentralgerat}" as String
+            pdfCreator.addArtikelToDocument(zentralgerat)
             
             model.map.raum.raume.each { r -> erzeugeRaumStuckliste(r, pdfCreator) }
             
@@ -1658,7 +1659,7 @@ class ProjektController {
         dvb.kanalnetz.each { 
             pdfCreator.addArtikel("", "", it.kanalbezeichnung, it.lange)
         }
-    }
+    }   
     
     def erzeugeSchalldampferStuckliste = { akustik, luftart, pdfCreator ->
         pdfCreator.addArtikel("", "", akustik.hauptschalldampfer1, 1)
