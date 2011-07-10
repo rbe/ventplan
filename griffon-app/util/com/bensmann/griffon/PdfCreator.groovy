@@ -11,6 +11,7 @@
  */
 package com.bensmann.griffon
 
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;

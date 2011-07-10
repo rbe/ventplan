@@ -18,7 +18,7 @@ import java.util.prefs.BackingStoreException
  */
 class MRUFileManager {
 
-    public static boolean DEBUG = true    
+    public static boolean DEBUG = false    
     
     private static final String LAST_TEN_OPEN_PROJECTS = "LastTenWacProjects"
     private static final String PREFS_USER_NODE = "/wacprojects";

@@ -1582,12 +1582,13 @@ class ProjektController {
             def title = getProjektTitel() as String
             
             // Save document in user home dir
-            def userDir = System.getProperty("user.home")
-            userDir = userDir + "/" + title + "_" + System.currentTimeMillis() + ".pdf"
+            //def userDir = System.getProperty("user.home")
+            //userDir = userDir + "/" + title + "_" + System.currentTimeMillis() + ".pdf"
+            def stucklisteFilename = model.wpxFilename + "_" + System.currentTimeMillis() + ".pdf"
             
             PdfCreator pdfCreator = new PdfCreator()
             // Create a new pdf document
-            pdfCreator.createDocument(userDir)
+            pdfCreator.createDocument(stucklisteFilename)
 
             def logourl = Wac2Resource.getPdfLogo()
             if (DEBUG) println "logourl -> ${logourl.dump()}"
@@ -1613,7 +1614,7 @@ class ProjektController {
             // Close the pdf document
             pdfCreator.closeDocument()
             
-            def successMsg = "Stückliste '${userDir}' erfolgreich generiert"
+            def successMsg = "Stückliste '${stucklisteFilename}' erfolgreich generiert"
             app.controllers["Dialog"].showInformDialog(successMsg as String)
         } catch (e) {
             println "Error generating document: ${e}"
