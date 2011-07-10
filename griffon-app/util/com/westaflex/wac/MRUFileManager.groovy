@@ -18,7 +18,7 @@ import java.util.prefs.BackingStoreException
  */
 class MRUFileManager {
 
-    public static boolean DEBUG = false    
+    public static boolean DEBUG = true    
     
     private static final String LAST_TEN_OPEN_PROJECTS = "LastTenWacProjects"
     private static final String PREFS_USER_NODE = "/wacprojects";
@@ -77,20 +77,6 @@ class MRUFileManager {
     }
 
     /**
-     * Adds a file name to the MRU file list.
-     */
-    public void set(File file) {
-        setMRU(file);
-    }
-
-    /**
-     * Adds a string to the MRU file list.
-     */
-    public void set(String string) {
-        setMRU(string);
-    }
-
-    /**
      * Gets the list of files stored in the MRU file list.
      */
     public String[] getMRUFileList() {
@@ -116,25 +102,36 @@ class MRUFileManager {
      * @param index The index to be first in the mru list
      */
     public void moveToTop(int index) {
-        def o = mruFileList.get(index)
-        mruFileList.remove(o);
+        //def o = mruFileList.get(index)
+        def o = mruFileList.remove(index);
         mruFileList.addFirst(o);
+    }
+    
+    protected void setMRU(File f) {
+        setMRU(f.getAbsolutePath())
     }
 
     /**
      * Adds an object to the mru.
      */
-    protected void setMRU(Object o) {
-        int index = mruFileList.indexOf(o);
+    protected void setMRU(String s) {
+        
+        def file = new java.io.File(s.toString())
 
-        def file = new java.io.File(o.toString())
         if (file.exists()) {
-            if (index == -1) {
-                if (DEBUG) println "setMRU: add file to list -> ${mruFileList.dump()}"
-                mruFileList.add(0, o);
+            def contains = false
+            mruFileList.each {
+                if (it.equals(s)) {
+                    contains = true
+                }
+            }
+            if (!contains) {
+                if (DEBUG) println "setMRU: add file to list -> ${mruFileList.dump()} file=${s}"
+                mruFileList.addFirst(s);
                 setMaxSize(DEFAULT_MAX_SIZE);
             } else {
-                if (DEBUG) println "setMRU: move file to top -> ${mruFileList.dump()}"
+                int index = mruFileList.indexOf(s);
+                if (DEBUG) println "setMRU: move file to top -> ${mruFileList.dump()} file=${s} index=${index}"
                 moveToTop(index);
             }
         }
@@ -147,7 +144,7 @@ class MRUFileManager {
         String value = null;
         try{
             value = getPrefs().get("" + i, "");
-            if (DEBUG) println "getPrefValue value -> ${value}, index=${index}"
+            if (DEBUG) println "getPrefValue value -> ${value}, index=${i}"
         }
         catch (Exception e) {
             if (DEBUG) println "getPrefValue -> ${e}"
@@ -161,7 +158,7 @@ class MRUFileManager {
      */
     protected void load() {
         
-        if (DEBUG) println "preferences absolute path -> ${getPrefs().absolutePath()}"
+        if (DEBUG) println "load: preferences absolute path -> ${getPrefs().absolutePath()}"
         
         if (null == mruFileList) {
             mruFileList = new LinkedList();
@@ -170,8 +167,9 @@ class MRUFileManager {
         {
             try{
                 String value = getPrefValue(i);
-                if (null != value && value.length() > 0)
+                if (value)
                 {
+                    println "load -> setMRU: ${value.dump()}"
                     setMRU(value);
                 }
             }
