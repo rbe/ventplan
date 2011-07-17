@@ -39,6 +39,11 @@ class Wac2Controller {
     private def prefs = java.util.prefs.Preferences.userNodeForPackage(Wac2Controller)
 
     def static mruFileManager = MRUFileManager.getInstance()
+    
+    /**
+     *
+     */
+    private def wacwsUrl = GH.getWacwsUrl()
 
     /**
      * Initialize wac2 MVC group.
@@ -546,6 +551,9 @@ class Wac2Controller {
      * Informs the user with dialogs what happens: error, success...
      */
     def angebotsverfolgungFilesClosure = { files, inputName ->
+        
+        def wacwsUrl
+        
         boolean isError = false
         def fileMsg = "" as String
         jxwithWorker(start: true) {
@@ -619,8 +627,9 @@ class Wac2Controller {
     def postWpxFile = { f, inputName -> 
         doOutside {
             try {
+                println "wacwsUrl -> ${wacwsUrl}"
                 // call webservice with paramter
-                def result = withWs(wsdl: "http://localhost:8080/wacws/services/wpxUpload?wsdl") {
+                def result = withWs(wsdl: wacwsUrl) {
                     uploadWpx(f?.text, inputName)
                 }
                 doLater {

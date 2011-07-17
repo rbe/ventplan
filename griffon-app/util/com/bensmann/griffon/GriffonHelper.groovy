@@ -604,6 +604,13 @@ class GriffonHelper {
         version
     }
 
-
+    /**
+     * 
+     */
+    def static getWacwsUrl = {
+        Properties properties = new Properties()
+        properties.load(Wac2Resource.getWacwsProperties())
+        return properties.get("webservice.url") as String
+    }
 
 }

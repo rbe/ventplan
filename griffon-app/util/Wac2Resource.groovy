@@ -96,5 +96,16 @@ class Wac2Resource {
 		if (!r) r = Wac2Resource.class.getResource("/image/westaflex_logo.png")
 		r
 	}
+    
+    /**
+	 * Get template for OpenOffice.
+	 */
+	def static getWacwsProperties = {
+		// dev
+		def r = Wac2Resource.class.getResourceAsStream("../resources/wacws/wacws.properties")
+		// prod
+		if (!r) r = Wac2Resource.class.getResourceAsStream("/wacws/wacws.properties")
+		r
+	}
 	
 }
