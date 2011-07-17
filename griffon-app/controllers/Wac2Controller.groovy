@@ -526,19 +526,26 @@ class Wac2Controller {
      * WAC-177: Angebotsverfolgung
      */
     def angebotsverfolgung = {
-        // TODO: change dialog call
-        //def angebotsverfolgungDialog = GH.createDialogNoScrollPane(builder, AngebotsverfolgungView, [title: "Angebotsverfolgung", resizable: false, pack: true])
-        //angebotsverfolgungDialog.show()
-        
-        def openResult = view.angebotsverfolgungChooserWindow.showOpenDialog(view.wac2Frame)
-        if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
-            def files = view.angebotsverfolgungChooserWindow.selectedFiles as java.io.File[]
-            angebotsverfolgungFilesClosure(files)
+        // show input dialog
+        def inputName = javax.swing.JOptionPane.showInputDialog("Bitte geben Sie Ihren Namen ein.")
+        // if input is not empty show file dialog
+        if (inputName) {
+            def openResult = view.angebotsverfolgungChooserWindow.showOpenDialog(view.wac2Frame)
+            if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
+                def files = view.angebotsverfolgungChooserWindow.selectedFiles as java.io.File[]
+                angebotsverfolgungFilesClosure(files, inputName)
+            }
+        } else {
+            def errorMsg = "Geben Sie einen Namen an, um die Angebotsverfolgung durchzuführen." as String
+            app.controllers["Dialog"].showErrorDialog(errorMsg as String)
         }
-        
     }
     
-    def angebotsverfolgungFilesClosure = { files ->
+    /**
+     * Iterate through the files and submit each file to the web service.
+     * Informs the user with dialogs what happens: error, success...
+     */
+    def angebotsverfolgungFilesClosure = { files, inputName ->
         boolean isError = false
         def fileMsg = "" as String
         jxwithWorker(start: true) {
@@ -563,7 +570,7 @@ class Wac2Controller {
                                 listFiles.each { f -> 
                                     if (f.name.toLowerCase().endsWith(".wpx")) {
                                         model.statusBarText = "Lade WPX-Datei hoch..." as String
-                                        if (postWpxFile(f)) {
+                                        if (postWpxFile(f, inputName)) {
                                             fileMsg = fileMsg + f.name + "\n"
                                             isError = isError ?: true
                                         }
@@ -571,7 +578,7 @@ class Wac2Controller {
                                 }
                             } else {
                                 model.statusBarText = "Lade WPX-Datei hoch..." as String
-                                if (postWpxFile(file)) {
+                                if (postWpxFile(file, inputName)) {
                                     fileMsg = fileMsg + file.name + "\n"
                                     isError = isError ?: true
                                 }
@@ -585,7 +592,7 @@ class Wac2Controller {
                     }
                 } else {
                     model.statusBarText = "Lade WPX-Datei hoch..." as String
-                    if (postWpxFile(it)) {
+                    if (postWpxFile(it, inputName)) {
                         fileMsg = fileMsg + it.name + "\n"
                         isError = isError ?: true
                     }
@@ -609,12 +616,12 @@ class Wac2Controller {
     }
     
     // Post text of file object.
-    def postWpxFile = { f -> 
+    def postWpxFile = { f, inputName -> 
         doOutside {
             try {
                 // call webservice with paramter
                 def result = withWs(wsdl: "http://localhost:8080/wacws/services/wpxUpload?wsdl") {
-                    uploadWpx(f?.text)
+                    uploadWpx(f?.text, inputName)
                 }
                 doLater {
                     if (DEBUG) println "postWpxFile: SOAP Webservice response is: ${result}" as String
