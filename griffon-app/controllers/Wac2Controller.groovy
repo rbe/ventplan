@@ -540,6 +540,7 @@ class Wac2Controller {
     
     def angebotsverfolgungFilesClosure = { files ->
         boolean isError = false
+        def fileMsg = "" as String
         jxwithWorker(start: true) {
             // initialize the worker
             onInit {
@@ -562,23 +563,32 @@ class Wac2Controller {
                                 listFiles.each { f -> 
                                     if (f.name.toLowerCase().endsWith(".wpx")) {
                                         model.statusBarText = "Lade WPX-Datei hoch..." as String
-                                        postWpxFile(f)
+                                        if (postWpxFile(f)) {
+                                            fileMsg = fileMsg + f.name + "\n"
+                                            isError = isError ?: true
+                                        }
                                     }
                                 }
                             } else {
                                 model.statusBarText = "Lade WPX-Datei hoch..." as String
-                                postWpxFile(file)
+                                if (postWpxFile(file)) {
+                                    fileMsg = fileMsg + file.name + "\n"
+                                    isError = isError ?: true
+                                }
                             }
                         } catch (e) {
                             if (DEBUG) println "catching inner each... ${e}"
                             def errMsg = "Fehler beim Übermitteln der WPX-Datei."
                             app.controllers["Dialog"].showErrorDialog("Fehler bei Angebotsverfolgung" as String, errMsg as String)
-                            isError = true
+                            isError = isError ?: true
                         }
                     }
                 } else {
                     model.statusBarText = "Lade WPX-Datei hoch..." as String
-                    postWpxFile(it)
+                    if (postWpxFile(it)) {
+                        fileMsg = fileMsg + it.name + "\n"
+                        isError = isError ?: true
+                    }
                 }
             }
             // do sth. when the task is done.
@@ -590,8 +600,8 @@ class Wac2Controller {
                 model.statusBarText = "Bereit."
                 
                 def infoMsg = "Übermittlung der WPX-Dateien erfolgreich abgeschlossen."
-                if (isError) {
-                    infoMsg = "Übermittlung der WPX-Dateien mit Fehler abgeschlossen."
+                if (isError || fileMsg.length() > 0) {
+                    infoMsg = "Übermittlung der WPX-Dateien mit Fehler abgeschlossen.\n ${fileMsg}"
                 }
                 app.controllers["Dialog"].showCustomInformDialog("Angebotsverfolgung" as String, infoMsg as String)
             }
@@ -607,10 +617,14 @@ class Wac2Controller {
                     uploadWpx(f?.text)
                 }
                 doLater {
-                    println "SOAP Webservice response is: ${result}" as String
+                    if (DEBUG) println "postWpxFile: SOAP Webservice response is: ${result}" as String
                 }
+                return true
+            } catch (e) {
+                println "postWpxFile: SOAP call failed. Error=${e}"
+                return false
             } finally {
-                println "End of postWpxFile file ${f.name}..." as String
+                if (DEBUG) println "postWpxFile: End of postWpxFile file ${f.name}..." as String
             }
         }
     }
