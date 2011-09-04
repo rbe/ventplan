@@ -63,7 +63,8 @@ def addListenerToComboBox = { tabname ->
 		"akustik${tabname}2Hauptschalldampfer",
 		"akustik${tabname}LangsdampfungKanal",
 		"akustik${tabname}SchalldampferVentil",
-		"akustik${tabname}EinfugungsdammwertLuftdurchlass"
+		"akustik${tabname}EinfugungsdammwertLuftdurchlass",
+        "akustik${tabname}Raumabsorption"
 	].each {
 		addActionListener(view."${it}", tabname)
 	}
@@ -72,8 +73,7 @@ def addListenerToTextField = { tabname ->
 	[
 		"akustik${tabname}AnzahlUmlenkungen90GradStck",
 		"akustik${tabname}LuftverteilerkastenStck",
-		"akustik${tabname}LangsdampfungKanalLfdmMeter",
-		"akustik${tabname}Raumabsorption"
+		"akustik${tabname}LangsdampfungKanalLfdmMeter"
 	].each {
 		addKeyListener(view."${it}", tabname)
 	}
