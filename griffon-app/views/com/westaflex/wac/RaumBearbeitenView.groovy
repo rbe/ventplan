@@ -114,8 +114,9 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
 //                    add radioButton(id: "raumBearbeitenKanalanschlussAbluftBoden", text: "Boden", constraints: "cell 2 4")
 //                }
 //            }
+            // WAC-185: Schliessen in Ok ändern.
             panel(id: "raumBearbeitenSubPanel2", constraints: "cell 0 5, align right") {
-                button(id: "raumBearbeitenSchliessen", text: "Schliessen")
+                button(id: "raumBearbeitenSchliessen", text: "Ok")
             }
         }
     }

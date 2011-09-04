@@ -35,6 +35,7 @@ class DialogController {
 
     /**
      * Dialog anzeigen, wenn ein nicht gespeichertes Projekt geschlossen werden soll.
+     * WAC-185: Schliessen in Ok ändern.
      */
     def showCloseProjectDialog() {
         def choice = choice(
@@ -44,7 +45,7 @@ class DialogController {
                 [
                     new CommandLink("Speichern", ""),
                     new CommandLink("Abbrechen", ""),
-                    new CommandLink("Schliessen", "")
+                    new CommandLink("Ok", "")
                 ]
                 )
         choice
