@@ -21,7 +21,7 @@ panel(layout: new MigLayout("fill, wrap", "[fill, grow]", "[fill,grow]"), constr
         // WAC-171
         label(id: "raumVsUbElementeHinweis", foreground: java.awt.Color.RED)
 
-        jideTabbedPane(id: "raumVsVentileTabGroup", constraints: "grow, span") {
+        jideTabbedPane(id: "raumVsVentileTabGroup", constraints: "height ::280, grow, span") {
             // Raumvolumenströme - Zu-/Abluftventile
             panel(id: "raumVsZuAbluftventileTab", title: "Zu-/Abluftventile", layout: new MigLayout("fill", "[fill,grow]", "[fill,grow]"), constraints: "grow") {
                 panel(id: "raumVsZuAbluftventileTabellePanel", layout: new MigLayout("", "[fill, grow]"), constraints: "grow") {
