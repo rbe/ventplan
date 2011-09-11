@@ -612,7 +612,7 @@ class WacCalculationService {
 		// 1-3 wurden woanders erledigt
 		// 4
 		if (DEBUG) println "berechneUberstromelemente: map.raumUberstromElement=${map?.raumUberstromElement?.dump()} map=${map?.dump()}"
-        if (map.raumUberstromElement) {
+        if (map?.raumUberstromElement) {
             def maxVolumenstrom = wacModelService.getMaxVolumenstrom(map.raumUberstromElement)
             // 5b
             if (DEBUG) println "berechneUberstromelemente: map.turen=${map?.turen?.dump()}"
@@ -804,6 +804,7 @@ class WacCalculationService {
 	}
 	
 	/**
+     * WAC-184/WAC-187: Türen können nicht gelöscht werden.
 	 * Raum bearbeiten - Türen berechnen, wenn Raumvolumenströme/Überströmelemente eingegeben wurden.
 	 * @param map One of model.map.raum.raume
 	 */
@@ -818,26 +819,30 @@ class WacCalculationService {
             if (durchgang) {
                 // TODO Nicht setzen, wenn Werte manuell geändert wurden (WAC-151)?
                 map.raumUberstromVolumenstrom = 0
-                return
-            }
-			def anzTurenOhneDichtung = map.turen.findAll { it.turDichtung == false }?.size() ?: 0
-            def abziehenTurenOhneDichtung = 2500 * anzTurenOhneDichtung
-			def summeTurBreiten = map.turen.sum { it.turBreite.toDouble2() }
-            if (DEBUG) println "berechneTurspalt: anzTurenOhneDichtung=${anzTurenOhneDichtung} summeTurBreiten=${summeTurBreiten}"
-			map.turen.findAll { it.turBreite > 0 }?.each {
-                try {
-                    // Zuerst Überströmventile berechnen!
-                    if (DEBUG) println "berechneTurspalt: map.raumUberstromVolumenstrom=${map.raumUberstromVolumenstrom}"
-                    def tsqf = (100 * 3.1d * map.raumUberstromVolumenstrom / java.lang.Math.sqrt(1.5d)) - abziehenTurenOhneDichtung
-                    it.turSpalthohe = tsqf / summeTurBreiten
-                    it.turQuerschnitt = tsqf * it.turBreite / summeTurBreiten
-                    if (DEBUG) println "berechneTurspalt: abziehen=${abziehen} tsqf=${tsqf} turSpalthohe=${it.turSpalthohe} turQuerschnitt=${it.turQuerschnitt}"
-                } catch (e) {
-                    println "berechneTurspalt: EXCEPTION=${e}"
+                // WAC-184/WAC-187: Else-Zweig eingefügt, damit die map zurückgegeben werden kann!
+                // Ansonsten kommt es zu einer NullPointerException und die Türen können
+                // nicht gelöscht werden. Die Berechnung schlägt dann auch fehl!
+                //return
+            } else {
+                def anzTurenOhneDichtung = map.turen.findAll { it.turDichtung == false }?.size() ?: 0
+                def abziehenTurenOhneDichtung = 2500 * anzTurenOhneDichtung
+                def summeTurBreiten = map.turen.sum { it.turBreite.toDouble2() }
+                if (DEBUG) println "berechneTurspalt: anzTurenOhneDichtung=${anzTurenOhneDichtung} summeTurBreiten=${summeTurBreiten}"
+                map.turen.findAll { it.turBreite > 0 }?.each {
+                    try {
+                        // Zuerst Überströmventile berechnen!
+                        if (DEBUG) println "berechneTurspalt: map.raumUberstromVolumenstrom=${map.raumUberstromVolumenstrom}"
+                        def tsqf = (100 * 3.1d * map.raumUberstromVolumenstrom / java.lang.Math.sqrt(1.5d)) - abziehenTurenOhneDichtung
+                        it.turSpalthohe = tsqf / summeTurBreiten
+                        it.turQuerschnitt = tsqf * it.turBreite / summeTurBreiten
+                        if (DEBUG) println "berechneTurspalt: abziehen=${abziehen} tsqf=${tsqf} turSpalthohe=${it.turSpalthohe} turQuerschnitt=${it.turQuerschnitt}"
+                    } catch (e) {
+                        println "berechneTurspalt: EXCEPTION=${e}"
+                    }
                 }
-			}
-            // WAC-165: Hinweis: Türspalt > max. Türspalthöhe?
-            // TODO Zugriff auf model.meta notwendig! Alternativ Property pro Raum.
+                // WAC-165: Hinweis: Türspalt > max. Türspalthöhe?
+                // TODO Zugriff auf model.meta notwendig! Alternativ Property pro Raum.
+            }
 		}
         map
 	}

@@ -684,7 +684,7 @@ class ProjektController {
             def turSpalthoheUberschritten = raum.turen.findAll {
                 it.turSpalthohe > raum.raumMaxTurspaltHohe.toDouble2()
             }?.size() ?: 0
-            if (DEBUG) println "WAC-171: Raum=${raum.raumBezeichnung}, tuspalthoheUberschritten=${turSpalthoheUberschritten}"
+            if (DEBUG) println "WAC-171: Raum=${raum.raumBezeichnung}, turspalthoheUberschritten=${turSpalthoheUberschritten}"
             if (DEBUG) println "WAC-171: ${raum.raumUberstromVolumenstrom > 0} && ${turSpalthoheUberschritten > 0} && ${!raum.raumUberstromElement}"
             raum.raumUberstromVolumenstrom > 0 && turSpalthoheUberschritten > 0 /*&& !raum.raumUberstromElement*/
         }
@@ -911,8 +911,8 @@ class ProjektController {
 		def raum = model.map.raum.raume[raumIndex]
         if (DEBUG) println "WAC-174: berechneTuren: raum=${raum?.dump()}"
 		// Türen berechnen?
-		if (raum.turen.findAll { it.turBreite > 0 }?.size() > 0 && raum.raumUberstromVolumenstrom) {
-			wacCalculationService.berechneTurspalt(raum)
+        if (raum.turen.findAll { it.turBreite > 0 }?.size() > 0 && raum.raumUberstromVolumenstrom) {
+            wacCalculationService.berechneTurspalt(raum)
             // WAC-165: Hinweis: Türspalt > max. Türspalthöhe?
             def turSpalthoheUberschritten = raum.turen.findAll {
                 it.turSpalthohe > raum.raumMaxTurspaltHohe.toDouble2()
@@ -922,7 +922,7 @@ class ProjektController {
             } else {
                 model.meta.gewahlterRaum.raumTurspaltHinweis = ""
             }
-		}
+        }
         // WAC-165: Bugfix: Werte in der Türen-Tabelle werden erst dann aktualisiert, wenn die Maus über einzelne Zeilen bewegt wird
         try {
             view.raumBearbeitenTurenTabelle.repaint()

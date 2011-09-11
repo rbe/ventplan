@@ -841,35 +841,35 @@ class ProjektModel {
             // Remember selected row
             def view = app.views[mvcId]
             def selected = view.raumTabelle.selectedRow
-			//println "-" * 80
-			//println "resyncRaumTableModels"
-			// Raumdaten
-			tableModels.raume.clear()
-			tableModels.raume.addAll(map.raum.raume)
-			// Türen
+            //println "-" * 80
+            //println "resyncRaumTableModels"
+            // Raumdaten
+            tableModels.raume.clear()
+            tableModels.raume.addAll(map.raum.raume)
+            // Türen
             if (DEBUG) println "tableModels.raume -> ${tableModels.raume}"
             if (DEBUG) println "tableModels.raumeTuren -> BEFORE -> ${tableModels.raumeTuren}"
-			tableModels.raume.each {
+            tableModels.raume.each {
                 def m = tableModels.raumeTuren[it.position]
-				// TODO NullPointer when loading data
-				try {
+                // TODO NullPointer when loading data
+                try {
                     m.clear()
-					m.addAll(it.turen)
+                    m.addAll(it.turen)
                     if (DEBUG) println "tableModels.raume.each -> raumeTuren: ${m}"
-				} catch (e) {}
-			}
+                } catch (e) {}
+            }
             if (DEBUG) println "tableModels.raumeTuren -> AFTER -> ${tableModels.raumeTuren}"
-			// Raumvolumentströme - Zu-/Abluftventile
-			tableModels.raumeVsZuAbluftventile.clear()
-			tableModels.raumeVsZuAbluftventile.addAll(map.raum.raume)
-			// Raumvolumentströme - Überströmventile
-			tableModels.raumeVsUberstromventile.clear()
-			tableModels.raumeVsUberstromventile.addAll(map.raum.raume)
-			// java.lang.NullPointerException: Cannot invoke method addAll() on null object
-			// when RaumBearbeitenDialog was not opened before
-			// Quickfix: added null-safe-operator
-			tableModels.raumeBearbeiten?.addAll(map.raum.raume)
-			//println "-" * 80
+            // Raumvolumentströme - Zu-/Abluftventile
+            tableModels.raumeVsZuAbluftventile.clear()
+            tableModels.raumeVsZuAbluftventile.addAll(map.raum.raume)
+            // Raumvolumentströme - Überströmventile
+            tableModels.raumeVsUberstromventile.clear()
+            tableModels.raumeVsUberstromventile.addAll(map.raum.raume)
+            // java.lang.NullPointerException: Cannot invoke method addAll() on null object
+            // when RaumBearbeitenDialog was not opened before
+            // Quickfix: added null-safe-operator
+            tableModels.raumeBearbeiten?.addAll(map.raum.raume)
+            //println "-" * 80
             // Select previously selected row
             if (selected && selected > -1) view.raumTabelle.changeSelection(selected, 0, false, false)
 		}
