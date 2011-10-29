@@ -1,30 +1,24 @@
 /*
- * This script is executed inside the EDT, so be sure to
- * call long running code in another thread.
+ * This script is executed inside the UI thread, so be sure to  call 
+ * long running code in another thread.
  *
  * You have the following options
- * - SwingBuilder.doOutside { // your code  }
+ * - execOutside { // your code }
+ * - execFuture { // your code }
  * - Thread.start { // your code }
- * - SwingXBuilder.withWorker( start: true ) {
- *      onInit { // initialization (optional, runs in current thread) }
- *      work { // your code }
- *      onDone { // finish (runs inside EDT) }
- *   }
  *
- * You have the following options to run code again inside EDT
- * - SwingBuilder.doLater { // your code }
- * - SwingBuilder.edt { // your code }
- * - SwingUtilities.invokeLater { // your code }
- *
- * You can also use the following
- * - UIThreadHelper.instance.executeAsync { // your code }
- * - UIThreadHelper.instance.executeSync { // your code }
- * - UIThreadHelper.instance.executeOutside { // your code }
- * - UIThreadHelper.instance.executeFuture { // your code }
+ * You have the following options to run code again inside the UI thread
+ * - execAsync { // your code }
+ * - execSync { // your code }
  */
-//println "lifecycle.Initialize"
 
-griffon.util.GriffonPlatformHelper.tweakForNativePlatform(app)
-groovy.swing.SwingBuilder.lookAndFeel('mac', 'nimbus', 'gtk', ['metal', [boldFonts: false]])
+import groovy.swing.SwingBuilder
+import static griffon.util.GriffonApplicationUtils.isMacOSX
+
+SwingBuilder.lookAndFeel((isMacOSX ? 'system' : 'nimbus'), 'gtk', ['metal', [boldFonts: false]])
+
+//griffon.util.groovy.swing.SwingBuilder.lookAndFeel('mac', 'nimbus', 'gtk', ['metal', [boldFonts: false]])
 Wac2Splash.instance.setup()
 Wac2Splash.instance.initializing()
+
+//SplashGriffonAddon.display(app)
