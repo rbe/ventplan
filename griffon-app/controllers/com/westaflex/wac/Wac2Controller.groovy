@@ -19,7 +19,7 @@ import com.bensmann.griffon.GriffonHelper as GH
  */
 class Wac2Controller {
 	
-    public static boolean DEBUG = true
+    public static boolean DEBUG = false
 
     def model
     def wacModelService
@@ -57,17 +57,6 @@ class Wac2Controller {
      * Get access to all components of a MVC group by its ID.
      */
     def getMVCGroup(mvcId) {
-        /*[
-            mvcId: mvcId,
-            model: app.models[mvcId],
-            view: app.views[mvcId],
-            controller: app.controllers[mvcId]
-        ]*/
-        println "app.models -> ${app.models.dump()}"
-        println "app.views -> ${app.views.dump()}"
-        println "app.controllers -> ${app.controllers.dump()}"
-        println "app.groups -> ${app.groups.dump()}"
-        println "get app.groups from mvcId=${mvcId} -> ${app.groups[mvcId].dump()}"
         [
             mvcId: mvcId,
             model: app.groups[mvcId].model,
@@ -179,17 +168,13 @@ class Wac2Controller {
                 // (durch Bauvorhaben, Speichern)
                 // Es wird also immer "Projekt 1", "Projekt 2" etc. genutzt, nach Reihenfolge der Erstellung
                 //model.statusBarText = "Phase 2/3: Initialisiere das Projekt..."
-                //def p = Wac2Controller.projektCounter++
                 String mvcId = generateMVCId()
-                //String mvcId = "Projekt ${p.toString()}".toString()
                 def (m, v, c) =
                     createMVCGroup("Projekt", "${mvcId}", [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
                 //model.statusBarText = "Phase 3/3: Erstelle Benutzeroberfläche für das Projekt..."
                 //doLater {
-                    println "Wac2Controller.neuesProjekt work doLater"
                     // MVC ID zur Liste der Projekte hinzufügen
                     model.projekte << mvcId
-                    println "Wac2Controller.neuesProjekt 2 -> mvcId=${mvcId}"
                     // Projekt aktivieren
                     projektAktivieren(mvcId)
                     // resize the frame to validate the components.
@@ -219,11 +204,8 @@ class Wac2Controller {
      * Ein Projekt aktivieren -- MVC ID an Wac2Model übergeben.
      */
     def projektAktivieren = { mvcId ->
-        println "Wac2Controller.projektAktivieren -> mvcId=${mvcId}"
         if (DEBUG) println "Wac2Controller.projektAktivieren: mvcId=${mvcId} model.aktivesProjekt=${model?.aktivesProjekt}"
-        println "Wac2Controller.projektAktivieren: mvcId=${mvcId} model.aktivesProjekt=${model?.aktivesProjekt}"
         if (DEBUG) println "Wac2Controller.projektAktivieren: model=${model?.dump()}"
-        println "Wac2Controller.projektAktivieren: model=${model?.dump()}"
         // Anderes Projekt wurde aktiviert?
         if (mvcId && mvcId != model?.aktivesProjekt) {
             // MVC ID merken
@@ -232,15 +214,12 @@ class Wac2Controller {
             try {
                 def mvcGroup = getMVCGroup(mvcId)
                 if (DEBUG) println "Wac2Controller.projektAktivieren: getMVCGroup(mvcGroup)=${mvcGroup}, wpx=${mvcGroup.model?.wpxFilename}"
-                println "Wac2Controller.projektAktivieren: getMVCGroup(mvcGroup)=${mvcGroup}, wpx=${mvcGroup.model?.wpxFilename}"
                 if (DEBUG) println "Wac2Controller.projektAktivieren: getMVCGroup(mvcGroup)=${mvcGroup.dump()}"
-                println "Wac2Controller.projektAktivieren: getMVCGroup(mvcGroup)=${mvcGroup.dump()}"
                 model.aktivesProjektGeandert = mvcGroup.model?.map.dirty
             } catch (e) {
                 e.printStackTrace()
             }
             if (DEBUG) println "Wac2Controller.projektAktivieren: mvcId=${model.aktivesProjekt}"
-            println "Wac2Controller.projektAktivieren: mvcId=${model.aktivesProjekt}"
         }
         /*
         else {
@@ -404,7 +383,6 @@ class Wac2Controller {
      */
     def aktivesProjektSpeichern = { evt = null ->
         def mvc = getMVCGroupAktivesProjekt()
-        println "Wac2Controller.aktivesProjektSpeichern -> mvc=${mvc.dump()}"
         projektSpeichern(mvc)
     }
 
@@ -413,7 +391,6 @@ class Wac2Controller {
 	 * Ist er nicht gesetzt, wird "Projekt speichern als" aufgerufen.
      */
     def projektSpeichern = { mvc ->
-        println "Wac2Controller.projektSpeichern -> mvc=${mvc.dump()}"
         def saved = mvc.controller.save()
         if (saved) {
             if (DEBUG) println "aktivesProjektSpeichern: Projekt gespeichert in ${mvc.model.wpxFilename}"

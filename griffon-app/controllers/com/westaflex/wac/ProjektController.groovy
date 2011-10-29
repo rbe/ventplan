@@ -28,7 +28,7 @@ import javax.swing.event.TableModelEvent
  */
 class ProjektController {
 	
-	public static boolean DEBUG = true
+	public static boolean DEBUG = false
     Boolean loadMode = false
 	
 	def builder
@@ -160,12 +160,12 @@ class ProjektController {
 	 * Titel des Projekts für Tab setzen.
 	 */
 	def setTabTitle = { tabIndex -> 
-        /* TODO java.lang.ArrayIndexOutOfBoundsException: -1
-         * at com.jidesoft.swing.JideTabbedPane.setTitleAt(Unknown Source)
-         * at com.westaflex.wac.ProjektController.setTabTitle(ProjektController.groovy:163)
-         */
+        println "ProjektController.setTabTitle tabIndex=${tabIndex}"
+        if (!tabIndex) {
+            tabIndex = view.projektTabGroup.selectedIndex
+            println "ProjektController.setTabTitle new tabIndex=${tabIndex}"
+        }
         def tabTitle = makeTabTitle()?.toString()
-        println "ProjektController.setTabTitle - tabTitle: ${tabTitle}"
         view.projektTabGroup.setTitleAt(tabIndex, tabTitle)
 	}
 	
