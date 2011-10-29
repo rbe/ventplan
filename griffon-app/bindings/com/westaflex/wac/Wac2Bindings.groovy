@@ -7,6 +7,7 @@
  * 
  * Created by: rbe
  */
+package com.westaflex.wac
 
 // ChangeListener for active tab; tell model about its MVC ID
 projektTabGroup.addChangeListener({ evt ->

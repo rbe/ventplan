@@ -14,13 +14,13 @@ import groovy.sql.Sql
  */
 class BootstrapGsql {
 	
-	def init = { Sql sql ->
+    def init = { String dataSourceName = 'default', Sql sql ->
 		// Set splash screen status text
 		Wac2Splash.instance.connectingDatabase()
 		//println "BootstrapGsql.init: ${sql}"
 	}
 	
-	def destroy = { Sql sql ->
+	def destroy = { String dataSourceName = 'default', Sql sql ->
 		//println "BootstrapGsql.destroy: ${sql}"
 	}
 	

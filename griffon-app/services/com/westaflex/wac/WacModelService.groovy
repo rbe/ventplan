@@ -25,7 +25,7 @@ class WacModelService {
 	 * Hole Liste mit Zentralgeräten (Raumvolumenströme).
 	 */
 	List getZentralgerat() {
-		def r = withSql { sql ->
+		def r = withSql { dataSourceName, sql ->
 				sql.rows("SELECT artikelnummer FROM artikelstamm"
 					+ " WHERE kategorie = ? AND gesperrt = ? AND maxvolumenstrom <> ?"
 					+ " ORDER BY artikelnummer",
@@ -41,7 +41,7 @@ class WacModelService {
 	 * Hole Volumenströme für ein bestimmtes Zentralgerät (Raumvolumenströme).
 	 */
 	List getVolumenstromFurZentralgerat(String artikel) {
-		def r = withSql { sql ->
+		def r = withSql { dataSourceName, sql ->
 				sql.rows("SELECT DISTINCT volumenstrom FROM schalleistungspegel"
 					+ " WHERE artikelnummer = ? ORDER BY volumenstrom",
 					[artikel])
@@ -56,7 +56,7 @@ class WacModelService {
 	 * 
 	 */
 	String getZentralgeratFurVolumenstrom(Integer luftung) {
-		def r = withSql { sql ->
+		def r = withSql { dataSourceName, sql ->
 				sql.firstRow("SELECT artikelnummer FROM artikelstamm"
 					+ " WHERE kategorie = 1 AND maxvolumenstrom >= ?"
 					+ " ORDER BY artikelnummer",
@@ -70,7 +70,7 @@ class WacModelService {
 	 * Hole alle Zu/Abluftventile.
 	 */
 	List getZuAbluftventile() {
-		def r = withSql { sql ->
+		def r = withSql { dataSourceName, sql ->
 				sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust WHERE ausblaswinkel <> ? ORDER BY artikelnummer", [180])
 			}?.collect {
 				it.artikelnummer
@@ -83,7 +83,7 @@ class WacModelService {
      * Hole alle Zuluftventile.
      */
     List getZuluftventile() {
-        def r = withSql { sql ->
+        def r = withSql { dataSourceName, sql ->
                 sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust WHERE luftart = 'ZU' AND ausblaswinkel <> ? ORDER BY artikelnummer", [180])
             }?.collect {
                 it.artikelnummer
@@ -96,7 +96,7 @@ class WacModelService {
      * Hole alle Abluftventile.
      */
     List getAbluftventile() {
-        def r = withSql { sql ->
+        def r = withSql { dataSourceName, sql ->
                 sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust WHERE luftart = 'AB' AND ausblaswinkel <> ? ORDER BY artikelnummer", [180])
             }?.collect {
                 it.artikelnummer
@@ -109,7 +109,7 @@ class WacModelService {
 	 * Hole alle Überströmelemente.
 	 */
 	List getUberstromelemente() {
-		def r = withSql { sql ->
+		def r = withSql { dataSourceName, sql ->
 				sql.rows("SELECT artikelnummer FROM artikelstamm WHERE klasse = ? ORDER BY artikelnummer", [14])
 			}?.collect {
 				it.artikelnummer
@@ -122,7 +122,7 @@ class WacModelService {
 	 * 
 	 */
 	Integer getMaxVolumenstrom(String artikel) {
-		def r = withSql { sql ->
+		def r = withSql { dataSourceName, sql ->
 				sql.firstRow("SELECT maxvolumenstrom FROM artikelstamm"
 					+ " WHERE artikelnummer = ?"
 					+ " ORDER BY maxvolumenstrom",
@@ -136,7 +136,7 @@ class WacModelService {
 	 * 
 	 */
 	List getDvbKanalbezeichnung() {
-		def r = withSql { sql ->
+		def r = withSql { dataSourceName, sql ->
 				sql.rows("SELECT artikelnummer FROM artikelstamm WHERE klasse BETWEEN 4 AND 8 ORDER BY artikelnummer")
 			}?.collect {
 				it.artikelnummer
@@ -149,7 +149,7 @@ class WacModelService {
 	 * 
 	 */
 	def getKanal(String kanalbezeichnung) {
-		def r = withSql { sql ->
+		def r = withSql { dataSourceName, sql ->
 				sql.firstRow("SELECT klasse, durchmesser, flaeche, seitea, seiteb FROM rohrwerte"
 					+ " WHERE artikelnummer = ?",
 					[kanalbezeichnung])
@@ -162,7 +162,7 @@ class WacModelService {
 	 * 
 	 */
 	List getDvbVentileinstellung() {
-		def r = withSql { sql ->
+		def r = withSql { dataSourceName, sql ->
 				sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust WHERE ausblaswinkel <> 180 ORDER BY artikelnummer")
 			}?.collect {
 				it.artikelnummer
@@ -177,7 +177,7 @@ class WacModelService {
 	 * 
 	 */
 	List getWbw() {
-		def r = withSql { sql ->
+		def r = withSql { dataSourceName, sql ->
 				sql.rows("SELECT id, bezeichnung, wert, CONCAT(id, '.png') bild FROM widerstandsbeiwerte ORDER BY bezeichnung")
 			}
 		if (DEBUG) println "getWbw: r=${r?.dump()}"
@@ -188,7 +188,7 @@ class WacModelService {
 	 * 
 	 */
 	def getMinimalerDruckverlustFurVentil(String ventilbezeichnung, String luftart, Double luftmenge) {
-		def r = withSql { sql ->
+		def r = withSql { dataSourceName, sql ->
 				sql.firstRow("SELECT MIN(druckverlust) druckverlust FROM druckverlust"
 							+ " WHERE artikelnummer = ? AND luftart = ? AND luftmenge >= ?",
 							[ventilbezeichnung, luftart, luftmenge])
@@ -201,7 +201,7 @@ class WacModelService {
 	 * 
 	 */
 	def getEinstellung(String ventilbezeichnung, String luftart, Double luftmenge, Double abgleich) {
-		def r = withSql { sql ->
+		def r = withSql { dataSourceName, sql ->
 				sql.rows("SELECT DISTINCT einstellung, druckverlust, luftmenge"
 					+ " FROM druckverlust"
 					+ " WHERE artikelnummer = ? AND luftart = ? AND luftmenge >= ?"
@@ -234,7 +234,7 @@ class WacModelService {
 	 * 
 	 */
 	List getSchalldampfer() {
-		def r = withSql { sql ->
+		def r = withSql { dataSourceName, sql ->
 			sql.rows("SELECT artikelnummer FROM artikelstamm WHERE klasse = 2 AND gesperrt = false")
 		}?.collect {
 			it.artikelnummer
@@ -249,7 +249,7 @@ class WacModelService {
 	 * Akustikberechnung, db(A) des Zentralgeräts.
 	 */
 	def getDezibelZentralgerat(artnr, volumenstrom, luftart) {
-		def r = withSql { sql ->
+		def r = withSql { dataSourceName, sql ->
 			sql.rows("SELECT s.dba"
 					+ " FROM schalleistungspegel s"
 					+ " WHERE artikelnummer = ? AND volumenstrom >= ? AND ZuAbEx = ?",
@@ -263,7 +263,7 @@ class WacModelService {
 	 * Akustikberechnung, Oktavmittenfrequenz.
 	 */
 	Map getOktavmittenfrequenz(artnr, volumenstrom, luftart) {
-		def r = withSql { sql ->
+		def r = withSql { dataSourceName, sql ->
 			sql.rows("SELECT s.slp125, s.slp250, s.slp500, s.slp1000, s.slp2000, s.slp4000, s.dba"
 					+ " FROM schalleistungspegel s"
 					+ " WHERE artikelnummer = ? AND volumenstrom >= ? AND ZuAbEx = ?",
@@ -278,7 +278,7 @@ class WacModelService {
 	 * Akustikberechnung, Schallleistungspegel.
 	 */
 	def getSchallleistungspegel(artnr) {
-		def r = withSql { sql ->
+		def r = withSql { dataSourceName, sql ->
 			sql.rows("SELECT s.slp125, s.slp250, s.slp500, s.slp1000, s.slp2000, s.slp4000"
 					+ " FROM schalleistungspegel s"
 					+ " WHERE artikelnummer = ?",
@@ -293,7 +293,7 @@ class WacModelService {
 	 * Akustikberechnung, Pegelerhöhung externer Druck.
 	 */
 	Map getPegelerhohungExternerDruck(artnr) {
-		def r = withSql { sql ->
+		def r = withSql { dataSourceName, sql ->
 			sql.rows("SELECT s.slp125, s.slp250, s.slp500, s.slp1000, s.slp2000, s.slp4000"
 					+ " FROM schalleistungspegel s"
 					+ " WHERE artikelnummer = ? AND ZuAbEx = 2",

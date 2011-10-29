@@ -34,3 +34,11 @@ root.'GsqlGriffonAddon'.addon=true
 root.'SpringGriffonAddon'.addon=true
 
 root.'WsclientGriffonAddon'.addon=true
+
+root.'DatasourceGriffonAddon'.addon=true
+
+root.'ZonelayoutGriffonAddon'.addon=true
+
+root.'SplashGriffonAddon'.addon=true
+
+root.'GlazedlistsGriffonAddon'.addon=true

@@ -65,7 +65,7 @@ panel(layout: new MigLayout("fill, wrap", "[fill, grow]", "[fill,grow]"), constr
                 label("Reduzierte Lüftung")
                 label(id: "raumVsAussenluftVsDerLtmRl", text: "0,00")
                 label("m³/h")
-                comboBox(id: "raumVsZentralgerat", items: model.meta.zentralgerat)
+                //comboBox(id: "raumVsZentralgerat", items: model.meta.zentralgerat)
 
                 label("Nennlüftung")
                 label(id: "raumVsAussenluftVsDerLtmNl", text: "0,00")
@@ -75,7 +75,7 @@ panel(layout: new MigLayout("fill, wrap", "[fill, grow]", "[fill,grow]"), constr
                 label("Intensivlüftung")
                 label(id: "raumVsAussenluftVsDerLtmIl", text: "0,00")
                 label("m³/h")
-                comboBox(id: "raumVsVolumenstrom", items: model.meta.volumenstromZentralgerat)
+                //comboBox(id: "raumVsVolumenstrom", items: model.meta.volumenstromZentralgerat)
             }
         }
         panel(layout: new MigLayout("", "[fill, grow]", "[] 10 []"), constraints: "wrap") {

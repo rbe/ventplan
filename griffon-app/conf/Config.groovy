@@ -37,6 +37,8 @@ signingkey.params.lazy = true // only sign when unsigned
 //griffon.memory.max='64m'
 //griffon.memory.maxPermSize='64m'
 
+griffon.datasource.injectInto = ["controller", "service"]
+
 griffon.wsclient.injectInto = ["controller"]
 
-griffon.basic_injection.disable = true
+griffon.ws.injectInto = ['controller']

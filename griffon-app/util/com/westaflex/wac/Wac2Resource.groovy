@@ -87,7 +87,7 @@ class Wac2Resource {
 	}
     
     /**
-	 * Get template for OpenOffice.
+	 * Get Pdf Logo.
 	 */
 	def static getPdfLogo = {
 		// dev
@@ -98,13 +98,24 @@ class Wac2Resource {
 	}
     
     /**
-	 * Get template for OpenOffice.
+	 * Get wac web service properties.
 	 */
 	def static getWacwsProperties = {
 		// dev
-		def r = Wac2Resource.class.getResourceAsStream("../resources/wacws/wacws.properties")
-		// prod
+		def r = Wac2Resource.class.getResourceAsStream("/wacws.properties")
+        // prod
 		if (!r) r = Wac2Resource.class.getResourceAsStream("/wacws/wacws.properties")
+		r
+	}
+    
+    /**
+	 * Get version.
+	 */
+	def static getConfVersion = {
+		// dev
+		def r = Wac2Resource.class.getResource("../conf/version")
+		// prod
+		if (!r) r = Wac2Resource.class.getResource("/conf/version")
 		r
 	}
 	

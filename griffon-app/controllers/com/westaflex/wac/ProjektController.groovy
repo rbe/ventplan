@@ -28,7 +28,7 @@ import javax.swing.event.TableModelEvent
  */
 class ProjektController {
 	
-	public static boolean DEBUG = false
+	public static boolean DEBUG = true
     Boolean loadMode = false
 	
 	def builder
@@ -49,35 +49,37 @@ class ProjektController {
 	 * Initialize MVC group.
 	 */
 	void mvcGroupInit(Map args) {
-		// Save MVC id
-		model.mvcId = args.mvcId
-		// Set defaults
-		setDefaultValues()
-		// Add PropertyChangeListener to our model.meta
-		//GH.addMapPropertyChangeListener("meta", model.meta)
-		// Add PropertyChangeListener to our model.map
-		GH.addMapPropertyChangeListener("map", model.map, { evt ->
-            // Nur ausführen, wenn Projekt nicht gerade geladen wird
-            if (!loadMode) {
-				// Show dialog only when property changes
-				if (evt.propertyName == "ltm") {
-					ltmErforderlichDialog()
-				}
-				// Only set dirty flag, when modified property is not the dirty flag
-				// Used for loading and saving
-				else if (evt.propertyName != "dirty" && !model.map.dirty) {
-					// Dirty-flag im eigenen und Wac2Model setzen
-					model.map.dirty = true
-                    // Wac2Model über Änderung informieren
-					app.models["wac2"].aktivesProjektGeandert =
-                        app.models["wac2"].alleProjekteGeandert =
-                        true
-					// Change tab title (show a star)
-                        ////println "popertyChangeListener: calling setTabTitle: ${evt.propertyName}"
-					setTabTitle()
-				}
-            }
-        })
+        // Save MVC id
+        //edt {
+            model.mvcId = args.mvcId
+            // Set defaults
+            setDefaultValues()
+            // Add PropertyChangeListener to our model.meta
+            GH.addMapPropertyChangeListener("meta", model.meta)
+            // Add PropertyChangeListener to our model.map
+            GH.addMapPropertyChangeListener("map", model.map, { evt ->
+                // Nur ausführen, wenn Projekt nicht gerade geladen wird
+                if (!loadMode) {
+                    // Show dialog only when property changes
+                    if (evt.propertyName == "ltm") {
+                        ltmErforderlichDialog()
+                    }
+                    // Only set dirty flag, when modified property is not the dirty flag
+                    // Used for loading and saving
+                    else if (evt.propertyName != "dirty" && !model.map.dirty) {
+                        // Dirty-flag im eigenen und Wac2Model setzen
+                        model.map.dirty = true
+                        // Wac2Model über Änderung informieren
+                        app.models["wac2"].aktivesProjektGeandert =
+                            app.models["wac2"].alleProjekteGeandert =
+                            true
+                        // Change tab title (show a star)
+                            ////println "popertyChangeListener: calling setTabTitle: ${evt.propertyName}"
+                        setTabTitle(view.projektTabGroup.tabCount - 1)
+                    }
+                }
+            })
+        //}
 	}
 	
 	/**
@@ -125,42 +127,46 @@ class ProjektController {
 	/**
 	 * Titel für dieses Projekt erstellen: Bauvorhaben, ansonsten MVC ID.
 	 */
-	def getProjektTitel = {
-		def title = new StringBuilder()
-		// Bauvorhaben
-		def bauvorhaben = model.map.kundendaten.bauvorhaben
-		if (bauvorhaben) {
-			title << "Projekt - ${bauvorhaben}"
-		} else {
-			title << model.mvcId
-		}
-		title
+	StringBuilder getProjektTitel() {
+        def title = new StringBuilder()
+        // Bauvorhaben
+        def bauvorhaben = model.map.kundendaten.bauvorhaben
+        if (bauvorhaben) {
+            title << "Projekt - ${bauvorhaben}"
+        } else {
+            title << model.mvcId
+        }
+        println "ProjektController.getProjektTitel stop -> ${title}"
+        title
 	}
 	
 	/**
 	 * Titel der Tab für dieses Projekt erstellen, und Sternchen für ungesicherte Änderungen anhängen.
 	 */
-	def makeTabTitle = {
-		def tabTitle = getProjektTitel()
-		// Dateiname des Projekts oder MVC ID
-		tabTitle << " (${model.wpxFilename ?: view.mvcId})"
-		// Ungespeicherte Daten?
-		if (model.map.dirty) tabTitle << "*"
-		//
-		tabTitle
+	StringBuilder makeTabTitle() {
+        def tabTitle = getProjektTitel()
+        println "ProjektController.makeTabTitle start -> ${tabTitle}"
+        // Dateiname des Projekts oder MVC ID
+        tabTitle << " (${model.wpxFilename ?: view.mvcId})"
+        // Ungespeicherte Daten?
+        if (model.map.dirty) {
+            tabTitle << "*"
+        }
+        //
+        tabTitle
 	}
 	
 	/**
 	 * Titel des Projekts für Tab setzen.
 	 */
-	def setTabTitle() {
+	def setTabTitle = { tabIndex -> 
         /* TODO java.lang.ArrayIndexOutOfBoundsException: -1
          * at com.jidesoft.swing.JideTabbedPane.setTitleAt(Unknown Source)
          * at com.westaflex.wac.ProjektController.setTabTitle(ProjektController.groovy:163)
          */
-        def tabTitle = makeTabTitle().toString()
-        ///println "tabTitle: ${tabTitle}"
-        view.projektTabGroup.setTitleAt(view.projektTabGroup.selectedIndex, tabTitle)
+        def tabTitle = makeTabTitle()?.toString()
+        println "ProjektController.setTabTitle - tabTitle: ${tabTitle}"
+        view.projektTabGroup.setTitleAt(tabIndex, tabTitle)
 	}
 	
 	/**
@@ -184,7 +190,7 @@ class ProjektController {
 	 * Save this project.
 	 * @return Boolean Was project successfully saved to a file?
 	 */
-	def save = {
+	boolean save() {
 		if (DEBUG) println "save: saving project '${getProjektTitel()}' in file ${model.wpxFilename?.dump()}"
 		try {
 			if (model.wpxFilename) {
@@ -193,7 +199,7 @@ class ProjektController {
 				// Set dirty-flag in project's model to false
 				model.map.dirty = false
 				// Update tab title to ensure that no "unsaved-data-star" is displayed
-				setTabTitle()
+				setTabTitle(view.projektTabGroup.selectedIndex)
 				// Project was saved
 				true
 			} else {
@@ -321,7 +327,7 @@ class ProjektController {
         berechneAkustik("Abluft")
         // Dirty flag
         model.map.dirty = false
-        setTabTitle()
+        setTabTitle(view.projektTabGroup.selectedIndex)
         //
         this.loadMode = false
     }

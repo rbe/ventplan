@@ -169,7 +169,7 @@ class MRUFileManager {
                 String value = getPrefValue(i);
                 if (value)
                 {
-                    println "load -> setMRU: ${value.dump()}"
+                    if (DEBUG) println "load -> setMRU: ${value.dump()}"
                     setMRU(value);
                 }
             }

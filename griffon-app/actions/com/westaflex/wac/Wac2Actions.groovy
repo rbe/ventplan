@@ -9,6 +9,8 @@
  * /Users/rbe/project/wac/griffon-app/controllers/Wac2Controller.groovy
  * Last modified at 13.03.2011 18:34:15 by rbe
  */
+package com.westaflex.wac
+
 import groovy.ui.Console
 
 neuesProjektAction = action(

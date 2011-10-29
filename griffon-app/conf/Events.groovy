@@ -101,6 +101,7 @@ onShutdownStart = { app ->
  */
 onNewInstance = { clazz, type, instance ->
 	// Nur Anzeigen, wenn Applikation erstmalig started (see conf/Application, startup groups)
+    //println "Events.onNewInstance: clazz=${clazz} type=${type} instance=${instance}"
 	if (clazz.name ==~ /Wac2.*/) Wac2Splash.instance.creatingUI()
 	//println "Events.onNewInstance: clazz=${clazz} type=${type} instance=${instance}"
 }
@@ -108,8 +109,9 @@ onNewInstance = { clazz, type, instance ->
 /**
  * 
  */
-onCreateMVCGroup = { mvcId, model, view, controller, mvcType, instances ->
-	//println "Events.onCreateMVCGroup: mvcId=${mvcId}"
+//onCreateMVCGroup = { mvcId, map ->
+onCreateMVCGroup = { mvcId ->
+	//println "Events.onCreateMVCGroup: mvcId=${mvcId.dump()}"
 }
 
 /**

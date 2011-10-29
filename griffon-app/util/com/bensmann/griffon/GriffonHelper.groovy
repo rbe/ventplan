@@ -11,6 +11,7 @@
  */
 package com.bensmann.griffon
 
+import com.westaflex.wac.*
 import javax.swing.JComboBox
 import javax.swing.JTable
 import javax.swing.table.DefaultTableModel
@@ -26,7 +27,7 @@ import java.awt.Component
  */
 class GriffonHelper {
 	
-	public static boolean DEBUG = false
+	public static boolean DEBUG = true
 	
 	/**
 	 * Standard rounding mode.
@@ -599,8 +600,9 @@ class GriffonHelper {
      */
     def static localVersion = {
         // For development only: new java.io.File("/home/manu/Entwicklung/git/wac2/usbstick/wac/conf/version").text.trim()
-        def version = new java.io.File("conf/version").text.trim()
-        println "version -> ${version}"
+        //def version = new java.io.File("conf/version").text.trim()
+        def version = Wac2Resource.getConfVersion()
+        println "version -> ${version.dump()}"
         version
     }
 
@@ -609,8 +611,11 @@ class GriffonHelper {
      */
     def static getWacwsUrl = {
         Properties properties = new Properties()
+        def p = Wac2Resource.getWacwsProperties()
+        println "p -> ${p?.dump()}"
         properties.load(Wac2Resource.getWacwsProperties())
         return properties.get("webservice.url") as String
+        //return "http://localhost:8080/wacws/services/wpxUpload?wsdl"
     }
 
 }

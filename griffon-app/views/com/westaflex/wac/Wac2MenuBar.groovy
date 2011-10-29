@@ -6,10 +6,11 @@
  * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
  * 
  */
+package com.westaflex.wac
 
 menuBar = menuBar {
 	
-    menu(text: 'Auslegung', mnemonic: 'A') {
+    menu(id: 'hauptmenu', text: 'Auslegung', mnemonic: 'A') {
 		menuItem(neuesProjektAction)
 		menuItem(projektOeffnenAction)
 		separator()
@@ -39,7 +40,7 @@ menuBar = menuBar {
 	}
 
     // WAC-167: Info-Menü mit Über-Dialog
-    menu(text: '?', mnemonic: 'I') {
+    menu(id: 'infomenu', text: '?', mnemonic: 'I') {
         menuItem(aboutAction)
     }
 

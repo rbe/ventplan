@@ -9,6 +9,8 @@
  * /Users/rbe/project/wac/griffon-app/controllers/Wac2Controller.groovy
  * Last modified at 13.03.2011 18:34:15 by rbe
  */
+package com.westaflex.wac
+
 import com.westaflex.wac.*
 import com.bensmann.griffon.GriffonHelper as GH
 
@@ -17,7 +19,7 @@ import com.bensmann.griffon.GriffonHelper as GH
  */
 class Wac2Controller {
 	
-    public static boolean DEBUG = false
+    public static boolean DEBUG = true
 
     def model
     def wacModelService
@@ -55,18 +57,29 @@ class Wac2Controller {
      * Get access to all components of a MVC group by its ID.
      */
     def getMVCGroup(mvcId) {
-        [
+        /*[
             mvcId: mvcId,
             model: app.models[mvcId],
             view: app.views[mvcId],
             controller: app.controllers[mvcId]
+        ]*/
+        println "app.models -> ${app.models.dump()}"
+        println "app.views -> ${app.views.dump()}"
+        println "app.controllers -> ${app.controllers.dump()}"
+        println "app.groups -> ${app.groups.dump()}"
+        println "get app.groups from mvcId=${mvcId} -> ${app.groups[mvcId].dump()}"
+        [
+            mvcId: mvcId,
+            model: app.groups[mvcId].model,
+            view: app.groups[mvcId].view,
+            controller: app.groups[mvcId].controller
         ]
     }
 
     /**
      * Hole MVC Group des aktiven Projekts.
      */
-    def getMVCGroupAktivesProjekt = {
+    def getMVCGroupAktivesProjekt() {
         if (DEBUG) println "getMVCGroupAktivesProjekt: model.aktivesProjekt=${model.aktivesProjekt}"
         getMVCGroup(model.aktivesProjekt)
     }
@@ -142,9 +155,11 @@ class Wac2Controller {
     /**
      * 
      */
-    def generateMVCId = {
+    String generateMVCId() {
         def c = Wac2Controller.projektCounter++
-        "Projekt ${c.toString()}" as String
+        def t = "Projekt ${c.toString()}".toString()
+        //println "Wac2Controller.generateMVCId -> t=${t.dump()}"
+        t
     }
 	
     /**
@@ -155,23 +170,26 @@ class Wac2Controller {
         jxwithWorker(start: true) {
             // initialize the worker
             onInit {
-                model.statusProgressBarIndeterminate = true
-                model.statusBarText = "Phase 1/3: Erstelle ein neues Projekt..."
+                //model.statusProgressBarIndeterminate = true
+                //model.statusBarText = "Phase 1/3: Erstelle ein neues Projekt..."
             }
             // do the task
             work {
                 // Die hier vergebene MVC ID wird immer genutzt, selbst wenn das Projekt anders benannt wird!
                 // (durch Bauvorhaben, Speichern)
                 // Es wird also immer "Projekt 1", "Projekt 2" etc. genutzt, nach Reihenfolge der Erstellung
-                model.statusBarText = "Phase 2/3: Initialisiere das Projekt..."
+                //model.statusBarText = "Phase 2/3: Initialisiere das Projekt..."
+                //def p = Wac2Controller.projektCounter++
                 String mvcId = generateMVCId()
+                //String mvcId = "Projekt ${p.toString()}".toString()
                 def (m, v, c) =
-                createMVCGroup("Projekt", mvcId,
-                    			[projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
-                model.statusBarText = "Phase 3/3: Erstelle Benutzeroberfläche für das Projekt..."
-                doLater {
+                    createMVCGroup("Projekt", "${mvcId}", [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+                //model.statusBarText = "Phase 3/3: Erstelle Benutzeroberfläche für das Projekt..."
+                //doLater {
+                    println "Wac2Controller.neuesProjekt work doLater"
                     // MVC ID zur Liste der Projekte hinzufügen
                     model.projekte << mvcId
+                    println "Wac2Controller.neuesProjekt 2 -> mvcId=${mvcId}"
                     // Projekt aktivieren
                     projektAktivieren(mvcId)
                     // resize the frame to validate the components.
@@ -186,12 +204,13 @@ class Wac2Controller {
                     } catch (e) {
                         e.printStackTrace()
                     }
-                }
+                //}
             }
             // do sth. when the task is done.
             onDone {
-                model.statusProgressBarIndeterminate = false
-                model.statusBarText = "Bereit."
+                //model.statusBarText = ""
+                //model.statusProgressBarIndeterminate = false
+                //model.statusBarText = "Bereit."
             }
         }
     }
@@ -200,20 +219,28 @@ class Wac2Controller {
      * Ein Projekt aktivieren -- MVC ID an Wac2Model übergeben.
      */
     def projektAktivieren = { mvcId ->
-        //if (DEBUG) println "projektAktivieren: mvcId=${mvcId} model.aktivesProjekt=${model.aktivesProjekt}"
+        println "Wac2Controller.projektAktivieren -> mvcId=${mvcId}"
+        if (DEBUG) println "Wac2Controller.projektAktivieren: mvcId=${mvcId} model.aktivesProjekt=${model?.aktivesProjekt}"
+        println "Wac2Controller.projektAktivieren: mvcId=${mvcId} model.aktivesProjekt=${model?.aktivesProjekt}"
+        if (DEBUG) println "Wac2Controller.projektAktivieren: model=${model?.dump()}"
+        println "Wac2Controller.projektAktivieren: model=${model?.dump()}"
         // Anderes Projekt wurde aktiviert?
-        if (mvcId && mvcId != model.aktivesProjekt) {
+        if (mvcId && mvcId != model?.aktivesProjekt) {
             // MVC ID merken
             model.aktivesProjekt = mvcId
             // Dirty-flag aus Projekt-Model übernehmen
             try {
                 def mvcGroup = getMVCGroup(mvcId)
-                //if (DEBUG) println "projektAktivieren: getMVCGroup(mvcId)=${mvcGroup}, wpx=${mvcGroup.model?.wpxFilename}"
+                if (DEBUG) println "Wac2Controller.projektAktivieren: getMVCGroup(mvcGroup)=${mvcGroup}, wpx=${mvcGroup.model?.wpxFilename}"
+                println "Wac2Controller.projektAktivieren: getMVCGroup(mvcGroup)=${mvcGroup}, wpx=${mvcGroup.model?.wpxFilename}"
+                if (DEBUG) println "Wac2Controller.projektAktivieren: getMVCGroup(mvcGroup)=${mvcGroup.dump()}"
+                println "Wac2Controller.projektAktivieren: getMVCGroup(mvcGroup)=${mvcGroup.dump()}"
                 model.aktivesProjektGeandert = mvcGroup.model?.map.dirty
             } catch (e) {
                 e.printStackTrace()
             }
-            //if (DEBUG) println "projektAktivieren: mvcId=${model.aktivesProjekt}"
+            if (DEBUG) println "Wac2Controller.projektAktivieren: mvcId=${model.aktivesProjekt}"
+            println "Wac2Controller.projektAktivieren: mvcId=${model.aktivesProjekt}"
         }
         /*
         else {
@@ -377,6 +404,7 @@ class Wac2Controller {
      */
     def aktivesProjektSpeichern = { evt = null ->
         def mvc = getMVCGroupAktivesProjekt()
+        println "Wac2Controller.aktivesProjektSpeichern -> mvc=${mvc.dump()}"
         projektSpeichern(mvc)
     }
 
@@ -385,10 +413,11 @@ class Wac2Controller {
 	 * Ist er nicht gesetzt, wird "Projekt speichern als" aufgerufen.
      */
     def projektSpeichern = { mvc ->
+        println "Wac2Controller.projektSpeichern -> mvc=${mvc.dump()}"
         def saved = mvc.controller.save()
         if (saved) {
             if (DEBUG) println "aktivesProjektSpeichern: Projekt gespeichert in ${mvc.model.wpxFilename}"
-            saved
+            //saved
         } else {
             if (DEBUG) println "aktivesProjektSpeichern: Projekt nicht gespeichert, kein Dateiname (mvc.model.wpxFilename=${mvc.model.wpxFilename?.dump()})?"
             aktivesProjektSpeichernAls()
@@ -434,7 +463,7 @@ class Wac2Controller {
             def saved = mvc.controller.save()
             if (saved) {
                 if (DEBUG) println "alleProjekteSpeichern: Projekt gespeichert in ${mvc.model.wpxFilename}"
-                saved
+                //saved
             } else {
                 if (DEBUG) println "alleProjekteSpeichern: Projekt nicht gespeichert, kein Dateiname (mvc.model.wpxFilename=${mvc.model.wpxFilename?.dump()})?"
                 projektSpeichernAls(mvc)
@@ -491,7 +520,7 @@ class Wac2Controller {
     /**
      * WAC-161: Zuletzt geöffnete Projekte
      */
-    def addRecentlyOpenedFile = { filename ->
+    void addRecentlyOpenedFile(filename) {
         if (DEBUG) println "addRecentlyOpenedFile -> filename: ${filename}"
         // Add file to MRU list
         if (mruFileManager.size() == MRUFileManager.DEFAULT_MAX_SIZE) {
@@ -508,21 +537,23 @@ class Wac2Controller {
      */
     def buildRecentlyOpenedMenuItems = {
         if (mruFileManager.size() > 0) {
-            if (DEBUG) println "view dump -> ${view.dump()}"
+            if (DEBUG) println "Wac2Controller.buildRecentlyOpenedMenuItems view dump -> ${view.dump()}"
             view.recentlyOpenedMenu.removeAll()
             
             def mruList = mruFileManager.getMRUFileList()
             
-            mruList.each() { f -> 
-                if (DEBUG) println "buildRecentlyOpenedMenuItems -> f = ${f}".toString()
-                def newMenuItem = builder.menuItem(f)
-                newMenuItem.setAction(builder.action(
-                        id: "zuletztGeoffnetesProjektAction" as String,
-                        name: "${f}".toString(),
-                        enabled: true,
-                        closure: zuletztGeoffnetesProjekt
-                    ))
-                view.recentlyOpenedMenu.add(newMenuItem)
+            edt{
+                mruList.each() { f -> 
+                    if (DEBUG) println "Wac2Controller.buildRecentlyOpenedMenuItems -> f = ${f}".toString()
+                    def newMenuItem = builder.menuItem(f)
+                    newMenuItem.setAction(builder.action(
+                            id: "zuletztGeoffnetesProjektAction" as String,
+                            name: "${f}".toString(),
+                            enabled: true,
+                            closure: zuletztGeoffnetesProjekt
+                        ))
+                    view.recentlyOpenedMenu.add(newMenuItem)
+                }
             }
         }
     }
@@ -618,6 +649,7 @@ class Wac2Controller {
                 if (isError || fileMsg.length() > 0) {
                     infoMsg = "Übermittlung der WPX-Dateien mit Fehler abgeschlossen.\n ${fileMsg}"
                 }
+                println "Wac2Controller.angebotsverfolgungFilesClosure -> ${app.controllers["Dialog"]?.dump()}"
                 app.controllers["Dialog"].showCustomInformDialog("Angebotsverfolgung" as String, infoMsg as String)
             }
         }
@@ -627,7 +659,7 @@ class Wac2Controller {
     def postWpxFile = { f, inputName -> 
         doOutside {
             try {
-                println "wacwsUrl -> ${wacwsUrl}"
+                if (DEBUG) println "wacwsUrl -> ${wacwsUrl}"
                 // call webservice with paramter
                 def result = withWs(wsdl: wacwsUrl) {
                     uploadWpx(f?.text, inputName)
@@ -637,7 +669,7 @@ class Wac2Controller {
                 }
                 return true
             } catch (e) {
-                println "postWpxFile: SOAP call failed. Error=${e}"
+                if (DEBUG) println "postWpxFile: SOAP call failed. Error=${e}"
                 return false
             } finally {
                 if (DEBUG) println "postWpxFile: End of postWpxFile file ${f.name}..." as String

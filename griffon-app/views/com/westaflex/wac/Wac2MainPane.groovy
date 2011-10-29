@@ -6,6 +6,7 @@
  * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
  * 
  */
+package com.westaflex.wac
 
 // A tabbed pane holding all open projects
 jideTabbedPane(id: "projektTabGroup", constraints: "growx") {

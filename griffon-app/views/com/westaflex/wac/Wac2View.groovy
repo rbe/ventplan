@@ -6,6 +6,8 @@
  * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
  * 
  */
+package com.westaflex.wac
+
 import net.miginfocom.swing.MigLayout
 
 def screen = java.awt.Toolkit.defaultToolkit.screenSize
@@ -50,7 +52,8 @@ wac2Frame = application(title: 'WestaWAC 2',
 	windowClosing: controller.exitApplication
 ) {
 	// Build menu bar
-	menuBar(build(Wac2MenuBar))
+	//menuBar(build(Wac2MenuBar))
+    build(Wac2MenuBar)
 	// Build toolbar
 	toolBar(build(Wac2ToolBar))
 	// Content
@@ -66,11 +69,11 @@ wac2Frame = application(title: 'WestaWAC 2',
 	// Bindings
 	build(Wac2Bindings)
 	// The status bar
-	jxstatusBar(id: "mainStatusBar") {
+	/*jxstatusBar(id: "mainStatusBar") {
 		label(id: "mainStatusBarText", text: bind { model.statusBarText })
 
         progressBar(id: "mainStatusProgressBar", minimum: 0, maximum: 100, indeterminate: bind { model.statusProgressBarIndeterminate } )
-	}
+	}*/
     
     // WAC-161: Zuletzt geöffnete Projekte in das Menu laden
     controller.buildRecentlyOpenedMenuItems()

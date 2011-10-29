@@ -9,6 +9,8 @@
  * /Users/rbe/project/wac/griffon-app/models/Wac2Model.groovy
  * Last modified at 14.03.2011 20:27:07 by rbe
  */
+package com.westaflex.wac
+
 import groovy.beans.Bindable
 
 import com.westaflex.wac.*
@@ -56,7 +58,8 @@ class Wac2Model {
 	/**
 	 * Die MVC ID des derzeit aktiven Projekts/der aktive Tab.
 	 */
-	@Bindable def aktivesProjekt
+	//@Bindable 
+    def aktivesProjekt
 	
 	/**
 	 * Wurde das Model des aktuellen Projekts geändert?

@@ -88,7 +88,8 @@ class DialogController {
      * Zeige Informationsdialog für Angebotsverfolgung mit mitgegebener Nachricht an.
      */
     def showCustomInformDialog = { titel, infoMsg ->
-        inform(titel as String, infoMsg)
+        println "DialogController.showCustomInformDialog titel -> ${titel}, ${infoMsg}"
+        TaskDialogs.inform(titel as String, infoMsg)
     }
     
 }

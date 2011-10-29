@@ -21,7 +21,7 @@ import javax.swing.DefaultComboBoxModel
  */
 class ProjektModel {
 	
-	public static boolean DEBUG = false
+	public static boolean DEBUG = true
 	
 	/**
 	 * The MVC id.

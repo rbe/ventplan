@@ -6,6 +6,7 @@
  * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
  * 
  */
+package com.westaflex.wac
 
 def vertSep = { -> separator(orientation: javax.swing.SwingConstants.VERTICAL) }
 

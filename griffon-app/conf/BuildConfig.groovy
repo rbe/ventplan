@@ -135,3 +135,7 @@ griffon {
         footer = "<br/><br/>Made with Griffon (0.9)"
     }
 }
+
+app.archetype = 'default'
+app.fileType = '.groovy'
+app.defaultPackageName = 'com.westaflex.wac'
