@@ -54,15 +54,17 @@ class DialogController {
     /**
      * Zeige Informationsdialog mit mitgegebener Nachricht an.
      */
-    def showInformDialog = { infoMsg ->
-        inform("Information", infoMsg)
+    def showInformDialog = { window = null, infoMsg ->
+        window ?: Window.windows.find{it.focused}
+        inform(window, "Information", infoMsg)
     }
 
     /**
      * Zeige Fehler-Informationsdialog mit mitgegebener Nachricht an.
      */
-    def showErrorDialog = { errorMsg ->
-        inform("Fehler", errorMsg)
+    def showErrorDialog = { window = null, errorMsg ->
+        window ?: Window.windows.find{it.focused}
+        inform(window, "Fehler", errorMsg)
     }
 
     /**
