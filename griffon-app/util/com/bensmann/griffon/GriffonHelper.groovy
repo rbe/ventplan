@@ -531,9 +531,10 @@ class GriffonHelper {
 	/**
 	 * Make a CellEditor with a ComboBox for GlazedLists.
 	 */
-	def static makeComboboxCellEditor = { column, list ->
+	static void makeComboboxCellEditor(column, list) {
 		def eventList = ca.odell.glazedlists.GlazedLists.eventList(list) as ca.odell.glazedlists.EventList
-		javax.swing.DefaultCellEditor cellEditor = ca.odell.glazedlists.swing.AutoCompleteSupport.createTableCellEditor(eventList)
+        def threadEventList = ca.odell.glazedlists.GlazedLists.threadSafeList(eventList)
+		javax.swing.DefaultCellEditor cellEditor = ca.odell.glazedlists.swing.AutoCompleteSupport.createTableCellEditor(threadEventList)
 		column.setCellEditor(cellEditor)
 	}
 
