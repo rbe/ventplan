@@ -268,15 +268,15 @@ class ProjektModel {
 	def tmNameComparator = { a, b -> a.name <=> b.name } as Comparator
 	def tmNothingComparator = { a, b -> 0 } as Comparator
 	def tableModels = [
-			raume:                   new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			raume:                   ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList),
 			raumeTuren:              [/* TableModels will be added in addRaum() */],
-			raumeVsZuAbluftventile:  new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			raumeVsUberstromventile: new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			dvbKanalnetz:            new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
-			dvbVentileinstellung:    new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList,
+			raumeVsZuAbluftventile:  ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList),
+			raumeVsUberstromventile: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList),
+			dvbKanalnetz:            ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList),
+			dvbVentileinstellung:    ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList),
 			wbw:                     [/* TableModels will be added in addWbwTableModel() */],
-			akustikZuluft:           new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList,
-			akustikAbluft:           new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList
+			akustikZuluft:           ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList),
+			akustikAbluft:           ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList)
 		]
 	
 	/**
@@ -658,7 +658,7 @@ class ProjektModel {
 		// TableModel schon vorhanden?
 		if (tableModels.wbw[index]) return
 		// Neues TableModel erstellen und füllen
-		tableModels.wbw << new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNameComparator) as ca.odell.glazedlists.EventList
+		tableModels.wbw << ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNameComparator) as ca.odell.glazedlists.EventList)
 		meta.wbw.each {
 			tableModels.wbw[index].add([id: it.id, anzahl: 0 as Integer, name: it.bezeichnung, widerstandsbeiwert: it.wert])
 		}
@@ -715,35 +715,35 @@ class ProjektModel {
 	 */
 	def addRaumTurenModel() {
 		tableModels.raumeTuren <<
-			new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList
+			ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList)
 	}
 	
 	/**
-	 * TODO mmu Dokumentation!
+	 * Setze CellEditor für Combobox in Tabellen.
 	 */
-	def setRaumEditors(view) {
-		////javax.swing.SwingUtilities.invokeLater {
-			// Raumdaten - Geschoss
-			GH.makeComboboxCellEditor view.raumTabelle.columnModel.getColumn(1), meta.raum.geschoss
-			// Raumdaten - Luftart
-			GH.makeComboboxCellEditor view.raumTabelle.columnModel.getColumn(2), meta.raum.luftart
-			// RaumVs Zu- und Abluftventile
-			// Combobox RaumVs - Luftart
-			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(1), meta.raum.luftart
-			// Combobox RaumVs - Bezeichnung Abluftmenge
-			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(5), meta.raum.raumVsBezeichnungZuluftventile
-			// Combobox RaumVs - Bezeichnung Zuluftmenge
-			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(9), meta.raum.raumVsBezeichnungAbluftventile
-			// Combobox RaumVs - Verteilebene
-			GH.makeComboboxCellEditor view.raumVsZuAbluftventileTabelle.columnModel.getColumn(12), meta.raum.geschoss
-			// RaumVs Überströmventile
-			// Combobox RaumVs - Luftart
-			GH.makeComboboxCellEditor view.raumVsUberstromelementeTabelle.columnModel.getColumn(1), meta.raum.luftart
-			// Combobox RaumVs - Überströmelemente
-			GH.makeComboboxCellEditor view.raumVsUberstromelementeTabelle.columnModel.getColumn(4), meta.raum.raumVsUberstromelemente
-			// WAC-7: Raumtyp für Druckverlustberechnung - Ventileinstellung Combobox.
-			updateDvbVentileinstellungComboBoxModel(view)
-		////}
+	void setRaumEditors(view) {
+		javax.swing.SwingUtilities.invokeLater {
+            // Raumdaten - Geschoss
+            GH.makeComboboxCellEditor(view.raumTabelle.columnModel.getColumn(1), meta.raum.geschoss)
+            // Raumdaten - Luftart
+            GH.makeComboboxCellEditor(view.raumTabelle.columnModel.getColumn(2), meta.raum.luftart)
+            // RaumVs Zu- und Abluftventile
+            // Combobox RaumVs - Luftart
+            GH.makeComboboxCellEditor(view.raumVsZuAbluftventileTabelle.columnModel.getColumn(1), meta.raum.luftart)
+            // Combobox RaumVs - Bezeichnung Abluftmenge
+            GH.makeComboboxCellEditor(view.raumVsZuAbluftventileTabelle.columnModel.getColumn(5), meta.raum.raumVsBezeichnungZuluftventile)
+            // Combobox RaumVs - Bezeichnung Zuluftmenge
+            GH.makeComboboxCellEditor(view.raumVsZuAbluftventileTabelle.columnModel.getColumn(9), meta.raum.raumVsBezeichnungAbluftventile)
+            // Combobox RaumVs - Verteilebene
+            GH.makeComboboxCellEditor(view.raumVsZuAbluftventileTabelle.columnModel.getColumn(12), meta.raum.geschoss)
+            // RaumVs Überströmventile
+            // Combobox RaumVs - Luftart
+            GH.makeComboboxCellEditor(view.raumVsUberstromelementeTabelle.columnModel.getColumn(1), meta.raum.luftart)
+            // Combobox RaumVs - Überströmelemente
+            GH.makeComboboxCellEditor(view.raumVsUberstromelementeTabelle.columnModel.getColumn(4), meta.raum.raumVsUberstromelemente)
+            // WAC-7: Raumtyp für Druckverlustberechnung - Ventileinstellung Combobox.
+            updateDvbVentileinstellungComboBoxModel(view)
+		}
 	}
 	
 	/**
@@ -993,8 +993,8 @@ class ProjektModel {
      */
     def setDvbKanalnetzEditors(view) {
 		javax.swing.SwingUtilities.invokeLater {
-            GH.makeComboboxCellEditor view.dvbKanalnetzTabelle.columnModel.getColumn(0), meta.druckverlust.kanalnetz.luftart
-            GH.makeComboboxCellEditor view.dvbKanalnetzTabelle.columnModel.getColumn(3), meta.druckverlust.kanalnetz.kanalbezeichnung
+            GH.makeComboboxCellEditor(view.dvbKanalnetzTabelle.columnModel.getColumn(0), meta.druckverlust.kanalnetz.luftart)
+            GH.makeComboboxCellEditor(view.dvbKanalnetzTabelle.columnModel.getColumn(3), meta.druckverlust.kanalnetz.kanalbezeichnung)
         }
     }
 	

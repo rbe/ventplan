@@ -814,8 +814,8 @@ class ProjektController {
 			raumBearbeitenDialog = GH.createDialog(builder, RaumBearbeitenView, [title: "Raum bearbeiten", pack: true])
 			// Modify TableModel for Turen
 			def columnModel = view.raumBearbeitenTurenTabelle.columnModel
-			GH.makeComboboxCellEditor columnModel.getColumn(0), model.meta.raumTurTyp
-			GH.makeComboboxCellEditor columnModel.getColumn(1), model.meta.raumTurbreiten
+			GH.makeComboboxCellEditor(columnModel.getColumn(0), model.meta.raumTurTyp)
+			GH.makeComboboxCellEditor(columnModel.getColumn(1), model.meta.raumTurbreiten)
             /*
             view.raumBearbeitenTurenTabelle.getModel().addTableModelListener({ TableModelEvent e ->
                 println "test"
@@ -1058,7 +1058,7 @@ class ProjektController {
 	/**
 	 * Aktualisiere Zentralgerät und Volumenstrom in allen Comboboxen
 	 */
-	def zentralgeratAktualisieren = {
+	void zentralgeratAktualisieren() {
         if (DEBUG) println "zentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
 		doLater {
 			/*
@@ -1525,7 +1525,7 @@ class ProjektController {
 	/**
 	 * Akustikberechnung.
 	 */
-	def berechneAkustik = { tabname ->
+	void berechneAkustik(tabname) {
 		def m = model.map.akustik."${tabname.toLowerCase()}"
 		// Konvertiere Wert TextField, ComboBox in Integer, default ist 0
 		// Eingabe einer 0 im TextField gibt ""???

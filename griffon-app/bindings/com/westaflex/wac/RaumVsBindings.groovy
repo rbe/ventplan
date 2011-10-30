@@ -27,8 +27,8 @@ bind(source: model.map.raum.raumVs, sourceProperty: "ubElementeHinweis", target:
 }
 // Comboboxes
 // Binding for items of comboboxes is done in RaumVsiew!
-//raumVsZentralgerat.actionPerformed = controller.zentralgeratManuellGewahlt
-//raumVsVolumenstrom.actionPerformed = controller.volumenstromZentralgeratManuellGewahlt
+raumVsZentralgerat.actionPerformed = controller.zentralgeratManuellGewahlt
+raumVsVolumenstrom.actionPerformed = controller.volumenstromZentralgeratManuellGewahlt
 //
 bind(source: model.map.raum.raumVs, sourceProperty: "gesamtVolumenNE",                   target: raumVsGesamtVolumenNE,                   targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.raum.raumVs, sourceProperty: "luftwechselNE",                     target: raumVsLuftwechselNE,                     targetProperty: "text", converter: GH.toString2Converter)

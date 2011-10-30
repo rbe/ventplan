@@ -9,6 +9,7 @@
 package com.westaflex.wac
 
 import com.ezware.dialog.task.CommandLink
+import java.awt.Window
 
 /**
  * Manage and create dialogs.
@@ -19,17 +20,19 @@ class DialogController {
      * Dialog anzeigen, wenn die Applikation geschlossen werden soll, obwohl
      * noch nicht gespeicherte Projekte vorhanden sind.
      */
-    def showApplicationCloseDialog() {
+    def showApplicationCloseDialog(window = null) {
+        window ?: Window.windows.find{it.focused}
         def choice = choice(
-                "Anwendung schliessen?",
-                "Die Anwendung enthält nicht gespeicherte Projekte. Bitte wählen Sie.",
-                1,
-                [
-                    new CommandLink("Alle Speichern", ""),
-                    //new CommandLink("Abbrechen", ""),
-                    new CommandLink("Ohne Speichern schliessen", "")
-                ]
-                )
+            window,
+            "Anwendung schliessen?",
+            "Die Anwendung enthält nicht gespeicherte Projekte. Bitte wählen Sie.",
+            1,
+            [
+                new CommandLink("Alle Speichern", ""),
+                new CommandLink("Abbrechen", ""),
+                new CommandLink("Ohne Speichern schliessen", "")
+            ]
+            )
         choice
     }
 
@@ -37,17 +40,19 @@ class DialogController {
      * Dialog anzeigen, wenn ein nicht gespeichertes Projekt geschlossen werden soll.
      * WAC-185: Schliessen in Ok ändern.
      */
-    def showCloseProjectDialog() {
+    def showCloseProjectDialog(window = null) {
+        window ?: Window.windows.find{it.focused}
         def choice = choice(
-                "Projekt schliessen?",
-                "Das Projekt enthält nicht gespeicherte Werte. Bitte wählen Sie.",
-                1,
-                [
-                    new CommandLink("Speichern", ""),
-                    new CommandLink("Abbrechen", ""),
-                    new CommandLink("Ok", "")
-                ]
-                )
+            window,
+            "Projekt schliessen?",
+            "Das Projekt enthält nicht gespeicherte Werte. Bitte wählen Sie.",
+            1,
+            [
+                new CommandLink("Speichern", ""),
+                new CommandLink("Abbrechen", ""),
+                new CommandLink("Ok", "")
+            ]
+            )
         choice
     }
 
@@ -73,16 +78,18 @@ class DialogController {
      * Ja = Daten an OOo senden
      * Nein = es wird ein Blanko Angebot geöffnet
      */
-    def showPrintProjectDialog() {
+    def showPrintProjectDialog(window = null) {
+        window ?: Window.windows.find{it.focused}
         def choice = choice(
-                "Angebot aus der aktuellen Auslegung erstellen?",
-                "Bitte wählen Sie.",
-                1,
-                [
-                    new CommandLink("Ja", ""),
-                    new CommandLink("Nein", ""),
-                ]
-                )
+            window,
+            "Angebot aus der aktuellen Auslegung erstellen?",
+            "Bitte wählen Sie.",
+            1,
+            [
+                new CommandLink("Ja", ""),
+                new CommandLink("Nein", ""),
+            ]
+            )
         choice
     }
     

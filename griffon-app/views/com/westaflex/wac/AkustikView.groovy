@@ -13,6 +13,7 @@ package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
+import javax.swing.table.JTableHeader;
 
 // Akustikberechnung
 panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]"), constraints: "grow") {
@@ -161,8 +162,13 @@ def buildLayout(tabname) {
                                 tm = model.createAkustikAbluftTableModel()
                                 break
                         }
-                        table(id: "akustik${tabname}Tabelle", model: tm, selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-                            current.setRowHeight(33)
+                        //table(id: "akustik${tabname}Tabelle", model: tm, selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                        table(id: "akustik${tabname}Tabelle", model: tm) {
+                            //current.setRowHeight(33)
+                            //current.setSortable(false)
+                            //current.getTableHeader().setDefaultRenderer(new JTableHeader().getDefaultRenderer())
+                            //current.setAutoCreateRowSorter(false)
+                            //current.setRowSorter(null)
                         }
                     }
                 }
@@ -177,8 +183,13 @@ def buildLayout(tabname) {
                                 tm = model.createAkustikAbluftTableModel()
                                 break
                         }
-                        table(id: "akustik${tabname}Tabelle", model: tm, selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-                            current.setRowHeight(33)
+                        //table(id: "akustik${tabname}Tabelle", model: tm, selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                        table(id: "akustik${tabname}Tabelle", model: tm) {
+                            //current.setRowHeight(33)
+                            //current.setSortable(false)
+                            //current.getTableHeader().setDefaultRenderer(new JTableHeader().getDefaultRenderer())
+                            //current.setAutoCreateRowSorter(false)
+                            //current.setRowSorter(null)
                         }
                     }
                 }
