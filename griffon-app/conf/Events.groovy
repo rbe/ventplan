@@ -39,27 +39,10 @@ onBootstrapEnd = { app ->
 	def stopTime = System.currentTimeMillis()
     
     
+    // shutdown handler to abort application closing
     app.addShutdownHandler([
         canShutdown: { a ->
             app.config.shutdown.proceed = app.controllers["wac2"].exitApplication(a)
-            /*def choice = app.controllers["Dialog"].showCloseProjectDialog()
-            switch (choice) {
-                case 0: // Save: save and close project
-                	println "projektSchliessen: save and close"
-                	controller.aktivesProjektSpeichern(evt)
-                	//clacpr(mvc)
-                	app.config.shutdown.proceed = true
-                    break
-                case 1: // Cancel: do nothing...
-                    println "projektSchliessen: cancel"
-                	app.config.shutdown.proceed = false
-                    break
-                case 2: // Close: just close the tab...
-                	println "projektSchliessen: close without save"
-               		//clacpr(mvc)
-                	app.config.shutdown.proceed = true
-                    break
-            }*/
             return app.config.shutdown.proceed
         },
         onShutdown: { a -> }

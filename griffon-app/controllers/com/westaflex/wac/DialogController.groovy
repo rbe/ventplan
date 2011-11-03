@@ -36,8 +36,8 @@ class DialogController {
     }
     
     /**
-     * Dialog anzeigen, wenn die Applikation geschlossen werden soll, obwohl
-     * noch nicht gespeicherte Projekte vorhanden sind.
+     * Dialog anzeigen, wenn die Applikation geschlossen werden soll.
+     * Dialog nur für Schliessen bzw. Abbrechen nutzen.
      */
     int showApplicationOnlyCloseDialog() {
         def choice = choice(

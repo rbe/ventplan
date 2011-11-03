@@ -99,7 +99,7 @@ class Wac2Controller {
     }
 	
     /**
-     * 
+     * Behebt den Fehler aus dem Ticket WAC-8.
      */
     boolean exitApplication(evt) {
         boolean proceed = false
