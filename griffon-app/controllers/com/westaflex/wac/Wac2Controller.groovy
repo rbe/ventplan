@@ -19,7 +19,7 @@ import com.bensmann.griffon.GriffonHelper as GH
  */
 class Wac2Controller {
 	
-    public static boolean DEBUG = false
+    public static boolean DEBUG = true
 
     def model
     def wacModelService

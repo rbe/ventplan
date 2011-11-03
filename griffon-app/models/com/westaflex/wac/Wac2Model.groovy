@@ -58,8 +58,7 @@ class Wac2Model {
 	/**
 	 * Die MVC ID des derzeit aktiven Projekts/der aktive Tab.
 	 */
-	//@Bindable 
-    def aktivesProjekt
+	@Bindable def aktivesProjekt
 	
 	/**
 	 * Wurde das Model des aktuellen Projekts geändert?
