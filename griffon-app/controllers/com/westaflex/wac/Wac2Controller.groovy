@@ -93,38 +93,56 @@ class Wac2Controller {
             o &= c.canClose()
         }
     }
+    
+    def exitApplication = { evt = null ->
+        exitApplication()
+    }
 	
     /**
      * 
      */
-    def exitApplication = { evt = null ->
+    boolean exitApplication(evt) {
+        boolean proceed = false
         // Ask if we can close
         def canClose = canClose()
-        if (DEBUG) println "exitApplication: ${canClose}"
+        //if (DEBUG) println "exitApplication: ${canClose}"
         if (canClose) {
-            _shutdown()
+            def choice = app.controllers["Dialog"].showApplicationOnlyCloseDialog()
+            if (DEBUG) println "exitApplication: choice=${choice}"
+            switch (choice) {
+                case 0:
+                	if (DEBUG) println "Ja"
+                	alleProjekteSpeichern(evt)
+                	proceed = true
+                	break
+                case 1: // Cancel: do nothing...
+                	if (DEBUG) println "Nein"
+                	proceed = false
+                	break
+            }
         } else {
             if (DEBUG) println "exitApplication: there are unsaved changes"
             // Show dialog: ask user for save all, cancel, quit
-            def choice = app.controllers["Dialog"].showApplicationCloseDialog()
+            def choice = app.controllers["Dialog"].showApplicationSaveAndCloseDialog()
             if (DEBUG) println "exitApplication: choice=${choice}"
             switch (choice) {
                 case 0:
                 	if (DEBUG) println "Alles speichern"
                 	alleProjekteSpeichern(evt)
-                	_shutdown()
+                	proceed = true
                 	break
                 case 1: // Cancel: do nothing...
                 	if (DEBUG) println "Abbrechen..."
-                	app.shutdown()
+                	proceed = false
                 	break
                 case 2:
                 	if (DEBUG) println "Schliessen"
-                	_shutdown()
+                	proceed = true
                 	break
             }
         }
         mruFileManager.save()
+        return proceed
     }
 	
     /**
@@ -265,7 +283,6 @@ class Wac2Controller {
                 model.aktivesProjekt = model.projekte[view.projektTabGroup.selectedIndex]
             }
             if (DEBUG) println "projektSchliessen: model.projekte=${model.projekte.dump()}"
-            // Anderes Projekt aktivieren?
             // NOT NEEDED projektIndexAktivieren(view.projektTabGroup.selectedIndex)
             // Wird durch die Tab und den ChangeListener erledigt.
         }

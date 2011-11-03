@@ -20,10 +20,9 @@ class DialogController {
      * Dialog anzeigen, wenn die Applikation geschlossen werden soll, obwohl
      * noch nicht gespeicherte Projekte vorhanden sind.
      */
-    int showApplicationCloseDialog(window = null) {
-        window ?: Window.windows.find{it.focused}
+    int showApplicationSaveAndCloseDialog() {
         def choice = choice(
-            window,
+            app.windowManager.windows.find{it.focused},
             "Anwendung schliessen?",
             "Die Anwendung enthält nicht gespeicherte Projekte. Bitte wählen Sie.",
             1,
@@ -35,15 +34,32 @@ class DialogController {
             )
         return choice
     }
+    
+    /**
+     * Dialog anzeigen, wenn die Applikation geschlossen werden soll, obwohl
+     * noch nicht gespeicherte Projekte vorhanden sind.
+     */
+    int showApplicationOnlyCloseDialog() {
+        def choice = choice(
+            app.windowManager.windows.find{it.focused},
+            "Anwendung schliessen?",
+            "Möchten Sie die Anwendung wirklich schliessen?",
+            1,
+            [
+                new CommandLink("Ja", ""),
+                new CommandLink("Nein", "")
+            ]
+            )
+        return choice
+    }
 
     /**
      * Dialog anzeigen, wenn ein nicht gespeichertes Projekt geschlossen werden soll.
      * WAC-185: Schliessen in Ok ändern.
      */
-    int showCloseProjectDialog(window = null) {
-        window ?: Window.windows.find{it.focused}
+    int showCloseProjectDialog() {
         def choice = choice(
-            window,
+            app.windowManager.windows.find{it.focused},
             "Projekt schliessen?",
             "Das Projekt enthält nicht gespeicherte Werte. Bitte wählen Sie.",
             1,
@@ -78,10 +94,9 @@ class DialogController {
      * Ja = Daten an OOo senden
      * Nein = es wird ein Blanko Angebot geöffnet
      */
-    int showPrintProjectDialog(window = null) {
-        window ?: Window.windows.find{it.focused}
+    int showPrintProjectDialog() {
         def choice = choice(
-            window,
+            app.windowManager.windows.find{it.focused},
             "Angebot aus der aktuellen Auslegung erstellen?",
             "Bitte wählen Sie.",
             1,

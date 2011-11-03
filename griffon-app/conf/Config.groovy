@@ -42,3 +42,11 @@ griffon.datasource.injectInto = ["controller", "service"]
 griffon.wsclient.injectInto = ["controller"]
 
 griffon.ws.injectInto = ['controller']
+
+swing {
+    windowManager {
+        myWindowName = [
+            hide: {w, app -> if(app.config.shutdown.proceed) w.dispose()}
+        ]
+    }
+}

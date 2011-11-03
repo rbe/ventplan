@@ -49,10 +49,10 @@ wac2Frame = application(title: 'WestaWAC 2',
     layout: new MigLayout("fill", "[grow,200::]"),
 	// Our window close listener
 	defaultCloseOperation: javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE,
-	windowClosing: controller.exitApplication
+	windowClosing: { evt -> println "windowClosing -> ${evt.dump()}" }
+    //controller.exitApplication
 ) {
 	// Build menu bar
-	//menuBar(build(Wac2MenuBar))
     build(Wac2MenuBar)
 	// Build toolbar
 	toolBar(build(Wac2ToolBar))
@@ -69,11 +69,11 @@ wac2Frame = application(title: 'WestaWAC 2',
 	// Bindings
 	build(Wac2Bindings)
 	// The status bar
-	/*jxstatusBar(id: "mainStatusBar") {
+	jxstatusBar(id: "mainStatusBar") {
 		label(id: "mainStatusBarText", text: bind { model.statusBarText })
 
         progressBar(id: "mainStatusProgressBar", minimum: 0, maximum: 100, indeterminate: bind { model.statusProgressBarIndeterminate } )
-	}*/
+	}
     
     // WAC-161: Zuletzt geöffnete Projekte in das Menu laden
     controller.buildRecentlyOpenedMenuItems()

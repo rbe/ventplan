@@ -260,7 +260,7 @@ class ProjektController {
 	 */
 	def drucken = {
 		def choice = app.controllers["Dialog"].showPrintProjectDialog()
-        if (DEBUG) println "exitApplication: choice=${choice}"
+        if (DEBUG) println "drucken: choice=${choice}"
         switch (choice) {
             case 0:
                 if (DEBUG) println "Ja = Daten an OOo senden"
