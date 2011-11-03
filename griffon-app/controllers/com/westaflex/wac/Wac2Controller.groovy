@@ -159,19 +159,19 @@ class Wac2Controller {
         jxwithWorker(start: true) {
             // initialize the worker
             onInit {
-                //model.statusProgressBarIndeterminate = true
-                //model.statusBarText = "Phase 1/3: Erstelle ein neues Projekt..."
+                model.statusProgressBarIndeterminate = true
+                model.statusBarText = "Phase 1/3: Erstelle ein neues Projekt..."
             }
             // do the task
             work {
                 // Die hier vergebene MVC ID wird immer genutzt, selbst wenn das Projekt anders benannt wird!
                 // (durch Bauvorhaben, Speichern)
                 // Es wird also immer "Projekt 1", "Projekt 2" etc. genutzt, nach Reihenfolge der Erstellung
-                //model.statusBarText = "Phase 2/3: Initialisiere das Projekt..."
+                model.statusBarText = "Phase 2/3: Initialisiere das Projekt..."
                 String mvcId = generateMVCId()
                 def (m, v, c) =
                     createMVCGroup("Projekt", "${mvcId}", [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
-                //model.statusBarText = "Phase 3/3: Erstelle Benutzeroberfläche für das Projekt..."
+                model.statusBarText = "Phase 3/3: Erstelle Benutzeroberfläche für das Projekt..."
                 //doLater {
                     // MVC ID zur Liste der Projekte hinzufügen
                     model.projekte << mvcId
@@ -193,9 +193,9 @@ class Wac2Controller {
             }
             // do sth. when the task is done.
             onDone {
-                //model.statusBarText = ""
-                //model.statusProgressBarIndeterminate = false
-                //model.statusBarText = "Bereit."
+                model.statusBarText = ""
+                model.statusProgressBarIndeterminate = false
+                model.statusBarText = "Bereit."
             }
         }
     }
@@ -257,12 +257,20 @@ class Wac2Controller {
             // Aus Liste der Projekte entfernen
             if (DEBUG) println "projektSchliessen: removing ${model.aktivesProjekt} from model.projekte=${model.projekte.dump()}"
             model.projekte.remove(mvc.mvcId)
+            // aktives Projekt auf null setzen.
+            // Wichtig für die Bindings in den Menus
+            model.aktivesProjekt = null
+            // aktives Projekt nur setzen, wenn noch weitere Projekte offen sind.
+            if (view.projektTabGroup.selectedIndex > -1) {
+                model.aktivesProjekt = model.projekte[view.projektTabGroup.selectedIndex]
+            }
             if (DEBUG) println "projektSchliessen: model.projekte=${model.projekte.dump()}"
             // Anderes Projekt aktivieren?
             // NOT NEEDED projektIndexAktivieren(view.projektTabGroup.selectedIndex)
             // Wird durch die Tab und den ChangeListener erledigt.
         }
         // Projekt zur aktiven Tab finden
+        println "projektSchliessen: "
         def mvc = getMVCGroupAktivesProjekt()
         if (!mvc) {
             println "projektSchliessen: kein aktives Projekt!"
