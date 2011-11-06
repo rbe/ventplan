@@ -70,9 +70,8 @@ wac2Frame = application(title: 'WestaWAC 2',
 	build(Wac2Bindings)
 	// The status bar
 	jxstatusBar(id: "mainStatusBar") {
-		label(id: "mainStatusBarText", text: bind { model.statusBarText })
-
         progressBar(id: "mainStatusProgressBar", minimum: 0, maximum: 100, indeterminate: bind { model.statusProgressBarIndeterminate } )
+        label(id: "mainStatusBarText", text: bind { model.statusBarText })
 	}
     
     // WAC-161: Zuletzt geöffnete Projekte in das Menu laden

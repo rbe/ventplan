@@ -99,7 +99,7 @@ class Wac2Controller {
     }
 	
     /**
-     * Behebt den Fehler aus dem Ticket WAC-8.
+     * WAC-8: Behebt den Fehler aus dem Ticket
      */
     boolean exitApplication(evt) {
         boolean proceed = false
@@ -174,46 +174,64 @@ class Wac2Controller {
      */
     def neuesProjekt = { evt = null ->
         // Progress bar in Wac2View.
-        jxwithWorker(start: true) {
-            // initialize the worker
-            onInit {
-                model.statusProgressBarIndeterminate = true
-                model.statusBarText = "Phase 1/3: Erstelle ein neues Projekt..."
-            }
-            // do the task
-            work {
-                // Die hier vergebene MVC ID wird immer genutzt, selbst wenn das Projekt anders benannt wird!
-                // (durch Bauvorhaben, Speichern)
-                // Es wird also immer "Projekt 1", "Projekt 2" etc. genutzt, nach Reihenfolge der Erstellung
-                model.statusBarText = "Phase 2/3: Initialisiere das Projekt..."
-                String mvcId = generateMVCId()
-                def (m, v, c) =
-                    createMVCGroup("Projekt", "${mvcId}", [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
-                model.statusBarText = "Phase 3/3: Erstelle Benutzeroberfläche für das Projekt..."
-                //doLater {
-                    // MVC ID zur Liste der Projekte hinzufügen
-                    model.projekte << mvcId
-                    // Projekt aktivieren
-                    projektAktivieren(mvcId)
-                    // resize the frame to validate the components.
-                    try{
-                        def dim = wac2Frame.getSize()
-                        wac2Frame.setSize((int) dim.width + 1, (int) dim.height)
-                        wac2Frame.invalidate()
-                        wac2Frame.validate()
-                        wac2Frame.setSize(dim)
-                        wac2Frame.invalidate()
-                        wac2Frame.validate()
-                    } catch (e) {
-                        e.printStackTrace()
-                    }
-                //}
-            }
-            // do sth. when the task is done.
-            onDone {
-                model.statusBarText = ""
-                model.statusProgressBarIndeterminate = false
-                model.statusBarText = "Bereit."
+        edt {
+            jxwithWorker(start: true) {
+                // initialize the worker
+                onInit {
+                    model.statusProgressBarIndeterminate = true
+                    //model.statusBarText = "Phase 1/3: Erstelle ein neues Projekt..."
+                    //model.statusBarText = ""
+                    view.mainStatusBarText.text = "Phase 1/3: Erstelle ein neues Projekt..."
+                }
+                // do the task
+                work {
+                    // Die hier vergebene MVC ID wird immer genutzt, selbst wenn das Projekt anders benannt wird!
+                    // (durch Bauvorhaben, Speichern)
+                    // Es wird also immer "Projekt 1", "Projekt 2" etc. genutzt, nach Reihenfolge der Erstellung
+                    //model.statusBarText = ""
+                    //model.statusBarText = "Phase 2/3: Initialisiere das Projekt..."
+                    view.mainStatusBarText.text = ""
+                    view.mainStatusBarText.text = "Phase 2/3: Initialisiere das Projekt..."
+                    
+                    String mvcId = generateMVCId()
+                    def (m, v, c) =
+                        createMVCGroup("Projekt", "${mvcId}", [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+                    
+                    //model.statusBarText = ""
+                    //model.statusBarText = "Phase 3/3: Erstelle Benutzeroberfläche für das Projekt..."
+                    view.mainStatusBarText.text = ""
+                    view.mainStatusBarText.text = "Phase 3/3: Erstelle Benutzeroberfläche für das Projekt..."
+                    //doLater {
+                        // MVC ID zur Liste der Projekte hinzufügen
+                        model.projekte << mvcId
+                        // Projekt aktivieren
+                        projektAktivieren(mvcId)
+                        // resize the frame to validate the components.
+                        try{
+                            def dim = wac2Frame.getSize()
+                            wac2Frame.setSize((int) dim.width + 1, (int) dim.height)
+                            wac2Frame.invalidate()
+                            wac2Frame.validate()
+                            wac2Frame.setSize(dim)
+                            wac2Frame.invalidate()
+                            wac2Frame.validate()
+                        } catch (e) {
+                            e.printStackTrace()
+                        }
+                    //}
+                    model.statusBarText = ""
+                    view.mainStatusBarText.text = ""
+                }
+                // do sth. when the task is done.
+                onDone {
+                    view.mainStatusBarText.text = ""
+                    //model.statusBarText = ""
+                    model.statusProgressBarIndeterminate = false
+                    //model.statusBarText = "Bereit."
+                    view.mainStatusBarText.text = "Bereit."
+                    model.statusBarText = ""
+                    model.statusBarText = "Bereit."
+                }
             }
         }
     }

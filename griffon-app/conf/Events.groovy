@@ -39,7 +39,7 @@ onBootstrapEnd = { app ->
 	def stopTime = System.currentTimeMillis()
     
     
-    // shutdown handler to abort application closing
+    // WAC-8: shutdown handler to abort application closing
     app.addShutdownHandler([
         canShutdown: { a ->
             app.config.shutdown.proceed = app.controllers["wac2"].exitApplication(a)
