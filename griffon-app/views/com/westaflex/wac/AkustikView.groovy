@@ -16,15 +16,15 @@ import net.miginfocom.swing.MigLayout
 import javax.swing.table.JTableHeader;
 
 // Akustikberechnung
-panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]"), constraints: "grow") {
+panel(layout: new MigLayout("ins 0 n 0 n, fillx, wrap", "[fill]", "[fill]"), constraints: "grow") {
 
-    panel(id: "akustikTabPanel", layout: new MigLayout("fill", "[grow]", ""), constraints: "grow") {
+    panel(id: "akustikTabPanel", layout: new MigLayout("ins 0 n 0 n, fill", "[grow]", ""), constraints: "grow") {
         // Tabellen für
         jideTabbedPane(id: "akustikTabGroup", constraints: "grow, span") {
-            panel(id: "akustikZuluftTab", title: "Zuluft", layout: new MigLayout("fill", "[fill]", ""), constraints: "grow") {
+            panel(id: "akustikZuluftTab", title: "Zuluft", layout: new MigLayout("ins 0 n 0 n, fill", "[fill]", ""), constraints: "grow") {
                 buildLayout("Zuluft")
             }
-            panel(id: "akustikAbluftTab", title: "Abluft", layout: new MigLayout("fill", "[fill]", ""), constraints: "grow") {
+            panel(id: "akustikAbluftTab", title: "Abluft", layout: new MigLayout("ins 0 n 0 n, fill", "[fill]", ""), constraints: "grow") {
                 buildLayout("Abluft")
             }
         }
@@ -67,7 +67,7 @@ akustikAbluftTabelle.packColumn(5, 10, 80)
 def buildLayout(tabname) {
 	def tabTitleForeground = tabname == "Zuluft" ? GH.MY_RED : java.awt.Color.BLUE
 	// Akustikberechnung - Zuluft
-    panel(layout: new MigLayout("fill, wrap", "[]", "[fill]"), constraints: "grow") {
+    panel(layout: new MigLayout("ins 0 n 0 n, fill, wrap", "[]", "[fill]"), constraints: "grow") {
         panel(layout: new MigLayout("wrap 3", "[left]5[center]5[left]", "[fill]"), constraints: "grow") {
             panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
                 label("Raumbezeichnung")

@@ -113,7 +113,7 @@ panel(constraints: 'a', border: compoundBorder(outer: emptyBorder(5), inner: emp
 
     // Feuerstätten-Kennzeichnung
     panel(id: "anlageFeuerstattePanel", border: titledBorder(title: "Feuerstätten-Kennzeichnung"), constraints: 'c', layout: new MigLayout("ins 0 n 0 n, wrap 1")) {
-        checkBox(id: "anlageFeuerstatte", text: "Lüftungsanlage mit Sicherheitseinrichtung")
+        checkBox(id: "anlageFeuerstatte", text: "<html>Lüftungsanlage mit <br/>Sicherheitseinrichtung</html>")
     }
 
     zl.insertTemplate('valueRow3');

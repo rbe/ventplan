@@ -13,15 +13,15 @@ import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
 // Druckverlustberechnung
-panel(id: "dvbTabPanel", layout: new MigLayout("fill, wrap 1", "[fill]", "[fill]"), constraints: "grow") {
+panel(id: "dvbTabPanel", layout: new MigLayout("ins 0 n 0 n, fill, wrap 1", "[fill]", "[fill]"), constraints: "grow") {
 
     // Tabellen für Druckverlustberechnung
     jideTabbedPane(id: "dvbTabGroup", constraints: "grow, span") {
 
         // Druckverlustberechnung - Kanalnetz
-        panel(id: "dvbKanalnetzTab", title: "Kanalnetz", layout: new MigLayout("fill", "[fill,grow]", "[fill]"), constraints: "grow") {
+        panel(id: "dvbKanalnetzTab", title: "Kanalnetz", layout: new MigLayout("ins 0 n 0 n, fill", "[fill,grow]", "[fill]"), constraints: "grow") {
             jideScrollPane(constraints: "grow") {
-                panel(id: "dvbKanalnetzPanel", layout: new MigLayout("", "[grow]", ""), constraints: "grow") {
+                panel(id: "dvbKanalnetzPanel", layout: new MigLayout("ins 0 n 0 n", "[grow]", ""), constraints: "grow") {
                     panel(id: "dvbKanalnetzInput", layout: new MigLayout("", "[fill] 16 [fill] 16 [fill] 16 [fill] 16 [fill] 16 [fill] 16 [fill]", ""), constraints: "grow, wrap") {
 
                         label("Luftart")
@@ -40,13 +40,13 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill, wrap 1", "[fill]", "[fill]
                         button(id: "dvbKanalnetzHinzufugen", text: "Hinzufügen", constraints: "wrap")
                     }
 
-                    panel(id: "dvbKanalnetzTabellePanel", layout: new MigLayout("fill", "[grow]", ""), constraints: "span, grow, wrap") {
+                    panel(id: "dvbKanalnetzTabellePanel", layout: new MigLayout("ins 0 n 0 n, fill", "[grow]", ""), constraints: "span, grow, wrap") {
                         jideScrollPane(constraints: "grow") {
                             table(id: 'dvbKanalnetzTabelle', model: model.createDvbKanalnetzTableModel())
                         }
                     }
 
-                    panel(layout: new MigLayout("fillx", "[left] 16 []", ""), constraints: "span, wrap") {
+                    panel(layout: new MigLayout("ins 0 n 0 n, fillx", "[left] 16 []", ""), constraints: "span, wrap") {
                         // TODO mmu Enable only when table isn't empty and row is selected
                         button(id: "dvbKanalnetzEntfernen",        text: "Entfernen",               constraints: "split 2")
                         button(id: "dvbKanalnetzWiderstandswerte", text: "Widerstandsbeiwerte...")
@@ -57,10 +57,10 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill, wrap 1", "[fill]", "[fill]
         }
 
         // Druckverlustberechnung - Ventileinstellung
-        panel(id: "dvbVentileinstellungTab", title: "Ventileinstellung", layout: new MigLayout("fill", "[fill,grow]", "[fill]"), constraints: "grow") {
+        panel(id: "dvbVentileinstellungTab", title: "Ventileinstellung", layout: new MigLayout("ins 0 n 0 n, fill", "[fill,grow]", "[fill]"), constraints: "grow") {
             // Druckverlustberechnung - Ventileinstellung
             jideScrollPane(constraints: "grow") {
-                panel(id: "dvbVentileinstellungPanel", layout: new MigLayout("", "[grow]"), constraints: "grow") {
+                panel(id: "dvbVentileinstellungPanel", layout: new MigLayout("ins 0 n 0 n", "[grow]"), constraints: "grow") {
                     panel(id: "dvbVentileinstellungInput", layout: new MigLayout("", "[] 16 [] 16 [] 16 [] 16 [] 16 [] 16 []", ""), constraints: "grow, wrap") {
 
                         label("Luftart")
@@ -79,13 +79,13 @@ panel(id: "dvbTabPanel", layout: new MigLayout("fill, wrap 1", "[fill]", "[fill]
                         // Nach Rücksprache mit Stukemeier erstmal ausblenden; label("Mindesteingabe 5 Teilstrecken", foreground: java.awt.Color.RED, constraints: "wrap")
                     }
 
-                    panel(id: "dvbVentileinstellungTabellePanel", layout: new MigLayout("fill", "[fill,grow]", ""), constraints: "span, grow, wrap") {
+                    panel(id: "dvbVentileinstellungTabellePanel", layout: new MigLayout("ins 0 n 0 n, fill", "[fill,grow]", ""), constraints: "span, grow, wrap") {
                         jideScrollPane(constraints: "grow") {
                             table(id: 'dvbVentileinstellungTabelle', model: model.createDvbVentileinstellungTableModel())
                         }
                     }
 
-                    panel(layout: new MigLayout("fillx", "[left] 16 []", ""), constraints: "span, wrap") {
+                    panel(layout: new MigLayout("ins 0 n 0 n, fillx", "[left] 16 []", ""), constraints: "span, wrap") {
                         // TODO mmu Enable only when table isn't empty and row is selected
                         button(id: "dvbVentileinstellungEntfernen", text: "Entfernen"/*, enabled: bind { dvbVentileinstellungTabelle?.selectedRow >= 0 ? true : false }*/)
                     }
