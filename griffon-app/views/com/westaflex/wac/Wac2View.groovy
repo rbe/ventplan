@@ -49,8 +49,11 @@ wac2Frame = application(title: 'WestaWAC 2',
     layout: new MigLayout("fill", "[grow,200::]"),
 	// Our window close listener
 	defaultCloseOperation: javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE,
-	windowClosing: { evt -> println "windowClosing -> ${evt.dump()}" }
-    //controller.exitApplication
+	windowClosing: { evt -> 
+        //println "windowClosing -> ${evt.dump()}"
+        //controller.exitApplication
+        app.shutdown()
+    }
 ) {
 	// Build menu bar
     build(Wac2MenuBar)

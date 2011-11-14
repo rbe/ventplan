@@ -27,7 +27,7 @@ import java.awt.Component
  */
 class GriffonHelper {
 	
-	public static boolean DEBUG = true
+	public static boolean DEBUG = false
 	
 	/**
 	 * Standard rounding mode.

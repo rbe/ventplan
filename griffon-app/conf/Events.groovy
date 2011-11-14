@@ -42,10 +42,11 @@ onBootstrapEnd = { app ->
     // WAC-8: shutdown handler to abort application closing
     app.addShutdownHandler([
         canShutdown: { a ->
-            app.config.shutdown.proceed = app.controllers["wac2"].exitApplication(a)
+            app.config.shutdown.proceed = app.controllers["wac2"].canExitApplication(a)
             return app.config.shutdown.proceed
         },
-        onShutdown: { a -> }
+        onShutdown: { a -> 
+        }
     ] as griffon.core.ShutdownHandler)
 	//println "Events.onBootstrapEnd: finished in ${stopTime - startTime} ms"
 }

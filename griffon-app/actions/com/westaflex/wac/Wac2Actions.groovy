@@ -60,7 +60,7 @@ alleProjekteSpeichernAction = action(
         accelerator: shortcut("shift A"),
         smallIcon: imageIcon("/menu/alleprojektespeichern.png"),
         enabled: bind { model.alleProjekteGeandert },
-        closure: controller.alleProjekteSpeichern
+        closure: controller.alleProjekteSpeichernAction
         )
 
 projektSchliessenAction = action(

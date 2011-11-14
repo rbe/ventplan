@@ -14,9 +14,9 @@
     </loadproperties>
 
     <!-- Griffon, Groovy -->
-    <property name="myapp.home" value="/Users/rbe/app" />
-    <property name="groovy.home" value="${myapp.home}/groovy/1.7.3" />
-    <property name="griffon.home" value="${myapp.home}/griffon/0.9" />
+    <property name="myapp.home" value="/Users/manu/app" />
+    <property name="groovy.home" value="${myapp.home}/groovy/1.8.3" />
+    <property name="griffon.home" value="${myapp.home}/griffon/0.9.4" />
     <!-- Binaries -->
     <property name="bin.dir" value="${basedir}/bin" />
     <!-- Libraries -->
