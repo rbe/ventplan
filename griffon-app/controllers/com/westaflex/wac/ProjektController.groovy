@@ -1573,7 +1573,7 @@ class ProjektController {
 			view."akustik${tabname}MittlererSchalldruckpegel".text =
 				m.mittlererSchalldruckpegel?.toString2() ?: 0d.toString2()
 			// Resync table
-			model.resyncAkustikTableModels()
+			model.resyncAkustikTableModels(view)
 		}
 	}
     

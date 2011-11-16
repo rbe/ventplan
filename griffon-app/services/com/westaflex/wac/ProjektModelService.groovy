@@ -87,7 +87,7 @@ class ProjektModelService {
             def grosshandel = p."firma".find { it."rolle".text() == "Grosshandel" }
             def gebaude = p."gebaude"
             def zentralgerat = p."zentralgerat"
-            // R�ume
+            // Räume
             def raume = []
             gebaude."raum".each { room ->
                 def r = [
@@ -541,7 +541,7 @@ class ProjektModelService {
     def save = { map, file ->
         def wpx = domBuilder."westaflex-wpx" {
             projekt() {
-                ersteller() { person() }
+                /*ersteller() { person() }
                 X.tc { bauvorhaben(map.kundendaten.bauvorhaben) } { bauvorhaben() }
                 X.tc { notizen(map.kundendaten.notizen) }
                 makeGebaude(map)
@@ -551,7 +551,7 @@ class ProjektModelService {
                         makeAkustik(map.akustik.zuluft, "zuluft")
                         makeAkustik(map.akustik.abluft, "abluft")
                     }
-                }
+                }*/
                 makeFirma("Grosshandel", map.kundendaten.grosshandel)
                 makeFirma("Ausfuhrende", map.kundendaten.ausfuhrendeFirma)
             }

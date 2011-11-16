@@ -65,22 +65,6 @@ GH.yellowTextField(akustikAbluftLangsdampfungKanalLfdmMeter)
 // Bindings
 build(AkustikBindings)
 
-akustikZuluftTabelle.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF)
-akustikZuluftTabelle.packColumn(0, 14, 100)
-akustikZuluftTabelle.packColumn(1, 14, 100)
-akustikZuluftTabelle.packColumn(2, 14, 100)
-akustikZuluftTabelle.packColumn(3, 14, 100)
-akustikZuluftTabelle.packColumn(4, 14, 100)
-akustikZuluftTabelle.packColumn(5, 14, 100)
-
-akustikAbluftTabelle.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF)
-akustikAbluftTabelle.packColumn(0, 12, 80)
-akustikAbluftTabelle.packColumn(1, 12, 80)
-akustikAbluftTabelle.packColumn(2, 12, 80)
-akustikAbluftTabelle.packColumn(3, 12, 80)
-akustikAbluftTabelle.packColumn(4, 12, 80)
-akustikAbluftTabelle.packColumn(5, 12, 80)
-
 
 /**
  * Synchronize all Swing table models depending on map.raum.raume.
@@ -91,13 +75,16 @@ def buildLayout(tabname) {
     panel(constraints: "y", border: compoundBorder(outer: emptyBorder(5), inner: emptyBorder(5))) {
 
         zl = zoneLayout {
+            // Die ersten 3 Zeilen
             zoneRow('a<-.a2b-.bc>..c2d.......d1.....', template: 'headerrow')
+            // Folgezeile mit vertikalem Abstand von 6px
             zoneRow('...............6...............')
+            // 1. Zeile. o = Tabelle
             zoneRow('.....2.........2o........1p^<.p')
             zoneRow('e<-.e2f^-fg^>.g2.........1q^<.q')
-            //zoneRow('h<-.hi^.-...i..............')
             zoneRow('j<-.j2k^.-....k2...............', template: 'row1')
             zoneRow('l<-.l2m^-mn^>-n2...............', template: 'row2')
+            // Tabelle o wird hier geschlossen
             zoneRow('r<-.r2.........2........o......')
             zoneRow('...............6...............')
             zoneRow('s<-...........s2t>......t1u^<.u')
@@ -136,11 +123,12 @@ def buildLayout(tabname) {
             }
             //table(id: "akustik${tabname}Tabelle", model: tm, selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
             table(id: "akustik${tabname}Tabelle", model: tm) {
-                //current.setRowHeight(33)
-                //current.setSortable(false)
-                //current.getTableHeader().setDefaultRenderer(new JTableHeader().getDefaultRenderer())
-                //current.setAutoCreateRowSorter(false)
-                //current.setRowSorter(null)
+                //current.setRowHeight(16)
+                current.setSortable(false)
+                current.getTableHeader().setDefaultRenderer(new JTableHeader().getDefaultRenderer())
+                current.setAutoCreateRowSorter(false)
+                current.setRowSorter(null)
+                current.setFillsViewportHeight(true)
             }
         }
 
@@ -220,159 +208,5 @@ def buildLayout(tabname) {
 
         label("<html>* Bei dieser Berechnung handelt es dich um eine theoretische Auslegung, deren Werte in der Praxis abweichen können</html>", constraints: "v")
     }
-
-    // Akustikberechnung - Zuluft
-/*    panel(layout: new MigLayout("ins 0 n 0 n, fill, wrap", "[]", "[fill]"), constraints: "grow") {
-        panel(layout: new MigLayout("wrap 3", "[left]5[center]5[left]", "[fill]"), constraints: "grow") {
-            panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
-                label("Raumbezeichnung")
-
-                comboBox(id: "akustik${tabname}Raumbezeichnung", items: model.meta.raum.typ)
-            }
-            panel(layout: new MigLayout("wrap", "[center]", "[]")) {
-
-                panel() {
-                    label("Zentrales Lüftungsgerät", foreground: tabTitleForeground)
-                    label(id: "akustik${tabname}${tabname}Zentralgerat", foreground: tabTitleForeground)
-                }
-
-                label(tabname, foreground: tabTitleForeground)
-
-                label("Oktavmittenfrequenz in Hz")
-            }
-            panel(layout: new MigLayout("fillx, wrap", "[fill]", "[fill]")) {
-                label(" ")
-            }
-
-            panel(layout: new MigLayout("fillx", "[fill]para[fill]para[right]", "3[fill]-1")) {
-
-                label(" ", constraints: "height 26px!, span 3, wrap")
-
-                label("Schallleistungspegel ${tabname}stutzen", foreground: GH.MY_RED, constraints: "height 30px!")
-
-                comboBox(id: "akustik${tabname}${tabname}stutzenZentralgerat", items: [""] + model.meta.zentralgerat, selectedItem: "")
-                comboBox(id: "akustik${tabname}Pegel", constraints: "width 80px!, wrap", items: [""] + model.meta.volumenstromZentralgerat)
-
-                label("Schallleistungspegelerhöhung Kanalnetz", foreground: GH.MY_RED, constraints: "height 30px!")
-                comboBox(id: "akustik${tabname}Kanalnetz", constraints: "span 2, wrap", items: (10..200).step(10))
-
-            
-            
-
-                label("Schallleistungspegelerhöhung Filter", foreground: GH.MY_RED, constraints: "height 30px!")
-                comboBox(id: "akustik${tabname}Filter", constraints: "span 2, wrap", items: (10..200).step(10))
-
-                label("1. Hauptschalldämpfer", foreground: GH.MY_GREEN, constraints: "height 30px!")
-                switch (tabname) {
-                    case "Zuluft":
-                        comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "span 2, wrap", items: model.meta.akustik.schalldampfer, selectedItem: "100150TYP4A")
-                        break
-                    case "Abluft":
-                        comboBox(id: "akustik${tabname}1Hauptschalldampfer", constraints: "span 2, wrap", items: model.meta.akustik.schalldampfer, selectedItem: "")
-                        break
-                }
-
-                label("2. Hauptschalldämpfer", foreground: GH.MY_GREEN, constraints: "height 30px!")
-                comboBox(id: "akustik${tabname}2Hauptschalldampfer", constraints: "span 2, wrap", items: model.meta.akustik.schalldampfer)
-
-                label("Anzahl der Umlenkungen 90° Stck.", foreground: GH.MY_GREEN, constraints: "height 30px!")
-                label("")
-                textField(id: "akustik${tabname}AnzahlUmlenkungen90GradStck", constraints: "width 80px!, wrap")
-
-                label("Luftverteilerkasten Stck.", foreground: GH.MY_GREEN, constraints: "height 30px!")
-                label("")
-                textField(id: "akustik${tabname}LuftverteilerkastenStck", constraints: "width 80px!, wrap")
-
-                label("Längsdämpfung Kanal lfdm.", foreground: GH.MY_GREEN, constraints: "height 30px!")
-                comboBox(id: "akustik${tabname}LangsdampfungKanal", items: model.meta.druckverlust.kanalnetz.kanalbezeichnung)
-                textField(id: "akustik${tabname}LangsdampfungKanalLfdmMeter", constraints: "width 80px!, wrap")
-
-                label("Schalldämpfer Ventil", foreground: GH.MY_GREEN, constraints: "height 30px!")
-                comboBox(id: "akustik${tabname}SchalldampferVentil", constraints: "span 2, wrap", items: model.meta.akustik.schalldampfer)
-
-                label("Einfügungsdämmwert Luftdurchlass", foreground: GH.MY_GREEN, constraints: "height 30px!")
-                comboBox(id: "akustik${tabname}EinfugungsdammwertLuftdurchlass", constraints: "span 2, wrap", items: model.meta.druckverlust.ventileinstellung.ventilbezeichnung, selectedItem: "100ALSQ3W002")
-
-                label("Raumabsorption (Annahme)", foreground: GH.MY_GREEN, constraints: "span 2, height 30px!")
-                switch (tabname) {
-                    case "Zuluft":
-                        comboBox(id: "akustik${tabname}Raumabsorption", constraints: "wrap", items: ["BAD", "WOHNEN"], selectedItem: "WOHNEN")
-                        break
-                    case "Abluft":
-                        comboBox(id: "akustik${tabname}Raumabsorption", constraints: "wrap", items: ["BAD", "WOHNEN"], selectedItem: "BAD")
-                        break
-                }
-
-                label("Korrektur der A-Bewertung", constraints: "height 30px!, wrap")
-
-                label("Bewerteter Schallpegel", constraints: "height 30px!, wrap")
-            }
-            panel(layout: new MigLayout("fill, wrap", "[right]", "[fill]")) {
-                if (System.properties.'os.name'.contains("Windows")) {
-                    jideScrollPane(constraints: "grow, height 500px!") {
-                        def tm
-                        switch (tabname) {
-                            case "Zuluft":
-                                tm = model.createAkustikZuluftTableModel()
-                                break
-                            case "Abluft":
-                                tm = model.createAkustikAbluftTableModel()
-                                break
-                        }
-                        //table(id: "akustik${tabname}Tabelle", model: tm, selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-                        table(id: "akustik${tabname}Tabelle", model: tm) {
-                            //current.setRowHeight(33)
-                            //current.setSortable(false)
-                            //current.getTableHeader().setDefaultRenderer(new JTableHeader().getDefaultRenderer())
-                            //current.setAutoCreateRowSorter(false)
-                            //current.setRowSorter(null)
-                        }
-                    }
-                }
-                else {
-                    jideScrollPane(constraints: "grow, height 460px!") {
-                        def tm
-                        switch (tabname) {
-                            case "Zuluft":
-                                tm = model.createAkustikZuluftTableModel()
-                                break
-                            case "Abluft":
-                                tm = model.createAkustikAbluftTableModel()
-                                break
-                        }
-                        //table(id: "akustik${tabname}Tabelle", model: tm, selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
-                        table(id: "akustik${tabname}Tabelle", model: tm) {
-                            //current.setRowHeight(33)
-                            //current.setSortable(false)
-                            //current.getTableHeader().setDefaultRenderer(new JTableHeader().getDefaultRenderer())
-                            //current.setAutoCreateRowSorter(false)
-                            //current.setRowSorter(null)
-                        }
-                    }
-                }
-            }
-            panel(layout: new MigLayout("fillx, wrap", "[]", "[fill]")) {
-                label("dB(A)")
-                label(id: "akustik${tabname}dbA", text: "0,00", constraints: "height 30px!")
-            }
-            //panel() {
-            //    label("")
-            //}
-//            panel(layout: new MigLayout("wrap", "[450:480:650, right]", "[]")) {
-            panel(layout: new MigLayout("fillx, wrap", "[fill, right]", "[]"), constraints: "right, span 2") {
-                label("Mittlerer Schalldruckpegel* dB(A) =", constraints: "right, wrap")
-            }
-            panel() {
-                label(id: "akustik${tabname}MittlererSchalldruckpegel", text: "0,00", constraints: "left")
-            }
-            panel(layout: new MigLayout("wrap", "[right]", "[fill]"), constraints: "right, span 2") {
-
-                label("<html>* Bei dieser Berechnung handelt es dich um eine theoretische Auslegung, deren Werte in der Praxis abweichen können</html>", constraints: "right, span 2")
-            }
-            panel() {
-                label("")
-            }
-        }
-    }*/
     return "akustik${tabname}Tab"
 }

@@ -353,19 +353,21 @@ class GriffonHelper {
 	 */
 	def static withDisabledActionListeners = { component, closure ->
 		// Save existing ActionListener(s)
-		def actionListeners = component.actionListeners
-		actionListeners.each {
-			if (GriffonHelper.DEBUG) println "withDisabledActionListener: removing ${it}"
-			component.removeActionListener(it)
-		}
-		// Execute closure
-		closure.delegate = component
-		closure()
-		// Re-add ActionListener(s)
-		actionListeners.each {
-				if (GriffonHelper.DEBUG) println "withDisabledActionListener: re-adding ${it}"
-				component.addActionListener(it)
-			}
+        javax.swing.SwingUtilities.invokeLater {
+            def actionListeners = component.actionListeners
+            actionListeners.each {
+                if (GriffonHelper.DEBUG) println "withDisabledActionListener: removing ${it}"
+                component.removeActionListener(it)
+            }
+            // Execute closure
+            closure.delegate = component
+            closure()
+            // Re-add ActionListener(s)
+            actionListeners.each {
+                if (GriffonHelper.DEBUG) println "withDisabledActionListener: re-adding ${it}"
+                component.addActionListener(it)
+            }
+        }
 	}
 	
 	/**
@@ -532,10 +534,12 @@ class GriffonHelper {
 	 * Make a CellEditor with a ComboBox for GlazedLists.
 	 */
 	static void makeComboboxCellEditor(column, list) {
-		def eventList = ca.odell.glazedlists.GlazedLists.eventList(list) as ca.odell.glazedlists.EventList
-        def threadEventList = ca.odell.glazedlists.GlazedLists.threadSafeList(eventList)
-		javax.swing.DefaultCellEditor cellEditor = ca.odell.glazedlists.swing.AutoCompleteSupport.createTableCellEditor(threadEventList)
-		column.setCellEditor(cellEditor)
+        javax.swing.SwingUtilities.invokeLater {
+            def eventList = ca.odell.glazedlists.GlazedLists.eventList(list) as ca.odell.glazedlists.EventList
+            def threadEventList = ca.odell.glazedlists.GlazedLists.threadSafeList(eventList)
+            javax.swing.DefaultCellEditor cellEditor = ca.odell.glazedlists.swing.AutoCompleteSupport.createTableCellEditor(threadEventList)
+            column.setCellEditor(cellEditor)
+        }
 	}
 
     /**

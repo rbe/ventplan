@@ -1,4 +1,4 @@
-/*
+    /*
  * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
  * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
  *
@@ -19,7 +19,7 @@ import com.bensmann.griffon.GriffonHelper as GH
  */
 class Wac2Controller {
 	
-    public static boolean DEBUG = true
+    public static boolean DEBUG = false
 
     def model
     def wacModelService
