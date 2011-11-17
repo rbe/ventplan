@@ -100,7 +100,7 @@ class Wac2Resource {
     /**
 	 * Get wac web service properties.
 	 */
-	def static getWacwsProperties = {
+	def static getWacwsProperties() {
 		// dev
 		def r = Wac2Resource.class.getResourceAsStream("/wacws.properties")
         // prod
@@ -111,11 +111,13 @@ class Wac2Resource {
     /**
 	 * Get version.
 	 */
-	def static getConfVersion = {
+	def static getConfVersion() {
 		// dev
-		def r = Wac2Resource.class.getResource("../conf/version")
+		def r = Wac2Resource.class.getResource("../resources/version")
+        println "r -> ${r?.dump()}"
 		// prod
-		if (!r) r = Wac2Resource.class.getResource("/conf/version")
+		if (!r) r = Wac2Resource.class.getResource("version")
+        println "r2 -> ${r?.dump()}"
 		r
 	}
 	

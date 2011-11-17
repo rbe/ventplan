@@ -834,9 +834,11 @@ class ProjektController {
 	 * RaumBearbeiten - RaumBearbeitenView schliessen.
 	 */
 	def raumBearbeitenSchliessen = {
-		if (DEBUG) println "raumBearbeitenSchliessen: closing dialog '${raumBearbeitenDialog.title}'"
-        raumBearbeitenGeandert()
-		raumBearbeitenDialog.dispose()
+        invokeLater {
+            if (DEBUG) println "raumBearbeitenSchliessen: closing dialog '${raumBearbeitenDialog.title}'"
+            raumBearbeitenGeandert()
+            raumBearbeitenDialog.dispose()
+        }
 	}
 	
 	/**

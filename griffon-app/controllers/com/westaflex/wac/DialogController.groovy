@@ -9,6 +9,7 @@
 package com.westaflex.wac
 
 import com.ezware.dialog.task.CommandLink
+import com.ezware.dialog.task.TaskDialogs
 import java.awt.Window
 
 /**
@@ -113,7 +114,7 @@ class DialogController {
      */
     def showCustomInformDialog = { titel, infoMsg ->
         println "DialogController.showCustomInformDialog titel -> ${titel}, ${infoMsg}"
-        TaskDialogs.inform(titel as String, infoMsg)
+        TaskDialogs.inform(app.windowManager.windows.find{it.focused}, titel as String, infoMsg)
     }
     
 }

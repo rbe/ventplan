@@ -64,9 +64,9 @@ class Wac2Controller {
     def getMVCGroup(mvcId) {
         [
             mvcId: mvcId,
-            model: app.groups[mvcId].model,
-            view: app.groups[mvcId].view,
-            controller: app.groups[mvcId].controller
+            model: app.groups[mvcId]?.model,
+            view: app.groups[mvcId]?.view,
+            controller: app.groups[mvcId]?.controller
         ]
     }
 
@@ -701,7 +701,8 @@ class Wac2Controller {
     def postWpxFile = { f, inputName -> 
         doOutside {
             try {
-                if (DEBUG) println "wacwsUrl -> ${wacwsUrl}"
+                //if (DEBUG) 
+                println "wacwsUrl -> ${wacwsUrl}"
                 // call webservice with paramter
                 def result = withWs(wsdl: wacwsUrl) {
                     uploadWpx(f?.text, inputName)

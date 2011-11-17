@@ -606,8 +606,9 @@ class GriffonHelper {
     def static localVersion = {
         // For development only: new java.io.File("/home/manu/Entwicklung/git/wac2/usbstick/wac/conf/version").text.trim()
         //def version = new java.io.File("conf/version").text.trim()
-        def version = Wac2Resource.getConfVersion()
-        println "version -> ${version.dump()}"
+        //def version = Wac2Resource.getConfVersion()
+        def version = "6.1.4"
+        println "version -> ${version?.dump()}"
         version
     }
 
