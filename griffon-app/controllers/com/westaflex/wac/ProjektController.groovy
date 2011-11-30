@@ -22,6 +22,7 @@ import javax.swing.event.TableModelListener
 import java.awt.Component
 import javax.swing.DefaultListModel
 import javax.swing.event.TableModelEvent
+import griffon.transform.Threading
 
 /**
  * 
@@ -41,7 +42,7 @@ class ProjektController {
 	def projektModelService
 	def oooService
 	
-	def raumBearbeitenDialog
+	javax.swing.JDialog raumBearbeitenDialog
 	def wbwDialog
 	def teilstreckenDialog
 
@@ -217,6 +218,7 @@ class ProjektController {
 	/**
 	 * Button "Seitenansicht".
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def seitenansicht = {
         jxwithWorker(start: true) {
             onInit {
@@ -258,6 +260,7 @@ class ProjektController {
 	/**
 	 * Aktuelles Projekt drucken.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def drucken = {
 		def choice = app.controllers["Dialog"].showPrintProjectDialog()
         if (DEBUG) println "drucken: choice=${choice}"
@@ -276,6 +279,7 @@ class ProjektController {
     /**
      * Alles neu berechnen.
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def berechneAlles = { loadMode = false ->
         this.loadMode = loadMode
         if (DEBUG) println "berechneAlles: loadMode=${loadMode}"
@@ -335,10 +339,13 @@ class ProjektController {
     /**
      * Gebäudedaten wurden geändert - Aussenluftvolumenströme berechnen.
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def gebaudedatenGeandert = { evt = null ->
         if (model.map.gebaude.lage.windstark) {
             // WAC-169: Änderung der Druckdifferenz durch Gebäudelage windstark
-            doLater { model.map.gebaude.luftdichtheit.druckdifferenz = 4.0d }
+            //doLater { 
+                model.map.gebaude.luftdichtheit.druckdifferenz = 4.0d 
+            //}
         }
         berechneAussenluftVs()
     }
@@ -346,6 +353,7 @@ class ProjektController {
 	/**
 	 * Gebäudedaten - Geometrie wurde manuell eingegeben.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def berechneGeometrie = {
 		// Read values from view and transfer them into our model
 		def g = [
@@ -354,7 +362,7 @@ class ProjektController {
 			//gelufteteFlache: view.gebaudeGeometrieGelufteteFlache.text.toDouble2()
 			gelufteteVolumen: view.gebaudeGeometrieGeluftetesVolumen.text.toDouble2()
 		]
-        doLater {
+        //doLater {
             // Write values into model
             model.map.gebaude.geometrie.wohnflache = g.wohnflache
             model.map.gebaude.geometrie.raumhohe = g.raumhohe
@@ -365,77 +373,83 @@ class ProjektController {
             wacCalculationService.aussenluftVs(model.map)
             // Zentralgerät bestimmen
             onZentralgeratAktualisieren()
-        }
+        //}
 	}
 	
 	/**
 	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def luftdichtheitKategorieA = {
-		doLater {
+		//doLater {
 			model.map.gebaude.luftdichtheit.with {
 				druckdifferenz = 2.0d
 				luftwechsel = 1.0d
 				druckexponent = 0.666f
 			}
             berechneAussenluftVs()
-		}
+		//}
 	}
 	
 	/**
 	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def luftdichtheitKategorieB = {
-		doLater {
+		//doLater {
 			model.map.gebaude.luftdichtheit.with {
 				druckdifferenz = 2.0d
 				luftwechsel = 1.5f
 				druckexponent = 0.666f
 			}
             berechneAussenluftVs()
-		}
+		//}
 	}
 	
 	/**
 	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def luftdichtheitKategorieC = {
-		doLater {
+		//doLater {
 			model.map.gebaude.luftdichtheit.with {
 				druckdifferenz = 2.0d
 				luftwechsel = 2.0d
 				druckexponent = 0.666f
 			}
             berechneAussenluftVs()
-		}
+		//}
 	}
 	
 	/**
 	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def speichereLuftdichtheit = {
-		doLater {
+		//doLater {
 			model.map.gebaude.luftdichtheit.druckdifferenz = view.gebaudeLuftdichtheitDruckdifferenz.text.toDouble2()
 			model.map.gebaude.luftdichtheit.luftwechsel = view.gebaudeLuftdichtheitLuftwechsel.text.toDouble2()
 			model.map.gebaude.luftdichtheit.druckexponent = view.gebaudeLuftdichtheitDruckexponent.text.toDouble2()
-		}
+		//}
         berechneAussenluftVs()
 	}
 	
 	/**
 	 * Gebäudedaten - Faktor für besondere Anforderungen
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def speichereFaktorBesondereAnforderungen = {
-		doLater {
+		//doLater {
 			model.map.gebaude.faktorBesondereAnforderungen = view.faktorBesondereAnforderungen.text.toDouble2()
-		}
+		//}
 	}
 	
 	/**
 	 * Gebäudedaten - Geplante Belegung
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def berechneMindestaussenluftrate = {
-		doLater {
+		//doLater {
 			// Save actual caret position
 			def personenanzahlCaretPos = view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition
 			def aussenluftVsProPersonCaretPos = view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition
@@ -456,14 +470,15 @@ class ProjektController {
 			view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition = aussenluftVsProPersonCaretPos
             // Berechnen
             berechneAussenluftVs()
-		}
+		//}
 	}
 	
 	/**
 	 * Anlagendaten - Energie-Kennzeichen
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def berechneEnergieKennzeichen = {
-		doLater {
+		//doLater {
 			model.map.anlage.energie.with {
 				if (zuAbluftWarme && bemessung && ruckgewinnung && regelung) {
 					nachricht = "Energiekennzeichen gesetzt!"
@@ -472,14 +487,15 @@ class ProjektController {
 				}
 			}
 			berechneKennzeichenLuftungsanlage()
-		}
+		//}
 	}
 	
 	/**
 	 * Anlagendaten - Hygiene-Kennzeichen
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def berechneHygieneKennzeichen = {
-		doLater {
+		//doLater {
 			model.map.anlage.hygiene.with {
 				if (ausfuhrung && filterung && keineVerschmutzung && dichtheitsklasseB) {
 					nachricht = "Hygienekennzeichen gesetzt!"
@@ -488,14 +504,15 @@ class ProjektController {
 				}
 			}
 			berechneKennzeichenLuftungsanlage()
-		}
+		//}
 	}
 	
 	/**
 	 * Anlagendaten - Kennzeichen
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def berechneKennzeichenLuftungsanlage = {
-		doLater {
+		//doLater {
 			def gebaudeTyp = model.map.gebaude.efh ? "EFH" : "WE"
 			def energieKz = model.map.anlage.energie.nachricht != " " ? "E" : "0"
 			def hygieneKz = model.map.anlage.hygiene.nachricht != " " ? "H" : "0"
@@ -504,12 +521,13 @@ class ProjektController {
 			def feuerstatte = model.map.anlage.feuerstatte ? "F" : "0"
 			model.map.anlage.kennzeichnungLuftungsanlage =
 				"ZuAbLS-Z-${gebaudeTyp}-WÜT-${energieKz}-${hygieneKz}-${ruckschlag}-${schallschutz}-${feuerstatte}"
-		}
+		//}
 	}
 	
 	/**
 	 * Aussenluftvolumenströme berechnen.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def berechneAussenluftVs = {
         // Mit/ohne Infiltrationsanteil berechnen
         wacCalculationService.aussenluftVs(model.map)
@@ -520,8 +538,9 @@ class ProjektController {
 	/**
 	 * Raumdaten - Eingabe - Raumtyp in Combobox ausgewählt.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def raumTypGeandert = {
-		doLater {
+		//doLater {
 			switch (view.raumTyp.selectedIndex) {
 				// Zulufträume
 				case 0..5:
@@ -565,12 +584,13 @@ class ProjektController {
 					view.raumZuluftfaktor.text = ""
 					view.raumAbluftVolumenstrom.text = ""
 			}
-		}
+		//}
 	}
 	
 	/**
 	 * Zeige Dialog "lüftungstechnische Maßnahmen erforderlich."
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def ltmErforderlichDialog = {
 		def infoMsg = model.map.messages.ltm
 		app.controllers["Dialog"].showInformDialog(infoMsg as String)
@@ -580,6 +600,7 @@ class ProjektController {
 	/**
 	 * Raumdaten - Raum anlegen.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def raumHinzufugen = {
 		// Erstelle Model für Raum: Standardwerte überschreiben mit eingegebenen Werten
 		// Berechne Position: Raum wird unten angefügt
@@ -589,12 +610,12 @@ class ProjektController {
 		// TODO rbe Improve cloning of list with maps: use deep, not shallow copy.
 		// raum.turen = model.raumTurenTemplate.clone() as ObservableList
 		raum.turen = [
-						[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-						[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-						[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-						[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-						[turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
-					] as ObservableList
+                        [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+                        [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+                        [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+                        [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+                        [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
+                ] as ObservableList
 		// Hole Werte für neuen Raum aus der View und füge Raum hinzu
 		raum.with {
 			// Übernehme Wert für Bezeichnung vom Typ?
@@ -613,7 +634,7 @@ class ProjektController {
 			// Standard Türspalthöhe ist 10 mm
 			raumTurspaltHohe = 10.0d
 		}
-		doLater {
+		//doLater {
 			// Raum im Model hinzufügen
             if (DEBUG) println "onRaumHinzufugen: raum -> ${raum}"
 			model.addRaum(raum, view)
@@ -622,12 +643,13 @@ class ProjektController {
             view.raumBezeichnung.text = ""
             // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
             berechneAlles()
-		}
+		//}
 	}
 	
 	/**
 	 * Raumdarten - ein Raum wurde geändert.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def raumGeandert = { Integer raumIndex ->
         // WAC-174 (raumIndex kann == 0 sein!)
         if (raumIndex < 0) raumIndex = view.raumTabelle.selectedRow
@@ -703,6 +725,7 @@ class ProjektController {
 	/**
 	 * Raumdaten - einen Raum entfernen.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def raumEntfernen = {
         // Raum aus Model entfernen
         model.removeRaum(view.raumTabelle.selectedRow, view)
@@ -715,8 +738,9 @@ class ProjektController {
 	/**
 	 * Raumdaten - einen Raum kopieren.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def raumKopieren = {
-		doLater {
+		//doLater {
 			// Get selected row
 			def row = view.raumTabelle.selectedRow
 			// Raum anhand seiner Position finden
@@ -760,14 +784,15 @@ class ProjektController {
             raumGeandert(newMap.position)
             // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
             berechneAlles()
-		}
+		//}
 	}
 	
 	/**
 	 * Raumdaten - einen Raum in der Tabelle nach oben verschieben.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def raumNachObenVerschieben = {
-		doLater {
+		//doLater {
 			// Get selected row
 			def row = view.raumTabelle.selectedRow
 			if (row > 0) {
@@ -780,14 +805,15 @@ class ProjektController {
 				// Raum geändert
                 raumGeandert(row - 1)
 			}
-		}
+		//}
 	}
 	
 	/**
 	 * Raumdaten - einen Raum in der Tabelle nach oben verschieben.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def raumNachUntenVerschieben = {
-		doLater {
+		//doLater {
 			// Get selected row
 			def row = view.raumTabelle.selectedRow
 			if (row < view.raumTabelle.rowCount - 1) {
@@ -800,22 +826,28 @@ class ProjektController {
 				// Raum geändert
                 raumGeandert(row + 1)
 			}
-		}
+		//}
 	}
 	
 	/**
 	 * Raumdaten - einen Raum bearbeiten.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def raumBearbeiten = {
 		// Get selected row
-		def row = view.raumTabelle.selectedRow
-		if (row > -1) {
-			// Show dialog
-			raumBearbeitenDialog = GH.createDialog(builder, RaumBearbeitenView, [title: "Raum bearbeiten", pack: true])
-			// Modify TableModel for Turen
-			def columnModel = view.raumBearbeitenTurenTabelle.columnModel
-			GH.makeComboboxCellEditor(columnModel.getColumn(0), model.meta.raumTurTyp)
-			GH.makeComboboxCellEditor(columnModel.getColumn(1), model.meta.raumTurbreiten)
+        def row = view.raumTabelle.selectedRow
+        if (row > -1) {
+            // Show dialog
+            /*raumBearbeitenDialog = builder.dialog([title: "Raum bearbeiten", pack: true]) {
+                jideScrollPane() {
+                    build(RaumBearbeitenView)
+                }
+            }*/
+            raumBearbeitenDialog = GH.createDialog(builder, RaumBearbeitenView, [title: "Raum bearbeiten", pack: true])
+            // Modify TableModel for Turen
+            def columnModel = view.raumBearbeitenTurenTabelle.columnModel
+            GH.makeComboboxCellEditor(columnModel.getColumn(0), model.meta.raumTurTyp)
+            GH.makeComboboxCellEditor(columnModel.getColumn(1), model.meta.raumTurbreiten)
             /*
             view.raumBearbeitenTurenTabelle.getModel().addTableModelListener({ TableModelEvent e ->
                 println "test"
@@ -826,24 +858,24 @@ class ProjektController {
             } as TableModelListener);
             */
             berechneTuren(null, row)
-			raumBearbeitenDialog.show()
-		}
+            raumBearbeitenDialog.show()
+        }
 	}
 	
 	/**
 	 * RaumBearbeiten - RaumBearbeitenView schliessen.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def raumBearbeitenSchliessen = {
-        invokeLater {
-            if (DEBUG) println "raumBearbeitenSchliessen: closing dialog '${raumBearbeitenDialog.title}'"
-            raumBearbeitenGeandert()
-            raumBearbeitenDialog.dispose()
-        }
+        if (DEBUG) println "raumBearbeitenSchliessen: closing dialog '${raumBearbeitenDialog.title}'"
+        raumBearbeitenGeandert()
+        raumBearbeitenDialog.dispose()
 	}
 	
 	/**
 	 * Raum bearbeiten - Daten eingegeben. Mit raumBearbeitenSchliessen zusammenlegen?
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def raumBearbeitenGeandert = { evt = null ->
         // WAC-174: Immer Raum Index/Position aus Metadaten nehmen
         //def raumIndex = view.raumTabelle.selectedRow
@@ -911,6 +943,7 @@ class ProjektController {
 	/**
 	 * Berechne Türen eines bestimmten Raumes.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def berechneTuren = { evt = null, raumIndex = null ->
         if (DEBUG) println "WAC-174: berechneTuren: evt=${evt?.dump()} raumIndex=${raumIndex?.dump()}"
 		// Hole gewählten Raum
@@ -940,6 +973,7 @@ class ProjektController {
     /**
      * Tur Werte entfernen in Raum bearbeiten Dialog
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def raumBearbeitenTurEntfernen = { evt = null ->
         if (DEBUG) println "raumBearbeitenTurEntfernen: view.raumBearbeitenTurenTabelle.selectedRow -> ${view.raumBearbeitenTurenTabelle.selectedRow}"
         def turenIndex = view.raumBearbeitenTurenTabelle.selectedRow
@@ -959,6 +993,7 @@ class ProjektController {
 	/**
 	 * Raumvolumenströme - Zu/Abluftventile geändert.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def raumZuAbluftventileGeandert = {
 		def raumIndex = view.raumVsZuAbluftventileTabelle.selectedRow
 		if (DEBUG) println "raumZuAbluftventileGeandert: raumIndex=${raumIndex}"
@@ -972,6 +1007,7 @@ class ProjektController {
 	/**
 	 * Raumvolumenströme - Überströmelemente geändert.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def raumUberstromelementeGeandert = {
 		def raumIndex = view.raumVsUberstromelementeTabelle.selectedRow
 		if (raumIndex > -1) {
@@ -986,6 +1022,7 @@ class ProjektController {
 	 * die Auswahl aller anderen Tabellen entsprechend anpassen.
 	 * @param evt javax.swing.event.ListSelectionEvent
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def raumInTabelleGewahlt = { evt, table ->
 		if (!evt.isAdjusting && evt.firstIndex > -1 && evt.lastIndex > -1) {
 			// source = javax.swing.ListSelectionModel
@@ -1010,7 +1047,7 @@ class ProjektController {
 	 * Einen bestimmten Raum in allen Raum-Tabellen markieren.
 	 */
 	def onRaumInTabelleWahlen = { row, table = null ->
-		doLater {
+		//doLater {
 			//if (DEBUG) println "onRaumInTabelleWahlen: row=${row}"
 			row = GH.checkRow(row, view.raumTabelle)
 			if (row > -1) {
@@ -1031,12 +1068,13 @@ class ProjektController {
 				// Aktuell gewählten Raum in Metadaten leeren
 				model.meta.gewahlterRaum.clear()
 			}
-		}
+		//}
 	}
 	
 	/**
 	 * Raumvolumenströme - Zentralgerät: manuelle Auswahl des Zentralgeräts.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def zentralgeratManuellGewahlt = {
 		////publishEvent "ZentralgeratGewahlt", [view.raumVsZentralgerat.selectedItem]
 //		doLater {
@@ -1060,9 +1098,10 @@ class ProjektController {
 	/**
 	 * Aktualisiere Zentralgerät und Volumenstrom in allen Comboboxen
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	void zentralgeratAktualisieren() {
         if (DEBUG) println "zentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
-		doLater {
+		//doLater {
 			/*
 			// Füge Volumenströme des aktuellen Zentralgeräts in Combobox hinzu
 			// Raumvolumenströme
@@ -1130,7 +1169,7 @@ class ProjektController {
 				view.akustikZuluftPegel.selectedItem = foundVs
 				view.akustikAbluftPegel.selectedItem = foundVs
 			}
-		}
+		//}
 	}
 	
 	/**
@@ -1169,10 +1208,11 @@ class ProjektController {
 	/**
 	 * Druckverlustberechnung - Kanalnetz - Hinzufügen.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def dvbKanalnetzHinzufugen = {
 		def kanalnetz = GH.getValuesFromView(view, "dvbKanalnetz")
 		////publishEvent "DvbKanalnetzHinzufugen", [kanalnetz, view]
-        doLater {
+        //doLater {
             // Map values from GUI
             def k = [
                     luftart: kanalnetz.dvbKanalnetzLuftart,
@@ -1191,7 +1231,7 @@ class ProjektController {
             GH.addMapPropertyChangeListener("map.dvb.kanalnetz", k)
             //
             dvbKanalnetzGeandert(k.position)
-        }
+        //}
         // Reset values in view
         view.dvbKanalnetzNrTeilstrecke.text = ""
         view.dvbKanalnetzLuftmenge.text = ""
@@ -1201,10 +1241,11 @@ class ProjektController {
 	/**
 	 * Druckverlustberechnung - Kanalnetz wurde hinzugefügt: Eintrag in der Tabelle anwählen.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def onDvbKanalnetzInTabelleWahlen = { kanalnetzIndex ->
-		doLater {
+		//doLater {
 			view.dvbKanalnetzTabelle.changeSelection(kanalnetzIndex, 0, false, false)
-		}
+		//}
 	}
 	
 	/**
@@ -1258,6 +1299,7 @@ class ProjektController {
 	 * Ein Widerstandsbeiwert wurde in der Tabelle gewählt:
 	 * Bild anzeigen und Daten in die Eingabemaske kopieren.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def wbwInTabelleGewahlt = { evt = null ->
 		// Welche Teilstrecke ist ausgewählt? Index bestimmen
 		def index = model.meta.dvbKanalnetzGewahlt //view.dvbKanalnetzTabelle.selectedRow
@@ -1289,6 +1331,7 @@ class ProjektController {
 	/**
 	 * Widerstandsbeiwerte, Übernehmen-Button.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def wbwSaveButton = {
 		// Welche Teilstrecke ist ausgewählt? Index bestimmen
 		def index = model.meta.dvbKanalnetzGewahlt //view.dvbKanalnetzTabelle.selectedRow
@@ -1316,6 +1359,7 @@ class ProjektController {
 	/**
 	 * Widerstandsbeiwerte: eingegebene Werte aufsummieren.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def wbwSummieren = {
 		// Welche Teilstrecke ist ausgewählt? Index bestimmen
 		def index = model.meta.dvbKanalnetzGewahlt //view.dvbKanalnetzTabelle.selectedRow
@@ -1334,6 +1378,7 @@ class ProjektController {
 	/**
 	 * Widerstandsbeiwerte, Dialog mit OK geschlossen.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def wbwOkButton = {
 		// Welche Teilstrecke ist ausgewählt? Index bestimmen
 		def index = model.meta.dvbKanalnetzGewahlt //view.dvbKanalnetzTabelle.selectedRow
@@ -1352,6 +1397,7 @@ class ProjektController {
 	/**
 	 * 
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def wbwCancelButton = {
 		// Close dialog
 		wbwDialog.dispose()
@@ -1360,6 +1406,7 @@ class ProjektController {
 	/**
 	 * Druckverlustberechnung - Ventileinstellung - Hinzufügen.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def dvbVentileinstellungHinzufugen = {
 		def ventileinstellung = GH.getValuesFromView(view, "dvbVentileinstellung")
 		////publishEvent "DvbVentileinstellungHinzufugen", [ventileinstellung, view]
@@ -1385,6 +1432,7 @@ class ProjektController {
 	/**
 	 * Druckverlustberechnung - Ventileinstellung wurde hinzugefügt: Eintrag in der Tabelle anwählen.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def onDvbVentileinstellungInTabelleWahlen = { ventileinstellungIndex ->
 		doLater {
 			view.dvbVentileinstellungTabelle.changeSelection(ventileinstellungIndex, 0, false, false)
@@ -1402,6 +1450,7 @@ class ProjektController {
 	/**
 	 * Druckverlustberechnung - Ventileinstellung - Geändert.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def dvbVentileinstellungGeandert = { ventileinstellungIndex ->
 		////publishEvent "DvbVentileinstellungGeandert", [ventileinstellungIndex]
         doLater {
@@ -1415,6 +1464,7 @@ class ProjektController {
 	/**
 	 * Druckverlustberechnung - Ventileinstellung - Entfernen.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def dvbVentileinstellungEntfernen = {
 		////publishEvent "DvbVentileinstellungEntfernen", [view.dvbVentileinstellungTabelle.selectedRow]
         doLater {
@@ -1427,6 +1477,7 @@ class ProjektController {
 	/**
 	 * Druckverlustberechnung - Ventileinstellung - Teilstrecke wählen.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def dvbVentileinstellungTeilstreckeDialog = {
         teilstreckenDialog = GH.createDialog(builder, TeilstreckenView, [title: "Teilstrecken", size: [250, 400]])
 
@@ -1446,6 +1497,7 @@ class ProjektController {
      * Teilstrecke von ausgewählte Teilstrecke nach verfügbare Teilstrecke verschieben
      * TODO mmu remove old value!
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def teilstreckenNachVerfugbarVerschieben = {
         // get selected items
         def selectedValues = view.teilstreckenAusgewahlteListe.selectedValues as String[]
@@ -1470,6 +1522,7 @@ class ProjektController {
      * Teilstrecke von verfügbare Teilstrecke nach ausgewählte Teilstrecke verschieben
      * TODO mmu remove old value!
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def teilstreckenNachAusgewahlteVerschieben = {
         // get selected items
         def selectedValues = view.teilstreckenVerfugbareListe.selectedValues as String[]
@@ -1495,6 +1548,7 @@ class ProjektController {
 	/**
 	 * Teilstrecken, Dialog mit OK geschlossen.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def teilstreckenOkButton = {
         // save values...
         view.dvbVentileinstellungTeilstrecken.setText(view.teilstreckenAuswahl.text)
@@ -1504,6 +1558,7 @@ class ProjektController {
 	/**
 	 * Teilstrecken Dialog Abbrechen - nichts speichern!
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def teilstreckenCancelButton = {
         // Close dialog
         teilstreckenDialog.dispose()
@@ -1527,6 +1582,7 @@ class ProjektController {
 	/**
 	 * Akustikberechnung.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	void berechneAkustik(tabname) {
 		def m = model.map.akustik."${tabname.toLowerCase()}"
 		// Konvertiere Wert TextField, ComboBox in Integer, default ist 0
@@ -1583,6 +1639,7 @@ class ProjektController {
     /**
      *
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def generiereStuckliste = {
         
         try {
@@ -1634,6 +1691,7 @@ class ProjektController {
     }
     
     
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def erzeugeRaumStuckliste = { map, pdfCreator -> 
         
         if (DEBUG) println "map -> ${map.dump()}"
@@ -1664,103 +1722,17 @@ class ProjektController {
         
     }
     
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def erzeugeDruckverlustStuckliste = { dvb, pdfCreator ->
         dvb.kanalnetz.each { 
             pdfCreator.addArtikel("", "", it.kanalbezeichnung, it.lange)
         }
     }   
     
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def erzeugeSchalldampferStuckliste = { akustik, luftart, pdfCreator ->
         pdfCreator.addArtikel("", "", akustik.hauptschalldampfer1, 1)
         pdfCreator.addArtikel("", "", akustik.hauptschalldampfer2, 1)
     }
     
-    // TODO: change dialog call
-    /*
-    def openAngebotsverfolgungFileChooser = {
-        def openResult = view.angebotsverfolgungChooserWindow.showOpenDialog(view.wac2Frame)
-        if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
-            def files = view.angebotsverfolgungChooserWindow.selectedFiles as java.io.File[]
-            angebotsverfolgungFilesClosure(files)
-        }
-    }
-    
-    def angebotsverfolgungFilesClosure = { files ->
-        boolean isError = false
-        jxwithWorker(start: true) {
-            // initialize the worker
-            onInit {
-                model.statusProgressBarIndeterminate = true
-                model.statusBarText = "WPX-Dateien werden hochgeladen..."
-            }
-            // do the task
-            work {
-                // ... and reset it in FileChooser
-                view.angebotsverfolgungChooserWindow.selectedFile = null
-                // check if files array is directory
-                if (files?.class.isArray()) {
-                    files.each { file -> 
-                        try {
-                            if (file.isDirectory()) {
-                                model.statusBarText = "Lade WPX-Dateien aus Verzeichnis ${file.path} hoch..." as String
-
-                                def listFiles = file.listFiles()
-
-                                listFiles.each { f -> 
-                                    if (f.name.toLowerCase().endsWith(".wpx")) {
-                                        model.statusBarText = "Lade WPX-Datei hoch..." as String
-                                        postWpxFile(f)
-                                    }
-                                }
-                            } else {
-                                model.statusBarText = "Lade WPX-Datei hoch..." as String
-                                postWpxFile(file)
-                            }
-                        } catch (e) {
-                            if (DEBUG) println "catching inner each... ${e}"
-                            def errMsg = "Fehler beim Übermitteln der WPX-Datei."
-                            app.controllers["Dialog"].showErrorDialog("Fehler bei Angebotsverfolgung" as String, errMsg as String)
-                            isError = true
-                        }
-                    }
-                } else {
-                    model.statusBarText = "Lade WPX-Datei hoch..." as String
-                    postWpxFile(it)
-                }
-            }
-            // do sth. when the task is done.
-            onDone {
-                def mvc = getMVCGroupAktivesProjekt()
-                model.statusBarText = "Alle WPX-Dateien hochgeladen..."
-                //
-                model.statusProgressBarIndeterminate = false
-                model.statusBarText = "Bereit."
-                
-                def infoMsg = "Übermittlung der WPX-Dateien erfolgreich abgeschlossen."
-                if (isError) {
-                    infoMsg = "Übermittlung der WPX-Dateien mit Fehler abgeschlossen."
-                }
-                app.controllers["Dialog"].showCustomInformDialog("Angebotsverfolgung" as String, infoMsg as String)
-            }
-        }
-    }
-    
-    // Post text of file object.
-    def postWpxFile = { f -> 
-        doOutside {
-            try {
-                // call webservice with paramter
-                def result = withWs(wsdl: "http://localhost:8080/wacws/services/wpxUpload?wsdl") {
-                    uploadWpx(f?.text)
-                }
-                doLater {
-                    println "SOAP Webservice response is: ${result}" as String
-                }
-            } finally {
-                println "End of postWpxFile file ${f.name}..." as String
-            }
-        }
-    }
-    */
-	
 }

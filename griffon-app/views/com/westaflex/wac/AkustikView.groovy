@@ -14,42 +14,24 @@ package com.westaflex.wac
 import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 import javax.swing.table.JTableHeader;
+import griffon.transform.Threading
 
-// Akustikberechnung
-//panel(layout: new MigLayout("ins 0 n 0 n, fillx, wrap", "[fill]", "[fill]"), constraints: "grow") {
-//zoneLayout {
-//    zoneRow('z+*z')
-//}
-//panel(constraints: 'z', border: compoundBorder(outer: emptyBorder(5), inner: emptyBorder(5))) {
-    jideTabbedPane(id: "akustikTabGroup", constraints: "grow, span") {
-        panel(id: "akustikZuluftTab", constraints: "grow", title: "Zuluft", layout: new MigLayout("ins 0 n 0 n, fill", "[fill]", "")) {
-            zoneLayout {
-                zoneRow('y+*y')
-            }
-            buildLayout("Zuluft")
+jideTabbedPane(id: "akustikTabGroup", constraints: "grow, span") {
+    panel(id: "akustikZuluftTab", constraints: "grow", title: "Zuluft", layout: new MigLayout("ins 0 n 0 n, fill", "[fill]", "")) {
+        zoneLayout {
+            zoneRow('y+*y')
         }
-        //}
-        panel(id: "akustikAbluftTab", title: "Abluft", layout: new MigLayout("ins 0 n 0 n, fill", "[fill]", ""), constraints: "grow") {
-            zoneLayout {
-                zoneRow('y+*y')
-            }
-            buildLayout("Abluft")
-        }
+        buildLayout("Zuluft")
     }
-//}
+    //}
+    panel(id: "akustikAbluftTab", title: "Abluft", layout: new MigLayout("ins 0 n 0 n, fill", "[fill]", ""), constraints: "grow") {
+        zoneLayout {
+            zoneRow('y+*y')
+        }
+        buildLayout("Abluft")
+    }
+}
 
-    /*panel(id: "akustikTabPanel", layout: new MigLayout("ins 0 n 0 n, fill", "[grow]", ""), constraints: "grow") {
-        // Tabellen für
-        jideTabbedPane(id: "akustikTabGroup", constraints: "grow, span") {
-            panel(id: "akustikZuluftTab", title: "Zuluft", layout: new MigLayout("ins 0 n 0 n, fill", "[fill]", ""), constraints: "grow") {
-                buildLayout("Zuluft")
-            }
-            panel(id: "akustikAbluftTab", title: "Abluft", layout: new MigLayout("ins 0 n 0 n, fill", "[fill]", ""), constraints: "grow") {
-                buildLayout("Abluft")
-            }
-        }
-    }
-}*/
 // akustikTabGroup
 akustikTabGroup.with {
 	setTabColorProvider(com.jidesoft.swing.JideTabbedPane.ONENOTE_COLOR_PROVIDER)

@@ -20,6 +20,7 @@ import javax.swing.table.TableColumn
 import javax.swing.event.TableModelListener
 import java.awt.Component
 //import java.awt.GridLayout
+import griffon.transform.Threading
 
 /**
  * Several helpers for Griffon.
@@ -263,33 +264,40 @@ class GriffonHelper {
 	/**
 	 * Create a dialog. Please call .show() yourself as this call blocks until the dialog is closed.
 	 */
-	def static createDialog = { builder, dialogClass, dialogProp = [:] ->
-		def dialog = dialogCache[dialogClass]
-		//if (!dialog) {
-			// Properties for dialog
-			def prop = [
-					title: "Ein Dialog",
-					visible: false,
-					modal: true,
-					pack: false,
-					locationByPlatform: true
-				] + dialogProp
-			// Create dialog instance
-			dialog = builder.dialog(prop) {
-                jideScrollPane() {
-					build(dialogClass)
-				}
-            }
-			// Cache dialog instance
-			//dialogCache[dialogClass] = dialog
-		//}
-		// Return dialog instance
-		dialog
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+	def static createDialog = { builder, dialogClass, dialogProp = [:] -> 
+        //javax.swing.SwingUtilities.invokeLater {
+            def dialog// = dialogCache[dialogClass]
+            //if (!dialog) {
+                // Properties for dialog
+                def prop = [
+                        title: "Ein Dialog",
+                        visible: false,
+                        modal: true,
+                        pack: false,
+                        locationByPlatform: true
+                    ] + dialogProp
+                // Create dialog instance
+                //println "createDialog -> builder=${builder?.dump()}"
+                
+                
+                dialog = builder.dialog(prop) {
+                    jideScrollPane() {
+                        build(dialogClass)
+                    }
+                }
+                // Cache dialog instance
+                //dialogCache[dialogClass] = dialog
+            //}
+            // Return dialog instance
+            dialog
+        //}
 	}
     
     /**
 	 * Create a dialog. Please call .show() yourself as this call blocks until the dialog is closed.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def static createDialogNoScrollPane = { builder, dialogClass, dialogProp = [:] ->
 		def dialog = dialogCache[dialogClass]
 		//if (!dialog) {
@@ -606,8 +614,8 @@ class GriffonHelper {
     def static localVersion = {
         // For development only: new java.io.File("/home/manu/Entwicklung/git/wac2/usbstick/wac/conf/version").text.trim()
         //def version = new java.io.File("conf/version").text.trim()
-        //def version = Wac2Resource.getConfVersion()
-        def version = "6.1.4"
+        def version = Wac2Resource.getConfVersion()
+        //def version = "6.1.4"
         println "version -> ${version?.dump()}"
         version
     }

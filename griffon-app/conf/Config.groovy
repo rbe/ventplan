@@ -46,7 +46,10 @@ griffon.ws.injectInto = ['controller']
 swing {
     windowManager {
         frame1 = [
-            hide: {w, app -> if(app.config.shutdown.proceed) w.dispose()}
+            hide: { w, app -> 
+                println "Config.swing.windowManager: w=${w.dump()}"
+                if(app.config.shutdown.proceed) w.dispose()
+            }
         ]
     }
 }

@@ -15,6 +15,7 @@ import com.bensmann.griffon.GriffonHelper as GH
 
 import groovy.beans.Bindable
 import javax.swing.DefaultComboBoxModel
+import griffon.transform.Threading
 
 /**
  * 
@@ -781,7 +782,7 @@ class ProjektModel {
 				if (DEBUG) println "addRaum: adding raum.raume=${map.raum.raume}"
 			}
             // TODO mmu Sortierung funktioniert aber!?
-			// Disables sorting in raumTabelle
+            // Disables sorting in raumTabelle
             try {
                 view.raumTabelle.setSortable(false);
                 view.raumTabelle.getTableHeader().setDefaultRenderer(new javax.swing.table.JTableHeader().getDefaultRenderer());
@@ -830,6 +831,7 @@ class ProjektModel {
 	/**
 	 * Synchronize all Swing table models depending on map.raum.raume.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	void resyncRaumTableModels() {
 		// Räume sortieren, damit die Liste immer der Position des Raums und der Reihenfolge im TableModel entspricht:
 		// Nicht zwingend notwendig, da die TableModels bereits über den Comparator nach Position sortieren:
@@ -841,53 +843,54 @@ class ProjektModel {
 			println "resyncRaumTableModels: ${r.raumBezeichnung}: i=${i} == position=${r.position}?"
 		}
 		*/
-        javax.swing.SwingUtilities.invokeLater {
-            synchronized (tableModels) {
-                // Remember selected row
-                def view = app.views[mvcId]
-                def selected = view.raumTabelle.selectedRow
-                //println "-" * 80
-                //println "resyncRaumTableModels"
-                // Raumdaten
-                def newRaume = ca.odell.glazedlists.swing.GlazedListsSwing.swingThreadProxyList(tableModels.raume)
-                //tableModels.raume.clear()
-                //tableModels.raume.addAll(map.raum.raume)
-                newRaume.clear()
-                newRaume.addAll(map.raum.raume)
-                // Türen
-                if (DEBUG) println "tableModels.raume -> ${tableModels.raume}"
-                if (DEBUG) println "tableModels.raumeTuren -> BEFORE -> ${tableModels.raumeTuren}"
-                //tableModels.raume.each {
-                newRaume.each {
-                    def m = tableModels.raumeTuren[it.position]
-                    // TODO NullPointer when loading data
-                    try {
-                        m.clear()
-                        m.addAll(it.turen)
-                        if (DEBUG) println "tableModels.raume.each -> raumeTuren: ${m}"
-                    } catch (e) {}
-                }
-                if (DEBUG) println "tableModels.raumeTuren -> AFTER -> ${tableModels.raumeTuren}"
-                // Raumvolumentströme - Zu-/Abluftventile
-                def newRaumeVsZuAbluftventile = ca.odell.glazedlists.swing.GlazedListsSwing.swingThreadProxyList(tableModels.raumeVsZuAbluftventile)
-                //tableModels.raumeVsZuAbluftventile.clear()
-                //tableModels.raumeVsZuAbluftventile.addAll(map.raum.raume)
-                newRaumeVsZuAbluftventile.clear()
-                newRaumeVsZuAbluftventile.addAll(map.raum.raume)
-                // Raumvolumentströme - Überströmventile
-                def newRaumeVsUberstromventile = ca.odell.glazedlists.swing.GlazedListsSwing.swingThreadProxyList(tableModels.raumeVsUberstromventile)
-                //tableModels.raumeVsUberstromventile.clear()
-                //tableModels.raumeVsUberstromventile.addAll(map.raum.raume)
-                newRaumeVsUberstromventile.clear()
-                newRaumeVsUberstromventile.addAll(map.raum.raume)
-                
-                // java.lang.NullPointerException: Cannot invoke method addAll() on null object
-                // when RaumBearbeitenDialog was not opened before
-                // Quickfix: added null-safe-operator
-                tableModels.raumeBearbeiten?.addAll(map.raum.raume)
-                //println "-" * 80
-                // Select previously selected row
-                if (selected && selected > -1) view.raumTabelle.changeSelection(selected, 0, false, false)
+        synchronized (tableModels) {
+            // Remember selected row
+            def view = app.views[mvcId]
+            def selected = view.raumTabelle.selectedRow
+            //println "-" * 80
+            //println "resyncRaumTableModels"
+            // Raumdaten
+            def newRaume = ca.odell.glazedlists.swing.GlazedListsSwing.swingThreadProxyList(tableModels.raume)
+            //tableModels.raume.clear()
+            //tableModels.raume.addAll(map.raum.raume)
+            newRaume.clear()
+            newRaume.addAll(map.raum.raume)
+            // Türen
+            if (DEBUG) println "tableModels.raume -> ${tableModels.raume}"
+            if (DEBUG) println "tableModels.raumeTuren -> BEFORE -> ${tableModels.raumeTuren}"
+            //tableModels.raume.each {
+            newRaume.each {
+                def m = tableModels.raumeTuren[it.position]
+                // TODO NullPointer when loading data
+                try {
+                    m.clear()
+                    m.addAll(it.turen)
+                    if (DEBUG) println "tableModels.raume.each -> raumeTuren: ${m}"
+                } catch (e) {}
+            }
+            if (DEBUG) println "tableModels.raumeTuren -> AFTER -> ${tableModels.raumeTuren}"
+            // Raumvolumentströme - Zu-/Abluftventile
+            def newRaumeVsZuAbluftventile = ca.odell.glazedlists.swing.GlazedListsSwing.swingThreadProxyList(tableModels.raumeVsZuAbluftventile)
+            //tableModels.raumeVsZuAbluftventile.clear()
+            //tableModels.raumeVsZuAbluftventile.addAll(map.raum.raume)
+            newRaumeVsZuAbluftventile.clear()
+            newRaumeVsZuAbluftventile.addAll(map.raum.raume)
+            // Raumvolumentströme - Überströmventile
+            def newRaumeVsUberstromventile = ca.odell.glazedlists.swing.GlazedListsSwing.swingThreadProxyList(tableModels.raumeVsUberstromventile)
+            //tableModels.raumeVsUberstromventile.clear()
+            //tableModels.raumeVsUberstromventile.addAll(map.raum.raume)
+            newRaumeVsUberstromventile.clear()
+            newRaumeVsUberstromventile.addAll(map.raum.raume)
+
+            // java.lang.NullPointerException: Cannot invoke method addAll() on null object
+            // when RaumBearbeitenDialog was not opened before
+            // Quickfix: added null-safe-operator
+            tableModels.raumeBearbeiten?.addAll(map.raum.raume)
+            //println "-" * 80
+            // Select previously selected row
+            println "resyncRaumTableModels selected -> ${selected?.dump()}"
+            if (selected && selected > -1) {
+                view.raumTabelle.changeSelection(selected, 0, false, false)
             }
         }
 	}
@@ -993,6 +996,7 @@ class ProjektModel {
 	/**
 	 * Synchronize all Swing table models depending on map.akustik.*.tabelle.
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
 	def resyncAkustikTableModels(view) {
 		if (DEBUG) println "resyncAkustikTableModels()"
 		synchronized (tableModels) {
