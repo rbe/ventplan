@@ -100,15 +100,15 @@ class Wac2Controller {
         }
     }
     
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def exitApplication = { evt = null ->
-        edt {
-            canExitApplication(evt)
-        }
+        canExitApplication(evt)
     }
 	
     /**
      * WAC-8: Behebt den Fehler aus dem Ticket
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     boolean canExitApplication(evt) {
         boolean proceed = false
         // Ask if we can close
@@ -184,7 +184,7 @@ class Wac2Controller {
     /**
      * Ein neues Projekt erstellen.
      */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def neuesProjekt = { evt = null ->
         // Progress bar in Wac2View.
         jxwithWorker(start: true) {
@@ -250,6 +250,7 @@ class Wac2Controller {
     /**
      * Ein Projekt aktivieren -- MVC ID an Wac2Model übergeben.
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def projektAktivieren = { mvcId ->
         if (DEBUG) println "Wac2Controller.projektAktivieren: mvcId=${mvcId} model.aktivesProjekt=${model?.aktivesProjekt}"
         if (DEBUG) println "Wac2Controller.projektAktivieren: model=${model?.dump()}"
@@ -278,6 +279,7 @@ class Wac2Controller {
     /**
      * Ein Projekt aktivieren -- MVC ID an Wac2Model übergeben.
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def projektIndexAktivieren = { index ->
         if (index > -1) {
             //if (DEBUG) println "projektIndexAktivieren: model.projekte=${model.projekte.dump()}"
@@ -294,8 +296,10 @@ class Wac2Controller {
     /**
      * Das aktive Projekt schliessen.
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def projektSchliessen = { evt = null ->
         // Closure for closing the active project
+        @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
         def clacpr = { mvc ->
             // Tab entfernen
             view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
@@ -352,6 +356,7 @@ class Wac2Controller {
      * Projekt öffnen: zeige FileChooser, lese XML, erstelle eine MVC Group und übertrage die Werte
      * aus dem XML in das ProjektModel.
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def projektOffnen = { evt = null ->
         def openResult = view.wpxFileChooserWindow.showOpenDialog(view.wac2Frame)
         if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
@@ -360,6 +365,7 @@ class Wac2Controller {
         }
     }
     
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def zuletztGeoffnetesProjekt = { evt = null ->
         try {
             def file = evt.getActionCommand()
@@ -370,6 +376,7 @@ class Wac2Controller {
         }
     }
     
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def projektOffnenClosure = { file ->
         jxwithWorker(start: true) {
             // initialize the worker
@@ -623,6 +630,7 @@ class Wac2Controller {
      * Iterate through the files and submit each file to the web service.
      * Informs the user with dialogs what happens: error, success...
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def angebotsverfolgungFilesClosure = { files, inputName ->
         
         def wacwsUrl

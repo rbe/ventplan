@@ -9,6 +9,7 @@
 package com.westaflex.wac
 
 import net.miginfocom.swing.MigLayout
+import griffon.transform.Threading
 
 def screen = java.awt.Toolkit.defaultToolkit.screenSize
 
@@ -72,7 +73,7 @@ wac2Frame = application(title: 'WestaWAC 2',
 	// Bindings
 	build(Wac2Bindings)
 	// The status bar
-	jxstatusBar(id: "mainStatusBar") {
+	statusBar(id: "mainStatusBar") {
         progressBar(id: "mainStatusProgressBar", minimum: 0, maximum: 100, indeterminate: bind { model.statusProgressBarIndeterminate } )
         label(id: "mainStatusBarText", text: bind { model.statusBarText })
 	}

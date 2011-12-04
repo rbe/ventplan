@@ -117,6 +117,7 @@ class ProjektModel {
     /**
      * Meta-data: will be initialized by ProjektController.
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     @Bindable meta = [
 		raum: [
 				typ: ["Wohnzimmer", "Kinderzimmer", "Schlafzimmer", "Esszimmer", "Arbeitszimmer", "Gästezimmer",

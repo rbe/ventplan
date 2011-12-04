@@ -97,6 +97,10 @@ class ProjektController {
 			model.meta.raum.raumVsBezeichnungAbluftventile = wacModelService.getAbluftventile()
 			// Raumvolumenströme - Überströmelemente
 			model.meta.raum.raumVsUberstromelemente = wacModelService.getUberstromelemente()
+            // Fix: raum typ setzen, sonst wird bei den AkustikBindings eine Exception geworfen.
+            //model.meta.raum.typ = ["Wohnzimmer", "Kinderzimmer", "Schlafzimmer", "Esszimmer", "Arbeitszimmer", "Gästezimmer",
+            //          "Hausarbeitsraum", "Kellerraum", "WC", "Küche", "Kochnische", "Bad mit/ohne WC", "Duschraum",
+            //          "Sauna", "Flur", "Diele"]
 			// Raumvolumenströme - Zentralgerät + Volumenstrom
 			model.meta.zentralgerat = wacModelService.getZentralgerat()
 			// Liste aller möglichen Volumenströme des 1. Zentralgeräts
