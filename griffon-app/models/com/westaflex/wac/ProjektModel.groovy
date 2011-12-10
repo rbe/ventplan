@@ -889,7 +889,7 @@ class ProjektModel {
             tableModels.raumeBearbeiten?.addAll(map.raum.raume)
             //println "-" * 80
             // Select previously selected row
-            println "resyncRaumTableModels selected -> ${selected?.dump()}"
+            if (DEBUG) println "resyncRaumTableModels selected -> ${selected?.dump()}"
             if (selected && selected > -1) {
                 view.raumTabelle.changeSelection(selected, 0, false, false)
             }
