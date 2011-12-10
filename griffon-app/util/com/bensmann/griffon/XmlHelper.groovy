@@ -9,8 +9,6 @@
  */
 package com.bensmann.griffon
 
-import griffon.transform.Threading
-
 class XmlHelper {
 	
     /**
@@ -21,12 +19,11 @@ class XmlHelper {
     /**
      * Try to create a node.
      */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def static tc = { valueClosure, defaultClosure = null ->
         try {
+            //println "valueClosure -> ${valueClosure?.dump()}"
             valueClosure()
         } catch (e) {
-            println "tc: CATCHED: ${e}"
             // Default?
             if (defaultClosure) {
                 defaultClosure()
