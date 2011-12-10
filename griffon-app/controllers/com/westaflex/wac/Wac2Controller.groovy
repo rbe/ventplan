@@ -141,7 +141,11 @@ class Wac2Controller {
                 case 0:
                 	if (DEBUG) println "Alles speichern"
                 	alleProjekteSpeichern(evt)
-                	proceed = true
+                    if (abortClosing) {
+                        proceed = false
+                    } else {
+                        proceed = true
+                    }
                 	break
                 case 1: // Cancel: do nothing...
                 	if (DEBUG) println "Abbrechen..."
@@ -500,22 +504,21 @@ class Wac2Controller {
      * Ist er nicht gesetzt, wird "Projekt speichern als" aufgerufen.
      * @return Boolean Was project saved sucessfully?
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def alleProjekteSpeichernAction = { evt = null -> 
         alleProjekteSpeichern(evt)
     }
     
     boolean alleProjekteSpeichern(evt) {
-        edt {
-            model.projekte.each {
-                def mvc = getMVCGroup(it)
-                def saved = mvc.controller.save()
-                if (saved) {
-                    if (DEBUG) println "alleProjekteSpeichern: Projekt gespeichert in ${mvc.model.wpxFilename}"
-                    //saved
-                } else {
-                    if (DEBUG) println "alleProjekteSpeichern: Projekt nicht gespeichert, kein Dateiname (mvc.model.wpxFilename=${mvc.model.wpxFilename?.dump()})?"
-                    projektSpeichernAls(mvc)
-                }
+        model.projekte.each {
+            def mvc = getMVCGroup(it)
+            def saved = mvc.controller.save()
+            if (saved) {
+                if (DEBUG) println "alleProjekteSpeichern: Projekt gespeichert in ${mvc.model.wpxFilename}"
+                //saved
+            } else {
+                if (DEBUG) println "alleProjekteSpeichern: Projekt nicht gespeichert, kein Dateiname (mvc.model.wpxFilename=${mvc.model.wpxFilename?.dump()})?"
+                projektSpeichernAls(mvc)
             }
         }
     }
