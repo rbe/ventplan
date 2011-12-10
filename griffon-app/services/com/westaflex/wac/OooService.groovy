@@ -206,7 +206,7 @@ class OooService {
     /**
      * @param map model.map
      */
-    def addRaumvolumenstrome = { doc, map ->
+    def addRaumvolumenstrome = { domBuilder, map ->
         // Tabelle
         def m = [:]
         map.raum.raume.eachWithIndex { r, i ->
@@ -246,7 +246,7 @@ class OooService {
     /**
      * @param map model.map
      */
-    def addUberstromelemente = { doc, map ->
+    def addUberstromelemente = { domBuilder, map ->
         // Tabelle
         def m = [:]
         map.raum.raume.eachWithIndex { r, i ->
@@ -283,15 +283,17 @@ class OooService {
     /**
      * @param map model.map
      */
-    def addAkustikBerechnung = { doc, map ->
+    def addAkustikBerechnung = { domBuilder, map ->
         // Zuluft
         //abZuTabelleUberschrift2Label = "Zuluft"
-        domBuilder.userfield(name: "abZuTabelleTable\$B${i + 2}", GH.toString2Converter(ak.slp125))
-        domBuilder.userfield(name: "abZuTabelleTable\$C${i + 2}", GH.toString2Converter(ak.slp250))
-        domBuilder.userfield(name: "abZuTabelleTable\$D${i + 2}", GH.toString2Converter(ak.slp500))
-        domBuilder.userfield(name: "abZuTabelleTable\$E${i + 2}", GH.toString2Converter(ak.slp1000))
-        domBuilder.userfield(name: "abZuTabelleTable\$F${i + 2}", GH.toString2Converter(ak.slp2000))
-        domBuilder.userfield(name: "abZuTabelleTable\$G${i + 2}", GH.toString2Converter(ak.slp4000))
+        map.akustik.zuluft.tabelle.eachWithIndex { ak, i ->
+            domBuilder.userfield(name: "abZuTabelleTable\$B${i + 2}", GH.toString2Converter(ak.slp125))
+            domBuilder.userfield(name: "abZuTabelleTable\$C${i + 2}", GH.toString2Converter(ak.slp250))
+            domBuilder.userfield(name: "abZuTabelleTable\$D${i + 2}", GH.toString2Converter(ak.slp500))
+            domBuilder.userfield(name: "abZuTabelleTable\$E${i + 2}", GH.toString2Converter(ak.slp1000))
+            domBuilder.userfield(name: "abZuTabelleTable\$F${i + 2}", GH.toString2Converter(ak.slp2000))
+            domBuilder.userfield(name: "abZuTabelleTable\$G${i + 2}", GH.toString2Converter(ak.slp4000))
+        }
         domBuilder.userfield(name: 'abZuRaumbezeichnungComboBox', map.akustik.zuluft.raumBezeichnung)
         domBuilder.userfield(name: 'abZuSchallleistungspegelZuluftstutzenComboBox', map.akustik.zuluft.zentralgerat)
         domBuilder.userfield(name: 'abZuKanalnetzComboBox', map.akustik.zuluft.slpErhohungKanalnetz as String)
@@ -309,12 +311,14 @@ class OooService {
         domBuilder.userfield(name: 'abZuTabelleMittlererSchalldruckpegelWertLabel', GH.toString2Converter(map.akustik.zuluft.mittlererSchalldruckpegel))
         // Abluft
         //abAbTabelleUberschrift2Label = "Abluft"
-        domBuilder.userfield(name: "abAbTabelleTable\$B${i + 2}", GH.toString2Converter(ak.slp125))
-        domBuilder.userfield(name: "abAbTabelleTable\$C${i + 2}", GH.toString2Converter(ak.slp250))
-        domBuilder.userfield(name: "abAbTabelleTable\$D${i + 2}", GH.toString2Converter(ak.slp500))
-        domBuilder.userfield(name: "abAbTabelleTable\$E${i + 2}", GH.toString2Converter(ak.slp1000))
-        domBuilder.userfield(name: "abAbTabelleTable\$F${i + 2}", GH.toString2Converter(ak.slp2000))
-        domBuilder.userfield(name: "abAbTabelleTable\$G${i + 2}", GH.toString2Converter(ak.slp4000))
+        map.akustik.zuluft.tabelle.eachWithIndex { ak, i ->
+            domBuilder.userfield(name: "abAbTabelleTable\$B${i + 2}", GH.toString2Converter(ak.slp125))
+            domBuilder.userfield(name: "abAbTabelleTable\$C${i + 2}", GH.toString2Converter(ak.slp250))
+            domBuilder.userfield(name: "abAbTabelleTable\$D${i + 2}", GH.toString2Converter(ak.slp500))
+            domBuilder.userfield(name: "abAbTabelleTable\$E${i + 2}", GH.toString2Converter(ak.slp1000))
+            domBuilder.userfield(name: "abAbTabelleTable\$F${i + 2}", GH.toString2Converter(ak.slp2000))
+            domBuilder.userfield(name: "abAbTabelleTable\$G${i + 2}", GH.toString2Converter(ak.slp4000))
+        }
         domBuilder.userfield(name: 'abAbRaumbezeichnungComboBox', map.akustik.abluft.raumBezeichnung)
         domBuilder.userfield(name: 'abAbSchallleistungspegelAbluftstutzenComboBox', map.akustik.abluft.zentralgerat)
         domBuilder.userfield(name: 'abAbKanalnetzComboBox', map.akustik.abluft.slpErhohungKanalnetz as String)
