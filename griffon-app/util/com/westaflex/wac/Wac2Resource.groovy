@@ -117,7 +117,7 @@ class Wac2Resource {
 		// dev
 		def r = Wac2Resource.class.getResourceAsStream("/version.properties")
 		// prod
-		if (!r) r = Wac2Resource.class.getResourceAsStream("version.properties")
+		if (!r) r = Wac2Resource.class.getResourceAsStream("/version.properties")
 		r
 	}
 	
