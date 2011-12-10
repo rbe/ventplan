@@ -51,7 +51,6 @@ class ProjektController {
 	 */
 	void mvcGroupInit(Map args) {
         // Save MVC id
-        //edt {
             model.mvcId = args.mvcId
             // Set defaults
             setDefaultValues()
@@ -141,7 +140,7 @@ class ProjektController {
         } else {
             title << model.mvcId
         }
-        println "ProjektController.getProjektTitel stop -> ${title}"
+        if (DEBUG) println "ProjektController.getProjektTitel stop -> ${title}"
         title
 	}
 	
@@ -150,7 +149,7 @@ class ProjektController {
 	 */
 	StringBuilder makeTabTitle() {
         def tabTitle = getProjektTitel()
-        println "ProjektController.makeTabTitle start -> ${tabTitle}"
+        if (DEBUG) println "ProjektController.makeTabTitle start -> ${tabTitle}"
         // Dateiname des Projekts oder MVC ID
         tabTitle << " (${model.wpxFilename ?: view.mvcId})"
         // Ungespeicherte Daten?
@@ -165,10 +164,10 @@ class ProjektController {
 	 * Titel des Projekts für Tab setzen.
 	 */
 	def setTabTitle = { tabIndex -> 
-        println "ProjektController.setTabTitle tabIndex=${tabIndex}"
+        if (DEBUG) println "ProjektController.setTabTitle tabIndex=${tabIndex}"
         if (!tabIndex) {
             tabIndex = view.projektTabGroup.selectedIndex
-            println "ProjektController.setTabTitle new tabIndex=${tabIndex}"
+            if (DEBUG) println "ProjektController.setTabTitle new tabIndex=${tabIndex}"
         }
         def tabTitle = makeTabTitle()?.toString()
         view.projektTabGroup.setTitleAt(tabIndex, tabTitle)
