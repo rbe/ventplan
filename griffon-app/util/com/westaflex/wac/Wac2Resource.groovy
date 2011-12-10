@@ -116,10 +116,8 @@ class Wac2Resource {
 	def static getConfVersion() {
 		// dev
 		def r = Wac2Resource.class.getResourceAsStream("/version.properties")
-        println "r -> ${r?.dump()}"
 		// prod
 		if (!r) r = Wac2Resource.class.getResourceAsStream("version.properties")
-        println "r2 -> ${r?.dump()}"
 		r
 	}
 	
