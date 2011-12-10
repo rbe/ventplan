@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="WAC">
-
+    <property environment="env"/>
     <!--
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
     	<classpath>
@@ -14,7 +14,7 @@
     </loadproperties>
 
     <!-- Griffon, Groovy -->
-    <property name="myapp.home" value="/Users/mm/app" />
+    <property name="myapp.home" value="${env.HOME}/app" />
     <property name="groovy.home" value="${myapp.home}/groovy/1.8.3" />
     <property name="griffon.home" value="${myapp.home}/griffon/0.9.4" />
     <!-- Binaries -->
@@ -220,7 +220,7 @@
     		<env key="GRIFFON_HOME" value="${griffon.home}" />
     		<env key="PATH" path="${GRIFFON_HOME}/bin:${GROOVY_HOME}/bin:${env.PATH}" />
     		<arg value="${griffon.home}/bin/griffon" />
-    		<arg value="prod" />
+    		<arg value="test" />
     		<arg value="run-app" />
     	</exec>
     </target>
@@ -237,7 +237,7 @@
     		<env key="GRIFFON_HOME" value="${griffon.home}" />
     		<env key="PATH" path="${GRIFFON_HOME}/bin:${GROOVY_HOME}/bin:${env.PATH}" />
     		<arg value="${griffon.home}/bin/griffon" />
-    		<arg value="prod" />
+    		<arg value="test" />
     		<arg value="run-app" />
     		<arg value="-debug" />
     	</exec>
