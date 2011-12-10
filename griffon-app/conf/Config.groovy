@@ -47,7 +47,7 @@ swing {
     windowManager {
         frame1 = [
             hide: { w, app -> 
-                println "Config.swing.windowManager: w=${w.dump()}"
+                //println "Config.swing.windowManager: w=${w.dump()}"
                 if(app.config.shutdown.proceed) w.dispose()
             }
         ]
