@@ -85,6 +85,7 @@ class ProjektController {
 	/**
 	 * Setze Standardwerte (meist in Comboboxen).
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def setDefaultValues() {
 		// Lookup values from database and put them into our model
 //        doOutside {
@@ -221,7 +222,7 @@ class ProjektController {
 	/**
 	 * Button "Seitenansicht".
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def seitenansicht = {
         jxwithWorker(start: true) {
             onInit {
@@ -263,7 +264,7 @@ class ProjektController {
 	/**
 	 * Aktuelles Projekt drucken.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def drucken = {
 		def choice = app.controllers["Dialog"].showPrintProjectDialog()
         if (DEBUG) println "drucken: choice=${choice}"
@@ -282,7 +283,7 @@ class ProjektController {
     /**
      * Alles neu berechnen.
      */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def berechneAlles = { loadMode = false ->
         this.loadMode = loadMode
         if (DEBUG) println "berechneAlles: loadMode=${loadMode}"
@@ -342,7 +343,7 @@ class ProjektController {
     /**
      * Gebäudedaten wurden geändert - Aussenluftvolumenströme berechnen.
      */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def gebaudedatenGeandert = { evt = null ->
         if (model.map.gebaude.lage.windstark) {
             // WAC-169: Änderung der Druckdifferenz durch Gebäudelage windstark
@@ -356,7 +357,7 @@ class ProjektController {
 	/**
 	 * Gebäudedaten - Geometrie wurde manuell eingegeben.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def berechneGeometrie = {
 		// Read values from view and transfer them into our model
 		def g = [
@@ -382,7 +383,7 @@ class ProjektController {
 	/**
 	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def luftdichtheitKategorieA = {
 		//doLater {
 			model.map.gebaude.luftdichtheit.with {
@@ -397,7 +398,7 @@ class ProjektController {
 	/**
 	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def luftdichtheitKategorieB = {
 		//doLater {
 			model.map.gebaude.luftdichtheit.with {
@@ -412,7 +413,7 @@ class ProjektController {
 	/**
 	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def luftdichtheitKategorieC = {
 		//doLater {
 			model.map.gebaude.luftdichtheit.with {
@@ -427,7 +428,7 @@ class ProjektController {
 	/**
 	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def speichereLuftdichtheit = {
 		//doLater {
 			model.map.gebaude.luftdichtheit.druckdifferenz = view.gebaudeLuftdichtheitDruckdifferenz.text.toDouble2()
@@ -440,7 +441,7 @@ class ProjektController {
 	/**
 	 * Gebäudedaten - Faktor für besondere Anforderungen
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def speichereFaktorBesondereAnforderungen = {
 		//doLater {
 			model.map.gebaude.faktorBesondereAnforderungen = view.faktorBesondereAnforderungen.text.toDouble2()
@@ -450,7 +451,7 @@ class ProjektController {
 	/**
 	 * Gebäudedaten - Geplante Belegung
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def berechneMindestaussenluftrate = {
 		//doLater {
 			// Save actual caret position
@@ -479,7 +480,7 @@ class ProjektController {
 	/**
 	 * Anlagendaten - Energie-Kennzeichen
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def berechneEnergieKennzeichen = {
 		//doLater {
 			model.map.anlage.energie.with {
@@ -496,7 +497,7 @@ class ProjektController {
 	/**
 	 * Anlagendaten - Hygiene-Kennzeichen
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def berechneHygieneKennzeichen = {
 		//doLater {
 			model.map.anlage.hygiene.with {
@@ -513,7 +514,7 @@ class ProjektController {
 	/**
 	 * Anlagendaten - Kennzeichen
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def berechneKennzeichenLuftungsanlage = {
 		//doLater {
 			def gebaudeTyp = model.map.gebaude.efh ? "EFH" : "WE"
@@ -530,7 +531,7 @@ class ProjektController {
 	/**
 	 * Aussenluftvolumenströme berechnen.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def berechneAussenluftVs = {
         // Mit/ohne Infiltrationsanteil berechnen
         wacCalculationService.aussenluftVs(model.map)
@@ -541,7 +542,7 @@ class ProjektController {
 	/**
 	 * Raumdaten - Eingabe - Raumtyp in Combobox ausgewählt.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def raumTypGeandert = {
 		//doLater {
 			switch (view.raumTyp.selectedIndex) {
@@ -593,7 +594,7 @@ class ProjektController {
 	/**
 	 * Zeige Dialog "lüftungstechnische Maßnahmen erforderlich."
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def ltmErforderlichDialog = {
 		def infoMsg = model.map.messages.ltm
 		app.controllers["Dialog"].showInformDialog(infoMsg as String)
@@ -603,7 +604,7 @@ class ProjektController {
 	/**
 	 * Raumdaten - Raum anlegen.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def raumHinzufugen = {
 		// Erstelle Model für Raum: Standardwerte überschreiben mit eingegebenen Werten
 		// Berechne Position: Raum wird unten angefügt
@@ -652,7 +653,7 @@ class ProjektController {
 	/**
 	 * Raumdarten - ein Raum wurde geändert.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def raumGeandert = { Integer raumIndex ->
         // WAC-174 (raumIndex kann == 0 sein!)
         if (raumIndex < 0) raumIndex = view.raumTabelle.selectedRow
@@ -728,7 +729,7 @@ class ProjektController {
 	/**
 	 * Raumdaten - einen Raum entfernen.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def raumEntfernen = {
         // Raum aus Model entfernen
         model.removeRaum(view.raumTabelle.selectedRow, view)
@@ -741,7 +742,7 @@ class ProjektController {
 	/**
 	 * Raumdaten - einen Raum kopieren.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def raumKopieren = {
 		//doLater {
 			// Get selected row
@@ -793,7 +794,7 @@ class ProjektController {
 	/**
 	 * Raumdaten - einen Raum in der Tabelle nach oben verschieben.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def raumNachObenVerschieben = {
 		//doLater {
 			// Get selected row
@@ -814,7 +815,7 @@ class ProjektController {
 	/**
 	 * Raumdaten - einen Raum in der Tabelle nach oben verschieben.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def raumNachUntenVerschieben = {
 		//doLater {
 			// Get selected row
@@ -835,7 +836,7 @@ class ProjektController {
 	/**
 	 * Raumdaten - einen Raum bearbeiten.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def raumBearbeiten = {
 		// Get selected row
         def row = view.raumTabelle.selectedRow
@@ -868,7 +869,7 @@ class ProjektController {
 	/**
 	 * RaumBearbeiten - RaumBearbeitenView schliessen.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def raumBearbeitenSchliessen = {
         if (DEBUG) println "raumBearbeitenSchliessen: closing dialog '${raumBearbeitenDialog.title}'"
         raumBearbeitenGeandert()
@@ -878,7 +879,7 @@ class ProjektController {
 	/**
 	 * Raum bearbeiten - Daten eingegeben. Mit raumBearbeitenSchliessen zusammenlegen?
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def raumBearbeitenGeandert = { evt = null ->
         // WAC-174: Immer Raum Index/Position aus Metadaten nehmen
         //def raumIndex = view.raumTabelle.selectedRow
@@ -946,7 +947,7 @@ class ProjektController {
 	/**
 	 * Berechne Türen eines bestimmten Raumes.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def berechneTuren = { evt = null, raumIndex = null ->
         if (DEBUG) println "WAC-174: berechneTuren: evt=${evt?.dump()} raumIndex=${raumIndex?.dump()}"
 		// Hole gewählten Raum
@@ -976,7 +977,7 @@ class ProjektController {
     /**
      * Tur Werte entfernen in Raum bearbeiten Dialog
      */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def raumBearbeitenTurEntfernen = { evt = null ->
         if (DEBUG) println "raumBearbeitenTurEntfernen: view.raumBearbeitenTurenTabelle.selectedRow -> ${view.raumBearbeitenTurenTabelle.selectedRow}"
         def turenIndex = view.raumBearbeitenTurenTabelle.selectedRow
@@ -996,7 +997,7 @@ class ProjektController {
 	/**
 	 * Raumvolumenströme - Zu/Abluftventile geändert.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def raumZuAbluftventileGeandert = {
 		def raumIndex = view.raumVsZuAbluftventileTabelle.selectedRow
 		if (DEBUG) println "raumZuAbluftventileGeandert: raumIndex=${raumIndex}"
@@ -1010,7 +1011,7 @@ class ProjektController {
 	/**
 	 * Raumvolumenströme - Überströmelemente geändert.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def raumUberstromelementeGeandert = {
 		def raumIndex = view.raumVsUberstromelementeTabelle.selectedRow
 		if (raumIndex > -1) {
@@ -1025,7 +1026,7 @@ class ProjektController {
 	 * die Auswahl aller anderen Tabellen entsprechend anpassen.
 	 * @param evt javax.swing.event.ListSelectionEvent
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def raumInTabelleGewahlt = { evt, table ->
 		if (!evt.isAdjusting && evt.firstIndex > -1 && evt.lastIndex > -1) {
 			// source = javax.swing.ListSelectionModel
@@ -1057,7 +1058,11 @@ class ProjektController {
 				// Raum in Raumdaten-Tabelle, Raumvolumenströme-Zu/Abluftventile-Tabelle,
 				// Raumvolumenströme-Überströmelemente-Tabelle markieren
 				withAllRaumTables { t ->
-					GH.withDisabledListSelectionListeners t, { -> changeSelection(row, 0, false, false) }
+                    try {
+                        GH.withDisabledListSelectionListeners t, { -> changeSelection(row, 0, false, false) }
+                    } catch (e) {
+                        // java.lang.IndexOutOfBoundsException: bitIndex < 0: -1
+                    }
 				}
 				// Aktuellen Raum in Metadaten setzen
                 model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
@@ -1077,7 +1082,7 @@ class ProjektController {
 	/**
 	 * Raumvolumenströme - Zentralgerät: manuelle Auswahl des Zentralgeräts.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def zentralgeratManuellGewahlt = {
 		////publishEvent "ZentralgeratGewahlt", [view.raumVsZentralgerat.selectedItem]
 //		doLater {
@@ -1101,7 +1106,7 @@ class ProjektController {
 	/**
 	 * Aktualisiere Zentralgerät und Volumenstrom in allen Comboboxen
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	void zentralgeratAktualisieren() {
         if (DEBUG) println "zentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
 		//doLater {
@@ -1211,7 +1216,7 @@ class ProjektController {
 	/**
 	 * Druckverlustberechnung - Kanalnetz - Hinzufügen.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def dvbKanalnetzHinzufugen = {
 		def kanalnetz = GH.getValuesFromView(view, "dvbKanalnetz")
 		////publishEvent "DvbKanalnetzHinzufugen", [kanalnetz, view]
@@ -1244,7 +1249,7 @@ class ProjektController {
 	/**
 	 * Druckverlustberechnung - Kanalnetz wurde hinzugefügt: Eintrag in der Tabelle anwählen.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def onDvbKanalnetzInTabelleWahlen = { kanalnetzIndex ->
 		//doLater {
 			view.dvbKanalnetzTabelle.changeSelection(kanalnetzIndex, 0, false, false)

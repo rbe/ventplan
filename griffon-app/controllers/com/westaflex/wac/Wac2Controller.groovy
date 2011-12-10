@@ -446,6 +446,7 @@ class Wac2Controller {
      * Wird über action aufgerufen. Weiterleiten an projektSpeichern.
      * @return Boolean Was project saved sucessfully?
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def aktivesProjektSpeichern = { evt = null ->
         def mvc = getMVCGroupAktivesProjekt()
         projektSpeichern(mvc)
@@ -455,7 +456,8 @@ class Wac2Controller {
      * Projekt speichern. Es wird der Dateiname aus dem ProjektModel 'wpxFilename' verwendet.
 	 * Ist er nicht gesetzt, wird "Projekt speichern als" aufgerufen.
      */
-    void projektSpeichern(mvc) {
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    def projektSpeichern = { mvc ->
         def saved = mvc.controller.save()
         if (saved) {
             if (DEBUG) println "aktivesProjektSpeichern: Projekt gespeichert in ${mvc.model.wpxFilename}"
@@ -471,6 +473,7 @@ class Wac2Controller {
      * Wird über action aufgerufen. Weiterleiten an projektSpeichernAls.
      * @return Boolean Was project saved sucessfully?
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def aktivesProjektSpeichernAls = { evt = null ->
         def mvc = getMVCGroupAktivesProjekt()
         projektSpeichernAls(mvc)
@@ -479,23 +482,22 @@ class Wac2Controller {
     /**
      * Zeige FileChooser, setze gewählten Dateinamen im ProjektModel und rufe "Projekt speichern".
      */
-    void projektSpeichernAls(mvc) {
-        edt {
-            // Reset selected filename
-            view.wpxFileChooserWindow.selectedFile = null
-            // Open filechooser
-            def openResult = view.wpxFileChooserWindow.showSaveDialog(app.windowManager.windows.find{it.focused})
-            if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
-                def fname = view.wpxFileChooserWindow.selectedFile.toString()
-                if (!fname.endsWith(".wpx")) fname += ".wpx"
-                mvc.model.wpxFilename = fname
-                if (DEBUG) println "projektSpeichernAls: wpxFilename=${mvc.model.wpxFilename?.dump()}"
-                // Save data
-                projektSpeichern(mvc)
-            }
-            else {
-                abortClosing = true
-            }
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    def projektSpeichernAls = { mvc ->
+        // Reset selected filename
+        view.wpxFileChooserWindow.selectedFile = null
+        // Open filechooser
+        def openResult = view.wpxFileChooserWindow.showSaveDialog(app.windowManager.windows.find{it.focused})
+        if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
+            def fname = view.wpxFileChooserWindow.selectedFile.toString()
+            if (!fname.endsWith(".wpx")) fname += ".wpx"
+            mvc.model.wpxFilename = fname
+            if (DEBUG) println "projektSpeichernAls: wpxFilename=${mvc.model.wpxFilename?.dump()}"
+            // Save data
+            projektSpeichern(mvc)
+        }
+        else {
+            abortClosing = true
         }
     }
 
@@ -504,12 +506,13 @@ class Wac2Controller {
      * Ist er nicht gesetzt, wird "Projekt speichern als" aufgerufen.
      * @return Boolean Was project saved sucessfully?
      */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def alleProjekteSpeichernAction = { evt = null -> 
         alleProjekteSpeichern(evt)
     }
     
-    boolean alleProjekteSpeichern(evt) {
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    def alleProjekteSpeichern = { evt ->
         model.projekte.each {
             def mvc = getMVCGroup(it)
             def saved = mvc.controller.save()
@@ -526,6 +529,7 @@ class Wac2Controller {
     /**
      * Seitenansicht öffnen.
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def projektSeitenansicht = { evt = null ->
         getMVCGroupAktivesProjekt().controller.seitenansicht()
     }
@@ -533,6 +537,7 @@ class Wac2Controller {
     /**
      * Projekt drucken.
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def projektDrucken = { evt = null ->
         getMVCGroupAktivesProjekt().controller.drucken()
     }
@@ -540,6 +545,7 @@ class Wac2Controller {
     /**
      * WAC-151: Automatische und manuelle Berechnung
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def automatischeBerechnung = { evt = null ->
         def mvc = getMVCGroupAktivesProjekt()
         
@@ -564,6 +570,7 @@ class Wac2Controller {
      * WAC-167: Info-Menü mit Über-Dialog
      * Dialog mit Logo und Versionsnummer
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def aboutDialogOeffnen = { evt = null ->
         def aboutDialog = GH.createDialog(builder, AboutView, [title: "Über", resizable: false, pack: true])
         aboutDialog.show()
@@ -572,7 +579,8 @@ class Wac2Controller {
     /**
      * WAC-161: Zuletzt geöffnete Projekte
      */
-    void addRecentlyOpenedFile(filename) {
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    def addRecentlyOpenedFile = { filename ->
         if (DEBUG) println "addRecentlyOpenedFile -> filename: ${filename}"
         // Add file to MRU list
         if (mruFileManager.size() == MRUFileManager.DEFAULT_MAX_SIZE) {
@@ -587,6 +595,7 @@ class Wac2Controller {
     /**
      * Removes all recently opened file menuItem objects and adds them again.
      */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def buildRecentlyOpenedMenuItems = {
         if (mruFileManager.size() > 0) {
             if (DEBUG) println "Wac2Controller.buildRecentlyOpenedMenuItems view dump -> ${view.dump()}"
