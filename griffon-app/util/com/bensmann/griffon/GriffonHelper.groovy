@@ -612,12 +612,10 @@ class GriffonHelper {
      * Returns the current installed version.
      */
     def static localVersion = {
-        // For development only: new java.io.File("/home/manu/Entwicklung/git/wac2/usbstick/wac/conf/version").text.trim()
-        //def version = new java.io.File("conf/version").text.trim()
-        def version = Wac2Resource.getConfVersion()
-        //def version = "6.1.4"
-        println "version -> ${version?.dump()}"
-        version
+        Properties properties = new Properties()
+        def p = Wac2Resource.getConfVersion()
+        properties.load(p)
+        return properties.get("version") as String
     }
 
     /**
@@ -626,8 +624,7 @@ class GriffonHelper {
     def static getWacwsUrl = {
         Properties properties = new Properties()
         def p = Wac2Resource.getWacwsProperties()
-        println "p -> ${p?.dump()}"
-        properties.load(Wac2Resource.getWacwsProperties())
+        properties.load(p)
         return properties.get("webservice.url") as String
         //return "http://localhost:8080/wacws/services/wpxUpload?wsdl"
     }

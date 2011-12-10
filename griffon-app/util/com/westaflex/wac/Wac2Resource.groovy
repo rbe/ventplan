@@ -110,13 +110,15 @@ class Wac2Resource {
     
     /**
 	 * Get version.
+     * Caution: 
+     * Had to change this because "version" file could not be loaded in griffon 0.9.4.
 	 */
 	def static getConfVersion() {
 		// dev
-		def r = Wac2Resource.class.getResource("../resources/version")
+		def r = Wac2Resource.class.getResourceAsStream("/version.properties")
         println "r -> ${r?.dump()}"
 		// prod
-		if (!r) r = Wac2Resource.class.getResource("version")
+		if (!r) r = Wac2Resource.class.getResourceAsStream("version.properties")
         println "r2 -> ${r?.dump()}"
 		r
 	}
