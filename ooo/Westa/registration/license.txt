@@ -1,3 +1,0 @@
-(C) 2006-2008 Oliver Seebass
-(C) 2007 Westaflexwerk GmbH
-(C) 2009-2010 Ralf Bensmann
