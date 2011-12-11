@@ -191,11 +191,11 @@ class OooService {
         // Tabelle
         def m = [:]
         map.raum.raume.eachWithIndex { r, i ->
-            domBuilder.userfield(name: "wfTabelleTable\$B${i + 3}", r.raumBezeichnung)
-            domBuilder.userfield(name: "wfTabelleTable\$C${i + 3}", r.raumGeschoss)
-            domBuilder.userfield(name: "wfTabelleTable\$D${i + 3}", r.raumLuftart)
-            domBuilder.userfield(name: "wfTabelleTable\$E${i + 3}", GH.toString2Converter(r.raumFlache))
-            domBuilder.userfield(name: "wfTabelleTable\$F${i + 3}", GH.toString2Converter(r.raumHohe))
+            domBuilder.userfield(name: "wfTabelleTable!B${i + 3}", r.raumBezeichnung)
+            domBuilder.userfield(name: "wfTabelleTable!C${i + 3}", r.raumGeschoss)
+            domBuilder.userfield(name: "wfTabelleTable!D${i + 3}", r.raumLuftart)
+            domBuilder.userfield(name: "wfTabelleTable!E${i + 3}", GH.toString2Converter(r.raumFlache))
+            domBuilder.userfield(name: "wfTabelleTable!F${i + 3}", GH.toString2Converter(r.raumHohe))
         }
         // Zusammenfassung
         domBuilder.userfield(name: 'lmeZuSummeWertLabel',
@@ -234,21 +234,24 @@ class OooService {
                     vs = java.lang.Math.max(r.raumZuluftVolumenstrom, r.raumAbluftVolumenstrom)
                     break
             }
-            domBuilder.userfield(name: "lmeTabelleTable\$B${i + 3}", r.raumBezeichnung)
-            domBuilder.userfield(name: "lmeTabelleTable\$C${i + 3}", GH.toString2Converter(r.raumVolumen))
-            domBuilder.userfield(name: "lmeTabelleTable\$D${i + 3}", r.raumLuftart)
-            domBuilder.userfield(name: "lmeTabelleTable\$E${i + 3}", GH.toString2Converter(vs))
-            domBuilder.userfield(name: "lmeTabelleTable\$F${i + 3}", GH.toString2Converter(r.raumLuftwechsel))
-            domBuilder.userfield(name: "lmeTabelleTable\$G${i + 3}", r.raumAnzahlZuluftventile)
-            domBuilder.userfield(name: "lmeTabelleTable\$H${i + 3}", GH.toString2Converter(r.raumZuluftmengeJeVentil))
-            domBuilder.userfield(name: "lmeTabelleTable\$I${i + 3}", r.raumBezeichnungZuluftventil)
-            domBuilder.userfield(name: "lmeTabelleTable\$J${i + 3}", r.raumAnzahlAbluftventile)
-            domBuilder.userfield(name: "lmeTabelleTable\$K${i + 3}", GH.toString2Converter(r.raumAbluftmengeJeVentil))
-            domBuilder.userfield(name: "lmeTabelleTable\$L${i + 3}", r.raumBezeichnungAbluftventil)
-            domBuilder.userfield(name: "lmeTabelleTable\$M${i + 3}", r.raumVerteilebene)
+            domBuilder.userfield(name: "lmeTabelleTable!B${i + 3}", r.raumBezeichnung)
+            domBuilder.userfield(name: "lmeTabelleTable!C${i + 3}", GH.toString2Converter(r.raumVolumen))
+            domBuilder.userfield(name: "lmeTabelleTable!D${i + 3}", r.raumLuftart)
+            domBuilder.userfield(name: "lmeTabelleTable!E${i + 3}", GH.toString2Converter(vs))
+            domBuilder.userfield(name: "lmeTabelleTable!F${i + 3}", GH.toString2Converter(r.raumLuftwechsel))
+            domBuilder.userfield(name: "lmeTabelleTable!G${i + 3}", r.raumAnzahlZuluftventile)
+            domBuilder.userfield(name: "lmeTabelleTable!H${i + 3}", GH.toString2Converter(r.raumZuluftmengeJeVentil))
+            domBuilder.userfield(name: "lmeTabelleTable!I${i + 3}", r.raumBezeichnungZuluftventile)
+            domBuilder.userfield(name: "lmeTabelleTable!J${i + 3}", r.raumAnzahlAbluftventile)
+            domBuilder.userfield(name: "lmeTabelleTable!K${i + 3}", GH.toString2Converter(r.raumAbluftmengeJeVentil))
+            domBuilder.userfield(name: "lmeTabelleTable!L${i + 3}", r.raumBezeichnungAbluftventile)
+            domBuilder.userfield(name: "lmeTabelleTable!M${i + 3}", r.raumVerteilebene)
         }
         // Ergebnis der Berechnungen
-        domBuilder.userfield(name: 'lmeSumLTMZuluftmengeWertLabel', GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "ZU" }?.inject(0.0d, { o, n -> o + n.raumZuluftVolumenstrom }) ?: 0.0d))
+        def zuluftRaume = map.raum.raume.findAll { it.raumLuftart == "ZU" }
+        println "zuluftRaume=${zuluftRaume}"
+        def x = GH.toString2Converter(zuluftraume?.inject(0.0d, { o, n -> o + n.raumZuluftVolumenstrom }) ?: 0.0d)
+        domBuilder.userfield(name: 'lmeSumLTMZuluftmengeWertLabel', x)
         domBuilder.userfield(name: 'lmeSumLTMAbluftmengeWertLabel', GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "AB" }?.inject(0.0d, { o, n -> o + n.raumAbluftVolumenstrom }) ?: 0.0d))
         domBuilder.userfield(name: 'lmeGesAussenluftmengeWertLabel', GH.toString2Converter(map.raum.raumVs.gesamtaussenluftVsMitInfiltration))
     }
@@ -275,12 +278,12 @@ class OooService {
                     vs = java.lang.Math.max(r.raumZuluftVolumenstrom, r.raumAbluftVolumenstrom)
                     break
             }
-            domBuilder.userfield(name: "lmeTabelleUeberstroemTable\$B${i + 3}", r.raumBezeichnung)
-            domBuilder.userfield(name: "lmeTabelleUeberstroemTable\$C${i + 3}", GH.toString2Converter(r.raumVolumen))
-            domBuilder.userfield(name: "lmeTabelleUeberstroemTable\$D${i + 3}", r.raumLuftart)
-            domBuilder.userfield(name: "lmeTabelleUeberstroemTable\$E${i + 3}", GH.toString2Converter(r.raumUberstromVolumenstrom))
-            domBuilder.userfield(name: "lmeTabelleUeberstroemTable\$F${i + 3}", r.raumAnzahlUberstromVentile)
-            domBuilder.userfield(name: "lmeTabelleUeberstroemTable\$G${i + 3}", r.raumUberstromElement)
+            domBuilder.userfield(name: "lmeTabelleUeberstroemTable!B${i + 3}", r.raumBezeichnung)
+            domBuilder.userfield(name: "lmeTabelleUeberstroemTable!C${i + 3}", GH.toString2Converter(r.raumVolumen))
+            domBuilder.userfield(name: "lmeTabelleUeberstroemTable!D${i + 3}", r.raumLuftart)
+            domBuilder.userfield(name: "lmeTabelleUeberstroemTable!E${i + 3}", GH.toString2Converter(r.raumUberstromVolumenstrom))
+            domBuilder.userfield(name: "lmeTabelleUeberstroemTable!F${i + 3}", r.raumAnzahlUberstromVentile)
+            domBuilder.userfield(name: "lmeTabelleUeberstroemTable!G${i + 3}", r.raumUberstromElement)
         }
         // Einstellungen am Lüftungsgerät und an der Fernbedienung
         domBuilder.userfield(name: 'lmeZentralgeraetCombobox', map.anlage.zentralgerat)
@@ -297,12 +300,12 @@ class OooService {
         // Zuluft
         //abZuTabelleUberschrift2Label = "Zuluft"
         map.akustik.zuluft.tabelle.eachWithIndex { ak, i ->
-            domBuilder.userfield(name: "abZuTabelleTable\$B${i + 2}", GH.toString2Converter(ak.slp125))
-            domBuilder.userfield(name: "abZuTabelleTable\$C${i + 2}", GH.toString2Converter(ak.slp250))
-            domBuilder.userfield(name: "abZuTabelleTable\$D${i + 2}", GH.toString2Converter(ak.slp500))
-            domBuilder.userfield(name: "abZuTabelleTable\$E${i + 2}", GH.toString2Converter(ak.slp1000))
-            domBuilder.userfield(name: "abZuTabelleTable\$F${i + 2}", GH.toString2Converter(ak.slp2000))
-            domBuilder.userfield(name: "abZuTabelleTable\$G${i + 2}", GH.toString2Converter(ak.slp4000))
+            domBuilder.userfield(name: "abZuTabelleTable!B${i + 2}", GH.toString2Converter(ak.slp125))
+            domBuilder.userfield(name: "abZuTabelleTable!C${i + 2}", GH.toString2Converter(ak.slp250))
+            domBuilder.userfield(name: "abZuTabelleTable!D${i + 2}", GH.toString2Converter(ak.slp500))
+            domBuilder.userfield(name: "abZuTabelleTable!E${i + 2}", GH.toString2Converter(ak.slp1000))
+            domBuilder.userfield(name: "abZuTabelleTable!F${i + 2}", GH.toString2Converter(ak.slp2000))
+            domBuilder.userfield(name: "abZuTabelleTable!G${i + 2}", GH.toString2Converter(ak.slp4000))
         }
         domBuilder.userfield(name: 'abZuRaumbezeichnungComboBox', map.akustik.zuluft.raumBezeichnung)
         domBuilder.userfield(name: 'abZuSchallleistungspegelZuluftstutzenComboBox', map.akustik.zuluft.zentralgerat)
@@ -322,12 +325,12 @@ class OooService {
         // Abluft
         //abAbTabelleUberschrift2Label = "Abluft"
         map.akustik.zuluft.tabelle.eachWithIndex { ak, i ->
-            domBuilder.userfield(name: "abAbTabelleTable\$B${i + 2}", GH.toString2Converter(ak.slp125))
-            domBuilder.userfield(name: "abAbTabelleTable\$C${i + 2}", GH.toString2Converter(ak.slp250))
-            domBuilder.userfield(name: "abAbTabelleTable\$D${i + 2}", GH.toString2Converter(ak.slp500))
-            domBuilder.userfield(name: "abAbTabelleTable\$E${i + 2}", GH.toString2Converter(ak.slp1000))
-            domBuilder.userfield(name: "abAbTabelleTable\$F${i + 2}", GH.toString2Converter(ak.slp2000))
-            domBuilder.userfield(name: "abAbTabelleTable\$G${i + 2}", GH.toString2Converter(ak.slp4000))
+            domBuilder.userfield(name: "abAbTabelleTable!B${i + 2}", GH.toString2Converter(ak.slp125))
+            domBuilder.userfield(name: "abAbTabelleTable!C${i + 2}", GH.toString2Converter(ak.slp250))
+            domBuilder.userfield(name: "abAbTabelleTable!D${i + 2}", GH.toString2Converter(ak.slp500))
+            domBuilder.userfield(name: "abAbTabelleTable!E${i + 2}", GH.toString2Converter(ak.slp1000))
+            domBuilder.userfield(name: "abAbTabelleTable!F${i + 2}", GH.toString2Converter(ak.slp2000))
+            domBuilder.userfield(name: "abAbTabelleTable!G${i + 2}", GH.toString2Converter(ak.slp4000))
         }
         domBuilder.userfield(name: 'abAbRaumbezeichnungComboBox', map.akustik.abluft.raumBezeichnung)
         domBuilder.userfield(name: 'abAbSchallleistungspegelAbluftstutzenComboBox', map.akustik.abluft.zentralgerat)
@@ -351,16 +354,16 @@ class OooService {
      */
     def addDvbKanalnetz = { domBuilder, map ->
         map.dvb.kanalnetz.eachWithIndex { kn, i ->
-            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable\$B${i + 3}", kn.luftart)
-            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable\$C${i + 3}", kn.teilstrecke)
-            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable\$D${i + 3}", GH.toString2Converter(kn.luftVs))
-            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable\$E${i + 3}", kn.kanalbezeichnung)
-            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable\$F${i + 3}", GH.toString2Converter(kn.lange))
-            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable\$G${i + 3}", GH.toString2Converter(kn.geschwindigkeit))
-            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable\$H${i + 3}", GH.toString2Converter(kn.reibungswiderstand))
-            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable\$I${i + 3}", GH.toString2Converter(kn.gesamtwiderstandszahl))
-            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable\$J${i + 3}", GH.toString2Converter(kn.einzelwiderstand))
-            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable\$K${i + 3}", GH.toString2Converter(kn.widerstandTeilstrecke))
+            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!B${i + 3}", kn.luftart)
+            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!C${i + 3}", kn.teilstrecke)
+            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!D${i + 3}", GH.toString2Converter(kn.luftVs))
+            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!E${i + 3}", kn.kanalbezeichnung)
+            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!F${i + 3}", GH.toString2Converter(kn.lange))
+            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!G${i + 3}", GH.toString2Converter(kn.geschwindigkeit))
+            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!H${i + 3}", GH.toString2Converter(kn.reibungswiderstand))
+            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!I${i + 3}", GH.toString2Converter(kn.gesamtwiderstandszahl))
+            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!J${i + 3}", GH.toString2Converter(kn.einzelwiderstand))
+            domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!K${i + 3}", GH.toString2Converter(kn.widerstandTeilstrecke))
         }
     }
     
@@ -369,15 +372,15 @@ class OooService {
      */
     def addDvbVentileinstellung = { domBuilder, map ->
         map.dvb.ventileinstellung.eachWithIndex { ve, i ->
-            domBuilder.userfield(name: "dvbVentileinstellungTabelleTable\$B${i + 3}", ve.luftart)
-            domBuilder.userfield(name: "dvbVentileinstellungTabelleTable\$C${i + 3}", ve.raum)
-            domBuilder.userfield(name: "dvbVentileinstellungTabelleTable\$D${i + 3}", ve.teilstrecken)
-            domBuilder.userfield(name: "dvbVentileinstellungTabelleTable\$E${i + 3}", ve.ventilbezeichnung)
-            domBuilder.userfield(name: "dvbVentileinstellungTabelleTable\$F${i + 3}", GH.toString2Converter(ve.dpOffen))
-            domBuilder.userfield(name: "dvbVentileinstellungTabelleTable\$G${i + 3}", GH.toString2Converter(ve.gesamtWiderstand))
-            domBuilder.userfield(name: "dvbVentileinstellungTabelleTable\$H${i + 3}", GH.toString2Converter(ve.differenz))
-            domBuilder.userfield(name: "dvbVentileinstellungTabelleTable\$I${i + 3}", GH.toString2Converter(ve.abgleich))
-            domBuilder.userfield(name: "dvbVentileinstellungTabelleTable\$J${i + 3}", GH.toString2Converter(ve.einstellung))
+            domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!B${i + 3}", ve.luftart)
+            domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!C${i + 3}", ve.raum)
+            domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!D${i + 3}", ve.teilstrecken)
+            domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!E${i + 3}", ve.ventilbezeichnung)
+            domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!F${i + 3}", GH.toString2Converter(ve.dpOffen))
+            domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!G${i + 3}", GH.toString2Converter(ve.gesamtWiderstand))
+            domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!H${i + 3}", GH.toString2Converter(ve.differenz))
+            domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!I${i + 3}", GH.toString2Converter(ve.abgleich))
+            domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!J${i + 3}", GH.toString2Converter(ve.einstellung))
         }
     }
     
