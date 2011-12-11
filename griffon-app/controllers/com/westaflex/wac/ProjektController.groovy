@@ -23,6 +23,8 @@ import java.awt.Component
 import javax.swing.DefaultListModel
 import javax.swing.event.TableModelEvent
 import griffon.transform.Threading
+import static groovyx.net.http.ContentType.XML
+import static groovyx.net.http.ContentType.BINARY
 
 /**
  * 
@@ -218,48 +220,72 @@ class ProjektController {
 			false
 		}
 	}
-	
-	/**
+    
+    /**
 	 * Button "Seitenansicht".
 	 */
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def seitenansicht = {
-        jxwithWorker(start: true) {
-            onInit {
-                app.models["wac2"].statusProgressBarIndeterminate = true
-                app.models["wac2"].statusBarText = "Erstelle Seitenansicht..."
-            }
-            work {
-                // TODO mmu Dialog: Daten aus Auslegung, Blanko? Ticket #97.
-                def doc = oooService.performAuslegung(false, getProjektTitel(), model.map)
-                if (DEBUG) println "projektSeitenansicht: doc=${doc?.dump()}"
-                // Open document
-                switch (System.getProperty("os.name")) {
-                    case { it ==~ /Windows.*/ }:
-                        def program = new java.io.File(System.getenv("OOO_HOME"), "program")
-                        def cmd = [
-                            "${program.absolutePath.replace('\\', '/')}/soffice.exe",
-                            "-nologo", "-nofirststartwizard", "-nodefault",
-                            "-nocrashreport", "-norestart", "-norestore",
-                            "-nolockcheck",
-                            "-writer", "-o \"${doc.absolutePath}\""
-                        ]
-                        def p = cmd.execute(null, program)
-                        p.waitFor()
-                        if (DEBUG) println "${cmd} = ${p.exitValue()}"
-                        break
-                    default:
-                        java.awt.Desktop.desktop.open(doc)
-                }
-            }
-            onUpdate {
-            }
-            onDone {
-                app.models["wac2"].statusBarText = ""
-                app.models["wac2"].statusProgressBarIndeterminate = false
+        // TODO mmu Dialog: Daten aus Auslegung, Blanko? Ticket #97.
+        def doc = oooService.performAuslegung(false, getProjektTitel(), model.map)
+
+        def restUrl = GH.getOdiseeRestUrl() as String
+        def restPath = GH.getOdiseeRestPath() as String
+
+        def pdfFile
+        edt {
+            pdfFile = restXML(restUrl, restPath, doc) as java.io.File
+        }
+        
+        if (DEBUG) println "pdfFile: ${pdfFile?.dump()}"
+
+        if (pdfFile?.exists()) {
+
+            if (DEBUG) println "projektSeitenansicht: doc=${pdfFile?.dump()}"
+            // Open document
+            switch (System.getProperty("os.name")) {
+                case { it ==~ /Windows.*/ }:
+                    def program = new java.io.File(System.getenv("OOO_HOME"), "program")
+                    def cmd = [
+                        "${program.absolutePath.replace('\\', '/')}/soffice.exe",
+                        "-nologo", "-nofirststartwizard", "-nodefault",
+                        "-nocrashreport", "-norestart", "-norestore",
+                        "-nolockcheck",
+                        "-writer", "-o \"${doc.absolutePath}\""
+                    ]
+                    def p = cmd.execute(null, program)
+                    p.waitFor()
+                    if (DEBUG) println "${cmd} = ${p.exitValue()}"
+                    break
+                default:
+                    java.awt.Desktop.desktop.open(pdfFile)
             }
         }
 	}
+    
+    /**
+     * Post xml document via REST and receive a PDF file.
+     */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    java.io.File restXML(restUrl, restPath, xmlDoc) {
+        java.io.File responseFile
+        try {
+            withRest(id: "odisee", uri: restUrl) {
+                
+                def resp = post(path: restPath, body: xmlDoc, requestContentType: XML, responseContentType: BINARY)
+
+                if (DEBUG) println "model.wpxFilename.absolutePath -> ${model.wpxFilename}"
+                responseFile = new java.io.File(model.wpxFilename + ".pdf")
+                
+                responseFile << resp.responseData
+                if (DEBUG) println "response end..."
+            }
+        } catch (e) {
+            println "post withRest exception -> ${e.dump()}"
+        }
+        if (DEBUG) println "returning responsefile ${responseFile.absolutePath}"
+        return responseFile
+    }
 	
 	/**
 	 * Aktuelles Projekt drucken.

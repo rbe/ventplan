@@ -42,3 +42,7 @@ root.'ZonelayoutGriffonAddon'.addon=true
 root.'SplashGriffonAddon'.addon=true
 
 root.'GlazedlistsGriffonAddon'.addon=true
+
+
+
+root.'RestGriffonAddon'.addon=true

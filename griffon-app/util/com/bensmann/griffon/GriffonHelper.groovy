@@ -628,5 +628,29 @@ class GriffonHelper {
         return properties.get("webservice.url") as String
         //return "http://localhost:8080/wacws/services/wpxUpload?wsdl"
     }
-
+    
+    
+    /**
+     * 
+     */
+    def static getOdiseeRestUrl = {
+        Properties properties = new Properties()
+        def p = Wac2Resource.getWacwsProperties()
+        properties.load(p)
+        return properties.get("odisee.rest.url") as String
+        //return "http://localhost:8080/wacws/services/wpxUpload?wsdl"
+    }
+    
+    
+    /**
+     * 
+     */
+    def static getOdiseeRestPath = {
+        Properties properties = new Properties()
+        def p = Wac2Resource.getWacwsProperties()
+        properties.load(p)
+        return properties.get("odisee.rest.path") as String
+        //return "http://localhost:8080/wacws/services/wpxUpload?wsdl"
+    }
+    
 }
