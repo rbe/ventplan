@@ -73,17 +73,21 @@ class OooService {
      */
     def performAuslegung = { blanko = false, title = null, map ->
         def domBuilder = groovy.xml.DOMBuilder.newInstance()
-        // Daten übergeben
-        addProjektdaten(domBuilder, map.kundendaten)
-        addKundendaten(domBuilder, map.kundendaten)
-        addInformationen(domBuilder, map)
-        addRaumdaten(domBuilder, map)
-        addRaumvolumenstrome(domBuilder, map)
-        addUberstromelemente(domBuilder, map)
-        addAkustikBerechnung(domBuilder, map)
-        addDvbKanalnetz(domBuilder, map)
-        addDvbVentileinstellung(domBuilder, map)
-        println groovy.xml.XmlUtil.serialize(odisee)
+        def odisee = domBuilder.odisee() {
+            // Daten übergeben
+            addProjektdaten(domBuilder, map.kundendaten)
+            addKundendaten(domBuilder, map.kundendaten)
+            addInformationen(domBuilder, map)
+            addRaumdaten(domBuilder, map)
+            addRaumvolumenstrome(domBuilder, map)
+            addUberstromelemente(domBuilder, map)
+            addAkustikBerechnung(domBuilder, map)
+            addDvbKanalnetz(domBuilder, map)
+            addDvbVentileinstellung(domBuilder, map)
+        }
+        def xml = groovy.xml.XmlUtil.serialize(odisee)
+        println xml
+        xml
     }
     
     /**
