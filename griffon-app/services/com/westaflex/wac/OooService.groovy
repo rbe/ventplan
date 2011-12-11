@@ -225,7 +225,7 @@ class OooService {
             def vs
             switch (r.raumLuftart) {
                 case "ZU":
-                    vs = r.raumZuluftVolumenstrom
+                    vs = r.raumVolumenstrom
                     break
                 case "AB":
                     vs = r.raumAbluftVolumenstrom
@@ -248,10 +248,7 @@ class OooService {
             domBuilder.userfield(name: "lmeTabelleTable!M${i + 3}", r.raumVerteilebene)
         }
         // Ergebnis der Berechnungen
-        def zuluftRaume = map.raum.raume.findAll { it.raumLuftart == "ZU" }
-        println "zuluftRaume=${zuluftRaume}"
-        def x = GH.toString2Converter(zuluftraume?.inject(0.0d, { o, n -> o + n.raumZuluftVolumenstrom }) ?: 0.0d)
-        domBuilder.userfield(name: 'lmeSumLTMZuluftmengeWertLabel', x)
+        domBuilder.userfield(name: 'lmeSumLTMZuluftmengeWertLabel', GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "ZU" }?.inject(0.0d, { o, n -> o + n.raumVolumenstrom }) ?: 0.0d))
         domBuilder.userfield(name: 'lmeSumLTMAbluftmengeWertLabel', GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "AB" }?.inject(0.0d, { o, n -> o + n.raumAbluftVolumenstrom }) ?: 0.0d))
         domBuilder.userfield(name: 'lmeGesAussenluftmengeWertLabel', GH.toString2Converter(map.raum.raumVs.gesamtaussenluftVsMitInfiltration))
     }
@@ -269,13 +266,13 @@ class OooService {
             // TODO Wert abzgl. Infiltration?
             switch (r.raumLuftart) {
                 case "ZU":
-                    vs = r.raumZuluftVolumenstrom
+                    vs = r.raumZuluftVolumenstromInfiltration
                     break
                 case "AB":
-                    vs = r.raumAbluftVolumenstrom
+                    vs = r.lmeSumLTMZuluftmengeWertLabel
                     break
                 case "ZU/AB":
-                    vs = java.lang.Math.max(r.raumZuluftVolumenstrom, r.raumAbluftVolumenstrom)
+                    vs = java.lang.Math.max(r.raumZuluftVolumenstromInfiltration, r.lmeSumLTMZuluftmengeWertLabel)
                     break
             }
             domBuilder.userfield(name: "lmeTabelleUeberstroemTable!B${i + 3}", r.raumBezeichnung)
@@ -314,7 +311,8 @@ class OooService {
         domBuilder.userfield(name: 'abZuHauptschalldaempfer1ComboBox', map.akustik.zuluft.hauptschalldampfer1)
         domBuilder.userfield(name: 'abZuHauptschalldaempfer2ComboBox', map.akustik.zuluft.hauptschalldampfer2)
         domBuilder.userfield(name: 'abZuAnzahlUmlenkungenTextField', map.akustik.zuluft.anzahlUmlenkungen as String)
-        domBuilder.userfield(name: 'abZuLuftverteilerkastenTextField', map.akustik.zuluft.luftverteilerkasten)
+        // throws NullPointerException
+        domBuilder.userfield(name: 'abZuLuftverteilerkastenTextField', map.akustik.zuluft.luftverteilerkasten ?: '')
         domBuilder.userfield(name: 'abZuLaengsdaempfungKanalComboBox', map.akustik.zuluft.langsdampfungKanal)
         domBuilder.userfield(name: 'abZuLaengsdaempfungKanalTextField', map.akustik.zuluft.langsdampfungKanalLfdmMeter)
         domBuilder.userfield(name: 'abZuSchalldaempferVentilComboBox', map.akustik.zuluft.schalldampferVentil)
@@ -339,7 +337,8 @@ class OooService {
         domBuilder.userfield(name: 'abAbHauptschalldaempfer1ComboBox', map.akustik.abluft.hauptschalldampfer1)
         domBuilder.userfield(name: 'abAbHauptschalldaempfer2ComboBox', map.akustik.abluft.hauptschalldampfer2)
         domBuilder.userfield(name: 'abAbAnzahlUmlenkungenTextField', map.akustik.abluft.anzahlUmlenkungen as String)
-        domBuilder.userfield(name: 'abAbLuftverteilerkastenTextField', map.akustik.abluft.luftverteilerkasten)
+        // throws NullPointerException
+        domBuilder.userfield(name: 'abAbLuftverteilerkastenTextField', map.akustik.abluft.luftverteilerkasten ?: '')
         domBuilder.userfield(name: 'abAbLaengsdaempfungKanalComboBox', map.akustik.abluft.langsdampfungKanal)
         domBuilder.userfield(name: 'abAbLaengsdaempfungKanalTextField', map.akustik.abluft.langsdampfungKanalLfdmMeter)
         domBuilder.userfield(name: 'abAbSchalldaempferVentilComboBox', map.akustik.abluft.schalldampferVentil)
