@@ -251,7 +251,7 @@ class ProjektController {
                         "-nologo", "-nofirststartwizard", "-nodefault",
                         "-nocrashreport", "-norestart", "-norestore",
                         "-nolockcheck",
-                        "-writer", "-o \"${doc.absolutePath}\""
+                        "-writer", "-o \"${pdfFile.absolutePath}\""
                     ]
                     def p = cmd.execute(null, program)
                     p.waitFor()
