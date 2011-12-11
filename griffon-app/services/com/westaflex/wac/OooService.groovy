@@ -74,16 +74,22 @@ class OooService {
     def performAuslegung = { blanko = false, title = null, map ->
         def domBuilder = groovy.xml.DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
-            // Daten übergeben
-            addProjektdaten(domBuilder, map.kundendaten)
-            addKundendaten(domBuilder, map.kundendaten)
-            addInformationen(domBuilder, map)
-            addRaumdaten(domBuilder, map)
-            addRaumvolumenstrome(domBuilder, map)
-            addUberstromelemente(domBuilder, map)
-            addAkustikBerechnung(domBuilder, map)
-            addDvbKanalnetz(domBuilder, map)
-            addDvbVentileinstellung(domBuilder, map)
+            request(name: 'Auslegung1', id: 1) {
+                ooo(group: 'group0') {}
+                template(name: 'WestaAuslegung', revision: 'LATEST', outputFormat: 'pdf') {}
+                archive(database: false, files: true) {}
+                instructions() {
+                    addProjektdaten(domBuilder, map.kundendaten)
+                    addKundendaten(domBuilder, map.kundendaten)
+                    addInformationen(domBuilder, map)
+                    addRaumdaten(domBuilder, map)
+                    addRaumvolumenstrome(domBuilder, map)
+                    addUberstromelemente(domBuilder, map)
+                    addAkustikBerechnung(domBuilder, map)
+                    addDvbKanalnetz(domBuilder, map)
+                    addDvbVentileinstellung(domBuilder, map)
+                }
+            }
         }
         def xml = groovy.xml.XmlUtil.serialize(odisee)
         println xml
