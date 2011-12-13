@@ -233,6 +233,7 @@ class ProjektController {
         def restPath = GH.getOdiseeRestPath() as String
 
         def pdfFile
+        
         edt {
             pdfFile = restXML(restUrl, restPath, doc) as java.io.File
         }
@@ -272,12 +273,24 @@ class ProjektController {
         try {
             withRest(id: "odisee", uri: restUrl) {
                 
-                def resp = post(path: restPath, body: xmlDoc, requestContentType: XML, responseContentType: BINARY)
+                def newString = new String(xmlDoc.getBytes(), "UTF-8")
+                
+                def resp = post(path: restPath, body: newString, requestContentType: XML, responseContentType: BINARY, charset: 'utf-8')
+                {
+                    headers.'Content-Type' = 'application/pdf'
+                    headers.'Accept' = 'application/pdf'
+                }
 
                 if (DEBUG) println "model.wpxFilename.absolutePath -> ${model.wpxFilename}"
                 responseFile = new java.io.File(model.wpxFilename + ".pdf")
                 
                 responseFile << resp.responseData
+                
+                //def byteArrayInputStream = new ByteArrayInputStream(resp.getBytes("UTF-8"))
+                
+                //responseFile << resp.responseData
+                //responseFile << byteArrayInputStream
+                                    
                 if (DEBUG) println "response end..."
             }
         } catch (e) {
@@ -286,7 +299,34 @@ class ProjektController {
         if (DEBUG) println "returning responsefile ${responseFile.absolutePath}"
         return responseFile
     }
-	
+    
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    java.io.File restXML2(restUrl, restPath, xmlDoc) {
+        java.io.File responseFile
+        try {
+            withRest(id: "odisee", uri: restUrl) {
+                
+                def newString = new String(xmlDoc, "UTF-8")
+                
+                def resp = post(path: restPath, body: newString, requestContentType: XML, responseContentType: BINARY) {
+                    headers.'Content-Type' = 'application/xml; charset=utf-8'
+                    headers.'Accept' = 'application/xml; charset=utf-8'
+                }
+                
+                def byteArrayInputStream = new ByteArrayInputStream(resp.getBytes("UTF-8"))
+                
+                responseFile = new java.io.File("/Users/mm/Entwicklung/WAC_Tests/mytest2.pdf")
+                
+                //responseFile << resp.responseData
+                responseFile << byteArrayInputStream
+            }
+        } catch (e) {
+            println "post withRest exception -> ${e.dump()}"
+        }
+        if (DEBUG) println "returning responsefile ${responseFile.absolutePath}"
+        return responseFile
+    }
+    
 	/**
 	 * Aktuelles Projekt drucken.
 	 */
@@ -1673,7 +1713,7 @@ class ProjektController {
     /**
      *
      */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def generiereStuckliste = {
         
         try {
@@ -1697,16 +1737,40 @@ class ProjektController {
             // create table with relative column width
             pdfCreator.createTable([2f, 1f, 3f, 1f] as float[])
             
+            if (DEBUG) println "adding zentralgerät... "
             // Zentralgerät
             def zentralgerat = "Zentralgerät: ${model.map.anlage.zentralgerat}" as String
             pdfCreator.addArtikelToDocument(zentralgerat)
+            if (DEBUG) println "added zentralgerät... "
+            // Add empty line.
+            pdfCreator.addArtikelToDocument("  ")
+            if (DEBUG) println "adding empty artikel"
             
-            model.map.raum.raume.each { r -> erzeugeRaumStuckliste(r, pdfCreator) }
+            edt {
+                model.map.raum.raume.each { r -> 
+                    erzeugeRaumStucklisteAbluft(r, pdfCreator)
+                }
+            }
+            edt {
+                model.map.raum.raume.each { r -> 
+                    erzeugeRaumStucklisteZuluft(r, pdfCreator)
+                }
+            }
+            edt {
+                model.map.raum.raume.each { r -> 
+                    erzeugeRaumStucklisteUberstrom(r, pdfCreator)
+                }
+            }
             
-            erzeugeDruckverlustStuckliste(model.map.dvb, pdfCreator)
-            
-            erzeugeSchalldampferStuckliste(model.map.akustik.zuluft, "zuluft", pdfCreator)
-            erzeugeSchalldampferStuckliste(model.map.akustik.abluft, "abluft", pdfCreator)
+            edt {
+                erzeugeDruckverlustStuckliste(model.map.dvb, pdfCreator)
+            }
+            edt {
+                erzeugeSchalldampferStuckliste(model.map.akustik.zuluft, "zuluft", pdfCreator)
+            }
+            edt {
+                erzeugeSchalldampferStuckliste(model.map.akustik.abluft, "abluft", pdfCreator)
+            }
             
             // Add table to the document
             pdfCreator.addTable()
@@ -1715,8 +1779,13 @@ class ProjektController {
             
             def successMsg = "Stückliste '${stucklisteFilename}' erfolgreich generiert"
             app.controllers["Dialog"].showInformDialog(successMsg as String)
+            
+            java.io.File sf = new java.io.File(stucklisteFilename)
+            if (sf.exists()) {
+                java.awt.Desktop.desktop.open(sf)
+            }
         } catch (e) {
-            println "Error generating document: ${e}"
+            println "Error generating document: ${e.dump()}"
             
             def errorMsg = "Beim generieren der Stückliste ist ein Fehler aufgetreten"
             app.controllers["Dialog"].showErrorDialog(errorMsg as String)
@@ -1725,48 +1794,52 @@ class ProjektController {
     }
     
     
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    def erzeugeRaumStuckliste = { map, pdfCreator -> 
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    def erzeugeRaumStucklisteAbluft = { map, pdfCreator -> 
         
-        if (DEBUG) println "map -> ${map.dump()}"
-        
-        def luftart = "Abluft"
-        def ventil = map.raumBezeichnungAbluftventile
-        def anzahl = map.raumAnzahlAbluftventile
-        if (!ventil) {
-            luftart = "Zuluft"
-            ventil = map.raumBezeichnungZuluftventile
-            anzahl = map.raumAnzahlZuluftventile
+        if (map.raumBezeichnungAbluftventile) {
+            if (DEBUG) println "adding Abluft... ${map.dump()}"
+            pdfCreator.addArtikel(map.raumBezeichnung, "Abluft", map.raumBezeichnungAbluftventile, map.raumAnzahlAbluftventile)
         }
-        
-        if (ventil && anzahl > 0) {
-            //pdfCreator.addRaum(map.raumBezeichnung)
-            pdfCreator.addArtikel(map.raumBezeichnung, luftart, ventil, anzahl)
-        }
-        
-        // Überströmventile hinzufügen
-        anzahl = map.raumAnzahlUberstromVentile
-        ventil = map.raumUberstromElement
-        luftart = "Überström"
-        
-        if (ventil && anzahl > 0) {
-            //pdfCreator.addRaum(map.raumBezeichnung)
-            pdfCreator.addArtikel("", luftart, ventil, anzahl)
-        }
-        
     }
     
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    def erzeugeRaumStucklisteZuluft = { map, pdfCreator -> 
+        if (map.raumBezeichnungZuluftventile) {
+            if (DEBUG) println "adding Zuluft... ${map.dump()}"
+            pdfCreator.addArtikel(map.raumBezeichnung, "Zuluft", map.raumBezeichnungZuluftventile, map.raumAnzahlZuluftventile)
+        }
+    }
+    
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    def erzeugeRaumStucklisteUberstrom = { map, pdfCreator -> 
+        if (map.raumAnzahlUberstromVentile && map.raumAnzahlUberstromVentile > 0) {
+            //if (DEBUG) 
+            println "adding Überström... ${map.dump()}"
+            pdfCreator.addArtikel("", "Überström", map.raumUberstromElement, map.raumAnzahlUberstromVentile)
+        }
+    }
+            
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def erzeugeDruckverlustStuckliste = { dvb, pdfCreator ->
-        dvb.kanalnetz.each { 
-            pdfCreator.addArtikel("", "", it.kanalbezeichnung, it.lange)
+        dvb.kanalnetz.each {
+            if (it.kanalbezeichnung) {
+                if (DEBUG) println "adding kanalnetz..."
+                pdfCreator.addArtikel("", "", it.kanalbezeichnung, it.lange)
+            }
         }
     }   
     
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def erzeugeSchalldampferStuckliste = { akustik, luftart, pdfCreator ->
-        pdfCreator.addArtikel("", "", akustik.hauptschalldampfer1, 1)
-        pdfCreator.addArtikel("", "", akustik.hauptschalldampfer2, 1)
+        if (akustik.hauptschalldampfer1) {
+            if (DEBUG) println "adding schalldampfer 1..."
+            pdfCreator.addArtikel("", "", akustik.hauptschalldampfer1, 1)
+        }
+        if (akustik.hauptschalldampfer2) {
+            if (DEBUG) println "adding schalldampfer 2..."
+            pdfCreator.addArtikel("", "", akustik.hauptschalldampfer2, 1)
+        }
     }
     
 }
