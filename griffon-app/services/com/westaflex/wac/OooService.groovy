@@ -71,10 +71,10 @@ class OooService {
     /**
      * 
      */
-    def performAuslegung = { blanko = false, title = null, map ->
+    String performAuslegung(String wpxFilename, Map map) {
         def domBuilder = groovy.xml.DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
-            request(name: 'Auslegung1', id: 1) {
+            request(name: wpxFilename, id: 1) {
                 ooo(group: 'group0') {}
                 template(name: 'WestaAuslegung', revision: 'LATEST', outputFormat: 'pdf') {}
                 archive(database: false, files: true) {}
