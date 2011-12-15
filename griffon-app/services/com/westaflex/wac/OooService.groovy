@@ -116,7 +116,7 @@ class OooService {
     /**
      * @param map model.map.kundendaten
      */
-    private def addKundendaten = { domBuilder, map ->
+    private def addKundendaten(domBuilder, map) {
         // Grosshandel
         domBuilder.userfield(name: 'ghFirma1TextField', map.grosshandel.firma1)
         domBuilder.userfield(name: 'ghFirma2TextField', map.grosshandel.firma2)
@@ -138,7 +138,7 @@ class OooService {
     /**
      * @param map model.map.kundendaten
      */
-    private def addInformationen = { domBuilder, map ->
+    private def addInformationen(domBuilder, map) {
         // Gerätestandort
         domBuilder.userfield(name: 'gsKellergeschossRadioButton', gt(map.anlage.standort, "KG", "Kellergeschoss"))
         domBuilder.userfield(name: 'gsErdgeschossRadioButton', gt(map.anlage.standort, "EG", "Erdgeschoss"))
@@ -187,7 +187,7 @@ class OooService {
     /**
      * @param map model.map
      */
-    def addRaumdaten = { domBuilder, map ->
+    def addRaumdaten(domBuilder, map) {
         // Tabelle
         def m = [:]
         map.raum.raume.eachWithIndex { r, i ->
@@ -216,7 +216,7 @@ class OooService {
     /**
      * @param map model.map
      */
-    def addRaumvolumenstrome = { domBuilder, map ->
+    def addRaumvolumenstrome(domBuilder, map) {
         // Tabelle
         def m = [:]
         map.raum.raume.eachWithIndex { r, i ->
@@ -256,7 +256,7 @@ class OooService {
     /**
      * @param map model.map
      */
-    def addUberstromelemente = { domBuilder, map ->
+    def addUberstromelemente(domBuilder, map) {
         // Tabelle
         def m = [:]
         map.raum.raume.eachWithIndex { r, i ->
@@ -293,7 +293,7 @@ class OooService {
     /**
      * @param map model.map
      */
-    def addAkustikBerechnung = { domBuilder, map ->
+    def addAkustikBerechnung(domBuilder, map) {
         // Zuluft
         //abZuTabelleUberschrift2Label = "Zuluft"
         map.akustik.zuluft.tabelle.eachWithIndex { ak, i ->
@@ -351,7 +351,7 @@ class OooService {
     /**
      * @param map model.map
      */
-    def addDvbKanalnetz = { domBuilder, map ->
+    def addDvbKanalnetz(domBuilder, map) {
         map.dvb.kanalnetz.eachWithIndex { kn, i ->
             domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!B${i + 3}", kn.luftart)
             domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!C${i + 3}", kn.teilstrecke)
@@ -369,7 +369,7 @@ class OooService {
     /**
      * @param map model.map
      */
-    def addDvbVentileinstellung = { domBuilder, map ->
+    def addDvbVentileinstellung(domBuilder, map) {
         map.dvb.ventileinstellung.eachWithIndex { ve, i ->
             domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!B${i + 3}", ve.luftart)
             domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!C${i + 3}", ve.raum)
