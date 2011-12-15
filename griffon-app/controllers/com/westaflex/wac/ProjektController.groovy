@@ -244,23 +244,9 @@ class ProjektController {
 
             if (DEBUG) println "projektSeitenansicht: doc=${pdfFile?.dump()}"
             // Open document
-            switch (System.getProperty("os.name")) {
-                case { it ==~ /Windows.*/ }:
-                    def program = new java.io.File(System.getenv("OOO_HOME"), "program")
-                    def cmd = [
-                        "${program.absolutePath.replace('\\', '/')}/soffice.exe",
-                        "-nologo", "-nofirststartwizard", "-nodefault",
-                        "-nocrashreport", "-norestart", "-norestore",
-                        "-nolockcheck",
-                        "-writer", "-o \"${pdfFile.absolutePath}\""
-                    ]
-                    def p = cmd.execute(null, program)
-                    p.waitFor()
-                    if (DEBUG) println "${cmd} = ${p.exitValue()}"
-                    break
-                default:
                     java.awt.Desktop.desktop.open(pdfFile)
-            }
+        } else {
+            if (DEBUG) println "pdfFile does not exist: ${pdfFile?.dump()}"
         }
 	}
     
