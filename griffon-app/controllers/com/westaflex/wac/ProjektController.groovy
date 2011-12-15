@@ -226,22 +226,14 @@ class ProjektController {
 	 */
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def seitenansicht = {
-        // TODO mmu Dialog: Daten aus Auslegung, Blanko? Ticket #97.
-        def doc = oooService.performAuslegung(false, getProjektTitel(), model.map)
-
+        def doc = oooService.performAuslegung(model.wpxFilename - '.wpx' + ' Auslegung.pdf', model.map)
         def restUrl = GH.getOdiseeRestUrl() as String
         def restPath = GH.getOdiseeRestPath() as String
-
-        def pdfFile
-        
+        java.io.File pdfFile
         edt {
-            pdfFile = restXML(restUrl, restPath, doc) as java.io.File
+            pdfFile = restXML(restUrl, restPath, doc)/* as java.io.File*/
         }
-        
-        if (DEBUG) println "pdfFile: ${pdfFile?.dump()}"
-
         if (pdfFile?.exists()) {
-
             if (DEBUG) println "projektSeitenansicht: doc=${pdfFile?.dump()}"
             // Open document
                     java.awt.Desktop.desktop.open(pdfFile)
@@ -255,28 +247,20 @@ class ProjektController {
      */
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     java.io.File restXML(restUrl, restPath, xmlDoc) {
-        java.io.File responseFile
+        java.io.File responseFile = null
         try {
             withRest(id: "odisee", uri: restUrl) {
-                
                 def newString = new String(xmlDoc.getBytes(), "UTF-8")
-                
-                def resp = post(path: restPath, body: newString, requestContentType: XML, responseContentType: BINARY, charset: 'utf-8')
-                {
-                    headers.'Content-Type' = 'application/pdf'
+                def resp = post(path: restPath, body: newString, requestContentType: XML, responseContentType: BINARY, charset: 'utf-8') {
+                    headers.'Content-Type' = 'text/xml'
                     headers.'Accept' = 'application/pdf'
                 }
-
                 if (DEBUG) println "model.wpxFilename.absolutePath -> ${model.wpxFilename}"
-                responseFile = new java.io.File(model.wpxFilename + ".pdf")
-                
-                responseFile << resp.responseData
-                
+                responseFile = new java.io.File(model.wpxFilename - '.wpx' + '.pdf')
                 //def byteArrayInputStream = new ByteArrayInputStream(resp.getBytes("UTF-8"))
-                
+                def byteArrayInputStream = new ByteArrayInputStream(resp.getBytes())
+                responseFile << byteArrayInputStream
                 //responseFile << resp.responseData
-                //responseFile << byteArrayInputStream
-                                    
                 if (DEBUG) println "response end..."
             }
         } catch (e) {
@@ -291,18 +275,13 @@ class ProjektController {
         java.io.File responseFile
         try {
             withRest(id: "odisee", uri: restUrl) {
-                
                 def newString = new String(xmlDoc, "UTF-8")
-                
                 def resp = post(path: restPath, body: newString, requestContentType: XML, responseContentType: BINARY) {
                     headers.'Content-Type' = 'application/xml; charset=utf-8'
                     headers.'Accept' = 'application/xml; charset=utf-8'
                 }
-                
                 def byteArrayInputStream = new ByteArrayInputStream(resp.getBytes("UTF-8"))
-                
                 responseFile = new java.io.File("/Users/mm/Entwicklung/WAC_Tests/mytest2.pdf")
-                
                 //responseFile << resp.responseData
                 responseFile << byteArrayInputStream
             }
@@ -1709,7 +1688,7 @@ class ProjektController {
             // Save document in user home dir
             //def userDir = System.getProperty("user.home")
             //userDir = userDir + "/" + title + "_" + System.currentTimeMillis() + ".pdf"
-            def stucklisteFilename = model.wpxFilename + "_" + System.currentTimeMillis() + ".pdf"
+            def stucklisteFilename = model.wpxFilename - '.wpx' + ' Stückliste.pdf'
             
             PdfCreator pdfCreator = new PdfCreator()
             // Create a new pdf document
