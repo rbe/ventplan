@@ -27,7 +27,6 @@ class Wac2Controller {
     def projektModelService
     def view
     def wacCalculationService
-    def oooService
     def builder
     
     /**
@@ -83,8 +82,6 @@ class Wac2Controller {
      * Shutdown application and all resources.
      */
     def _shutdown() {
-        // Shutdown OpenOffice
-        oooService.shutdownOCM()
         // Shutdown application
         app.shutdown()
     }
