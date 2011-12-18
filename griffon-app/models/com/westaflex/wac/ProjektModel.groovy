@@ -823,10 +823,9 @@ class ProjektModel {
 	 */
 	def removeRaum = { raumIndex, view ->
 		synchronized (map.raum.raume) {
-			//if (DEBUG) 
-            println "removeRaum: removing raumIndex=${raumIndex}"
+			if (DEBUG) println "removeRaum: removing raumIndex=${raumIndex}"
 			map.raum.raume.remove(raumIndex)
-            println "removeRaum: map.raum.raume = ${map.raum.raume.dump()}"
+            if (DEBUG) println "removeRaum: map.raum.raume = ${map.raum.raume.dump()}"
 			// Sync table models
 			[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
 				it.remove(raumIndex)
@@ -839,7 +838,7 @@ class ProjektModel {
 	/**
 	 * Synchronize all Swing table models depending on map.raum.raume.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	void resyncRaumTableModels() {
 		// Räume sortieren, damit die Liste immer der Position des Raums und der Reihenfolge im TableModel entspricht:
 		// Nicht zwingend notwendig, da die TableModels bereits über den Comparator nach Position sortieren:
@@ -1004,7 +1003,7 @@ class ProjektModel {
 	/**
 	 * Synchronize all Swing table models depending on map.akustik.*.tabelle.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def resyncAkustikTableModels(view) {
 		if (DEBUG) println "resyncAkustikTableModels()"
 		synchronized (tableModels) {

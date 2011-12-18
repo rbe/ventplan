@@ -679,7 +679,7 @@ class ProjektController {
 			// Raum im Model hinzufügen
             if (DEBUG) println "onRaumHinzufugen: raum -> ${raum}"
 			model.addRaum(raum, view)
-            raumGeandert(model.map.raum.raume.size() - 1)
+            raumGeandert(raum.position)
             // WAC-170: abw. Raumbezeichnung leeren
             view.raumBezeichnung.text = ""
             // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
@@ -691,28 +691,39 @@ class ProjektController {
 	 * Raumdarten - ein Raum wurde geändert.
 	 */
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-	def raumGeandert = { Integer raumIndex ->
+	def raumGeandert = { Integer raumPosition ->
         // WAC-174 (raumIndex kann == 0 sein!)
-        if (raumIndex < 0) raumIndex = view.raumTabelle.selectedRow
-        if (DEBUG) println "raumGeandert: raum[${raumIndex}]"
-        if (raumIndex > -1) {
-            if (DEBUG) println "raumGeandert: raum[${raumIndex}] ${model.map.raum.raume[raumIndex]}"
-            // Diesen Raum in allen Tabellen anwählen
-            onRaumInTabelleWahlen(raumIndex)
+        def isSelectedRow = false
+        if (raumPosition < 0) {
+            raumPosition = view.raumTabelle.selectedRow
+            isSelectedRow = true
+        }
+        if (DEBUG) println "raumGeandert: raum[${raumPosition}]"
+        if (raumPosition > -1) {
+            if (DEBUG) println "raumGeandert: raum[${raumPosition}] ${model.map.raum.raume[raumPosition]}"
             // Raum holen
             ////def raum = model.map.raum.raume[raumIndex]
-            // Raumdaten prüfen 
-            def currentPosition
-            def currentRaum
-            model.map.raum.raume.eachWithIndex{ item, pos ->
-                if (item.position == raumIndex) {
-                    currentRaum = item
-                    currentPosition = pos
+            // Raumdaten prüfen
+            def raum
+            def raumIndex
+            if (!isSelectedRow) {
+                model.map.raum.raume.eachWithIndex{ item, pos ->
+                    if (item.position == raumPosition) {
+                        raum = item
+                        raumIndex = pos
+                    }
                 }
+            } else {
+                raumIndex = raumPosition
             }
-            model.prufeRaumdaten(currentRaum)
+            // Diesen Raum in allen Tabellen anwählen
+            onRaumInTabelleWahlen(raumIndex)
+            
+            if (DEBUG) println "raumGeandert: raum[${raumPosition}] currentRaum=${raum.dump()}"
+            
+            model.prufeRaumdaten(model.map.raum.raume[raumIndex])
             // WAC-65: Errechnete Werte zurücksetzen
-            currentRaum.with {
+            model.map.raum.raume[raumIndex].with {
                 if (raumBreite && raumLange) raumFlache = raumBreite * raumLange
                 raumVolumen = raumFlache * raumHohe
                 raumLuftwechsel = 0.0d
@@ -729,24 +740,21 @@ class ProjektController {
             // Überströmvolumenstrom
             // WAC-151
             if (!model.map.anlage.zentralgeratManuell) {
-                currentRaum.raumUberstromVolumenstrom = 0.0d
+                model.map.raum.raume[raumIndex].raumUberstromVolumenstrom = 0.0d
             }
-            // raum setzen
-            model.map.raum.raume[currentPosition] = currentRaum
             
             // Raumvolumenströme, (Werte abzgl. Infiltration werden zur Berechnung der Ventile benötigt) berechnen
             wacCalculationService.autoLuftmenge(model.map)
-            // Raum erneut aus der Map holen - Berechnung 
-            currentRaum = model.map.raum.raume.find { it.position == raumIndex }
             // Zu-/Abluftventile
-            currentRaum = wacCalculationService.berechneZuAbluftventile(currentRaum)
+            model.map.raum.raume[raumIndex] = 
+                wacCalculationService.berechneZuAbluftventile(model.map.raum.raume[raumIndex])
             // Türspalt und Türen
-            currentRaum = wacCalculationService.berechneTurspalt(currentRaum)
-            berechneTuren(null, currentPosition, false)
+            model.map.raum.raume[raumIndex] = 
+                wacCalculationService.berechneTurspalt(model.map.raum.raume[raumIndex])
+            berechneTuren(null, raumIndex, isSelectedRow)
             // Überströmelement berechnen
-            currentRaum = wacCalculationService.berechneUberstromelemente(currentRaum)
-            // raum erneut setzen
-            model.map.raum.raume[currentPosition] = currentRaum
+            model.map.raum.raume[raumIndex] = 
+                wacCalculationService.berechneUberstromelemente(model.map.raum.raume[raumIndex])
         }
         // Nummern der Räume berechnen
         wacCalculationService.berechneRaumnummer(model.map)
@@ -783,7 +791,9 @@ class ProjektController {
         // Raum aus Model entfernen
         model.removeRaum(view.raumTabelle.selectedRow, view)
         // Es hat sich was geändert...
-        raumGeandert(view.raumTabelle.selectedRow)
+        def raum = model.map.raum.raume[view.raumTabelle.selectedRow]
+        raumGeandert(raum.position)
+        //raumGeandert(view.raumTabelle.selectedRow, true)
         // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
         berechneAlles()
 	}
@@ -797,7 +807,8 @@ class ProjektController {
 			// Get selected row
 			def row = view.raumTabelle.selectedRow
 			// Raum anhand seiner Position finden
-			def x = model.map.raum.raume.find { it.position == row }
+			//def x = model.map.raum.raume.find { it.position == row }
+            def x = model.map.raum.raume[row]
             // Kopie erzeugen
             def newMap = new ObservableMap()
             x.collect{
@@ -849,14 +860,18 @@ class ProjektController {
 			// Get selected row
 			def row = view.raumTabelle.selectedRow
 			if (row > 0) {
+                def currentRaum
 				// Recalculate positions
 				model.map.raum.raume.each {
 					if (it.position == row - 1) it.position += 1
-					else if (it.position == row) it.position -= 1
+					else if (it.position == row) {
+                        it.position -= 1
+                        currentRaum = it
+                    }
 				}
 				model.resyncRaumTableModels()
 				// Raum geändert
-                raumGeandert(row - 1)
+                raumGeandert(currentRaum.position)
 			}
 		//}
 	}
@@ -871,13 +886,17 @@ class ProjektController {
 			def row = view.raumTabelle.selectedRow
 			if (row < view.raumTabelle.rowCount - 1) {
 				// Recalculate positions
+                def currentRaum
 				model.map.raum.raume.each {
 					if (it.position == row + 1) it.position -= 1
-					else if (it.position == row) it.position += 1
+					else if (it.position == row) {
+                        it.position += 1
+                        currentRaum = it
+                    }
 				}
 				model.resyncRaumTableModels()
 				// Raum geändert
-                raumGeandert(row + 1)
+                raumGeandert(currentRaum.position, true)
 			}
 		//}
 	}
@@ -888,8 +907,8 @@ class ProjektController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def raumBearbeiten = {
 		// Get selected row
-        println "raumBearbeiten: view.raumTabelle -> ${view.raumTabelle.dump()}"
-        println "raumBearbeiten: model.meta.gewahlterRaum -> ${model.meta.gewahlterRaum.dump()}"
+        if (DEBUG) println "raumBearbeiten: view.raumTabelle -> ${view.raumTabelle.dump()}"
+        if (DEBUG) println "raumBearbeiten: model.meta.gewahlterRaum -> ${model.meta.gewahlterRaum.dump()}"
         def row = view.raumTabelle.selectedRow
         if (row > -1) {
             // Show dialog
@@ -912,7 +931,7 @@ class ProjektController {
                 println "test"
             } as TableModelListener);
             */
-            berechneTuren(null, row, true)
+            berechneTuren(null, model.meta.gewahlterRaum.position, false)
             raumBearbeitenDialog.show()
         }
 	}
@@ -1000,9 +1019,8 @@ class ProjektController {
 	 */
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def berechneTuren = { evt = null, raumIndex = null, isTableRow ->
-        //if (DEBUG) 
-        println "WAC-174: berechneTuren: evt=${evt?.dump()} raumIndex=${raumIndex?.dump()}"
-        println "WAC-174: berechneTuren: evt=${evt?.dump()} raume=${model.map.raum?.dump()}"
+        if (DEBUG) println "WAC-174: berechneTuren: evt=${evt?.dump()} raumIndex=${raumIndex?.dump()}"
+        if (DEBUG) println "WAC-174: berechneTuren: raume=${model.map.raum?.dump()}"
 		// ist der raumIndex aus der Raumtabelle?
         def isSelectedRow = false
         // Hole gewählten Raum
@@ -1010,9 +1028,8 @@ class ProjektController {
             raumIndex = view.raumTabelle.selectedRow
             isSelectedRow = true
         }
-        //if (DEBUG) 
-        println "WAC-174: berechneTuren: raumIndex=${raumIndex?.dump()}"
-		//def raum = model.map.raum.raume[raumIndex]
+        if (DEBUG) println "WAC-174: berechneTuren: raumIndex=${raumIndex?.dump()}"
+		// Suche Raum mittels übergebenen raumIndex
         def raum
         if (isSelectedRow || isTableRow) {
             model.map.raum.raume.eachWithIndex { item, pos -> 
@@ -1025,10 +1042,10 @@ class ProjektController {
             raum = model.map.raum.raume.find { it.position == raumIndex }
         }
         
-        //if (DEBUG) 
-        println "WAC-174: berechneTuren: raum=${raum?.dump()}"
+        if (DEBUG) println "WAC-174: berechneTuren: raum=${raum?.dump()}"
 		// Türen berechnen?
-        if (raum.turen.findAll { it.turBreite > 0 }?.size() > 0 && raum.raumUberstromVolumenstrom) {
+        if (DEBUG) println "raum.turen -> ${raum?.turen.dump()}"
+        if (raum?.turen.findAll { it.turBreite > 0 }?.size() > 0 && raum.raumUberstromVolumenstrom) {
             wacCalculationService.berechneTurspalt(raum)
             // WAC-165: Hinweis: Türspalt > max. Türspalthöhe?
             def turSpalthoheUberschritten = raum.turen.findAll {
@@ -1043,35 +1060,45 @@ class ProjektController {
         // WAC-165: Bugfix: Werte in der Türen-Tabelle werden erst dann aktualisiert, wenn die Maus über einzelne Zeilen bewegt wird
         try {
             view.raumBearbeitenTurenTabelle.repaint()
-        } catch (e) {}
+        } catch (e) { }
 	}
 
     /**
      * Tur Werte entfernen in Raum bearbeiten Dialog
      */
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    def raumBearbeitenTurEntfernen = { evt = null ->
-        //if (DEBUG) 
-        println "raumBearbeitenTurEntfernen: view.raumBearbeitenTurenTabelle.selectedRow -> ${view.raumBearbeitenTurenTabelle.selectedRow}"
+    def raumBearbeitenTurEntfernen = { evt = null, reload = true ->
+        if (DEBUG) println "raumBearbeitenTurEntfernen: view.raumBearbeitenTurenTabelle.selectedRow -> ${view.raumBearbeitenTurenTabelle.selectedRow}"
         def turenIndex = view.raumBearbeitenTurenTabelle.selectedRow
         def raumIndex = model.meta.gewahlterRaum.position
-        println "turenIndex -> ${turenIndex}"
+        //println "turenIndex -> ${turenIndex}"
+        def raumPosition
         try {
             //def raum = model.map.raum.raume[raumIndex]
-            def raum = model.map.raum.raume.find { it.position == raumIndex }
+            //def raum = model.map.raum.raume.find { it.position == raumIndex }
+            def raum
+            model.map.raum.raume.eachWithIndex { item, pos -> 
+                if (item.position == raumIndex) {
+                    raum = item
+                    raumPosition = pos
+                }
+            }
             raum.turen[turenIndex] = [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
-            //if (DEBUG) 
-            println "raumBearbeitenTurEntfernen: ${raum}"
-        } catch (e) {
-            println ""
-            println "Fehler aufgetreten: ${e.dump()}"
-            println ""
-        }
+            if (DEBUG) println "raumBearbeitenTurEntfernen: ${raum}"
+            model.map.raum.raume[raumPosition] = raum
+        } catch (e) { }
+        println "raumBearbeitenTurEntfernen: raumPosition=${raumPosition}"
         // WAC-174: resyncTableModels ist notwendig, selectedRow wird auf 0 gesetzt, daher selectedRow setzen
         model.resyncRaumTableModels()
-        view.raumTabelle.changeSelection(model.meta.gewahlterRaum.position, 0, false, false) 
+        //view.raumTabelle.changeSelection(model.meta.gewahlterRaum.position, 0, false, false) 
+        view.raumTabelle.changeSelection(raumPosition, 0, false, false)
         // WAC-174: Parameter fehlten!
         berechneTuren(null, raumIndex, false)
+        if (reload) {
+            try {
+                raumBearbeitenTurEntfernen(null, false)
+            } catch (e) { }
+        }
     }
 	
 	/**
@@ -1387,7 +1414,7 @@ class ProjektController {
 	 * Ein Widerstandsbeiwert wurde in der Tabelle gewählt:
 	 * Bild anzeigen und Daten in die Eingabemaske kopieren.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def wbwInTabelleGewahlt = { evt = null ->
 		// Welche Teilstrecke ist ausgewählt? Index bestimmen
 		def index = model.meta.dvbKanalnetzGewahlt //view.dvbKanalnetzTabelle.selectedRow
@@ -1419,7 +1446,7 @@ class ProjektController {
 	/**
 	 * Widerstandsbeiwerte, Übernehmen-Button.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def wbwSaveButton = {
 		// Welche Teilstrecke ist ausgewählt? Index bestimmen
 		def index = model.meta.dvbKanalnetzGewahlt //view.dvbKanalnetzTabelle.selectedRow
@@ -1447,7 +1474,7 @@ class ProjektController {
 	/**
 	 * Widerstandsbeiwerte: eingegebene Werte aufsummieren.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def wbwSummieren = {
 		// Welche Teilstrecke ist ausgewählt? Index bestimmen
 		def index = model.meta.dvbKanalnetzGewahlt //view.dvbKanalnetzTabelle.selectedRow
@@ -1466,7 +1493,7 @@ class ProjektController {
 	/**
 	 * Widerstandsbeiwerte, Dialog mit OK geschlossen.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def wbwOkButton = {
 		// Welche Teilstrecke ist ausgewählt? Index bestimmen
 		def index = model.meta.dvbKanalnetzGewahlt //view.dvbKanalnetzTabelle.selectedRow
@@ -1485,7 +1512,7 @@ class ProjektController {
 	/**
 	 * 
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def wbwCancelButton = {
 		// Close dialog
 		wbwDialog.dispose()
@@ -1494,7 +1521,7 @@ class ProjektController {
 	/**
 	 * Druckverlustberechnung - Ventileinstellung - Hinzufügen.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def dvbVentileinstellungHinzufugen = {
 		def ventileinstellung = GH.getValuesFromView(view, "dvbVentileinstellung")
 		////publishEvent "DvbVentileinstellungHinzufugen", [ventileinstellung, view]
@@ -1520,7 +1547,7 @@ class ProjektController {
 	/**
 	 * Druckverlustberechnung - Ventileinstellung wurde hinzugefügt: Eintrag in der Tabelle anwählen.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def onDvbVentileinstellungInTabelleWahlen = { ventileinstellungIndex ->
 		doLater {
 			view.dvbVentileinstellungTabelle.changeSelection(ventileinstellungIndex, 0, false, false)
@@ -1538,7 +1565,7 @@ class ProjektController {
 	/**
 	 * Druckverlustberechnung - Ventileinstellung - Geändert.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def dvbVentileinstellungGeandert = { ventileinstellungIndex ->
 		////publishEvent "DvbVentileinstellungGeandert", [ventileinstellungIndex]
         doLater {
@@ -1552,7 +1579,7 @@ class ProjektController {
 	/**
 	 * Druckverlustberechnung - Ventileinstellung - Entfernen.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def dvbVentileinstellungEntfernen = {
 		////publishEvent "DvbVentileinstellungEntfernen", [view.dvbVentileinstellungTabelle.selectedRow]
         doLater {
@@ -1565,7 +1592,7 @@ class ProjektController {
 	/**
 	 * Druckverlustberechnung - Ventileinstellung - Teilstrecke wählen.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def dvbVentileinstellungTeilstreckeDialog = {
         teilstreckenDialog = GH.createDialog(builder, TeilstreckenView, [title: "Teilstrecken", size: [250, 400]])
 
@@ -1585,7 +1612,7 @@ class ProjektController {
      * Teilstrecke von ausgewählte Teilstrecke nach verfügbare Teilstrecke verschieben
      * TODO mmu remove old value!
      */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def teilstreckenNachVerfugbarVerschieben = {
         // get selected items
         def selectedValues = view.teilstreckenAusgewahlteListe.selectedValues as String[]
@@ -1610,7 +1637,7 @@ class ProjektController {
      * Teilstrecke von verfügbare Teilstrecke nach ausgewählte Teilstrecke verschieben
      * TODO mmu remove old value!
      */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def teilstreckenNachAusgewahlteVerschieben = {
         // get selected items
         def selectedValues = view.teilstreckenVerfugbareListe.selectedValues as String[]
@@ -1636,7 +1663,7 @@ class ProjektController {
 	/**
 	 * Teilstrecken, Dialog mit OK geschlossen.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def teilstreckenOkButton = {
         // save values...
         view.dvbVentileinstellungTeilstrecken.setText(view.teilstreckenAuswahl.text)
@@ -1646,7 +1673,7 @@ class ProjektController {
 	/**
 	 * Teilstrecken Dialog Abbrechen - nichts speichern!
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def teilstreckenCancelButton = {
         // Close dialog
         teilstreckenDialog.dispose()
@@ -1670,7 +1697,7 @@ class ProjektController {
 	/**
 	 * Akustikberechnung.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	void berechneAkustik(tabname) {
 		def m = model.map.akustik."${tabname.toLowerCase()}"
 		// Konvertiere Wert TextField, ComboBox in Integer, default ist 0
@@ -1828,8 +1855,7 @@ class ProjektController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def erzeugeRaumStucklisteUberstrom = { map, pdfCreator -> 
         if (map.raumAnzahlUberstromVentile && map.raumAnzahlUberstromVentile > 0) {
-            //if (DEBUG) 
-            println "adding Überström... ${map.dump()}"
+            if (DEBUG) println "adding Überström... ${map.dump()}"
             pdfCreator.addArtikel("", "Überström", map.raumUberstromElement, map.raumAnzahlUberstromVentile)
         }
     }

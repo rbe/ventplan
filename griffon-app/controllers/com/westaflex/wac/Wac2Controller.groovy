@@ -321,7 +321,7 @@ class Wac2Controller {
             // Wird durch die Tab und den ChangeListener erledigt.
         }
         // Projekt zur aktiven Tab finden
-        println "projektSchliessen: "
+        if (DEBUG) println "projektSchliessen: "
         def mvc = getMVCGroupAktivesProjekt()
         if (!mvc) {
             println "projektSchliessen: kein aktives Projekt!"
@@ -526,7 +526,7 @@ class Wac2Controller {
     /**
      * Seitenansicht öffnen.
      */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def projektSeitenansicht = { evt = null ->
         getMVCGroupAktivesProjekt().controller.seitenansicht()
     }
@@ -534,7 +534,7 @@ class Wac2Controller {
     /**
      * Projekt drucken.
      */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def projektDrucken = { evt = null ->
         getMVCGroupAktivesProjekt().controller.drucken()
     }
@@ -567,7 +567,7 @@ class Wac2Controller {
      * WAC-167: Info-Menü mit Über-Dialog
      * Dialog mit Logo und Versionsnummer
      */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def aboutDialogOeffnen = { evt = null ->
         def aboutDialog = GH.createDialog(builder, AboutView, [title: "Über", resizable: false, pack: true])
         aboutDialog.show()
@@ -708,7 +708,7 @@ class Wac2Controller {
                 if (isError || fileMsg.length() > 0) {
                     infoMsg = "Übermittlung der WPX-Dateien mit Fehler abgeschlossen.\n ${fileMsg}"
                 }
-                println "Wac2Controller.angebotsverfolgungFilesClosure -> ${app.controllers["Dialog"]?.dump()}"
+                if (DEBUG) println "Wac2Controller.angebotsverfolgungFilesClosure -> ${app.controllers["Dialog"]?.dump()}"
                 app.controllers["Dialog"].showCustomInformDialog("Angebotsverfolgung" as String, infoMsg as String)
             }
         }
@@ -718,8 +718,7 @@ class Wac2Controller {
     def postWpxFile = { f, inputName -> 
         doOutside {
             try {
-                //if (DEBUG) 
-                println "wacwsUrl -> ${wacwsUrl}"
+                if (DEBUG) println "wacwsUrl -> ${wacwsUrl}"
                 // call webservice with paramter
                 def result = withWs(wsdl: wacwsUrl) {
                     uploadWpx(f?.text, inputName)
