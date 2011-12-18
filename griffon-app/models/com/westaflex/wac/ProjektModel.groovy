@@ -154,6 +154,7 @@ class ProjektModel {
      *        This is set true by a PropertyChangeListener installed in
      *        ProjectController.addMapPropertyChangeListener().
 	 */
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	@Bindable map = [
 		messages: [ltm: ""] as ObservableMap,
 		dirty: false,
@@ -226,6 +227,8 @@ class ProjektModel {
 						luftverteilerkastenStck: 1,
 						langsdampfung: 12,
 						raumabsorption: 1,
+                        raumBezeichnung: '',
+                        zentralgerat: '',
 						tabelle: [
 								[slp125: 0, slp250: 0, slp500: 0, slp1000: 0, slp2000: 0, slp4000: 0],
 								[slp125: 0, slp250: 0, slp500: 0, slp1000: 0, slp2000: 0, slp4000: 0],
@@ -246,6 +249,8 @@ class ProjektModel {
 						luftverteilerkastenStck: 1,
 						langsdampfung: 7,
 						raumabsorption: 0,
+                        raumBezeichnung: '',
+                        zentralgerat: '',
 						tabelle: [
 								[slp125: 0, slp250: 0, slp500: 0, slp1000: 0, slp2000: 0, slp4000: 0],
 								[slp125: 0, slp250: 0, slp500: 0, slp1000: 0, slp2000: 0, slp4000: 0],
@@ -611,7 +616,7 @@ class ProjektModel {
 		def writable      = [true,             true,          false,                      false,              true] as boolean[]
 		def postValueSet  = { object, columnIndex, value -> 
 			// Call ProjektController
-			app.controllers[mvcId].berechneTuren(null, meta.gewahlterRaum.position)
+			app.controllers[mvcId].berechneTuren(null, meta.gewahlterRaum.position, false)
 		}
 		gltmClosureCheckbox(columnNames, propertyNames, writable, tableModels.raumeTuren[index], postValueSet)
 	}
@@ -818,8 +823,10 @@ class ProjektModel {
 	 */
 	def removeRaum = { raumIndex, view ->
 		synchronized (map.raum.raume) {
-			if (DEBUG) println "removeRaum: removing raumIndex=${raumIndex}"
+			//if (DEBUG) 
+            println "removeRaum: removing raumIndex=${raumIndex}"
 			map.raum.raume.remove(raumIndex)
+            println "removeRaum: map.raum.raume = ${map.raum.raume.dump()}"
 			// Sync table models
 			[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
 				it.remove(raumIndex)

@@ -18,7 +18,7 @@ import net.miginfocom.swing.MigLayout
 jideScrollPane(id: "raumBearbeitenScrollPane") {
     panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fill", "[]", "[]0[]")) {
         panel(id: "raumVsZuAbluftventileTabellePanel", layout: new MigLayout("wrap", "[]", "[]0[]")) {
-            panel(id: "raumBearbeiten", border: titledBorder("Raum"), layout: new MigLayout("", "[left]para[right]para[left]para[left]para[left,fill]para[left,fill]para[left]"), constraints: "cell 0 0, grow") {
+            panel(id: "raumBearbeitenPanel", border: titledBorder("Raum"), layout: new MigLayout("", "[left]para[right]para[left]para[left]para[left,fill]para[left,fill]para[left]"), constraints: "cell 0 0, grow") {
                 label(id: "", text: "Geschoss")
                 label("")
                 label(id: "", text: "Raumnummer", constraints: "span 2")
@@ -45,7 +45,7 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
                 label(id: "raumBearbeitenLuftartAbluftVsLabel", text: "Abluftvolumentstrom in m³/h", constraints: "cell 2 1")
             }
 
-            panel(id: "raumBearbeitenTabelle", layout: new MigLayout("", "[left]para[left]para[left]", "[]0[]"), constraints: "cell 0 2") {
+            panel(id: "raumBearbeitenTabellePanel", layout: new MigLayout("", "[left]para[left]para[left]", "[]0[]"), constraints: "cell 0 2") {
                 label(text: "Maximale Türspalthöhe [mm]")
                 textField(id: "raumBearbeitenDetailsTurspalthohe"/*, text: "10,00"*/, constraints: "width 100px")
                 button(id: "raumBearbeitenDetailsTurentfernen", text: "Tür entfernen", constraints: "wrap")

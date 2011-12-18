@@ -139,3 +139,23 @@ griffon {
 app.archetype = 'default'
 app.fileType = '.groovy'
 app.defaultPackageName = 'com.westaflex.wac'
+
+
+compiler {
+    threading {
+        com {
+            westaflex {
+                wac {
+                    AkustikBindings = true
+                    AkustikView = true
+                    ProjektController = true
+                    ProjektModel = true
+                    //ProjektView = true
+                    Wac2Controller = true
+                    //Wac2MainPane = true
+                    //Wac2View = true
+                }
+            }
+        }
+    }
+}
