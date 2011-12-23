@@ -1,14 +1,13 @@
 .DS_Store
+Thumbs.db
 ._*
 *.log
-dist/
-build/
-target/
-staging/
-usbstick/
-wacupdate/
-Thumbs.db
-out/
-*.iws
-/atlassian-ide-plugin.xml
 CHANGE ME
+wpx
+archive
+dist
+build
+target
+staging
+usbstick
+wacupdate
