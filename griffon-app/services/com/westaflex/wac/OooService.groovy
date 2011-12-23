@@ -71,10 +71,31 @@ class OooService {
     /**
      * 
      */
-    String performAuslegung(String wpxFilename, Map map) {
+    def noZero = { val ->
+        if (val == '0,00' || val == '0') val = ''
+        val
+    }
+    
+    /**
+     * Return key of map.key as String else an empty one:
+     * key=Decke -> map[decke] set, then "Decke" else ""
+     * key= -> map[decke] set, then "Decke" else ""
+     */
+    private def gt = { map, key, value ->
+        def val = map[key]
+        val ? value as String : ""
+    }
+    
+    /**
+     * @param wpxAuslegungFilename Filename of WPX w/o extension.
+     */
+    String performAuslegung(File wpxFile, Map map, boolean saveOdiseeXml = false) {
+        // Filename w/o extension
+        def wpxFilenameWoExt = wpxFile.name - '.wpx'
+        // Generate Odisee XML
         def domBuilder = groovy.xml.DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
-            request(name: wpxFilename, id: 1) {
+            request(name: wpxFilenameWoExt, id: 1) {
                 ooo(group: 'group0') {}
                 template(name: 'WestaAuslegung', revision: 'LATEST', outputFormat: 'pdf') {}
                 archive(database: false, files: true) {}
@@ -91,19 +112,19 @@ class OooService {
                 }
             }
         }
-        def xml = groovy.xml.XmlUtil.serialize(odisee)
-        println xml
+        // Convert XML to string (StreamingMarkupBuilder will generate XML with correct german umlauts)
+        String xml = new groovy.xml.StreamingMarkupBuilder().bind {
+                mkp.yieldUnescaped odisee
+            }.toString()
+        // Save Odisee request XML
+        if (saveOdiseeXml) {
+            def odiseeXmlFile = new File(wpxFile.parentFile, "${wpxFilenameWoExt}_odisee.xml")
+            odiseeXmlFile.withWriter("UTF-8") { writer ->
+                writer.write(xml)
+            }
+        }
+        // Return Odisee XML
         xml
-    }
-    
-    /**
-     * Return key of map.key as String else an empty one:
-     * key=Decke -> map[decke] set, then "Decke" else ""
-     * key= -> map[decke] set, then "Decke" else ""
-     */
-    private def gt = { map, key, value ->
-        def val = map[key]
-        val ? value as String : ""
     }
     
     /**
@@ -151,7 +172,7 @@ class OooService {
         domBuilder.userfield(name: 'lkDeckeCheckbox', gt(map.anlage.luftkanalverlegung, "decke", "Decke (abgehängt)"))
         domBuilder.userfield(name: 'lkSpitzbodenCheckbox', gt(map.anlage.luftkanalverlegung, "spitzboden", "Spitzboden"))
         // Geplante Belegung
-        domBuilder.userfield(name: 'personenAnzahlSpinner', map.gebaude.geplanteBelegung.personenanzahl as String)
+        domBuilder.userfield(name: 'personenAnzahlSpinner', GH.toString0Converter(map.gebaude.geplanteBelegung.personenanzahl as String))
         // Außenluft
         domBuilder.userfield(name: 'rbAlDachdurchfuehrung', gt(map.anlage.aussenluft, "dach", "Dachdurchführung"))
         domBuilder.userfield(name: 'rbAlWand', gt(map.anlage.aussenluft, "wand", "Wand (Luftgitter)"))
@@ -161,15 +182,15 @@ class OooService {
         domBuilder.userfield(name: 'flWandRadioButton', gt(map.anlage.fortluft, "wand", "Wand (Luftgitter)"))
         domBuilder.userfield(name: 'flLichtschachtRadioButton', gt(map.anlage.fortluft, "bogen135", "Bogen 135°"))
         // Luftauslässe
-        domBuilder.userfield(name: 'laTellerventileCheckbox', gt(map.anlage.abluft, "tellerventile", "Tellerventile"))
+        domBuilder.userfield(name: 'laTellerventileCheckbox', gt(map.anlage.abluft, "tellerventile", "Tellerventile (Standard)"))
         // Lufteinlässe
         domBuilder.userfield(name: 'lzTellerventileCheckbox', gt(map.anlage.zuluft, "tellerventile", "Tellerventile"))
         domBuilder.userfield(name: 'lzSchlitzauslassCheckbox', gt(map.anlage.zuluft, "schlitzauslass", "Schlitzauslass (Weitwurfdüse)"))
         domBuilder.userfield(name: 'lzFussbodenauslassCheckbox', gt(map.anlage.zuluft, "fussboden", "Fußbodenauslass"))
         domBuilder.userfield(name: 'lzSockelquellauslassCheckbox', gt(map.anlage.zuluft, "sockel", "Sockelquellauslass"))
         // Gebäudetyp
-        domBuilder.userfield(name: 'gtMFHRadioButton', gt(map.gebaude.typ, "mfh", "Mehrfamilienhaus"))
-        domBuilder.userfield(name: 'gtEFHRadioButton', gt(map.gebaude.typ, "efh", "Einfamilienhaus"))
+        domBuilder.userfield(name: 'gtMFHRadioButton', gt(map.gebaude.typ, "mfh", "Mehrfamilienhaus MFH"))
+        domBuilder.userfield(name: 'gtEFHRadioButton', gt(map.gebaude.typ, "efh", "Einfamilienhaus EFH"))
         domBuilder.userfield(name: 'gtMaisonetteRadioButton', gt(map.gebaude.typ, "maisonette", "Maisonette"))
         // Gebäudelage
         domBuilder.userfield(name: 'glWschwachRadioButton', gt(map.gebaude.lage, "windschwach", "windschwach"))
@@ -178,9 +199,9 @@ class OooService {
         domBuilder.userfield(name: 'wsHochRadioButton', gt(map.gebaude.warmeschutz, "hoch", "hoch (Neubau / Sanierung mind. WSchV 1995)"))
         domBuilder.userfield(name: 'wsNiedrigRadioButton', gt(map.gebaude.warmeschutz, "niedrig", "niedrig (Gebäude bestand vor 1995)"))
         // Luftdichtheit
-        domBuilder.userfield(name: 'ldKatARadioButton', gt(map.gebaude.luftdichtheit, "kategorieA", "Kategorie A"))
-        domBuilder.userfield(name: 'ldKatBRadioButton', gt(map.gebaude.luftdichtheit, "kategorieB", "Kategorie B"))
-        domBuilder.userfield(name: 'ldKatCRadioButton', gt(map.gebaude.luftdichtheit, "kategorieC", "Kategorie C"))
+        domBuilder.userfield(name: 'ldKatARadioButton', gt(map.gebaude.luftdichtheit, "kategorieA", "Kategorie A (ventilatorgestützt)"))
+        domBuilder.userfield(name: 'ldKatBRadioButton', gt(map.gebaude.luftdichtheit, "kategorieB", "Kategorie B (frei, Neubau)"))
+        domBuilder.userfield(name: 'ldKatCRadioButton', gt(map.gebaude.luftdichtheit, "kategorieC", "Kategorie C (frei, Bestand)"))
         domBuilder.userfield(name: 'ldMessRadioButton', gt(map.gebaude.luftdichtheit, "messwerte", "Messwerte"))
     }
     
@@ -225,32 +246,35 @@ class OooService {
             def vs
             switch (r.raumLuftart) {
                 case "ZU":
-                    vs = r.raumVolumenstrom
+                    vs = r.raumZuluftVolumenstromInfiltration //r.raumVolumenstrom
                     break
                 case "AB":
-                    vs = r.raumAbluftVolumenstrom
+                    vs = r.raumAbluftVolumenstromInfiltration
                     break
                 case "ZU/AB":
-                    vs = java.lang.Math.max(r.raumZuluftVolumenstrom, r.raumAbluftVolumenstrom)
+                    vs = java.lang.Math.max(r.raumZuluftVolumenstromInfiltration, r.raumAbluftVolumenstromInfiltration)
                     break
             }
             domBuilder.userfield(name: "lmeTabelleTable!B${i + 3}", r.raumBezeichnung)
-            domBuilder.userfield(name: "lmeTabelleTable!C${i + 3}", GH.toString2Converter(r.raumVolumen))
+            domBuilder.userfield(name: "lmeTabelleTable!C${i + 3}", noZero(GH.toString2Converter(r.raumVolumen)))
             domBuilder.userfield(name: "lmeTabelleTable!D${i + 3}", r.raumLuftart)
-            domBuilder.userfield(name: "lmeTabelleTable!E${i + 3}", GH.toString2Converter(vs))
-            domBuilder.userfield(name: "lmeTabelleTable!F${i + 3}", GH.toString2Converter(r.raumLuftwechsel))
-            domBuilder.userfield(name: "lmeTabelleTable!G${i + 3}", r.raumAnzahlZuluftventile)
-            domBuilder.userfield(name: "lmeTabelleTable!H${i + 3}", GH.toString2Converter(r.raumZuluftmengeJeVentil))
+            domBuilder.userfield(name: "lmeTabelleTable!E${i + 3}", noZero(GH.toString2Converter(vs)))
+            domBuilder.userfield(name: "lmeTabelleTable!F${i + 3}", noZero(GH.toString2Converter(r.raumLuftwechsel)))
+            domBuilder.userfield(name: "lmeTabelleTable!G${i + 3}", noZero(GH.toString0Converter(r.raumAnzahlZuluftventile)))
+            domBuilder.userfield(name: "lmeTabelleTable!H${i + 3}", noZero(GH.toString2Converter(r.raumZuluftmengeJeVentil)))
             domBuilder.userfield(name: "lmeTabelleTable!I${i + 3}", r.raumBezeichnungZuluftventile)
-            domBuilder.userfield(name: "lmeTabelleTable!J${i + 3}", r.raumAnzahlAbluftventile)
-            domBuilder.userfield(name: "lmeTabelleTable!K${i + 3}", GH.toString2Converter(r.raumAbluftmengeJeVentil))
+            domBuilder.userfield(name: "lmeTabelleTable!J${i + 3}", noZero(GH.toString0Converter(r.raumAnzahlAbluftventile)))
+            domBuilder.userfield(name: "lmeTabelleTable!K${i + 3}", noZero(GH.toString2Converter(r.raumAbluftmengeJeVentil)))
             domBuilder.userfield(name: "lmeTabelleTable!L${i + 3}", r.raumBezeichnungAbluftventile)
             domBuilder.userfield(name: "lmeTabelleTable!M${i + 3}", r.raumVerteilebene)
         }
         // Ergebnis der Berechnungen
-        domBuilder.userfield(name: 'lmeSumLTMZuluftmengeWertLabel', GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "ZU" }?.inject(0.0d, { o, n -> o + n.raumVolumenstrom }) ?: 0.0d))
-        domBuilder.userfield(name: 'lmeSumLTMAbluftmengeWertLabel', GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "AB" }?.inject(0.0d, { o, n -> o + n.raumAbluftVolumenstrom }) ?: 0.0d))
-        domBuilder.userfield(name: 'lmeGesAussenluftmengeWertLabel', GH.toString2Converter(map.raum.raumVs.gesamtaussenluftVsMitInfiltration))
+        domBuilder.userfield(name: 'lmeSumLTMZuluftmengeWertLabel',
+            noZero(GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "ZU" }?.inject(0.0d, { o, n -> o + n.raumZuluftVolumenstromInfiltration }) ?: 0.0d)))
+        domBuilder.userfield(name: 'lmeSumLTMAbluftmengeWertLabel',
+            noZero(GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "AB" }?.inject(0.0d, { o, n -> o + n.raumAbluftVolumenstromInfiltration }) ?: 0.0d)))
+        domBuilder.userfield(name: 'lmeGesAussenluftmengeWertLabel',
+            GH.toString2Converter(map.raum.raumVs.gesamtaussenluftVsMitInfiltration))
     }
     
     /**
@@ -276,10 +300,10 @@ class OooService {
                     break
             }
             domBuilder.userfield(name: "lmeTabelleUeberstroemTable!B${i + 3}", r.raumBezeichnung)
-            domBuilder.userfield(name: "lmeTabelleUeberstroemTable!C${i + 3}", GH.toString2Converter(r.raumVolumen))
+            domBuilder.userfield(name: "lmeTabelleUeberstroemTable!C${i + 3}", noZero(GH.toString2Converter(r.raumVolumen)))
             domBuilder.userfield(name: "lmeTabelleUeberstroemTable!D${i + 3}", r.raumLuftart)
-            domBuilder.userfield(name: "lmeTabelleUeberstroemTable!E${i + 3}", GH.toString2Converter(r.raumUberstromVolumenstrom))
-            domBuilder.userfield(name: "lmeTabelleUeberstroemTable!F${i + 3}", r.raumAnzahlUberstromVentile)
+            domBuilder.userfield(name: "lmeTabelleUeberstroemTable!E${i + 3}", noZero(GH.toString2Converter(r.raumUberstromVolumenstrom)))
+            domBuilder.userfield(name: "lmeTabelleUeberstroemTable!F${i + 3}", noZero(GH.toString0Converter(r.raumAnzahlUberstromVentile)))
             domBuilder.userfield(name: "lmeTabelleUeberstroemTable!G${i + 3}", r.raumUberstromElement)
         }
         // Einstellungen am Lüftungsgerät und an der Fernbedienung
@@ -305,7 +329,7 @@ class OooService {
             domBuilder.userfield(name: "abZuTabelleTable!G${i + 2}", GH.toString2Converter(ak.slp4000))
         }
         domBuilder.userfield(name: 'abZuRaumbezeichnungComboBox', map.akustik.zuluft.raumBezeichnung)
-        domBuilder.userfield(name: 'abZuSchallleistungspegelZuluftstutzenComboBox', map.akustik.zuluft.zentralgerat)
+        domBuilder.userfield(name: 'abZuSchallleistungspegelZuluftstutzenComboBox', map.akustik.zuluft.volumenstromZentralgerat)
         domBuilder.userfield(name: 'abZuKanalnetzComboBox', map.akustik.zuluft.slpErhohungKanalnetz as String)
         domBuilder.userfield(name: 'abZuFilterverschmutzungComboBox', map.akustik.zuluft.slpErhohungFilter as String)
         domBuilder.userfield(name: 'abZuHauptschalldaempfer1ComboBox', map.akustik.zuluft.hauptschalldampfer1)
@@ -331,7 +355,7 @@ class OooService {
             domBuilder.userfield(name: "abAbTabelleTable!G${i + 2}", GH.toString2Converter(ak.slp4000))
         }
         domBuilder.userfield(name: 'abAbRaumbezeichnungComboBox', map.akustik.abluft.raumBezeichnung)
-        domBuilder.userfield(name: 'abAbSchallleistungspegelAbluftstutzenComboBox', map.akustik.abluft.zentralgerat)
+        domBuilder.userfield(name: 'abAbSchallleistungspegelAbluftstutzenComboBox', map.akustik.abluft.volumenstromZentralgerat)
         domBuilder.userfield(name: 'abAbKanalnetzComboBox', map.akustik.abluft.slpErhohungKanalnetz as String)
         domBuilder.userfield(name: 'abAbFilterverschmutzungComboBox', map.akustik.abluft.slpErhohungFilter as String)
         domBuilder.userfield(name: 'abAbHauptschalldaempfer1ComboBox', map.akustik.abluft.hauptschalldampfer1)

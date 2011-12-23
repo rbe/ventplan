@@ -240,6 +240,7 @@ class ProjektModelService {
                                 OG: X.vb { zentralgerat."geratestandort".text() == "OG" },
                                 DG: X.vb { zentralgerat."geratestandort".text() == "DG" },
                                 SG: X.vb { zentralgerat."geratestandort".text() == "SG" },
+                                SB: X.vb { zentralgerat."geratestandort".text() == "SB" }
                             ],
                             luftkanalverlegung: [
                                 aufputz:     X.vb { gebaude."luftkanalverlegung".find { it.text() == "AUF" } == "AUF" },

@@ -23,8 +23,7 @@ import java.awt.Component
 import javax.swing.DefaultListModel
 import javax.swing.event.TableModelEvent
 import griffon.transform.Threading
-import static groovyx.net.http.ContentType.XML
-import static groovyx.net.http.ContentType.BINARY
+import groovyx.net.http.ContentType
 
 /**
  * 
@@ -231,68 +230,42 @@ class ProjektController {
 	 * Button "Seitenansicht".
 	 */
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-	def seitenansicht = {
-        def doc = oooService.performAuslegung(model.wpxFilename - '.wpx' + ' Auslegung.pdf', model.map)
+    def seitenansicht = {
+        File wpxFile = new File(model.wpxFilename)
+        String xmlDoc = oooService.performAuslegung(wpxFile, model.map, DEBUG )
         def restUrl = GH.getOdiseeRestUrl() as String
         def restPath = GH.getOdiseeRestPath() as String
         java.io.File pdfFile
         edt {
-            pdfFile = restXML(restUrl, restPath, doc)/* as java.io.File*/
+            pdfFile = odiseeRestXML(wpxFile, restUrl, restPath, xmlDoc)
         }
         if (pdfFile?.exists()) {
             if (DEBUG) println "projektSeitenansicht: doc=${pdfFile?.dump()}"
             // Open document
-                    java.awt.Desktop.desktop.open(pdfFile)
+            java.awt.Desktop.desktop.open(pdfFile)
         } else {
             if (DEBUG) println "pdfFile does not exist: ${pdfFile?.dump()}"
         }
-	}
+    }
     
     /**
      * Post xml document via REST and receive a PDF file.
      */
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    java.io.File restXML(restUrl, restPath, xmlDoc) {
+    java.io.File odiseeRestXML(File wpxFile, String restUrl, String restPath, String xmlDoc) {
         java.io.File responseFile = null
         try {
             withRest(id: "odisee", uri: restUrl) {
-                def newString = new String(xmlDoc.getBytes(), "UTF-8")
-                def resp = post(path: restPath, body: newString, requestContentType: XML, responseContentType: BINARY, charset: 'utf-8') {
-                    headers.'Content-Type' = 'text/xml'
-                    headers.'Accept' = 'application/pdf'
-                }
-                if (DEBUG) println "model.wpxFilename.absolutePath -> ${model.wpxFilename}"
-                responseFile = new java.io.File(model.wpxFilename - '.wpx' + '.pdf')
-                //def byteArrayInputStream = new ByteArrayInputStream(resp.getBytes("UTF-8"))
-                def byteArrayInputStream = new ByteArrayInputStream(resp.getBytes())
+                def resp = post(path: restPath, body: xmlDoc, requestContentType: ContentType.XML, responseContentType: ContentType.BINARY, charset: 'utf-8')
+                if (DEBUG) println "${new Date()}: model.wpxFilename.absolutePath -> ${model.wpxFilename}"
+                def byteArrayInputStream = new ByteArrayInputStream(resp.data.bytes)
+                responseFile = new java.io.File(model.wpxFilename - '.wpx' + '_Auslegung.pdf')
                 responseFile << byteArrayInputStream
-                //responseFile << resp.responseData
-                if (DEBUG) println "response end..."
+                if (DEBUG) println "${new Date()}: response end..."
             }
         } catch (e) {
             println "post withRest exception -> ${e.dump()}"
-        }
-        if (DEBUG) println "returning responsefile ${responseFile.absolutePath}"
-        return responseFile
-    }
-    
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    java.io.File restXML2(restUrl, restPath, xmlDoc) {
-        java.io.File responseFile
-        try {
-            withRest(id: "odisee", uri: restUrl) {
-                def newString = new String(xmlDoc, "UTF-8")
-                def resp = post(path: restPath, body: newString, requestContentType: XML, responseContentType: BINARY) {
-                    headers.'Content-Type' = 'application/xml; charset=utf-8'
-                    headers.'Accept' = 'application/xml; charset=utf-8'
-                }
-                def byteArrayInputStream = new ByteArrayInputStream(resp.getBytes("UTF-8"))
-                responseFile = new java.io.File("/Users/mm/Entwicklung/WAC_Tests/mytest2.pdf")
-                //responseFile << resp.responseData
-                responseFile << byteArrayInputStream
-            }
-        } catch (e) {
-            println "post withRest exception -> ${e.dump()}"
+            e.printStackTrace()
         }
         if (DEBUG) println "returning responsefile ${responseFile.absolutePath}"
         return responseFile
@@ -554,7 +527,7 @@ class ProjektController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def berechneKennzeichenLuftungsanlage = {
 		//doLater {
-			def gebaudeTyp = model.map.gebaude.efh ? "EFH" : "WE"
+			def gebaudeTyp = model.map.gebaude.typ.efh ? "EFH" : "WE"
 			def energieKz = model.map.anlage.energie.nachricht != " " ? "E" : "0"
 			def hygieneKz = model.map.anlage.hygiene.nachricht != " " ? "H" : "0"
 			def ruckschlag = model.map.anlage.ruckschlagklappe ? "RK" : "0"
