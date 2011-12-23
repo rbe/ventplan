@@ -89,6 +89,17 @@ class GriffonHelper {
 	/**
 	 * Show number with 2 fraction digits
 	 */
+	def static toString0Converter = { v ->
+		if (v && v instanceof Number) {
+			v.toString2(0)
+		} else {
+			"0"
+		}
+	}
+	
+	/**
+	 * Show number with 2 fraction digits
+	 */
 	def static toString2Converter = { v ->
 		if (v && v instanceof Number) {
 			v.toString2()
