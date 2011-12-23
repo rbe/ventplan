@@ -205,15 +205,11 @@ class ProjektModelService {
                             typ: [
                                 efh:         X.vb { gebaude."gebaudeTyp".text() == "EFH" },
                                 mfh:         X.vb { gebaude."gebaudeTyp".text() == "MFH" },
-                                maisonette:  X.vb {
-                                    gebaude."gebaudeTyp".text() == "MAI"
-                                }
+                                maisonette:  X.vb { gebaude."gebaudeTyp".text() == "MAI" }
                             ],
                             lage: [
                                 windschwach: X.vb { gebaude."gebaudeLage".text() == "SCH" },
-                                windstark:   X.vb {
-                                    gebaude."gebaudeLage".text() == "STA"
-                                }
+                                windstark:   X.vb { gebaude."gebaudeLage".text() == "STA" }
                             ],
                             warmeschutz: [
                                 hoch:    X.vb { gebaude."warmeschutz".text() == "HOC" },
@@ -243,9 +239,7 @@ class ProjektModelService {
                                 EG: X.vb { zentralgerat."geratestandort".text() == "EG" },
                                 OG: X.vb { zentralgerat."geratestandort".text() == "OG" },
                                 DG: X.vb { zentralgerat."geratestandort".text() == "DG" },
-                                SG: X.vb {
-                                    zentralgerat."geratestandort".text() == "SG"
-                                }
+                                SG: X.vb { zentralgerat."geratestandort".text() == "SG" },
                             ],
                             luftkanalverlegung: [
                                 aufputz:     X.vb { gebaude."luftkanalverlegung".find { it.text() == "AUF" } == "AUF" },
