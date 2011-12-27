@@ -30,7 +30,7 @@ import groovyx.net.http.ContentType
  */
 class ProjektController {
 	
-	public static boolean DEBUG = false
+	public static boolean DEBUG = true
     Boolean loadMode = false
 	
 	def builder
@@ -49,7 +49,7 @@ class ProjektController {
 	javax.swing.JDialog raumBearbeitenDialog
 	def wbwDialog
 	def teilstreckenDialog
-
+    
 	/**
 	 * Initialize MVC group.
 	 */
@@ -1232,15 +1232,19 @@ class ProjektController {
 				(minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
 				// Füge Volumenströme in Comboboxen hinzu
 				view.raumVsVolumenstrom.removeAllItems()
-				// Akustik
-				view.akustikZuluftPegel.removeAllItems()
-				view.akustikAbluftPegel.removeAllItems()
+				/*
+                // Akustik
+                view.akustikZuluftPegel.removeAllItems()
+                view.akustikAbluftPegel.removeAllItems()
+                */
 				model.meta.volumenstromZentralgerat.each {
 					// Raumvolumenströme
 					view.raumVsVolumenstrom.addItem(it)
+					/* TODO FUNKTIONIERT NICHT
 					// Akustikberechnung
 					view.akustikZuluftPegel.addItem(it)
 					view.akustikAbluftPegel.addItem(it)
+					*/
 				}
 				// Selektiere errechneten Volumenstrom
 				def roundedVs = wacCalculationService.round5(model.map.anlage.volumenstromZentralgerat)
@@ -1252,12 +1256,20 @@ class ProjektController {
 				}
 				model.map.anlage.volumenstromZentralgerat =
 					view.raumVsVolumenstrom.selectedItem =
+					view.akustikZuluftPegel.selectedItem =  // TODO FUNKTIONIERT NICHT
+					view.akustikAbluftPegel.selectedItem =  // TODO FUNKTIONIERT NICHT
 					foundVs
-				// Akustik
-				view.akustikZuluftPegel.selectedItem = foundVs
-				view.akustikAbluftPegel.selectedItem = foundVs
 			}
 		//}
+		/* TODO FUNKTIONIERT NICHT
+	    edt {
+			// Akustik
+			if (DEBUG) println "zentralgeratAktualisieren: AKUTALISIERE AKUSTIK: $foundVs"
+			view.akustikZuluftPegel.selectedItem = foundVs
+			view.akustikAbluftPegel.selectedItem = foundVs
+			view.akustikZuluftPegel.selectedIndex = 2
+	    }
+	    */
 	}
 	
 	/**
@@ -1663,7 +1675,9 @@ class ProjektController {
 			p.removeAllItems()
 			// Hole Volumenströme des Zentralgeräts und füge diese in Combobox hinzu
             // TODO 5er-Schritte
-			wacModelService.getVolumenstromFurZentralgerat(zg.selectedItem).each { p.addItem(it) }
+			wacModelService.getVolumenstromFurZentralgerat(zg.selectedItem).each {
+			    p.addItem(it)
+			}
 		}
 	}
 	
@@ -1705,6 +1719,7 @@ class ProjektController {
 		if (input.zentralgerat) {
 			// Volumenstrom gesetzt?
 			if (input.volumenstrom == 0) {
+			    if (DEBUG) println "berechneAkustik: Kein Volumenstrom (${input.volumenstrom}), setze auf 50"
 				input.volumenstrom = 50
 				view."akustik${tabname}Pegel".selectedItem = model.meta.volumenstromZentralgerat[0]
 			}

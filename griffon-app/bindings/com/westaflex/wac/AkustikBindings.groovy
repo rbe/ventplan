@@ -14,7 +14,7 @@ bind(source: model.map.akustik.zuluft, sourceProperty: "anzahlUmlenkungen",     
 bind(source: model.map.akustik.zuluft, sourceProperty: "luftverteilerkastenStck",     target: akustikZuluftLuftverteilerkastenStck,         targetProperty: "text",         mutual: true)
 bind(source: model.map.akustik.zuluft, sourceProperty: "raumBezeichnung",             target: akustikZuluftRaumbezeichnung,                 targetProperty: "selectedItem", mutual: true)
 bind(source: model.map.akustik.zuluft, sourceProperty: "zentralgerat",                target: akustikZuluftZuluftstutzenZentralgerat,       targetProperty: "selectedItem", mutual: true)
-bind(source: model.map.akustik.zuluft, sourceProperty: "volumenstromZentralgerat",    target: akustikZuluftPegel,                           targetProperty: "selectedItem", mutual: true)
+////bind(source: model.map.akustik.zuluft, sourceProperty: "volumenstromZentralgerat",    target: akustikZuluftPegel,                           targetProperty: "selectedItem", mutual: true)
 bind(source: model.map.akustik.zuluft, sourceProperty: "slpErhohungKanalnetz",        target: akustikZuluftKanalnetz,                       targetProperty: "selectedItem", mutual: true)
 bind(source: model.map.akustik.zuluft, sourceProperty: "slpErhohungFilter",           target: akustikZuluftFilter,                          targetProperty: "selectedItem", mutual: true)
 bind(source: model.map.akustik.zuluft, sourceProperty: "hauptschalldampfer1",         target: akustikZuluft1Hauptschalldampfer,             targetProperty: "selectedItem", mutual: true)
@@ -29,7 +29,7 @@ bind(source: model.map.akustik.abluft, sourceProperty: "anzahlUmlenkungen",     
 bind(source: model.map.akustik.abluft, sourceProperty: "luftverteilerkastenStck",     target: akustikAbluftLuftverteilerkastenStck,         targetProperty: "text",         mutual: true)
 bind(source: model.map.akustik.abluft, sourceProperty: "raumBezeichnung",             target: akustikAbluftRaumbezeichnung,                 targetProperty: "selectedItem", mutual: true)
 bind(source: model.map.akustik.abluft, sourceProperty: "zentralgerat",                target: akustikAbluftAbluftstutzenZentralgerat,       targetProperty: "selectedItem", mutual: true)
-bind(source: model.map.akustik.abluft, sourceProperty: "volumenstromZentralgerat",    target: akustikAbluftPegel,                           targetProperty: "selectedItem", mutual: true)
+////bind(source: model.map.akustik.abluft, sourceProperty: "volumenstromZentralgerat",    target: akustikAbluftPegel,                           targetProperty: "selectedItem", mutual: true)
 bind(source: model.map.akustik.abluft, sourceProperty: "slpErhohungKanalnetz",        target: akustikAbluftKanalnetz,                       targetProperty: "selectedItem", mutual: true)
 bind(source: model.map.akustik.abluft, sourceProperty: "slpErhohungFilter",           target: akustikAbluftFilter,                          targetProperty: "selectedItem", mutual: true)
 bind(source: model.map.akustik.abluft, sourceProperty: "hauptschalldampfer1",         target: akustikAbluft1Hauptschalldampfer,             targetProperty: "selectedItem", mutual: true)
@@ -57,8 +57,10 @@ def addKeyListener = { comp, tabname ->
 def addListenerToComboBox = { tabname ->
 	[
 		"akustik${tabname}Raumbezeichnung",
-		"akustik${tabname}${tabname}stutzenZentralgerat", "akustik${tabname}Pegel",
-		"akustik${tabname}Kanalnetz", "akustik${tabname}Filter",
+		"akustik${tabname}${tabname}stutzenZentralgerat",
+		"akustik${tabname}Pegel",
+		"akustik${tabname}Kanalnetz",
+		"akustik${tabname}Filter",
 		"akustik${tabname}1Hauptschalldampfer",
 		"akustik${tabname}2Hauptschalldampfer",
 		"akustik${tabname}LangsdampfungKanal",
