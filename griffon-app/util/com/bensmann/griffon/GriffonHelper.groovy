@@ -372,7 +372,7 @@ class GriffonHelper {
 	 */
 	def static withDisabledActionListeners = { component, closure ->
 		// Save existing ActionListener(s)
-        javax.swing.SwingUtilities.invokeLater {
+        //javax.swing.SwingUtilities.invokeLater {
             def actionListeners = component.actionListeners
             actionListeners.each {
                 if (GriffonHelper.DEBUG) println "withDisabledActionListener: removing ${it}"
@@ -386,7 +386,7 @@ class GriffonHelper {
                 if (GriffonHelper.DEBUG) println "withDisabledActionListener: re-adding ${it}"
                 component.addActionListener(it)
             }
-        }
+        //}
 	}
 	
 	/**

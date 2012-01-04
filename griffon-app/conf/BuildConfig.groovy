@@ -154,6 +154,11 @@ compiler {
                     Wac2Controller = true
                     //Wac2MainPane = true
                     //Wac2View = true
+                    RaumVsView
+                    ProjektModelService = true
+                    WacCalculationService = true
+                    WacModelService = true
+                    
                 }
             }
         }
