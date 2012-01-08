@@ -113,7 +113,6 @@ class DialogController {
      * Zeige Informationsdialog für Angebotsverfolgung mit mitgegebener Nachricht an.
      */
     def showCustomInformDialog = { titel, infoMsg ->
-        println "DialogController.showCustomInformDialog titel -> ${titel}, ${infoMsg}"
         TaskDialogs.inform(app.windowManager.windows.find{it.focused}, titel as String, infoMsg)
     }
     

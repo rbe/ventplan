@@ -490,7 +490,7 @@ class ProjektModelService {
         def makeKanalnetz = { k ->
             domBuilder.kanalnetz() {
                 X.tc { luftart(k.luftart) }
-                X.tc { nrTeilstrecke(k.teilstrecke) }
+                X.tc { nrTeilstrecke(k.teilstrecke.toInteger().toString()) }
                 X.tc { luftmenge(k.luftVs) }
                 X.tc { kanalbezeichnung(k.kanalbezeichnung) }
                 X.tc { kanallange(k.lange) }

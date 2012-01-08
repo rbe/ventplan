@@ -384,7 +384,7 @@ class ProjektModel {
 					try {
 						object?."${propertyNames[columnIndex]}"?.toString2()
 					} catch (e) {
-						println "gltmClosure, getColumnValue: ${e}: ${object?.dump()}"
+						if (DEBUG) println "gltmClosure, getColumnValue: ${e}: ${object?.dump()}"
 						object?.toString()
 					}
 				},
@@ -428,37 +428,64 @@ class ProjektModel {
 				getColumnName:  { columnIndex -> columnNames[columnIndex] },
 				getColumnValue: { object, columnIndex ->
                     def isInt
+                    def isDouble
+                    def isBoolean
                     try {
                         if (propertyTypes[columnIndex].equals(Integer.class.getName())) {
                             isInt = true
+                        } else if (propertyTypes[columnIndex].equals(Double.class.getName())) {
+                            isDouble = true
                         }
                     } catch (e) {
 
                     }
 					try {
                         if (isInt || isInt == true) {
-                            object."${propertyNames[columnIndex]}"?.toString()
+                            object."${propertyNames[columnIndex]}"?.toInteger().toString()
                         }
                         else {
 						    object."${propertyNames[columnIndex]}"?.toString2()
                         }
 					} catch (e) {
-						println "gltmClosure, getColumnValue: ${e}: ${object?.dump()}"
+						if (DEBUG) println "gltmClosure, getColumnValue: ${e}: ${object?.dump()}"
 						object?.toString()
 					}
 				},
 				isEditable:     { object, columnIndex -> writable[columnIndex] },
 				setColumnValue: { object, value, columnIndex ->
-					def property = propertyNames[columnIndex]
-					if (DEBUG) println "gltmClosure, setColumnValue: ${property}=${value}"
-					// Call pre-value-set closure
-					if (preValueSet) object = preValueSet(object, property, value, columnIndex)
-					else {
-						// Try to save double value; see ticket #60
-						object[property] = value.toDouble2()
-					}
-					// Call post-value-set closure
-					if (postValueSet) postValueSet(object, columnIndex, value)
+                    try {
+                        if (DEBUG) println "gltmClosureWithTypes, start..."
+                        def property = propertyNames[columnIndex]
+                        def propertyType = propertyTypes[columnIndex]
+                        if (DEBUG) println "gltmClosure, setColumnValue: ${property}=${value}"
+                        // Call pre-value-set closure
+                        def oldValue = object."${propertyNames[columnIndex]}"
+                        if (propertyTypes[columnIndex].equals(Integer.class.getName())) {
+                            if (!value.isInteger()) {
+                                value = oldValue
+                            } else {
+                                value.toInteger()
+                            }
+                        } else if (propertyTypes[columnIndex].equals(Double.class.getName())) {
+                            if (!value.isDouble()) {
+                                value = oldValue
+                            } else {
+                                value.toDouble()
+                            }
+                        }
+                        if (preValueSet) {
+                            object = preValueSet(object, property, value, columnIndex)
+                        }
+                        else {
+                            // Try to save double value; see ticket #60
+                            object[property] = value.toDouble2()
+                        }
+                        // Call post-value-set closure
+                        if (postValueSet) postValueSet(object, columnIndex, value)
+                        if (DEBUG) println "postValueSet... done"
+                    } catch (e) {
+                        println "gltmClosureWithTypes: Error ${e.dump()} "
+                    }
 					// VERY IMPORTANT: return null value to prevent e.g. returning
 					// a boolean value. Table would display the wrong value in all
 					// cells !!!
@@ -626,17 +653,21 @@ class ProjektModel {
 	 */
 	def createDvbKanalnetzTableModel() {
 		def columnNames =   ["Luftart",     "Teilstrecke",  ws("Luft [m³/h]"), "Kanalbezeichnung", ws("Kanallänge<br/>[m]"), ws("Geschwindigkeit<br/>[m/s]"), ws("Reibungswiderstand<br/>gerader Kanal<br/>[Pa]"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>[Pa]"), ws("Widerstand<br/>Teilstrecke<br/><[Pa]")] as String[]
-		def propertyNames = ["luftart",     "teilstrecke",  "luftVs",                                "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
-		def writable      = [false,         true,           true,                                    true,               true,                     false,                           false,                                               true/* TODO false*/,               false,                                 false] as boolean[]
+		def propertyNames = ["luftart",     "teilstrecke",  "luftVs",          "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
+		def propertyTypes = [Object.class.getName(), Integer.class.getName(), Double.class.getName(), Object.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName()] as String[]
+        def writable      = [false,         true,           true,                                    true,               true,                     false,                           false,                                               true/* TODO false*/,               false,                                 false] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
-			def myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
-			myTempMap[columnIndex] = value
-			if (DEBUG) println "Edited: map.dvb.kanalnetz -> ${map.dvb.kanalnetz}"
-			// Call ProjektController
-			app.controllers[mvcId].dvbKanalnetzGeandert(object.position)
-			resyncDvbKanalnetzTableModels()
+            def myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
+            if (DEBUG) println "createDvbKanalnetzTableModel: myTempMap=${myTempMap?.dump()}"
+
+            myTempMap[columnIndex] = value
+            if (DEBUG) println "Edited: map.dvb.kanalnetz -> ${map.dvb.kanalnetz}"
+            // Call ProjektController
+            app.controllers[mvcId].dvbKanalnetzGeandert(object.position)
+            //resyncDvbKanalnetzTableModels()
 		}
-		gltmClosure(columnNames, propertyNames, writable, tableModels.dvbKanalnetz, postValueSet)
+		//gltmClosure(columnNames, propertyNames, writable, tableModels.dvbKanalnetz, postValueSet)
+		gltmClosureWithTypes(columnNames, propertyNames, propertyTypes, writable, tableModels.dvbKanalnetz, postValueSet)
 	}
 	
 	/**
@@ -974,12 +1005,14 @@ class ProjektModel {
 	/**
 	 * Synchronize all Swing table models depending on map.dvb.kanalnetz.
 	 */
-	def resyncDvbKanalnetzTableModels() {
+	void resyncDvbKanalnetzTableModels() {
 		// Druckverlust - Kanalnetz
-		synchronized (tableModels) {
-			tableModels.dvbKanalnetz.clear()
-			tableModels.dvbKanalnetz.addAll(map.dvb.kanalnetz)
-		}
+        javax.swing.SwingUtilities.invokeLater {
+            synchronized (tableModels) {
+                tableModels.dvbKanalnetz.clear()
+                tableModels.dvbKanalnetz.addAll(map.dvb.kanalnetz)
+            }
+        }
 	}
 	
 	/**
@@ -1012,14 +1045,14 @@ class ProjektModel {
 			map.akustik.zuluft.tabelle.each { tableModels.akustikZuluft.addAll(it) }
             if (DEBUG) println "resyncAkustikTableModels -> view.akustikZuluftTabelle.getHeight(): ${view.akustikZuluftTabelle.getHeight()}"
             // Zeilenhöhe anpassen
-            def rowh = (view.akustikZuluftTabelle.getHeight() - 6) / 13 as Integer
+            def rowh = (view.akustikZuluftTabelle.getHeight() - 5) / 13 as Integer
             view.akustikZuluftTabelle.setRowHeight(rowh)
 			// Akustikberechnung Abluft
 			tableModels.akustikAbluft.clear()
 			map.akustik.abluft.tabelle.each { tableModels.akustikAbluft.addAll(it) }
             // Zeilenhöhe anpassen
             if (DEBUG) println "resyncAkustikTableModels -> view.akustikAbluftTabelle.getHeight(): ${view.akustikAbluftTabelle.getHeight()}"
-            rowh = (view.akustikAbluftTabelle.getHeight() - 6) / 13 as Integer
+            rowh = (view.akustikAbluftTabelle.getHeight() - 4) / 13 as Integer
             view.akustikAbluftTabelle.setRowHeight(rowh)
 		}
 	}

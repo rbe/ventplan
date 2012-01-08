@@ -100,6 +100,7 @@ class OooService {
                 template(name: 'WestaAuslegung', revision: 'LATEST', outputFormat: 'pdf') {}
                 archive(database: false, files: true) {}
                 instructions() {
+                    addBearbeiter(domBuilder)
                     addProjektdaten(domBuilder, map.kundendaten)
                     addKundendaten(domBuilder, map.kundendaten)
                     addInformationen(domBuilder, map)
@@ -125,6 +126,22 @@ class OooService {
         }
         // Return Odisee XML
         xml
+    }
+    
+    /**
+     * 
+     */
+    private def addBearbeiter(domBuilder) {
+        def prefHelper = AuslegungPrefHelper.getInstance()
+        
+        domBuilder.userfield(name: 'Firma', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA))
+        domBuilder.userfield(name: 'Name', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME))
+        domBuilder.userfield(name: 'Straße', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE))
+        domBuilder.userfield(name: 'PLZ', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_PLZ))
+        domBuilder.userfield(name: 'Ort', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_ORT))
+        domBuilder.userfield(name: 'Telefon', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_TEL))
+        domBuilder.userfield(name: 'FAX', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FAX))
+        domBuilder.userfield(name: 'E-Mail', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL))
     }
     
     /**

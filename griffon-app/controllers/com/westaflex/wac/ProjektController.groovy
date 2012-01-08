@@ -50,6 +50,8 @@ class ProjektController {
 	def wbwDialog
 	def teilstreckenDialog
     
+    def static auslegungPrefs = AuslegungPrefHelper.getInstance()
+    
 	/**
 	 * Initialize MVC group.
 	 */
@@ -226,20 +228,67 @@ class ProjektController {
 	 * Button "Seitenansicht".
 	 */
     def seitenansicht = {
-        File wpxFile = new File(model.wpxFilename)
-        String xmlDoc = oooService.performAuslegung(wpxFile, model.map, DEBUG )
-        def restUrl = GH.getOdiseeRestUrl() as String
-        def restPath = GH.getOdiseeRestPath() as String
-        java.io.File pdfFile
-        edt {
-            pdfFile = odiseeRestXML(wpxFile, restUrl, restPath, xmlDoc)
-        }
-        if (pdfFile?.exists()) {
-            if (DEBUG) println "projektSeitenansicht: doc=${pdfFile?.dump()}"
-            // Open document
-            java.awt.Desktop.desktop.open(pdfFile)
+        // TODO mmu: Prefs aufrufen und prüfen, ob die Daten bereits eingegeben worden sind.
+        
+        if (!auslegungPrefs.hasSavedValues()) {
+            showAuslegungDialog()
         } else {
-            if (DEBUG) println "pdfFile does not exist: ${pdfFile?.dump()}"
+            File wpxFile = new File(model.wpxFilename)
+            String xmlDoc = oooService.performAuslegung(wpxFile, model.map, DEBUG )
+            def restUrl = GH.getOdiseeRestUrl() as String
+            def restPath = GH.getOdiseeRestPath() as String
+            java.io.File pdfFile
+            edt {
+                pdfFile = odiseeRestXML(wpxFile, restUrl, restPath, xmlDoc)
+            }
+            if (pdfFile?.exists()) {
+                if (DEBUG) println "projektSeitenansicht: doc=${pdfFile?.dump()}"
+                // Open document
+                java.awt.Desktop.desktop.open(pdfFile)
+            } else {
+                if (DEBUG) println "pdfFile does not exist: ${pdfFile?.dump()}"
+            }
+        }
+    }
+    
+    def showAuslegungDialog() {
+        def auslegungDialog = GH.createDialog(builder, AboutView, [title: "Über", resizable: false, pack: true])
+        auslegungDialog.show()
+    }
+    
+    /**
+     * Action: Saves Auslegung Ersteller information to preferences.
+     * Called once!
+     */
+    def auslegungErstellerSpeichern = { evt = null -> 
+        
+        def firma = view.auslegungErstellerFirma.text
+        def name = view.auslegungErstellerName.text
+        def anschrift = view.auslegungErstellerAnschrift.text
+        def plz = view.auslegungErstellerPlz.text
+        def ort = view.auslegungErstellerOrt.text
+        def tel = view.auslegungErstellerTelefon.text
+        def fax = view.auslegungErstellerFax.text
+        def email = view.auslegungErstellerEmail.text
+        
+        if (name?.trim() && anschrift?.trim() && plz?.trim() && ort?.trim() && tel?.trim()) {
+            def map = [:]
+            map.put(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA, view.auslegungErstellerFirma.text)
+            map.put(AuslegungPrefHelper.PREFS_USER_KEY_NAME, view.auslegungErstellerName.text)
+            map.put(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE, view.auslegungErstellerAnschrift.text)
+            map.put(AuslegungPrefHelper.PREFS_USER_KEY_PLZ, view.auslegungErstellerPlz.text)
+            map.put(AuslegungPrefHelper.PREFS_USER_KEY_ORT, view.auslegungErstellerOrt.text)
+            map.put(AuslegungPrefHelper.PREFS_USER_KEY_TEL, view.auslegungErstellerTelefon.text)
+            map.put(AuslegungPrefHelper.PREFS_USER_KEY_FAX, view.auslegungErstellerFax.text)
+            map.put(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL, view.auslegungErstellerEmail.text)
+
+            auslegungPrefs.save(map)
+
+            seitenansicht()
+        } else {
+            def errorMsg = "Auslegung konnte nicht erstellt werden. " +
+                           "Es muss mindestens Name, Anschrift, PLZ, Ort und Telefon angegeben werden." as String
+            app.controllers["Dialog"].showErrorDialog(errorMsg as String)
         }
     }
     
@@ -826,24 +875,22 @@ class ProjektController {
 	 * Raumdaten - einen Raum in der Tabelle nach oben verschieben.
 	 */
 	def raumNachUntenVerschieben = {
-		//doLater {
-			// Get selected row
-			def row = view.raumTabelle.selectedRow
-			if (row < view.raumTabelle.rowCount - 1) {
-				// Recalculate positions
-                def currentRaum
-				model.map.raum.raume.each {
-					if (it.position == row + 1) it.position -= 1
-					else if (it.position == row) {
-                        it.position += 1
-                        currentRaum = it
-                    }
-				}
-				model.resyncRaumTableModels()
-				// Raum geändert
-                raumGeandert(currentRaum.position, true)
-			}
-		//}
+        // Get selected row
+        def row = view.raumTabelle.selectedRow
+        if (row < view.raumTabelle.rowCount - 1) {
+            // Recalculate positions
+            def currentRaum
+            model.map.raum.raume.each {
+                if (it.position == row + 1) it.position -= 1
+                else if (it.position == row) {
+                    it.position += 1
+                    currentRaum = it
+                }
+            }
+            model.resyncRaumTableModels()
+            // Raum geändert
+            raumGeandert(currentRaum.position, true)
+        }
 	}
 	
 	/**
@@ -856,25 +903,11 @@ class ProjektController {
         def row = view.raumTabelle.selectedRow
         if (row > -1) {
             // Show dialog
-            /*raumBearbeitenDialog = builder.dialog([title: "Raum bearbeiten", pack: true]) {
-                jideScrollPane() {
-                    build(RaumBearbeitenView)
-                }
-            }*/
             raumBearbeitenDialog = GH.createDialog(builder, RaumBearbeitenView, [title: "Raum bearbeiten", pack: true])
             // Modify TableModel for Turen
             def columnModel = view.raumBearbeitenTurenTabelle.columnModel
             GH.makeComboboxCellEditor(columnModel.getColumn(0), model.meta.raumTurTyp)
             GH.makeComboboxCellEditor(columnModel.getColumn(1), model.meta.raumTurbreiten)
-            /*
-            view.raumBearbeitenTurenTabelle.getModel().addTableModelListener({ TableModelEvent e ->
-                println "test"
-                println "test"
-                println "test e -> ${e.dump()}"
-                println "test"
-                println "test"
-            } as TableModelListener);
-            */
             berechneTuren(null, model.meta.gewahlterRaum.position, false)
             raumBearbeitenDialog.show()
         }
@@ -1027,7 +1060,7 @@ class ProjektController {
             if (DEBUG) println "raumBearbeitenTurEntfernen: ${raum}"
             model.map.raum.raume[raumPosition] = raum
         } catch (e) { }
-        println "raumBearbeitenTurEntfernen: raumPosition=${raumPosition}"
+        if (DEBUG) println "raumBearbeitenTurEntfernen: raumPosition=${raumPosition}"
         // WAC-174: resyncTableModels ist notwendig, selectedRow wird auf 0 gesetzt, daher selectedRow setzen
         model.resyncRaumTableModels()
         //view.raumTabelle.changeSelection(model.meta.gewahlterRaum.position, 0, false, false) 
@@ -1301,15 +1334,14 @@ class ProjektController {
 	 * Druckverlustberechnung - Kanalnetz - Geändert.
 	 */
 	def dvbKanalnetzGeandert = { kanalnetzIndex ->
-		///publishEvent "DvbKanalnetzGeandert", [kanalnetzIndex]
-//        doLater {
+        doLater {
             // Berechne die Teilstrecke
+            if (DEBUG) println "kanalnetzIndex -> ${kanalnetzIndex}, kanalnetz -> ${model.map.dvb.kanalnetz.dump()}"
             model.map.dvb.kanalnetz[kanalnetzIndex] =
                 wacCalculationService.berechneTeilstrecke(model.map.dvb.kanalnetz[kanalnetzIndex])
             //
-            ////publishEvent "DvbKanalnetzInTabelleWahlen", [kanalnetzIndex]
             !loadMode && onDvbKanalnetzInTabelleWahlen(kanalnetzIndex)
-//        }
+        }
 	}
 	
 	/**
@@ -1434,7 +1466,7 @@ class ProjektController {
 		wbwSummieren()
 		wacCalculationService.berechneTeilstrecke(map)
 		// Resync model
-		model.resyncDvbKanalnetzTableModels()
+		//model.resyncDvbKanalnetzTableModels()
 		// Close dialog
 		wbwDialog.dispose()
 	}
