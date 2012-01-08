@@ -726,6 +726,5 @@ class Wac2Controller {
         mvc.controller.generiereStuckliste()
     }
     
-    
 	
 }

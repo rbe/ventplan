@@ -100,7 +100,7 @@ class OooService {
                 template(name: 'WestaAuslegung', revision: 'LATEST', outputFormat: 'pdf') {}
                 archive(database: false, files: true) {}
                 instructions() {
-                    addBearbeiter(domBuilder)
+                    addErsteller(domBuilder)
                     addProjektdaten(domBuilder, map.kundendaten)
                     addKundendaten(domBuilder, map.kundendaten)
                     addInformationen(domBuilder, map)
@@ -131,7 +131,7 @@ class OooService {
     /**
      * 
      */
-    private def addBearbeiter(domBuilder) {
+    private def addErsteller(domBuilder) {
         def prefHelper = AuslegungPrefHelper.getInstance()
         
         domBuilder.userfield(name: 'Firma', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA))

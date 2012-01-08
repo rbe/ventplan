@@ -51,6 +51,7 @@ class ProjektController {
 	def teilstreckenDialog
     
     def static auslegungPrefs = AuslegungPrefHelper.getInstance()
+    def auslegungDialog
     
 	/**
 	 * Initialize MVC group.
@@ -251,8 +252,9 @@ class ProjektController {
         }
     }
     
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def showAuslegungDialog() {
-        def auslegungDialog = GH.createDialog(builder, AboutView, [title: "Über", resizable: false, pack: true])
+        auslegungDialog = GH.createDialog(builder, AuslegungView, [title: "Ersteller Informationen", resizable: false, pack: true])
         auslegungDialog.show()
     }
     
@@ -260,36 +262,41 @@ class ProjektController {
      * Action: Saves Auslegung Ersteller information to preferences.
      * Called once!
      */
-    def auslegungErstellerSpeichern = { evt = null -> 
+    def auslegungErstellerSpeichern = {
         
-        def firma = view.auslegungErstellerFirma.text
-        def name = view.auslegungErstellerName.text
-        def anschrift = view.auslegungErstellerAnschrift.text
-        def plz = view.auslegungErstellerPlz.text
-        def ort = view.auslegungErstellerOrt.text
-        def tel = view.auslegungErstellerTelefon.text
-        def fax = view.auslegungErstellerFax.text
-        def email = view.auslegungErstellerEmail.text
-        
-        if (name?.trim() && anschrift?.trim() && plz?.trim() && ort?.trim() && tel?.trim()) {
-            def map = [:]
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA, view.auslegungErstellerFirma.text)
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_NAME, view.auslegungErstellerName.text)
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE, view.auslegungErstellerAnschrift.text)
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_PLZ, view.auslegungErstellerPlz.text)
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_ORT, view.auslegungErstellerOrt.text)
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_TEL, view.auslegungErstellerTelefon.text)
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_FAX, view.auslegungErstellerFax.text)
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL, view.auslegungErstellerEmail.text)
+        try {
+            def firma = view.auslegungErstellerFirma.text
+            def name = view.auslegungErstellerName.text
+            def anschrift = view.auslegungErstellerAnschrift.text
+            def plz = view.auslegungErstellerPlz.text
+            def ort = view.auslegungErstellerOrt.text
+            def tel = view.auslegungErstellerTelefon.text
+            def fax = view.auslegungErstellerFax.text
+            def email = view.auslegungErstellerEmail.text
 
-            auslegungPrefs.save(map)
+            if (name?.trim() && anschrift?.trim() && plz?.trim() && ort?.trim() && tel?.trim()) {
+                def map = [:]
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA, view.auslegungErstellerFirma.text)
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_NAME, view.auslegungErstellerName.text)
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE, view.auslegungErstellerAnschrift.text)
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_PLZ, view.auslegungErstellerPlz.text)
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_ORT, view.auslegungErstellerOrt.text)
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_TEL, view.auslegungErstellerTelefon.text)
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_FAX, view.auslegungErstellerFax.text)
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL, view.auslegungErstellerEmail.text)
 
-            seitenansicht()
-        } else {
-            def errorMsg = "Auslegung konnte nicht erstellt werden. " +
-                           "Es muss mindestens Name, Anschrift, PLZ, Ort und Telefon angegeben werden." as String
-            app.controllers["Dialog"].showErrorDialog(errorMsg as String)
+                auslegungPrefs.save(map)
+
+                seitenansicht()
+            } else {
+                def errorMsg = "Auslegung konnte nicht erstellt werden. " +
+                               "Es muss mindestens Name, Anschrift, PLZ, Ort und Telefon angegeben werden." as String
+                app.controllers["Dialog"].showErrorDialog(errorMsg as String)
+            }
+        } catch (e) {
+            println "Error saving ersteller values -> ${e.dump()}"
         }
+        auslegungDialog.dispose()
     }
     
     /**

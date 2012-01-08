@@ -44,7 +44,7 @@ class AuslegungPrefHelper {
     
     public boolean hasSavedValues() {
         try {
-            def value = getPrefValue(PREFS_USER_KEY_FIRMA)
+            def value = getPrefValue(PREFS_USER_KEY_NAME)
             if (value) {
                 return true;
             } else {
@@ -84,6 +84,7 @@ class AuslegungPrefHelper {
      * Get a value from the preferences by its preferences key.
      */
     public String getPrefValue(String prefKey) {
+        println "AuslegungPrefHelper getPrefs path=${getPrefs().absolutePath()}"
         String value = null;
         try{
             value = getPrefs().get(prefKey);
@@ -117,7 +118,6 @@ class AuslegungPrefHelper {
     }
 
     protected java.util.prefs.Preferences getPrefs() {
-        println "AuslegungPrefHelper getPrefs path=${getPrefs().absolutePath()}"
         return java.util.prefs.Preferences.userRoot().node(PREFS_USER_NODE);
     }
 

@@ -13,7 +13,7 @@ import net.miginfocom.swing.MigLayout
 import com.bensmann.griffon.GriffonHelper as GH
 
 // Auslegung input dialog view
-panel(id: 'auslegungErstellerPanel') {
+/*panel(id: 'auslegungErstellerPanel') {
     zoneLayout {
         zoneRow('a+*a')
     }
@@ -24,9 +24,8 @@ panel(id: 'auslegungErstellerPanel') {
             zoneRow('c+*c2d+*d2e+*e', template: 'inputRow2')
             zoneRow('f.....+*.....f', template: 'buttonRow')
         }
-
         zone.insertTemplate('inputRow');
-
+        
         label("Firma", constraints: 'a')
         textField(id: "auslegungErstellerFirma", constraints: 'b')
 
@@ -55,4 +54,33 @@ panel(id: 'auslegungErstellerPanel') {
         button(id: "auslegungErstellerSpeichern", text: "Eingaben speichern", constraints: 'f')
 
     }
+*/
+//}
+panel(id: "auslegungErstellerPanel", layout: new MigLayout("fillx, wrap", "[]para[fill]para[fill]", ""), constraints: "grow") {
+    
+    label("Firma")
+    textField(id: "auslegungErstellerFirma", constraints: "grow, span 2")
+
+    label("Name")
+    textField(id: "auslegungErstellerName", constraints: "grow, span 2")
+
+    label("Anschrift")
+    textField(id: "auslegungErstellerAnschrift", constraints: "grow, span 2")
+
+    label("Plz/Ort")
+    textField(id: "auslegungErstellerPlz", constraints: "width 80px!")
+    textField(id: "auslegungErstellerOrt", constraints: "width 150px!")
+
+    label("Telefon")
+    textField(id: "auslegungErstellerTelefon", constraints: "grow, span 2")
+
+    label("Fax")
+    textField(id: "auslegungErstellerFax", constraints: "grow, span 2")
+
+    label("Email")
+    textField(id: "auslegungErstellerEmail", constraints: "grow, span 2")
+
+    label("")
+    label("")
+    button(id: "auslegungErstellerSpeichern", text: "Eingaben speichern")
 }
