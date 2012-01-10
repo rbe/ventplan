@@ -1043,6 +1043,7 @@ class ProjektModel {
 			// Akustikberechnung Zuluft
 			tableModels.akustikZuluft.clear()
 			map.akustik.zuluft.tabelle.each { tableModels.akustikZuluft.addAll(it) }
+            map.akustik.zuluft.volumenstromZentralgerat = view.akustikZuluftZuluftstutzenZentralgerat.selectedItem
             if (DEBUG) println "resyncAkustikTableModels -> view.akustikZuluftTabelle.getHeight(): ${view.akustikZuluftTabelle.getHeight()}"
             // Zeilenhöhe anpassen
             def rowh = (view.akustikZuluftTabelle.getHeight() - 5) / 13 as Integer
@@ -1050,6 +1051,7 @@ class ProjektModel {
 			// Akustikberechnung Abluft
 			tableModels.akustikAbluft.clear()
 			map.akustik.abluft.tabelle.each { tableModels.akustikAbluft.addAll(it) }
+            map.akustik.abluft.volumenstromZentralgerat = view.akustikAbluftAbluftstutzenZentralgerat.selectedItem
             // Zeilenhöhe anpassen
             if (DEBUG) println "resyncAkustikTableModels -> view.akustikAbluftTabelle.getHeight(): ${view.akustikAbluftTabelle.getHeight()}"
             rowh = (view.akustikAbluftTabelle.getHeight() - 4) / 13 as Integer
