@@ -743,7 +743,7 @@ class WacCalculationService {
 	def berechneVentileinstellung(map) {
 		if (DEBUG) println "berechneVentileinstellung"
 		def teilstrecken = { s ->
-			s?.split(";").toList()
+			s?.toString().split(";").toList()
 		}
 		// Hole den Luftvolumenstrom der letzten Teilstrecke
 		def luftVsLetzteTeilstrecke = { ve ->
@@ -772,7 +772,7 @@ class WacCalculationService {
 				def x = teilstrecken(ve.teilstrecken).collect { t ->
 						map.dvb.kanalnetz.find {
 							it.teilstrecke.toString2() == t
-						}.widerstandTeilstrecke
+						}?.widerstandTeilstrecke
 					}
 				def z = x.inject(0.0d, { o, n ->
 						o + n

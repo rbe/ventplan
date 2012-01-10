@@ -146,19 +146,19 @@ compiler {
         com {
             westaflex {
                 wac {
-                    AkustikBindings = true
-                    AkustikView = true
-                    ProjektController = true
-                    ProjektModel = true
-                    //ProjektView = true
                     Wac2Controller = true
+                    ProjektModel = true
+                    ProjektController = true
+                    AkustikView = true
+                    AkustikBindings = true
+                    //ProjektView = true
                     //Wac2MainPane = true
                     //Wac2View = true
                     RaumVsView
                     ProjektModelService = true
                     WacCalculationService = true
                     WacModelService = true
-                    
+                    AuslegungView = true
                 }
             }
         }

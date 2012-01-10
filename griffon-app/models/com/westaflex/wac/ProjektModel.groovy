@@ -427,9 +427,6 @@ class ProjektModel {
 				getColumnCount: { columnNames.size() },
 				getColumnName:  { columnIndex -> columnNames[columnIndex] },
 				getColumnValue: { object, columnIndex ->
-                    def isInt
-                    def isDouble
-                    def isBoolean
                     try {
                         if (propertyTypes[columnIndex].equals(Integer.class.getName())) {
                             isInt = true
@@ -447,7 +444,7 @@ class ProjektModel {
 						    object."${propertyNames[columnIndex]}"?.toString2()
                         }
 					} catch (e) {
-						if (DEBUG) println "gltmClosure, getColumnValue: ${e}: ${object?.dump()}"
+						if (DEBUG) println "gltmClosureWithTypes, getColumnValue: ${e}: ${object?.dump()}"
 						object?.toString()
 					}
 				},
@@ -457,7 +454,7 @@ class ProjektModel {
                         if (DEBUG) println "gltmClosureWithTypes, start..."
                         def property = propertyNames[columnIndex]
                         def propertyType = propertyTypes[columnIndex]
-                        if (DEBUG) println "gltmClosure, setColumnValue: ${property}=${value}"
+                        if (DEBUG) println "gltmClosureWithTypes, setColumnValue: ${property}=${value}"
                         // Call pre-value-set closure
                         def oldValue = object."${propertyNames[columnIndex]}"
                         if (propertyTypes[columnIndex].equals(Integer.class.getName())) {
@@ -482,7 +479,7 @@ class ProjektModel {
                         }
                         // Call post-value-set closure
                         if (postValueSet) postValueSet(object, columnIndex, value)
-                        if (DEBUG) println "postValueSet... done"
+                        if (DEBUG) println "gltmClosureWithTypes postValueSet... done"
                     } catch (e) {
                         println "gltmClosureWithTypes: Error ${e.dump()} "
                     }
@@ -655,7 +652,8 @@ class ProjektModel {
 		def columnNames =   ["Luftart",     "Teilstrecke",  ws("Luft [m³/h]"), "Kanalbezeichnung", ws("Kanallänge<br/>[m]"), ws("Geschwindigkeit<br/>[m/s]"), ws("Reibungswiderstand<br/>gerader Kanal<br/>[Pa]"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>[Pa]"), ws("Widerstand<br/>Teilstrecke<br/><[Pa]")] as String[]
 		def propertyNames = ["luftart",     "teilstrecke",  "luftVs",          "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
 		def propertyTypes = [Object.class.getName(), Integer.class.getName(), Double.class.getName(), Object.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName()] as String[]
-        def writable      = [false,         true,           true,                                    true,               true,                     false,                           false,                                               true/* TODO false*/,               false,                                 false] as boolean[]
+        //def writable      = [false,         true,           true,                                    true,               true,                     false,                           false,                                               true/* TODO false*/,               false,                                 false] as boolean[]
+        def writable      = [false,         false,           false,                                    false,               false,                     false,                           false,                                            false,               false,               false] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
             def myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
             if (DEBUG) println "createDvbKanalnetzTableModel: myTempMap=${myTempMap?.dump()}"
@@ -676,14 +674,16 @@ class ProjektModel {
 	def createDvbVentileinstellungTableModel() {
 		def columnNames =   ["Raum", "Luftart",     "Teilstrecken", "Ventiltyp",         "dP offen [Pa]", "Gesamt [Pa]",      "Differenz", "Abgleich [Pa]", "Einstellung"] as String[]
 		def propertyNames = ["raum", "luftart",     "teilstrecken", "ventilbezeichnung", "dpOffen",       "gesamtWiderstand", "differenz", "abgleich",      "einstellung"] as String[]
-		def writable      = [true,   false,         true,           true,                false,           false,              false,       false,            false] as boolean[]
+        //def propertyTypes = [Object.class.getName(), Object.class.getName(), String.class.getName(), Object.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName()] as String[]
+		//def writable      = [true,   false,         true,           true,                false,           false,              false,       false,            false] as boolean[]
+		def writable      = [false,   false,         false,           false,                false,           false,              false,       false,            false] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			def myTempMap = map.dvb.ventileinstellung.find { it.position == object.position }
 			myTempMap[columnIndex] = value
 			if (DEBUG) println "Edited: map.dvb.ventileinstellung -> ${map.dvb.ventileinstellung}"
 			// Call ProjektController
 			app.controllers[mvcId].dvbVentileinstellungGeandert(object.position)
-			resyncDvbVentileinstellungTableModels()
+			//resyncDvbVentileinstellungTableModels()
 		}
 		gltmClosure(columnNames, propertyNames, writable, tableModels.dvbVentileinstellung, postValueSet)
 	}

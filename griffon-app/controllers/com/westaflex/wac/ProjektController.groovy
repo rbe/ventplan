@@ -234,25 +234,28 @@ class ProjektController {
         if (!auslegungPrefs.hasSavedValues()) {
             showAuslegungDialog()
         } else {
-            File wpxFile = new File(model.wpxFilename)
-            String xmlDoc = oooService.performAuslegung(wpxFile, model.map, DEBUG )
-            def restUrl = GH.getOdiseeRestUrl() as String
-            def restPath = GH.getOdiseeRestPath() as String
-            java.io.File pdfFile
-            edt {
-                pdfFile = odiseeRestXML(wpxFile, restUrl, restPath, xmlDoc)
-            }
-            if (pdfFile?.exists()) {
-                if (DEBUG) println "projektSeitenansicht: doc=${pdfFile?.dump()}"
-                // Open document
-                java.awt.Desktop.desktop.open(pdfFile)
-            } else {
-                if (DEBUG) println "pdfFile does not exist: ${pdfFile?.dump()}"
-            }
+            makeSeitenansicht()
         }
     }
     
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    def makeSeitenansicht() {
+        File wpxFile = new File(model.wpxFilename)
+        String xmlDoc = oooService.performAuslegung(wpxFile, model.map, DEBUG )
+        def restUrl = GH.getOdiseeRestUrl() as String
+        def restPath = GH.getOdiseeRestPath() as String
+        java.io.File pdfFile
+        edt {
+            pdfFile = odiseeRestXML(wpxFile, restUrl, restPath, xmlDoc)
+        }
+        if (pdfFile?.exists()) {
+            if (DEBUG) println "projektSeitenansicht: doc=${pdfFile?.dump()}"
+            // Open document
+            java.awt.Desktop.desktop.open(pdfFile)
+        } else {
+            if (DEBUG) println "pdfFile does not exist: ${pdfFile?.dump()}"
+        }
+    }
+    
     def showAuslegungDialog() {
         auslegungDialog = GH.createDialog(builder, AuslegungView, [title: "Ersteller Informationen", resizable: false, pack: true])
         auslegungDialog.show()
@@ -263,7 +266,6 @@ class ProjektController {
      * Called once!
      */
     def auslegungErstellerSpeichern = {
-        
         try {
             def firma = view.auslegungErstellerFirma.text
             def name = view.auslegungErstellerName.text
@@ -274,20 +276,23 @@ class ProjektController {
             def fax = view.auslegungErstellerFax.text
             def email = view.auslegungErstellerEmail.text
 
+            auslegungDialog.dispose()
+
             if (name?.trim() && anschrift?.trim() && plz?.trim() && ort?.trim() && tel?.trim()) {
                 def map = [:]
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA, view.auslegungErstellerFirma.text)
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_NAME, view.auslegungErstellerName.text)
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE, view.auslegungErstellerAnschrift.text)
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_PLZ, view.auslegungErstellerPlz.text)
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_ORT, view.auslegungErstellerOrt.text)
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_TEL, view.auslegungErstellerTelefon.text)
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_FAX, view.auslegungErstellerFax.text)
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL, view.auslegungErstellerEmail.text)
+
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA, firma)
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_NAME, name)
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE, anschrift)
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_PLZ, plz)
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_ORT, ort)
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_TEL, tel)
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_FAX, fax)
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL, email)
 
                 auslegungPrefs.save(map)
-
-                seitenansicht()
+                
+                makeSeitenansicht()
             } else {
                 def errorMsg = "Auslegung konnte nicht erstellt werden. " +
                                "Es muss mindestens Name, Anschrift, PLZ, Ort und Telefon angegeben werden." as String
@@ -296,7 +301,6 @@ class ProjektController {
         } catch (e) {
             println "Error saving ersteller values -> ${e.dump()}"
         }
-        auslegungDialog.dispose()
     }
     
     /**

@@ -18,24 +18,25 @@ import java.util.prefs.BackingStoreException
 class AuslegungPrefHelper {
 
     public static boolean DEBUG = false    
-    
+    private static java.util.prefs.Preferences prefs = java.util.prefs.Preferences.userNodeForPackage(this);
     private static final String PREFS_USER_NODE = "/wacauslegung";
-    public static final String PREFS_USER_KEY_FIRMA = "firma";
-    public static final String PREFS_USER_KEY_NAME = "name";
-    public static final String PREFS_USER_KEY_STRASSE = "strasse";
-    public static final String PREFS_USER_KEY_PLZ = "plz";
-    public static final String PREFS_USER_KEY_ORT = "ort";
+    public static final String PREFS_USER_KEY_FIRMA = "erstellerFirma";
+    public static final String PREFS_USER_KEY_NAME = "erstellerName";
+    public static final String PREFS_USER_KEY_STRASSE = "erstellerStrasse";
+    public static final String PREFS_USER_KEY_PLZ = "erstellerPlz";
+    public static final String PREFS_USER_KEY_ORT = "erstellerOrt";
+    public static final String PREFS_USER_KEY_TEL = "erstellerTel";
+    public static final String PREFS_USER_KEY_FAX = "erstellerFax";
+    public static final String PREFS_USER_KEY_EMAIL = "erstellerEmail";
 
     
     private static AuslegungPrefHelper INSTANCE = null;
     
     public static AuslegungPrefHelper getInstance() {
         if (null == INSTANCE) {
-            return new AuslegungPrefHelper();
+            INSTANCE = new AuslegungPrefHelper();
         }
-        else {
-            return INSTANCE;
-        }
+        return INSTANCE;
     }
     
     private AuslegungPrefHelper() {
@@ -62,18 +63,16 @@ class AuslegungPrefHelper {
     public void save(map) {
         try {
             // Remove node - should not exist - and save user information...
-            getPrefs().removeNode();
+            prefs.put(PREFS_USER_KEY_FIRMA, map[PREFS_USER_KEY_FIRMA]);
+            prefs.put(PREFS_USER_KEY_NAME, map[PREFS_USER_KEY_NAME]);
+            prefs.put(PREFS_USER_KEY_STRASSE, map[PREFS_USER_KEY_STRASSE]);
+            prefs.put(PREFS_USER_KEY_PLZ, map[PREFS_USER_KEY_PLZ]);
+            prefs.put(PREFS_USER_KEY_ORT, map[PREFS_USER_KEY_ORT]);
+            prefs.put(PREFS_USER_KEY_TEL, map[PREFS_USER_KEY_TEL]);
+            prefs.put(PREFS_USER_KEY_FAX, map[PREFS_USER_KEY_FAX]);
+            prefs.put(PREFS_USER_KEY_EMAIL, map[PREFS_USER_KEY_EMAIL]);
             
-            getPrefs().put(PREFS_USER_KEY_FIRMA, map[PREFS_USER_KEY_FIRMA]);
-            getPrefs().put(PREFS_USER_KEY_NAME, map[PREFS_USER_KEY_NAME]);
-            getPrefs().put(PREFS_USER_KEY_STRASSE, map[PREFS_USER_KEY_STRASSE]);
-            getPrefs().put(PREFS_USER_KEY_PLZ, map[PREFS_USER_KEY_PLZ]);
-            getPrefs().put(PREFS_USER_KEY_ORT, map[PREFS_USER_KEY_ORT]);
-            getPrefs().put(PREFS_USER_KEY_TEL, map[PREFS_USER_KEY_TEL]);
-            getPrefs().put(PREFS_USER_KEY_FAX, map[PREFS_USER_KEY_FAX]);
-            getPrefs().put(PREFS_USER_KEY_EMAIL, map[PREFS_USER_KEY_EMAIL]);
-            
-            getPrefs().flush();
+            prefs.flush();
         } catch (Exception e) {
             // do nothing
             println "AuslegungPrefHelper Error saving prefs ${e.dump()}";
@@ -84,11 +83,10 @@ class AuslegungPrefHelper {
      * Get a value from the preferences by its preferences key.
      */
     public String getPrefValue(String prefKey) {
-        println "AuslegungPrefHelper getPrefs path=${getPrefs().absolutePath()}"
         String value = null;
         try{
-            value = getPrefs().get(prefKey);
-            if (DEBUG) println "AuslegungPrefHelper getPrefValue value -> ${value}, index=${i}"
+            value = prefs.get(prefKey, null);
+            if (DEBUG) println "AuslegungPrefHelper getPrefValue value -> ${value}"
         }
         catch (Exception e) {
             if (DEBUG) println "AuslegungPrefHelper getPrefValue -> ${e.dump()}"
@@ -102,14 +100,14 @@ class AuslegungPrefHelper {
     public String getAllPrefValuesAsString() {
         String value = null;
         try{
-            value = getPrefs().get(PREFS_USER_KEY_FIRMA) + "\n" + 
-                    getPrefs().get(PREFS_USER_KEY_NAME) + "\n" + 
-                    getPrefs().get(PREFS_USER_KEY_STRASSE) + "\n" + 
-                    getPrefs().get(PREFS_USER_KEY_PLZ) + " " + getPrefs().get(PREFS_USER_KEY_ORT) + "\n" + 
-                    "Tel: " + getPrefs().get(PREFS_USER_KEY_TEL) + "\n" + 
-                    "Fax: " + getPrefs().get(PREFS_USER_KEY_FAX) + "\n" + 
-                    "Email: " + getPrefs().get(PREFS_USER_KEY_EMAIL) + "\n"
-            if (DEBUG) println "AuslegungPrefHelper getPrefValue value -> ${value}, index=${i}"
+            value = prefs.get(PREFS_USER_KEY_FIRMA) + "\n" + 
+                    prefs.get(PREFS_USER_KEY_NAME) + "\n" + 
+                    prefs.get(PREFS_USER_KEY_STRASSE) + "\n" + 
+                    prefs.get(PREFS_USER_KEY_PLZ) + " " + prefs.get(PREFS_USER_KEY_ORT) + "\n" + 
+                    "Tel: " + prefs.get(PREFS_USER_KEY_TEL) + "\n" + 
+                    "Fax: " + prefs.get(PREFS_USER_KEY_FAX) + "\n" + 
+                    "Email: " + prefs.get(PREFS_USER_KEY_EMAIL) + "\n"
+            if (DEBUG) println "AuslegungPrefHelper getPrefValue value -> ${value}"
         }
         catch (Exception e) {
             if (DEBUG) println "AuslegungPrefHelper getPrefValue -> ${e.dump()}"
@@ -117,8 +115,5 @@ class AuslegungPrefHelper {
         return value;
     }
 
-    protected java.util.prefs.Preferences getPrefs() {
-        return java.util.prefs.Preferences.userRoot().node(PREFS_USER_NODE);
-    }
 
 }
