@@ -189,7 +189,8 @@ class OooService {
         domBuilder.userfield(name: 'lkDeckeCheckbox', gt(map.anlage.luftkanalverlegung, "decke", "Decke (abgehängt)"))
         domBuilder.userfield(name: 'lkSpitzbodenCheckbox', gt(map.anlage.luftkanalverlegung, "spitzboden", "Spitzboden"))
         // Geplante Belegung
-        domBuilder.userfield(name: 'personenAnzahlSpinner', GH.toString0Converter(map.gebaude.geplanteBelegung.personenanzahl as String))
+        println "map.gebaude -> ${map.gebaude?.dump()}"
+        domBuilder.userfield(name: 'personenAnzahlSpinner', GH.toString0Converter(map.gebaude.geplanteBelegung.personenanzahl))
         // Außenluft
         domBuilder.userfield(name: 'rbAlDachdurchfuehrung', gt(map.anlage.aussenluft, "dach", "Dachdurchführung"))
         domBuilder.userfield(name: 'rbAlWand', gt(map.anlage.aussenluft, "wand", "Wand (Luftgitter)"))
