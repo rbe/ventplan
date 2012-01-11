@@ -155,52 +155,38 @@ class PdfCreator {
             println "Error closing document ${e}"
         }
     }
-
+    
     /**
      * Needs a table to be instantiated first.
      * Specified method to fit on a table with 4 columns.
      * Otherwise the items will display broken.
      */
-    /*
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def addArtikel = { raumBezeichnung, luftart, ventil, anzahl ->
-        try {
-            PdfPCell cell = new PdfPCell()
-            cell.setPaddingBottom(5f)
-            table?.addCell("" + raumBezeichnung)
-            table?.addCell("" + luftart)
-            table?.addCell("" + ventil)
-            table?.addCell("" + anzahl)
-        } catch (e) {
-            println "Error adding content to document ${e}"
-        }
-    }
-    */
-    
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    def addArtikel = { raumBezeichnung, luftart, ventil, anzahl ->
+        
+        if (DEBUG) println "raumbez=${raumBezeichnung} luftart=${luftart} ventil=${ventil} anzahl=${anzahl}"
         try {
             PdfPCell cell = new PdfPCell()
             cell.setPaddingBottom(5f)
             if (raumBezeichnung) {
                 table.addCell("" + raumBezeichnung)
             } else {
-                table.addCell("")
+                table.addCell(" - ")
             }
             if (luftart) {
                 table.addCell("" + luftart)
             } else {
-                table.addCell("")
+                table.addCell(" - ")
             }
             if (ventil) {
                 table.addCell("" + ventil)
             } else {
-                table.addCell("")
+                table.addCell(" - ")
             }
             if (anzahl) {
                 table.addCell("" + anzahl)
             } else {
-                table.addCell("")
+                table.addCell(" - ")
             }
         } catch (e) {
             println "Error adding content to document ${e}"

@@ -53,6 +53,9 @@ class ProjektController {
     def static auslegungPrefs = AuslegungPrefHelper.getInstance()
     def auslegungDialog
     
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    def waitDialog
+    
 	/**
 	 * Initialize MVC group.
 	 */
@@ -229,35 +232,62 @@ class ProjektController {
 	 * Button "Seitenansicht".
 	 */
     def seitenansicht = {
-        // TODO mmu: Prefs aufrufen und prüfen, ob die Daten bereits eingegeben worden sind.
-        
-        if (!auslegungPrefs.hasSavedValues()) {
-            showAuslegungDialog()
-        } else {
-            makeSeitenansicht()
-        }
+        // Auslegungsdialog immer anzeigen, damit die Handwerker die Daten ändern können.
+        showAuslegungDialog()
     }
     
     def makeSeitenansicht() {
-        File wpxFile = new File(model.wpxFilename)
-        String xmlDoc = oooService.performAuslegung(wpxFile, model.map, DEBUG )
-        def restUrl = GH.getOdiseeRestUrl() as String
-        def restPath = GH.getOdiseeRestPath() as String
-        java.io.File pdfFile
-        edt {
-            pdfFile = odiseeRestXML(wpxFile, restUrl, restPath, xmlDoc)
+        
+        /*
+        def titel = "Auslegung erstellen" as String
+        def msg = "Bitte warten Sie während die Auslegung erstellt wird..." as String
+        def pleaseWaitDialog = app.controllers["Dialog"].showCustomInformDialog(titel, msg)
+        */
+        showWartenDialog()
+       
+        try {
+            File wpxFile = new File(model.wpxFilename)
+            String xmlDoc = oooService.performAuslegung(wpxFile, model.map, DEBUG )
+            def restUrl = GH.getOdiseeRestUrl() as String
+            def restPath = GH.getOdiseeRestPath() as String
+            java.io.File pdfFile
+            edt {
+                pdfFile = odiseeRestXML(wpxFile, restUrl, restPath, xmlDoc)
+            }
+            if (pdfFile?.exists()) {
+                if (DEBUG) println "projektSeitenansicht: doc=${pdfFile?.dump()}"
+                // Open document
+                java.awt.Desktop.desktop.open(pdfFile)
+            } else {
+                if (DEBUG) println "pdfFile does not exist: ${pdfFile?.dump()}"
+            }
+        } catch (e) {
+            println "Error while calling 'Seitenansicht' -> ${e.dump()}"
+            def errorMsg = "Auslegung konnte nicht erstellt werden. ${e}" as String
+            app.controllers["Dialog"].showErrorDialog(errorMsg as String)
         }
-        if (pdfFile?.exists()) {
-            if (DEBUG) println "projektSeitenansicht: doc=${pdfFile?.dump()}"
-            // Open document
-            java.awt.Desktop.desktop.open(pdfFile)
-        } else {
-            if (DEBUG) println "pdfFile does not exist: ${pdfFile?.dump()}"
-        }
+        waitDialog?.dispose()
     }
+    
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    def showWartenDialog() {
+        waitDialog = GH.createDialog(builder, WaitingView, [title: "Auslegung wird erstellt", resizable: false, pack: true])
+        waitDialog.show()
+    }
+    
     
     def showAuslegungDialog() {
         auslegungDialog = GH.createDialog(builder, AuslegungView, [title: "Ersteller Informationen", resizable: false, pack: true])
+        
+        view.auslegungErstellerFirma.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA)
+        view.auslegungErstellerName.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME)
+        view.auslegungErstellerAnschrift.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE)
+        view.auslegungErstellerPlz.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_PLZ)
+        view.auslegungErstellerOrt.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_ORT)
+        view.auslegungErstellerTelefon.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_TEL)
+        view.auslegungErstellerFax.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FAX)
+        view.auslegungErstellerEmail.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL)
+        
         auslegungDialog.show()
     }
     
@@ -266,6 +296,7 @@ class ProjektController {
      * Called once!
      */
     def auslegungErstellerSpeichern = {
+        
         try {
             def firma = view.auslegungErstellerFirma.text
             def name = view.auslegungErstellerName.text
@@ -277,7 +308,7 @@ class ProjektController {
             def email = view.auslegungErstellerEmail.text
 
             auslegungDialog.dispose()
-
+            
             if (name?.trim() && anschrift?.trim() && plz?.trim() && ort?.trim() && tel?.trim()) {
                 def map = [:]
 
@@ -293,6 +324,7 @@ class ProjektController {
                 auslegungPrefs.save(map)
                 
                 makeSeitenansicht()
+                
             } else {
                 def errorMsg = "Auslegung konnte nicht erstellt werden. " +
                                "Es muss mindestens Name, Anschrift, PLZ, Ort und Telefon angegeben werden." as String
@@ -1719,7 +1751,7 @@ class ProjektController {
     /**
      *
      */
-    def generiereStuckliste = {
+    void generiereStuckliste() {
         
         try {
             
@@ -1751,31 +1783,18 @@ class ProjektController {
             pdfCreator.addArtikelToDocument("  ")
             if (DEBUG) println "adding empty artikel"
             
-            edt {
                 model.map.raum.raume.each { r -> 
                     erzeugeRaumStucklisteAbluft(r, pdfCreator)
                 }
-            }
-            edt {
                 model.map.raum.raume.each { r -> 
                     erzeugeRaumStucklisteZuluft(r, pdfCreator)
                 }
-            }
-            edt {
                 model.map.raum.raume.each { r -> 
                     erzeugeRaumStucklisteUberstrom(r, pdfCreator)
                 }
-            }
-            
-            edt {
                 erzeugeDruckverlustStuckliste(model.map.dvb, pdfCreator)
-            }
-            edt {
                 erzeugeSchalldampferStuckliste(model.map.akustik.zuluft, "zuluft", pdfCreator)
-            }
-            edt {
                 erzeugeSchalldampferStuckliste(model.map.akustik.abluft, "abluft", pdfCreator)
-            }
             
             // Add table to the document
             pdfCreator.addTable()
@@ -1799,7 +1818,7 @@ class ProjektController {
     }
     
     
-    def erzeugeRaumStucklisteAbluft = { map, pdfCreator -> 
+    void erzeugeRaumStucklisteAbluft(map, pdfCreator) { 
         
         if (map.raumBezeichnungAbluftventile) {
             if (DEBUG) println "adding Abluft... ${map.dump()}"
@@ -1807,21 +1826,21 @@ class ProjektController {
         }
     }
     
-    def erzeugeRaumStucklisteZuluft = { map, pdfCreator -> 
+    void erzeugeRaumStucklisteZuluft(map, pdfCreator) { 
         if (map.raumBezeichnungZuluftventile) {
             if (DEBUG) println "adding Zuluft... ${map.dump()}"
             pdfCreator.addArtikel(map.raumBezeichnung, "Zuluft", map.raumBezeichnungZuluftventile, map.raumAnzahlZuluftventile)
         }
     }
     
-    def erzeugeRaumStucklisteUberstrom = { map, pdfCreator -> 
+    void erzeugeRaumStucklisteUberstrom(map, pdfCreator) { 
         if (map.raumAnzahlUberstromVentile && map.raumAnzahlUberstromVentile > 0) {
             if (DEBUG) println "adding Überström... ${map.dump()}"
             pdfCreator.addArtikel("", "Überström", map.raumUberstromElement, map.raumAnzahlUberstromVentile)
         }
     }
             
-    def erzeugeDruckverlustStuckliste = { dvb, pdfCreator ->
+    void erzeugeDruckverlustStuckliste(dvb, pdfCreator) {
         dvb.kanalnetz.each {
             if (it.kanalbezeichnung) {
                 if (DEBUG) println "adding kanalnetz..."
@@ -1830,7 +1849,7 @@ class ProjektController {
         }
     }   
     
-    def erzeugeSchalldampferStuckliste = { akustik, luftart, pdfCreator ->
+    void erzeugeSchalldampferStuckliste(akustik, luftart, pdfCreator) {
         if (akustik.hauptschalldampfer1) {
             if (DEBUG) println "adding schalldampfer 1..."
             pdfCreator.addArtikel("", "", akustik.hauptschalldampfer1, 1)

@@ -85,7 +85,7 @@ class AuslegungPrefHelper {
     public String getPrefValue(String prefKey) {
         String value = null;
         try{
-            value = prefs.get(prefKey, null);
+            value = prefs.get(prefKey, "");
             if (DEBUG) println "AuslegungPrefHelper getPrefValue value -> ${value}"
         }
         catch (Exception e) {
