@@ -1,6 +1,6 @@
 /**
  * WAC
- *
+ * 
  * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
  * Copyright (C) 2010-2012 art of coding UG (haftungsbeschränkt).
  *
@@ -283,7 +283,8 @@ class GriffonHelper {
                         visible: false,
                         modal: true,
                         pack: false,
-                        locationByPlatform: true
+                        locationByPlatform: true,
+                        locationRelativeTo: null
                     ] + dialogProp
                 // Create dialog instance
                 //println "createDialog -> builder=${builder?.dump()}"
