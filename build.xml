@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <project name="WAC">
     <property environment="env"/>
     <!--
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
-    	<classpath>
-    		<pathelement location="ant-contrib-1.0b3.jar" />
-    	</classpath>
+        <classpath>
+            <pathelement location="ant-contrib-1.0b3.jar" />
+        </classpath>
     </taskdef>
     -->
-
-    <loadproperties srcfile="application.properties">
-    </loadproperties>
-
+    <loadproperties srcfile="application.properties"></loadproperties>
     <!-- Griffon, Groovy -->
     <property name="myapp.home" value="${env.HOME}/app" />
     <property name="groovy.home" value="${myapp.home}/groovy/1.8.3" />
@@ -28,219 +24,206 @@
     <!-- Directory to produce platform dependant USB stick versions -->
     <property name="usbstick.base.dir" value="${basedir}/usbstick" />
     <property name="usbstick.win.dir" value="${usbstick.base.dir}/win" />
-    <property name="usbstick.linux.dir" value="${usbstick.base.dir}/linux" />
-    <property name="usbstick.mac.dir" value="${usbstick.base.dir}/mac" />
-
+    <property name="usbstick.pfi.dir" value="${usbstick.base.dir}/pfi" />
+    
     <!--
-
+        
     -->
     <target name="clean">
-    	<property environment="env" />
-    	<exec dir="." executable="bash">
-    		<env key="GROOVY_HOME" value="${groovy.home}" />
-    		<env key="GRIFFON_HOME" value="${griffon.home}" />
-    		<env key="PATH" path="${GRIFFON_HOME}/bin:${GROOVY_HOME}/bin:${env.PATH}" />
-    		<arg value="${griffon.home}/bin/griffon" />
-    		<arg value="clean" />
-    	</exec>
-    	<!-- Clean build.dir -->
-    	<delete dir="${build.dir}" />
-    	<!-- Clean USB stick distributions -->
-    	<delete dir="${usbstick.base.dir}/wac" />
-    	<delete dir="${usbstick.win.dir}" />
-    	<delete dir="${usbstick.linux.dir}" />
-    	<delete dir="${usbstick.mac.dir}" />
+        <property environment="env" />
+        <exec dir="." executable="bash">
+            <env key="GROOVY_HOME" value="${groovy.home}" />
+            <env key="GRIFFON_HOME" value="${griffon.home}" />
+            <env key="PATH" path="${GRIFFON_HOME}/bin:${GROOVY_HOME}/bin:${env.PATH}" />
+            <arg value="${griffon.home}/bin/griffon" />
+            <arg value="clean" />
+        </exec>
+        <!-- Clean build.dir -->
+        <delete dir="${build.dir}" />
+        <!-- Clean USB stick distributions -->
+        <delete dir="${usbstick.base.dir}/wac" />
+        <delete dir="${usbstick.win.dir}" />
+        <delete dir="${usbstick.pfi.dir}" />
+        <delete dir="${usbstick.mac.dir}" />
     </target>
-
+    
     <!--
-
+        
     -->
-    <target name="compile" depends="clean">
-    	<property environment="env" />
-    	<exec dir="." executable="bash">
-    		<env key="GROOVY_HOME" value="${groovy.home}" />
-    		<env key="GRIFFON_HOME" value="${griffon.home}" />
-    		<env key="PATH" path="${GRIFFON_HOME}/bin:${GROOVY_HOME}/bin:${env.PATH}" />
-    		<arg value="${griffon.home}/bin/griffon" />
-    		<arg value="compile" />
-    	</exec>
+    <target name="compile"> <!-- depends="clean"-->
+        <property environment="env" />
+        <exec dir="." executable="bash">
+            <env key="GROOVY_HOME" value="${groovy.home}" />
+            <env key="GRIFFON_HOME" value="${griffon.home}" />
+            <env key="PATH" path="${GRIFFON_HOME}/bin:${GROOVY_HOME}/bin:${env.PATH}" />
+            <arg value="${griffon.home}/bin/griffon" />
+            <arg value="compile" />
+        </exec>
     </target>
-
+    
     <!--
-
+        
     -->
     <target name="package" depends="compile">
-    	<property environment="env" />
-    	<exec dir="." executable="bash">
-    		<env key="GROOVY_HOME" value="${groovy.home}" />
-    		<env key="GRIFFON_HOME" value="${griffon.home}" />
-    		<env key="PATH" path="${GRIFFON_HOME}/bin:${GROOVY_HOME}/bin:${env.PATH}" />
-    		<arg value="${griffon.home}/bin/griffon" />
-    		<arg value="package" />
-    	</exec>
+        <property environment="env" />
+        <exec dir="." executable="bash">
+            <env key="GROOVY_HOME" value="${groovy.home}" />
+            <env key="GRIFFON_HOME" value="${griffon.home}" />
+            <env key="PATH" path="${GRIFFON_HOME}/bin:${GROOVY_HOME}/bin:${env.PATH}" />
+            <arg value="${griffon.home}/bin/griffon" />
+            <arg value="package" />
+            <arg value="zip" />
+        </exec>
     </target>
-
+    
     <!--
-
+        
     -->
     <target name="usbstick" depends="package">
-    	<echo file="griffon-app/resources/version.properties">version=${app.version}</echo>
-    	<!-- wac -->
-    	<mkdir dir="${usbstick.base.dir}" />
-    	<mkdir dir="${usbstick.base.dir}/wac/resources" />
-    	<copy todir="${usbstick.base.dir}/wac/resources" file="griffon-app/resources/version.properties" />
-    	<mkdir dir="${usbstick.base.dir}/wac/lib" />
-    	<copy todir="${usbstick.base.dir}/wac/lib">
-    		<fileset dir="${dist.dir}/zip/lib">
-    			<include name="**.jar" />
-    		</fileset>
-    		<fileset dir="${lib.dir}">
-    			<include name="dtmp.zip" />
-    		</fileset>
-    	</copy>
-    	<!-- Windows -->
-    	<mkdir dir="${usbstick.win.dir}/wac/Windows/jre6" />
-    	<mkdir dir="${usbstick.win.dir}/wac/Windows/OpenOfficePortable" />
-    	<mkdir dir="${usbstick.win.dir}/wac/conf" />
-    	<mkdir dir="${usbstick.win.dir}/wac/lib" />
-    	<copy todir="${usbstick.win.dir}/wac">
-    		<fileset dir="${usbstick.base.dir}/wac">
-    			<include name="**" />
-    		</fileset>
-    		<fileset dir="${bin.dir}">
-    			<include name="wac.bat" />
-    		</fileset>
-    	</copy>
-    	<!-- Linux -->
-    	<mkdir dir="${usbstick.linux.dir}/wac/Linux/jre6" />
-    	<mkdir dir="${usbstick.linux.dir}/wac/conf" />
-    	<mkdir dir="${usbstick.linux.dir}/wac/lib" />
-    	<copy todir="${usbstick.linux.dir}/wac">
-    		<fileset dir="${usbstick.base.dir}/wac">
-    			<include name="**" />
-    		</fileset>
-    		<fileset dir="${bin.dir}">
-    			<include name="wac" />
-    		</fileset>
-    	</copy>
-    	<chmod perm="a+rx" file="${bin.dir}/wac" />
-    	<!-- Mac -->
-    	<mkdir dir="${usbstick.mac.dir}/wac/Darwin/jre6" />
-    	<mkdir dir="${usbstick.mac.dir}/wac/conf" />
-    	<mkdir dir="${usbstick.mac.dir}/wac/lib" />
-    	<copy todir="${usbstick.mac.dir}/wac">
-    		<fileset dir="${usbstick.base.dir}/wac">
-    			<include name="**" />
-    		</fileset>
-    		<fileset dir="${bin.dir}">
-    			<include name="wac" />
-    		</fileset>
-    	</copy>
-    	<chmod perm="a+rx" file="${bin.dir}/wac" />
+        <echo file="griffon-app/resources/version.properties">version=${app.version}</echo>
+        <!-- wac -->
+        <mkdir dir="${usbstick.base.dir}" />
+        <!--
+        <mkdir dir="${usbstick.base.dir}/wac/resources" />
+        <copy todir="${usbstick.base.dir}/wac/resources">
+             <fileset dir="griffon-app/resources">
+                 <include name="**.properties"/>
+             </fileset>
+        </copy>
+        -->
+        <mkdir dir="${usbstick.base.dir}/wac/lib" />
+        <copy todir="${usbstick.base.dir}/wac/lib">
+            <fileset dir="${dist.dir}/zip/lib">
+                <include name="**.jar" />
+            </fileset>
+            <fileset dir="${lib.dir}">
+                <include name="dtmp.zip" />
+            </fileset>
+        </copy>
+        <!-- Windows -->
+        <mkdir dir="${usbstick.win.dir}/wac/Windows/jre6" />
+        <!--
+        <mkdir dir="${usbstick.win.dir}/wac/resources" />
+        -->
+        <mkdir dir="${usbstick.win.dir}/wac/lib" />
+        <copy todir="${usbstick.win.dir}/wac">
+            <fileset dir="${usbstick.base.dir}/wac">
+                <include name="**" />
+            </fileset>
+            <fileset dir="${bin.dir}">
+                <include name="wac.bat" />
+            </fileset>
+        </copy>
+        <!-- Platform independent w/o JRE -->
+        <!--
+        <mkdir dir="${usbstick.pfi.dir}/wac/resources" />
+        -->
+        <mkdir dir="${usbstick.pfi.dir}/wac/lib" />
+        <copy todir="${usbstick.pfi.dir}/wac">
+            <fileset dir="${usbstick.base.dir}/wac">
+                <include name="**" />
+            </fileset>
+            <fileset dir="${bin.dir}">
+                <include name="wac" />
+            </fileset>
+        </copy>
+        <chmod perm="a+rx" file="${bin.dir}/wac" />
     </target>
-
+    
     <!--
-
+        
     -->
     <target name="exportsql">
-    	<property environment="env" />
-    	<exec dir="sql" executable="java">
-    		<arg value="-cp" />
-    		<arg value="../lib/h2-1.2.147.jar" />
-    		<arg value="org.h2.tools.Recover" />
-    		<arg value="-db" />
-    		<arg value="westawac" />
-    	</exec>
-    	<exec dir="sql" executable="java">
-    		<arg value="-cp" />
-    		<arg value="../lib/h2-1.2.147.jar" />
-    		<arg value="org.h2.tools.Backup" />
-    		<arg value="-file" />
-    		<arg value="dtmp.zip" />
-    		<arg value="-db" />
-    		<arg value="westawac" />
-    	</exec>
-    	<copy file="sql/dtmp.zip" todir="${usbstick.base.dir}/wac/lib" />
+        <property environment="env" />
+        <exec dir="sql" executable="java">
+            <arg value="-cp" />
+            <arg value="../lib/h2-1.2.147.jar" />
+            <arg value="org.h2.tools.Recover" />
+            <arg value="-db" />
+            <arg value="westawac" />
+        </exec>
+        <exec dir="sql" executable="java">
+            <arg value="-cp" />
+            <arg value="../lib/h2-1.2.147.jar" />
+            <arg value="org.h2.tools.Backup" />
+            <arg value="-file" />
+            <arg value="dtmp.zip" />
+            <arg value="-db" />
+            <arg value="westawac" />
+        </exec>
+        <copy file="sql/dtmp.zip" todir="${usbstick.base.dir}/wac/lib" />
     </target>
-
+    
     <!--
-
     <target name="copysql-to-usbstick" depends="exportsql">
-    	<copy todir="${usbstick.win.dir}/wac/lib">
-    		<fileset dir="${usbstick.base.dir}/wac/lib">
-    			<include name="dtmp.zip" />
-    		</fileset>
-    	</copy>
-    	<copy todir="${usbstick.linux.dir}/wac/lib">
-    		<fileset dir="${usbstick.base.dir}/wac/lib">
-    			<include name="dtmp.zip" />
-    		</fileset>
-    	</copy>
-    	<copy todir="${usbstick.mac.dir}/wac/lib">
-    		<fileset dir="${usbstick.base.dir}/wac/lib">
-    			<include name="dtmp.zip" />
-    		</fileset>
-    	</copy>
+        <copy todir="${usbstick.win.dir}/wac/lib">
+            <fileset dir="${usbstick.base.dir}/wac/lib">
+                <include name="dtmp.zip" />
+            </fileset>
+        </copy>
+        <copy todir="${usbstick.pfi.dir}/wac/lib">
+            <fileset dir="${usbstick.base.dir}/wac/lib">
+                <include name="dtmp.zip" />
+            </fileset>
+        </copy>
+        <copy todir="${usbstick.mac.dir}/wac/lib">
+            <fileset dir="${usbstick.base.dir}/wac/lib">
+                <include name="dtmp.zip" />
+            </fileset>
+        </copy>
     </target>
     -->
-
+    
     <!--
- 
+        
     -->
     <target name="world" depends="usbstick,exportsql">
-    	<!--propertyregex property="app.version2" input="${app.version}" regexp="\d" select="\1"
-    	<echo>${app.version2}</echo>-->
-    	<!-- Windows -->
-    	<zip destfile="${usbstick.base.dir}/wac_${app.version}_win.zip" whenempty="fail">
-    		<zipfileset dir="${usbstick.win.dir}/wac" includes="**" prefix="wac" />
-    		<zipfileset dir="${usbstick.base.dir}/Windows" includes="**" prefix="wac/Windows" />
-    	</zip>
-    	<!-- Linux -->
-    	<zip destfile="${usbstick.base.dir}/wac_${app.version}_linux.zip" whenempty="fail">
-    		<zipfileset dir="${usbstick.linux.dir}/wac" includes="**" excludes="wac" prefix="wac" />
-    		<zipfileset dir="${usbstick.linux.dir}/wac" includes="wac" prefix="wac" filemode="555" />
-    	</zip>
-    	<!-- Mac -->
-    	<zip destfile="${usbstick.base.dir}/wac_${app.version}_mac.zip" whenempty="fail">
-    		<zipfileset dir="${usbstick.mac.dir}/wac" includes="**" excludes="wac" prefix="wac" />
-    		<zipfileset dir="${usbstick.linux.dir}/wac" includes="wac" prefix="wac" filemode="555" />
-    	</zip>
-    	<!--antcall target="clean"/-->
+        <!-- Windows -->
+        <zip destfile="${usbstick.base.dir}/wac_${app.version}_win.zip" whenempty="fail">
+            <zipfileset dir="${usbstick.win.dir}/wac" includes="**" prefix="wac" />
+            <zipfileset dir="${usbstick.base.dir}/Windows" includes="**" prefix="wac/Windows" />
+        </zip>
+        <!-- Platform independent -->
+        <zip destfile="${usbstick.base.dir}/wac_${app.version}.zip" whenempty="fail">
+            <zipfileset dir="${usbstick.win.dir}/wac" includes="**.bat" prefix="wac" />
+            <zipfileset dir="${usbstick.pfi.dir}/wac" includes="**" excludes="wac" prefix="wac" />
+            <zipfileset dir="${usbstick.pfi.dir}/wac" includes="wac" prefix="wac" filemode="555" />
+        </zip>
     </target>
-
+    
     <!--
-
-       Run WAC.
-
+        
+        Run WAC.
+        
     -->
     <target name="run" depends="compile">
-    	<property environment="env" />
-    	<exec dir="." executable="bash">
-    		<env key="GROOVY_HOME" value="${groovy.home}" />
-    		<env key="GRIFFON_HOME" value="${griffon.home}" />
-    		<env key="PATH" path="${GRIFFON_HOME}/bin:${GROOVY_HOME}/bin:${env.PATH}" />
-    		<arg value="${griffon.home}/bin/griffon" />
-    		<arg value="test" />
-    		<arg value="run-app" />
-    	</exec>
+        <property environment="env" />
+        <exec dir="." executable="bash">
+            <env key="GROOVY_HOME" value="${groovy.home}" />
+            <env key="GRIFFON_HOME" value="${griffon.home}" />
+            <env key="PATH" path="${GRIFFON_HOME}/bin:${GROOVY_HOME}/bin:${env.PATH}" />
+            <arg value="${griffon.home}/bin/griffon" />
+            <arg value="test" />
+            <arg value="run-app" />
+        </exec>
     </target>
-
+    
     <!--
-
-       Run WAC in debug mode.
-
+        
+        Run WAC in debug mode.
+        
     -->
     <target name="debug" depends="compile">
-    	<property environment="env" />
-    	<exec dir="." executable="bash">
-    		<env key="GROOVY_HOME" value="${groovy.home}" />
-    		<env key="GRIFFON_HOME" value="${griffon.home}" />
-    		<env key="PATH" path="${GRIFFON_HOME}/bin:${GROOVY_HOME}/bin:${env.PATH}" />
-    		<arg value="${griffon.home}/bin/griffon" />
-    		<arg value="test" />
-    		<arg value="run-app" />
-    		<arg value="-debug" />
-    	</exec>
+        <property environment="env" />
+        <exec dir="." executable="bash">
+            <env key="GROOVY_HOME" value="${groovy.home}" />
+            <env key="GRIFFON_HOME" value="${griffon.home}" />
+            <env key="PATH" path="${GRIFFON_HOME}/bin:${GROOVY_HOME}/bin:${env.PATH}" />
+            <arg value="${griffon.home}/bin/griffon" />
+            <arg value="test" />
+            <arg value="run-app" />
+            <arg value="-debug" />
+        </exec>
     </target>
-
+    
 </project>
