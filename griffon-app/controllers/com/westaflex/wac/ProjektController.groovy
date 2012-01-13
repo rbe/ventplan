@@ -1,6 +1,6 @@
 /**
  * WAC
- *
+ * 
  * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
  * Copyright (C) 2010-2012 art of coding UG (haftungsbeschränkt).
  *
@@ -338,6 +338,7 @@ class ProjektController {
         java.io.File responseFile = null
         try {
             withRest(id: "odisee", uri: restUrl) {
+                auth.basic 'wac', 're:Xai3u'
                 def resp = post(path: restPath, body: xmlDoc, requestContentType: ContentType.XML, responseContentType: ContentType.BINARY, charset: 'utf-8')
                 if (DEBUG) println "${new Date()}: model.wpxFilename.absolutePath -> ${model.wpxFilename}"
                 def byteArrayInputStream = new ByteArrayInputStream(resp.data.bytes)
