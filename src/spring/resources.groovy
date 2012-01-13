@@ -1,1 +1,3 @@
-// This file is empty.
+// Place your Spring DSL code here
+beans = {
+}
