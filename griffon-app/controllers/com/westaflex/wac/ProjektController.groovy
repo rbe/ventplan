@@ -259,7 +259,7 @@ class ProjektController {
             }
         } catch (e) {
             println "Error while calling 'Seitenansicht' -> ${e.dump()}"
-            def errorMsg = "Auslegung konnte nicht erstellt werden. ${e}" as String
+            def errorMsg = "Auslegung konnte nicht erstellt werden.\n${e}" as String
             app.controllers["Dialog"].showErrorDialog(errorMsg as String)
         }
         waitDialog?.dispose()
