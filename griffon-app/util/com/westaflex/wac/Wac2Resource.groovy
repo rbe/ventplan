@@ -1,12 +1,10 @@
 /**
- * /Users/rbe/project/westaflex/WestaWAC2/griffon-app/conf/Wac2Resource.groovy
+ * WAC
  * 
- * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2011 art of coding UG (haftungsbeschränkt).
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2012 art of coding UG (haftungsbeschränkt).
  *
- * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
- * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
- * 
+ * Alle Rechte vorbehalten. All rights reserved.
  * Created by: rbe
  */
 
@@ -14,44 +12,44 @@
  * Provide access to resources.
  */
 class Wac2Resource {
-	
-	/**
-	 * Get URL for splash screen.
-	 */
-	def static getSplashScreenURL = {
-		// dev
-		def r = Wac2Resource.class.getResource("../resources/image/splash.png")
-		// prod
-		if (!r) r = Wac2Resource.class.getResource("/image/splash.png")
-		r
-	}
-	
-	/**
-	 * Get URI for XSD of WPX files.
-	 */
-	def static getWPXXSDAsURL = {
-		// dev
-		def r = Wac2Resource.class.getResource("../resources/xml/westaflex-project.xsd")
-		// prod
-		if (!r) r = Wac2Resource.class.getResource("/xml/westaflex-project.xsd")
-		r.toURI()
-	}
-	
-	/**
-	 * Get stream for XSD of WPX files.
-	 */
-	def static getWPXXSDAsStream = {
-		// dev
-		def r = Wac2Resource.class.getResourceAsStream("../resources/xml/westaflex-project.xsd")
-		// prod
-		if (!r) r = Wac2Resource.class.getResourceAsStream("/xml/westaflex-project.xsd")
-		r
-	}
-	
-	/**
-	 * Get image for 'Widerstand'.
-	 */
-	def static getWiderstandURL = { n ->
+    
+    /**
+     * Get URL for splash screen.
+     */
+    def static getSplashScreenURL = {
+        // dev
+        def r = Wac2Resource.class.getResource("../resources/image/splash.png")
+        // prod
+        if (!r) r = Wac2Resource.class.getResource("/image/splash.png")
+        r
+    }
+    
+    /**
+     * Get URI for XSD of WPX files.
+     */
+    def static getWPXXSDAsURL = {
+        // dev
+        def r = Wac2Resource.class.getResource("../resources/xml/westaflex-project.xsd")
+        // prod
+        if (!r) r = Wac2Resource.class.getResource("/xml/westaflex-project.xsd")
+        r.toURI()
+    }
+    
+    /**
+     * Get stream for XSD of WPX files.
+     */
+    def static getWPXXSDAsStream = {
+        // dev
+        def r = Wac2Resource.class.getResourceAsStream("../resources/xml/westaflex-project.xsd")
+        // prod
+        if (!r) r = Wac2Resource.class.getResourceAsStream("/xml/westaflex-project.xsd")
+        r
+    }
+    
+    /**
+     * Get image for 'Widerstand'.
+     */
+    def static getWiderstandURL = { n ->
         def r
         try {
             // dev
@@ -62,63 +60,63 @@ class Wac2Resource {
             r = ""
         }
         r
-	}
-	
-	/**
-	 * Get template for OpenOffice.
-	 */
-	def static getOOoURL = { t ->
-		// dev
-		def r = Wac2Resource.class.getResource("../resources/ooo/${t}.ott")
-		// prod
-		if (!r) r = Wac2Resource.class.getResource("/ooo/${t}.ott")
-		r
-	}
-	
-	/**
-	 * Get template for OpenOffice.
-	 */
-	def static getOOoAsStream = { t ->
-		// dev
-		def r = Wac2Resource.class.getResourceAsStream("../resources/ooo/${t}.ott")
-		// prod
-		if (!r) r = Wac2Resource.class.getResourceAsStream("/ooo/${t}.ott")
-		r
-	}
+    }
     
     /**
-	 * Get Pdf Logo.
-	 */
-	def static getPdfLogo = {
-		// dev
-		def r = Wac2Resource.class.getResource("../resources/image/westaflex_logo.png")
-		// prod
-		if (!r) r = Wac2Resource.class.getResource("/image/westaflex_logo.png")
-		r
-	}
-    
-    /**
-	 * Get wac web service properties.
-	 */
-	def static getWacwsProperties() {
-		// dev
-		def r = Wac2Resource.class.getResourceAsStream("/wacws.properties")
+     * Get template for OpenOffice.
+     */
+    def static getOOoURL = { t ->
+        // dev
+        def r = Wac2Resource.class.getResource("../resources/ooo/${t}.ott")
         // prod
-		if (!r) r = Wac2Resource.class.getResourceAsStream("/wacws/wacws.properties")
-		r
-	}
+        if (!r) r = Wac2Resource.class.getResource("/ooo/${t}.ott")
+        r
+    }
     
     /**
-	 * Get version.
+     * Get template for OpenOffice.
+     */
+    def static getOOoAsStream = { t ->
+        // dev
+        def r = Wac2Resource.class.getResourceAsStream("../resources/ooo/${t}.ott")
+        // prod
+        if (!r) r = Wac2Resource.class.getResourceAsStream("/ooo/${t}.ott")
+        r
+    }
+    
+    /**
+     * Get Pdf Logo.
+     */
+    def static getPdfLogo = {
+        // dev
+        def r = Wac2Resource.class.getResource("../resources/image/westaflex_logo.png")
+        // prod
+        if (!r) r = Wac2Resource.class.getResource("/image/westaflex_logo.png")
+        r
+    }
+    
+    /**
+     * Get wac web service properties.
+     */
+    def static getWacwsProperties() {
+        // dev
+        def r = Wac2Resource.class.getResourceAsStream("/wacws.properties")
+        // prod
+        if (!r) r = Wac2Resource.class.getResourceAsStream("/wacws/wacws.properties")
+        r
+    }
+    
+    /**
+     * Get version.
      * Caution: 
      * Had to change this because "version" file could not be loaded in griffon 0.9.4.
-	 */
-	def static getConfVersion() {
-		// dev
-		def r = Wac2Resource.class.getResourceAsStream("/version.properties")
-		// prod
-		if (!r) r = Wac2Resource.class.getResourceAsStream("/version.properties")
-		r
-	}
-	
+     */
+    def static getConfVersion() {
+        // dev
+        def r = Wac2Resource.class.getResourceAsStream("/version.properties")
+        // prod
+        if (!r) r = Wac2Resource.class.getResourceAsStream("/version.properties")
+        r
+    }
+    
 }

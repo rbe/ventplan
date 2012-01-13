@@ -1,10 +1,10 @@
 /**
- * /Users/rbe/project/wac2/griffon-app/views/com/westaflex/wac/WbwView.groovy
+ * WAC
+ * 
+ * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2010-2012 art of coding UG (haftungsbeschränkt).
  *
- * Copyright (C) 2010 Informationssysteme Ralf Bensmann.
- * Nutzungslizenz siehe http://www.bensmann.com/BPL_v10_de.html
- * Use is subject to license terms, see http://www.bensmann.com/BPL_v10_en.html
- *
+ * Alle Rechte vorbehalten. All rights reserved.
  * Created by: rbe
  */
 package com.westaflex.wac

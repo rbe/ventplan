@@ -1,13 +1,10 @@
-/*
+/**
+ * WAC
+ * 
  * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2010-2011 art of coding UG (haftungsbeschränkt).
+ * Copyright (C) 2010-2012 art of coding UG (haftungsbeschränkt).
  *
- * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
- * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
- *
- * Project wac
- * /Users/rbe/project/wac/griffon-app/views/com/westaflex/wac/WbwView.groovy
- * Last modified at 27.03.2011 19:22:24 by rbe
+ * Alle Rechte vorbehalten. All rights reserved.
  */
 package com.westaflex.wac
 
