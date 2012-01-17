@@ -151,6 +151,7 @@
             <arg value="-db" />
             <arg value="westawac" />
         </exec>
+        <copy file="sql/dtmp.zip" todir="${lib.dir}" />
         <copy file="sql/dtmp.zip" todir="${usbstick.base.dir}/wac/lib" />
     </target>
     
