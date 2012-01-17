@@ -20,9 +20,11 @@ panel(id: "wbwPanel", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[f
 			table(id: "wbwTabelle", model: model.createWbwTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
                 // WAC-160: Feste Spaltenbreiten vergeben.
 				current.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+                //current.removeColumn(current.columnModel.getColumn(0)) // REMOVE
                 current.columnModel.getColumn(0).setPreferredWidth(60)
                 current.columnModel.getColumn(1).setPreferredWidth(200)
 				current.columnModel.getColumn(2).setPreferredWidth(120)
+				current.columnModel.getColumn(3).setMaxWidth(0)
 			}
 		}
 	}
