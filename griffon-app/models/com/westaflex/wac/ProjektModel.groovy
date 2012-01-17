@@ -648,7 +648,7 @@ class ProjektModel {
 	def createDvbKanalnetzTableModel() {
 		def columnNames =   ["Luftart",     "Teilstrecke",  ws("Luft [m³/h]"), "Kanalbezeichnung", ws("Kanallänge<br/>[m]"), ws("Geschwindigkeit<br/>[m/s]"), ws("Reibungswiderstand<br/>gerader Kanal<br/>[Pa]"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>[Pa]"), ws("Widerstand<br/>Teilstrecke<br/><[Pa]")] as String[]
 		def propertyNames = ["luftart",     "teilstrecke",  "luftVs",          "kanalbezeichnung", "lange",                  "geschwindigkeit",               "reibungswiderstand",                                "gesamtwiderstandszahl",           "einzelwiderstand",                    "widerstandTeilstrecke"] as String[]
-		def propertyTypes = [Object.class.getName(), Integer.class.getName(), Double.class.getName(), Object.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName()] as String[]
+		//def propertyTypes = [Object.class.getName(), Integer.class.getName(), Double.class.getName(), Object.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName()] as String[]
         //def writable      = [false,         true,           true,                                    true,               true,                     false,                           false,                                               true/* TODO false*/,               false,                                 false] as boolean[]
         def writable      = [false,         false,           false,                                    false,               false,                     false,                           false,                                            false,               false,               false] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
@@ -661,8 +661,8 @@ class ProjektModel {
             app.controllers[mvcId].dvbKanalnetzGeandert(object.position)
             //resyncDvbKanalnetzTableModels()
 		}
-		//gltmClosure(columnNames, propertyNames, writable, tableModels.dvbKanalnetz, postValueSet)
-		gltmClosureWithTypes(columnNames, propertyNames, propertyTypes, writable, tableModels.dvbKanalnetz, postValueSet)
+		gltmClosure(columnNames, propertyNames, writable, tableModels.dvbKanalnetz, postValueSet)
+		//gltmClosureWithTypes(columnNames, propertyNames, propertyTypes, writable, tableModels.dvbKanalnetz, postValueSet)
 	}
 	
 	/**
