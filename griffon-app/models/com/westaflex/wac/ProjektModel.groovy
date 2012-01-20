@@ -677,9 +677,9 @@ class ProjektModel {
 		def index = meta.gewahlterRaum.position
 		if (DEBUG) {
 			println "createRaumTurenTableModel: index=${index}"
-			println "createRaumTurenTableModel: raumeTuren: ${tableModels.raumeTuren}"
-			println "#########"
-			println "createRaumTurenTableModel: raumeTuren[index]: ${tableModels.raumeTuren[index]}"
+			tableModels.raumeTuren.eachWithIndex { rt, i ->
+    			println "createRaumTurenTableModel: raumeTuren: index=${i} ${tableModels.raumeTuren[i]}"
+			}
 		}
 		def columnNames =   ["Bezeichnung",    "Breite [mm]", "Querschnittsfläche [mm²]", "Spaltenhöhe [mm]", "mit Dichtung"] as String[]
 		def propertyNames = ["turBezeichnung", "turBreite",   "turQuerschnitt",           "turSpalthohe",     "turDichtung"] as String[]

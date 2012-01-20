@@ -757,7 +757,7 @@ class WacCalculationService {
 		}
 		// Alle Einträge in der Tabelle Ventileinstellung durchlaufen
 		map.dvb.ventileinstellung.each { ve ->
-			//println "ve: ${ve}"
+			if (DEBUG) println "berechneVentileinstellung: ve: ${ve}"
 			// Prüfe, ob die letzte Teilstrecke existiert und ob die Luftart übereinstimmt
 			def luftVsLts = luftVsLetzteTeilstrecke(ve)
 			//println "luftVsLts=${luftVsLts}"
@@ -769,9 +769,11 @@ class WacCalculationService {
 				def x = teilstrecken(ve.teilstrecken).collect { t ->
 						map.dvb.kanalnetz.find {
 							it.teilstrecke.toString2() == t
-						}?.widerstandTeilstrecke
+						}?.widerstandTeilstrecke ?: 0.0d
 					}
+				if (DEBUG) println "berechneVentileinstellung: x=${x}"
 				def z = x.inject(0.0d, { o, n ->
+				        if (DEBUG) println "berechneVentileinstellung: z=x.inject, o=${o} n=${n}"
 						o + n
 					})
 				ve.gesamtWiderstand = ve.dpOffen + z
@@ -832,7 +834,7 @@ class WacCalculationService {
                         def tsqf = (100 * 3.1d * map.raumUberstromVolumenstrom / java.lang.Math.sqrt(1.5d)) - abziehenTurenOhneDichtung
                         it.turSpalthohe = tsqf / summeTurBreiten
                         it.turQuerschnitt = tsqf * it.turBreite / summeTurBreiten
-                        if (DEBUG) println "berechneTurspalt: abziehen=${abziehen} tsqf=${tsqf} turSpalthohe=${it.turSpalthohe} turQuerschnitt=${it.turQuerschnitt}"
+                        if (DEBUG) println "berechneTurspalt: abziehenTurenOhneDichtung=${abziehenTurenOhneDichtung} tsqf=${tsqf} turSpalthohe=${it.turSpalthohe} turQuerschnitt=${it.turQuerschnitt}"
                     } catch (e) {
                         println "berechneTurspalt: EXCEPTION=${e}"
                     }
