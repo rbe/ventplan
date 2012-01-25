@@ -54,6 +54,7 @@ panel(id: "raumPanel", layout: new MigLayout("fill", "[fill,grow]", "")) {
         button(id: "raumEntfernen",            enabled: bind {1==1}, text: "Raum entfernen")
         button(id: "raumBearbeiten",           enabled: bind {1==1}, text: "Raum bearbeiten")
         button(id: "raumKopieren",             enabled: bind {1==1}, text: "Raum kopieren")
+        button(id: "raumGeandert",             enabled: bind {1==1}, text: "Neu berechnen")
         /*
         button(id: "raumEntfernen",            enabled: bind { model.map.raum.raume?.size() > 1 ? true : false }, text: "Raum entfernen")
         button(id: "raumBearbeiten",           enabled: bind { model.map.raum.raume?.size() > 0 ? true : false }, text: "Raum bearbeiten")

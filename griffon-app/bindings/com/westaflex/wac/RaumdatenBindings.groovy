@@ -25,5 +25,6 @@ raumHinzufugen.actionPerformed = controller.raumHinzufugen
 raumEntfernen.actionPerformed = controller.raumEntfernen
 raumKopieren.actionPerformed = controller.raumKopieren
 raumBearbeiten.actionPerformed = controller.raumBearbeiten
+raumGeandert.actionPerformed = controller.raumGeandertAction
 raumNachObenVerschieben.actionPerformed = controller.raumNachObenVerschieben
 raumNachUntenVerschieben.actionPerformed = controller.raumNachUntenVerschieben

@@ -840,6 +840,10 @@ class ProjektModel {
 	 * Einen Raum im Model und allen TableModels hinzufügen, Comboboxen synchronisieren.
 	 */
 	def addRaum = { raum, view, isCopy = false ->
+        _addRaum(raum, view, isCopy)
+    }
+
+    def _addRaum(raum, view, isCopy = false) {
 		synchronized (map.raum.raume) {
 			raum = prufeRaumdaten(raum)
 			// Raumdaten mit Template zusammführen
@@ -901,6 +905,10 @@ class ProjektModel {
 	 * Einen Raum aus dem Model entfernen, alle TableModels synchronisieren.
 	 */
 	def removeRaum = { raumIndex, view ->
+        _removeRaum(raumIndex, view)
+    }
+
+    def _removeRaum(raumIndex, view) {
 		synchronized (map.raum.raume) {
 			if (DEBUG) println "removeRaum: removing raumIndex=${raumIndex}"
 			map.raum.raume.remove(raumIndex)

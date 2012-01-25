@@ -553,9 +553,13 @@ class ProjektController {
 					mindestaussenluftrate = 0.0d
 				}
 			}
+			try {
 			// Set caret to old position; is moved through model update?
 			view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition = personenanzahlCaretPos
 			view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition = aussenluftVsProPersonCaretPos
+			} catch (e) {
+			    e.printStackTrace()
+			}
             // Berechnen
             berechneAussenluftVs()
 		//}
@@ -683,6 +687,10 @@ class ProjektController {
 	 * Raumdaten - Raum anlegen.
 	 */
     def raumHinzufugen = {
+        _raumHinzufugen()
+    }
+
+    def _raumHinzufugen() {
 		// Erstelle Model für Raum: Standardwerte überschreiben mit eingegebenen Werten
 		// Berechne Position: Raum wird unten angefügt
 		def raum = model.raumMapTemplate.clone() +
@@ -719,11 +727,11 @@ class ProjektController {
 			// Raum im Model hinzufügen
             if (DEBUG) println "onRaumHinzufugen: raum -> ${raum}"
 			model.addRaum(raum, view)
-            raumGeandert(raum.position)
+            // WAC-210: _raumGeandert(raum.position), wird nun über Benutzer/Button gemacht
             // WAC-170: abw. Raumbezeichnung leeren
             view.raumBezeichnung.text = ""
             // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
-            berechneAlles()
+            //berechneAlles()
 		//}
 	}
 	
@@ -731,6 +739,10 @@ class ProjektController {
 	 * Raumdarten - ein Raum wurde geändert.
 	 */
     def raumGeandert = { Integer raumPosition ->
+        _raumGeandert(raumPosition)
+    }
+
+    def _raumGeandert(Integer raumPosition) {
         // WAC-174 (raumIndex kann == 0 sein!)
         def isSelectedRow = false
         if (raumPosition < 0) {
@@ -823,24 +835,38 @@ class ProjektController {
             "Hinweis: bitte ÜB-Elemente prüfen: ${raumeOhneUbElemente.collect { it.raumBezeichnung }.join(", ")}" : ""
 	}
 	
+    def raumGeandertAction = { java.awt.event.ActionEvent e ->
+        _raumGeandert(0)
+    }
+
 	/**
 	 * Raumdaten - einen Raum entfernen.
 	 */
 	def raumEntfernen = {
+        _raumEntfernen()
+    }
+
+    def _raumEntfernen() {
         // Raum aus Model entfernen
         model.removeRaum(view.raumTabelle.selectedRow, view)
         // Es hat sich was geändert...
         def raum = model.map.raum.raume[view.raumTabelle.selectedRow]
-        raumGeandert(raum.position)
+        // WAC-210: raumGeandert(raum.position)
         //raumGeandert(view.raumTabelle.selectedRow, true)
+        /*
         // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
         berechneAlles()
+        */
 	}
 	
 	/**
 	 * Raumdaten - einen Raum kopieren.
 	 */
 	def raumKopieren = {
+        _raumKopieren()
+    }
+
+    def _raumKopieren() {
 		//doLater {
 			// Get selected row
 			def row = view.raumTabelle.selectedRow
@@ -884,8 +910,10 @@ class ProjektController {
 			model.addRaum(newMap, view, true)
 			// Raum hinzugefügt
             raumGeandert(newMap.position)
+            /*
             // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
             berechneAlles()
+            */
 		//}
 	}
 	
@@ -952,6 +980,8 @@ class ProjektController {
             GH.makeComboboxCellEditor(columnModel.getColumn(1), model.meta.raumTurbreiten)
             berechneTuren(null, model.meta.gewahlterRaum.position, false)
             raumBearbeitenDialog.show()
+        } else {
+            println "${this}.raumBearbeiten: no row selected"
         }
 	}
 	
@@ -959,6 +989,10 @@ class ProjektController {
 	 * RaumBearbeiten - RaumBearbeitenView schliessen.
 	 */
     def raumBearbeitenSchliessen = {
+        _raumBearbeitenSchliessen()
+    }
+
+    def _raumBearbeitenSchliessen() {
         if (DEBUG) println "raumBearbeitenSchliessen: closing dialog '${raumBearbeitenDialog.title}'"
         raumBearbeitenGeandert()
         raumBearbeitenDialog.dispose()
@@ -968,6 +1002,10 @@ class ProjektController {
 	 * Raum bearbeiten - Daten eingegeben. Mit raumBearbeitenSchliessen zusammenlegen?
 	 */
     def raumBearbeitenGeandert = { evt = null ->
+        _raumBearbeitenGeandert()
+    }
+
+    def _raumBearbeitenGeandert() {
         // WAC-174: Immer Raum Index/Position aus Metadaten nehmen
         //def raumIndex = view.raumTabelle.selectedRow
         def raumIndex = model.meta.gewahlterRaum.position
