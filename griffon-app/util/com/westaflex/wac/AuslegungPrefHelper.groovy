@@ -1,6 +1,6 @@
 /*
  * WAC
- * 
+ *
  * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
  * Copyright (C) 2010-2012 art of coding UG (haftungsbeschränkt).
  *
@@ -15,6 +15,7 @@ import java.util.prefs.BackingStoreException
  * WAC-161: Zuletzt geöffnete Projekte
  * Save and load preferences for a Most Recently Used (MRU) list.
  */
+@Singleton
 class AuslegungPrefHelper {
 
     public static boolean DEBUG = false    
@@ -29,18 +30,7 @@ class AuslegungPrefHelper {
     public static final String PREFS_USER_KEY_FAX = "erstellerFax";
     public static final String PREFS_USER_KEY_EMAIL = "erstellerEmail";
 
-    
-    private static AuslegungPrefHelper INSTANCE = null;
-    
-    public static AuslegungPrefHelper getInstance() {
-        if (null == INSTANCE) {
-            INSTANCE = new AuslegungPrefHelper();
-        }
-        return INSTANCE;
-    }
-    
     private AuslegungPrefHelper() {
-        // just instantiate...
     }
     
     public boolean hasSavedValues() {
@@ -114,6 +104,5 @@ class AuslegungPrefHelper {
         }
         return value;
     }
-
 
 }
