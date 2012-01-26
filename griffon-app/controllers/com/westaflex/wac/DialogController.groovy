@@ -28,8 +28,8 @@ class DialogController {
             "Die Anwendung enthält nicht gespeicherte Projekte. Bitte wählen Sie.",
             1,
             [
-                new CommandLink("Alle Speichern", ""),
-                new CommandLink("Abbrechen", ""),
+                new CommandLink("Alle Speichern und schliessen", ""),
+                new CommandLink("Abbrechen, nicht speichern und nicht schliessen", ""),
                 new CommandLink("Ohne Speichern schliessen", "")
             ]
             )
@@ -47,8 +47,8 @@ class DialogController {
             "Möchten Sie die Anwendung wirklich schliessen?",
             1,
             [
-                new CommandLink("Ja", ""),
-                new CommandLink("Nein", "")
+                new CommandLink("Ja, klar!", ""),
+                new CommandLink("Nein, doch nicht.", "")
             ]
             )
         return choice
@@ -65,9 +65,9 @@ class DialogController {
             "Das Projekt enthält nicht gespeicherte Werte. Bitte wählen Sie.",
             1,
             [
-                new CommandLink("Speichern", ""),
-                new CommandLink("Abbrechen", ""),
-                new CommandLink("Ok", "")
+                new CommandLink("Speichern und das Projekt schliessen", ""),
+                new CommandLink("Abbrechen, nicht speichern und Projekt geöffnet lassen", ""),
+                new CommandLink("Ok, nicht speichern und Projekt schliessen", "")
             ]
             )
         return choice
