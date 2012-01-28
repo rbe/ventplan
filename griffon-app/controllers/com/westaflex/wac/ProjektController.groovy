@@ -403,7 +403,7 @@ class ProjektController {
         model.map.raum.raume.each { raum ->
             if (DEBUG) println "berechneAlles: BERECHNE RAUM ${raum.position}"
             try {
-                raumGeandert(raum.position)
+                raumGeandert(raum.position, -1)
             } catch (e) {
                 println "berechneAlles: ${raum.raumBezeichnung} ${e}"
             }
@@ -727,7 +727,7 @@ class ProjektController {
 			// Raum im Model hinzufügen
             if (DEBUG) println "onRaumHinzufugen: raum -> ${raum}"
 			model.addRaum(raum, view)
-            raumGeandert(raum.position)
+            raumGeandert(raum.position, -1)
             // WAC-210: _raumGeandert(raum.position), wird nun über Benutzer/Button gemacht
             // WAC-170: abw. Raumbezeichnung leeren
             view.raumBezeichnung.text = ""
@@ -739,11 +739,11 @@ class ProjektController {
 	/**
 	 * Raumdarten - ein Raum wurde geändert.
 	 */
-    def raumGeandert = { Integer raumPosition ->
-        _raumGeandert(raumPosition)
+    def raumGeandert = { Integer raumPosition, Integer setSelectedIndex, boolean isIndex = false ->
+        _raumGeandert(raumPosition, setSelectedIndex, isIndex)
     }
 
-    def _raumGeandert(Integer raumPosition) {
+    def _raumGeandert(Integer raumPosition, Integer setSelectedIndex, boolean isIndex) {
         doLater {
             // WAC-174 (raumIndex kann == 0 sein!)
             def isSelectedRow = false
@@ -759,7 +759,7 @@ class ProjektController {
                 // Raumdaten prüfen
                 def raum
                 def raumIndex
-                if (!isSelectedRow) {
+                if (!isSelectedRow && !isIndex) {
                     model.map.raum.raume.eachWithIndex{ item, pos ->
                         if (item.position == raumPosition) {
                             raum = item
@@ -770,7 +770,11 @@ class ProjektController {
                     raumIndex = raumPosition
                 }
                 // Diesen Raum in allen Tabellen anwählen
-                onRaumInTabelleWahlen(raumIndex)
+                if (setSelectedIndex > -1) {
+                    onRaumInTabelleWahlen(setSelectedIndex)
+                } else {
+                    onRaumInTabelleWahlen(raumIndex)
+                }
 
                 if (DEBUG) println "raumGeandert: raum[${raumPosition}] currentRaum=${raum.dump()}"
 
@@ -838,10 +842,6 @@ class ProjektController {
         }
 	}
 	
-    def raumGeandertAction = { java.awt.event.ActionEvent e ->
-        _raumGeandert(0)
-    }
-
 	/**
 	 * Raumdaten - einen Raum entfernen.
 	 */
@@ -855,7 +855,7 @@ class ProjektController {
         // Es hat sich was geändert...
         def raum = model.map.raum.raume[view.raumTabelle.selectedRow]
         // WAC-210: raumGeandert(raum.position)
-        raumGeandert(view.raumTabelle.selectedRow)
+        raumGeandert(view.raumTabelle.selectedRow, true)
         // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
         berechneAlles()
 	}
@@ -910,7 +910,7 @@ class ProjektController {
 			// Raum zum Model hinzufügen
 			model.addRaum(newMap, view, true)
 			// Raum hinzugefügt
-            raumGeandert(newMap.position)
+            raumGeandert(newMap.position, -1)
             // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
             berechneAlles()
 		}
@@ -935,7 +935,7 @@ class ProjektController {
 				}
 				model.resyncRaumTableModels()
 				// Raum geändert
-                raumGeandert(currentRaum.position)
+                raumGeandert(currentRaum.position, row - 1)
 			}
 		}
 	}
@@ -958,7 +958,7 @@ class ProjektController {
             }
             model.resyncRaumTableModels()
             // Raum geändert
-            raumGeandert(currentRaum.position, true)
+            raumGeandert(currentRaum.position, row + 1, false)
         }
 	}
 	
@@ -1009,9 +1009,9 @@ class ProjektController {
     def _raumBearbeitenGeandert() {
         // WAC-174: Immer Raum Index/Position aus Metadaten nehmen
         //def raumIndex = view.raumTabelle.selectedRow
-        def raumIndex = model.meta.gewahlterRaum.position
+        def raumPosition = model.meta.gewahlterRaum.position
         // Daten aus Dialog übertragen und neu berechnen
-        def m = model.map.raum.raume.find { it.position == raumIndex }
+        def m = model.map.raum.raume.find { it.position == raumPosition }
         // Raumnummer
         model.meta.gewahlterRaum.raumNummer =
             m.raumNummer =
@@ -1058,7 +1058,7 @@ class ProjektController {
             m.raumHohe =
             view.raumBearbeitenOptionalRaumhohe.text?.toDouble2()
         // Raum neu berechnen
-        raumGeandert(raumIndex)
+        raumGeandert(raumPosition, -1)
         // Daten aus Model in den Dialog übertragen
         // Zuluft/Abluft
         model.meta.gewahlterRaum.raumZuluftfaktor = m.raumZuluftfaktor
