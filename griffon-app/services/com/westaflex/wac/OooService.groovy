@@ -1,6 +1,6 @@
 /*
  * WAC
- * 
+ *
  * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
  * Copyright (C) 2010-2012 art of coding UG (haftungsbeschränkt).
  *
@@ -11,97 +11,126 @@ package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
 
+import groovy.xml.DOMBuilder
+import java.text.SimpleDateFormat
+
 /**
- * 
+ *
  */
 class OooService {
-    
+
     public static boolean DEBUG = false
-    
+
+    /**
+     * Helper for preferences.
+     */
+    private static AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
+
+    /**
+     * German date, e.g. used for userfield Angebotsdatum.
+     */
+    private static SimpleDateFormat germanDate = new SimpleDateFormat('dd.MM.yyyy')
+
+    /**
+     * Short ISO date, e.g. used for userfield Angebotsnummer.
+     */
+    private static SimpleDateFormat shortIsoDate = new SimpleDateFormat('yyMMdd')
+
     /**
      * Constructor.
      */
     def OooService() {
     }
-    
+
     /**
-     * 
-    def performAngebot(blanko = false, title = null) {
-        try {
-            // Setup OCM
-            setupOCM()
-            // Get connection to OpenOffice
-            def oooConnection = ocm.acquire("group1")
-            // Which macro to call?
-            def macro = blanko ? "Westa.Main.silentMain" : "Westa.Main.silentMode"
-            // Get connection to OpenOffice
-            oooConnection = ocm.acquire("group1")
-            if (!oooConnection) throw new IllegalStateException("No connection to OpenOffice")
-            // Process template
-            def file
-            use (com.bensmann.odisee.category.OOoDocumentCategory) {
-                // Create new document from template
-                def doc = westaAuslegungTemplate.open(oooConnection, [Hidden: Boolean.FALSE])
-                // Execute macro
-                //def aVerteilung
-                //map.raum.raume.collect { it ->
-                //    def k = "${it.raumVerteilebene}${it.raumLuftart}"
-                //    def v = "${map.raum.raume.inject(0, { o, n -> o + n.raumAnzahlAbluftventile })};${map.raum.raume.inject(0, { o, n -> o + n.raumAbluftmengeJeVentil })}"
-                //    new NamedValue(k, v)
-                //}
-                // Basic Parameter: aRumpf (Basisdaten, Kunde etc.), aVerteilung, aVentile, aUberstroemElemente
-                doc.executeMacro("${macro}?language=Basic&location=application", [])
-                // Save generated document
-                file = java.io.File.createTempFile((title ?: "WAC_Auslegung") as String, ".odt")
-                doc.saveAs(file)
-                // Close it
-                doc.close()
-            }
-            // Return file reference to generated document
-            file
-        } finally {
-            // Shutdown
-            shutdownOCM()
-        }
-    }
+     * Strings containing zero numbers are made empty.
      */
-    
-    /**
-     * 
-     */
-    def noZero = { val ->
+    private String noZero(String val) {
         if (val == '0,00' || val == '0') val = ''
         val
     }
-    
+
     /**
-     * Return key of map.key as String else an empty one:
+     * Return value of map.key as String, or an empty String when key is not present:
      * key=Decke -> map[decke] set, then "Decke" else ""
      * key= -> map[decke] set, then "Decke" else ""
      */
-    private def gt = { map, key, value ->
+    private String gt(Map map, key, value) {
         def val = map[key]
-        val ? value as String : ""
+        val ? value as String : ''
     }
-    
+
     /**
-     * @param wpxAuslegungFilename Filename of WPX w/o extension.
+     *
+     * @param wpxFile
+     * @param map
+     * @return
+     */
+    Object makeOdiseeBasedata(File wpxFile, Map map, DOMBuilder domBuilder) {
+        domBuilder.instructions() {
+            addErsteller(domBuilder)
+            addKundendaten(domBuilder, map.kundendaten)
+        }
+    }
+
+    /**
+     *
+     * @param wpxFile
+     * @param map
+     * @param domBuilder
+     * @return
+     */
+    Object makeOdiseeProjectdata(File wpxFile, Map map, DOMBuilder domBuilder) {
+        domBuilder.instructions() {
+            addProjektdaten(domBuilder, map.kundendaten)
+            addGebaude(domBuilder, map)
+        }
+    }
+
+    /**
+     *
+     * @param wpxFile
+     * @param map
+     * @param domBuilder
+     * @return
+     */
+    Object makeOdiseeRoomdata(File wpxFile, Map map, DOMBuilder domBuilder) {
+        domBuilder.instructions() {
+            addRaumdaten(domBuilder, map)
+            addRaumvolumenstrome(domBuilder, map)
+            addUberstromelemente(domBuilder, map)
+            addAkustikBerechnung(domBuilder, map)
+            addDvbKanalnetz(domBuilder, map)
+            addDvbVentileinstellung(domBuilder, map)
+        }
+    }
+
+    /**
+     *
+     * @param wpxFile
+     * @param map
+     * @param saveOdiseeXml
+     * @return
      */
     String performAuslegung(File wpxFile, Map map, boolean saveOdiseeXml = false) {
         // Filename w/o extension
         def wpxFilenameWoExt = wpxFile.name - '.wpx'
         // Generate Odisee XML
-        def domBuilder = groovy.xml.DOMBuilder.newInstance()
+        DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
             request(name: wpxFilenameWoExt, id: 1) {
                 ooo(group: 'group0') {}
                 template(name: 'WestaAuslegung', revision: 'LATEST', outputFormat: 'pdf') {}
                 archive(database: false, files: true) {}
+                makeOdiseeBasedata(wpxFile, map, domBuilder)
+                makeOdiseeProjectdata(wpxFile, map, domBuilder)
+                makeOdiseeRoomdata(wpxFile, map, domBuilder)
+                /*
                 instructions() {
                     addErsteller(domBuilder)
                     addProjektdaten(domBuilder, map.kundendaten)
                     addKundendaten(domBuilder, map.kundendaten)
-                    addInformationen(domBuilder, map)
+                    addGebaude(domBuilder, map)
                     addRaumdaten(domBuilder, map)
                     addRaumvolumenstrome(domBuilder, map)
                     addUberstromelemente(domBuilder, map)
@@ -109,15 +138,16 @@ class OooService {
                     addDvbKanalnetz(domBuilder, map)
                     addDvbVentileinstellung(domBuilder, map)
                 }
+                */
             }
         }
         // Convert XML to string (StreamingMarkupBuilder will generate XML with correct german umlauts)
         String xml = new groovy.xml.StreamingMarkupBuilder().bind {
-                mkp.yieldUnescaped odisee
-            }.toString()
+            mkp.yieldUnescaped odisee
+        }.toString()
         // Save Odisee request XML
         if (saveOdiseeXml) {
-            def odiseeXmlFile = new File(wpxFile.parentFile, "${wpxFilenameWoExt}_odisee.xml")
+            def odiseeXmlFile = new File(wpxFile.parentFile, "${wpxFilenameWoExt}_Auslegung_odisee.xml")
             odiseeXmlFile.withWriter("UTF-8") { writer ->
                 writer.write(xml)
             }
@@ -125,12 +155,71 @@ class OooService {
         // Return Odisee XML
         xml
     }
-    
+
     /**
-     * 
+     *
+     * @param wpxFile
+     * @param map
+     * @param saveOdiseeXml
+     * @return
+     */
+    String performAngebot(File wpxFile, Map map, boolean saveOdiseeXml = false) {
+        // Filename w/o extension
+        def wpxFilenameWoExt = wpxFile.name - '.wpx'
+        // Generate Odisee XML
+        DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
+        def odisee = domBuilder.odisee() {
+            request(name: wpxFilenameWoExt, id: 1) {
+                ooo(group: 'group0') {}
+                template(name: 'WestaAuslegung', revision: 'LATEST', outputFormat: 'pdf') {}
+                archive(database: false, files: true) {}
+                makeOdiseeBasedata(wpxFile, map, domBuilder)
+                makeOdiseeProjectdata(wpxFile, map, domBuilder)
+                makeOdiseeRoomdata(wpxFile, map, domBuilder)
+                // Adresse westaflex
+                domBuilder.userfield(name: 'AbenderFirma', 'Westaflexwerk GmbH')
+                domBuilder.userfield(name: 'AbenderStrasse', 'Thaddäusstr. 5')
+                domBuilder.userfield(name: 'AbenderPLZ', '33334')
+                domBuilder.userfield(name: 'AbenderOrt', 'Gütersloh')
+                domBuilder.userfield(name: 'AbenderPostfach', 'Postfach 3255')
+                domBuilder.userfield(name: 'AbenderPostfachPLZ', '33262')
+                domBuilder.userfield(name: 'Fon', '01805 – 93 78 23 53')
+                domBuilder.userfield(name: 'Fax', '0700 – 93 78 23 5')
+                domBuilder.userfield(name: 'EmailSB', 'info@westa.net')
+                // Empfänger
+                domBuilder.userfield(name: 'AnschriftFenster', '')
+                domBuilder.userfield(name: 'EmpfFax', '')
+                domBuilder.userfield(name: 'EmpfFon', '')
+                domBuilder.userfield(name: 'Angebotsdatum', germanDate.format(new Date()))
+                // Angebot: ProjektBV
+                domBuilder.userfield(name: 'ProjektBV', map.bauvorhaben)
+                // Angebot: Angebotsnummer, Datum, Kürzel des Erstellers, zufällige/lfd. Nummer
+                String datum = shortIsoDate.format(new java.util.Date())
+                String kuerzel = prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME)
+                String angebotsnrkurz = map.angebotsnummerkurz ?: String.format("%04d", Math.round(Math.random() * 10000))
+                domBuilder.userfield(name: 'Angebotsnummer', "${datum}-${kuerzel}-${angebotsnrkurz}")
+                domBuilder.userfield(name: 'AngebotsnummerKurz', angebotsnrkurz)
+            }
+        }
+        // Convert XML to string (StreamingMarkupBuilder will generate XML with correct german umlauts)
+        String xml = new groovy.xml.StreamingMarkupBuilder().bind {
+            mkp.yieldUnescaped odisee
+        }.toString()
+        // Save Odisee request XML
+        if (saveOdiseeXml) {
+            def odiseeXmlFile = new File(wpxFile.parentFile, "${wpxFilenameWoExt}_Angebot_odisee.xml")
+            odiseeXmlFile.withWriter("UTF-8") { writer ->
+                writer.write(xml)
+            }
+        }
+        // Return Odisee XML
+        xml
+    }
+
+    /**
+     *
      */
     private def addErsteller(domBuilder) {
-        def prefHelper = AuslegungPrefHelper.getInstance()
         domBuilder.userfield(name: 'erstellerFirma', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA))
         domBuilder.userfield(name: 'erstellerName', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME))
         domBuilder.userfield(name: 'erstellerStrasse', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE))
@@ -140,14 +229,15 @@ class OooService {
         domBuilder.userfield(name: 'erstellerFax', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FAX))
         domBuilder.userfield(name: 'erstellerEmail', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL))
     }
-    
+
     /**
      * @param map model.map.kundendaten
      */
     private def addProjektdaten(domBuilder, map) {
+        // Bauvorhaben
         domBuilder.userfield(name: 'adBauvorhabenTextField', map.bauvorhaben)
     }
-    
+
     /**
      * @param map model.map.kundendaten
      */
@@ -169,11 +259,14 @@ class OooService {
         domBuilder.userfield(name: 'afFaxTextField', map.ausfuhrendeFirma.telefax)
         domBuilder.userfield(name: 'afAnsprechpartnerTextField', map.ausfuhrendeFirma.ansprechpartner)
     }
-    
+
     /**
-     * @param map model.map.kundendaten
+     *
+     * @param domBuilder
+     * @param map
+     * @return
      */
-    private def addInformationen(domBuilder, map) {
+    private def addGebaude(domBuilder, map) {
         // Gerätestandort
         domBuilder.userfield(name: 'gsKellergeschossRadioButton', gt(map.anlage.standort, "KG", "Kellergeschoss"))
         domBuilder.userfield(name: 'gsErdgeschossRadioButton', gt(map.anlage.standort, "EG", "Erdgeschoss"))
@@ -219,7 +312,7 @@ class OooService {
         domBuilder.userfield(name: 'ldKatCRadioButton', gt(map.gebaude.luftdichtheit, "kategorieC", "Kategorie C (frei, Bestand)"))
         domBuilder.userfield(name: 'ldMessRadioButton', gt(map.gebaude.luftdichtheit, "messwerte", "Messwerte"))
     }
-    
+
     /**
      * @param map model.map
      */
@@ -235,20 +328,20 @@ class OooService {
         }
         // Zusammenfassung
         domBuilder.userfield(name: 'lmeZuSummeWertLabel',
-            GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "ZU" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d))
+                GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "ZU" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d))
         domBuilder.userfield(name: 'lmeAbSummeWertLabel',
-            GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "AB" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d))
+                GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "AB" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d))
         domBuilder.userfield(name: 'lmeUebSummeWertLabel',
-            GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "ÜB" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d))
+                GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "ÜB" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d))
         domBuilder.userfield(name: 'lmeGesamtvolumenWertLabel',
-            GH.toString2Converter(map.raum.raumVs.gesamtVolumenNE))
+                GH.toString2Converter(map.raum.raumVs.gesamtVolumenNE))
         domBuilder.userfield(name: 'lmeGebaeudeluftwechselWertLabel',
-            GH.toString2Converter(map.raum.raumVs.luftwechselNE))
+                GH.toString2Converter(map.raum.raumVs.luftwechselNE))
         domBuilder.userfield(name: 'kzKennzeichenLabel', map.anlage.kennzeichnungLuftungsanlage)
         // Bemerkungen
         domBuilder.userfield(name: 'adNotizenTextArea', map.kundendaten.notizen)
     }
-    
+
     /**
      * @param map model.map
      */
@@ -285,13 +378,13 @@ class OooService {
         }
         // Ergebnis der Berechnungen
         domBuilder.userfield(name: 'lmeSumLTMZuluftmengeWertLabel',
-            noZero(GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "ZU" }?.inject(0.0d, { o, n -> o + n.raumZuluftVolumenstromInfiltration }) ?: 0.0d)))
+                noZero(GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "ZU" }?.inject(0.0d, { o, n -> o + n.raumZuluftVolumenstromInfiltration }) ?: 0.0d)))
         domBuilder.userfield(name: 'lmeSumLTMAbluftmengeWertLabel',
-            noZero(GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "AB" }?.inject(0.0d, { o, n -> o + n.raumAbluftVolumenstromInfiltration }) ?: 0.0d)))
+                noZero(GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "AB" }?.inject(0.0d, { o, n -> o + n.raumAbluftVolumenstromInfiltration }) ?: 0.0d)))
         domBuilder.userfield(name: 'lmeGesAussenluftmengeWertLabel',
-            GH.toString2Converter(map.raum.raumVs.gesamtaussenluftVsMitInfiltration))
+                GH.toString2Converter(map.raum.raumVs.gesamtaussenluftVsMitInfiltration))
     }
-    
+
     /**
      * @param map model.map
      */
@@ -328,7 +421,7 @@ class OooService {
         domBuilder.userfield(name: 'lmeGrundlueftungWertLabel', GH.toString2Round5Converter(map.aussenluftVs.gesamtLvsLtmLvsNl))
         domBuilder.userfield(name: 'lmeIntensivlueftungWertLabel', GH.toString2Round5Converter(map.aussenluftVs.gesamtLvsLtmLvsIl))
     }
-    
+
     /**
      * @param map model.map
      */
@@ -357,7 +450,7 @@ class OooService {
         domBuilder.userfield(name: 'abZuSchalldaempferVentilComboBox', map.akustik.zuluft.schalldampferVentil)
         domBuilder.userfield(name: 'abZuEinfuegungswertLuftdurchlassComboBox', map.akustik.zuluft.einfugungsdammwert)
         domBuilder.userfield(name: 'abZuRaumabsorptionTextField', map.akustik.zuluft.raumabsorption)
-        domBuilder.userfield(name: 'abZuTabelleDezibelWertLabel', /*GH.toString2Converter(*/map.akustik.zuluft.dbA/*)*/)
+        domBuilder.userfield(name: 'abZuTabelleDezibelWertLabel', /*GH.toString2Converter(*/ map.akustik.zuluft.dbA/*)*/)
         domBuilder.userfield(name: 'abZuTabelleMittlererSchalldruckpegelWertLabel', GH.toString2Converter(map.akustik.zuluft.mittlererSchalldruckpegel))
         // Abluft
         //abAbTabelleUberschrift2Label = "Abluft"
@@ -383,10 +476,10 @@ class OooService {
         domBuilder.userfield(name: 'abAbSchalldaempferVentilComboBox', map.akustik.abluft.schalldampferVentil)
         domBuilder.userfield(name: 'abAbEinfuegungswertLuftdurchlassComboBox', map.akustik.abluft.einfugungsdammwert)
         domBuilder.userfield(name: 'abAbRaumabsorptionTextField', map.akustik.abluft.raumabsorption)
-        domBuilder.userfield(name: 'abAbTabelleDezibelWertLabel', /*GH.toString2Converter(*/map.akustik.zuluft.dbA/*)*/)
+        domBuilder.userfield(name: 'abAbTabelleDezibelWertLabel', /*GH.toString2Converter(*/ map.akustik.zuluft.dbA/*)*/)
         domBuilder.userfield(name: 'abAbTabelleMittlererSchalldruckpegelWertLabel', GH.toString2Converter(map.akustik.abluft.mittlererSchalldruckpegel))
     }
-    
+
     /**
      * @param map model.map
      */
@@ -404,7 +497,7 @@ class OooService {
             domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!K${i + 3}", GH.toString2Converter(kn.widerstandTeilstrecke))
         }
     }
-    
+
     /**
      * @param map model.map
      */
@@ -421,164 +514,86 @@ class OooService {
             domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!J${i + 3}", GH.toString2Converter(ve.einstellung))
         }
     }
-    
+
     /**
-     * 
-    public Object[] collectTransferData() {
-        Object[] ret = new Object[4];
-        Object[][] controls = new Object[][]{
-            {"Bauvorhaben", adBauvorhabenTextField},
-            {"Firma1", afFirma1TextField},
-            {"Firma2", afFirma2TextField},
-            {"Strasse", afStrasseTextField},
-            {"PlzOrt", afPlzOrtTextField},
-            {"Telefon", afTelefonTextField},
-            {"Telefax", afFaxTextField},
-            {"Ansprechpartner", afAnsprechpartnerTextField},
-            {"Volumenstrom", lmeVolumenstromCombobox},
-            {"Zentralgeraet", lmeZentralgeraetCombobox},
-            {"Aussenluft", aussenluftButtonGroup},
-            {"Fortluft", fortluftButtonGroup},
-            {"Geraetestandort", geraetestandortButtonGroup}
-        };//{"Ueberstroemelement", lmeTabelleTable.getValueAt(row, column)},
-        com.sun.star.beans.NamedValue[] first = new com.sun.star.beans.NamedValue[controls.length + 1];
-        for (int i = 0; i < controls.length; i++) {
-            first[i] = new com.sun.star.beans.NamedValue((String) controls[i][0], ((DocumentAware) controls[i][1]).getString());
-        }
-        // Hier kommt die Grafik hin!
-        Description desc = new Description();
-        int lmeRowCount = lmeTabelleTable.getRowCount();
-        for (int i = 0; i < lmeRowCount; i++) {
-            String luftart = (String) lmeTabelleTable.getValueAt(i, 1); // Luftart
-            String verteilebene = (String) lmeTabelleTable.getValueAt(i, 10); // Verteilebene
-            String ventil = null;
-            String raumname = null;
-            if (luftart.equals("AB")) {
-                ventil = (String) lmeTabelleTable.getValueAt(i, 9);
-                raumname = (String) lmeTabelleTable.getValueAt(i, 0) + " / " + ventil;
-                desc.addConnector(luftart, verteilebene, raumname);
-            } else if (luftart.equals("ZU")){
-                ventil = (String) lmeTabelleTable.getValueAt(i, 8);
-                raumname = (String) lmeTabelleTable.getValueAt(i, 0) + " / " + ventil;
-                desc.addConnector(luftart, verteilebene, raumname);
-            } else if (luftart.equals("ZU/AB")) {
-                // AB
-                ventil = (String) lmeTabelleTable.getValueAt(i, 9);
-                raumname = (String) lmeTabelleTable.getValueAt(i, 0) + " / " + ventil;
-                desc.addConnector("AB", verteilebene, raumname);
-                // ZU
-                ventil = (String) lmeTabelleTable.getValueAt(i, 8);
-                raumname = (String) lmeTabelleTable.getValueAt(i, 0) + " / " + ventil;
-                desc.addConnector("ZU", verteilebene, raumname);
-            }
-        }
-        //
-        WestaDB westaDb = WestaDB.getInstance();
-        ResultSet rs;
-        //
-        // 4. Außenluft
-        //
-        rs = westaDb.queryDB("select ~stueckliste~.~Artikel~, ~stueckliste~.~Anzahl~ from ~stueckliste~, ~pakete~ where ~stueckliste~.~Paket~ = ~pakete~.~ID~ and ~pakete~.~Kategorie~= 70 and ~pakete~.~Geraet~= '" + lmeZentralgeraetCombobox.getString() + "' and ~pakete~.~Bedingung~ = '" + aussenluftButtonGroup.getValue().toString() + "' and ~stueckliste~.~Reihenfolge~ = 10");
-        try {
-            rs.next();
-            desc.putName("aussenluft", rs.getString(1));
-        } catch (SQLException ex) {
-            Logger.getLogger(ProjectInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //
-        // 5. Fortluft
-        //
-        rs = westaDb.queryDB("select ~stueckliste~.~Artikel~, ~stueckliste~.~Anzahl~ from ~stueckliste~, ~pakete~ where ~stueckliste~.~Paket~ = ~pakete~.~ID~ and ~pakete~.~Kategorie~= 71 and ~pakete~.~Geraet~= '" + lmeZentralgeraetCombobox.getString() + "' and ~pakete~.~Bedingung~ = '" + fortluftButtonGroup.getValue().toString() + "' and ~stueckliste~.~Reihenfolge~ = 10");
-        try {
-            rs.next();
-            desc.putName("fortluft", rs.getString(1));
-        } catch (SQLException ex) {
-            Logger.getLogger(ProjectInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        desc.putName("zentralgeraet", lmeZentralgeraetCombobox.getString());
-        try {
-            first[first.length - 1] = new com.sun.star.beans.NamedValue("grafik", desc.drawText().getAbsolutePath());
-        } catch (Exception e) {
-        }
-        // Beim Volumenstrom die Kommata entfernen
-        first[8].Value = ((String) first[8].Value).replaceAll(",", ".");
-        //
-        final int UEBERSTROEM = 5;
-        final int VENTILBEZEICHNUNG = 9;
-        final int VERTEILEBENE = 10;
-        ret[0] = first;
-        ret[1] = makeNamedValuesFromTable(lmeTabelleTable, VERTEILEBENE); // 10
-        ret[2] = makeNamedValuesFromTable(lmeTabelleTable, VENTILBEZEICHNUNG); // 9
-        ret[3] = makeNamedValuesFromTable(lmeTabelleUeberstroemTable, UEBERSTROEM); // 5
-        return ret;
-    }
-    
-    com.sun.star.beans.NamedValue[] makeNamedValuesFromTable(SeeTable table, int index) {
-        final int LUFTART = 1, ANZAHLABLUFT = 4, ANZAHLZULUFT = 7, LUFTMENGE = 6;
-        HashMap hm = new HashMap();
-        String itemName = "";
-        String itemName2 = "";
-        String keyString[] = null;
-        float itemCount = 0;
-        float itemCountZU = 0;
-        float luftMenge = 0;
-        for (int i = 0; i < table.getRowCount(); i++) {
-            if (((String) lmeTabelleTable.getValueAt(i, LUFTART)).contains("ZU") && index == 9) {
-                itemName2 = (String) table.getValueAt(i, index - 1);
-            } else {
-                if (index == 5) {
-                    itemName2 = "";
-                } else {
-                    itemName2 = (String) table.getValueAt(i, index);
-                }
-            }
-            //System.out.println(String.format("i = %d;index =%d", i, index));
-            // Nur für Abluft
-            itemName = (String) table.getValueAt(i, index);
-            if ((itemName != null) && (!itemName.isEmpty()) && index != 5
-                    && ((String) lmeTabelleTable.getValueAt(i, LUFTART)).contains("AB")) {
-                itemCount = JTableUtil.parseFloatFromTableCell(table, i, ANZAHLABLUFT);
-                luftMenge = JTableUtil.parseFloatFromTableCell(table, i, LUFTMENGE);
-                itemName += "AB";
-                // itemName ist die Zusammensetzung aus Luftart und Verteilebene
-                if (hm.containsKey(itemName)) {
-                    keyString = ((String) hm.get(itemName)).split(";");
-                    itemCount = itemCount + Float.parseFloat(keyString[0]);
-                    luftMenge = luftMenge + Float.parseFloat(keyString[1]);
-                }
-                hm.put(itemName, itemCount + ";" + luftMenge);
-            }
-            // Nur für Zuluft
-            if ((itemName2 != null) && (!itemName2.isEmpty())
-                    && ((String) lmeTabelleTable.getValueAt(i, LUFTART)).contains("ZU")) {
-                itemCountZU = JTableUtil.parseFloatFromTableCell(table, i, ANZAHLZULUFT);
-                luftMenge = JTableUtil.parseFloatFromTableCell(table, i, LUFTMENGE);
-                itemName2 += "ZU";
-                if (hm.containsKey(itemName2)) {
-                    keyString = ((String) hm.get(itemName2)).split(";");
-                    itemCountZU = itemCountZU + Float.parseFloat(keyString[0]);
-                    luftMenge = luftMenge + Float.parseFloat(keyString[1]);
-                }
-                hm.put(itemName2, itemCountZU + ";" + luftMenge);
-            }
-            // Nur für Überströmelemente
-            if ((itemName != null) && (!itemName.isEmpty()) && index == 5) {
-                itemCount = JTableUtil.parseFloatFromTableCell(table, i, 3);
-                if (hm.containsKey(itemName)) {
-                    keyString = ((String) hm.get(itemName)).split(";");
-                    itemCount = itemCount + Float.parseFloat(keyString[0]);
-                    luftMenge = luftMenge + Float.parseFloat(keyString[1]);
-                }
-                hm.put(itemName, itemCount + ";" + luftMenge);
-            }
-        }
-        com.sun.star.beans.NamedValue[] nv = new com.sun.star.beans.NamedValue[hm.size()];
-        Object[] keys = hm.keySet().toArray();
-        for (int i = 0; i < hm.size(); i++) {
-            nv[i] = new com.sun.star.beans.NamedValue((String) keys[i], hm.get(keys[i]));
-        }
-        return nv;
-    }
+     *
+     public Object[] collectTransferData() {Object[] ret = new Object[4];
+     Object[][] controls = new Object[][]{{"Bauvorhaben", adBauvorhabenTextField},{"Firma1", afFirma1TextField},{"Firma2", afFirma2TextField},{"Strasse", afStrasseTextField},{"PlzOrt", afPlzOrtTextField},{"Telefon", afTelefonTextField},{"Telefax", afFaxTextField},{"Ansprechpartner", afAnsprechpartnerTextField},{"Volumenstrom", lmeVolumenstromCombobox},{"Zentralgeraet", lmeZentralgeraetCombobox},{"Aussenluft", aussenluftButtonGroup},{"Fortluft", fortluftButtonGroup},{"Geraetestandort", geraetestandortButtonGroup}};//{"Ueberstroemelement", lmeTabelleTable.getValueAt(row, column)},
+     com.sun.star.beans.NamedValue[] first = new com.sun.star.beans.NamedValue[controls.length + 1];
+     for (int i = 0; i < controls.length; i++) {first[i] = new com.sun.star.beans.NamedValue((String) controls[i][0], ((DocumentAware) controls[i][1]).getString());}// Hier kommt die Grafik hin!
+     Description desc = new Description();
+     int lmeRowCount = lmeTabelleTable.getRowCount();
+     for (int i = 0; i < lmeRowCount; i++) {String luftart = (String) lmeTabelleTable.getValueAt(i, 1); // Luftart
+     String verteilebene = (String) lmeTabelleTable.getValueAt(i, 10); // Verteilebene
+     String ventil = null;
+     String raumname = null;
+     if (luftart.equals("AB")) {ventil = (String) lmeTabelleTable.getValueAt(i, 9);
+     raumname = (String) lmeTabelleTable.getValueAt(i, 0) + " / " + ventil;
+     desc.addConnector(luftart, verteilebene, raumname);} else if (luftart.equals("ZU")){ventil = (String) lmeTabelleTable.getValueAt(i, 8);
+     raumname = (String) lmeTabelleTable.getValueAt(i, 0) + " / " + ventil;
+     desc.addConnector(luftart, verteilebene, raumname);} else if (luftart.equals("ZU/AB")) {// AB
+     ventil = (String) lmeTabelleTable.getValueAt(i, 9);
+     raumname = (String) lmeTabelleTable.getValueAt(i, 0) + " / " + ventil;
+     desc.addConnector("AB", verteilebene, raumname);
+     // ZU
+     ventil = (String) lmeTabelleTable.getValueAt(i, 8);
+     raumname = (String) lmeTabelleTable.getValueAt(i, 0) + " / " + ventil;
+     desc.addConnector("ZU", verteilebene, raumname);}}//
+     WestaDB westaDb = WestaDB.getInstance();
+     ResultSet rs;
+     //
+     // 4. Außenluft
+     //
+     rs = westaDb.queryDB("select ~stueckliste~.~Artikel~, ~stueckliste~.~Anzahl~ from ~stueckliste~, ~pakete~ where ~stueckliste~.~Paket~ = ~pakete~.~ID~ and ~pakete~.~Kategorie~= 70 and ~pakete~.~Geraet~= '" + lmeZentralgeraetCombobox.getString() + "' and ~pakete~.~Bedingung~ = '" + aussenluftButtonGroup.getValue().toString() + "' and ~stueckliste~.~Reihenfolge~ = 10");
+     try {rs.next();
+     desc.putName("aussenluft", rs.getString(1));} catch (SQLException ex) {Logger.getLogger(ProjectInternalFrame.class.getName()).log(Level.SEVERE, null, ex);}//
+     // 5. Fortluft
+     //
+     rs = westaDb.queryDB("select ~stueckliste~.~Artikel~, ~stueckliste~.~Anzahl~ from ~stueckliste~, ~pakete~ where ~stueckliste~.~Paket~ = ~pakete~.~ID~ and ~pakete~.~Kategorie~= 71 and ~pakete~.~Geraet~= '" + lmeZentralgeraetCombobox.getString() + "' and ~pakete~.~Bedingung~ = '" + fortluftButtonGroup.getValue().toString() + "' and ~stueckliste~.~Reihenfolge~ = 10");
+     try {rs.next();
+     desc.putName("fortluft", rs.getString(1));} catch (SQLException ex) {Logger.getLogger(ProjectInternalFrame.class.getName()).log(Level.SEVERE, null, ex);}desc.putName("zentralgeraet", lmeZentralgeraetCombobox.getString());
+     try {first[first.length - 1] = new com.sun.star.beans.NamedValue("grafik", desc.drawText().getAbsolutePath());} catch (Exception e) {}// Beim Volumenstrom die Kommata entfernen
+     first[8].Value = ((String) first[8].Value).replaceAll(",", ".");
+     //
+     final int UEBERSTROEM = 5;
+     final int VENTILBEZEICHNUNG = 9;
+     final int VERTEILEBENE = 10;
+     ret[0] = first;
+     ret[1] = makeNamedValuesFromTable(lmeTabelleTable, VERTEILEBENE); // 10
+     ret[2] = makeNamedValuesFromTable(lmeTabelleTable, VENTILBEZEICHNUNG); // 9
+     ret[3] = makeNamedValuesFromTable(lmeTabelleUeberstroemTable, UEBERSTROEM); // 5
+     return ret;}com.sun.star.beans.NamedValue[] makeNamedValuesFromTable(SeeTable table, int index) {final int LUFTART = 1, ANZAHLABLUFT = 4, ANZAHLZULUFT = 7, LUFTMENGE = 6;
+     HashMap hm = new HashMap();
+     String itemName = "";
+     String itemName2 = "";
+     String keyString[] = null;
+     float itemCount = 0;
+     float itemCountZU = 0;
+     float luftMenge = 0;
+     for (int i = 0; i < table.getRowCount(); i++) {if (((String) lmeTabelleTable.getValueAt(i, LUFTART)).contains("ZU") && index == 9) {itemName2 = (String) table.getValueAt(i, index - 1);} else {if (index == 5) {itemName2 = "";} else {itemName2 = (String) table.getValueAt(i, index);}}//System.out.println(String.format("i = %d;index =%d", i, index));
+     // Nur für Abluft
+     itemName = (String) table.getValueAt(i, index);
+     if ((itemName != null) && (!itemName.isEmpty()) && index != 5
+     && ((String) lmeTabelleTable.getValueAt(i, LUFTART)).contains("AB")) {itemCount = JTableUtil.parseFloatFromTableCell(table, i, ANZAHLABLUFT);
+     luftMenge = JTableUtil.parseFloatFromTableCell(table, i, LUFTMENGE);
+     itemName += "AB";
+     // itemName ist die Zusammensetzung aus Luftart und Verteilebene
+     if (hm.containsKey(itemName)) {keyString = ((String) hm.get(itemName)).split(";");
+     itemCount = itemCount + Float.parseFloat(keyString[0]);
+     luftMenge = luftMenge + Float.parseFloat(keyString[1]);}hm.put(itemName, itemCount + ";" + luftMenge);}// Nur für Zuluft
+     if ((itemName2 != null) && (!itemName2.isEmpty())
+     && ((String) lmeTabelleTable.getValueAt(i, LUFTART)).contains("ZU")) {itemCountZU = JTableUtil.parseFloatFromTableCell(table, i, ANZAHLZULUFT);
+     luftMenge = JTableUtil.parseFloatFromTableCell(table, i, LUFTMENGE);
+     itemName2 += "ZU";
+     if (hm.containsKey(itemName2)) {keyString = ((String) hm.get(itemName2)).split(";");
+     itemCountZU = itemCountZU + Float.parseFloat(keyString[0]);
+     luftMenge = luftMenge + Float.parseFloat(keyString[1]);}hm.put(itemName2, itemCountZU + ";" + luftMenge);}// Nur für Überströmelemente
+     if ((itemName != null) && (!itemName.isEmpty()) && index == 5) {itemCount = JTableUtil.parseFloatFromTableCell(table, i, 3);
+     if (hm.containsKey(itemName)) {keyString = ((String) hm.get(itemName)).split(";");
+     itemCount = itemCount + Float.parseFloat(keyString[0]);
+     luftMenge = luftMenge + Float.parseFloat(keyString[1]);}hm.put(itemName, itemCount + ";" + luftMenge);}}com.sun.star.beans.NamedValue[] nv = new com.sun.star.beans.NamedValue[hm.size()];
+     Object[] keys = hm.keySet().toArray();
+     for (int i = 0; i < hm.size(); i++) {nv[i] = new com.sun.star.beans.NamedValue((String) keys[i], hm.get(keys[i]));}return nv;}
      */
-    
+
 }
