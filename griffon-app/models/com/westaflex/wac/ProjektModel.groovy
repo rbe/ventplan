@@ -155,6 +155,10 @@ class ProjektModel {
 	@Bindable map = [
 		messages: [ltm: ""] as ObservableMap,
 		dirty: false,
+        bauvorhaben: "",    // WAC-177, WAC-108
+        bauvorhabenPlz: "", // WAC-177, WAC-108
+        bauvorhabenOrt: "", // WAC-177, WAC-108
+        angebotsnummerkurz: "", // WAC-177, WAC-108
 		kundendaten: [
 			grosshandel: [:] as ObservableMap,
 			ausfuhrendeFirma: [:] as ObservableMap,
