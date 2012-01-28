@@ -223,8 +223,8 @@ class WacModelService {
 					//println "${it.luftmenge} == ${nahe}?"
 					it.luftmenge == nahe
 				}.inject([druckverlust: Double.MAX_VALUE], { o, n ->
-					def v1 = Math.abs(abgleich - o.druckverlust)
-					def v2 = Math.abs(abgleich - n.druckverlust)
+					int v1 = Math.abs(abgleich - o.druckverlust)
+					int v2 = Math.abs(abgleich - n.druckverlust)
 					v1 < v2 ? o : n
 				})
 		if (DEBUG) println "getEinstellung(${[ventilbezeichnung,luftart,luftmenge,abgleich]}): einstellung=${m.einstellung}"
@@ -260,6 +260,7 @@ class WacModelService {
 		if (DEBUG) println "getDezibelZentralgerat($artnr,$volumenstrom,$luftart): ${r?.dump()}"
 		r
 	}
+    
 	/**
 	 * Akustikberechnung, Oktavmittenfrequenz.
 	 */
@@ -304,5 +305,5 @@ class WacModelService {
 		if (DEBUG) println "getPegelerhohungExternerDruck($artnr): ${r?.dump()}"
 		r
 	}
-	
+    
 }
