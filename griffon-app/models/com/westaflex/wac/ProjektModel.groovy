@@ -114,7 +114,7 @@ class ProjektModel {
     /**
      * Meta-data: will be initialized by ProjektController.
      */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    //@Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     @Bindable meta = [
 		raum: [
 				typ: ["Wohnzimmer", "Kinderzimmer", "Schlafzimmer", "Esszimmer", "Arbeitszimmer", "Gästezimmer",
@@ -151,7 +151,7 @@ class ProjektModel {
      *        This is set true by a PropertyChangeListener installed in
      *        ProjectController.addMapPropertyChangeListener().
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    //@Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	@Bindable map = [
 		messages: [ltm: ""] as ObservableMap,
 		dirty: false,
@@ -925,7 +925,7 @@ class ProjektModel {
 	/**
 	 * Synchronize all Swing table models depending on map.raum.raume.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    //@Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	void resyncRaumTableModels() {
 		// Räume sortieren, damit die Liste immer der Position des Raums und der Reihenfolge im TableModel entspricht:
 		// Nicht zwingend notwendig, da die TableModels bereits über den Comparator nach Position sortieren:
@@ -937,54 +937,56 @@ class ProjektModel {
 			println "resyncRaumTableModels: ${r.raumBezeichnung}: i=${i} == position=${r.position}?"
 		}
 		*/
-        synchronized (tableModels) {
-            // Remember selected row
-            def view = app.views[mvcId]
-            def selected = view.raumTabelle.selectedRow
-            //println "-" * 80
-            //println "resyncRaumTableModels"
-            // Raumdaten
-            def newRaume = ca.odell.glazedlists.swing.GlazedListsSwing.swingThreadProxyList(tableModels.raume)
-            //tableModels.raume.clear()
-            //tableModels.raume.addAll(map.raum.raume)
-            newRaume.clear()
-            newRaume.addAll(map.raum.raume)
-            // Türen
-            if (DEBUG) println "tableModels.raume -> ${tableModels.raume}"
-            if (DEBUG) println "tableModels.raumeTuren -> BEFORE -> ${tableModels.raumeTuren}"
-            //tableModels.raume.each {
-            newRaume.each {
-                def m = tableModels.raumeTuren[it.position]
-                // TODO NullPointer when loading data
-                try {
-                    m.clear()
-                    m.addAll(it.turen)
-                    if (DEBUG) println "tableModels.raume.each -> raumeTuren: ${m}"
-                } catch (e) {}
-            }
-            if (DEBUG) println "tableModels.raumeTuren -> AFTER -> ${tableModels.raumeTuren}"
-            // Raumvolumentströme - Zu-/Abluftventile
-            def newRaumeVsZuAbluftventile = ca.odell.glazedlists.swing.GlazedListsSwing.swingThreadProxyList(tableModels.raumeVsZuAbluftventile)
-            //tableModels.raumeVsZuAbluftventile.clear()
-            //tableModels.raumeVsZuAbluftventile.addAll(map.raum.raume)
-            newRaumeVsZuAbluftventile.clear()
-            newRaumeVsZuAbluftventile.addAll(map.raum.raume)
-            // Raumvolumentströme - Überströmventile
-            def newRaumeVsUberstromventile = ca.odell.glazedlists.swing.GlazedListsSwing.swingThreadProxyList(tableModels.raumeVsUberstromventile)
-            //tableModels.raumeVsUberstromventile.clear()
-            //tableModels.raumeVsUberstromventile.addAll(map.raum.raume)
-            newRaumeVsUberstromventile.clear()
-            newRaumeVsUberstromventile.addAll(map.raum.raume)
+        javax.swing.SwingUtilities.invokeLater {
+            synchronized (tableModels) {
+                // Remember selected row
+                def view = app.views[mvcId]
+                def selected = view.raumTabelle.selectedRow
+                //println "-" * 80
+                //println "resyncRaumTableModels"
+                // Raumdaten
+                def newRaume = ca.odell.glazedlists.swing.GlazedListsSwing.swingThreadProxyList(tableModels.raume)
+                //tableModels.raume.clear()
+                //tableModels.raume.addAll(map.raum.raume)
+                newRaume.clear()
+                newRaume.addAll(map.raum.raume)
+                // Türen
+                if (DEBUG) println "tableModels.raume -> ${tableModels.raume}"
+                if (DEBUG) println "tableModels.raumeTuren -> BEFORE -> ${tableModels.raumeTuren}"
+                //tableModels.raume.each {
+                newRaume.each {
+                    def m = tableModels.raumeTuren[it.position]
+                    // TODO NullPointer when loading data
+                    try {
+                        m.clear()
+                        m.addAll(it.turen)
+                        if (DEBUG) println "tableModels.raume.each -> raumeTuren: ${m}"
+                    } catch (e) {}
+                }
+                if (DEBUG) println "tableModels.raumeTuren -> AFTER -> ${tableModels.raumeTuren}"
+                // Raumvolumentströme - Zu-/Abluftventile
+                def newRaumeVsZuAbluftventile = ca.odell.glazedlists.swing.GlazedListsSwing.swingThreadProxyList(tableModels.raumeVsZuAbluftventile)
+                //tableModels.raumeVsZuAbluftventile.clear()
+                //tableModels.raumeVsZuAbluftventile.addAll(map.raum.raume)
+                newRaumeVsZuAbluftventile.clear()
+                newRaumeVsZuAbluftventile.addAll(map.raum.raume)
+                // Raumvolumentströme - Überströmventile
+                def newRaumeVsUberstromventile = ca.odell.glazedlists.swing.GlazedListsSwing.swingThreadProxyList(tableModels.raumeVsUberstromventile)
+                //tableModels.raumeVsUberstromventile.clear()
+                //tableModels.raumeVsUberstromventile.addAll(map.raum.raume)
+                newRaumeVsUberstromventile.clear()
+                newRaumeVsUberstromventile.addAll(map.raum.raume)
 
-            // java.lang.NullPointerException: Cannot invoke method addAll() on null object
-            // when RaumBearbeitenDialog was not opened before
-            // Quickfix: added null-safe-operator
-            tableModels.raumeBearbeiten?.addAll(map.raum.raume)
-            //println "-" * 80
-            // Select previously selected row
-            if (DEBUG) println "resyncRaumTableModels selected -> ${selected?.dump()}"
-            if (selected && selected > -1) {
-                view.raumTabelle.changeSelection(selected, 0, false, false)
+                // java.lang.NullPointerException: Cannot invoke method addAll() on null object
+                // when RaumBearbeitenDialog was not opened before
+                // Quickfix: added null-safe-operator
+                tableModels.raumeBearbeiten?.addAll(map.raum.raume)
+                //println "-" * 80
+                // Select previously selected row
+                if (DEBUG) println "resyncRaumTableModels selected -> ${selected?.dump()}"
+                if (selected && selected > -1) {
+                    view.raumTabelle.changeSelection(selected, 0, false, false)
+                }
             }
         }
 	}
@@ -1083,36 +1085,40 @@ class ProjektModel {
 	 */
 	def resyncDvbVentileinstellungTableModels() {
 		// Druckverlust - Ventileinstellung
-		synchronized (tableModels) {
-			tableModels.dvbVentileinstellung.clear()
-			tableModels.dvbVentileinstellung.addAll(map.dvb.ventileinstellung)
-		}
+        javax.swing.SwingUtilities.invokeLater {
+            synchronized (tableModels) {
+                tableModels.dvbVentileinstellung.clear()
+                tableModels.dvbVentileinstellung.addAll(map.dvb.ventileinstellung)
+            }
+        }
 	}
 	
 	/**
 	 * Synchronize all Swing table models depending on map.akustik.*.tabelle.
 	 */
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    //@Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def resyncAkustikTableModels(view) {
 		if (DEBUG) println "resyncAkustikTableModels()"
-		synchronized (tableModels) {
-			// Akustikberechnung Zuluft
-			tableModels.akustikZuluft.clear()
-			map.akustik.zuluft.tabelle.each { tableModels.akustikZuluft.addAll(it) }
-            map.akustik.zuluft.volumenstromZentralgerat = view.akustikZuluftZuluftstutzenZentralgerat.selectedItem
-            if (DEBUG) println "resyncAkustikTableModels -> view.akustikZuluftTabelle.getHeight(): ${view.akustikZuluftTabelle.getHeight()}"
-            // Zeilenhöhe anpassen
-            def rowh = (view.akustikZuluftTabelle.getHeight() - 5) / 13 as Integer
-            view.akustikZuluftTabelle.setRowHeight(rowh)
-			// Akustikberechnung Abluft
-			tableModels.akustikAbluft.clear()
-			map.akustik.abluft.tabelle.each { tableModels.akustikAbluft.addAll(it) }
-            map.akustik.abluft.volumenstromZentralgerat = view.akustikAbluftAbluftstutzenZentralgerat.selectedItem
-            // Zeilenhöhe anpassen
-            if (DEBUG) println "resyncAkustikTableModels -> view.akustikAbluftTabelle.getHeight(): ${view.akustikAbluftTabelle.getHeight()}"
-            rowh = (view.akustikAbluftTabelle.getHeight() - 4) / 13 as Integer
-            view.akustikAbluftTabelle.setRowHeight(rowh)
-		}
+        javax.swing.SwingUtilities.invokeLater {
+            synchronized (tableModels) {
+                // Akustikberechnung Zuluft
+                tableModels.akustikZuluft.clear()
+                map.akustik.zuluft.tabelle.each { tableModels.akustikZuluft.addAll(it) }
+                map.akustik.zuluft.volumenstromZentralgerat = view.akustikZuluftZuluftstutzenZentralgerat.selectedItem
+                if (DEBUG) println "resyncAkustikTableModels -> view.akustikZuluftTabelle.getHeight(): ${view.akustikZuluftTabelle.getHeight()}"
+                // Zeilenhöhe anpassen
+                def rowh = (view.akustikZuluftTabelle.getHeight() - 5) / 13 as Integer
+                view.akustikZuluftTabelle.setRowHeight(rowh)
+                // Akustikberechnung Abluft
+                tableModels.akustikAbluft.clear()
+                map.akustik.abluft.tabelle.each { tableModels.akustikAbluft.addAll(it) }
+                map.akustik.abluft.volumenstromZentralgerat = view.akustikAbluftAbluftstutzenZentralgerat.selectedItem
+                // Zeilenhöhe anpassen
+                if (DEBUG) println "resyncAkustikTableModels -> view.akustikAbluftTabelle.getHeight(): ${view.akustikAbluftTabelle.getHeight()}"
+                rowh = (view.akustikAbluftTabelle.getHeight() - 4) / 13 as Integer
+                view.akustikAbluftTabelle.setRowHeight(rowh)
+            }
+        }
 	}
 
     /**

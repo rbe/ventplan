@@ -208,7 +208,7 @@ class Wac2Controller {
                 //model.statusBarText = "Phase 3/3: Erstelle Benutzeroberfläche für das Projekt..."
                 view.mainStatusBarText.text = ""
                 view.mainStatusBarText.text = "Phase 3/3: Erstelle Benutzeroberfläche für das Projekt..."
-                //doLater {
+                doLater {
                     // MVC ID zur Liste der Projekte hinzufügen
                     model.projekte << mvcId
                     // Projekt aktivieren
@@ -225,7 +225,7 @@ class Wac2Controller {
                     } catch (e) {
                         e.printStackTrace()
                     }
-                //}
+                }
                 model.statusBarText = ""
                 view.mainStatusBarText.text = ""
             }
@@ -291,7 +291,7 @@ class Wac2Controller {
      */
     def projektSchliessen = { evt = null ->
         // Closure for closing the active project
-        @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+        //@Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
         def clacpr = { mvc ->
             // Tab entfernen
             view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)

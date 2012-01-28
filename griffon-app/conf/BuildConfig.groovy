@@ -144,6 +144,7 @@ compiler {
     threading {
         com {
             westaflex {
+                /*
                 wac {
                     Wac2Controller = true
                     ProjektModel = true
@@ -159,6 +160,8 @@ compiler {
                     WacModelService = true
                     AuslegungView = true
                 }
+                */
+                wac = false
             }
         }
     }

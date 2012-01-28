@@ -32,10 +32,10 @@ class ProjektController {
 	
 	def builder
 	
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    //@Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def model
     
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    //@Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def view
 	
 	def wacCalculationService
@@ -126,12 +126,12 @@ class ProjektController {
 			// Akustikberechnung - 1. Hauptschalldämpfer
 			model.meta.akustik.schalldampfer = wacModelService.getSchalldampfer()
             //
-            ////doLater {
+            doLater {
                 // Raumvolumenströme, Zentralgerät
                 model.map.anlage.zentralgerat = model.meta.zentralgerat[0]
                 // Raumvolumenströme, Volumenstrom des Zentralgeräts; default ist erster Wert der Liste
                 model.map.anlage.volumenstromZentralgerat = model.meta.volumenstromZentralgerat[0]
-            ////}
+            }
 //        }
 	}
 	
@@ -438,9 +438,9 @@ class ProjektController {
     def gebaudedatenGeandert = { evt = null ->
         if (model.map.gebaude.lage.windstark) {
             // WAC-169: Änderung der Druckdifferenz durch Gebäudelage windstark
-            //doLater { 
+            doLater {
                 model.map.gebaude.luftdichtheit.druckdifferenz = 4.0d 
-            //}
+            }
         }
         berechneAussenluftVs()
     }
@@ -456,7 +456,7 @@ class ProjektController {
 			//gelufteteFlache: view.gebaudeGeometrieGelufteteFlache.text.toDouble2()
 			gelufteteVolumen: view.gebaudeGeometrieGeluftetesVolumen.text.toDouble2()
 		]
-        //doLater {
+        doLater {
             // Write values into model
             model.map.gebaude.geometrie.wohnflache = g.wohnflache
             model.map.gebaude.geometrie.raumhohe = g.raumhohe
@@ -467,60 +467,60 @@ class ProjektController {
             wacCalculationService.aussenluftVs(model.map)
             // Zentralgerät bestimmen
             onZentralgeratAktualisieren()
-        //}
+        }
 	}
 	
 	/**
 	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
 	 */
     def luftdichtheitKategorieA = {
-		//doLater {
+		doLater {
 			model.map.gebaude.luftdichtheit.with {
 				druckdifferenz = 2.0d
 				luftwechsel = 1.0d
 				druckexponent = 0.666f
 			}
             berechneAussenluftVs()
-		//}
+		}
 	}
 	
 	/**
 	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
 	 */
     def luftdichtheitKategorieB = {
-		//doLater {
+		doLater {
 			model.map.gebaude.luftdichtheit.with {
 				druckdifferenz = 2.0d
 				luftwechsel = 1.5f
 				druckexponent = 0.666f
 			}
             berechneAussenluftVs()
-		//}
+		}
 	}
 	
 	/**
 	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
 	 */
     def luftdichtheitKategorieC = {
-		//doLater {
+		doLater {
 			model.map.gebaude.luftdichtheit.with {
 				druckdifferenz = 2.0d
 				luftwechsel = 2.0d
 				druckexponent = 0.666f
 			}
             berechneAussenluftVs()
-		//}
+		}
 	}
 	
 	/**
 	 * Gebäudedaten - Luftdichtheit der Gebäudehülle
 	 */
     def speichereLuftdichtheit = {
-		//doLater {
+		doLater {
 			model.map.gebaude.luftdichtheit.druckdifferenz = view.gebaudeLuftdichtheitDruckdifferenz.text.toDouble2()
 			model.map.gebaude.luftdichtheit.luftwechsel = view.gebaudeLuftdichtheitLuftwechsel.text.toDouble2()
 			model.map.gebaude.luftdichtheit.druckexponent = view.gebaudeLuftdichtheitDruckexponent.text.toDouble2()
-		//}
+		}
         berechneAussenluftVs()
 	}
 	
@@ -528,16 +528,16 @@ class ProjektController {
 	 * Gebäudedaten - Faktor für besondere Anforderungen
 	 */
     def speichereFaktorBesondereAnforderungen = {
-		//doLater {
+		doLater {
 			model.map.gebaude.faktorBesondereAnforderungen = view.faktorBesondereAnforderungen.text.toDouble2()
-		//}
+		}
 	}
 	
 	/**
 	 * Gebäudedaten - Geplante Belegung
 	 */
     def berechneMindestaussenluftrate = {
-		//doLater {
+		doLater {
 			// Save actual caret position
 			def personenanzahlCaretPos = view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition
 			def aussenluftVsProPersonCaretPos = view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition
@@ -562,14 +562,14 @@ class ProjektController {
 			}
             // Berechnen
             berechneAussenluftVs()
-		//}
+		}
 	}
 	
 	/**
 	 * Anlagendaten - Energie-Kennzeichen
 	 */
     def berechneEnergieKennzeichen = {
-		//doLater {
+		doLater {
 			model.map.anlage.energie.with {
 				if (zuAbluftWarme && bemessung && ruckgewinnung && regelung) {
 					nachricht = "Energiekennzeichen gesetzt!"
@@ -578,14 +578,14 @@ class ProjektController {
 				}
 			}
 			berechneKennzeichenLuftungsanlage()
-		//}
+		}
 	}
 	
 	/**
 	 * Anlagendaten - Hygiene-Kennzeichen
 	 */
     def berechneHygieneKennzeichen = {
-		//doLater {
+		doLater {
 			model.map.anlage.hygiene.with {
 				if (ausfuhrung && filterung && keineVerschmutzung && dichtheitsklasseB) {
 					nachricht = "Hygienekennzeichen gesetzt!"
@@ -594,14 +594,14 @@ class ProjektController {
 				}
 			}
 			berechneKennzeichenLuftungsanlage()
-		//}
+		}
 	}
 	
 	/**
 	 * Anlagendaten - Kennzeichen
 	 */
     def berechneKennzeichenLuftungsanlage = {
-		//doLater {
+		doLater {
 			def gebaudeTyp = model.map.gebaude.typ.efh ? "EFH" : "WE"
 			def energieKz = model.map.anlage.energie.nachricht != " " ? "E" : "0"
 			def hygieneKz = model.map.anlage.hygiene.nachricht != " " ? "H" : "0"
@@ -610,7 +610,7 @@ class ProjektController {
 			def feuerstatte = model.map.anlage.feuerstatte ? "F" : "0"
 			model.map.anlage.kennzeichnungLuftungsanlage =
 				"ZuAbLS-Z-${gebaudeTyp}-WÜT-${energieKz}-${hygieneKz}-${ruckschlag}-${schallschutz}-${feuerstatte}"
-		//}
+		}
 	}
 	
 	/**
@@ -627,7 +627,7 @@ class ProjektController {
 	 * Raumdaten - Eingabe - Raumtyp in Combobox ausgewählt.
 	 */
     def raumTypGeandert = {
-		//doLater {
+		doLater {
 			switch (view.raumTyp.selectedIndex) {
 				// Zulufträume
 				case 0..5:
@@ -671,7 +671,7 @@ class ProjektController {
 					view.raumZuluftfaktor.text = ""
 					view.raumAbluftVolumenstrom.text = ""
 			}
-		//}
+		}
 	}
 	
 	/**
@@ -723,16 +723,17 @@ class ProjektController {
 			// Standard Türspalthöhe ist 10 mm
 			raumTurspaltHohe = 10.0d
 		}
-		//doLater {
+		doLater {
 			// Raum im Model hinzufügen
             if (DEBUG) println "onRaumHinzufugen: raum -> ${raum}"
 			model.addRaum(raum, view)
+            raumGeandert(raum.position)
             // WAC-210: _raumGeandert(raum.position), wird nun über Benutzer/Button gemacht
             // WAC-170: abw. Raumbezeichnung leeren
             view.raumBezeichnung.text = ""
             // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
-            //berechneAlles()
-		//}
+            berechneAlles()
+		}
 	}
 	
 	/**
@@ -743,96 +744,98 @@ class ProjektController {
     }
 
     def _raumGeandert(Integer raumPosition) {
-        // WAC-174 (raumIndex kann == 0 sein!)
-        def isSelectedRow = false
-        if (raumPosition < 0) {
-            raumPosition = view.raumTabelle.selectedRow
-            isSelectedRow = true
-        }
-        if (DEBUG) println "raumGeandert: raum[${raumPosition}]"
-        if (raumPosition > -1) {
-            if (DEBUG) println "raumGeandert: raum[${raumPosition}] ${model.map.raum.raume[raumPosition]}"
-            // Raum holen
-            ////def raum = model.map.raum.raume[raumIndex]
-            // Raumdaten prüfen
-            def raum
-            def raumIndex
-            if (!isSelectedRow) {
-                model.map.raum.raume.eachWithIndex{ item, pos ->
-                    if (item.position == raumPosition) {
-                        raum = item
-                        raumIndex = pos
+        doLater {
+            // WAC-174 (raumIndex kann == 0 sein!)
+            def isSelectedRow = false
+            if (raumPosition < 0) {
+                raumPosition = view.raumTabelle.selectedRow
+                isSelectedRow = true
+            }
+            if (DEBUG) println "raumGeandert: raum[${raumPosition}]"
+            if (raumPosition > -1) {
+                if (DEBUG) println "raumGeandert: raum[${raumPosition}] ${model.map.raum.raume[raumPosition]}"
+                // Raum holen
+                ////def raum = model.map.raum.raume[raumIndex]
+                // Raumdaten prüfen
+                def raum
+                def raumIndex
+                if (!isSelectedRow) {
+                    model.map.raum.raume.eachWithIndex{ item, pos ->
+                        if (item.position == raumPosition) {
+                            raum = item
+                            raumIndex = pos
+                        }
                     }
+                } else {
+                    raumIndex = raumPosition
                 }
-            } else {
-                raumIndex = raumPosition
+                // Diesen Raum in allen Tabellen anwählen
+                onRaumInTabelleWahlen(raumIndex)
+
+                if (DEBUG) println "raumGeandert: raum[${raumPosition}] currentRaum=${raum.dump()}"
+
+                model.prufeRaumdaten(model.map.raum.raume[raumIndex])
+                // WAC-65: Errechnete Werte zurücksetzen
+                model.map.raum.raume[raumIndex].with {
+                    if (raumBreite && raumLange) raumFlache = raumBreite * raumLange
+                    raumVolumen = raumFlache * raumHohe
+                    raumLuftwechsel = 0.0d
+                    // Abluft
+                    raumAbluftVolumenstromInfiltration = 0.0d // Abluftvs abzgl. Infiltration
+                    raumAnzahlAbluftventile = 0
+                    raumAbluftmengeJeVentil = 0.0d
+                    // Zuluft
+                    raumZuluftVolumenstromInfiltration = 0.0d // Zuluftvs abzgl. Infiltration
+                    raumAnzahlZuluftventile = 0
+                    raumZuluftmengeJeVentil = 0.0d
+                    raumAnzahlUberstromVentile = 0
+                }
+                // Überströmvolumenstrom
+                // WAC-151
+                if (!model.map.anlage.zentralgeratManuell) {
+                    model.map.raum.raume[raumIndex].raumUberstromVolumenstrom = 0.0d
+                }
+
+                // Raumvolumenströme, (Werte abzgl. Infiltration werden zur Berechnung der Ventile benötigt) berechnen
+                wacCalculationService.autoLuftmenge(model.map)
+                // Zu-/Abluftventile
+                model.map.raum.raume[raumIndex] =
+                    wacCalculationService.berechneZuAbluftventile(model.map.raum.raume[raumIndex])
+                // Türspalt und Türen
+                model.map.raum.raume[raumIndex] =
+                    wacCalculationService.berechneTurspalt(model.map.raum.raume[raumIndex])
+                berechneTuren(null, raumIndex, isSelectedRow)
+                // Überströmelement berechnen
+                model.map.raum.raume[raumIndex] =
+                    wacCalculationService.berechneUberstromelemente(model.map.raum.raume[raumIndex])
             }
-            // Diesen Raum in allen Tabellen anwählen
-            onRaumInTabelleWahlen(raumIndex)
-            
-            if (DEBUG) println "raumGeandert: raum[${raumPosition}] currentRaum=${raum.dump()}"
-            
-            model.prufeRaumdaten(model.map.raum.raume[raumIndex])
-            // WAC-65: Errechnete Werte zurücksetzen
-            model.map.raum.raume[raumIndex].with {
-                if (raumBreite && raumLange) raumFlache = raumBreite * raumLange
-                raumVolumen = raumFlache * raumHohe
-                raumLuftwechsel = 0.0d
-                // Abluft
-                raumAbluftVolumenstromInfiltration = 0.0d // Abluftvs abzgl. Infiltration
-                raumAnzahlAbluftventile = 0
-                raumAbluftmengeJeVentil = 0.0d
-                // Zuluft
-                raumZuluftVolumenstromInfiltration = 0.0d // Zuluftvs abzgl. Infiltration
-                raumAnzahlZuluftventile = 0
-                raumZuluftmengeJeVentil = 0.0d
-                raumAnzahlUberstromVentile = 0
+            // Nummern der Räume berechnen
+            wacCalculationService.berechneRaumnummer(model.map)
+            // Gebäude-Geometrie berechnen
+            wacCalculationService.geometrieAusRaumdaten(model.map)
+            // Aussenluftvolumenströme berechnen
+            wacCalculationService.aussenluftVs(model.map)
+            // Zentralgerät bestimmen
+            onZentralgeratAktualisieren()
+            // WAC-171: Finde Räume ohne Türen oder ÜB-Elemente
+            def raumeOhneTuren = model.map.raum.raume.findAll { raum ->
+                raum.raumUberstromVolumenstrom > 0 && !raum.turen.any { it.turBreite > 0 }
             }
-            // Überströmvolumenstrom
-            // WAC-151
-            if (!model.map.anlage.zentralgeratManuell) {
-                model.map.raum.raume[raumIndex].raumUberstromVolumenstrom = 0.0d
+            def raumeOhneUbElemente = []
+            raumeOhneUbElemente = model.map.raum.raume.findAll { raum ->
+                def turSpalthoheUberschritten = raum.turen.findAll {
+                    it.turSpalthohe > raum.raumMaxTurspaltHohe.toDouble2()
+                }?.size() ?: 0
+                if (DEBUG) println "WAC-171: Raum=${raum.raumBezeichnung}, turspalthoheUberschritten=${turSpalthoheUberschritten}"
+                if (DEBUG) println "WAC-171: ${raum.raumUberstromVolumenstrom > 0} && ${turSpalthoheUberschritten > 0} && ${!raum.raumUberstromElement}"
+                // WAC-187
+                raum.raumUberstromVolumenstrom > 0 && turSpalthoheUberschritten > 0 && !raum.raumUberstromElement
             }
-            
-            // Raumvolumenströme, (Werte abzgl. Infiltration werden zur Berechnung der Ventile benötigt) berechnen
-            wacCalculationService.autoLuftmenge(model.map)
-            // Zu-/Abluftventile
-            model.map.raum.raume[raumIndex] = 
-                wacCalculationService.berechneZuAbluftventile(model.map.raum.raume[raumIndex])
-            // Türspalt und Türen
-            model.map.raum.raume[raumIndex] = 
-                wacCalculationService.berechneTurspalt(model.map.raum.raume[raumIndex])
-            berechneTuren(null, raumIndex, isSelectedRow)
-            // Überströmelement berechnen
-            model.map.raum.raume[raumIndex] = 
-                wacCalculationService.berechneUberstromelemente(model.map.raum.raume[raumIndex])
+            model.map.raum.raumVs.turenHinweis = raumeOhneTuren.size() > 0 ?
+                "Hinweis: bitte Türen prüfen: ${raumeOhneTuren.collect { it.raumBezeichnung }.join(", ")}" : ""
+            model.map.raum.raumVs.ubElementeHinweis = raumeOhneUbElemente.size() > 0 ?
+                "Hinweis: bitte ÜB-Elemente prüfen: ${raumeOhneUbElemente.collect { it.raumBezeichnung }.join(", ")}" : ""
         }
-        // Nummern der Räume berechnen
-        wacCalculationService.berechneRaumnummer(model.map)
-        // Gebäude-Geometrie berechnen
-        wacCalculationService.geometrieAusRaumdaten(model.map)
-        // Aussenluftvolumenströme berechnen
-        wacCalculationService.aussenluftVs(model.map)
-        // Zentralgerät bestimmen
-        onZentralgeratAktualisieren()
-        // WAC-171: Finde Räume ohne Türen oder ÜB-Elemente
-        def raumeOhneTuren = model.map.raum.raume.findAll { raum ->
-            raum.raumUberstromVolumenstrom > 0 && !raum.turen.any { it.turBreite > 0 }
-        }
-        def raumeOhneUbElemente = []
-        raumeOhneUbElemente = model.map.raum.raume.findAll { raum ->
-            def turSpalthoheUberschritten = raum.turen.findAll {
-                it.turSpalthohe > raum.raumMaxTurspaltHohe.toDouble2()
-            }?.size() ?: 0
-            if (DEBUG) println "WAC-171: Raum=${raum.raumBezeichnung}, turspalthoheUberschritten=${turSpalthoheUberschritten}"
-            if (DEBUG) println "WAC-171: ${raum.raumUberstromVolumenstrom > 0} && ${turSpalthoheUberschritten > 0} && ${!raum.raumUberstromElement}"
-            // WAC-187
-            raum.raumUberstromVolumenstrom > 0 && turSpalthoheUberschritten > 0 && !raum.raumUberstromElement
-        }
-        model.map.raum.raumVs.turenHinweis = raumeOhneTuren.size() > 0 ?
-            "Hinweis: bitte Türen prüfen: ${raumeOhneTuren.collect { it.raumBezeichnung }.join(", ")}" : ""
-        model.map.raum.raumVs.ubElementeHinweis = raumeOhneUbElemente.size() > 0 ?
-            "Hinweis: bitte ÜB-Elemente prüfen: ${raumeOhneUbElemente.collect { it.raumBezeichnung }.join(", ")}" : ""
 	}
 	
     def raumGeandertAction = { java.awt.event.ActionEvent e ->
@@ -852,11 +855,9 @@ class ProjektController {
         // Es hat sich was geändert...
         def raum = model.map.raum.raume[view.raumTabelle.selectedRow]
         // WAC-210: raumGeandert(raum.position)
-        //raumGeandert(view.raumTabelle.selectedRow, true)
-        /*
+        raumGeandert(view.raumTabelle.selectedRow)
         // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
         berechneAlles()
-        */
 	}
 	
 	/**
@@ -867,7 +868,7 @@ class ProjektController {
     }
 
     def _raumKopieren() {
-		//doLater {
+		doLater {
 			// Get selected row
 			def row = view.raumTabelle.selectedRow
 			// Raum anhand seiner Position finden
@@ -910,18 +911,16 @@ class ProjektController {
 			model.addRaum(newMap, view, true)
 			// Raum hinzugefügt
             raumGeandert(newMap.position)
-            /*
             // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
             berechneAlles()
-            */
-		//}
+		}
 	}
 	
 	/**
 	 * Raumdaten - einen Raum in der Tabelle nach oben verschieben.
 	 */
 	def raumNachObenVerschieben = {
-		//doLater {
+		doLater {
 			// Get selected row
 			def row = view.raumTabelle.selectedRow
 			if (row > 0) {
@@ -938,7 +937,7 @@ class ProjektController {
 				// Raum geändert
                 raumGeandert(currentRaum.position)
 			}
-		//}
+		}
 	}
 	
 	/**
@@ -967,21 +966,23 @@ class ProjektController {
 	 * Raumdaten - einen Raum bearbeiten.
 	 */
     def raumBearbeiten = {
-		// Get selected row
-        if (DEBUG) println "raumBearbeiten: view.raumTabelle -> ${view.raumTabelle.dump()}"
-        if (DEBUG) println "raumBearbeiten: model.meta.gewahlterRaum -> ${model.meta.gewahlterRaum.dump()}"
-        def row = view.raumTabelle.selectedRow
-        if (row > -1) {
-            // Show dialog
-            raumBearbeitenDialog = GH.createDialog(builder, RaumBearbeitenView, [title: "Raum bearbeiten", pack: true])
-            // Modify TableModel for Turen
-            def columnModel = view.raumBearbeitenTurenTabelle.columnModel
-            GH.makeComboboxCellEditor(columnModel.getColumn(0), model.meta.raumTurTyp)
-            GH.makeComboboxCellEditor(columnModel.getColumn(1), model.meta.raumTurbreiten)
-            berechneTuren(null, model.meta.gewahlterRaum.position, false)
-            raumBearbeitenDialog.show()
-        } else {
-            println "${this}.raumBearbeiten: no row selected"
+        doLater {
+            // Get selected row
+            if (DEBUG) println "raumBearbeiten: view.raumTabelle -> ${view.raumTabelle.dump()}"
+            if (DEBUG) println "raumBearbeiten: model.meta.gewahlterRaum -> ${model.meta.gewahlterRaum.dump()}"
+            def row = view.raumTabelle.selectedRow
+            if (row > -1) {
+                // Show dialog
+                raumBearbeitenDialog = GH.createDialog(builder, RaumBearbeitenView, [title: "Raum bearbeiten", pack: true])
+                // Modify TableModel for Turen
+                def columnModel = view.raumBearbeitenTurenTabelle.columnModel
+                GH.makeComboboxCellEditor(columnModel.getColumn(0), model.meta.raumTurTyp)
+                GH.makeComboboxCellEditor(columnModel.getColumn(1), model.meta.raumTurbreiten)
+                berechneTuren(null, model.meta.gewahlterRaum.position, false)
+                raumBearbeitenDialog.show()
+            } else {
+                println "${this}.raumBearbeiten: no row selected"
+            }
         }
 	}
 	
@@ -1208,7 +1209,7 @@ class ProjektController {
 	 * Einen bestimmten Raum in allen Raum-Tabellen markieren.
 	 */
 	def onRaumInTabelleWahlen = { row, table = null ->
-		//doLater {
+		doLater {
 			//if (DEBUG) println "onRaumInTabelleWahlen: row=${row}"
 			row = GH.checkRow(row, view.raumTabelle)
 			if (row > -1) {
@@ -1233,7 +1234,7 @@ class ProjektController {
 				// Aktuell gewählten Raum in Metadaten leeren
 				model.meta.gewahlterRaum.clear()
 			}
-		//}
+		}
 	}
 	
 	/**
@@ -1241,7 +1242,7 @@ class ProjektController {
 	 */
     def zentralgeratManuellGewahlt = {
 		////publishEvent "ZentralgeratGewahlt", [view.raumVsZentralgerat.selectedItem]
-//		doLater {
+		doLater {
 			// Merken, dass das Zentralgerät manuell ausgewählt wurde
 			// -> keine automatische Auswahl des Zentralgeräts mehr durchführen
             if (DEBUG) println "zentralgeratManuellGewahlt: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
@@ -1256,7 +1257,7 @@ class ProjektController {
 			wacCalculationService.aussenluftVs(model.map)
 			// Neue Auswahl setzen
 			zentralgeratAktualisieren()
-//		}
+		}
 	}
 
 	/**
@@ -1264,7 +1265,7 @@ class ProjektController {
 	 */
     void zentralgeratAktualisieren() {
         if (DEBUG) println "zentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
-		//doLater {
+		doLater {
 			/*
 			// Füge Volumenströme des aktuellen Zentralgeräts in Combobox hinzu
 			// Raumvolumenströme
@@ -1284,55 +1285,56 @@ class ProjektController {
 				view.akustikAbluftAbluftstutzenZentralgerat.selectedItem =
 				model.meta.volumenstromZentralgerat
 			*/
-        // Aktualisiere Zentralgerät
-        GH.withDisabledActionListeners view.raumVsZentralgerat, {
-            // Raumvolumenströme
-            model.map.anlage.zentralgerat =
-                view.raumVsZentralgerat.selectedItem =
-                model.map.anlage.zentralgerat
-            // Akustik Zu-/Abluft
-            view.akustikZuluftZuluftstutzenZentralgerat.selectedItem =
-                view.akustikAbluftAbluftstutzenZentralgerat.selectedItem =
-                model.map.anlage.zentralgerat
-        }
-        // Aktualisiere Volumenstrom
-        GH.withDisabledActionListeners view.raumVsVolumenstrom, {
-            // Hole Volumenströme des Zentralgeräts
-            def volumenstromZentralgerat =
-                wacModelService.getVolumenstromFurZentralgerat(view.raumVsZentralgerat.selectedItem)
-            // 5er-Schritte
-            model.meta.volumenstromZentralgerat = []
-            def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
-            def maxVsZentralgerat = volumenstromZentralgerat.toList().last() as Integer
-            (minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
-            // Füge Volumenströme in Comboboxen hinzu
-            
-            view.raumVsVolumenstrom.removeAllItems()
-            // Akustik
-            view.akustikZuluftPegel.removeAllItems()
-            view.akustikAbluftPegel.removeAllItems()
-            
-            model.meta.volumenstromZentralgerat.each {
+            // Aktualisiere Zentralgerät
+            GH.withDisabledActionListeners view.raumVsZentralgerat, {
                 // Raumvolumenströme
-                view.raumVsVolumenstrom.addItem(it)
-                // Akustikberechnung
-                view.akustikZuluftPegel.addItem(it)
-                view.akustikAbluftPegel.addItem(it)
+                model.map.anlage.zentralgerat =
+                    view.raumVsZentralgerat.selectedItem =
+                    model.map.anlage.zentralgerat
+                // Akustik Zu-/Abluft
+                view.akustikZuluftZuluftstutzenZentralgerat.selectedItem =
+                    view.akustikAbluftAbluftstutzenZentralgerat.selectedItem =
+                    model.map.anlage.zentralgerat
             }
-            
-            // Selektiere errechneten Volumenstrom
-            def roundedVs = wacCalculationService.round5(model.map.anlage.volumenstromZentralgerat)
-            if (DEBUG) println "zentralgeratAktualisieren: model.map.anlage.volumenstromZentralgerat=${model.map.anlage.volumenstromZentralgerat} roundedVs=${roundedVs}"
-            def foundVs = model.meta.volumenstromZentralgerat.find { it.toInteger() == roundedVs }
-            // Wenn gerundeter Volumenstrom nicht gefunden wurde, setze Minimum des Zentralgeräts
-            if (!foundVs) {
-                foundVs = model.meta.volumenstromZentralgerat[0]
+            // Aktualisiere Volumenstrom
+            GH.withDisabledActionListeners view.raumVsVolumenstrom, {
+                // Hole Volumenströme des Zentralgeräts
+                def volumenstromZentralgerat =
+                    wacModelService.getVolumenstromFurZentralgerat(view.raumVsZentralgerat.selectedItem)
+                // 5er-Schritte
+                model.meta.volumenstromZentralgerat = []
+                def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
+                def maxVsZentralgerat = volumenstromZentralgerat.toList().last() as Integer
+                (minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
+                // Füge Volumenströme in Comboboxen hinzu
+
+                view.raumVsVolumenstrom.removeAllItems()
+                // Akustik
+                view.akustikZuluftPegel.removeAllItems()
+                view.akustikAbluftPegel.removeAllItems()
+
+                model.meta.volumenstromZentralgerat.each {
+                    // Raumvolumenströme
+                    view.raumVsVolumenstrom.addItem(it)
+                    // Akustikberechnung
+                    view.akustikZuluftPegel.addItem(it)
+                    view.akustikAbluftPegel.addItem(it)
+                }
+
+                // Selektiere errechneten Volumenstrom
+                def roundedVs = wacCalculationService.round5(model.map.anlage.volumenstromZentralgerat)
+                if (DEBUG) println "zentralgeratAktualisieren: model.map.anlage.volumenstromZentralgerat=${model.map.anlage.volumenstromZentralgerat} roundedVs=${roundedVs}"
+                def foundVs = model.meta.volumenstromZentralgerat.find { it.toInteger() == roundedVs }
+                // Wenn gerundeter Volumenstrom nicht gefunden wurde, setze Minimum des Zentralgeräts
+                if (!foundVs) {
+                    foundVs = model.meta.volumenstromZentralgerat[0]
+                }
+                //println "view.akustikAbluftPegel.selectedItem -> ${view.akustikAbluftPegel.selectedItem}"
+                model.map.anlage.volumenstromZentralgerat = foundVs
+                view.raumVsVolumenstrom.selectedItem = foundVs
+                view.akustikZuluftPegel.selectedItem = foundVs
+                view.akustikAbluftPegel.selectedItem = foundVs
             }
-            //println "view.akustikAbluftPegel.selectedItem -> ${view.akustikAbluftPegel.selectedItem}"
-            model.map.anlage.volumenstromZentralgerat = foundVs
-            view.raumVsVolumenstrom.selectedItem = foundVs
-            view.akustikZuluftPegel.selectedItem = foundVs
-            view.akustikAbluftPegel.selectedItem = foundVs
         }
 	}
 	
@@ -1342,7 +1344,7 @@ class ProjektController {
 	 * verändert hat!
 	 */
 	def onZentralgeratAktualisieren = {
-//		doLater {
+		doLater {
 			if (DEBUG) println "onZentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
 			if (!model.map.anlage.zentralgeratManuell) {
 				// Berechne Zentralgerät und Volumenstrom
@@ -1352,7 +1354,7 @@ class ProjektController {
 				if (DEBUG) println "onZentralgeratAktualisieren: zentralgerat=${model.map.anlage.zentralgerat}, nl=${nl}/${model.map.anlage.volumenstromZentralgerat}"
 				zentralgeratAktualisieren()
 			}
-//		}
+		}
 	}
 	
 	/**
@@ -1375,7 +1377,7 @@ class ProjektController {
     def dvbKanalnetzHinzufugen = {
 		def kanalnetz = GH.getValuesFromView(view, "dvbKanalnetz")
 		////publishEvent "DvbKanalnetzHinzufugen", [kanalnetz, view]
-        //doLater {
+        doLater {
             // Map values from GUI
             def k = [
                     luftart: kanalnetz.dvbKanalnetzLuftart,
@@ -1394,7 +1396,7 @@ class ProjektController {
             GH.addMapPropertyChangeListener("map.dvb.kanalnetz", k)
             //
             dvbKanalnetzGeandert(k.position)
-        //}
+        }
         // Reset values in view
         view.dvbKanalnetzNrTeilstrecke.text = ""
         view.dvbKanalnetzLuftmenge.text = ""
@@ -1405,9 +1407,9 @@ class ProjektController {
 	 * Druckverlustberechnung - Kanalnetz wurde hinzugefügt: Eintrag in der Tabelle anwählen.
 	 */
     def onDvbKanalnetzInTabelleWahlen = { kanalnetzIndex ->
-		//doLater {
+		doLater {
 			view.dvbKanalnetzTabelle.changeSelection(kanalnetzIndex, 0, false, false)
-		//}
+		}
 	}
 	
 	/**
