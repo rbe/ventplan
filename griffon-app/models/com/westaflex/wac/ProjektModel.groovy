@@ -10,9 +10,9 @@ package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
 
+import griffon.transform.Threading
 import groovy.beans.Bindable
 import javax.swing.DefaultComboBoxModel
-import griffon.transform.Threading
 
 /**
  * 

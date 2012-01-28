@@ -1,6 +1,6 @@
 /*
  * WAC
- * 
+ *
  * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
  * Copyright (C) 2010-2012 art of coding UG (haftungsbeschränkt).
  *
@@ -11,6 +11,7 @@ package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
 import com.bensmann.griffon.PdfCreator
+/*
 import javax.swing.DefaultCellEditor
 import javax.swing.JComboBox
 import javax.swing.JTable
@@ -19,6 +20,7 @@ import javax.swing.event.TableModelListener
 import java.awt.Component
 import javax.swing.DefaultListModel
 import javax.swing.event.TableModelEvent
+*/
 import griffon.transform.Threading
 import groovyx.net.http.ContentType
 
@@ -554,9 +556,9 @@ class ProjektController {
 				}
 			}
 			try {
-			// Set caret to old position; is moved through model update?
-			view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition = personenanzahlCaretPos
-			view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition = aussenluftVsProPersonCaretPos
+    			// Set caret to old position; is moved through model update?
+    			view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition = personenanzahlCaretPos
+    			view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition = aussenluftVsProPersonCaretPos
 			} catch (e) {
 			    e.printStackTrace()
 			}
@@ -837,7 +839,7 @@ class ProjektController {
                 "Hinweis: bitte ÜB-Elemente prüfen: ${raumeOhneUbElemente.collect { it.raumBezeichnung }.join(", ")}" : ""
         }
 	}
-	
+
     def raumGeandertAction = { java.awt.event.ActionEvent e ->
         _raumGeandert(0)
     }

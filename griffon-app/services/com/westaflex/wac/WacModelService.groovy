@@ -9,8 +9,8 @@
  */
 package com.westaflex.wac
 
-import groovy.sql.*
-import org.javanicus.gsql.*
+//import groovy.sql.*
+//import org.javanicus.gsql.*
 
 /**
  * Communicate with WestaWAC database.
