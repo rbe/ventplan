@@ -554,9 +554,9 @@ class ProjektController {
 				}
 			}
 			try {
-			// Set caret to old position; is moved through model update?
-			view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition = personenanzahlCaretPos
-			view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition = aussenluftVsProPersonCaretPos
+                // Set caret to old position; is moved through model update?
+                view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition = personenanzahlCaretPos
+                view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition = aussenluftVsProPersonCaretPos
 			} catch (e) {
 			    e.printStackTrace()
 			}
