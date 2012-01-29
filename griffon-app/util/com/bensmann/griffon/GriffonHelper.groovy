@@ -273,7 +273,7 @@ class GriffonHelper {
 	 * Create a dialog. Please call .show() yourself as this call blocks until the dialog is closed.
 	 */
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-	def static createDialog = { builder, dialogClass, dialogProp = [:] -> 
+	def static createDialog = { builder, dialogClass, dialogProp = [:] ->
         //javax.swing.SwingUtilities.invokeLater {
             def dialog// = dialogCache[dialogClass]
             //if (!dialog) {
@@ -282,9 +282,7 @@ class GriffonHelper {
                         title: "Ein Dialog",
                         visible: false,
                         modal: true,
-                        pack: false,
-                        locationByPlatform: true,
-                        locationRelativeTo: null
+                        pack: false
                     ] + dialogProp
                 // Create dialog instance
                 //println "createDialog -> builder=${builder?.dump()}"
@@ -299,6 +297,7 @@ class GriffonHelper {
                 //dialogCache[dialogClass] = dialog
             //}
             // Return dialog instance
+        println "dialog -> ${dialog.dump()}"
             dialog
         //}
 	}
@@ -660,6 +659,20 @@ class GriffonHelper {
         properties.load(p)
         return properties.get("odisee.rest.path") as String
         //return "http://localhost:8080/wacws/services/wpxUpload?wsdl"
+    }
+
+    /**
+     * Centers the dialog within the screen.
+     * @param view Wac2View object
+     * @param dialog The dialog to center
+     * @return Returns the centered dialog
+     */
+    def static centerDialog(view, dialog) {
+        java.awt.Rectangle r = view.wac2Frame.getBounds();
+        int x = r.x + (r.width - dialog.getSize().width)/2;
+        int y = r.y + (r.height - dialog.getSize().height)/2;
+        dialog.setLocation(x, y);
+        dialog
     }
     
 }

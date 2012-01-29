@@ -549,6 +549,7 @@ class Wac2Controller {
      */
     def aboutDialogOeffnen = { evt = null ->
         def aboutDialog = GH.createDialog(builder, AboutView, [title: "Über", resizable: false, pack: true])
+        aboutDialog = GH.centerDialog(app.views['wac2'], aboutDialog)
         aboutDialog.show()
     }
 	

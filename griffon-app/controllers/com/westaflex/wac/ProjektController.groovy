@@ -262,6 +262,7 @@ class ProjektController {
 
     def showWartenDialog() {
         waitDialog = GH.createDialog(builder, WaitingView, [title: "Auslegung wird erstellt", resizable: false, pack: true])
+        waitDialog = GH.centerDialog(app.views['wac2'], waitDialog)
         waitDialog.show()
     }
     
@@ -277,6 +278,8 @@ class ProjektController {
         view.auslegungErstellerTelefon.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_TEL)
         view.auslegungErstellerFax.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FAX)
         view.auslegungErstellerEmail.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL)
+
+        auslegungDialog = GH.centerDialog(app.views['wac2'], auslegungDialog)
         
         auslegungDialog.show()
     }
@@ -975,6 +978,9 @@ class ProjektController {
                 GH.makeComboboxCellEditor(columnModel.getColumn(0), model.meta.raumTurTyp)
                 GH.makeComboboxCellEditor(columnModel.getColumn(1), model.meta.raumTurbreiten)
                 berechneTuren(null, model.meta.gewahlterRaum.position, false)
+
+                raumBearbeitenDialog = GH.centerDialog(app.views['wac2'], raumBearbeitenDialog)
+
                 raumBearbeitenDialog.show()
             } else {
                 println "${this}.raumBearbeiten: no row selected"
@@ -1451,7 +1457,8 @@ class ProjektController {
         // WBW summieren, damit das Label im Dialog (bind model.meta.summeAktuelleWBW) den richtigen Wert anzeigt
         wbwSummieren()
         // Show dialog
-        wbwDialog = GH.createDialog(builder, WbwView, [title: "Widerstandsbeiwerte", size: [750, 650]])
+        // Ist zentriert!
+        wbwDialog = GH.createDialog(builder, WbwView, [title: "Widerstandsbeiwerte", size: [750, 650], locationRelativeTo: app.windowManager.findWindow('wac2Frame')])
         wbwDialog.show()
         if (DEBUG) println "widerstandsbeiwerteBearbeiten: dialog '${dialog.title}'"
 	}
@@ -1632,7 +1639,8 @@ class ProjektController {
 	 * Druckverlustberechnung - Ventileinstellung - Teilstrecke wählen.
 	 */
     def dvbVentileinstellungTeilstreckeDialog = {
-        teilstreckenDialog = GH.createDialog(builder, TeilstreckenView, [title: "Teilstrecken", size: [250, 400]])
+        teilstreckenDialog = GH.createDialog(builder, TeilstreckenView, [title: "Teilstrecken", pack: true])
+        teilstreckenDialog = GH.centerDialog(app.views['wac2'], teilstreckenDialog)
 
         def listModel = view.teilstreckenVerfugbareListe.model
         model.map.dvb.kanalnetz.each { listModel.addElement(it.teilstrecke) }
