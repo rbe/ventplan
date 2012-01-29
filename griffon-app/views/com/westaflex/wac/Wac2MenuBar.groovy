@@ -21,7 +21,7 @@ menuBar = menuBar {
 		separator()
         // WAC-161: Zuletzt geöffnete Projekte
         // Position i=10
-        menu(id: 'recentlyOpenedMenu', text: 'Zuletzt geöffnete Projekte')
+        menu(id: 'recentlyOpenedMenu', text: 'Zuletzt geöffnete Projekte', enabled: bind { model.aktivesProjekt == null })
         separator()
         menuItem(seitenansichtAction)
         // WAC-151: Automatische und manuelle Berechnung
