@@ -51,22 +51,16 @@ panel(id: "raumPanel", layout: new MigLayout("fill", "[fill,grow]", "")) {
     // Buttons
     hbox(constraints: SOUTH) {
         // TODO mmu Enable buttons when table isn't empty and a row is selected
-        button(id: "raumEntfernen",            enabled: bind {1==1}, text: "Raum entfernen")
-        button(id: "raumBearbeiten",           enabled: bind {1==1}, text: "Raum bearbeiten")
-        button(id: "raumKopieren",             enabled: bind {1==1}, text: "Raum kopieren")
+        button(id: "raumEntfernen",            enabled: bind {model.raumButtonsEnabled}, text: "Raum entfernen")
+        button(id: "raumBearbeiten",           enabled: bind {model.raumButtonsEnabled}, text: "Raum bearbeiten")
+        button(id: "raumKopieren",             enabled: bind {model.raumButtonsEnabled}, text: "Raum kopieren")
+
+        button(id: "raumNachObenVerschieben",  enabled: bind {model.raumVerschiebenButtonsEnabled}, text: "^")
+        button(id: "raumNachUntenVerschieben", enabled: bind {model.raumVerschiebenButtonsEnabled}, text: "v")
         /*
         button(id: "raumEntfernen",            enabled: bind { model.map.raum.raume?.size() > 1 ? true : false }, text: "Raum entfernen")
         button(id: "raumBearbeiten",           enabled: bind { model.map.raum.raume?.size() > 0 ? true : false }, text: "Raum bearbeiten")
         button(id: "raumKopieren",             enabled: bind { model.map.raum.raume?.size() > 0 ? true : false }, text: "Raum kopieren")
-        */
-    }
-    vbox(constraints: EAST) {
-        // TODO mmu Buttons "nach oben" und "nach unten" müssen rechts neben die Tabelle; vertikal in die Mitte!
-        button(id: "raumNachObenVerschieben",  enabled: bind {1==1}, text: "^")
-        button(id: "raumNachUntenVerschieben", enabled: bind {1==1}, text: "v")
-        /*
-        button(id: "raumNachObenVerschieben",  enabled: bind { model.map.raum.raume?.size() > 0 ? true : false }, text: "^")
-        button(id: "raumNachUntenVerschieben", enabled: bind { model.map.raum.raume?.size() > 0 ? true : false }, text: "v")
         */
     }
 }

@@ -12,7 +12,8 @@ import com.bensmann.griffon.GriffonHelper as GH
 
 import groovy.beans.Bindable
 import javax.swing.DefaultComboBoxModel
-import griffon.transform.Threading
+
+import griffon.transform.PropertyListener
 
 /**
  * 
@@ -114,7 +115,6 @@ class ProjektModel {
     /**
      * Meta-data: will be initialized by ProjektController.
      */
-    //@Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     @Bindable meta = [
 		raum: [
 				typ: ["Wohnzimmer", "Kinderzimmer", "Schlafzimmer", "Esszimmer", "Arbeitszimmer", "Gästezimmer",
@@ -151,8 +151,8 @@ class ProjektModel {
      *        This is set true by a PropertyChangeListener installed in
      *        ProjectController.addMapPropertyChangeListener().
 	 */
-    //@Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-	@Bindable map = [
+    @Bindable
+    map = [
 		messages: [ltm: ""] as ObservableMap,
 		dirty: false,
         bauvorhaben: "",    // WAC-177, WAC-108
@@ -291,7 +291,13 @@ class ProjektModel {
 	 * Wrap text in HTML and substitute every space character with HTML-breaks.
 	 */
 	def ws = GH.ws
-	
+
+    @Bindable
+    boolean raumButtonsEnabled
+
+    @Bindable
+    boolean raumVerschiebenButtonsEnabled
+
 	/**
 	 * Prüfe Raumdaten auf Richtigkeit.
 	 * @return raum
@@ -630,7 +636,7 @@ class ProjektModel {
 			meta.gewahlterRaum[columnIndex] = value
 			//println "Edited: map.raum.raume -> ${map.raum.raume}"
 			// Call ProjektController
-			app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position)
+			app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position, -1)
 			resyncRaumTableModels()
 		}
 		gltmClosure(columnNames, propertyNames, writable, tableModels.raume, postValueSet, checkRaum)
@@ -646,7 +652,7 @@ class ProjektModel {
 		def writable      = [true,              true,          false,           false,              false,                                true,                                false,                          false,                           false,                                 true,                              false,                       false,                           true] as boolean[]
 		def postValueSet  = { object, columnIndex, value ->
 			// Call ProjektController
-			app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position)
+			app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position, -1)
 			////app.controllers[mvcId].raumZuAbluftventileGeandert()
 			resyncRaumTableModels()
 		}
@@ -667,7 +673,7 @@ class ProjektModel {
                 app.models[mvcId].map.anlage.zentralgeratManuell = true
             }
             // Call ProjektController
-            app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position)
+            app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position, -1)
             // Update TableModels
 			resyncRaumTableModels()
 		}
@@ -874,6 +880,16 @@ class ProjektModel {
 				map.raum.raume << raum
 				if (DEBUG) println "addRaum: adding raum.raume=${map.raum.raume}"
 			}
+
+            if (!raumButtonsEnabled) {
+                raumButtonsEnabled = true
+                firePropertyChange("raumButtonsEnabled", !raumButtonsEnabled, raumButtonsEnabled)
+            }
+            if (map.raum.raume.size() > 1) {
+                raumVerschiebenButtonsEnabled = true
+                firePropertyChange("raumVerschiebenButtonsEnabled", !raumVerschiebenButtonsEnabled, raumVerschiebenButtonsEnabled)
+            }
+
             // TODO mmu Sortierung funktioniert aber!?
             // Disables sorting in raumTabelle
             try {
@@ -917,6 +933,15 @@ class ProjektModel {
 			if (DEBUG) println "removeRaum: removing raumIndex=${raumIndex}"
 			map.raum.raume.remove(raumIndex)
             if (DEBUG) println "removeRaum: map.raum.raume = ${map.raum.raume.dump()}"
+
+            if (map.raum.raume.size() < 1) {
+                raumButtonsEnabled = false
+                firePropertyChange("raumButtonsEnabled", !raumButtonsEnabled, raumButtonsEnabled)
+            }
+            if (raumVerschiebenButtonsEnabled && map.raum.raume.size() < 2) {
+                raumVerschiebenButtonsEnabled = false
+                firePropertyChange("raumVerschiebenButtonsEnabled", !raumVerschiebenButtonsEnabled, raumVerschiebenButtonsEnabled)
+            }
 			// Sync table models
 			[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
 				it.remove(raumIndex)
@@ -929,7 +954,6 @@ class ProjektModel {
 	/**
 	 * Synchronize all Swing table models depending on map.raum.raume.
 	 */
-    //@Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	void resyncRaumTableModels() {
 		// Räume sortieren, damit die Liste immer der Position des Raums und der Reihenfolge im TableModel entspricht:
 		// Nicht zwingend notwendig, da die TableModels bereits über den Comparator nach Position sortieren:
@@ -1100,7 +1124,6 @@ class ProjektModel {
 	/**
 	 * Synchronize all Swing table models depending on map.akustik.*.tabelle.
 	 */
-    //@Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def resyncAkustikTableModels(view) {
 		if (DEBUG) println "resyncAkustikTableModels()"
         javax.swing.SwingUtilities.invokeLater {

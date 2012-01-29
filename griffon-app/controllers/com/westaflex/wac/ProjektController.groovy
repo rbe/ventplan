@@ -19,7 +19,6 @@ import javax.swing.event.TableModelListener
 import java.awt.Component
 import javax.swing.DefaultListModel
 import javax.swing.event.TableModelEvent
-import griffon.transform.Threading
 import groovyx.net.http.ContentType
 
 /**
@@ -31,11 +30,7 @@ class ProjektController {
     Boolean loadMode = false
 	
 	def builder
-	
-    //@Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def model
-    
-    //@Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
 	def view
 	
 	def wacCalculationService
@@ -49,8 +44,7 @@ class ProjektController {
     
     def static auslegungPrefs = AuslegungPrefHelper.getInstance()
     def auslegungDialog
-    
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+
     def waitDialog
     
 	/**
@@ -265,8 +259,7 @@ class ProjektController {
         }
         waitDialog?.dispose()
     }
-    
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+
     def showWartenDialog() {
         waitDialog = GH.createDialog(builder, WaitingView, [title: "Auslegung wird erstellt", resizable: false, pack: true])
         waitDialog.show()
@@ -738,6 +731,9 @@ class ProjektController {
 	
 	/**
 	 * Raumdarten - ein Raum wurde geändert.
+     * @param raumPosition Could be position or real index position.
+     * @param setSelectedIndex Real index position in table view. Real selected index item.
+     * @param isIndex Boolean value if this is the real index position in map rather than position-key in map.
 	 */
     def raumGeandert = { Integer raumPosition, Integer setSelectedIndex, boolean isIndex = false ->
         _raumGeandert(raumPosition, setSelectedIndex, isIndex)
@@ -855,7 +851,7 @@ class ProjektController {
         // Es hat sich was geändert...
         def raum = model.map.raum.raume[view.raumTabelle.selectedRow]
         // WAC-210: raumGeandert(raum.position)
-        raumGeandert(view.raumTabelle.selectedRow, true)
+        raumGeandert(view.raumTabelle.selectedRow, -1, true)
         // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
         berechneAlles()
 	}
@@ -1523,18 +1519,20 @@ class ProjektController {
 	 * Widerstandsbeiwerte: eingegebene Werte aufsummieren.
 	 */
     def wbwSummieren = {
-		// Welche Teilstrecke ist ausgewählt? Index bestimmen
-		def index = model.meta.dvbKanalnetzGewahlt //view.dvbKanalnetzTabelle.selectedRow
-		if (DEBUG) println "wbwSummieren: index=${index}"
-		def wbw = model.tableModels.wbw[index]
-		// Summiere WBW
-		def map = model.map.dvb.kanalnetz[index]
-		model.meta.summeAktuelleWBW =
-			map.gesamtwiderstandszahl =
-			wbw.sum {
-				it.anzahl.toDouble2() * it.widerstandsbeiwert.toDouble2()
-			}
-		if (DEBUG) println "wbwSummieren: map.gesamtwiderstandszahl=${map.gesamtwiderstandszahl}"
+        doLater {
+            // Welche Teilstrecke ist ausgewählt? Index bestimmen
+            def index = model.meta.dvbKanalnetzGewahlt //view.dvbKanalnetzTabelle.selectedRow
+            if (DEBUG) println "wbwSummieren: index=${index}"
+            def wbw = model.tableModels.wbw[index]
+            // Summiere WBW
+            def map = model.map.dvb.kanalnetz[index]
+            model.meta.summeAktuelleWBW =
+                map.gesamtwiderstandszahl =
+                wbw.sum {
+                    it.anzahl.toDouble2() * it.widerstandsbeiwert.toDouble2()
+                }
+            if (DEBUG) println "wbwSummieren: map.gesamtwiderstandszahl=${map.gesamtwiderstandszahl}"
+        }
 	}
 	
 	/**

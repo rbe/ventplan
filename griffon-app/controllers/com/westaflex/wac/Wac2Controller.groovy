@@ -10,7 +10,6 @@ package com.westaflex.wac
 
 import com.westaflex.wac.*
 import com.bensmann.griffon.GriffonHelper as GH
-import griffon.transform.Threading
 
 /**
  * 
@@ -291,7 +290,6 @@ class Wac2Controller {
      */
     def projektSchliessen = { evt = null ->
         // Closure for closing the active project
-        //@Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
         def clacpr = { mvc ->
             // Tab entfernen
             view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
