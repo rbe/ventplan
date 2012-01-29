@@ -9,8 +9,8 @@
  */
 package com.westaflex.wac
 
-import groovy.sql.*
-import org.javanicus.gsql.*
+//import groovy.sql.*
+//import org.javanicus.gsql.*
 
 /**
  * Communicate with WestaWAC database.
@@ -223,8 +223,8 @@ class WacModelService {
 					//println "${it.luftmenge} == ${nahe}?"
 					it.luftmenge == nahe
 				}.inject([druckverlust: Double.MAX_VALUE], { o, n ->
-					def v1 = Math.abs(abgleich - o.druckverlust)
-					def v2 = Math.abs(abgleich - n.druckverlust)
+					int v1 = Math.abs(abgleich - o.druckverlust)
+					int v2 = Math.abs(abgleich - n.druckverlust)
 					v1 < v2 ? o : n
 				})
 		if (DEBUG) println "getEinstellung(${[ventilbezeichnung,luftart,luftmenge,abgleich]}): einstellung=${m.einstellung}"
