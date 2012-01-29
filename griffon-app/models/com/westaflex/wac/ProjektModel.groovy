@@ -748,15 +748,17 @@ class ProjektModel {
 	 * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
 	 */
 	def addWbwTableModel(index) {
-		if (DEBUG) println "addWbwTableModel(${index}): ${tableModels.wbw[index]}"
-		// TableModel schon vorhanden?
-		if (tableModels.wbw[index]) return
-		// Neues TableModel erstellen und füllen
-		tableModels.wbw << ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNameComparator) as ca.odell.glazedlists.EventList)
-		meta.wbw.each {
-			//tableModels.wbw[index].add([id: it.id, anzahl: 0 as Integer, name: it.bezeichnung, widerstandsbeiwert: it.wert])
-			tableModels.wbw[index].add([anzahl: 0 as Integer, name: it.bezeichnung, widerstandsbeiwert: it.wert, id: it.id])
-		}
+        //javax.swing.SwingUtilities.invokeLater {
+            if (DEBUG) println "addWbwTableModel(${index}): ${tableModels.wbw[index]}"
+            // TableModel schon vorhanden?
+            if (tableModels.wbw[index]) return
+            // Neues TableModel erstellen und füllen
+            tableModels.wbw << ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNameComparator) as ca.odell.glazedlists.EventList)
+            meta.wbw.each {
+                //tableModels.wbw[index].add([id: it.id, anzahl: 0 as Integer, name: it.bezeichnung, widerstandsbeiwert: it.wert])
+                tableModels.wbw[index].add([anzahl: 0 as Integer, name: it.bezeichnung, widerstandsbeiwert: it.wert, id: it.id])
+            }
+        //}
 	}
 	
 	/**
@@ -771,21 +773,27 @@ class ProjektModel {
 	 * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
 	 */
 	def createWbwTableModel() {
-		def index = meta.dvbKanalnetzGewahlt
-		if (DEBUG) println "createWbwTableModel: index=${index}"
-		def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert", ""] as String[]
-		def propertyNames = ["anzahl", "name",        "widerstandsbeiwert", "id"] as String[]
-		def propertyTypes = [Integer.class.getName(), String.class.getName(), Double.class.getName(), Integer.class.getName()] as String[]
-		def writable      = [true, true, true, false] as boolean[]
-		def postValueSet  = { object, columnIndex, value ->
-			app.controllers[mvcId].wbwSummieren()
-			app.controllers[mvcId].wbwInTabelleGewahlt()
-		}
-		// Widerstandsbeiwerte für die gewählte Kanalnetz in tableModels.wbw übertragen
-		//gltmClosureWithTypes(columnNames, propertyNames, propertyTypes, writable, tableModels.wbw[index], postValueSet)
-		gltmClosure(columnNames, propertyNames, writable, tableModels.wbw[index])
-	}
-	
+        def index = meta.dvbKanalnetzGewahlt
+        if (DEBUG) println "createWbwTableModel: index=${index}"
+        def columnNames =   ["Anzahl", "Bezeichnung", "Widerstandsbeiwert", ""] as String[]
+        def propertyNames = ["anzahl", "name",        "widerstandsbeiwert", "id"] as String[]
+        def propertyTypes = [Integer.class.getName(), String.class.getName(), Double.class.getName(), Integer.class.getName()] as String[]
+        def writable      = [true, true, true, false] as boolean[]
+        def postValueSet  = { object, columnIndex, value ->
+            app.controllers[mvcId].wbwSummieren()
+            app.controllers[mvcId].wbwInTabelleGewahlt()
+        }
+        // Widerstandsbeiwerte für die gewählte Kanalnetz in tableModels.wbw übertragen
+        //gltmClosureWithTypes(columnNames, propertyNames, propertyTypes, writable, tableModels.wbw[index], postValueSet)
+        println "tableModels.wbw[index] -> ${tableModels.wbw[index]}"
+        /*
+        if (!tableModels.wbw[index]) {
+            addWbwTableModel(index)
+        }
+        */
+        gltmClosure(columnNames, propertyNames, writable, tableModels.wbw[index])
+    }
+
 	/**
 	 * Akustikberechnung - Zuluft.
 	 */
@@ -1023,6 +1031,8 @@ class ProjektModel {
 			}
 			// Comboboxen in den Tabellen hinzufügen
             setDvbKanalnetzEditors(view)
+            // wbw setzen
+            addWbwTableModel(tableModels.dvbKanalnetz.size() - 1)
 		}
 	}
 	

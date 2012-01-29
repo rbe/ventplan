@@ -1439,21 +1439,21 @@ class ProjektController {
 	 * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
 	 */
 	def widerstandsbeiwerteBearbeiten = {
-		// Welche Teilstrecke ist ausgewählt? Index bestimmen
-		def index = view.dvbKanalnetzTabelle.selectedRow
-		if (DEBUG) println "widerstandsbeiwerteBearbeiten: index=${index}"
-		// Setze Index des gewählten Kanalnetzes in Metadaten
-		model.meta.dvbKanalnetzGewahlt = index
-		// TableModel für WBW hinzufügen, wenn noch nicht vorhanden
+        // Welche Teilstrecke ist ausgewählt? Index bestimmen
+        def index = view.dvbKanalnetzTabelle.selectedRow
+        if (DEBUG) println "widerstandsbeiwerteBearbeiten: index=${index}"
+        // Setze Index des gewählten Kanalnetzes in Metadaten
+        model.meta.dvbKanalnetzGewahlt = index
+        // TableModel für WBW hinzufügen, wenn noch nicht vorhanden
         doLater {
             model.addWbwTableModel(index)
         }
-		// WBW summieren, damit das Label im Dialog (bind model.meta.summeAktuelleWBW) den richtigen Wert anzeigt
-		wbwSummieren()
-		// Show dialog
-		wbwDialog = GH.createDialog(builder, WbwView, [title: "Widerstandsbeiwerte", size: [750, 650]])
-		wbwDialog.show()
-		if (DEBUG) println "widerstandsbeiwerteBearbeiten: dialog '${dialog.title}'"
+        // WBW summieren, damit das Label im Dialog (bind model.meta.summeAktuelleWBW) den richtigen Wert anzeigt
+        wbwSummieren()
+        // Show dialog
+        wbwDialog = GH.createDialog(builder, WbwView, [title: "Widerstandsbeiwerte", size: [750, 650]])
+        wbwDialog.show()
+        if (DEBUG) println "widerstandsbeiwerteBearbeiten: dialog '${dialog.title}'"
 	}
 	
 	/**
@@ -1528,7 +1528,7 @@ class ProjektController {
             def map = model.map.dvb.kanalnetz[index]
             model.meta.summeAktuelleWBW =
                 map.gesamtwiderstandszahl =
-                wbw.sum {
+                wbw?.sum {
                     it.anzahl.toDouble2() * it.widerstandsbeiwert.toDouble2()
                 }
             if (DEBUG) println "wbwSummieren: map.gesamtwiderstandszahl=${map.gesamtwiderstandszahl}"
