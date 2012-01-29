@@ -881,14 +881,8 @@ class ProjektModel {
 				if (DEBUG) println "addRaum: adding raum.raume=${map.raum.raume}"
 			}
 
-            if (!raumButtonsEnabled) {
-                raumButtonsEnabled = true
-                firePropertyChange("raumButtonsEnabled", !raumButtonsEnabled, raumButtonsEnabled)
-            }
-            if (map.raum.raume.size() > 1) {
-                raumVerschiebenButtonsEnabled = true
-                firePropertyChange("raumVerschiebenButtonsEnabled", !raumVerschiebenButtonsEnabled, raumVerschiebenButtonsEnabled)
-            }
+            // Buttons aktivieren / deaktivieren
+            enableDisableRaumButtons(true)
 
             // TODO mmu Sortierung funktioniert aber!?
             // Disables sorting in raumTabelle
@@ -934,14 +928,8 @@ class ProjektModel {
 			map.raum.raume.remove(raumIndex)
             if (DEBUG) println "removeRaum: map.raum.raume = ${map.raum.raume.dump()}"
 
-            if (map.raum.raume.size() < 1) {
-                raumButtonsEnabled = false
-                firePropertyChange("raumButtonsEnabled", !raumButtonsEnabled, raumButtonsEnabled)
-            }
-            if (raumVerschiebenButtonsEnabled && map.raum.raume.size() < 2) {
-                raumVerschiebenButtonsEnabled = false
-                firePropertyChange("raumVerschiebenButtonsEnabled", !raumVerschiebenButtonsEnabled, raumVerschiebenButtonsEnabled)
-            }
+            enableDisableRaumButtons(false)
+
 			// Sync table models
 			[tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
 				it.remove(raumIndex)
@@ -1165,6 +1153,34 @@ class ProjektModel {
 		javax.swing.SwingUtilities.invokeLater {
             GH.makeComboboxCellEditor view.dvbVentileinstellungTabelle.columnModel.getColumn(1), meta.druckverlust.ventileinstellung.luftart
             GH.makeComboboxCellEditor view.dvbVentileinstellungTabelle.columnModel.getColumn(3), meta.druckverlust.ventileinstellung.ventilbezeichnung
+        }
+    }
+
+    /**
+     *
+     * @param enable Boolean value. Enable == true if a room were added or copied.
+     *              Enable == false if a room were removed.
+     */
+    def enableDisableRaumButtons(enable) {
+        // added raum
+        if (enable) {
+            if (!raumButtonsEnabled && map.raum.raume.size() > 0) {
+                raumButtonsEnabled = true
+                firePropertyChange("raumButtonsEnabled", !raumButtonsEnabled, raumButtonsEnabled)
+            }
+            if (!raumVerschiebenButtonsEnabled && map.raum.raume.size() > 1) {
+                raumVerschiebenButtonsEnabled = true
+                firePropertyChange("raumVerschiebenButtonsEnabled", !raumVerschiebenButtonsEnabled, raumVerschiebenButtonsEnabled)
+            }
+        } else { // removed raum...
+            if (raumButtonsEnabled && map.raum.raume.size() < 1) {
+                raumButtonsEnabled = false
+                firePropertyChange("raumButtonsEnabled", !raumButtonsEnabled, raumButtonsEnabled)
+            }
+            if (raumVerschiebenButtonsEnabled && map.raum.raume.size() < 2) {
+                raumVerschiebenButtonsEnabled = false
+                firePropertyChange("raumVerschiebenButtonsEnabled", !raumVerschiebenButtonsEnabled, raumVerschiebenButtonsEnabled)
+            }
         }
     }
 

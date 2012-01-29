@@ -403,6 +403,8 @@ class Wac2Controller {
                     model.projekte << mvcId
                     // Projekt aktivieren
                     projektAktivieren(mvcId)
+
+                    projektModel.enableDisableRaumButtons(true)
                 } else {
                     def errorMsg = "projektOffnen: Konnte Projekt nicht öffnen!"
                     app.controllers["Dialog"].showErrorDialog(errorMsg as String)
