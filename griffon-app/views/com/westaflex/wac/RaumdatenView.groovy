@@ -57,11 +57,6 @@ panel(id: "raumPanel", layout: new MigLayout("fill", "[fill,grow]", "")) {
 
         button(id: "raumNachObenVerschieben",  enabled: bind {model.raumVerschiebenButtonsEnabled}, text: "^")
         button(id: "raumNachUntenVerschieben", enabled: bind {model.raumVerschiebenButtonsEnabled}, text: "v")
-        /*
-        button(id: "raumEntfernen",            enabled: bind { model.map.raum.raume?.size() > 1 ? true : false }, text: "Raum entfernen")
-        button(id: "raumBearbeiten",           enabled: bind { model.map.raum.raume?.size() > 0 ? true : false }, text: "Raum bearbeiten")
-        button(id: "raumKopieren",             enabled: bind { model.map.raum.raume?.size() > 0 ? true : false }, text: "Raum kopieren")
-        */
     }
 }
 // Format fields
