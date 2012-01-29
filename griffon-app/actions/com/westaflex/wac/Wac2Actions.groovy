@@ -17,7 +17,7 @@ neuesProjektAction = action(
         mnemonic: "N",
         accelerator: shortcut("N"),
         smallIcon: imageIcon(resource: "/menu/neuesprojekt.png"),
-        enabled: true,
+        enabled: bind { model.aktivesProjekt == null },
         closure: controller.neuesProjekt
         )
 
@@ -27,7 +27,7 @@ projektOeffnenAction = action(
         mnemonic: "O",
         accelerator: shortcut("O"),
         smallIcon: imageIcon(resource: "/menu/projektoeffnen.png", class: Console),
-        enabled: true,
+        enabled: bind { model.aktivesProjekt == null },
         closure: controller.projektOffnen
         )
 
