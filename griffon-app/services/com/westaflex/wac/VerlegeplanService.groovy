@@ -16,7 +16,7 @@ import org.javanicus.gsql.*
 /**
  * Erstellen der Stückliste aus den vorhandenen Werten.
  */
-class StucklistenService {
+class VerlegeplanService {
 
     /**
 	 *
@@ -39,7 +39,7 @@ class StucklistenService {
 	/**
 	 * 
 	 */
-	def StucklistenService() {
+	def VerlegeplanService() {
 		
 	}
 
