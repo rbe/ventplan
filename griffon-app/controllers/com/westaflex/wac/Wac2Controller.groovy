@@ -308,6 +308,8 @@ class Wac2Controller {
             if (DEBUG) println "projektSchliessen: model.projekte=${model.projekte.dump()}"
             // NOT NEEDED projektIndexAktivieren(view.projektTabGroup.selectedIndex)
             // Wird durch die Tab und den ChangeListener erledigt.
+            // Das aktive Projekt wurde geandert... nein, geschlossen.
+            model.aktivesProjektGeandert = false
         }
         // Projekt zur aktiven Tab finden
         if (DEBUG) println "projektSchliessen: "
