@@ -9,7 +9,6 @@
  */
 package com.westaflex.wac
 
-
 import groovy.sql.*
 import org.javanicus.gsql.*
 

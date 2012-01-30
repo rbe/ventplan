@@ -134,7 +134,7 @@ class PdfCreator {
             // Now add title
             document.add(new Paragraph(title, TITLE_FONT))
             // Add date of creation
-            document.add(new Phrase("Stückliste vom " + new Date().format('dd.MM.yyyy HH:mm')))
+            document.add(new Phrase("Verlegeplan vom " + new Date().format('dd.MM.yyyy HH:mm')))
         } catch (Exception e) {
             println "Error adding title ${e}"
         }
