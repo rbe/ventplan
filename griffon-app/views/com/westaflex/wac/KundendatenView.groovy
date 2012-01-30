@@ -69,11 +69,15 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("ins 0 n 0 n, wrap 2","
     panel(id: "kundendatenNotizen", border: titledBorder(title: "Notizen"), layout: new MigLayout("ins 0 n 0 n, wrap 2","[] 16 [grow,fill]"), constraints: "grow, span 2") {
         // Bauvorhaben
         label("Bauvorhaben")
-        textField(id: "bauvorhaben", constraints: "growx")
+        panel(layout: new MigLayout("fillx", "grow"), constraints: "grow") {
+            textField(id: "bauvorhaben", text: "Bauvorhaben/Investor", foreground: Color.GRAY, constraints: "growx")
+            textField(id: "bauvorhabenPlz", text: "PLZ", foreground: Color.GRAY, constraints: "growx")
+            textField(id: "bauvorhabenOrt", text: "Ort", foreground: Color.GRAY, constraints: "growx")
+        }
         // Notizen
         label("Notizen")
         jideScrollPane(constraints: "grow") {
-            textArea(id: "notizen", rows: 13)
+            textArea(id: "notizen", rows: 13, constraints: "grow")
         }
     }
 }

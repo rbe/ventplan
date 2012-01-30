@@ -1,6 +1,6 @@
 /*
  * WAC
- * 
+ *
  * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
  * Copyright (C) 2010-2012 art of coding UG (haftungsbeschränkt).
  *
@@ -215,34 +215,33 @@ class ProjektController {
     /**
 	 * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
 	 */
-    def auslegungErstellen = {
-        // Auslegungsdialog immer anzeigen, damit die Handwerker die Daten ändern können.
-        showAuslegungDialog()
-    }
-    
-    /**
-     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
-        */
-    def _auslegungErstellen() {
+    def auslegungErstellen() {
+        // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
+        showNutzerdatenDialog()
+        // Auslegung/Dokument erstellen
         try {
             File wpxFile = new File(model.wpxFilename)
             String xmlDoc = oooService.performAuslegung(wpxFile, model.map, DEBUG )
-            def restUrl = GH.getOdiseeRestUrl() as String
-            def restPath = GH.getOdiseeRestPath() as String
             java.io.File pdfFile
+            // Dialog: Bitte warten...
+            doOutside {
+                waitDialog = GH.createDialog(builder, WaitingView, [title: "Die Auslegung wird erstellt", resizable: false, pack: true])
+                waitDialog = GH.centerDialog(app.views['wac2'], waitDialog)
+                waitDialog.show()
+            }
             edt {
-                pdfFile = odiseeRestXML(wpxFile, restUrl, restPath, xmlDoc)
+                pdfFile = processOdisee(wpxFile, xmlDoc)
             }
             if (pdfFile?.exists()) {
-                if (DEBUG) println "projektSeitenansicht: doc=${pdfFile?.dump()}"
+                if (DEBUG) println "auslegungErstellen: doc=${pdfFile?.dump()}"
                 // Open document
                 java.awt.Desktop.desktop.open(pdfFile)
             } else {
-                if (DEBUG) println "pdfFile does not exist: ${pdfFile?.dump()}"
+                if (DEBUG) println "PDF file does not exist: ${pdfFile?.dump()}"
             }
         } catch (e) {
-            println "Error while calling 'Seitenansicht' -> ${e.dump()}"
-            def errorMsg = "Auslegung konnte nicht erstellt werden.\n${e}" as String
+            println "Error while calling 'Auslegung' -> ${e.dump()}"
+            def errorMsg = "Auslegung konnte leider nicht erstellt werden.\n${e}" as String
             app.controllers["Dialog"].showErrorDialog(errorMsg as String)
         }
         waitDialog?.dispose()
@@ -251,18 +250,10 @@ class ProjektController {
     /**
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      */
-    def showWartenDialog() {
-        waitDialog = GH.createDialog(builder, WaitingView, [title: "Auslegung wird erstellt", resizable: false, pack: true])
-        waitDialog = GH.centerDialog(app.views['wac2'], waitDialog)
-        waitDialog.show()
-    }
-    
-    /**
-     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
-     */
-    def showAuslegungDialog() {
-        auslegungDialog = GH.createDialog(builder, AuslegungView, [title: "Ersteller Informationen", resizable: false, pack: true])
-        
+    def showNutzerdatenDialog() {
+        // Dialog erzeugen
+        auslegungDialog = GH.createDialog(builder, AuslegungView, [title: "Informationen über den Ersteller", resizable: false, pack: true])
+        // Gespeicherte Daten holen
         view.auslegungErstellerFirma.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA)
         view.auslegungErstellerName.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME)
         view.auslegungErstellerAnschrift.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE)
@@ -271,20 +262,18 @@ class ProjektController {
         view.auslegungErstellerTelefon.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_TEL)
         view.auslegungErstellerFax.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FAX)
         view.auslegungErstellerEmail.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL)
-
+        // Dialog ausrichten und anzeigen
         auslegungDialog = GH.centerDialog(app.views['wac2'], auslegungDialog)
-        
         auslegungDialog.show()
     }
     
     /**
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      * Action: Saves Auslegung Ersteller information to preferences.
-     * Called once!
      */
-    def auslegungErstellenSpeichern = {
-        
+    def nutzerdatenSpeichern() {
         try {
+            // Daten aus dem Dialog holen
             def firma = view.auslegungErstellerFirma.text
             def name = view.auslegungErstellerName.text
             def anschrift = view.auslegungErstellerAnschrift.text
@@ -293,12 +282,11 @@ class ProjektController {
             def tel = view.auslegungErstellerTelefon.text
             def fax = view.auslegungErstellerFax.text
             def email = view.auslegungErstellerEmail.text
-
+            def angebotsnummer = view.auslegungErstellerAngebotsnummer.text
             auslegungDialog.dispose()
-            
-            if (name?.trim() && anschrift?.trim() && plz?.trim() && ort?.trim() && tel?.trim()) {
+            if (name?.trim() && anschrift?.trim() && plz?.trim() && ort?.trim()) {
+                // Daten speichern
                 def map = [:]
-
                 map.put(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA, firma)
                 map.put(AuslegungPrefHelper.PREFS_USER_KEY_NAME, name)
                 map.put(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE, anschrift)
@@ -307,14 +295,11 @@ class ProjektController {
                 map.put(AuslegungPrefHelper.PREFS_USER_KEY_TEL, tel)
                 map.put(AuslegungPrefHelper.PREFS_USER_KEY_FAX, fax)
                 map.put(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL, email)
-
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_ANGEBOTSNUMMER, angebotsnummer)
                 auslegungPrefs.save(map)
-                
-                _auslegungErstellen()
-                
             } else {
                 def errorMsg = "Auslegung konnte nicht erstellt werden. " +
-                               "Es muss mindestens Name, Anschrift, PLZ, Ort und Telefon angegeben werden." as String
+                               "Es muss mindestens Name, Anschrift, PLZ, Ort angegeben werden." as String
                 app.controllers["Dialog"].showErrorDialog(errorMsg as String)
             }
         } catch (e) {
@@ -324,10 +309,59 @@ class ProjektController {
     
     /**
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
+     */
+    def angebotErstellen() {
+        /*
+        def choice = app.controllers["Dialog"].showPrintProjectDialog()
+        if (DEBUG) println "angebotErstellen: choice=${choice}"
+        switch (choice) {
+            case 0:
+                if (DEBUG) println "Ja = Daten an OOo senden"
+                break
+            case 1: // Cancel: do nothing...
+                if (DEBUG) println "Nein = es wird ein Blanko Angebot geöffnet"
+                break
+        }
+        */
+        // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
+        showNutzerdatenDialog()
+        // Auslegung/Dokument erstellen
+        try {
+            File wpxFile = new File(model.wpxFilename)
+            String xmlDoc = oooService.performAngebot(wpxFile, model.map, DEBUG)
+            java.io.File pdfFile
+            // Dialog: Bitte warten...
+            doOutside {
+                waitDialog = GH.createDialog(builder, WaitingView, [title: "Das Angebot wird erstellt", resizable: false, pack: true])
+                waitDialog = GH.centerDialog(app.views['wac2'], waitDialog)
+                waitDialog.show()
+            }
+            edt {
+                pdfFile = processOdisee(wpxFile, xmlDoc)
+            }
+            if (pdfFile?.exists()) {
+                if (DEBUG) println "projektSeitenansicht: doc=${pdfFile?.dump()}"
+                // Open document
+                java.awt.Desktop.desktop.open(pdfFile)
+            } else {
+                if (DEBUG) println "PDF fFile does not exist: ${pdfFile?.dump()}"
+            }
+        } catch (e) {
+            println "Error while calling 'Angebot' -> ${e.dump()}"
+            def errorMsg = "Angebot konnte leider nicht erstellt werden.\n${e}" as String
+            app.controllers["Dialog"].showErrorDialog(errorMsg as String)
+        }
+        waitDialog?.dispose()
+    }
+
+    /**
+     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      * Post xml document via REST and receive a PDF file.
      */
-    java.io.File odiseeRestXML(File wpxFile, String restUrl, String restPath, String xmlDoc) {
+    java.io.File processOdisee(File wpxFile, String xmlDoc) {
         java.io.File responseFile = null
+        def restUrl = GH.getOdiseeRestUrl() as String
+        def restPath = GH.getOdiseeRestPath() as String
         try {
             withRest(id: "odisee", uri: restUrl) {
                 auth.basic 'wac', 're:Xai3u'
@@ -345,24 +379,6 @@ class ProjektController {
         if (DEBUG) println "returning responsefile ${responseFile.absolutePath}"
         return responseFile
     }
-    
-	/**
-     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
-	 */
-    def angebotErstellen = {
-		def choice = app.controllers["Dialog"].showPrintProjectDialog()
-        if (DEBUG) println "angebotErstellen: choice=${choice}"
-        switch (choice) {
-            case 0:
-                if (DEBUG) println "Ja = Daten an OOo senden"
-                // TODO rbe: Daten an OOo senden
-                break
-            case 1: // Cancel: do nothing...
-                if (DEBUG) println "Nein = es wird ein Blanko Angebot geöffnet"
-                // TODO rbe: Blanko Angebot öffnen
-                break
-        }
-	}
 
     /**
      * Alles neu berechnen.
@@ -1857,7 +1873,7 @@ class ProjektController {
         }
         
     }
-    
+
     /**
      * TODO Rename to 'Verlegeplan'
      * @param map
@@ -1870,7 +1886,7 @@ class ProjektController {
             pdfCreator.addArtikel(map.raumBezeichnung, "Abluft", map.raumBezeichnungAbluftventile, map.raumAnzahlAbluftventile)
         }
     }
-    
+
     /**
      * TODO Rename to 'Verlegeplan'
      * @param map
@@ -1882,7 +1898,7 @@ class ProjektController {
             pdfCreator.addArtikel(map.raumBezeichnung, "Zuluft", map.raumBezeichnungZuluftventile, map.raumAnzahlZuluftventile)
         }
     }
-    
+
     /**
      * TODO Rename to 'Verlegeplan'
      * @param map
@@ -1894,7 +1910,7 @@ class ProjektController {
             pdfCreator.addArtikel("", "Überström", map.raumUberstromElement, map.raumAnzahlUberstromVentile)
         }
     }
-            
+
     /**
      * TODO Rename to 'Verlegeplan'
      * @param dvb
@@ -1908,7 +1924,7 @@ class ProjektController {
             }
         }
     }   
-    
+
     /**
      * TODO Rename to 'Verlegeplan'
      * @param akusik

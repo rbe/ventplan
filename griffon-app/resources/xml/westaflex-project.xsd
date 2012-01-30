@@ -19,17 +19,19 @@
     -->
     <xs:complexType name="project">
         <xs:sequence>
-            <xs:element name="ersteller"    type="contact"      minOccurs="1" maxOccurs="1"/>
-            <xs:element name="erstellt"     type="xs:dateTime"  minOccurs="0" maxOccurs="1"/>
-            <xs:element name="bearbeitet"   type="xs:dateTime"  minOccurs="0" maxOccurs="1"/>
-            <xs:element name="geschickt"    type="xs:dateTime"  minOccurs="0" maxOccurs="1"/>
-            <xs:element name="bauvorhaben"  type="xs:string"    minOccurs="1" maxOccurs="1"/>
-            <xs:element name="notizen"      type="xs:string"    minOccurs="0" maxOccurs="1"/>
-            <xs:element name="gebaude"      type="building"     minOccurs="1" maxOccurs="1"/>
-            <xs:element name="zentralgerat" type="device"       minOccurs="1" maxOccurs="1"/>
-            <xs:element name="druckverlust" type="druckverlust" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="akustik"      type="akustik"      minOccurs="0" maxOccurs="1"/>
-            <xs:element name="firma"        type="company"      minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="ersteller"       type="contact"      minOccurs="1" maxOccurs="1"/>
+            <xs:element name="erstellt"        type="xs:dateTime"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bearbeitet"      type="xs:dateTime"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="geschickt"       type="xs:dateTime"  minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bauvorhaben"     type="xs:string"    minOccurs="1" maxOccurs="1"/>
+            <xs:element name="bauvorhabenPlz"  type="xs:string"    minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bauvorhabenOrt"  type="xs:string"    minOccurs="0" maxOccurs="1"/>
+            <xs:element name="notizen"         type="xs:string"    minOccurs="0" maxOccurs="1"/>
+            <xs:element name="gebaude"         type="building"     minOccurs="1" maxOccurs="1"/>
+            <xs:element name="zentralgerat"    type="device"       minOccurs="1" maxOccurs="1"/>
+            <xs:element name="druckverlust"    type="druckverlust" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="akustik"         type="akustik"      minOccurs="0" maxOccurs="1"/>
+            <xs:element name="firma"           type="company"      minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
     <!--

@@ -1,6 +1,6 @@
 /*
  * WAC
- * 
+ *
  * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
  * Copyright (C) 2010-2012 art of coding UG (haftungsbeschränkt).
  *
@@ -35,6 +35,9 @@ panel(id: "auslegungErstellerPanel", layout: new MigLayout("fillx, wrap", "[]par
 
     label("Email")
     textField(id: "auslegungErstellerEmail", constraints: "grow, span 2")
+
+    label("Angebotsnummer")
+    textField(id: "auslegungErstellerAngebotsnummer", constraints: "grow, span 2")
 
     label("")
     label("")

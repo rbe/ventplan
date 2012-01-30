@@ -29,8 +29,11 @@ class AuslegungPrefHelper {
     public static final String PREFS_USER_KEY_TEL = "erstellerTel";
     public static final String PREFS_USER_KEY_FAX = "erstellerFax";
     public static final String PREFS_USER_KEY_EMAIL = "erstellerEmail";
+    public static final String PREFS_USER_KEY_ANGEBOTSNUMMER = "erstellerAngebotsnummer";
 
     private AuslegungPrefHelper() {
+        // WAC-108 Angebotsnummer soll jedesmal eingegeben werden und wird nur temporär gespeichert
+        prefs.put(PREFS_USER_KEY_ANGEBOTSNUMMER, "");
     }
     
     public boolean hasSavedValues() {
@@ -61,7 +64,8 @@ class AuslegungPrefHelper {
             prefs.put(PREFS_USER_KEY_TEL, map[PREFS_USER_KEY_TEL]);
             prefs.put(PREFS_USER_KEY_FAX, map[PREFS_USER_KEY_FAX]);
             prefs.put(PREFS_USER_KEY_EMAIL, map[PREFS_USER_KEY_EMAIL]);
-            
+            // WAC-108 Angebotsnummer soll jedesmal eingegeben werden und wird nur temporär gespeichert
+            prefs.put(PREFS_USER_KEY_ANGEBOTSNUMMER, map[PREFS_USER_KEY_ANGEBOTSNUMMER]);
             prefs.flush();
         } catch (Exception e) {
             // do nothing
