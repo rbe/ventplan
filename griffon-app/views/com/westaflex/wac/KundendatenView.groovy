@@ -10,7 +10,7 @@ package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
-
+import java.awt.Color
 
 // Großhandel
 panel(id: "kundendatenHauptPanel", layout: new MigLayout("ins 0 n 0 n, wrap 2","[grow,fill] [grow,fill]"), constraints: "grow") {

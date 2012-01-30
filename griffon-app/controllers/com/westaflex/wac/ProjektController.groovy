@@ -11,14 +11,7 @@ package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
 import com.bensmann.griffon.PdfCreator
-import javax.swing.DefaultCellEditor
-import javax.swing.JComboBox
-import javax.swing.JTable
-import javax.swing.table.AbstractTableModel
-import javax.swing.event.TableModelListener
-import java.awt.Component
-import javax.swing.DefaultListModel
-import javax.swing.event.TableModelEvent
+
 import groovyx.net.http.ContentType
 
 /**
@@ -255,13 +248,18 @@ class ProjektController {
         waitDialog?.dispose()
     }
 
+    /**
+     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
+     */
     def showWartenDialog() {
         waitDialog = GH.createDialog(builder, WaitingView, [title: "Auslegung wird erstellt", resizable: false, pack: true])
         waitDialog = GH.centerDialog(app.views['wac2'], waitDialog)
         waitDialog.show()
     }
     
-    
+    /**
+     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
+     */
     def showAuslegungDialog() {
         auslegungDialog = GH.createDialog(builder, AuslegungView, [title: "Ersteller Informationen", resizable: false, pack: true])
         
@@ -280,6 +278,7 @@ class ProjektController {
     }
     
     /**
+     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      * Action: Saves Auslegung Ersteller information to preferences.
      * Called once!
      */
@@ -324,6 +323,7 @@ class ProjektController {
     }
     
     /**
+     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      * Post xml document via REST and receive a PDF file.
      */
     java.io.File odiseeRestXML(File wpxFile, String restUrl, String restPath, String xmlDoc) {

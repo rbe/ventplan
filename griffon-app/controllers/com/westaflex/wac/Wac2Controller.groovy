@@ -167,7 +167,7 @@ class Wac2Controller {
     }
 
     /**
-     * 
+     * TODO Documentation
      */
     String generateMVCId() {
         def c = Wac2Controller.projektCounter++
@@ -354,6 +354,9 @@ class Wac2Controller {
         }
     }
     
+    /**
+     * TODO Documentation
+     */
     def zuletztGeoffnetesProjekt = { evt = null ->
         try {
             def file = evt.getActionCommand()
@@ -364,6 +367,9 @@ class Wac2Controller {
         }
     }
     
+    /**
+     * TODO Documentation
+     */
     def projektOffnenClosure = { file ->
         jxwithWorker(start: true) {
             // initialize the worker
@@ -492,6 +498,9 @@ class Wac2Controller {
         alleProjekteSpeichern(evt)
     }
     
+    /**
+     * TODO Documentation
+     */
     def alleProjekteSpeichern = { evt ->
         model.projekte.each {
             def mvc = getMVCGroup(it)
@@ -521,7 +530,7 @@ class Wac2Controller {
     }
 
     /**
-     * WAC-151: Automatische und manuelle Berechnung
+     * WAC-151 Automatische und manuelle Berechnung
      */
     def automatischeBerechnung = { evt = null ->
         def mvc = getMVCGroupAktivesProjekt()
@@ -544,7 +553,7 @@ class Wac2Controller {
     }
 
     /**
-     * WAC-167: Info-Menü mit Über-Dialog
+     * WAC-167 Info-Menü mit Über-Dialog
      * Dialog mit Logo und Versionsnummer
      */
     def aboutDialogOeffnen = { evt = null ->
@@ -554,7 +563,7 @@ class Wac2Controller {
     }
 	
     /**
-     * WAC-161: Zuletzt geöffnete Projekte
+     * WAC-161 Zuletzt geöffnete Projekte
      */
     def addRecentlyOpenedFile = { filename ->
         if (DEBUG) println "addRecentlyOpenedFile -> filename: ${filename}"
@@ -595,7 +604,7 @@ class Wac2Controller {
     }
     
     /**
-     * WAC-177: Angebotsverfolgung
+     * WAC-177 Angebotsverfolgung
      */
     def angebotsverfolgung = {
         // show input dialog
@@ -616,7 +625,6 @@ class Wac2Controller {
     /**
      * Iterate through the files and submit each file to the web service.
      * Informs the user with dialogs what happens: error, success...
-     */
     def angebotsverfolgungFilesClosure = { files, inputName ->
         
         def wacwsUrl
@@ -690,8 +698,11 @@ class Wac2Controller {
             }
         }
     }
+    */
     
-    // Post text of file object.
+    /**
+     * Post text of file object.
+     */
     def postWpxFile = { f, inputName -> 
         doOutside {
             try {
@@ -723,5 +734,4 @@ class Wac2Controller {
         mvc.controller.generiereVerlegeplan()
     }
     
-	
 }
