@@ -9,4 +9,4 @@
  */
 package com.westaflex.wac
 
-auslegungErstellerSpeichern.actionPerformed = controller.auslegungErstellerSpeichern
+auslegungErstellerSpeichern.actionPerformed = controller.auslegungErstellen

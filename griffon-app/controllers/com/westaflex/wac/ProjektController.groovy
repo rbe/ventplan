@@ -220,22 +220,17 @@ class ProjektController {
 	}
     
     /**
-	 * Button "Seitenansicht".
+	 * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
 	 */
-    def seitenansicht = {
+    def auslegungErstellen = {
         // Auslegungsdialog immer anzeigen, damit die Handwerker die Daten ändern können.
         showAuslegungDialog()
     }
     
-    def makeSeitenansicht() {
-        
-        /*
-        def titel = "Auslegung erstellen" as String
-        def msg = "Bitte warten Sie während die Auslegung erstellt wird..." as String
-        def pleaseWaitDialog = app.controllers["Dialog"].showCustomInformDialog(titel, msg)
+    /**
+     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
         */
-        showWartenDialog()
-       
+    def _auslegungErstellen() {
         try {
             File wpxFile = new File(model.wpxFilename)
             String xmlDoc = oooService.performAuslegung(wpxFile, model.map, DEBUG )
@@ -288,7 +283,7 @@ class ProjektController {
      * Action: Saves Auslegung Ersteller information to preferences.
      * Called once!
      */
-    def auslegungErstellerSpeichern = {
+    def auslegungErstellenSpeichern = {
         
         try {
             def firma = view.auslegungErstellerFirma.text
@@ -316,7 +311,7 @@ class ProjektController {
 
                 auslegungPrefs.save(map)
                 
-                makeSeitenansicht()
+                _auslegungErstellen()
                 
             } else {
                 def errorMsg = "Auslegung konnte nicht erstellt werden. " +
@@ -352,11 +347,11 @@ class ProjektController {
     }
     
 	/**
-	 * Aktuelles Projekt drucken.
+     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
 	 */
-    def drucken = {
+    def angebotErstellen = {
 		def choice = app.controllers["Dialog"].showPrintProjectDialog()
-        if (DEBUG) println "drucken: choice=${choice}"
+        if (DEBUG) println "angebotErstellen: choice=${choice}"
         switch (choice) {
             case 0:
                 if (DEBUG) println "Ja = Daten an OOo senden"
@@ -1794,11 +1789,10 @@ class ProjektController {
 		}
 	}
     
-    
     /**
-     *
+     * TODO Rename to 'Verlegeplan'
      */
-    void generiereStuckliste() {
+    void generiereVerlegeplan() {
         
         try {
             
@@ -1807,11 +1801,11 @@ class ProjektController {
             // Save document in user home dir
             //def userDir = System.getProperty("user.home")
             //userDir = userDir + "/" + title + "_" + System.currentTimeMillis() + ".pdf"
-            def stucklisteFilename = model.wpxFilename - '.wpx' + ' Stückliste.pdf'
+            def verlegeplanFilename = model.wpxFilename - '.wpx' + ' Verlegeplan.pdf'
             
             PdfCreator pdfCreator = new PdfCreator()
             // Create a new pdf document
-            pdfCreator.createDocument(stucklisteFilename)
+            pdfCreator.createDocument(verlegeplanFilename)
 
             def logourl = Wac2Resource.getPdfLogo()
             if (DEBUG) println "logourl -> ${logourl.dump()}"
@@ -1831,41 +1825,45 @@ class ProjektController {
             if (DEBUG) println "adding empty artikel"
             
                 model.map.raum.raume.each { r -> 
-                    erzeugeRaumStucklisteAbluft(r, pdfCreator)
+                    erzeugeRaumVerlegeplanAbluft(r, pdfCreator)
                 }
                 model.map.raum.raume.each { r -> 
-                    erzeugeRaumStucklisteZuluft(r, pdfCreator)
+                    erzeugeRaumVerlegeplanZuluft(r, pdfCreator)
                 }
                 model.map.raum.raume.each { r -> 
-                    erzeugeRaumStucklisteUberstrom(r, pdfCreator)
+                    erzeugeRaumVerlegeplanUberstrom(r, pdfCreator)
                 }
-                erzeugeDruckverlustStuckliste(model.map.dvb, pdfCreator)
-                erzeugeSchalldampferStuckliste(model.map.akustik.zuluft, "zuluft", pdfCreator)
-                erzeugeSchalldampferStuckliste(model.map.akustik.abluft, "abluft", pdfCreator)
+                erzeugeDruckverlustVerlegeplan(model.map.dvb, pdfCreator)
+                erzeugeSchalldampferVerlegeplan(model.map.akustik.zuluft, "zuluft", pdfCreator)
+                erzeugeSchalldampferVerlegeplan(model.map.akustik.abluft, "abluft", pdfCreator)
             
             // Add table to the document
             pdfCreator.addTable()
             // Close the pdf document
             pdfCreator.closeDocument()
             
-            def successMsg = "Stückliste '${stucklisteFilename}' erfolgreich generiert"
+            def successMsg = "Verlegeplan '${verlegeplanFilename}' erfolgreich generiert"
             app.controllers["Dialog"].showInformDialog(successMsg as String)
             
-            java.io.File sf = new java.io.File(stucklisteFilename)
+            java.io.File sf = new java.io.File(verlegeplanFilename)
             if (sf.exists()) {
                 java.awt.Desktop.desktop.open(sf)
             }
         } catch (e) {
             println "Error generating document: ${e.dump()}"
             
-            def errorMsg = "Beim generieren der Stückliste ist ein Fehler aufgetreten"
+            def errorMsg = "Beim generieren des Verlegeplans ist ein Fehler aufgetreten"
             app.controllers["Dialog"].showErrorDialog(errorMsg as String)
         }
         
     }
     
-    
-    void erzeugeRaumStucklisteAbluft(map, pdfCreator) { 
+    /**
+     * TODO Rename to 'Verlegeplan'
+     * @param map
+     * @param pdfCreator
+     */
+    void erzeugeRaumVerlegeplanAbluft(map, pdfCreator) {
         
         if (map.raumBezeichnungAbluftventile) {
             if (DEBUG) println "adding Abluft... ${map.dump()}"
@@ -1873,21 +1871,36 @@ class ProjektController {
         }
     }
     
-    void erzeugeRaumStucklisteZuluft(map, pdfCreator) { 
+    /**
+     * TODO Rename to 'Verlegeplan'
+     * @param map
+     * @param pdfCreator
+     */
+    void erzeugeRaumVerlegeplanZuluft(map, pdfCreator) {
         if (map.raumBezeichnungZuluftventile) {
             if (DEBUG) println "adding Zuluft... ${map.dump()}"
             pdfCreator.addArtikel(map.raumBezeichnung, "Zuluft", map.raumBezeichnungZuluftventile, map.raumAnzahlZuluftventile)
         }
     }
     
-    void erzeugeRaumStucklisteUberstrom(map, pdfCreator) { 
+    /**
+     * TODO Rename to 'Verlegeplan'
+     * @param map
+     * @param pdfCreator
+     */
+    void erzeugeRaumVerlegeplanUberstrom(map, pdfCreator) {
         if (map.raumAnzahlUberstromVentile && map.raumAnzahlUberstromVentile > 0) {
             if (DEBUG) println "adding Überström... ${map.dump()}"
             pdfCreator.addArtikel("", "Überström", map.raumUberstromElement, map.raumAnzahlUberstromVentile)
         }
     }
             
-    void erzeugeDruckverlustStuckliste(dvb, pdfCreator) {
+    /**
+     * TODO Rename to 'Verlegeplan'
+     * @param dvb
+     * @param pdfCreator
+     */
+    void erzeugeDruckverlustVerlegeplan(dvb, pdfCreator) {
         dvb.kanalnetz.each {
             if (it.kanalbezeichnung) {
                 if (DEBUG) println "adding kanalnetz..."
@@ -1896,7 +1909,13 @@ class ProjektController {
         }
     }   
     
-    void erzeugeSchalldampferStuckliste(akustik, luftart, pdfCreator) {
+    /**
+     * TODO Rename to 'Verlegeplan'
+     * @param akusik
+     * @param luftart
+     * @param pdfCreator
+     */
+    void erzeugeSchalldampferVerlegeplan(akustik, luftart, pdfCreator) {
         if (akustik.hauptschalldampfer1) {
             if (DEBUG) println "adding schalldampfer 1..."
             pdfCreator.addArtikel("", "", akustik.hauptschalldampfer1, 1)

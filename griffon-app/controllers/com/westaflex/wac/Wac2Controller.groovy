@@ -507,17 +507,17 @@ class Wac2Controller {
     }
 
     /**
-     * Seitenansicht öffnen.
+     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      */
-    def projektSeitenansicht = { evt = null ->
-        getMVCGroupAktivesProjekt().controller.seitenansicht()
+    def projektAuslegungErstellen = { evt = null ->
+        getMVCGroupAktivesProjekt().controller.auslegungErstellen()
     }
 
     /**
      * Projekt drucken.
      */
-    def projektDrucken = { evt = null ->
-        getMVCGroupAktivesProjekt().controller.drucken()
+    def projektAngebotErstellen = { evt = null ->
+        getMVCGroupAktivesProjekt().controller.angebotErstellen()
     }
 
     /**
@@ -714,14 +714,13 @@ class Wac2Controller {
     }
     
     /**
-     * WAC-108: Stückliste generieren
+     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      */
     def stuckliste = {
         // Projekt zur aktiven Tab finden
         def mvc = getMVCGroupAktivesProjekt()
-        
         // Erzeuge Stückliste für aktives Projekt.
-        mvc.controller.generiereStuckliste()
+        mvc.controller.generiereVerlegeplan()
     }
     
 	

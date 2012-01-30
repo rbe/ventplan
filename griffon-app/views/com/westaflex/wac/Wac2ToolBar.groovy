@@ -13,14 +13,13 @@ def vertSep = { -> separator(orientation: javax.swing.SwingConstants.VERTICAL) }
 toolBar(id: 'toolbar', rollover: true) {
 	button(neuesProjektAction, text: null)
 	button(projektOeffnenAction, text: null)
-	vertSep()
 	button(projektSpeichernAction, text: null)
     //button(projektSpeichernAlsAction, text: null)
     //WAC-155 button(alleProjekteSpeichernAction, text: null)
     vertSep()
-	button(projektSeitenansichtAction, text: null)
+	button(projektAuslegungErstellenAction, text: null)
+    button(projektAngebotErstellenAction, text: null)
     // WAC-151: Automatische und manuelle Berechnung
     vertSep()
 	button(automatischeBerechnungAction, text: null)
-	/* Später aktivieren, Angebote sind noch nicht verfügbar! button(projektDruckenAction, text: null)*/
 }

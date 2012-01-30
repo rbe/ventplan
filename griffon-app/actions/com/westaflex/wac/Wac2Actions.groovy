@@ -73,24 +73,26 @@ projektSchliessenAction = action(
         closure: controller.projektSchliessen
         )
 
-projektSeitenansichtAction = action(
-        id: "seitenansichtAction",
-        name: "Seitenansicht",
+// WAC-108 Angebot mit Stückliste generieren
+projektAuslegungErstellenAction = action(
+        id: "auslegungErstellenAction",
+        name: "Auslegung erstellen",
         mnemonic: "A",
         accelerator: shortcut("A"),
         smallIcon: imageIcon("/menu/seitenansicht.png"),
         enabled: bind { model.aktivesProjekt != null },
-        closure: controller.projektSeitenansicht
+        closure: controller.projektAuslegungErstellen
         )
 
-projektDruckenAction = action(
-        id: "druckenAction",
-        name: "Drucken",
+// WAC-108 Angebot mit Stückliste generieren.
+projektAngebotErstellenAction = action(
+        id: "angebotErstellenAction",
+        name: "Angebot erstellen",
         mnemonic: "P",
         accelerator: shortcut("P"),
         smallIcon: imageIcon("/menu/drucken.png"),
         enabled: bind { model.aktivesProjekt != null },
-        closure: controller.projektDrucken
+        closure: controller.projektAngebotErstellen
         )
 
 exitAction = action(
@@ -102,7 +104,7 @@ exitAction = action(
         closure: controller.exitApplication
         )
 
-// WAC-151: Automatische und manuelle Berechnung
+// WAC-151 Automatische und manuelle Berechnung
 automatischeBerechnungAction = action(
         id: "automatischeBerechnungAction",
         name: "Automatische Berechnung",
@@ -113,7 +115,27 @@ automatischeBerechnungAction = action(
         closure: controller.automatischeBerechnung
         )
 
-// WAC-167: Info-Menü mit Über-Dialog
+// WAC-177 Angebotsverfolgung
+angebotsverfolgungAction = action(
+    id: "angebotsverfolgungAction",
+    name: "Angebotsverfolgung",
+    mnemonic: "U",
+    accelerator: shortcut("U"),
+    enabled: bind { model.aktivesProjekt != null },
+    closure: controller.angebotsverfolgung
+)
+
+// WAC-202 Verlegeplan
+verlegeplanAction = action(
+    id: "verlegeplanAction",
+    name: "Verlegeplan erstellen",
+    mnemonic: "G",
+    accelerator: shortcut("G"),
+    enabled: bind { model.aktivesProjekt != null },
+    closure: controller.stuckliste
+)
+
+// WAC-167 Info-Menü mit Über-Dialog
 aboutAction = action(
         id: "aboutAction",
         name: "Über",
@@ -121,24 +143,4 @@ aboutAction = action(
         accelerator: shortcut("I"),
         enabled: true,
         closure: controller.aboutDialogOeffnen
-        )
-
-// WAC-177: Angebotsverfolgung
-angebotsverfolgungAction = action(
-    id: "angebotsverfolgungAction",
-    name: "Angebotsverfolgung",
-    mnemonic: "U",
-    accelerator: shortcut("U"),
-    enabled: true,
-    closure: controller.angebotsverfolgung
-)
-
-// WAC-108: Stückliste generieren
-stucklisteAction = action(
-    id: "stucklisteAction",
-    name: "Stückliste generieren",
-    mnemonic: "G",
-    accelerator: shortcut("G"),
-    enabled: bind { model.aktivesProjekt != null },
-    closure: controller.stuckliste
 )
