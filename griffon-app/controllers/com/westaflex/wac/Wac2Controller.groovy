@@ -610,7 +610,11 @@ class Wac2Controller {
      */
     def angebotsverfolgung = {
         // show input dialog
+        // TODO mmu Bitte Dialog AGB akzeptieren
         def inputName = javax.swing.JOptionPane.showInputDialog("Bitte geben Sie Ihren Namen ein.")
+        // TODO mmu Danach Daten holen und REST Service aufrufen (Service existiert noch nicht!)
+        // TODO mmu http://wac.service.odisee.de/wac/177/bauvorhaben/<bauvorhaben>/plz/<bauvorhabenPlz>/ort/<bauvorhabenOrt>
+        /*
         // if input is not empty show file dialog
         if (inputName) {
             def openResult = view.angebotsverfolgungChooserWindow.showOpenDialog(view.wac2Frame)
@@ -622,6 +626,7 @@ class Wac2Controller {
             def errorMsg = "Geben Sie einen Namen an, um die Angebotsverfolgung durchzuführen." as String
             app.controllers["Dialog"].showErrorDialog(errorMsg as String)
         }
+        */
     }
     
     /**
