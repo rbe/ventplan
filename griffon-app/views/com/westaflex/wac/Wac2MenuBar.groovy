@@ -16,7 +16,7 @@ menuBar = menuBar {
 		separator()
 		menuItem(projektSpeichernAction)
 		menuItem(projektSpeichernAlsAction)
-		menuItem(alleProjekteSpeichernAction)
+        // WAC-155 menuItem(alleProjekteSpeichernAction)
 		menuItem(projektSchliessenAction)
 		separator()
         // WAC-161: Zuletzt geöffnete Projekte

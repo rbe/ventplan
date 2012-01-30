@@ -51,6 +51,8 @@ projektSpeichernAlsAction = action(
         closure: controller.aktivesProjektSpeichernAls
         )
 
+// WAC-155
+/*
 alleProjekteSpeichernAction = action(
         id: "alleProjekteSpeichernAction",
         name: "Alle Projekte speichern",
@@ -60,6 +62,7 @@ alleProjekteSpeichernAction = action(
         enabled: bind { model.alleProjekteGeandert },
         closure: controller.alleProjekteSpeichernAction
         )
+*/
 
 projektSchliessenAction = action(
         id: "projektSchliessenAction",
