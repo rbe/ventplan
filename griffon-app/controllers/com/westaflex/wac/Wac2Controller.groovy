@@ -355,7 +355,7 @@ class Wac2Controller {
             projektOffnenClosure(file)
         }
     }
-    
+
     /**
      * TODO Documentation
      */
@@ -368,7 +368,7 @@ class Wac2Controller {
             println "ERROR in zuletztGeoffnetesProjekt: Could not load file ${file} caused by: ${e.dump()}"
         }
     }
-    
+
     /**
      * TODO Documentation
      */
@@ -499,7 +499,7 @@ class Wac2Controller {
     def alleProjekteSpeichernAction = { evt = null -> 
         alleProjekteSpeichern(evt)
     }
-    
+
     /**
      * TODO Documentation
      */
@@ -706,7 +706,7 @@ class Wac2Controller {
         }
     }
     */
-    
+
     /**
      * Post text of file object.
      */
@@ -740,5 +740,5 @@ class Wac2Controller {
         // Erzeuge Stückliste für aktives Projekt.
         mvc.controller.generiereVerlegeplan()
     }
-    
+
 }
