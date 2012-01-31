@@ -24,6 +24,8 @@ class Wac2Controller {
     def view
     def wacCalculationService
     def builder
+
+    def angebotsverfolgungDialog
     
     /**
      * Flag zum Abbrechen des Schliessen Vorgangs
@@ -357,7 +359,7 @@ class Wac2Controller {
     }
 
     /**
-     * TODO Documentation
+     * Öffnet das zuletzt geladene Projekt aus MRUFileManager.
      */
     def zuletztGeoffnetesProjekt = { evt = null ->
         try {
@@ -370,7 +372,9 @@ class Wac2Controller {
     }
 
     /**
-     * TODO Documentation
+     * Öffnet das Projekt aus der angegebenen Datei.
+     * Die zu ladende Datei wird in den MRUFileManager als zuletzt geöffnetes Projekt gespeichert.
+     * Alle Werte werden neu berechnet.
      */
     def projektOffnenClosure = { file ->
         jxwithWorker(start: true) {
@@ -501,7 +505,7 @@ class Wac2Controller {
     }
 
     /**
-     * TODO Documentation
+     * Alle Projekte speichern, die nicht bereits gesichert wurden.
      */
     def alleProjekteSpeichern = { evt ->
         model.projekte.each {
@@ -609,11 +613,11 @@ class Wac2Controller {
      * WAC-177 Angebotsverfolgung
      */
     def angebotsverfolgung = {
-        // show input dialog
-        // TODO mmu Bitte Dialog AGB akzeptieren
-        def inputName = javax.swing.JOptionPane.showInputDialog("Bitte geben Sie Ihren Namen ein.")
-        // TODO mmu Danach Daten holen und REST Service aufrufen (Service existiert noch nicht!)
-        // TODO mmu http://wac.service.odisee.de/wac/177/bauvorhaben/<bauvorhaben>/plz/<bauvorhabenPlz>/ort/<bauvorhabenOrt>
+        // TODO mmu Eingabefelder mit grauem Text hinterlegen...
+        angebotsverfolgungDialog = GH.createDialog(builder, BauvorhabenView, [title: "Bauvorhaben", resizable: false, pack: true])
+        angebotsverfolgungDialog = GH.centerDialog(app.views['wac2'], angebotsverfolgungDialog)
+        angebotsverfolgungDialog.show()
+
         /*
         // if input is not empty show file dialog
         if (inputName) {
@@ -627,6 +631,21 @@ class Wac2Controller {
             app.controllers["Dialog"].showErrorDialog(errorMsg as String)
         }
         */
+    }
+
+    /**
+     * angebotsverfolgungDialog Wert auslesen und auswerten...
+     */
+    def angebotsverfolgungErstellen = { evt ->
+        if (view.bauvorhabenDialogAGB.selected) {
+            def bauvorhaben = view.bauvorhabenDialogBauvorhaben.text
+            def plz = view.bauvorhabenDialogPlz.text
+            def ort = view.bauvorhabenDialogOrt.text
+            def angebotsnummer = view.bauvorhabenDialogAngebotsnummer.text
+            // TODO mmu Danach Daten holen und REST Service aufrufen (Service existiert noch nicht!)
+            // TODO mmu http://wac.service.odisee.de/wac/177/bauvorhaben/<bauvorhaben>/plz/<bauvorhabenPlz>/ort/<bauvorhabenOrt>
+        }
+
     }
     
     /**
@@ -739,6 +758,15 @@ class Wac2Controller {
         def mvc = getMVCGroupAktivesProjekt()
         // Erzeuge Stückliste für aktives Projekt.
         mvc.controller.generiereVerlegeplan()
+    }
+
+    /**
+     * TODO mmu/rbe Link zur AGB ersetzen!
+     * Öffnet den Link zu den AGBs in dem Default-Browser
+     */
+    def agbOeffnen = {
+        def agbLink = "http://www.art-of-coding.eu"
+        java.awt.Desktop.getDesktop().browse(java.net.URI.create(agbLink));
     }
 
 }
