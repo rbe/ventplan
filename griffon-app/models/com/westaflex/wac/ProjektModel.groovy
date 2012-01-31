@@ -297,6 +297,12 @@ class ProjektModel {
 
     @Bindable
     boolean raumVerschiebenButtonsEnabled
+    
+    @Bindable
+    boolean dvbKanalnetzButtonsEnabled
+
+    @Bindable
+    boolean dvbVentileinstellungButtonsEnabled
 
 	/**
 	 * Prüfe Raumdaten auf Richtigkeit.
@@ -980,7 +986,7 @@ class ProjektModel {
                 //tableModels.raume.each {
                 newRaume.each {
                     def m = tableModels.raumeTuren[it.position]
-                    // TODO NullPointer when loading data
+                    // Catch possible NullPointer when loading data
                     try {
                         m.clear()
                         m.addAll(it.turen)
@@ -1033,6 +1039,8 @@ class ProjektModel {
             setDvbKanalnetzEditors(view)
             // wbw setzen
             addWbwTableModel(tableModels.dvbKanalnetz.size() - 1)
+            dvbKanalnetzButtonsEnabled = true
+            firePropertyChange("dvbKanalnetzButtonsEnabled", !dvbKanalnetzButtonsEnabled, dvbKanalnetzButtonsEnabled)
 		}
 	}
 	
@@ -1047,6 +1055,10 @@ class ProjektModel {
 			[tableModels.dvbKanalnetz].each {
 				it.remove(kanalnetzIndex)
 			}
+            if (tableModels.dvbKanalnetz.size() < 1) {
+                dvbKanalnetzButtonsEnabled = false
+                firePropertyChange("dvbKanalnetzButtonsEnabled", !dvbKanalnetzButtonsEnabled, dvbKanalnetzButtonsEnabled)
+            }
 		}
 	}
 	
@@ -1063,6 +1075,8 @@ class ProjektModel {
 		}
 		// Comboboxen in den Tabellen hinzufügen
         setDvbVentileinstellungEditors(view)
+        dvbVentileinstellungButtonsEnabled = true
+        firePropertyChange("dvbVentileinstellungButtonsEnabled", !dvbVentileinstellungButtonsEnabled, dvbVentileinstellungButtonsEnabled)
 	}
 	
 	/**
@@ -1083,6 +1097,10 @@ class ProjektModel {
 			[tableModels.dvbVentileinstellung].each {
 				it.remove(ventileinstellungIndex)
 			}
+            if (tableModels.dvbVentileinstellung.size() < 1) {
+                dvbVentileinstellungButtonsEnabled = false
+                firePropertyChange("dvbVentileinstellungButtonsEnabled", !dvbVentileinstellungButtonsEnabled, dvbVentileinstellungButtonsEnabled)
+            }
 		}
 	}
 	
