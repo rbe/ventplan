@@ -50,7 +50,6 @@ panel(id: "raumPanel", layout: new MigLayout("fill", "[fill,grow]", "")) {
     }
     // Buttons
     hbox(constraints: SOUTH) {
-        // TODO mmu Enable buttons when table isn't empty and a row is selected
         button(id: "raumEntfernen",            enabled: bind {model.raumButtonsEnabled}, text: "Raum entfernen")
         button(id: "raumBearbeiten",           enabled: bind {model.raumButtonsEnabled}, text: "Raum bearbeiten")
         button(id: "raumKopieren",             enabled: bind {model.raumButtonsEnabled}, text: "Raum kopieren")

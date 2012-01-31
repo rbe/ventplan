@@ -297,7 +297,6 @@ class GriffonHelper {
                 //dialogCache[dialogClass] = dialog
             //}
             // Return dialog instance
-        println "dialog -> ${dialog.dump()}"
             dialog
         //}
 	}
