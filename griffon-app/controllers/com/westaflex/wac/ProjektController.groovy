@@ -215,7 +215,7 @@ class ProjektController {
     /**
 	 * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
 	 */
-    def auslegungErstellen() {
+    def auslegungErstellen = {
         // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
         showNutzerdatenDialog()
         // Auslegung/Dokument erstellen
@@ -1584,7 +1584,6 @@ class ProjektController {
 	 */
     def dvbVentileinstellungHinzufugen = {
 		def ventileinstellung = GH.getValuesFromView(view, "dvbVentileinstellung")
-		////publishEvent "DvbVentileinstellungHinzufugen", [ventileinstellung, view]
         doLater {
             // Map values from GUI
             def v = [
@@ -1625,11 +1624,8 @@ class ProjektController {
 	 * Druckverlustberechnung - Ventileinstellung - Geändert.
 	 */
     def dvbVentileinstellungGeandert = { ventileinstellungIndex ->
-		////publishEvent "DvbVentileinstellungGeandert", [ventileinstellungIndex]
         doLater {
             wacCalculationService.berechneVentileinstellung(model.map)
-            //
-            ////publishEvent "DvbVentileinstellungInTabelleWahlen", [ventileinstellungIndex]
             onDvbVentileinstellungInTabelleWahlen(ventileinstellungIndex)
         }
 	}
@@ -1638,10 +1634,9 @@ class ProjektController {
 	 * Druckverlustberechnung - Ventileinstellung - Entfernen.
 	 */
     def dvbVentileinstellungEntfernen = {
-		////publishEvent "DvbVentileinstellungEntfernen", [view.dvbVentileinstellungTabelle.selectedRow]
         doLater {
-            //println "onDvbVentileinstellungEntfernen: ventileinstellungIndex=${ventileinstellungIndex}"
             // Zeile aus Model entfernen
+            def ventileinstellungIndex = view.dvbVentileinstellungTabelle.selectedRow
             model.removeDvbVentileinstellung(ventileinstellungIndex)
         }
 	}
@@ -1667,52 +1662,51 @@ class ProjektController {
 
     /**
      * Teilstrecke von ausgewählte Teilstrecke nach verfügbare Teilstrecke verschieben
-     * TODO mmu remove old value!
      */
     def teilstreckenNachVerfugbarVerschieben = {
-        // get selected items
-        def selectedValues = view.teilstreckenAusgewahlteListe.selectedValues as String[]
-        if (DEBUG) println "teilstreckenNachVerfugbarVerschieben: selectedIndices -> ${selectedValues}"
-        // add to verfugbare list and remove from ausgewahlte list
-        def listModel = view.teilstreckenVerfugbareListe.model
-        selectedValues.each { listModel.addElement(it) }
-        view.teilstreckenVerfugbareListe.setModel(listModel)
+        doLater {
+            // get selected items
+            def selectedValues = view.teilstreckenAusgewahlteListe.selectedValues as String[]
+            if (DEBUG) println "teilstreckenNachVerfugbarVerschieben: selectedIndices -> ${selectedValues}"
+            // add to verfugbare list and remove from ausgewahlte list
+            def vListModel = view.teilstreckenVerfugbareListe.model
+            selectedValues.each { vListModel.addElement(it) }
+            view.teilstreckenVerfugbareListe.setModel(vListModel)
 
-        // remove from ausgewahlte list
-        def aListModel = view.teilstreckenAusgewahlteListe.model
-        selectedValues.each { aListModel.remove(it) }
-        
-        view.teilstreckenAusgewahlteListe.setModel(aListModel)
+            // remove from ausgewahlte list
+            def aListModel = view.teilstreckenAusgewahlteListe.model
+            selectedValues.each { aListModel.removeElement(it) }
+            view.teilstreckenAusgewahlteListe.setModel(aListModel)
 
-        def listArray = aListModel.toArray()
-        def newText = listArray.collect { it }.join(';')
-        view.teilstreckenAuswahl.setText(newText)
+            def listArray = aListModel.toArray()
+            def newText = listArray.collect { it }.join(';')
+            view.teilstreckenAuswahl.setText(newText)
+        }
     }
 
     /**
      * Teilstrecke von verfügbare Teilstrecke nach ausgewählte Teilstrecke verschieben
-     * TODO mmu remove old value!
      */
     def teilstreckenNachAusgewahlteVerschieben = {
-        // get selected items
-        def selectedValues = view.teilstreckenVerfugbareListe.selectedValues as String[]
-        if (DEBUG) println "teilstreckenNachAusgewahlteVerschieben: selectedValues -> ${selectedValues}"
-        // add to ausgewahlte list and remove from verfugbare list
-        def aListModel = view.teilstreckenAusgewahlteListe.model
-        selectedValues.each { aListModel.addElement(it) }
-        view.teilstreckenAusgewahlteListe.setModel(aListModel)
+        doLater {
+            // get selected items
+            def selectedValues = view.teilstreckenVerfugbareListe.selectedValues as String[]
+            if (DEBUG) println "teilstreckenNachAusgewahlteVerschieben: selectedValues -> ${selectedValues}"
+            // add to ausgewahlte list and remove from verfugbare list
+            def aListModel = view.teilstreckenAusgewahlteListe.model
+            selectedValues.each { aListModel.addElement(it) }
+            view.teilstreckenAusgewahlteListe.setModel(aListModel)
 
-        // remove from verfugbare list
-        def vListModel = view.teilstreckenVerfugbareListe.model
-        selectedValues.each { vListModel.removeElement(it) }
-        view.teilstreckenVerfugbareListe.setModel(vListModel)
+            // remove from verfugbare list
+            def vListModel = view.teilstreckenVerfugbareListe.model
+            selectedValues.each { vListModel.removeElement(it) }
+            view.teilstreckenVerfugbareListe.setModel(vListModel)
 
-        if (DEBUG) println "view -> ${view}"
-
-        // set text
-        def listArray = aListModel.toArray()
-        def newText = listArray.collect { it }.join(';')
-        view.teilstreckenAuswahl.setText(newText)
+            // set text
+            def listArray = aListModel.toArray()
+            def newText = listArray.collect { it }.join(';')
+            view.teilstreckenAuswahl.setText(newText)
+        }
     }
 	
 	/**
@@ -1941,5 +1935,4 @@ class ProjektController {
             pdfCreator.addArtikel("", "", akustik.hauptschalldampfer2, 1)
         }
     }
-    
 }
