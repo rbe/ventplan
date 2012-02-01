@@ -32,7 +32,7 @@ panel(id: "angebotsverfolgungDialogPanel", layout: new MigLayout("fillx, wrap", 
 
     button(id: "angebotsverfolgungDialogAbbrechen", text: "Abbrechen")
     label("")
-    button(id: "angebotsverfolgungDialogAbsenden", text: "Angebot verfolgen")
+    button(id: "angebotsverfolgungDialogAbsenden", text: "Angebot verfolgen", enabled: false)
 }
 
 build(AngebotsverfolgungBindings)

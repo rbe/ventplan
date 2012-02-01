@@ -9,6 +9,7 @@
  */
 package com.westaflex.wac
 
+angebotsverfolgungDialogAGB.actionPerformed = controller.angebotsverfolgungAGB
 angebotsverfolgungDialogAbbrechen.actionPerformed = controller.angebotsverfolgungAbbrechen
 angebotsverfolgungDialogAbsenden.actionPerformed = controller.angebotsverfolgungErstellen
 angebotsverfolgungDialogAGBOeffnen.actionPerformed = controller.agbOeffnen

@@ -13,6 +13,7 @@ import com.bensmann.griffon.GriffonHelper as GH
 import com.bensmann.griffon.PdfCreator
 
 import groovyx.net.http.ContentType
+import java.awt.Dialog
 
 /**
  * 
@@ -442,7 +443,7 @@ class ProjektController {
         // Dialog erstellen
         angebotsverfolgungDialog = GH.createDialog(builder, AngebotsverfolgungView, [title: "Angebotsverfolgung durchführen", resizable: false, pack: true])
         // Dialog mit Daten füllen
-        println "model.map.kundendaten=${model.map.kundendaten}"
+        if (DEBUG) println "model.map.kundendaten=${model.map.kundendaten}"
         view.angebotsverfolgungDialogBauvorhaben.text = model.map.kundendaten.bauvorhaben
         view.angebotsverfolgungDialogAnschrift.text = model.map.kundendaten.bauvorhabenAnschrift
         view.angebotsverfolgungDialogPlz.text = model.map.kundendaten.bauvorhabenPlz
@@ -465,14 +466,23 @@ class ProjektController {
      * Wert auslesen und auswerten...
      */
     def angebotsverfolgungErstellen = { evt ->
-        if (view.bauvorhabenDialogAGB.selected) {
+        if (view.angebotsverfolgungDialogAGB.selected) {
             def bauvorhaben = view.angebotsverfolgungDialogBauvorhaben.text
+            def anschrift = view.angebotsverfolgungDialogAnschrift.text
             def plz = view.angebotsverfolgungPlz.text
             def ort = view.angebotsverfolgungOrt.text
-            //def angebotsnummer = view.bauvorhabenDialogAngebotsnummer.text
             // TODO mmu Danach Daten holen und REST Service aufrufen (Service existiert noch nicht!)
-            // TODO mmu http://wac.service.odisee.de/wac/177/bauvorhaben/<bauvorhaben>/plz/<bauvorhabenPlz>/ort/<bauvorhabenOrt>
+            // TODO mmu http://wac.service.odisee.de/wac/177/bauvorhaben/<bauvorhaben>/anschrift/<anschrift>/plz/<plz>/ort/<ort>
+        } else {
+            // TODO mmu Info-Dialog "Bitte akzeptieren Sie dazu die AGB!"
         }
+    }
+
+    /**
+     *
+     */
+    def angebotsverfolgungAGB = {
+        view.angebotsverfolgungDialogAbsenden.enabled = !view.angebotsverfolgungDialogAbsenden.enabled
     }
 
     /**
