@@ -194,7 +194,7 @@ class AngebotService {
     /**
      * @param artikelnummer
      */
-    def artikel(artikelnummer) {
+    def getArtikel(artikelnummer) {
         // Check arguments
         if (null == artikelnummer) {
             throw new IllegalStateException('Keine Artikelnummer angegeben!')
@@ -213,11 +213,24 @@ class AngebotService {
     }
 
     /**
+     * Artikelnummer, Datensatz ist entweder aus Tabelle ARTIKEL oder STUECKLISTE
+     * @param artikel
+     * @return
+     */
+    String getArtikelnummer(artikel) {
+        try { // STUECKLISTE
+            artikel.ARTIKEL
+        } catch (groovy.lang.MissingPropertyException e) { // ARTIKEL
+            artikel.ARTIKELNUMMER
+        }
+    }
+
+    /**
      *
      * @param pakete
      * @return
      */
-    List getStuckliste(List<Integer> pakete) {
+    List paketeZuStuckliste(List<Integer> pakete) {
         // Check arguments
         if (null == pakete) {
             throw new IllegalStateException('Kein(e) Paket(e) angegeben!')
@@ -238,6 +251,45 @@ class AngebotService {
         }
         if (DEBUG) println "${this}.getStuckliste(${pakete}): " + r.dump()
         return r
+    }
+
+    /**
+     * Füge einen Artikel zur Stückliste hinzu.
+     * @param stuckliste Map
+     * @param artikel groovy.sql.GroovyRowResult
+     * @param p
+     */
+    void artikelAufStuckliste(Map stuckliste, artikel, p = null) {
+        if (null == artikel) {
+            throw new IllegalArgumentException('Kein Artikel')
+        }
+        def artikelnummer = getArtikelnummer(artikel)
+        if (stuckliste.containsKey(artikelnummer)) {
+            stuckliste[artikelnummer].ANZAHL += artikel.ANZAHL ?: 1
+            println String.format('+      Artikel hinzu: Paket=%5s Artikel=%17s Anzahl=%4.1f', p ?: '', artikelnummer, artikel.ANZAHL)
+        } else {
+            stuckliste[artikelnummer] = artikel
+            println String.format('* Füge Artikel hinzu: Paket=%5s Artikel=%17s Anzahl=%4.1f', p ?: '', artikelnummer, artikel.ANZAHL)
+        }
+    }
+
+    /**
+     * Zeige Inhalt der Stückliste formatiert an.
+     * @param stuckliste
+     */
+    void dumpStuckliste(Map stuckliste) {
+        println ''
+        println 'GESAMTLISTE DER ARTIKEL'
+        println '======================='
+        println 'NR  REIHENFOLGE  ANZAHL     ME     ARTIKELNUMMER - ARTIKELBEZEICHNUNG'
+        println '---------------------------------------------------------------------'
+        stuckliste.sort { it.value.REIHENFOLGE }.eachWithIndex { it, i ->
+            def artikel = it.value
+            int reihenfolge = (int) artikel.REIHENFOLGE
+            double anzahl = (double) artikel.ANZAHL
+            String artikelnummer = getArtikelnummer(artikel)
+            println String.format('%2d % 12d % 7.1f %6s %17s %s', i + 1, reihenfolge, anzahl, artikel.MENGENEINHEIT, artikelnummer, artikel.ARTIKELBEZEICHNUNG)
+        }
     }
 
 }
