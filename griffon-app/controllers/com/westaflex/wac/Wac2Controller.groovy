@@ -613,7 +613,7 @@ class Wac2Controller {
     def angebotsverfolgung = {
         getMVCGroupAktivesProjekt().controller.angebotsverfolgung()
     }
-    
+
     /**
      * Iterate through the files and submit each file to the web service.
      * Informs the user with dialogs what happens: error, success...
@@ -694,7 +694,6 @@ class Wac2Controller {
 
     /**
      * Post text of file object.
-     */
     def postWpxFile = { f, inputName -> 
         doOutside {
             try {
@@ -715,7 +714,8 @@ class Wac2Controller {
             }
         }
     }
-    
+    */
+
     /**
      * WAC-202 Verlegeplan
      */
