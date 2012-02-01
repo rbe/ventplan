@@ -42,8 +42,8 @@ class ProjektController {
     boolean nutzerdatenGeandert
 
     def angebotsverfolgungDialog
-    
-	/**
+
+    /**
 	 * Initialize MVC group.
 	 */
 	void mvcGroupInit(Map args) {
@@ -168,7 +168,7 @@ class ProjektController {
         }
         def tabTitle = makeTabTitle()?.toString()
         try {
-        view.projektTabGroup.setTitleAt(tabIndex, tabTitle)
+            view.projektTabGroup.setTitleAt(tabIndex, tabTitle)
         } catch (java.lang.ArrayIndexOutOfBoundsException e) {
             // ignore
             println "${this}.setTabTitle(${tabIndex}): EXCEPTION: ${e}"
@@ -252,10 +252,10 @@ class ProjektController {
 			false
 		}
 	}
-    
+
     /**
-	 * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
-	 */
+     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
+     */
     def showNutzerdatenDialog(String title = null, String okButtonText = null) {
         // Anzeigen, dass Daten nicht geändert wurden (da dieser Dialog erneut angezeigt wird)
         nutzerdatenGeandert = false
@@ -287,7 +287,7 @@ class ProjektController {
         // Anzeigen, dass Daten nicht geändert wurden
         nutzerdatenGeandert = false
     }
-    
+
     /**
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      * Action: Saves Auslegung Ersteller information to preferences.
@@ -319,7 +319,7 @@ class ProjektController {
                 auslegungPrefs.save(map)
             } else {
                 def errorMsg = "Auslegung konnte nicht erstellt werden. " +
-                               "Es muss mindestens Name, Anschrift, PLZ, Ort angegeben werden." as String
+                        "Es muss mindestens Name, Anschrift, PLZ, Ort angegeben werden." as String
                 app.controllers["Dialog"].showErrorDialog(errorMsg as String)
             }
             // Anzeigen, dass Daten geändert wurden
@@ -330,7 +330,7 @@ class ProjektController {
             nutzerdatenDialog.dispose()
         }
     }
-    
+
     /**
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      */
@@ -338,13 +338,13 @@ class ProjektController {
         // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
         showNutzerdatenDialog('Auslegung erstellen - Daten eingeben', 'Eingaben speichern und Auslegung erstellen')
         if (nutzerdatenGeandert) {
-        // Auslegung/Dokument erstellen
-        try {
-            File wpxFile = new File(model.wpxFilename)
+            // Auslegung/Dokument erstellen
+            try {
+                File wpxFile = new File(model.wpxFilename)
                 String xmlDoc = oooService.performAuslegung(wpxFile, model.map, DEBUG)
-            java.io.File pdfFile
+                java.io.File pdfFile
                 doLater {
-            doOutside {
+                    doOutside {
                         pdfFile = postToOdisee(wpxFile, 'Auslegung', xmlDoc)
                         if (pdfFile?.exists()) {
                             if (DEBUG) println "auslegungErstellen: doc=${pdfFile?.dump()}"
@@ -357,15 +357,15 @@ class ProjektController {
                     }
                     // Dialog: Bitte warten...
                     waitDialog = GH.createDialog(builder, WaitingView, [title: "Die Auslegung wird erstellt", resizable: false, pack: true])
-                waitDialog = GH.centerDialog(app.views['wac2'], waitDialog)
-                waitDialog.show()
-            }
+                    waitDialog = GH.centerDialog(app.views['wac2'], waitDialog)
+                    waitDialog.show()
+                }
             } catch (e) {
                 println "auslegungErstellen: Error while calling 'Auslegung' -> ${e.dump()}"
                 def errorMsg = "Auslegung konnte leider nicht erstellt werden.\n${e}" as String
                 app.controllers["Dialog"].showErrorDialog(errorMsg as String)
             }
-            }
+        }
     }
 
     /**
@@ -383,11 +383,11 @@ class ProjektController {
                 doLater {
                     doOutside {
                         pdfFile = postToOdisee(wpxFile, 'Angebot', xmlDoc)
-            if (pdfFile?.exists()) {
+                        if (pdfFile?.exists()) {
                             if (DEBUG) println "angebotErstellen: doc=${pdfFile?.dump()}"
-                // Open document
-                java.awt.Desktop.desktop.open(pdfFile)
-            } else {
+                            // Open document
+                            java.awt.Desktop.desktop.open(pdfFile)
+                        } else {
                             if (DEBUG) println "angebotErstellen: PDF fFile does not exist: ${pdfFile?.dump()}"
                         }
                         waitDialog?.dispose()
@@ -396,12 +396,12 @@ class ProjektController {
                     waitDialog = GH.createDialog(builder, WaitingView, [title: "Das Angebot wird erstellt", resizable: false, pack: true])
                     waitDialog = GH.centerDialog(app.views['wac2'], waitDialog)
                     waitDialog.show()
-            }
-        } catch (e) {
+                }
+            } catch (e) {
                 println "angebotErstellen: Error while calling 'Angebot' -> ${e.dump()}"
-            def errorMsg = "Angebot konnte leider nicht erstellt werden.\n${e}" as String
-            app.controllers["Dialog"].showErrorDialog(errorMsg as String)
-        }
+                def errorMsg = "Angebot konnte leider nicht erstellt werden.\n${e}" as String
+                app.controllers["Dialog"].showErrorDialog(errorMsg as String)
+            }
         }
     }
 
@@ -1904,7 +1904,7 @@ class ProjektController {
 	}
     
     /**
-     * TODO Rename to 'Verlegeplan'
+     *
      */
     void generiereVerlegeplan() {
         
@@ -1955,10 +1955,10 @@ class ProjektController {
             pdfCreator.addTable()
             // Close the pdf document
             pdfCreator.closeDocument()
-            
+            /* Dialog nicht anzeigen, einfach PDF öffnen
             def successMsg = "Verlegeplan '${verlegeplanFilename}' erfolgreich generiert"
             app.controllers["Dialog"].showInformDialog(successMsg as String)
-            
+            */
             java.io.File sf = new java.io.File(verlegeplanFilename)
             if (sf.exists()) {
                 java.awt.Desktop.desktop.open(sf)
@@ -1973,7 +1973,7 @@ class ProjektController {
     }
 
     /**
-     * TODO Rename to 'Verlegeplan'
+     *
      * @param map
      * @param pdfCreator
      */
@@ -1986,7 +1986,7 @@ class ProjektController {
     }
 
     /**
-     * TODO Rename to 'Verlegeplan'
+     *
      * @param map
      * @param pdfCreator
      */
@@ -1998,7 +1998,7 @@ class ProjektController {
     }
 
     /**
-     * TODO Rename to 'Verlegeplan'
+     *
      * @param map
      * @param pdfCreator
      */
@@ -2010,7 +2010,7 @@ class ProjektController {
     }
 
     /**
-     * TODO Rename to 'Verlegeplan'
+     *
      * @param dvb
      * @param pdfCreator
      */
@@ -2024,7 +2024,7 @@ class ProjektController {
     }   
 
     /**
-     * TODO Rename to 'Verlegeplan'
+     *
      * @param akusik
      * @param luftart
      * @param pdfCreator
