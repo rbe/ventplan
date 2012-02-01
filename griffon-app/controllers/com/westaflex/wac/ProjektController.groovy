@@ -167,7 +167,45 @@ class ProjektController {
             if (DEBUG) println "ProjektController.setTabTitle new tabIndex=${tabIndex}"
         }
         def tabTitle = makeTabTitle()?.toString()
+        try {
         view.projektTabGroup.setTitleAt(tabIndex, tabTitle)
+        } catch (java.lang.ArrayIndexOutOfBoundsException e) {
+            // ignore
+            println "${this}.setTabTitle(${tabIndex}): EXCEPTION: ${e}"
+            /*
+            java.lang.ArrayIndexOutOfBoundsException: -1
+            at java.util.Vector.elementAt(Vector.java:430)
+            at javax.swing.JTabbedPane.getTitleAt(JTabbedPane.java:1091)
+            at com.jidesoft.swing.JideTabbedPane.setTitleAt(JideTabbedPane.java:1057)
+            at com.jidesoft.swing.JideTabbedPane$setTitleAt.call(Unknown Source)
+            at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:42)
+            at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:108)
+            at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:120)
+            at com.westaflex.wac.ProjektController$_closure1.doCall(ProjektController.groovy:167)
+            at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+            at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+            at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+            at java.lang.reflect.Method.invoke(Method.java:597)
+            at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:90)
+            at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:233)
+            at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1053)
+            at groovy.lang.ExpandoMetaClass.invokeMethod(ExpandoMetaClass.java:1071)
+            at groovy.lang.MetaClassImpl.invokePropertyOrMissing(MetaClassImpl.java:1092)
+            at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1055)
+            at groovy.lang.ExpandoMetaClass.invokeMethod(ExpandoMetaClass.java:1071)
+            at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:883)
+            at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:703)
+            at groovy.lang.GroovyObjectSupport.invokeMethod(GroovyObjectSupport.java:44)
+            at groovy.lang.MetaClassImpl.invokeMethodOnGroovyObject(MetaClassImpl.java:1118)
+            at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1012)
+            at groovy.lang.ExpandoMetaClass.invokeMethod(ExpandoMetaClass.java:1071)
+            at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:883)
+            at org.codehaus.groovy.runtime.callsite.PogoMetaClassSite.callCurrent(PogoMetaClassSite.java:66)
+            at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallCurrent(CallSiteArray.java:46)
+            at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:133)
+            at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:141)
+             */
+        }
 	}
 	
 	/**
