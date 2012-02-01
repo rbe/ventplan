@@ -132,7 +132,7 @@ verlegeplanAction = action(
     mnemonic: "G",
     accelerator: shortcut("G"),
     enabled: bind { model.aktivesProjekt != null },
-    closure: controller.stuckliste
+    closure: controller.verlegeplan
 )
 
 // WAC-167 Info-Menü mit Über-Dialog
