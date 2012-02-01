@@ -155,13 +155,14 @@ class ProjektModel {
     map = [
 		messages: [ltm: ""] as ObservableMap,
 		dirty: false,
-        bauvorhaben: "",    // WAC-177, WAC-108
-        bauvorhabenPlz: "", // WAC-177, WAC-108
-        bauvorhabenOrt: "", // WAC-177, WAC-108
-        angebotsnummerkurz: "", // WAC-177, WAC-108
 		kundendaten: [
 			grosshandel: [:] as ObservableMap,
 			ausfuhrendeFirma: [:] as ObservableMap,
+            bauvorhaben: "",    // WAC-177, WAC-108
+            bauvorhabenAnschrift: "", // WAC-177, WAC-108
+            bauvorhabenPlz: "", // WAC-177, WAC-108
+            bauvorhabenOrt: "", // WAC-177, WAC-108
+            angebotsnummerkurz: "", // WAC-177, WAC-108
 		] as ObservableMap,
 		gebaude: [
 				typ: [mfh: true] as ObservableMap,

@@ -14,7 +14,6 @@ import com.bensmann.griffon.GriffonHelper as GH
 import groovy.xml.DOMBuilder
 import java.text.SimpleDateFormat
 
-
 /**
  * 
  */
@@ -106,8 +105,6 @@ class OooService {
         }
     }
 
-
-
     /**
      *
      * @param wpxFile
@@ -128,20 +125,6 @@ class OooService {
                 makeOdiseeBasedata(wpxFile, map, domBuilder)
                 makeOdiseeProjectdata(wpxFile, map, domBuilder)
                 makeOdiseeRoomdata(wpxFile, map, domBuilder)
-                /*
-                instructions() {
-                    addErsteller(domBuilder)
-                    addProjektdaten(domBuilder, map.kundendaten)
-                    addKundendaten(domBuilder, map.kundendaten)
-                    addGebaude(domBuilder, map)
-                    addRaumdaten(domBuilder, map)
-                    addRaumvolumenstrome(domBuilder, map)
-                    addUberstromelemente(domBuilder, map)
-                    addAkustikBerechnung(domBuilder, map)
-                    addDvbKanalnetz(domBuilder, map)
-                    addDvbVentileinstellung(domBuilder, map)
-                }
-                */
             }
         }
         // Convert XML to string (StreamingMarkupBuilder will generate XML with correct german umlauts)
@@ -162,8 +145,8 @@ class OooService {
     /**
      *
      * @param wpxFile
-     * @param map
-     * @param saveOdiseeXml
+     * @param map The whole model.
+     * @param saveOdiseeXml Save Odisee XML (for debugging)?
      * @return
      */
     String performAngebot(File wpxFile, Map map, boolean saveOdiseeXml = false) {
@@ -174,34 +157,49 @@ class OooService {
         def odisee = domBuilder.odisee() {
             request(name: wpxFilenameWoExt, id: 1) {
                 ooo(group: 'group0') {}
-                template(name: 'WestaAuslegung', revision: 'LATEST', outputFormat: 'pdf') {}
+                template(name: 'WestaAngebot', revision: 'LATEST', outputFormat: 'pdf') {}
                 archive(database: false, files: true) {}
                 makeOdiseeBasedata(wpxFile, map, domBuilder)
                 makeOdiseeProjectdata(wpxFile, map, domBuilder)
                 makeOdiseeRoomdata(wpxFile, map, domBuilder)
-                // Adresse westaflex
-                domBuilder.userfield(name: 'AbenderFirma', 'Westaflexwerk GmbH')
-                domBuilder.userfield(name: 'AbenderStrasse', 'Thaddäusstr. 5')
-                domBuilder.userfield(name: 'AbenderPLZ', '33334')
-                domBuilder.userfield(name: 'AbenderOrt', 'Gütersloh')
-                domBuilder.userfield(name: 'AbenderPostfach', 'Postfach 3255')
-                domBuilder.userfield(name: 'AbenderPostfachPLZ', '33262')
-                domBuilder.userfield(name: 'Fon', '01805 – 93 78 23 53')
-                domBuilder.userfield(name: 'Fax', '0700 – 93 78 23 5')
-                domBuilder.userfield(name: 'EmailSB', 'info@westa.net')
-                // Empfänger
-                domBuilder.userfield(name: 'AnschriftFenster', '')
-                domBuilder.userfield(name: 'EmpfFax', '')
-                domBuilder.userfield(name: 'EmpfFon', '')
-                domBuilder.userfield(name: 'Angebotsdatum', germanDate.format(new Date()))
-                // Angebot: ProjektBV
-                domBuilder.userfield(name: 'ProjektBV', map.bauvorhaben)
-                // Angebot: Angebotsnummer, Datum, Kürzel des Erstellers, zufällige/lfd. Nummer
-                String datum = shortIsoDate.format(new java.util.Date())
-                String kuerzel = prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME)
-                String angebotsnrkurz = map.angebotsnummerkurz ?: String.format("%04d", Math.round(Math.random() * 10000))
-                domBuilder.userfield(name: 'Angebotsnummer', "${datum}-${kuerzel}-${angebotsnrkurz}")
-                domBuilder.userfield(name: 'AngebotsnummerKurz', angebotsnrkurz)
+                domBuilder.instructions() {
+                    // Absender
+                    domBuilder.userfield(name: 'AbsenderFirma', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA))
+                    domBuilder.userfield(name: 'AbsenderName', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME))
+                    domBuilder.userfield(name: 'AbsenderAnschrift', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE))
+                    domBuilder.userfield(name: 'AbsenderPLZ', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_PLZ))
+                    domBuilder.userfield(name: 'AbsenderOrt', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_ORT))
+                    domBuilder.userfield(name: 'AbsenderTelefon', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_TEL))
+                    domBuilder.userfield(name: 'AbsenderTelefax', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FAX))
+                    domBuilder.userfield(name: 'AbsenderEmail', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL))
+                    // Werksvertretung
+                    domBuilder.userfield(name: 'WerksvertretungFirma', '')
+                    domBuilder.userfield(name: 'WerksvertretungName', '')
+                    domBuilder.userfield(name: 'WerksvertretungAnschrift', '')
+                    domBuilder.userfield(name: 'WerksvertretungPLZ', '')
+                    domBuilder.userfield(name: 'WerksvertretungOrt', '')
+                    domBuilder.userfield(name: 'WerksvertretungTelefon', '')
+                    domBuilder.userfield(name: 'WerksvertretungTelefax', '')
+                    domBuilder.userfield(name: 'WerksvertretungEmail', '')
+                    // Empfänger
+                    domBuilder.userfield(name: 'EmpfFirma', '')
+                    domBuilder.userfield(name: 'EmpfName', map.kundendaten.bauvorhaben)
+                    domBuilder.userfield(name: 'EmpfAnschrift', map.kundendaten.bauvorhabenAnschrift)
+                    domBuilder.userfield(name: 'EmpfPLZ', map.kundendaten.bauvorhabenPlz)
+                    domBuilder.userfield(name: 'EmpfOrt', map.kundendaten.bauvorhabenOrt)
+                    domBuilder.userfield(name: 'EmpfFax', '')
+                    domBuilder.userfield(name: 'EmpfFon', '')
+                    // Angebotsdatum
+                    domBuilder.userfield(name: 'Angebotsdatum', germanDate.format(new Date()))
+                    // Angebot: ProjektBV
+                    domBuilder.userfield(name: 'ProjektBV', map.kundendaten.bauvorhaben)
+                    // Angebot: Angebotsnummer, Datum, Kürzel des Erstellers, zufällige/lfd. Nummer
+                    String datum = shortIsoDate.format(new java.util.Date())
+                    String kuerzel = prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME).grep { it in ('A'..'Z') }.join()
+                    String angebotsnrkurz = map.angebotsnummerkurz ?: String.format("%04d", Math.round(Math.random() * 10000))
+                    domBuilder.userfield(name: 'Angebotsnummer', "${datum}-${kuerzel}-${angebotsnrkurz}")
+                    domBuilder.userfield(name: 'AngebotsnummerKurz', angebotsnrkurz)
+                }
             }
         }
         // Convert XML to string (StreamingMarkupBuilder will generate XML with correct german umlauts)
@@ -281,7 +279,6 @@ class OooService {
         domBuilder.userfield(name: 'lkDeckeCheckbox', gt(map.anlage.luftkanalverlegung, "decke", "Decke (abgehängt)"))
         domBuilder.userfield(name: 'lkSpitzbodenCheckbox', gt(map.anlage.luftkanalverlegung, "spitzboden", "Spitzboden"))
         // Geplante Belegung
-        println "map.gebaude -> ${map.gebaude?.dump()}"
         domBuilder.userfield(name: 'personenAnzahlSpinner', GH.toString0Converter(map.gebaude.geplanteBelegung.personenanzahl))
         // Außenluft
         domBuilder.userfield(name: 'rbAlDachdurchfuehrung', gt(map.anlage.aussenluft, "dach", "Dachdurchführung"))

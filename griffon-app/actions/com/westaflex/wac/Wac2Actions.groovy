@@ -77,8 +77,8 @@ projektSchliessenAction = action(
 projektAuslegungErstellenAction = action(
         id: "auslegungErstellenAction",
         name: "Auslegung erstellen",
-        mnemonic: "A",
-        accelerator: shortcut("A"),
+        mnemonic: "L",
+        accelerator: shortcut("L"),
         smallIcon: imageIcon("/menu/seitenansicht.png"),
         enabled: bind { model.aktivesProjekt != null },
         closure: controller.projektAuslegungErstellen

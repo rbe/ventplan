@@ -28,9 +28,10 @@ bind(source: model.map.kundendaten.ausfuhrendeFirma, sourceProperty: "telefon", 
 bind(source: model.map.kundendaten.ausfuhrendeFirma, sourceProperty: "telefax",         target: ausfuhrendeFirmaTelefax,         targetProperty: "text", mutual: true)
 bind(source: model.map.kundendaten.ausfuhrendeFirma, sourceProperty: "ansprechpartner", target: ausfuhrendeFirmaAnsprechpartner, targetProperty: "text", mutual: true)
 // Kundendaten - Notizen
-bind(source: model.map.kundendaten, sourceProperty: "bauvorhaben",    target: bauvorhaben,    targetProperty: "text", mutual: true)
-bind(source: model.map.kundendaten, sourceProperty: "bauvorhabenPlz", target: bauvorhabenPlz, targetProperty: "text", mutual: true)
-bind(source: model.map.kundendaten, sourceProperty: "bauvorhabenOrt", target: bauvorhabenOrt, targetProperty: "text", mutual: true)
-bind(source: model.map.kundendaten, sourceProperty: "notizen",        target: notizen,        targetProperty: "text", mutual: true)
+bind(source: model.map.kundendaten, sourceProperty: "bauvorhaben",          target: bauvorhaben,          targetProperty: "text", mutual: true)
+bind(source: model.map.kundendaten, sourceProperty: "bauvorhabenAnschrift", target: bauvorhabenAnschrift, targetProperty: "text", mutual: true)
+bind(source: model.map.kundendaten, sourceProperty: "bauvorhabenPlz",       target: bauvorhabenPlz,       targetProperty: "text", mutual: true)
+bind(source: model.map.kundendaten, sourceProperty: "bauvorhabenOrt",       target: bauvorhabenOrt,       targetProperty: "text", mutual: true)
+bind(source: model.map.kundendaten, sourceProperty: "notizen",              target: notizen,              targetProperty: "text", mutual: true)
 // Kundendaten - Bauvorhaben: Update tab title
 bauvorhaben.addCaretListener({ evt -> controller.setTabTitle() } as javax.swing.event.CaretListener)

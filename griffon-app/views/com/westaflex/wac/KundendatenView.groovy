@@ -10,7 +10,6 @@ package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
-import java.awt.Color
 
 // Großhandel
 panel(id: "kundendatenHauptPanel", layout: new MigLayout("ins 0 n 0 n, wrap 2","[grow,fill] [grow,fill]"), constraints: "grow") {
@@ -69,10 +68,13 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("ins 0 n 0 n, wrap 2","
     panel(id: "kundendatenNotizen", border: titledBorder(title: "Notizen"), layout: new MigLayout("ins 0 n 0 n, wrap 2","[] 16 [grow,fill]"), constraints: "grow, span 2") {
         // Bauvorhaben
         label("Bauvorhaben")
-        panel(layout: new MigLayout("fillx", "grow"), constraints: "grow") {
-            textField(id: "bauvorhaben", text: "Bauvorhaben/Investor", foreground: Color.GRAY, constraints: "growx")
-            textField(id: "bauvorhabenPlz", text: "PLZ", foreground: Color.GRAY, constraints: "growx")
-            textField(id: "bauvorhabenOrt", text: "Ort", foreground: Color.GRAY, constraints: "growx")
+        textField(id: "bauvorhaben", constraints: "growx")
+        label("Anschrift")
+        textField(id: "bauvorhabenAnschrift", constraints: "growx")
+        label("PLZ/Ort")
+        panel(layout: new MigLayout("ins 0 n 0 n, wrap 2","[] 16 [grow,fill]"), constraints: "growx") {
+            textField(id: "bauvorhabenPlz", constraints: "width 80px!")
+            textField(id: "bauvorhabenOrt", constraints: "growx")
         }
         // Notizen
         label("Notizen")

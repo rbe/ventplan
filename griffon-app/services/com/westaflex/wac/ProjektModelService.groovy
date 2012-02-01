@@ -179,6 +179,9 @@ class ProjektModelService {
             [
                         kundendaten: [
                             bauvorhaben: X.vs { p."bauvorhaben".text() },
+                            bauvorhabenAnschrift: X.vs { p."bauvorhabenAnschrift".text() },
+                            bauvorhabenPlz: X.vs { p."bauvorhabenPlz".text() },
+                            bauvorhabenOrt: X.vs { p."bauvorhabenOrt".text() },
                             notizen:     X.vs { p."notizen".text() },
                             grosshandel: [
                                 firma1:          X.vs { grosshandel."firma1".text() },
@@ -558,4 +561,5 @@ class ProjektModelService {
             }
         }
     }
+
 }

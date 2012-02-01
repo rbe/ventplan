@@ -36,9 +36,12 @@ class ProjektController {
 	def teilstreckenDialog
     
     def static auslegungPrefs = AuslegungPrefHelper.getInstance()
-    def auslegungDialog
+    def nutzerdatenDialog
 
     def waitDialog
+    boolean nutzerdatenGeandert
+
+    def angebotsverfolgungDialog
     
 	/**
 	 * Initialize MVC group.
@@ -215,45 +218,15 @@ class ProjektController {
     /**
 	 * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
 	 */
-    def auslegungErstellen = {
-        // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
-        showNutzerdatenDialog()
-        // Auslegung/Dokument erstellen
-        try {
-            File wpxFile = new File(model.wpxFilename)
-            String xmlDoc = oooService.performAuslegung(wpxFile, model.map, DEBUG )
-            java.io.File pdfFile
-            // Dialog: Bitte warten...
-            doOutside {
-                waitDialog = GH.createDialog(builder, WaitingView, [title: "Die Auslegung wird erstellt", resizable: false, pack: true])
-                waitDialog = GH.centerDialog(app.views['wac2'], waitDialog)
-                waitDialog.show()
-            }
-            edt {
-                pdfFile = processOdisee(wpxFile, xmlDoc)
-            }
-            if (pdfFile?.exists()) {
-                if (DEBUG) println "auslegungErstellen: doc=${pdfFile?.dump()}"
-                // Open document
-                java.awt.Desktop.desktop.open(pdfFile)
-            } else {
-                if (DEBUG) println "PDF file does not exist: ${pdfFile?.dump()}"
-            }
-        } catch (e) {
-            println "Error while calling 'Auslegung' -> ${e.dump()}"
-            def errorMsg = "Auslegung konnte leider nicht erstellt werden.\n${e}" as String
-            app.controllers["Dialog"].showErrorDialog(errorMsg as String)
-        }
-        waitDialog?.dispose()
-    }
-
-    /**
-     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
-     */
-    def showNutzerdatenDialog() {
+    def showNutzerdatenDialog(String title = null, String okButtonText = null) {
+        // Anzeigen, dass Daten nicht geändert wurden (da dieser Dialog erneut angezeigt wird)
+        nutzerdatenGeandert = false
         // Dialog erzeugen
-        auslegungDialog = GH.createDialog(builder, AuslegungView, [title: "Informationen über den Ersteller", resizable: false, pack: true])
-        // Gespeicherte Daten holen
+        String _title = title ?: 'Informationen über den Ersteller'
+        String _okButtonText = okButtonText ?: 'Eingaben speichern'
+        nutzerdatenDialog = GH.createDialog(builder, NutzerdatenView, [title: _title, resizable: false, pack: true])
+        view.auslegungErstellerSpeichern.text = _okButtonText
+        // Gespeicherte Daten holen und in den Dialog setzen
         view.auslegungErstellerFirma.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA)
         view.auslegungErstellerName.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME)
         view.auslegungErstellerAnschrift.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE)
@@ -263,15 +236,25 @@ class ProjektController {
         view.auslegungErstellerFax.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FAX)
         view.auslegungErstellerEmail.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL)
         // Dialog ausrichten und anzeigen
-        auslegungDialog = GH.centerDialog(app.views['wac2'], auslegungDialog)
-        auslegungDialog.show()
+        nutzerdatenDialog = GH.centerDialog(app.views['wac2'], nutzerdatenDialog)
+        nutzerdatenDialog.show()
+    }
+
+    /**
+     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
+     * Dialog schliessen und nichts tun.
+     */
+    def nutzerdatenAbbrechen = {
+        nutzerdatenDialog.dispose()
+        // Anzeigen, dass Daten nicht geändert wurden
+        nutzerdatenGeandert = false
     }
     
     /**
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      * Action: Saves Auslegung Ersteller information to preferences.
      */
-    def nutzerdatenSpeichern() {
+    def nutzerdatenSpeichern = {
         try {
             // Daten aus dem Dialog holen
             def firma = view.auslegungErstellerFirma.text
@@ -283,7 +266,6 @@ class ProjektController {
             def fax = view.auslegungErstellerFax.text
             def email = view.auslegungErstellerEmail.text
             def angebotsnummer = view.auslegungErstellerAngebotsnummer.text
-            auslegungDialog.dispose()
             if (name?.trim() && anschrift?.trim() && plz?.trim() && ort?.trim()) {
                 // Daten speichern
                 def map = [:]
@@ -302,63 +284,98 @@ class ProjektController {
                                "Es muss mindestens Name, Anschrift, PLZ, Ort angegeben werden." as String
                 app.controllers["Dialog"].showErrorDialog(errorMsg as String)
             }
+            // Anzeigen, dass Daten geändert wurden
+            nutzerdatenGeandert = true
         } catch (e) {
             println "Error saving ersteller values -> ${e.dump()}"
+        } finally {
+            nutzerdatenDialog.dispose()
         }
     }
     
     /**
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      */
-    def angebotErstellen() {
-        /*
-        def choice = app.controllers["Dialog"].showPrintProjectDialog()
-        if (DEBUG) println "angebotErstellen: choice=${choice}"
-        switch (choice) {
-            case 0:
-                if (DEBUG) println "Ja = Daten an OOo senden"
-                break
-            case 1: // Cancel: do nothing...
-                if (DEBUG) println "Nein = es wird ein Blanko Angebot geöffnet"
-                break
-        }
-        */
+    def auslegungErstellen() {
         // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
-        showNutzerdatenDialog()
+        showNutzerdatenDialog('Auslegung erstellen - Daten eingeben', 'Eingaben speichern und Auslegung erstellen')
+        if (nutzerdatenGeandert) {
         // Auslegung/Dokument erstellen
         try {
             File wpxFile = new File(model.wpxFilename)
-            String xmlDoc = oooService.performAngebot(wpxFile, model.map, DEBUG)
+                String xmlDoc = oooService.performAuslegung(wpxFile, model.map, DEBUG)
             java.io.File pdfFile
-            // Dialog: Bitte warten...
+                doLater {
             doOutside {
-                waitDialog = GH.createDialog(builder, WaitingView, [title: "Das Angebot wird erstellt", resizable: false, pack: true])
+                        pdfFile = postToOdisee(wpxFile, 'Auslegung', xmlDoc)
+                        if (pdfFile?.exists()) {
+                            if (DEBUG) println "auslegungErstellen: doc=${pdfFile?.dump()}"
+                            // Open document
+                            java.awt.Desktop.desktop.open(pdfFile)
+                        } else {
+                            if (DEBUG) println "auslegungErstellen: PDF file does not exist: ${pdfFile?.dump()}"
+                        }
+                        waitDialog?.dispose()
+                    }
+                    // Dialog: Bitte warten...
+                    waitDialog = GH.createDialog(builder, WaitingView, [title: "Die Auslegung wird erstellt", resizable: false, pack: true])
                 waitDialog = GH.centerDialog(app.views['wac2'], waitDialog)
                 waitDialog.show()
             }
-            edt {
-                pdfFile = processOdisee(wpxFile, xmlDoc)
+            } catch (e) {
+                println "auslegungErstellen: Error while calling 'Auslegung' -> ${e.dump()}"
+                def errorMsg = "Auslegung konnte leider nicht erstellt werden.\n${e}" as String
+                app.controllers["Dialog"].showErrorDialog(errorMsg as String)
             }
-            if (pdfFile?.exists()) {
-                if (DEBUG) println "projektSeitenansicht: doc=${pdfFile?.dump()}"
-                // Open document
-                java.awt.Desktop.desktop.open(pdfFile)
-            } else {
-                if (DEBUG) println "PDF fFile does not exist: ${pdfFile?.dump()}"
             }
-        } catch (e) {
-            println "Error while calling 'Angebot' -> ${e.dump()}"
-            def errorMsg = "Angebot konnte leider nicht erstellt werden.\n${e}" as String
-            app.controllers["Dialog"].showErrorDialog(errorMsg as String)
-        }
-        waitDialog?.dispose()
     }
 
     /**
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
-     * Post xml document via REST and receive a PDF file.
      */
-    java.io.File processOdisee(File wpxFile, String xmlDoc) {
+    def angebotErstellen() {
+        // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
+        showNutzerdatenDialog('Angebot erstellen - Daten eingeben', 'Eingaben speichern und Angebot erstellen')
+        if (nutzerdatenGeandert) {
+            // Auslegung/Dokument erstellen
+            try {
+                File wpxFile = new File(model.wpxFilename)
+                String xmlDoc = oooService.performAngebot(wpxFile, model.map, DEBUG)
+                java.io.File pdfFile
+                doLater {
+                    doOutside {
+                        pdfFile = postToOdisee(wpxFile, 'Angebot', xmlDoc)
+            if (pdfFile?.exists()) {
+                            if (DEBUG) println "angebotErstellen: doc=${pdfFile?.dump()}"
+                // Open document
+                java.awt.Desktop.desktop.open(pdfFile)
+            } else {
+                            if (DEBUG) println "angebotErstellen: PDF fFile does not exist: ${pdfFile?.dump()}"
+                        }
+                        waitDialog?.dispose()
+                    }
+                    // Dialog: Bitte warten...
+                    waitDialog = GH.createDialog(builder, WaitingView, [title: "Das Angebot wird erstellt", resizable: false, pack: true])
+                    waitDialog = GH.centerDialog(app.views['wac2'], waitDialog)
+                    waitDialog.show()
+            }
+        } catch (e) {
+                println "angebotErstellen: Error while calling 'Angebot' -> ${e.dump()}"
+            def errorMsg = "Angebot konnte leider nicht erstellt werden.\n${e}" as String
+            app.controllers["Dialog"].showErrorDialog(errorMsg as String)
+        }
+        }
+    }
+
+    /**
+     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
+     * Post XML document via REST and receive a PDF file.
+     * @param wpxFile WPX-Datei mit Daten.
+     * @param fileSuffix
+     * @param xmlDoc
+     * @return
+     */
+    java.io.File postToOdisee(File wpxFile, String fileSuffix, String xmlDoc) {
         java.io.File responseFile = null
         def restUrl = GH.getOdiseeRestUrl() as String
         def restPath = GH.getOdiseeRestPath() as String
@@ -368,7 +385,7 @@ class ProjektController {
                 def resp = post(path: restPath, body: xmlDoc, requestContentType: ContentType.XML, responseContentType: ContentType.BINARY, charset: 'utf-8')
                 if (DEBUG) println "${new Date()}: model.wpxFilename.absolutePath -> ${model.wpxFilename}"
                 def byteArrayInputStream = new ByteArrayInputStream(resp.data.bytes)
-                responseFile = new java.io.File(model.wpxFilename - '.wpx' + '_Auslegung.pdf')
+                responseFile = new java.io.File(model.wpxFilename - '.wpx' + "_${fileSuffix}.pdf")
                 responseFile << byteArrayInputStream
                 if (DEBUG) println "${new Date()}: response end..."
             }
@@ -378,6 +395,55 @@ class ProjektController {
         }
         if (DEBUG) println "returning responsefile ${responseFile.absolutePath}"
         return responseFile
+    }
+
+    /**
+     * WAC-177 Angebotsverfolgung
+     */
+    def angebotsverfolgung = {
+        // Dialog erstellen
+        angebotsverfolgungDialog = GH.createDialog(builder, AngebotsverfolgungView, [title: "Angebotsverfolgung durchführen", resizable: false, pack: true])
+        // Dialog mit Daten füllen
+        println "model.map.kundendaten=${model.map.kundendaten}"
+        view.angebotsverfolgungDialogBauvorhaben.text = model.map.kundendaten.bauvorhaben
+        view.angebotsverfolgungDialogAnschrift.text = model.map.kundendaten.bauvorhabenAnschrift
+        view.angebotsverfolgungDialogPlz.text = model.map.kundendaten.bauvorhabenPlz
+        view.angebotsverfolgungDialogOrt.text = model.map.kundendaten.bauvorhabenOrt
+        // Dialog anzeigen
+        angebotsverfolgungDialog = GH.centerDialog(app.views['wac2'], angebotsverfolgungDialog)
+        angebotsverfolgungDialog.show()
+    }
+
+    /**
+     * WAC-177 Angebotsverfolgung
+     * Wert auslesen und auswerten...
+     */
+    def angebotsverfolgungAbbrechen = { evt ->
+        angebotsverfolgungDialog.dispose()
+    }
+
+    /**
+     * WAC-177 Angebotsverfolgung
+     * Wert auslesen und auswerten...
+     */
+    def angebotsverfolgungErstellen = { evt ->
+        if (view.bauvorhabenDialogAGB.selected) {
+            def bauvorhaben = view.angebotsverfolgungDialogBauvorhaben.text
+            def plz = view.angebotsverfolgungPlz.text
+            def ort = view.angebotsverfolgungOrt.text
+            //def angebotsnummer = view.bauvorhabenDialogAngebotsnummer.text
+            // TODO mmu Danach Daten holen und REST Service aufrufen (Service existiert noch nicht!)
+            // TODO mmu http://wac.service.odisee.de/wac/177/bauvorhaben/<bauvorhaben>/plz/<bauvorhabenPlz>/ort/<bauvorhabenOrt>
+        }
+    }
+
+    /**
+     * WAC-177 Angebotsverfolgung
+     * Öffnet den Link zu den AGBs in dem Default-Browser
+     */
+    def agbOeffnen = {
+        def agbLink = "http://www.westaflex.com/Handel/AGBs"
+        java.awt.Desktop.getDesktop().browse(java.net.URI.create(agbLink));
     }
 
     /**

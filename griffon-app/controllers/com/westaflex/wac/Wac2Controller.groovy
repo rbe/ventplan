@@ -25,8 +25,6 @@ class Wac2Controller {
     def wacCalculationService
     def builder
 
-    def angebotsverfolgungDialog
-    
     /**
      * Flag zum Abbrechen des Schliessen Vorgangs
      */
@@ -613,39 +611,7 @@ class Wac2Controller {
      * WAC-177 Angebotsverfolgung
      */
     def angebotsverfolgung = {
-        // TODO mmu Eingabefelder mit grauem Text hinterlegen...
-        angebotsverfolgungDialog = GH.createDialog(builder, BauvorhabenView, [title: "Bauvorhaben", resizable: false, pack: true])
-        angebotsverfolgungDialog = GH.centerDialog(app.views['wac2'], angebotsverfolgungDialog)
-        angebotsverfolgungDialog.show()
-
-        /*
-        // if input is not empty show file dialog
-        if (inputName) {
-            def openResult = view.angebotsverfolgungChooserWindow.showOpenDialog(view.wac2Frame)
-            if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
-                def files = view.angebotsverfolgungChooserWindow.selectedFiles as java.io.File[]
-                angebotsverfolgungFilesClosure(files, inputName)
-            }
-        } else {
-            def errorMsg = "Geben Sie einen Namen an, um die Angebotsverfolgung durchzuführen." as String
-            app.controllers["Dialog"].showErrorDialog(errorMsg as String)
-        }
-        */
-    }
-
-    /**
-     * angebotsverfolgungDialog Wert auslesen und auswerten...
-     */
-    def angebotsverfolgungErstellen = { evt ->
-        if (view.bauvorhabenDialogAGB.selected) {
-            def bauvorhaben = view.bauvorhabenDialogBauvorhaben.text
-            def plz = view.bauvorhabenDialogPlz.text
-            def ort = view.bauvorhabenDialogOrt.text
-            def angebotsnummer = view.bauvorhabenDialogAngebotsnummer.text
-            // TODO mmu Danach Daten holen und REST Service aufrufen (Service existiert noch nicht!)
-            // TODO mmu http://wac.service.odisee.de/wac/177/bauvorhaben/<bauvorhaben>/plz/<bauvorhabenPlz>/ort/<bauvorhabenOrt>
-        }
-
+        getMVCGroupAktivesProjekt().controller.angebotsverfolgung()
     }
     
     /**
@@ -751,22 +717,13 @@ class Wac2Controller {
     }
     
     /**
-     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
+     * WAC-202 Verlegeplan
      */
-    def stuckliste = {
+    def verlegeplan = {
         // Projekt zur aktiven Tab finden
         def mvc = getMVCGroupAktivesProjekt()
         // Erzeuge Stückliste für aktives Projekt.
         mvc.controller.generiereVerlegeplan()
-    }
-
-    /**
-     * TODO mmu/rbe Link zur AGB ersetzen!
-     * Öffnet den Link zu den AGBs in dem Default-Browser
-     */
-    def agbOeffnen = {
-        def agbLink = "http://www.art-of-coding.eu"
-        java.awt.Desktop.getDesktop().browse(java.net.URI.create(agbLink));
     }
 
 }
