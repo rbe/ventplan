@@ -467,14 +467,32 @@ class ProjektController {
      */
     def angebotsverfolgungErstellen = { evt ->
         if (view.angebotsverfolgungDialogAGB.selected) {
-            def bauvorhaben = view.angebotsverfolgungDialogBauvorhaben.text
-            def anschrift = view.angebotsverfolgungDialogAnschrift.text
-            def plz = view.angebotsverfolgungPlz.text
-            def ort = view.angebotsverfolgungOrt.text
-            // TODO mmu Danach Daten holen und REST Service aufrufen (Service existiert noch nicht!)
+            def bauvorhabenValue = view.angebotsverfolgungDialogBauvorhaben.text
+            def anschriftValue = view.angebotsverfolgungDialogAnschrift.text
+            def plzValue = view.angebotsverfolgungPlz.text
+            def ortValue = view.angebotsverfolgungOrt.text
+
             // TODO mmu http://wac.service.odisee.de/wac/177/bauvorhaben/<bauvorhaben>/anschrift/<anschrift>/plz/<plz>/ort/<ort>
+            def restUrl = GH.getOdiseeWac177RestUrl() as String
+            def restPath = GH.getOdiseeWac177RestPath() as String
+            try {
+                def postBody = [bauvorhaben: bauvorhabenValue,
+                                anschrift: anschriftValue,
+                                plz: plzValue,
+                                ort: ortValue]
+                withRest(id: "wac177", uri: restUrl) {
+                    //auth.basic 'wac', 're:Xai3u'
+                    def resp = post(path: restPath, body: postBody, requestContentType: ContentType.URLENC, responseContentType: ContentType.ANY, charset: 'utf-8')
+                    println "ProjektController.angebotsverfolgungErstellen resp=${resp?.dump()}"
+                    if (DEBUG) println "${new Date()}: response end..."
+                }
+            } catch (e) {
+                println "ProjektController.angebotsverfolgungErstellen exception -> ${e.dump()}"
+                e.printStackTrace()
+            }
         } else {
-            // TODO mmu Info-Dialog "Bitte akzeptieren Sie dazu die AGB!"
+            def infoMsg = "Bitte akzeptieren Sie dazu die AGB!"
+            app.controllers['Dialog'].showInformDialog(infoMsg as String)
         }
     }
 

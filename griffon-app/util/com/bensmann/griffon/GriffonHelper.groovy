@@ -673,5 +673,27 @@ class GriffonHelper {
         dialog.setLocation(x, y);
         dialog
     }
+
+    /**
+     *
+     */
+    def static getOdiseeWac177RestUrl = {
+        Properties properties = new Properties()
+        def p = Wac2Resource.getWacwsProperties()
+        properties.load(p)
+        //return properties.get("odisee.wac177.rest.url") as String
+        return "http://wac.service.odisee.de"
+    }
+
+    /**
+     *
+     */
+    def static getOdiseeWac177RestPath = {
+        Properties properties = new Properties()
+        def p = Wac2Resource.getWacwsProperties()
+        properties.load(p)
+        //return properties.get("odisee.wac177.rest.path") as String
+        return "/wac/177/"
+    }
     
 }
