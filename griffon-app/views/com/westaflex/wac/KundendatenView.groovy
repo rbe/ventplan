@@ -72,7 +72,7 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("ins 0 n 0 n, wrap 2","
         label("Anschrift")
         textField(id: "bauvorhabenAnschrift", constraints: "growx")
         label("PLZ/Ort")
-        panel(layout: new MigLayout("ins 0 n 0 n, wrap 2","[] 16 [grow,fill]"), constraints: "growx") {
+        panel(layout: new MigLayout("ins 0 0 0 0, wrap 2","[fill] 16 [grow,fill]"), constraints: "growx") {
             textField(id: "bauvorhabenPlz", constraints: "width 80px!")
             textField(id: "bauvorhabenOrt", constraints: "growx")
         }
