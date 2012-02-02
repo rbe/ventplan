@@ -508,7 +508,7 @@ class ProjektController {
      * Öffnet den Link zu den AGBs in dem Default-Browser
      */
     def agbOeffnen = {
-        def agbLink = "http://www.westaflex.com/Handel/AGBs"
+        def agbLink = "http://www.westaflex.com/support/agbs"
         java.awt.Desktop.getDesktop().browse(java.net.URI.create(agbLink));
     }
 
