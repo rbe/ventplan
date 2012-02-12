@@ -888,6 +888,7 @@ class ProjektController {
     def _raumGeandert(Integer raumPosition, Integer setSelectedIndex, boolean isIndex) {
         doLater {
             // WAC-174 (raumIndex kann == 0 sein!)
+            if (DEBUG) println "raumGeandert raumPosition=${raumPosition}, selectedIndex=${setSelectedIndex}"
             def isSelectedRow = false
             if (raumPosition < 0) {
                 raumPosition = view.raumTabelle.selectedRow
@@ -913,8 +914,10 @@ class ProjektController {
                 }
                 // Diesen Raum in allen Tabellen anwählen
                 if (setSelectedIndex > -1) {
+                    if (DEBUG) println "_raumGeandert... 1 raumIndex=${raumIndex}, setSelectedIndex=${setSelectedIndex}"
                     onRaumInTabelleWahlen(setSelectedIndex)
                 } else {
+                    if (DEBUG) println "_raumGeandert... 2 raumIndex=${raumIndex}, setSelectedIndex=${setSelectedIndex}"
                     onRaumInTabelleWahlen(raumIndex)
                 }
 
@@ -1368,9 +1371,9 @@ class ProjektController {
                     }
 				}
 				// Aktuellen Raum in Metadaten setzen
-                model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
-				// TODO Warum wird das hier gemacht??? WacCalculationService.berechneRaumnummer ist zuständig!
-                ////model.meta.gewahlterRaum.raumNummer = row + 1
+                // Fix: Raum anhand der Position suchen, damit auch der korrekte Raum für das Bearbeiten angezeigt wird.
+                def m = model.map.raum.raume.find { it.position == row }
+                model.meta.gewahlterRaum.putAll(m)
 			} else {
 				// Remove selection in all tables
 				withAllRaumTables { t ->
