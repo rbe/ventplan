@@ -29,9 +29,14 @@ menuBar = menuBar {
         menuItem(verlegeplanAction)
         // WAC-108 Auslegung und Angebot mit Stückliste erstellen
         menuItem(projektAuslegungErstellenAction)
+        /* rbe 2012-02-21 Warten auf westaflex
+        // WAC-108
         menuItem(projektAngebotErstellenAction)
+        */
+        /* rbe 2012-02-21 Warten auf westaflex
         // WAC-177 Angebotsverfolgung
         menuItem(angebotsverfolgungAction)
+        */
 //      if (!isMacOSX) {
         // Separator
         separator()
