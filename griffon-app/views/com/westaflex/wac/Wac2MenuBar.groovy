@@ -25,8 +25,10 @@ menuBar = menuBar {
         menuItem(automatischeBerechnungAction)
         // Separator
         separator()
+        /*
         // WAC-202 Verlegeplan
         menuItem(verlegeplanAction)
+        */
         // WAC-108 Auslegung und Angebot mit Stückliste erstellen
         menuItem(projektAuslegungErstellenAction)
         /* rbe 2012-02-21 Warten auf westaflex
