@@ -1,6 +1,7 @@
 /*
  * WAC
  *
+ * Copyright (C) 2005      Informationssysteme Ralf Bensmann.
  * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
  * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
  *
@@ -29,10 +30,12 @@ menuBar = menuBar {
         // WAC-202 Verlegeplan
         menuItem(verlegeplanAction)
         */
-        // WAC-108 Auslegung und Angebot mit Stückliste erstellen
+        // WAC-108 Auslegung
         menuItem(projektAuslegungErstellenAction)
+        // WAC-108 Stückliste
+        menuItem(projektStuecklisteErstellenAction)
         /* rbe 2012-02-21 Warten auf westaflex
-        // WAC-108
+        // WAC-108 Stückliste
         menuItem(projektAngebotErstellenAction)
         */
         /* rbe 2012-02-21 Warten auf westaflex

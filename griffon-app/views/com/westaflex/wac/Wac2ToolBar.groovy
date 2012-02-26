@@ -1,6 +1,7 @@
 /*
  * WAC
  *
+ * Copyright (C) 2005      Informationssysteme Ralf Bensmann.
  * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
  * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
  *
@@ -18,10 +19,12 @@ toolBar(id: 'toolbar', rollover: true) {
     //button(projektSpeichernAlsAction, text: null)
     // WAC-155 button(alleProjekteSpeichernAction, text: null)
     vertSep()
-    // WAC-108
+    // WAC-108 Auslegung
     button(projektAuslegungErstellenAction, text: null)
+    // WAC-108 Stückliste
+    button(projektStuecklisteErstellenAction, text: null)
     /* rbe 2012-02-21 Warten auf westaflex
-    // WAC-108
+    // WAC-108 Angebot
     button(projektAngebotErstellenAction, text: null)
     */
     // WAC-151: Automatische und manuelle Berechnung
