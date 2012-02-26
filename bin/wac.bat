@@ -1,10 +1,11 @@
 @echo off
 rem
+rem Copyright (C) 2005      Informationssysteme Ralf Bensmann.
 rem Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
 rem Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
 rem 
-rem Alle Rechte vorbehalten. All rights reserved.
-rem Created by: rbe
+rem Alle Rechte vorbehalten.
+rem All rights reserved.
 rem
 
 rem Java 6

@@ -1,13 +1,12 @@
 /*
+ * WAC
+ *
+ * Copyright (C) 2005      Informationssysteme Ralf Bensmann.
  * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2010-2012 art of coding UG (haftungsbeschränkt).
+ * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
  *
- * Nutzungslizenz siehe http://files.art-of-coding.eu/aoc/AOCPL_v10_de.html
- * Use is subject to license terms, see http://files.art-of-coding.eu/aoc/AOCPL_v10_en.html
- *
- * Project wac
- * /Users/rbe/project/wac/griffon-app/conf/metainf/spring/springbeans.groovy
- * Last modified at 22.03.2011 14:50:12 by rbe
+ * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
+ * All rights reserved. Use is subject to license terms.
  */
 
 // This file is empty.

@@ -1,11 +1,12 @@
 /*
  * WAC
- * 
+ *
+ * Copyright (C) 2005      Informationssysteme Ralf Bensmann.
  * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2010-2012 art of coding UG (haftungsbeschränkt).
+ * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
  *
- * Alle Rechte vorbehalten. All rights reserved.
- *
+ * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
+ * All rights reserved. Use is subject to license terms.
  */
 package com.westaflex.wac
 
@@ -94,6 +95,17 @@ projektAngebotErstellenAction = action(
         enabled: bind { model.aktivesProjekt != null },
         closure: controller.projektAngebotErstellen
         )
+
+// WAC-108 Angebot mit Stückliste generieren.
+projektStuecklisteErstellenAction = action(
+        id: "stuecklisteErstellenAction",
+        name: "Stückliste erstellen",
+        mnemonic: "K",
+        accelerator: shortcut("K"),
+        smallIcon: imageIcon("/menu/stueckliste.png"),
+        enabled: bind { model.aktivesProjekt != null },
+        closure: controller.projektStuecklisteErstellen
+)
 
 exitAction = action(
         id: "exitAction",
