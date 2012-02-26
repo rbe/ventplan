@@ -1,8 +1,9 @@
 /*
  * WAC
- * 
+ *
+ * Copyright (C) 2005      Informationssysteme Ralf Bensmann.
  * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2010-2012 art of coding UG (haftungsbeschränkt).
+ * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
@@ -12,7 +13,9 @@ package com.westaflex.wac
 import com.bensmann.griffon.GriffonHelper as GH
 
 import groovy.xml.DOMBuilder
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
+import java.text.NumberFormat
 
 /**
  * 
@@ -35,6 +38,11 @@ class OooService {
      * Short ISO date, e.g. used for userfield Angebotsnummer.
      */
     private static SimpleDateFormat shortIsoDate = new SimpleDateFormat('yyMMdd')
+
+    /**
+     * Service for 'Stückliste'.
+     */
+    StucklisteService stucklisteService
 
     /**
      * Constructor.
@@ -218,6 +226,72 @@ class OooService {
     }
 
     /**
+     *
+     * @param wpxFile
+     * @param map
+     * @param saveOdiseeXml
+     * @return
+     */
+    String performStueckliste(File wpxFile, Map map, boolean saveOdiseeXml = false) {
+        // Filename w/o extension
+        def wpxFilenameWoExt = wpxFile.name - '.wpx'
+        // Generate Odisee XML
+        DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
+        def odisee = domBuilder.odisee() {
+            request(name: wpxFilenameWoExt, id: 1) {
+                ooo(group: 'group0') {}
+                template(name: 'WestaStueckliste', revision: 'LATEST', outputFormat: 'pdf') {}
+                archive(database: false, files: true) {}
+                //
+                makeOdiseeBasedata(wpxFile, map, domBuilder)
+                addProjektdaten(domBuilder, map.kundendaten)
+                //
+                domBuilder.instructions() {
+                    def stuckliste = stucklisteService.processData(map)
+                    double summe = 0.0d
+                    int summenZeile = 0
+                    stucklisteService.makeResult(stuckliste).eachWithIndex { stuck, i ->
+                        def artikel = stuck.value
+                        double anzahl = (double) artikel.ANZAHL
+                        // Menge mit oder ohne Komma anzeigen?
+                        String menge
+                        if (anzahl * 10 > 0) {
+                            menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.MENGENEINHEIT)
+                        } else {
+                            menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
+                        }
+                        domBuilder.userfield(name: "TabelleStueckliste!A${i + 2}", i + 1)
+                        domBuilder.userfield(name: "TabelleStueckliste!B${i + 2}", menge)
+                        domBuilder.userfield(name: "TabelleStueckliste!C${i + 2}", "${stuck.key}\n${artikel.ARTIKELBEZEICHNUNG}")
+                        domBuilder.userfield(name: "TabelleStueckliste!D${i + 2}", String.format(Locale.GERMANY, "%.2f", artikel.PREIS))
+                        domBuilder.userfield(name: "TabelleStueckliste!E${i + 2}", String.format(Locale.GERMANY, "%.2f", anzahl * artikel.PREIS))
+                        summe += anzahl * artikel.PREIS
+                        summenZeile = i + 1
+                    }
+                    // Summe in EUR
+                    domBuilder.userfield(name: "TabelleStueckliste!B${summenZeile + 2}", 'Summe')
+                    NumberFormat nf = DecimalFormat.getInstance(Locale.GERMANY)
+                    nf.groupingUsed = true
+                    domBuilder.userfield(name: "TabelleStueckliste!E${summenZeile + 2}", nf.format(summe))
+                }
+            }
+        }
+        // Convert XML to string (StreamingMarkupBuilder will generate XML with correct german umlauts)
+        String xml = new groovy.xml.StreamingMarkupBuilder().bind {
+            mkp.yieldUnescaped odisee
+        }.toString()
+        // Save Odisee request XML
+        if (saveOdiseeXml) {
+            def odiseeXmlFile = new File(wpxFile.parentFile, "${wpxFilenameWoExt}_Stueckliste_odisee.xml")
+            odiseeXmlFile.withWriter("UTF-8") { writer ->
+                writer.write(xml)
+            }
+        }
+        // Return Odisee XML
+        xml
+    }
+
+    /**
      * 
      */
     private def addErsteller(domBuilder) {
@@ -236,6 +310,7 @@ class OooService {
      */
     private def addProjektdaten(domBuilder, map) {
         domBuilder.userfield(name: 'adBauvorhabenTextField', map.bauvorhaben)
+        domBuilder.userfield(name: 'ProjektBV', map.bauvorhaben)
     }
     
     /**
