@@ -142,7 +142,7 @@ class StucklisteService {
         }
         // JOIN pakete -> stuckliste
         StringBuilder statement = new StringBuilder()
-        statement << 'SELECT a.artikelnummer, a.artikelbezeichnung, 1.0 anzahl, 900 reihenfolge, a.mengeneinheit, a.liefermenge, a.preis' <<
+        statement << 'SELECT a.artikelnummer, a.artikelbezeichnung, 1.0 ANZAHL, 900 REIHENFOLGE, a.mengeneinheit, a.liefermenge, a.preis' <<
                 '  FROM artikelstamm a' <<
                 ' WHERE artikelnummer = ?.artikelnummer'
         def r = withSql { dataSourceName, sql ->
@@ -431,7 +431,7 @@ class StucklisteService {
         }
         // JOIN pakete -> stuckliste
         StringBuilder statement = new StringBuilder()
-        statement << 'SELECT s.reihenfolge, s.luftart, SUM(s.anzahl) anzahl, a.mengeneinheit, a.liefermenge, s.artikel, a.artikelbezeichnung, a.preis' <<
+        statement << 'SELECT s.reihenfolge, s.luftart, SUM(s.anzahl) ANZAHL, a.mengeneinheit, a.liefermenge, s.artikel, a.artikelbezeichnung, a.preis' <<
                 '  FROM stueckliste s' <<
                 ' INNER JOIN artikelstamm a ON s.artikel = a.artikelnummer' <<
                 ' WHERE paket IN (' << pakete.join(', ') << ')' <<
@@ -559,7 +559,7 @@ class StucklisteService {
         //
         if (DEBUG) {
             println String.format("%17s für %8s (Vs=%d) sind %s", 'Gesamte Pakete', zentralgerat, volumenstrom, pakete)
-            println ""
+            println "${this}"
             println "HOLE ARTIKEL FÜR JEDES PAKET"
             println "============================"
         }
