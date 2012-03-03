@@ -25,8 +25,9 @@ bind(source: model.meta.gewahlterRaum, sourceProperty: "raumLuftart",     target
 // Luftart
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumZuluftfaktor",       target: raumBearbeitenLuftartFaktorZuluftverteilung, targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumAbluftVolumenstrom", target: raumBearbeitenLuftartAbluftVs,               targetProperty: "text", converter: GH.toString2Converter)
+// Beim Verlassen des Feldes neu berechnen
 [raumBearbeitenLuftartFaktorZuluftverteilung, raumBearbeitenLuftartAbluftVs].each {
-    GH.onChange(it, null, controller.raumBearbeitenGeandert)
+    GH.onFocusLost(it, null, controller.raumBearbeitenGeandert)
 }
 // Türen
 bind(source: model.meta.gewahlterRaum, sourceProperty: "raumMaxTurspaltHohe", target: raumBearbeitenDetailsTurspalthohe, targetProperty: "text", converter: GH.toString2Converter)

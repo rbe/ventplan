@@ -631,6 +631,21 @@ class GriffonHelper {
     }
 
     /**
+     * Execute code on change of component:
+     *   textField: focusLost, keyReleased
+     *   combobox: stateChanged
+     */
+    def static onFocusLost = { component, keyCodes = null, closure = null ->
+        if (closure) {
+            switch (component) {
+                case { it instanceof javax.swing.JTextArea || it instanceof javax.swing.JTextField }:
+                    GriffonHelper.installFocusLostAdapter(component, closure)
+                    break
+            }
+        }
+    }
+
+    /**
      * Returns the current installed version.
      */
     def static localVersion = {
