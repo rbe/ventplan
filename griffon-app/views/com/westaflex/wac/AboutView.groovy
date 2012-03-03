@@ -18,7 +18,7 @@ SimpleDateFormat sdf = new SimpleDateFormat('yyyy')
 
 // About view
 panel(layout: new MigLayout("wrap", "[center]", "[fill]"), constraints: "grow") {
-    label(icon: imageIcon("/image/ventplan-splash2.png"), constraints: "wrap")
+    label(icon: imageIcon("/image/ventplan_splash.png"), constraints: "wrap")
 
     label(' ')
     label("Version: ${GH.localVersion()}")
@@ -26,15 +26,16 @@ panel(layout: new MigLayout("wrap", "[center]", "[fill]"), constraints: "grow") 
     label("Copyright (C) 2011-${sdf.format(new Date())} art of coding UG (haftungsbeschränkt)")
 
     label(' ')
-    label('Diese Software wurde in Anlehnung an die DIN 1946-6 und')
-    label('gemeinsam mit einem Hersteller von Lüftungsanlagen entwickelt.')
+    label('Diese Software wurde gemeinsam mit einem Hersteller von')
+    label('Lüftungsanlagen unter Orientierung an der DIN 1946-6 entwickelt.')
     label(' ')
     label('Trotz grösster Sorgfalt bei Entwicklung von Software kann')
-    label('keine Garantie für die Berechnungen und')
-    label('deren Richtigkeit im Hinblick auf das konkrete Bauvorhaben gegeben werden.')
-
+    label('keine Garantie für die Berechnungen und deren Richtigkeit')
+    label('im Hinblick auf das konkrete Bauvorhaben gegeben werden.')
+    /*
     label(' ')
     button('Schliessen', actionPerformed: { e ->
         println "ACTION ${this}"
     })
+    */
 }

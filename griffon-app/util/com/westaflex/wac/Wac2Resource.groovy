@@ -13,18 +13,19 @@
  * Provide access to resources.
  */
 class Wac2Resource {
-    
+
     /**
      * Get URL for splash screen.
      */
     def static getSplashScreenURL = {
         // dev
-        def r = Wac2Resource.class.getResource("../resources/image/ventplan-splash.png")
+        def r = Wac2Resource.class.getResource("../resources/image/ventplan_splash.png")
         // prod
-        if (!r) r = Wac2Resource.class.getResource("/image/ventplan-splash.png")
+        if (!r)
+            r = Wac2Resource.class.getResource("/image/ventplan_splash.png")
         r
     }
-    
+
     /**
      * Get URI for XSD of WPX files.
      */
@@ -32,10 +33,11 @@ class Wac2Resource {
         // dev
         def r = Wac2Resource.class.getResource("../resources/xml/westaflex-project.xsd")
         // prod
-        if (!r) r = Wac2Resource.class.getResource("/xml/westaflex-project.xsd")
+        if (!r)
+            r = Wac2Resource.class.getResource("/xml/westaflex-project.xsd")
         r.toURI()
     }
-    
+
     /**
      * Get stream for XSD of WPX files.
      */
@@ -43,10 +45,11 @@ class Wac2Resource {
         // dev
         def r = Wac2Resource.class.getResourceAsStream("../resources/xml/westaflex-project.xsd")
         // prod
-        if (!r) r = Wac2Resource.class.getResourceAsStream("/xml/westaflex-project.xsd")
+        if (!r)
+            r = Wac2Resource.class.getResourceAsStream("/xml/westaflex-project.xsd")
         r
     }
-    
+
     /**
      * Get image for 'Widerstand'.
      */
@@ -56,13 +59,14 @@ class Wac2Resource {
             // dev
             r = Wac2Resource.class.getResource("../resources/widerstand/${n}.jpg")
             // prod
-            if (!r) r = Wac2Resource.class.getResource("/widerstand/${n}.jpg")
-        } catch (NullPointerException e) { 
+            if (!r)
+                r = Wac2Resource.class.getResource("/widerstand/${n}.jpg")
+        } catch (NullPointerException e) {
             r = ""
         }
         r
     }
-    
+
     /**
      * Get template for OpenOffice.
      */
@@ -70,10 +74,11 @@ class Wac2Resource {
         // dev
         def r = Wac2Resource.class.getResource("../resources/ooo/${t}.ott")
         // prod
-        if (!r) r = Wac2Resource.class.getResource("/ooo/${t}.ott")
+        if (!r)
+            r = Wac2Resource.class.getResource("/ooo/${t}.ott")
         r
     }
-    
+
     /**
      * Get template for OpenOffice.
      */
@@ -81,10 +86,11 @@ class Wac2Resource {
         // dev
         def r = Wac2Resource.class.getResourceAsStream("../resources/ooo/${t}.ott")
         // prod
-        if (!r) r = Wac2Resource.class.getResourceAsStream("/ooo/${t}.ott")
+        if (!r)
+            r = Wac2Resource.class.getResourceAsStream("/ooo/${t}.ott")
         r
     }
-    
+
     /**
      * Get Pdf Logo.
      */
@@ -92,10 +98,11 @@ class Wac2Resource {
         // dev
         def r = Wac2Resource.class.getResource("../resources/image/westaflex_logo.png")
         // prod
-        if (!r) r = Wac2Resource.class.getResource("/image/westaflex_logo.png")
+        if (!r)
+            r = Wac2Resource.class.getResource("/image/westaflex_logo.png")
         r
     }
-    
+
     /**
      * Get wac web service properties.
      */
@@ -103,10 +110,11 @@ class Wac2Resource {
         // dev
         def r = Wac2Resource.class.getResourceAsStream("/wacws.properties")
         // prod
-        if (!r) r = Wac2Resource.class.getResourceAsStream("/wacws/wacws.properties")
+        if (!r)
+            r = Wac2Resource.class.getResourceAsStream("/wacws/wacws.properties")
         r
     }
-    
+
     /**
      * Get version.
      * Caution: 
@@ -116,8 +124,9 @@ class Wac2Resource {
         // dev
         def r = Wac2Resource.class.getResourceAsStream("/version.properties")
         // prod
-        if (!r) r = Wac2Resource.class.getResourceAsStream("/version.properties")
+        if (!r)
+            r = Wac2Resource.class.getResourceAsStream("/version.properties")
         r
     }
-    
+
 }

@@ -11,6 +11,7 @@
 package com.westaflex.wac
 
 import net.miginfocom.swing.MigLayout
+import com.bensmann.griffon.GriffonHelper as GH
 import javax.swing.JFileChooser
 
 def screen = java.awt.Toolkit.defaultToolkit.screenSize
@@ -55,15 +56,15 @@ angebotsverfolgungChooserWindow = fileChooser(
 */
 
 wac2Frame = application(
-        title: 'VentPlan',
+        title: "VentPlan ${GH.localVersion()}",
         size: [1280, 800], //[screen.width as int, screen.height as int],
         pack: false,
         locationByPlatform: true,
-        iconImage: imageIcon('/icon/ventplan-icon-48x48.png').image,
+        iconImage: imageIcon('/image/ventplan_signet_48x48.png').image,
         iconImages: [
-                imageIcon('/icon/ventplan-icon-48x48.png').image,
-                imageIcon('/icon/ventplan-icon-32x32.png').image,
-                imageIcon('/icon/ventplan-icon-16x16.png').image
+                imageIcon('/image/ventplan_signet_48x48.png').image,
+                imageIcon('/image/ventplan_signet_32x32.png').image,
+                imageIcon('/image/ventplan_signet_16x16.png').image
         ],
         layout: new MigLayout("fill", "[grow,200::]"),
         // Our window close listener
