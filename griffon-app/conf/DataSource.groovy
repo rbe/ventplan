@@ -26,7 +26,8 @@ environments {
     }
     production {
         dataSource {
-            url = "jdbc:h2:zip:lib/dtmp.zip!/westawac"
+            // install dir of izpack.
+            url = "jdbc:h2:zip:../sql/dtmp.zip!/westawac"
         }
     }
 }

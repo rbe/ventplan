@@ -111,7 +111,7 @@
                 <include name="**"/>
             </fileset>
             <fileset dir="${bin.dir}">
-                <include name="wac.bat"/>
+                <include name="VentPlan.bat"/>
             </fileset>
         </copy>
         <!-- Platform independent w/o JRE -->
@@ -124,10 +124,10 @@
                 <include name="**"/>
             </fileset>
             <fileset dir="${bin.dir}">
-                <include name="wac"/>
+                <include name="VentPlan"/>
             </fileset>
         </copy>
-        <chmod perm="a+rx" file="${bin.dir}/wac"/>
+        <chmod perm="a+rx" file="/bin/VentPlan"/>
     </target>
 
     <!--
