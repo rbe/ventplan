@@ -17,7 +17,7 @@ import groovy.sql.Sql
  */
 class StucklisteService {
 
-    private static boolean DEBUG = true
+    private static boolean DEBUG = false
     /*
     def sql
     def withSql(closure) {
