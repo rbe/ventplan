@@ -19,9 +19,9 @@ class Wac2Resource {
      */
     def static getSplashScreenURL = {
         // dev
-        def r = Wac2Resource.class.getResource("../resources/image/splash.png")
+        def r = Wac2Resource.class.getResource("../resources/image/ventplan-splash.png")
         // prod
-        if (!r) r = Wac2Resource.class.getResource("/image/splash.png")
+        if (!r) r = Wac2Resource.class.getResource("/image/ventplan-splash.png")
         r
     }
     

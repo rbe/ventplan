@@ -11,10 +11,10 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <!--
 
-        Root element: westaflex-wpx
+        Root element: ventplan
 
     -->
-    <xs:element name="westaflex-wpx">
+    <xs:element name="ventplan">
         <xs:complexType>
             <xs:sequence minOccurs="1" maxOccurs="1">
                 <xs:element name="projekt" type="project"/>
@@ -42,6 +42,75 @@
             <xs:element name="druckverlust"          type="druckverlust" minOccurs="0" maxOccurs="1"/>
             <xs:element name="akustik"               type="akustik"      minOccurs="0" maxOccurs="1"/>
             <xs:element name="firma"                 type="company"      minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!--
+
+        Complex type: company
+
+    -->
+    <xs:complexType name="company">
+        <xs:sequence>
+            <xs:element name="firma1"  type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="firma2"  type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="rolle"   type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="email"   type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="tel"     type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="fax"     type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="adresse" type="address"   minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="kontakt" type="contact"   minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!--
+
+        Complex type: contact
+
+    -->
+    <xs:complexType name="contact">
+        <xs:sequence>
+            <xs:element name="rolle"  type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="person" type="person"    minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!--
+
+        Complex type: person
+
+    -->
+    <xs:complexType name="person">
+        <xs:sequence>
+            <xs:element name="benutzername" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="name"         type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="vorname"      type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="nachname"     type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="email"        type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="tel"          type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="fax"          type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="adresse"      type="address"   minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!--
+
+        Complex type: address
+
+    -->
+    <xs:complexType name="address">
+        <xs:sequence>
+            <xs:element name="strasse"      type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ort"          type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="postleitzahl" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="land"         type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!--
+
+        Complex type: bauvorhaben
+
+    -->
+    <xs:complexType name="bauvorhaben">
+        <xs:sequence>
+            <xs:element name="investor"     type="xs:double" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="adresse"      type="address"   minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
     <!--
@@ -232,64 +301,6 @@
             <xs:enumeration value="BAD"/>
         </xs:restriction>
     </xs:simpleType>
-    <!--
-
-        Complex type: company
-
-    -->
-    <xs:complexType name="company">
-        <xs:sequence>
-            <xs:element name="firma1"  type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="firma2"  type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="rolle"   type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="email"   type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="tel"     type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="fax"     type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="adresse" type="address"   minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="kontakt" type="contact"   minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
-    <!--
-
-        Complex type: contact
-
-    -->
-    <xs:complexType name="contact">
-        <xs:sequence>
-            <xs:element name="rolle"  type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="person" type="person"    minOccurs="0" maxOccurs="1"/>
-        </xs:sequence>
-    </xs:complexType>
-    <!--
-
-        Complex type: person
-
-    -->
-    <xs:complexType name="person">
-        <xs:sequence>
-            <xs:element name="benutzername" type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="name"         type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="vorname"      type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="nachname"     type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="email"        type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="tel"          type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="fax"          type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="adresse"      type="address"   minOccurs="0" maxOccurs="1"/>
-        </xs:sequence>
-    </xs:complexType>
-    <!--
-
-        Complex type: address
-
-    -->
-    <xs:complexType name="address">
-        <xs:sequence>
-            <xs:element name="strasse"      type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="ort"          type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="postleitzahl" type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="land"         type="xs:string" minOccurs="0" maxOccurs="1"/>
-        </xs:sequence>
-    </xs:complexType>
     <!--
 
         Complex type: gebaudeTyp
