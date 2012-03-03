@@ -31,101 +31,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="32082021-41d2-4f22-a355-405631967c6f" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/griffon-app/resources/icon/griffon-icon-128x128.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/griffon-app/resources/icon/griffon-icon-16x16.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/griffon-app/resources/icon/griffon-icon-24x24.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/griffon-app/resources/icon/griffon-icon-256x256.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/griffon-app/resources/icon/griffon-icon-32x32.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/griffon-app/resources/icon/griffon-icon-48x48.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/griffon-app/resources/icon/griffon-icon-64x64.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/griffon-app/resources/image/aircalc-splash copy 2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/griffon-app/resources/image/aircalc-splash copy.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/griffon-app/resources/image/aircalc-splash.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/griffon-app/resources/image/splash_.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/griffon-app/resources/image/ventplan-logo.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/griffon-app/resources/image/ventplan-logo.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/griffon-app/resources/image/ventplan-splash.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/griffon-app/resources/image/ventplan-splash2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/griffon-app/resources/image/wac-splash.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/griffon-app/resources/xml/ventplan-project.xsd" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/griffon-icon-128x128.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/griffon-icon-16x16.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/griffon-icon-24x24.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/griffon-icon-256x256.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/griffon-icon-32x32.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/griffon-icon-48x48.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/griffon-icon-64x64.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/griffon-splash.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/griffon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/icon/wap_projekt.ico" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/icon/wap_projekt.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/icon/westawac_icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/icon/westawac_old.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/ Prinzip_KWL_Gerät.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/AB1_ZU1.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/AB1_ZU2.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/AB1_ZU3.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/AB2_ZU1.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/AB2_ZU2.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/AB2_ZU3.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/AB3_ZU1.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/AB3_ZU2.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/AB3_ZU3.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Ablufteinlass.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Abluftleitung gross.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Abluftleitung.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Aussenluftleitung.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Bypassklappe.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Fortluftleitung.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Kennzeichnung Felder.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Kreuzgegenstromwärmetauscher.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Legende.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Legende01.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Legende02.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Luft-Erdreichwärmeüberträger.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Luftfilter.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Luftgitter.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Luftverteilerkasten.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Nachheizregister.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Prinzip_KWL_Detail_2Ebene_AB.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Prinzip_KWL_Detail_2Ebene_ZU.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Prinzip_KWL_Detail_3Ebene_AB.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Prinzip_KWL_Detail_3Ebene_ZU.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Prinzip_KWL_Geraet.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Prinzip_KWL_Legende.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Prinzip_KWL_Luftdurchlass_AB.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Prinzip_KWL_Luftdurchlass_AU_FO.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Prinzip_KWL_Luftdurchlass_ZU.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Prinzip_KWL_Luftdurchlass_ZU_SD.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Prinzip_KWL_Verteilung.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Radialventilator.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Schalldämpfer.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Vorheizregister.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/WestaWAC Zeichnung PlanB.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Zuluftauslass.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Zuluftleitung gross.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/Zuluftleitung.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/image/westaflex_logo.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/menu/angebot_klein.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/menu/auslegung_klein.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/menu/direkthilfe.bmp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/menu/drucken.bmp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/menu/hilfe.bmp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/menu/neuesprojekt.bmp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/menu/projektoeffnen.bmp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/menu/projektspeichern.bmp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/menu/seitenansicht.bmp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/splash.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/griffon-app/resources/wacws/wacws.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/h2-1.2.147.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/itext-xtra-5.1.1.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/itextpdf-5.1.1.jar" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/resources/image/splash.png" afterPath="$PROJECT_DIR$/griffon-app/resources/image/splash.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/resources/menu/angebot.png" afterPath="$PROJECT_DIR$/griffon-app/resources/menu/angebot.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/resources/menu/auslegung.png" afterPath="$PROJECT_DIR$/griffon-app/resources/menu/auslegung.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dtmp.zip" afterPath="$PROJECT_DIR$/lib/dtmp.zip" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application.properties" afterPath="$PROJECT_DIR$/application.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.xml" afterPath="$PROJECT_DIR$/build.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/actions/com/westaflex/wac/Wac2Actions.groovy" afterPath="$PROJECT_DIR$/griffon-app/actions/com/westaflex/wac/Wac2Actions.groovy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/bindings/com/westaflex/wac/RaumBearbeitenBindings.groovy" afterPath="$PROJECT_DIR$/griffon-app/bindings/com/westaflex/wac/RaumBearbeitenBindings.groovy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/conf/Application.groovy" afterPath="$PROJECT_DIR$/griffon-app/conf/Application.groovy" />
@@ -142,6 +49,7 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/DialogController.groovy" afterPath="$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/DialogController.groovy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/ProjektController.groovy" afterPath="$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/ProjektController.groovy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/resources/wacws.properties" afterPath="$PROJECT_DIR$/griffon-app/resources/wacws.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/resources/xml/ventplan-project.xsd" afterPath="$PROJECT_DIR$/griffon-app/resources/xml/ventplan-project.xsd" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/resources/xml/westaflex-project.xsd" afterPath="$PROJECT_DIR$/griffon-app/resources/xml/westaflex-project.xsd" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/OooService.groovy" afterPath="$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/OooService.groovy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/ProjektModelService.groovy" afterPath="$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/ProjektModelService.groovy" />
@@ -366,7 +274,7 @@
       <file leaf-file-name="OooService.groovy" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/OooService.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="359" column="7" selection-start="17277" selection-end="17277" vertical-scroll-proportion="0.9677966">
+            <state line="359" column="7" selection-start="17277" selection-end="17277" vertical-scroll-proportion="0.33305085">
               <folding>
                 <element signature="e#1427#1544#0" expanded="false" />
                 <element signature="n#!!block;n#OooService#0;n#!!block;n#OooService#0" expanded="false" />
@@ -1357,13 +1265,14 @@
       <window_info id="Leiningen" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16194895" sideWeight="0.60016906" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.47887325" sideWeight="0.49837738" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.49837586" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27053365" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="IvyIDEA" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Griffon View" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21160093" sideWeight="0.44573322" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19332406" sideWeight="0.6387738" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19332406" sideWeight="0.67025685" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="AWS Explorer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32891467" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -1382,7 +1291,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29976797" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="JProfiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1938691" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" x="796" y="281" width="1009" height="300" />
-      <window_info id="Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.49837586" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Issues - JIRA" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="DatabaseBrowser" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="DB Browser" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1917,7 +1825,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/OooService.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="359" column="7" selection-start="17277" selection-end="17277" vertical-scroll-proportion="0.9677966">
+        <state line="359" column="7" selection-start="17277" selection-end="17277" vertical-scroll-proportion="0.33305085">
           <folding>
             <element signature="e#1427#1544#0" expanded="false" />
             <element signature="n#!!block;n#OooService#0;n#!!block;n#OooService#0" expanded="false" />
