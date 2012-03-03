@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><component name="dataSourceStorage">
+  <data-source source="LOCAL" name="westawac.sqlite.db" product="" version="" jdbc-version="" driver-version="" uuid="9708b7b7-a779-4b13-ba92-a3b46fd57d4c">
+    <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+    <jdbc-url>jdbc:sqlite:/Users/rbe/project/westaflex/wac/sql/westawac.sqlite.db</jdbc-url>
+    <schema-pattern>*</schema-pattern>
+    <libraries>
+      <library>
+        <url>jar://$PROJECT_DIR$/lib/sqlite-jdbc-3.7.2.jar!/</url>
+      </library>
+      <library>
+        <url>file://$PROJECT_DIR$/lib/xerial-sqlite-license.txt</url>
+      </library>
+    </libraries>
+    <table name="ARTIKELSTAMM" schema="" catalog="" type="TABLE">
+      <column name="_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4" />
+      <column name="ARTIKELNUMMER" sqlType="VARCHAR(20,0)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="ARTIKELBEZEICHNUNG" sqlType="CLOB" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="PREIS" sqlType="DECIMAL(9,2)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="KATEGORIE" sqlType="DECIMAL(2,0)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="LIEFERMENGE" sqlType="DECIMAL(5,2)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="MENGENEINHEIT" sqlType="VARCHAR(20,0)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="VERPACKUNGSEINHEIT" sqlType="VARCHAR(20,0)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="GESPERRT" sqlType="TINYINT" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="KLASSE" sqlType="DECIMAL(2,0)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="MAXVOLUMENSTROM" sqlType="DECIMAL(3,0)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="ARTIKELBESCHREIBUNG" sqlType="TEXT" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <primary-key columns="_id" />
+    </table>
+    <table name="DRUCKVERLUST" schema="" catalog="" type="TABLE">
+      <column name="_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4" />
+      <column name="ARTIKELNUMMER" sqlType="VARCHAR(20)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="EINSTELLUNG" sqlType="SMALLINT" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="LUFTMENGE" sqlType="SMALLINT" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="LUFTART" sqlType="VARCHAR(2)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="AUSBLASWINKEL" sqlType="DECIMAL(3,0)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="DRUCKVERLUST" sqlType="DECIMAL(5,2)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <primary-key columns="_id" />
+    </table>
+    <table name="KATEGORIE" schema="" catalog="" type="TABLE">
+      <column name="_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4" />
+      <column name="KATID" sqlType="TINYINT" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="KATNAME" sqlType="VARCHAR(30)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <primary-key columns="_id" />
+    </table>
+    <table name="KLASSEN" schema="" catalog="" type="TABLE">
+      <column name="_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4" />
+      <column name="ID" sqlType="DECIMAL(2,0)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="NAME" sqlType="VARCHAR(30)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <primary-key columns="_id" />
+    </table>
+    <table name="PAKETE" schema="" catalog="" type="TABLE">
+      <column name="_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4" />
+      <column name="ID" sqlType="TINYINT" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="KATEGORIE" sqlType="DECIMAL(2,0)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="NAME" sqlType="VARCHAR(200)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="GERAET" sqlType="VARCHAR(25)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="MAXVOLUMENSTROM" sqlType="DECIMAL(3,0)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="BEDINGUNG" sqlType="VARCHAR(25)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <primary-key columns="_id" />
+    </table>
+    <table name="ROHRWERTE" schema="" catalog="" type="TABLE">
+      <column name="_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4" />
+      <column name="ARTIKELNUMMER" sqlType="VARCHAR(20)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="KLASSE" sqlType="DECIMAL(2,0)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="FLAECHE" sqlType="DECIMAL(5,0)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="DURCHMESSER" sqlType="DECIMAL(3,0)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="SEITEA" sqlType="DECIMAL(3,0)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="SEITEB" sqlType="DECIMAL(3,0)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <primary-key columns="_id" />
+    </table>
+    <table name="SCHALLEISTUNGSPEGEL" schema="" catalog="" type="TABLE">
+      <column name="_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4" />
+      <column name="ARTIKELNUMMER" sqlType="VARCHAR(15)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="VOLUMENSTROM" sqlType="DECIMAL(3,0)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="SLP63" sqlType="DECIMAL(3,1)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="SLP125" sqlType="DECIMAL(3,1)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="SLP250" sqlType="DECIMAL(3,1)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="SLP500" sqlType="DECIMAL(3,1)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="SLP1000" sqlType="DECIMAL(3,1)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="SLP2000" sqlType="DECIMAL(3,1)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="SLP4000" sqlType="DECIMAL(3,1)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="SLP8000" sqlType="DECIMAL(3,1)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="DBA" sqlType="DECIMAL(3,1)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="ZUABEX" sqlType="VARCHAR(1)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <primary-key columns="_id" />
+    </table>
+    <table name="STUECKLISTE" schema="" catalog="" type="TABLE">
+      <column name="_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4" />
+      <column name="PAKET" sqlType="TINYINT" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="ARTIKEL" sqlType="VARCHAR(20)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="LUFTART" sqlType="VARCHAR(2)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <column name="ANZAHL" sqlType="DECIMAL(5,2)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="REIHENFOLGE" sqlType="DECIMAL(3,0)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <primary-key columns="_id" />
+    </table>
+    <table name="WIDERSTANDSBEIWERTE" schema="" catalog="" type="TABLE">
+      <column name="_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4" />
+      <column name="ID" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4" />
+      <column name="BEZEICHNUNG" sqlType="VARCHAR(30)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="WERT" sqlType="DECIMAL(3,2)" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="BILD" sqlType="TEXT" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <primary-key columns="_id" />
+    </table>
+    <table name="android_metadata" schema="" catalog="" type="TABLE">
+      <column name="_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4" />
+      <column name="locale" sqlType="VARCHAR(30)" length="2000000000" precision="10" nullable="false" jdbcType="12" />
+      <primary-key columns="_id" />
+    </table>
+    <table name="sqlite_sequence" schema="" catalog="" type="TABLE">
+      <column name="name" sqlType="" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+      <column name="seq" sqlType="" length="2000000000" precision="10" nullable="true" jdbcType="12" />
+    </table>
+  </data-source>
+</component>
