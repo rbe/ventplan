@@ -10,5 +10,6 @@
 package com.westaflex.wac
 
 projektSuchenOrdnerOeffnen.actionPerformed = controller.projektSuchenOrdnerOeffnen
+projektSuchenStarteSuche.actionPerformed = controller.projektSuchenStarteSuche
 projektSuchenAbbruch.actionPerformed = controller.projektSuchenAbbrechen
 projektSuchenDateiOeffnen.actionPerformed = controller.projektSuchenDateiOeffnen

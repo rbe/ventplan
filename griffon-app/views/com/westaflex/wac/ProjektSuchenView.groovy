@@ -43,7 +43,7 @@ panel(id: "projektSuchenPanel", layout: new MigLayout("fillx, wrap", "[]para[fil
     label("", constraints: "span 2")
     button(id: "projektSuchenStarteSuche", constraints: "grow")
 
-    list(id: "projektSuchen",
+    list(id: "projektSuchenListe",
          listData: null,
          visibleRowCount: 5,
          selectionMode:ListSelectionModel.SINGLE_SELECTION

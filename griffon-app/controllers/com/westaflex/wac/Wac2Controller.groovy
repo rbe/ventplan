@@ -738,12 +738,38 @@ class Wac2Controller {
         }
     }
 
+    def projektSuchenStarteSuche = { evt = null ->
+        def searchInPath = view.projektSuchenOrdnerPfad.text
+        if (searchInPath) {
+            File startFilePath = new File(searchInPath)
+            if (startFilePath.exists()) {
+                // zuerst alle Projektdateien auflisten
+                startFilePath.listFiles(fileFilter: [
+                        accept: { file ->
+                            return file.name.toLowerCase().endsWith('.vpx') || file.name.toLowerCase().endsWith('.wpx')
+                        }
+                ] as javax.swing.filechooser.FileFilter).each { file ->
+                    // TODO: xmlslurper...
+                }
+
+                startFilePath.listFiles(fileFilter: [
+                        accept: { file ->
+                            return file.isDirectory()
+                        }
+                ] as javax.swing.filechooser.FileFilter).each { file ->
+                    // TODO: iterate through the directories...
+                }
+            }
+        }
+    }
+
     def projektSuchenAbbrechen = { evt = null ->
 
     }
 
     def projektSuchenDateiOeffnen = { evt = null ->
-
+        def file = view.projektSuchenListe.selectedValue
+        projektOffnenClosure(file)
     }
 
 }
