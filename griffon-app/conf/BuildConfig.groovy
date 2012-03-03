@@ -150,6 +150,8 @@ app.archetype = 'default'
 app.fileType = '.groovy'
 app.defaultPackageName = 'com.westaflex.wac'
 
+application.icon = '/griffon-app/VentPlan.icns'
+
 compiler {
     threading {
         com {

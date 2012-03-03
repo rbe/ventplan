@@ -63,9 +63,7 @@
 
   <resources>
      <res id="Heading.image" src="resources/griffon-logo.png" />
-     <res id="groovy.logo" src="resources/groovy-logo.png" />
-     <res id="griffon.logo" src="resources/griffon-logo.png" />
-     <res id="griffon.splash" src="resources/griffon-splash.png" />
+     <res id="ventplan.logo" src="resources/ventplan_logo.png" />
     <!--
     <res id="HTMLLicencePanel.licence" src="resources/asl2.html" />
     -->

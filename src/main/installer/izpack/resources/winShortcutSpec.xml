@@ -24,7 +24,7 @@
     initialState="normal"
     programGroup="yes"
     desktop="yes"
-    iconFile="$INSTALL_PATH\icons\griffon-logo.png"
+    iconFile="$INSTALL_PATH\icons\ventplan_signet_16x16.png"
     applications="yes"
     startMenu="no"
     startup="no">

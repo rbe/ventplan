@@ -11,15 +11,19 @@
 eventPackageResourcesEnd = {
     // Copy customized izpack files from /src/main/installer/izpack/resources to izpack resources dir.
     ant.copy( todir: "${projectWorkDir}/installer/izpack/resources", overwrite: true ) {
-        fileset( dir: "${basedir}/src/main/installer/izpack/resources", includes: "*.xml" )
+        fileset( dir: "${basedir}/src/main/installer/izpack/resources", includes: "**" )
     }
     // Copy SQL Database to izpack resources dir
     ant.copy( todir: "${projectWorkDir}/installer/izpack/resources", overwrite: true ) {
-        fileset( dir: "${basedir}/lib", includes: "*.zip" )
+        fileset( dir: "${basedir}/sql", includes: "*.db" )
     }
     // Copy customized VentPlan executables from /bin to izpack bin dir.
     ant.copy( todir: "${projectWorkDir}/installer/izpack/binary/bin", overwrite: true ) {
         fileset( dir: "${basedir}/bin", includes: "**" )
+    }
+    // Copy VentPlan images to resource dir to display them in README.html.
+    ant.copy( todir: "${projectWorkDir}/installer/izpack/resources", overwrite: true ) {
+        fileset( dir: "${basedir}/griffon-app/resources/image", includes: "*.png" )
     }
 }
 
