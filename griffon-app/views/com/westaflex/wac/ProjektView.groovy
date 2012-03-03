@@ -41,7 +41,6 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount, constra
             panel(id: "raumVsTab", title: "Raumvolumenströme", layout: new MigLayout("ins 5 n 0 n, fillx","[grow]"), constraints: "grow") {
                 build(RaumVsView)
             }
-            // TODO rbe Vorerst ausgeschaltet; Berechnungen mit Stukemeier prüfen
             // Druckverlustberechnung
             panel(id: "dvbTab", title: "Druckverlustberechnung", layout: new MigLayout("ins 5 n 0 n, fillx","[grow]"), constraints: "grow") {
                 build(DruckverlustView)

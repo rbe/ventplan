@@ -256,7 +256,7 @@ class WacCalculationService {
 
     /**
      * DiffDruck ist abhängig von der Gebäudelage.
-     * TODO rbe DIN1946, Seite 37, Tabelle 10, Freie Lüftung
+     * DIN1946, Seite 37, Tabelle 10, Freie Lüftung
      */
     Double diffDruck(map) {
         def r = map.gebaude.lage.with {
@@ -276,7 +276,7 @@ class WacCalculationService {
 
     /**
      * Wirksamen Infiltrationsanteil berechnen.
-     * TODO rbe DIN1946, Seite 34
+     * DIN1946, Seite 34
      */
     Double infiltration(map, Boolean ventilator) {
         def m = [
@@ -593,14 +593,18 @@ class WacCalculationService {
         grundluftung = Math.max(map.gebaude.geplanteBelegung.mindestaussenluftrate, grundluftung)
         map.aussenluftVs.gesamtLvsLtmLwNl = (grundluftung - infiltration) / geluftetesVolumen
         mindestluftung = 0.7f * grundluftung - infiltration
-   //     map.aussenluftVs.gesamtLvsLtmLvsRl = mindestluftung
+        // WAC-209 So wurde vor WAC-209 gerechnet
+        //map.aussenluftVs.gesamtLvsLtmLvsRl = mindestluftung
         map.aussenluftVs.gesamtLvsLtmLwRl = mindestluftung / geluftetesVolumen
         intensivluftung = 1.3f * grundluftung - infiltration
-   //     map.aussenluftVs.gesamtLvsLtmLvsIl = intensivluftung
+        // WAC-209 So wurde vor WAC-209 gerechnet
+        //map.aussenluftVs.gesamtLvsLtmLvsIl = intensivluftung
         map.aussenluftVs.gesamtLvsLtmLwIl = intensivluftung / geluftetesVolumen
-   //     map.aussenluftVs.gesamtLvsLtmLvsFs = wsFaktor * grundluftung - infiltration
+        // WAC-209 So wurde vor WAC-209 gerechnet
+        //map.aussenluftVs.gesamtLvsLtmLvsFs = wsFaktor * grundluftung - infiltration
         // Lüftung zum Feuchteschutz = Nennlüftung / 1.3
-   //     map.aussenluftVs.gesamtLvsLtmLvsFs = map.aussenluftVs.gesamtLvsLtmLvsNl / 1.3f
+        // WAC-209 So wurde vor WAC-209 gerechnet
+        //map.aussenluftVs.gesamtLvsLtmLvsFs = map.aussenluftVs.gesamtLvsLtmLvsNl / 1.3f
         map.aussenluftVs.gesamtLvsLtmLwFs = map.aussenluftVs.gesamtLvsLtmLwNl / 1.3f
         //
         // Raumvolumenströme
