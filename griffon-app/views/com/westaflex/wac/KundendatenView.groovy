@@ -101,5 +101,8 @@ GH.yellowTextField(ausfuhrendeFirmaTelefon)
 GH.yellowTextField(ausfuhrendeFirmaTelefax)
 GH.yellowTextField(ausfuhrendeFirmaAnsprechpartner)
 GH.yellowTextField(bauvorhaben)
+GH.yellowTextField(bauvorhabenAnschrift)
+GH.yellowTextField(bauvorhabenPlz)
+GH.yellowTextField(bauvorhabenOrt)
 // Bindings
 build(KundendatenBindings)
