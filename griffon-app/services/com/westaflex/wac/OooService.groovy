@@ -12,16 +12,17 @@ package com.westaflex.wac
 import com.bensmann.griffon.GriffonHelper as GH
 
 import groovy.xml.DOMBuilder
+import groovy.xml.StreamingMarkupBuilder
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
 
 /**
- * 
+ *
  */
 class OooService {
-    
-    public static boolean DEBUG = false
+
+    private static final boolean DEBUG = false
 
     /**
      * Helper for preferences.
@@ -39,9 +40,24 @@ class OooService {
     private static SimpleDateFormat shortIsoDate = new SimpleDateFormat('yyMMdd')
 
     /**
+     * Just time: hour and seconds.
+     */
+    private static SimpleDateFormat justTime = new SimpleDateFormat('HHmm')
+
+    /**
+     * German formatting of numbers.
+     */
+    private static NumberFormat germanNumberFormat = DecimalFormat.getInstance(Locale.GERMANY)
+
+    /**
      * Service for 'Stückliste'.
      */
     StucklisteService stucklisteService
+
+    static {
+        germanNumberFormat.setMinimumFractionDigits(2)
+        germanNumberFormat.setMaximumFractionDigits(2)
+    }
 
     /**
      * Constructor.
@@ -53,10 +69,11 @@ class OooService {
      * Strings containing zero numbers are made empty.
      */
     private String noZero(String val) {
-        if (val == '0,00' || val == '0') val = ''
+        if (val == '0,00' || val == '0')
+            val = ''
         val
     }
-    
+
     /**
      * Return value of map.key as String, or an empty String when key is not present:
      * key=Decke -> map[decke] set, then "Decke" else ""
@@ -68,168 +85,58 @@ class OooService {
     }
 
     /**
-     *
-     * @param wpxFile
-     * @param map
-     * @return
+     * @return String File extension for desired document format.
      */
-    Object makeOdiseeBasedata(File wpxFile, Map map, DOMBuilder domBuilder) {
-        domBuilder.instructions() {
-            addErsteller(domBuilder)
-            addKundendaten(domBuilder, map.kundendaten)
+    private String getOutputFormat() {
+        String outputFormat = 'pdf'
+        if (prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_DOKUMENTTYP).contains('ODF')) {
+            outputFormat = 'odt'
         }
+        return outputFormat
     }
 
     /**
      *
      * @param wpxFile
      * @param map
-     * @param domBuilder
-     * @return
-     */
-    Object makeOdiseeProjectdata(File wpxFile, Map map, DOMBuilder domBuilder) {
-        domBuilder.instructions() {
-            addProjektdaten(domBuilder, map.kundendaten)
-            addGebaude(domBuilder, map)
-        }
-    }
-
-    /**
-     *
-     * @param wpxFile
-     * @param map
-     * @param domBuilder
-     * @return
-     */
-    Object makeOdiseeRoomdata(File wpxFile, Map map, DOMBuilder domBuilder) {
-        domBuilder.instructions() {
-            addRaumdaten(domBuilder, map)
-            addRaumvolumenstrome(domBuilder, map)
-            addUberstromelemente(domBuilder, map)
-            addAkustikBerechnung(domBuilder, map)
-            addDvbKanalnetz(domBuilder, map)
-            addDvbVentileinstellung(domBuilder, map)
-        }
-    }
-
-    /**
-     *
-     * @param wpxFile
-     * @param map
-     * @param saveOdiseeXml
-     * @return
+     * @param saveOdiseeXml Save Odisee XML in file system? Defaults to false.
+     * @return String Odisee XML.
      */
     String performAuslegung(File wpxFile, Map map, boolean saveOdiseeXml = false) {
         // Filename w/o extension
         def wpxFilenameWoExt = wpxFile.name - '.wpx'
         // Generate Odisee XML
+        getOutputFormat()
         DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
             request(name: wpxFilenameWoExt, id: 1) {
                 ooo(group: 'group0') {}
-                template(name: 'WestaAuslegung', revision: 'LATEST', outputFormat: 'pdf') {}
+                template(name: 'WestaAuslegung', revision: 'LATEST', outputFormat: getOutputFormat()) {}
                 archive(database: false, files: true) {}
-                makeOdiseeBasedata(wpxFile, map, domBuilder)
-                makeOdiseeProjectdata(wpxFile, map, domBuilder)
-                makeOdiseeRoomdata(wpxFile, map, domBuilder)
-            }
-        }
-        // Convert XML to string (StreamingMarkupBuilder will generate XML with correct german umlauts)
-        String xml = new groovy.xml.StreamingMarkupBuilder().bind {
-            mkp.yieldUnescaped odisee
-        }.toString()
-        // Save Odisee request XML
-        if (saveOdiseeXml) {
-            def odiseeXmlFile = new File(wpxFile.parentFile, "${wpxFilenameWoExt}_Auslegung_odisee.xml")
-            odiseeXmlFile.withWriter("UTF-8") { writer ->
-                writer.write(xml)
-            }
-        }
-        // Return Odisee XML
-        xml
-    }
-
-    /**
-     *
-     * @param wpxFile
-     * @param map The whole model.
-     * @param saveOdiseeXml Save Odisee XML (for debugging)?
-     * @return
-     */
-    String performAngebot(File wpxFile, Map map, boolean saveOdiseeXml = false) {
-        // Filename w/o extension
-        def wpxFilenameWoExt = wpxFile.name - '.wpx'
-        // Generate Odisee XML
-        DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
-        def odisee = domBuilder.odisee() {
-            request(name: wpxFilenameWoExt, id: 1) {
-                ooo(group: 'group0') {}
-                template(name: 'WestaAngebot', revision: 'LATEST', outputFormat: 'pdf') {}
-                archive(database: false, files: true) {}
-                makeOdiseeBasedata(wpxFile, map, domBuilder)
-                makeOdiseeProjectdata(wpxFile, map, domBuilder)
-                makeOdiseeRoomdata(wpxFile, map, domBuilder)
-                domBuilder.instructions() {
-                    // Absender
-                    domBuilder.userfield(name: 'AbsenderFirma', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA))
-                    domBuilder.userfield(name: 'AbsenderName', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME))
-                    domBuilder.userfield(name: 'AbsenderAnschrift', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE))
-                    domBuilder.userfield(name: 'AbsenderPLZ', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_PLZ))
-                    domBuilder.userfield(name: 'AbsenderOrt', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_ORT))
-                    domBuilder.userfield(name: 'AbsenderTelefon', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_TEL))
-                    domBuilder.userfield(name: 'AbsenderTelefax', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FAX))
-                    domBuilder.userfield(name: 'AbsenderEmail', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL))
-                    // Werksvertretung
-                    domBuilder.userfield(name: 'WerksvertretungFirma', '')
-                    domBuilder.userfield(name: 'WerksvertretungName', '')
-                    domBuilder.userfield(name: 'WerksvertretungAnschrift', '')
-                    domBuilder.userfield(name: 'WerksvertretungPLZ', '')
-                    domBuilder.userfield(name: 'WerksvertretungOrt', '')
-                    domBuilder.userfield(name: 'WerksvertretungTelefon', '')
-                    domBuilder.userfield(name: 'WerksvertretungTelefax', '')
-                    domBuilder.userfield(name: 'WerksvertretungEmail', '')
-                    // Empfänger
-                    domBuilder.userfield(name: 'EmpfFirma', '')
-                    domBuilder.userfield(name: 'EmpfName', map.kundendaten.bauvorhaben)
-                    domBuilder.userfield(name: 'EmpfAnschrift', map.kundendaten.bauvorhabenAnschrift)
-                    domBuilder.userfield(name: 'EmpfPLZ', map.kundendaten.bauvorhabenPlz)
-                    domBuilder.userfield(name: 'EmpfOrt', map.kundendaten.bauvorhabenOrt)
-                    domBuilder.userfield(name: 'EmpfFax', '')
-                    domBuilder.userfield(name: 'EmpfFon', '')
-                    // Angebotsdatum
-                    domBuilder.userfield(name: 'Angebotsdatum', germanDate.format(new Date()))
-                    // Angebot: ProjektBV
-                    domBuilder.userfield(name: 'ProjektBV', map.kundendaten.bauvorhaben)
-                    // Angebot: Angebotsnummer, Datum, Kürzel des Erstellers, zufällige/lfd. Nummer
-                    String datum = shortIsoDate.format(new java.util.Date())
-                    String kuerzel = prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME).grep { it in ('A'..'Z') }.join()
-                    String angebotsnrkurz = map.angebotsnummerkurz ?: String.format("%04d", Math.round(Math.random() * 10000))
-                    domBuilder.userfield(name: 'Angebotsnummer', "${datum}-${kuerzel}-${angebotsnrkurz}")
-                    domBuilder.userfield(name: 'AngebotsnummerKurz', angebotsnrkurz)
+                instructions() {
+                    addErsteller(domBuilder)
+                    addGrosshandel(domBuilder, map.kundendaten)
+                    addAusfuhrendeFirma(domBuilder, map.kundendaten)
+                    addBauvorhaben(domBuilder, map.kundendaten)
+                    addGebaude(domBuilder, map)
+                    addRaumdaten(domBuilder, map)
+                    addRaumvolumenstrome(domBuilder, map)
+                    addUberstromelemente(domBuilder, map)
+                    addAkustikBerechnung(domBuilder, map)
+                    addDvbKanalnetz(domBuilder, map)
+                    addDvbVentileinstellung(domBuilder, map)
                 }
             }
         }
-        // Convert XML to string (StreamingMarkupBuilder will generate XML with correct german umlauts)
-        String xml = new groovy.xml.StreamingMarkupBuilder().bind {
-            mkp.yieldUnescaped odisee
-        }.toString()
-        // Save Odisee request XML
-        if (saveOdiseeXml) {
-            def odiseeXmlFile = new File(wpxFile.parentFile, "${wpxFilenameWoExt}_Angebot_odisee.xml")
-            odiseeXmlFile.withWriter("UTF-8") { writer ->
-                writer.write(xml)
-            }
-        }
-        // Return Odisee XML
-        xml
+        prepareXml(odisee, wpxFile, 'Auslegung', saveOdiseeXml)
     }
 
     /**
      *
      * @param wpxFile
      * @param map
-     * @param saveOdiseeXml
-     * @return
+     * @param saveOdiseeXml Save Odisee XML in file system? Defaults to false.
+     * @return String Odisee XML.
      */
     String performStueckliste(File wpxFile, Map map, boolean saveOdiseeXml = false) {
         // Filename w/o extension
@@ -239,13 +146,70 @@ class OooService {
         def odisee = domBuilder.odisee() {
             request(name: wpxFilenameWoExt, id: 1) {
                 ooo(group: 'group0') {}
-                template(name: 'WestaStueckliste', revision: 'LATEST', outputFormat: 'pdf') {}
+                template(name: 'WestaStueckliste', revision: 'LATEST', outputFormat: getOutputFormat()) {}
                 archive(database: false, files: true) {}
-                //
-                makeOdiseeBasedata(wpxFile, map, domBuilder)
-                addProjektdaten(domBuilder, map.kundendaten)
-                //
-                domBuilder.instructions() {
+                instructions() {
+                    //
+                    addErsteller(domBuilder)
+                    addEmpfanger(domBuilder, map)
+                    addBauvorhaben(domBuilder, map.kundendaten)
+                    // Stückliste
+                    def stuckliste = stucklisteService.processData(map)
+                    stucklisteService.makeResult(stuckliste).eachWithIndex { stuck, i ->
+                        Map artikel = stuck.value as Map
+                        int reihenfolge = (int) artikel.REIHENFOLGE
+                        double anzahl = (double) artikel.ANZAHL
+                        println String.format('%2d % 12d % 7.1f %6s %17s - %s', i + 1, reihenfolge, anzahl, artikel.MENGENEINHEIT, stuck.key, artikel.ARTIKELBEZEICHNUNG)
+                        // Menge mit oder ohne Komma anzeigen?
+                        String menge
+                        if (anzahl * 10 > 0) {
+                            menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.MENGENEINHEIT)
+                        } else {
+                            menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
+                        }
+                        domBuilder.userfield(name: "TabelleStueckliste!A${i + 2}", i + 1)
+                        domBuilder.userfield(name: "TabelleStueckliste!B${i + 2}", menge)
+                        domBuilder.userfield(name: "TabelleStueckliste!C${i + 2}", stuck.key)
+                        domBuilder.userfield(name: "TabelleStueckliste!D${i + 2}", artikel.ARTIKELBEZEICHNUNG)
+                    }
+                }
+            }
+        }
+        prepareXml(odisee, wpxFile, 'Stückliste', saveOdiseeXml)
+    }
+
+    /**
+     *
+     * @param wpxFile
+     * @param map The whole model.
+     * @param saveOdiseeXml Save Odisee XML in file system? Defaults to false.
+     * @return String Odisee XML.
+     */
+    String performAngebot(File wpxFile, Map map, boolean saveOdiseeXml = false) {
+        // Filename w/o extension
+        def wpxFilenameWoExt = wpxFile.name - '.wpx'
+        // Generate Odisee XML
+        DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
+        def odisee = domBuilder.odisee() {
+            request(name: wpxFilenameWoExt, id: 1) {
+                ooo(group: 'group0') {}
+                template(name: 'WestaAngebot', revision: 'LATEST', outputFormat: getOutputFormat()) {}
+                archive(database: false, files: true) {}
+                instructions() {
+                    //
+                    addErsteller(domBuilder)
+                    addEmpfanger(domBuilder, map)
+                    addBauvorhaben(domBuilder, map.kundendaten)
+                    addWerksvertretung(domBuilder)
+                    // Angebotsdatum
+                    domBuilder.userfield(name: 'Angebotsdatum', germanDate.format(new Date()))
+                    // Angebot: Angebotsnummer, Datum, Kürzel des Erstellers, zufällige/lfd. Nummer
+                    String datum = shortIsoDate.format(new java.util.Date())
+                    String kuerzel = prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME).grep { it in ('A'..'Z') }.join()
+                    String angebotsnrkurz = map.angebotsnummerkurz ?: justTime.format(new Date()) //String.format("%04d", Math.round(Math.random() * 10000))
+                    domBuilder.userfield(name: 'Angebotsnummer', "${datum}-${kuerzel}-${angebotsnrkurz}")
+                    domBuilder.userfield(name: 'AngebotsnummerKurz', angebotsnrkurz)
+                    // Stückliste
                     def stuckliste = stucklisteService.processData(map)
                     double summe = 0.0d
                     int summenZeile = 0
@@ -262,26 +226,38 @@ class OooService {
                         domBuilder.userfield(name: "TabelleStueckliste!A${i + 2}", i + 1)
                         domBuilder.userfield(name: "TabelleStueckliste!B${i + 2}", menge)
                         domBuilder.userfield(name: "TabelleStueckliste!C${i + 2}", "${stuck.key}\n${artikel.ARTIKELBEZEICHNUNG}")
-                        domBuilder.userfield(name: "TabelleStueckliste!D${i + 2}", String.format(Locale.GERMANY, "%.2f", artikel.PREIS))
-                        domBuilder.userfield(name: "TabelleStueckliste!E${i + 2}", String.format(Locale.GERMANY, "%.2f", anzahl * artikel.PREIS))
+                        domBuilder.userfield(name: "TabelleStueckliste!D${i + 2}", germanNumberFormat.format(artikel.PREIS)) //String.format(Locale.GERMANY, "%.2f", artikel.PREIS)
+                        domBuilder.userfield(name: "TabelleStueckliste!E${i + 2}", germanNumberFormat.format(anzahl * artikel.PREIS)) //String.format(Locale.GERMANY, "%.2f", anzahl * artikel.PREIS)
                         summe += anzahl * artikel.PREIS
                         summenZeile = i + 1
                     }
                     // Summe in EUR
                     domBuilder.userfield(name: "TabelleStueckliste!B${summenZeile + 2}", 'Summe')
-                    NumberFormat nf = DecimalFormat.getInstance(Locale.GERMANY)
-                    nf.groupingUsed = true
-                    domBuilder.userfield(name: "TabelleStueckliste!E${summenZeile + 2}", nf.format(summe))
+                    germanNumberFormat.groupingUsed = true
+                    domBuilder.userfield(name: "TabelleStueckliste!E${summenZeile + 2}", germanNumberFormat.format(summe))
                 }
             }
         }
+        prepareXml(odisee, wpxFile, 'Angebot', saveOdiseeXml)
+    }
+
+    /**
+     * @param odisee
+     * @param wpxFile
+     * @param type Just a name included in Odisee XML filename.
+     * @param saveOdiseeXml Save Odisee XML in file system?
+     * @return
+     */
+    private String prepareXml(odisee, File wpxFile, String type, boolean saveOdiseeXml) {
+        // Filename w/o extension
+        def wpxFilenameWoExt = wpxFile.name - '.wpx'
         // Convert XML to string (StreamingMarkupBuilder will generate XML with correct german umlauts)
-        String xml = new groovy.xml.StreamingMarkupBuilder().bind {
+        String xml = new StreamingMarkupBuilder().bind {
             mkp.yieldUnescaped odisee
         }.toString()
         // Save Odisee request XML
         if (saveOdiseeXml) {
-            def odiseeXmlFile = new File(wpxFile.parentFile, "${wpxFilenameWoExt}_Stueckliste_odisee.xml")
+            def odiseeXmlFile = new File(wpxFile.parentFile, "${wpxFilenameWoExt}_${type}_odisee.xml")
             odiseeXmlFile.withWriter("UTF-8") { writer ->
                 writer.write(xml)
             }
@@ -291,31 +267,71 @@ class OooService {
     }
 
     /**
-     * 
+     * @param domBuilder
      */
-    private def addErsteller(domBuilder) {
-        domBuilder.userfield(name: 'erstellerFirma', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA))
-        domBuilder.userfield(name: 'erstellerName', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME))
-        domBuilder.userfield(name: 'erstellerStrasse', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE))
-        domBuilder.userfield(name: 'erstellerPLZ', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_PLZ))
-        domBuilder.userfield(name: 'erstellerOrt', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_ORT))
-        domBuilder.userfield(name: 'erstellerTelefon', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_TEL))
-        domBuilder.userfield(name: 'erstellerFax', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FAX))
-        domBuilder.userfield(name: 'erstellerEmail', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL))
+    private void addErsteller(domBuilder) {
+        // Ersteller
+        domBuilder.userfield(name: 'ErstellerFirma', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA))
+        domBuilder.userfield(name: 'ErstellerName', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME))
+        domBuilder.userfield(name: 'ErstellerAnschrift', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE))
+        domBuilder.userfield(name: 'ErstellerPLZ', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_PLZ))
+        domBuilder.userfield(name: 'ErstellerOrt', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_ORT))
+        domBuilder.userfield(name: 'ErstellerTelefon', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_TEL))
+        domBuilder.userfield(name: 'ErstellerFax', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FAX))
+        domBuilder.userfield(name: 'ErstellerEmail', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL))
+        /* Möglicherweise Ersteller und Absender unterschiedlich?
+        // Absender
+        domBuilder.userfield(name: 'AbsenderFirma', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA))
+        domBuilder.userfield(name: 'AbsenderName', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME))
+        domBuilder.userfield(name: 'AbsenderAnschrift', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE))
+        domBuilder.userfield(name: 'AbsenderPLZ', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_PLZ))
+        domBuilder.userfield(name: 'AbsenderOrt', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_ORT))
+        domBuilder.userfield(name: 'AbsenderTelefon', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_TEL))
+        domBuilder.userfield(name: 'AbsenderTelefax', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FAX))
+        domBuilder.userfield(name: 'AbsenderEmail', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL))
+        */
     }
-    
+
     /**
+     * @param domBuilder
+     */
+    private void addEmpfanger(domBuilder, map) {
+        switch (prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMPFANGER)) {
+            case 'Grosshandel':
+                domBuilder.userfield(name: 'EmpfFirma', map.kundendaten.grosshandel.firma1 + ' ' + map.kundendaten.grosshandel.firma2)
+                domBuilder.userfield(name: 'EmpfName', map.kundendaten.grosshandel.ansprechpartner)
+                domBuilder.userfield(name: 'EmpfAnschrift', map.kundendaten.grosshandel.strasse)
+                domBuilder.userfield(name: 'EmpfPLZ', map.kundendaten.grosshandel.plz)
+                domBuilder.userfield(name: 'EmpfOrt', map.kundendaten.grosshandel.ort)
+                domBuilder.userfield(name: 'EmpfFax', map.kundendaten.grosshandel.telefon)
+                domBuilder.userfield(name: 'EmpfFon', map.kundendaten.grosshandel.telefax)
+                break
+            case 'Ausführende Firma':
+                domBuilder.userfield(name: 'EmpfFirma', map.kundendaten.ausfuhrendeFirma.firma1 + ' ' + map.kundendaten.ausfuhrendeFirma.firma2)
+                domBuilder.userfield(name: 'EmpfName', map.kundendaten.ausfuhrendeFirma.ansprechpartner)
+                domBuilder.userfield(name: 'EmpfAnschrift', map.kundendaten.ausfuhrendeFirma.strasse)
+                domBuilder.userfield(name: 'EmpfPLZ', map.kundendaten.ausfuhrendeFirma.plz)
+                domBuilder.userfield(name: 'EmpfOrt', map.kundendaten.ausfuhrendeFirma.ort)
+                domBuilder.userfield(name: 'EmpfFax', map.kundendaten.ausfuhrendeFirma.telefon)
+                domBuilder.userfield(name: 'EmpfFon', map.kundendaten.ausfuhrendeFirma.telefax)
+                break
+            case 'Bauherr/Investor':
+                domBuilder.userfield(name: 'EmpfFirma', '')
+                domBuilder.userfield(name: 'EmpfName', map.kundendaten.bauvorhaben)
+                domBuilder.userfield(name: 'EmpfAnschrift', map.kundendaten.bauvorhabenAnschrift)
+                domBuilder.userfield(name: 'EmpfPLZ', map.kundendaten.bauvorhabenPlz)
+                domBuilder.userfield(name: 'EmpfOrt', map.kundendaten.bauvorhabenOrt)
+                domBuilder.userfield(name: 'EmpfFax', '')
+                domBuilder.userfield(name: 'EmpfFon', '')
+                break
+        }
+    }
+
+    /**
+     * @param domBuilder
      * @param map model.map.kundendaten
      */
-    private def addProjektdaten(domBuilder, map) {
-        domBuilder.userfield(name: 'adBauvorhabenTextField', map.bauvorhaben)
-        domBuilder.userfield(name: 'ProjektBV', map.bauvorhaben)
-    }
-    
-    /**
-     * @param map model.map.kundendaten
-     */
-    private def addKundendaten(domBuilder, map) {
+    private void addGrosshandel(domBuilder, map) {
         // Grosshandel
         domBuilder.userfield(name: 'ghFirma1TextField', map.grosshandel.firma1)
         domBuilder.userfield(name: 'ghFirma2TextField', map.grosshandel.firma2)
@@ -324,6 +340,13 @@ class OooService {
         domBuilder.userfield(name: 'ghTelefonTextField', map.grosshandel.telefon)
         domBuilder.userfield(name: 'ghFaxTextField', map.grosshandel.telefax)
         domBuilder.userfield(name: 'ghAnsprechpartnerTextField', map.grosshandel.ansprechpartner)
+    }
+
+    /**
+     * @param domBuilder
+     * @param map model.map.kundendaten
+     */
+    private void addAusfuhrendeFirma(domBuilder, map) {
         // Ausführende Firma
         domBuilder.userfield(name: 'afFirma1TextField', map.ausfuhrendeFirma.firma1)
         domBuilder.userfield(name: 'afFirma2TextField', map.ausfuhrendeFirma.firma2)
@@ -333,14 +356,36 @@ class OooService {
         domBuilder.userfield(name: 'afFaxTextField', map.ausfuhrendeFirma.telefax)
         domBuilder.userfield(name: 'afAnsprechpartnerTextField', map.ausfuhrendeFirma.ansprechpartner)
     }
-    
+
     /**
-     *
+     * Werksvertretung.
+     * @param domBuilder
+     */
+    private void addWerksvertretung(domBuilder) {
+        domBuilder.userfield(name: 'WerksvertretungFirma', '')
+        domBuilder.userfield(name: 'WerksvertretungName', '')
+        domBuilder.userfield(name: 'WerksvertretungAnschrift', '')
+        domBuilder.userfield(name: 'WerksvertretungPLZ', '')
+        domBuilder.userfield(name: 'WerksvertretungOrt', '')
+        domBuilder.userfield(name: 'WerksvertretungTelefon', '')
+        domBuilder.userfield(name: 'WerksvertretungTelefax', '')
+        domBuilder.userfield(name: 'WerksvertretungEmail', '')
+    }
+
+    /**
+     * @param domBuilder
+     * @param map model.map.kundendaten
+     */
+    private void addBauvorhaben(domBuilder, map) {
+        domBuilder.userfield(name: 'adBauvorhabenTextField', map.bauvorhaben)
+        domBuilder.userfield(name: 'ProjektBV', map.bauvorhaben)
+    }
+
+    /**
      * @param domBuilder
      * @param map
-     * @return
      */
-    private def addGebaude(domBuilder, map) {
+    private void addGebaude(domBuilder, map) {
         // Gerätestandort
         domBuilder.userfield(name: 'gsKellergeschossRadioButton', gt(map.anlage.standort, "KG", "Kellergeschoss"))
         domBuilder.userfield(name: 'gsErdgeschossRadioButton', gt(map.anlage.standort, "EG", "Erdgeschoss"))
@@ -385,11 +430,12 @@ class OooService {
         domBuilder.userfield(name: 'ldKatCRadioButton', gt(map.gebaude.luftdichtheit, "kategorieC", "Kategorie C (frei, Bestand)"))
         domBuilder.userfield(name: 'ldMessRadioButton', gt(map.gebaude.luftdichtheit, "messwerte", "Messwerte"))
     }
-    
+
     /**
+     * @param domBuilder
      * @param map model.map
      */
-    def addRaumdaten(domBuilder, map) {
+    private void addRaumdaten(domBuilder, map) {
         // Tabelle
         def m = [:]
         map.raum.raume.eachWithIndex { r, i ->
@@ -400,27 +446,24 @@ class OooService {
             domBuilder.userfield(name: "wfTabelleTable!F${i + 3}", GH.toString2Converter(r.raumHohe))
         }
         // Zusammenfassung
-        domBuilder.userfield(name: 'lmeZuSummeWertLabel',
-            GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "ZU" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d))
-        domBuilder.userfield(name: 'lmeAbSummeWertLabel',
-            GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "AB" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d))
-        domBuilder.userfield(name: 'lmeUebSummeWertLabel',
-            GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "ÜB" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d))
-        domBuilder.userfield(name: 'lmeGesamtvolumenWertLabel',
-            GH.toString2Converter(map.raum.raumVs.gesamtVolumenNE))
-        domBuilder.userfield(name: 'lmeGebaeudeluftwechselWertLabel',
-            GH.toString2Converter(map.raum.raumVs.luftwechselNE))
+        def zuSumme = map.raum.raume.findAll { it.raumLuftart == "ZU" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
+        domBuilder.userfield(name: 'lmeZuSummeWertLabel', GH.toString2Converter(zuSumme))
+        def abSumme = map.raum.raume.findAll { it.raumLuftart == "AB" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
+        domBuilder.userfield(name: 'lmeAbSummeWertLabel', GH.toString2Converter(abSumme))
+        def ubSumme = map.raum.raume.findAll { it.raumLuftart == "ÜB" }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
+        domBuilder.userfield(name: 'lmeUebSummeWertLabel', GH.toString2Converter(ubSumme))
+        domBuilder.userfield(name: 'lmeGesamtvolumenWertLabel', GH.toString2Converter(map.raum.raumVs.gesamtVolumenNE))
         domBuilder.userfield(name: 'kzKennzeichenLabel', map.anlage.kennzeichnungLuftungsanlage)
         // Bemerkungen
         domBuilder.userfield(name: 'adNotizenTextArea', map.kundendaten.notizen)
     }
-    
+
     /**
+     * @param domBuilder
      * @param map model.map
      */
-    def addRaumvolumenstrome(domBuilder, map) {
+    private void addRaumvolumenstrome(domBuilder, map) {
         // Tabelle
-        def m = [:]
         map.raum.raume.eachWithIndex { r, i ->
             // raumZuluft- oder raumAbluftvolumenstrom
             // ZU/AB: größeren Wert nehmen
@@ -450,18 +493,39 @@ class OooService {
             domBuilder.userfield(name: "lmeTabelleTable!M${i + 3}", r.raumVerteilebene)
         }
         // Ergebnis der Berechnungen
-        domBuilder.userfield(name: 'lmeSumLTMZuluftmengeWertLabel',
-            noZero(GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "ZU" }?.inject(0.0d, { o, n -> o + n.raumZuluftVolumenstromInfiltration }) ?: 0.0d)))
-        domBuilder.userfield(name: 'lmeSumLTMAbluftmengeWertLabel',
-            noZero(GH.toString2Converter(map.raum.raume.findAll { it.raumLuftart == "AB" }?.inject(0.0d, { o, n -> o + n.raumAbluftVolumenstromInfiltration }) ?: 0.0d)))
-        domBuilder.userfield(name: 'lmeGesAussenluftmengeWertLabel',
-            GH.toString2Converter(map.raum.raumVs.gesamtaussenluftVsMitInfiltration))
+        double ltmZuluftSumme = (double) map.raum.raume.findAll {
+            it.raumLuftart == 'ZU'
+        }?.inject(0.0d, { double o, Map n ->
+            o + n.raumZuluftVolumenstromInfiltration
+        }) ?: 0.0d
+        def ltmAbluftSumme = map.raum.raume.findAll {
+            it.raumLuftart == 'AB'
+        }?.inject(0.0d, { double o, Map n ->
+            o + n.raumAbluftVolumenstromInfiltration
+        }) ?: 0.0d
+        // Höchster Wert Nennlüftung ohne Abzug Infiltration
+        def nennluftungVolumen = [
+                map.aussenluftVs.gesamtAvsNeLvsNl,
+                map.aussenluftVs.gesamtAvsRaumLvsNl,
+                map.aussenluftVs.gesamtAvsPersonLvsNl
+        ].inject 0.0d, { o, n -> o > n ? o : n }
+        def nennluftungLuftwechsel = [
+                map.aussenluftVs.gesamtAvsNeLwNl,
+                map.aussenluftVs.gesamtAvsRaumLwNl,
+                map.aussenluftVs.gesamtAvsPersonLwNl
+        ].inject 0.0d, { o, n -> o > n ? o : n }
+        //
+        domBuilder.userfield(name: 'lmeSumLTMZuluftmengeWertLabel', GH.toString2Converter(ltmZuluftSumme))
+        domBuilder.userfield(name: 'lmeSumLTMAbluftmengeWertLabel', GH.toString2Converter(ltmAbluftSumme))
+        domBuilder.userfield(name: 'lmeGesAussenluftmengeWertLabel', GH.toString2Converter(nennluftungVolumen))
+        domBuilder.userfield(name: 'lmeGebaeudeluftwechselWertLabel', GH.toString2Converter(nennluftungLuftwechsel))
     }
-    
+
     /**
+     * @param domBuilder
      * @param map model.map
      */
-    def addUberstromelemente(domBuilder, map) {
+    private void addUberstromelemente(domBuilder, map) {
         // Tabelle
         def m = [:]
         map.raum.raume.eachWithIndex { r, i ->
@@ -494,11 +558,12 @@ class OooService {
         domBuilder.userfield(name: 'lmeGrundlueftungWertLabel', GH.toString2Round5Converter(map.aussenluftVs.gesamtLvsLtmLvsNl))
         domBuilder.userfield(name: 'lmeIntensivlueftungWertLabel', GH.toString2Round5Converter(map.aussenluftVs.gesamtLvsLtmLvsIl))
     }
-    
+
     /**
+     * @param domBuilder
      * @param map model.map
      */
-    def addAkustikBerechnung(domBuilder, map) {
+    private void addAkustikBerechnung(domBuilder, map) {
         // Zuluft
         //abZuTabelleUberschrift2Label = "Zuluft"
         map.akustik.zuluft.tabelle.eachWithIndex { ak, i ->
@@ -552,11 +617,12 @@ class OooService {
         domBuilder.userfield(name: 'abAbTabelleDezibelWertLabel', /*GH.toString2Converter(*/ map.akustik.zuluft.dbA/*)*/)
         domBuilder.userfield(name: 'abAbTabelleMittlererSchalldruckpegelWertLabel', GH.toString2Converter(map.akustik.abluft.mittlererSchalldruckpegel))
     }
-    
+
     /**
+     * @param domBuilder
      * @param map model.map
      */
-    def addDvbKanalnetz(domBuilder, map) {
+    private void addDvbKanalnetz(domBuilder, map) {
         map.dvb.kanalnetz.eachWithIndex { kn, i ->
             domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!B${i + 3}", kn.luftart)
             domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!C${i + 3}", kn.teilstrecke)
@@ -570,11 +636,12 @@ class OooService {
             domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!K${i + 3}", GH.toString2Converter(kn.widerstandTeilstrecke))
         }
     }
-    
+
     /**
+     * @param domBuilder
      * @param map model.map
      */
-    def addDvbVentileinstellung(domBuilder, map) {
+    private void addDvbVentileinstellung(domBuilder, map) {
         map.dvb.ventileinstellung.eachWithIndex { ve, i ->
             domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!B${i + 3}", ve.luftart)
             domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!C${i + 3}", ve.raum)

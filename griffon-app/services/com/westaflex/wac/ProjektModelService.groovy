@@ -179,11 +179,11 @@ class ProjektModelService {
             // Build map; return value
             [
                         kundendaten: [
-                            bauvorhaben: X.vs { p."bauvorhaben".text() },
+                            bauvorhaben:          X.vs { p."bauvorhaben".text() },
                             bauvorhabenAnschrift: X.vs { p."bauvorhabenAnschrift".text() },
-                            bauvorhabenPlz: X.vs { p."bauvorhabenPlz".text() },
-                            bauvorhabenOrt: X.vs { p."bauvorhabenOrt".text() },
-                            notizen:     X.vs { p."notizen".text() },
+                            bauvorhabenPlz:       X.vs { p."bauvorhabenPlz".text() },
+                            bauvorhabenOrt:       X.vs { p."bauvorhabenOrt".text() },
+                            notizen:              X.vs { p."notizen".text() },
                             grosshandel: [
                                 firma1:          X.vs { grosshandel."firma1".text() },
                                 firma2:          X.vs { grosshandel."firma2".text() },
@@ -538,21 +538,40 @@ class ProjektModelService {
      *
      */
     def save = { map, file ->
-        def wpx = domBuilder."westaflex-wpx" {
+        def prefHelper = AuslegungPrefHelper.instance
+        def wpx = domBuilder.'westaflex-wpx' {
             projekt() {
-                ersteller() { person() }
+                X.tc {
+                    ersteller() {
+                        rolle('Bearbeiter')
+                        person() {
+                            X.tc { name(prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME)) }
+                            X.tc { email(prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL)) }
+                            X.tc { tel(prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_TEL)) }
+                            X.tc { fax(prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FAX)) }
+                            adresse() {
+                                X.tc { strasse(prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE)) }
+                                X.tc { ort(prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_ORT)) }
+                                X.tc { postleitzahl(prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_PLZ)) }
+                            }
+                        }
+                    }
+                } { ersteller() { person() } }
                 X.tc { bauvorhaben(map.kundendaten.bauvorhaben) } { bauvorhaben() }
+                X.tc { bauvorhabenAnschrift(map.kundendaten.bauvorhabenAnschrift) } { bauvorhabenAnschrift() }
+                X.tc { bauvorhabenPlz(map.kundendaten.bauvorhabenPlz) } { bauvorhabenPlz() }
+                X.tc { bauvorhabenOrt(map.kundendaten.bauvorhabenOrt) } { bauvorhabenOrt() }
                 X.tc { notizen(map.kundendaten.notizen) }
                 makeGebaude(map)
                 makeDruckverlust(map.dvb)
                 X.tc {
                     akustik() {
-                        makeAkustik(map.akustik.zuluft, "zuluft")
-                        makeAkustik(map.akustik.abluft, "abluft")
+                        makeAkustik(map.akustik.zuluft, 'zuluft')
+                        makeAkustik(map.akustik.abluft, 'abluft')
                     }
                 }
-                makeFirma("Grosshandel", map.kundendaten.grosshandel)
-                makeFirma("Ausfuhrende", map.kundendaten.ausfuhrendeFirma)
+                makeFirma('Grosshandel', map.kundendaten.grosshandel)
+                makeFirma('Ausfuhrende', map.kundendaten.ausfuhrendeFirma)
             }
         }
         if (file) {

@@ -261,7 +261,7 @@ class ProjektController {
     /**
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      */
-    def showNutzerdatenDialog(String title = null, String okButtonText = null) {
+    def showNutzerdatenDialog(String title = null, String okButtonText = null, Closure closure = null) {
         // Anzeigen, dass Daten nicht geändert wurden (da dieser Dialog erneut angezeigt wird)
         nutzerdatenGeandert = false
         // Dialog erzeugen
@@ -278,6 +278,10 @@ class ProjektController {
         view.auslegungErstellerTelefon.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_TEL)
         view.auslegungErstellerFax.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FAX)
         view.auslegungErstellerEmail.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL)
+        view.auslegungErstellerEmpfanger.selectedItem = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMPFANGER)
+        view.auslegungErstellerDokumenttyp.selectedItem = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_DOKUMENTTYP)
+        // Closure ausführen
+        closure(nutzerdatenDialog)
         // Dialog ausrichten und anzeigen
         nutzerdatenDialog = GH.centerDialog(app.views['wac2'], nutzerdatenDialog)
         nutzerdatenDialog.show()
@@ -309,9 +313,24 @@ class ProjektController {
             def fax = view.auslegungErstellerFax.text
             def email = view.auslegungErstellerEmail.text
             def angebotsnummer = view.auslegungErstellerAngebotsnummer.text
+            def empfanger = view.auslegungErstellerEmpfanger.selectedItem
+            def dokumenttyp = view.auslegungErstellerDokumenttyp.selectedItem
             if (name?.trim() && anschrift?.trim() && plz?.trim() && ort?.trim()) {
                 // Daten speichern
                 def map = [:]
+                /*
+                        AuslegungPrefHelper.PREFS_USER_KEY_FIRMA: firma,
+                        AuslegungPrefHelper.PREFS_USER_KEY_NAME: name,
+                        AuslegungPrefHelper.PREFS_USER_KEY_STRASSE: anschrift,
+                        AuslegungPrefHelper.PREFS_USER_KEY_PLZ: plz,
+                        AuslegungPrefHelper.PREFS_USER_KEY_ORT: ort,
+                        AuslegungPrefHelper.PREFS_USER_KEY_TEL: tel,
+                        AuslegungPrefHelper.PREFS_USER_KEY_FAX: fax,
+                        AuslegungPrefHelper.PREFS_USER_KEY_EMAIL: email,
+                        AuslegungPrefHelper.PREFS_USER_KEY_ANGEBOTSNUMMER: angebotsnummer,
+                        AuslegungPrefHelper.PREFS_USER_KEY_EMPFANGER: empfanger,
+                        AuslegungPrefHelper.PREFS_USER_KEY_DOKUMENTTYP: dokumenttyp
+                */
                 map.put(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA, firma)
                 map.put(AuslegungPrefHelper.PREFS_USER_KEY_NAME, name)
                 map.put(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE, anschrift)
@@ -321,6 +340,8 @@ class ProjektController {
                 map.put(AuslegungPrefHelper.PREFS_USER_KEY_FAX, fax)
                 map.put(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL, email)
                 map.put(AuslegungPrefHelper.PREFS_USER_KEY_ANGEBOTSNUMMER, angebotsnummer)
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_EMPFANGER, empfanger)
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_DOKUMENTTYP, dokumenttyp)
                 auslegungPrefs.save(map)
             } else {
                 def errorMsg = "Auslegung konnte nicht erstellt werden. " +
@@ -341,7 +362,14 @@ class ProjektController {
      */
     def auslegungErstellen() {
         // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
-        showNutzerdatenDialog('Auslegung erstellen - Daten eingeben', 'Eingaben speichern und Auslegung erstellen')
+        showNutzerdatenDialog(
+                'Auslegung erstellen - Daten eingeben',
+                'Eingaben speichern und Auslegung erstellen',
+                { dialog ->
+                    view.auslegungErstellerAngebotsnummer.enabled = false
+                    view.auslegungErstellerEmpfanger.enabled = false
+                }
+        )
         if (nutzerdatenGeandert) {
             // Auslegung/Dokument erstellen
             try {
@@ -380,7 +408,14 @@ class ProjektController {
      */
     def angebotErstellen() {
         // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
-        showNutzerdatenDialog('Angebot erstellen - Daten eingeben', 'Eingaben speichern und Angebot erstellen')
+        showNutzerdatenDialog(
+                'Angebot erstellen - Daten eingeben',
+                'Eingaben speichern und Angebot erstellen',
+                { dialog ->
+                    view.auslegungErstellerAngebotsnummer.enabled = true
+                    view.auslegungErstellerEmpfanger.enabled = true
+                }
+        )
         if (nutzerdatenGeandert) {
             // Auslegung/Dokument erstellen
             try {
@@ -418,9 +453,15 @@ class ProjektController {
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      */
     def stuecklisteErstellen() {
-        println model.map.raum
         // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
-        showNutzerdatenDialog('Stückliste erstellen - Daten eingeben', 'Eingaben speichern und Stückliste erstellen')
+        showNutzerdatenDialog(
+                'Stückliste erstellen - Daten eingeben',
+                'Eingaben speichern und Stückliste erstellen',
+                { dialog ->
+                    view.auslegungErstellerAngebotsnummer.enabled = false
+                    view.auslegungErstellerEmpfanger.enabled = false
+                }
+        )
         if (nutzerdatenGeandert) {
             // Auslegung/Dokument erstellen
             try {
