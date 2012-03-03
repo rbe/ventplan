@@ -51,6 +51,11 @@ class Wac2Controller {
     private def wacwsUrl = GH.getWacwsUrl()
 
     /**
+     * WAC-192 - Saving file path of search folder
+     */
+    def static projektSuchenPrefs = ProjektSuchenPrefHelper.getInstance()
+
+    /**
      * Initialize wac2 MVC group.
      */
     void mvcGroupInit(Map args) {
@@ -735,6 +740,36 @@ class Wac2Controller {
         def mvc = getMVCGroupAktivesProjekt()
         // Erzeuge Stückliste für aktives Projekt.
         mvc.controller.generiereVerlegeplan()
+    }
+
+    /**
+     * WAC-192 Suchfunktion für WPX-Dateien
+     */
+    def nachProjektSuchenDialogOeffnen = { evt = null ->
+        def projektSuchenDialog = GH.createDialog(builder, ProjektSuchenView, [title: "Projekt suchen", resizable: true, pack: true])
+        projektSuchenDialog = GH.centerDialog(app.views['wac2'], projektSuchenDialog)
+        if (projektSuchenPrefs.getSearchFolder()) {
+            view.projektSuchenOrdnerPfad.text = projektSuchenPrefs.getSearchFolder()
+        }
+        projektSuchenDialog.show()
+    }
+
+    def projektSuchenOrdnerOeffnen = { evt = null ->
+        def openResult = view.projektSuchenFolderChooserWindow.showOpenDialog(view.projektSuchenPanel)
+        if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
+            def file = view.projektSuchenFolderChooserWindow.selectedFile
+            view.projektSuchenOrdnerPfad.text = file.absolutePath
+            // Save file path for later use...
+            projektSuchenPrefs.save(file.absolutePath)
+        }
+    }
+
+    def projektSuchenAbbrechen = { evt = null ->
+
+    }
+
+    def projektSuchenDateiOeffnen = { evt = null ->
+
     }
 
 }

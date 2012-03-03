@@ -156,3 +156,13 @@ aboutAction = action(
         enabled: true,
         closure: controller.aboutDialogOeffnen
 )
+
+// WAC-192 Suchfunktion für WPX-Dateien
+nachProjektSuchenAction = action(
+        id: "nachProjektSuchenAction",
+        name: "Projekt suchen",
+        mnemonic: "F",
+        accelerator: shortcut("F"),
+        enabled: bind { model.aktivesProjekt == null },
+        closure: controller.nachProjektSuchenDialogOeffnen
+)

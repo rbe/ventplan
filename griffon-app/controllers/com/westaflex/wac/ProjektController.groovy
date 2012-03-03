@@ -2097,56 +2097,56 @@ class ProjektController {
             //userDir = userDir + "/" + title + "_" + System.currentTimeMillis() + ".pdf"
             def verlegeplanFilename = model.wpxFilename - '.wpx' + ' Verlegeplan.pdf'
 
-            PdfCreator pdfCreator = new PdfCreator()
-            // Create a new pdf document
-            pdfCreator.createDocument(verlegeplanFilename)
-
-            def logourl = Wac2Resource.getPdfLogo()
-            if (DEBUG)
-                println "logourl -> ${logourl.dump()}"
-            pdfCreator.addLogo(logourl)
-            // Add title to document
-            pdfCreator.addTitle(title)
-            // create table with relative column width
-            pdfCreator.createTable([2f, 1f, 3f, 1f] as float[])
-
-            if (DEBUG)
-                println "adding zentralgerät... "
-            // Zentralgerät
-            def zentralgerat = "Zentralgerät: ${model.map.anlage.zentralgerat}" as String
-            pdfCreator.addArtikelToDocument(zentralgerat)
-            if (DEBUG)
-                println "added zentralgerät... "
-            // Add empty line.
-            pdfCreator.addArtikelToDocument("  ")
-            if (DEBUG)
-                println "adding empty artikel"
-
-            model.map.raum.raume.each { r ->
-                erzeugeRaumVerlegeplanAbluft(r, pdfCreator)
-            }
-            model.map.raum.raume.each { r ->
-                erzeugeRaumVerlegeplanZuluft(r, pdfCreator)
-            }
-            model.map.raum.raume.each { r ->
-                erzeugeRaumVerlegeplanUberstrom(r, pdfCreator)
-            }
-            erzeugeDruckverlustVerlegeplan(model.map.dvb, pdfCreator)
-            erzeugeSchalldampferVerlegeplan(model.map.akustik.zuluft, "zuluft", pdfCreator)
-            erzeugeSchalldampferVerlegeplan(model.map.akustik.abluft, "abluft", pdfCreator)
-
-            // Add table to the document
-            pdfCreator.addTable()
-            // Close the pdf document
-            pdfCreator.closeDocument()
-            /* Dialog nicht anzeigen, einfach PDF öffnen
-            def successMsg = "Verlegeplan '${verlegeplanFilename}' erfolgreich generiert"
-            app.controllers["Dialog"].showInformDialog(successMsg as String)
-            */
-            java.io.File sf = new java.io.File(verlegeplanFilename)
-            if (sf.exists()) {
-                java.awt.Desktop.desktop.open(sf)
-            }
+//            PdfCreator pdfCreator = new PdfCreator()
+//            // Create a new pdf document
+//            pdfCreator.createDocument(verlegeplanFilename)
+//
+//            def logourl = Wac2Resource.getPdfLogo()
+//            if (DEBUG)
+//                println "logourl -> ${logourl.dump()}"
+//            pdfCreator.addLogo(logourl)
+//            // Add title to document
+//            pdfCreator.addTitle(title)
+//            // create table with relative column width
+//            pdfCreator.createTable([2f, 1f, 3f, 1f] as float[])
+//
+//            if (DEBUG)
+//                println "adding zentralgerät... "
+//            // Zentralgerät
+//            def zentralgerat = "Zentralgerät: ${model.map.anlage.zentralgerat}" as String
+//            pdfCreator.addArtikelToDocument(zentralgerat)
+//            if (DEBUG)
+//                println "added zentralgerät... "
+//            // Add empty line.
+//            pdfCreator.addArtikelToDocument("  ")
+//            if (DEBUG)
+//                println "adding empty artikel"
+//
+//            model.map.raum.raume.each { r ->
+//                erzeugeRaumVerlegeplanAbluft(r, pdfCreator)
+//            }
+//            model.map.raum.raume.each { r ->
+//                erzeugeRaumVerlegeplanZuluft(r, pdfCreator)
+//            }
+//            model.map.raum.raume.each { r ->
+//                erzeugeRaumVerlegeplanUberstrom(r, pdfCreator)
+//            }
+//            erzeugeDruckverlustVerlegeplan(model.map.dvb, pdfCreator)
+//            erzeugeSchalldampferVerlegeplan(model.map.akustik.zuluft, "zuluft", pdfCreator)
+//            erzeugeSchalldampferVerlegeplan(model.map.akustik.abluft, "abluft", pdfCreator)
+//
+//            // Add table to the document
+//            pdfCreator.addTable()
+//            // Close the pdf document
+//            pdfCreator.closeDocument()
+//            /* Dialog nicht anzeigen, einfach PDF öffnen
+//            def successMsg = "Verlegeplan '${verlegeplanFilename}' erfolgreich generiert"
+//            app.controllers["Dialog"].showInformDialog(successMsg as String)
+//            */
+//            java.io.File sf = new java.io.File(verlegeplanFilename)
+//            if (sf.exists()) {
+//                java.awt.Desktop.desktop.open(sf)
+//            }
         } catch (e) {
             println "Error generating document: ${e.dump()}"
 
@@ -2156,77 +2156,77 @@ class ProjektController {
 
     }
 
-    /**
-     *
-     * @param map
-     * @param pdfCreator
-     */
-    void erzeugeRaumVerlegeplanAbluft(map, pdfCreator) {
-
-        if (map.raumBezeichnungAbluftventile) {
-            if (DEBUG)
-                println "adding Abluft... ${map.dump()}"
-            pdfCreator.addArtikel(map.raumBezeichnung, "Abluft", map.raumBezeichnungAbluftventile, map.raumAnzahlAbluftventile)
-        }
-    }
-
-    /**
-     *
-     * @param map
-     * @param pdfCreator
-     */
-    void erzeugeRaumVerlegeplanZuluft(map, pdfCreator) {
-        if (map.raumBezeichnungZuluftventile) {
-            if (DEBUG)
-                println "adding Zuluft... ${map.dump()}"
-            pdfCreator.addArtikel(map.raumBezeichnung, "Zuluft", map.raumBezeichnungZuluftventile, map.raumAnzahlZuluftventile)
-        }
-    }
-
-    /**
-     *
-     * @param map
-     * @param pdfCreator
-     */
-    void erzeugeRaumVerlegeplanUberstrom(map, pdfCreator) {
-        if (map.raumAnzahlUberstromVentile && map.raumAnzahlUberstromVentile > 0) {
-            if (DEBUG)
-                println "adding Überström... ${map.dump()}"
-            pdfCreator.addArtikel("", "Überström", map.raumUberstromElement, map.raumAnzahlUberstromVentile)
-        }
-    }
-
-    /**
-     *
-     * @param dvb
-     * @param pdfCreator
-     */
-    void erzeugeDruckverlustVerlegeplan(dvb, pdfCreator) {
-        dvb.kanalnetz.each {
-            if (it.kanalbezeichnung) {
-                if (DEBUG)
-                    println "adding kanalnetz..."
-                pdfCreator.addArtikel("", "", it.kanalbezeichnung, it.lange)
-            }
-        }
-    }
-
-    /**
-     *
-     * @param akusik
-     * @param luftart
-     * @param pdfCreator
-     */
-    void erzeugeSchalldampferVerlegeplan(akustik, luftart, pdfCreator) {
-        if (akustik.hauptschalldampfer1) {
-            if (DEBUG)
-                println "adding schalldampfer 1..."
-            pdfCreator.addArtikel("", "", akustik.hauptschalldampfer1, 1)
-        }
-        if (akustik.hauptschalldampfer2) {
-            if (DEBUG)
-                println "adding schalldampfer 2..."
-            pdfCreator.addArtikel("", "", akustik.hauptschalldampfer2, 1)
-        }
-    }
+//    /**
+//     *
+//     * @param map
+//     * @param pdfCreator
+//     */
+//    void erzeugeRaumVerlegeplanAbluft(map, pdfCreator) {
+//
+//        if (map.raumBezeichnungAbluftventile) {
+//            if (DEBUG)
+//                println "adding Abluft... ${map.dump()}"
+//            pdfCreator.addArtikel(map.raumBezeichnung, "Abluft", map.raumBezeichnungAbluftventile, map.raumAnzahlAbluftventile)
+//        }
+//    }
+//
+//    /**
+//     *
+//     * @param map
+//     * @param pdfCreator
+//     */
+//    void erzeugeRaumVerlegeplanZuluft(map, pdfCreator) {
+//        if (map.raumBezeichnungZuluftventile) {
+//            if (DEBUG)
+//                println "adding Zuluft... ${map.dump()}"
+////            pdfCreator.addArtikel(map.raumBezeichnung, "Zuluft", map.raumBezeichnungZuluftventile, map.raumAnzahlZuluftventile)
+//        }
+//    }
+//
+//    /**
+//     *
+//     * @param map
+//     * @param pdfCreator
+//     */
+//    void erzeugeRaumVerlegeplanUberstrom(map, pdfCreator) {
+//        if (map.raumAnzahlUberstromVentile && map.raumAnzahlUberstromVentile > 0) {
+//            if (DEBUG)
+//                println "adding Überström... ${map.dump()}"
+//            pdfCreator.addArtikel("", "Überström", map.raumUberstromElement, map.raumAnzahlUberstromVentile)
+//        }
+//    }
+//
+//    /**
+//     *
+//     * @param dvb
+//     * @param pdfCreator
+//     */
+//    void erzeugeDruckverlustVerlegeplan(dvb, pdfCreator) {
+//        dvb.kanalnetz.each {
+//            if (it.kanalbezeichnung) {
+//                if (DEBUG)
+//                    println "adding kanalnetz..."
+//                pdfCreator.addArtikel("", "", it.kanalbezeichnung, it.lange)
+//            }
+//        }
+//    }
+//
+//    /**
+//     *
+//     * @param akusik
+//     * @param luftart
+//     * @param pdfCreator
+//     */
+//    void erzeugeSchalldampferVerlegeplan(akustik, luftart, pdfCreator) {
+//        if (akustik.hauptschalldampfer1) {
+//            if (DEBUG)
+//                println "adding schalldampfer 1..."
+//            pdfCreator.addArtikel("", "", akustik.hauptschalldampfer1, 1)
+//        }
+//        if (akustik.hauptschalldampfer2) {
+//            if (DEBUG)
+//                println "adding schalldampfer 2..."
+//            pdfCreator.addArtikel("", "", akustik.hauptschalldampfer2, 1)
+//        }
+//    }
 }

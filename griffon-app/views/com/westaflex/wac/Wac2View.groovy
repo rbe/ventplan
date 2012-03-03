@@ -11,6 +11,7 @@
 package com.westaflex.wac
 
 import net.miginfocom.swing.MigLayout
+import javax.swing.JFileChooser
 
 def screen = java.awt.Toolkit.defaultToolkit.screenSize
 
@@ -22,6 +23,18 @@ wpxFileChooserWindow = fileChooser(
                 accept: { file ->
                     //println "wpxFileChooser: filtering ${file.dump()} isDirectory=${file.isDirectory()} endsWith(wpx)=${file.name.endsWith(".wpx")}"
                     return file.isDirectory() || file.name.toLowerCase().endsWith('.vpx') || file.name.toLowerCase().endsWith('.wpx')
+                }
+        ] as javax.swing.filechooser.FileFilter
+)
+
+projektSuchenFolderChooserWindow = fileChooser(
+        dialogTitle: 'Bitte wählen Sie einen Ordner aus',
+        multiSelectionEnabled: false,
+        fileSelectionMode: JFileChooser.DIRECTORIES_ONLY,
+        fileFilter: [
+                getDescription: {-> 'Ordner' },
+                accept: { file ->
+                    return file.isDirectory()
                 }
         ] as javax.swing.filechooser.FileFilter
 )
