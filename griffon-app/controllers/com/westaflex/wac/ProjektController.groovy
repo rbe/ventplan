@@ -12,7 +12,6 @@ package com.westaflex.wac
 
 import groovyx.net.http.ContentType
 import com.bensmann.griffon.GriffonHelper as GH
-import com.bensmann.griffon.PdfCreator
 
 /**
  *
