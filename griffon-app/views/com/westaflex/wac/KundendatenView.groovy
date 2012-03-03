@@ -14,7 +14,7 @@ import net.miginfocom.swing.MigLayout
 
 // Großhandel
 panel(id: "kundendatenHauptPanel", layout: new MigLayout("ins 0 n 0 n, wrap 2","[grow,fill] [grow,fill]"), constraints: "grow") {
-    panel(id: "kundendatenGrosshandel", border: titledBorder(title: "Kunde 1 (Großhandel)"), layout: new MigLayout("ins 0 n 0 n, wrap 2, fill", "[right] 16 [grow,fill] []"), constraints: "grow") {
+    panel(id: "kundendatenGrosshandel", border: titledBorder(title: "Großhandel"), layout: new MigLayout("ins 0 n 0 n, wrap 2, fill", "[right] 16 [grow,fill] [grow,fill]"), constraints: "grow") {
         // Row 1
         label("Firma 1")
         textField(id: "grosshandelFirma1")
@@ -28,7 +28,6 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("ins 0 n 0 n, wrap 2","
         label("PLZ / Ort")
         textField(id: "grosshandelPlz", constraints: "split 2, width 80px!")
         textField(id: "grosshandelOrt", constraints: "growx")
-        //}
         // Row 5
         label("Telefon")
         textField(id: "grosshandelTelefon")
@@ -40,7 +39,7 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("ins 0 n 0 n, wrap 2","
         textField(id: "grosshandelAnsprechpartner")
     }
     // Ausführende Firma
-    panel(id: "kundendatenAusfuhrendeFirma", border: titledBorder(title: "Kunde 2 (Ausführende Firma)"), layout: new MigLayout("ins 0 n 0 n, wrap 2, fill", "[right] 16 [grow,fill] []"), constraints: "grow") {
+    panel(id: "kundendatenAusfuhrendeFirma", border: titledBorder(title: "Ausführende Firma"), layout: new MigLayout("ins 0 n 0 n, wrap 2, fill", "[right] 16 [grow,fill] []"), constraints: "grow") {
         // Row 1
         label("Firma 1")
         textField(id: "ausfuhrendeFirmaFirma1")
@@ -66,7 +65,7 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("ins 0 n 0 n, wrap 2","
         textField(id: "ausfuhrendeFirmaAnsprechpartner")
     }
     // Notizen
-    panel(id: "kundendatenNotizen", border: titledBorder(title: "Notizen"), layout: new MigLayout("ins 0 n 0 n, wrap 2","[] 16 [grow,fill]"), constraints: "grow, span 2") {
+    panel(id: "kundendatenNotizen", border: titledBorder(title: "Bauvorhaben, Investor"), layout: new MigLayout("ins 0 n 0 n, wrap 2","[] 16 [grow,fill]"), constraints: "grow, span 2") {
         // Bauvorhaben
         label("Bauvorhaben")
         textField(id: "bauvorhaben", constraints: "growx")
