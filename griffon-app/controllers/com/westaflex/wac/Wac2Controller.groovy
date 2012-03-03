@@ -417,6 +417,8 @@ class Wac2Controller {
                     projektAktivieren(mvcId)
 
                     projektModel.enableDisableRaumButtons(true)
+                    // Fixes WAC-216
+                    projektModel.enableDvbButtons()
                 } else {
                     def errorMsg = "projektOffnen: Konnte Projekt nicht öffnen!"
                     app.controllers["Dialog"].showErrorDialog(errorMsg as String)

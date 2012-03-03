@@ -1215,4 +1215,19 @@ class ProjektModel {
         }
     }
 
+    /**
+     * Fixes WAC-216:
+     * Enable buttons in DruckverlustBerechnung view.
+     */
+    def enableDvbButtons() {
+        if (map.dvb.kanalnetz.size() > 0) {
+            dvbKanalnetzButtonsEnabled = true
+            firePropertyChange("dvbKanalnetzButtonsEnabled", !dvbKanalnetzButtonsEnabled, dvbKanalnetzButtonsEnabled)
+        }
+        if (map.dvb.ventileinstellung.size() > 0) {
+            dvbVentileinstellungButtonsEnabled = true
+            firePropertyChange("dvbVentileinstellungButtonsEnabled", !dvbVentileinstellungButtonsEnabled, dvbVentileinstellungButtonsEnabled)
+        }
+    }
+
 }
