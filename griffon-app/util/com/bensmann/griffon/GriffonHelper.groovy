@@ -10,8 +10,6 @@
  */
 package com.bensmann.griffon
 
-//import java.awt.GridLayout
-
 import griffon.transform.Threading
 
 /**

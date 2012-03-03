@@ -10,9 +10,6 @@
  */
 package com.westaflex.wac
 
-//import groovy.sql.*
-//import org.javanicus.gsql.*
-
 /**
  * Communicate with WestaWAC database.
  */
@@ -35,7 +32,8 @@ class WacModelService {
 			}?.collect {
 				it.artikelnummer
 			}
-		if (DEBUG) println "getZentralgerat: ${r?.dump()}"
+        if (DEBUG)
+            println "getZentralgerat: ${r?.dump()}"
 		r
 	}
 	
@@ -50,7 +48,8 @@ class WacModelService {
 			}?.collect {
 				it.volumenstrom
 			}
-		if (DEBUG) println "getVolumenstromFurZentralgerat: ${r?.dump()}"
+        if (DEBUG)
+            println "getVolumenstromFurZentralgerat: ${r?.dump()}"
 		r
 	}
 	
@@ -64,7 +63,8 @@ class WacModelService {
 					+ " ORDER BY artikelnummer",
 					[luftung])
 			}
-		if (DEBUG) println "getZentralgeratForVolumenstrom: ${luftung} -> ${r}"
+        if (DEBUG)
+            println "getZentralgeratForVolumenstrom: ${luftung} -> ${r}"
 		r ? r.ARTIKELNUMMER : ""
 	}
 	
@@ -77,7 +77,8 @@ class WacModelService {
 			}?.collect {
 				it.artikelnummer
 			}
-		if (DEBUG) println "getZuluftventile: ${r?.dump()}"
+        if (DEBUG)
+            println "getZuluftventile: ${r?.dump()}"
 		r
 	}
 	
@@ -90,7 +91,8 @@ class WacModelService {
             }?.collect {
                 it.artikelnummer
             }
-        if (DEBUG) println "getZuluftventile: ${r?.dump()}"
+        if (DEBUG)
+            println "getZuluftventile: ${r?.dump()}"
         r
     }
 
@@ -103,7 +105,8 @@ class WacModelService {
             }?.collect {
                 it.artikelnummer
             }
-        if (DEBUG) println "getZuluftventile: ${r?.dump()}"
+        if (DEBUG)
+            println "getZuluftventile: ${r?.dump()}"
         r
     }
 
@@ -116,7 +119,8 @@ class WacModelService {
 			}?.collect {
 				it.artikelnummer
 			}
-		if (DEBUG) println "getUberstromElemente: ${r?.dump()}"
+        if (DEBUG)
+            println "getUberstromElemente: ${r?.dump()}"
 		r
 	}
 	
@@ -130,7 +134,8 @@ class WacModelService {
 					+ " ORDER BY maxvolumenstrom",
 					[artikel])
 			}
-		if (DEBUG) println "getMaxVolumenstrom(${artikel}): ${r?.dump()}"
+        if (DEBUG)
+            println "getMaxVolumenstrom(${artikel}): ${r?.dump()}"
 		r ? r.maxvolumenstrom as Integer : 0
 	}
 	
@@ -143,7 +148,8 @@ class WacModelService {
 			}?.collect {
 				it.artikelnummer
 			}
-		if (DEBUG) println "getDvbKanalbezeichnung(): ${r?.dump()}"
+        if (DEBUG)
+            println "getDvbKanalbezeichnung(): ${r?.dump()}"
 		r
 	}
 	
@@ -156,7 +162,8 @@ class WacModelService {
 					+ " WHERE artikelnummer = ?",
 					[kanalbezeichnung])
 			}
-		if (DEBUG) println "getKanal(): ${kanalbezeichnung}: ${r?.dump()}"
+        if (DEBUG)
+            println "getKanal(): ${kanalbezeichnung}: ${r?.dump()}"
 		r
 	}
 	
@@ -171,7 +178,8 @@ class WacModelService {
 			}
 		// Add empty item
 		r = [""] + r
-		if (DEBUG) println "getDvbKanalbezeichnung(): ${r?.dump()}"
+        if (DEBUG)
+            println "getDvbKanalbezeichnung(): ${r?.dump()}"
 		r
 	}
 	
@@ -182,7 +190,8 @@ class WacModelService {
 		def r = withSql { dataSourceName, sql ->
 				sql.rows("SELECT id, bezeichnung, wert, CONCAT(id, '.png') bild FROM widerstandsbeiwerte ORDER BY bezeichnung")
 			}
-		if (DEBUG) println "getWbw: r=${r?.dump()}"
+        if (DEBUG)
+            println "getWbw: r=${r?.dump()}"
 		r
 	}
 	
@@ -195,7 +204,8 @@ class WacModelService {
 							+ " WHERE artikelnummer = ? AND luftart = ? AND luftmenge >= ?",
 							[ventilbezeichnung, luftart, luftmenge])
 			}
-		if (DEBUG) println "getDruckverlustFurVentil(${[ventilbezeichnung, luftart, luftmenge]}): ${r?.dump()}"
+        if (DEBUG)
+            println "getDruckverlustFurVentil(${[ventilbezeichnung, luftart, luftmenge]}): ${r?.dump()}"
 		r?.druckverlust ?: 0.0d
 	}
 	
@@ -212,7 +222,8 @@ class WacModelService {
 					[ventilbezeichnung, luftart, luftmenge])
 			}
 		//println "getEinstellung: r=${r}"
-		if (r.size() == 0) return
+        if (r.size() == 0)
+            return
 		// Suche die nächst höhere zum Parameter 'luftmenge' passende Luftmenge aus den Datenbankergebnissen
 		// Dies funktioniert nur mit einem in aufsteigender Reihenfolge sortierten Luftmengen!
 		def nahe = r.find {
@@ -228,7 +239,8 @@ class WacModelService {
 					int v2 = Math.abs(abgleich - n.druckverlust)
 					v1 < v2 ? o : n
 				})
-		if (DEBUG) println "getEinstellung(${[ventilbezeichnung,luftart,luftmenge,abgleich]}): einstellung=${m.einstellung}"
+        if (DEBUG)
+            println "getEinstellung(${[ventilbezeichnung, luftart, luftmenge, abgleich]}): einstellung=${m.einstellung}"
 		m.einstellung
 	}
 	
@@ -243,7 +255,8 @@ class WacModelService {
 		}
 		// Add empty item
 		r = [""] + r
-		if (DEBUG) println "getSchalldampfer: ${r?.dump()}"
+        if (DEBUG)
+            println "getSchalldampfer: ${r?.dump()}"
 		r
 	}
 	
@@ -258,7 +271,8 @@ class WacModelService {
 					[artnr, volumenstrom, luftart == "Zuluft" ? 0 : 1])
 		}
 		r = r[0].dba
-		if (DEBUG) println "getDezibelZentralgerat($artnr,$volumenstrom,$luftart): ${r?.dump()}"
+        if (DEBUG)
+            println "getDezibelZentralgerat($artnr,$volumenstrom,$luftart): ${r?.dump()}"
 		r
 	}
 	/**
@@ -272,7 +286,8 @@ class WacModelService {
 					[artnr, volumenstrom, luftart == "Zuluft" ? 0 : 1])
 		}
 		r = r[0]
-		if (DEBUG) println "getOktavmittenfrequenz($artnr,$volumenstrom,$luftart): ${r?.dump()}"
+        if (DEBUG)
+            println "getOktavmittenfrequenz($artnr,$volumenstrom,$luftart): ${r?.dump()}"
 		r
 	}
 	
@@ -287,7 +302,8 @@ class WacModelService {
 					[artnr])
 		}
 		r = r[0]
-		if (DEBUG) println "getSchallleistungspegel($artnr): ${r?.dump()}"
+        if (DEBUG)
+            println "getSchallleistungspegel($artnr): ${r?.dump()}"
 		r
 	}
 	
@@ -302,7 +318,8 @@ class WacModelService {
 					[artnr])
 		}
 		r = r[0]
-		if (DEBUG) println "getPegelerhohungExternerDruck($artnr): ${r?.dump()}"
+        if (DEBUG)
+            println "getPegelerhohungExternerDruck($artnr): ${r?.dump()}"
 		r
 	}
 	

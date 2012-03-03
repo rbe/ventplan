@@ -83,7 +83,6 @@ class ProjektController {
      */
     def setDefaultValues() {
         // Lookup values from database and put them into our model
-//        doOutside {
         // Raumdaten - Türen
         model.meta.raumTurTyp = ["Tür", "Durchgang"]
         model.meta.raumTurbreiten = [610, 735, 860, 985, 1110, 1235, 1485, 1735, 1985]
@@ -99,8 +98,7 @@ class ProjektController {
         // Raumvolumenströme - Zentralgerät + Volumenstrom
         model.meta.zentralgerat = wacModelService.getZentralgerat()
         // Liste aller möglichen Volumenströme des 1. Zentralgeräts
-        def volumenstromZentralgerat =
-            wacModelService.getVolumenstromFurZentralgerat(model.meta.zentralgerat[0])
+        def volumenstromZentralgerat = wacModelService.getVolumenstromFurZentralgerat(model.meta.zentralgerat[0])
         // 5er-Schritte
         model.meta.volumenstromZentralgerat = []
         def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
@@ -121,7 +119,6 @@ class ProjektController {
             // Raumvolumenströme, Volumenstrom des Zentralgeräts; default ist erster Wert der Liste
             model.map.anlage.volumenstromZentralgerat = model.meta.volumenstromZentralgerat[0]
         }
-//        }
     }
 
     /**
@@ -1265,71 +1262,58 @@ class ProjektController {
      * Raum bearbeiten - Daten eingegeben. Mit raumBearbeitenSchliessen zusammenlegen?
      */
     def raumBearbeitenGeandert = { evt = null ->
-        _raumBearbeitenGeandert()
+        _raumBearbeitenGeandert(evt)
     }
 
-    def _raumBearbeitenGeandert() {
+    def _raumBearbeitenGeandert(evt = null) {
+        // Do nothing when just cursor is moved
+        if (evt?.keyCode && evt?.keyCode in GH.CURSOR_KEY_CODES) {
+            return
+        }
         // WAC-174: Immer Raum Index/Position aus Metadaten nehmen
         //def raumIndex = view.raumTabelle.selectedRow
         def raumPosition = model.meta.gewahlterRaum.position
         // Daten aus Dialog übertragen und neu berechnen
-        def m = model.map.raum.raume.find { it.position == raumPosition }
+        def raum = model.map.raum.raume.find { it.position == raumPosition }
+        def metaRaum = model.meta.gewahlterRaum
         // Raumnummer
-        model.meta.gewahlterRaum.raumNummer =
-        m.raumNummer =
-            view.raumBearbeitenRaumnummer.text
+        metaRaum.raumNummer = raum.raumNummer = view.raumBearbeitenRaumnummer.text
         // Raumbezeichnung
-        model.meta.gewahlterRaum.raumBezeichnung =
-        m.raumBezeichnung =
-            view.raumBearbeitenBezeichnung.text
-        // Raumtyp
+        metaRaum.raumBezeichnung = raum.raumBezeichnung = view.raumBearbeitenBezeichnung.text
+        // TODO Raumtyp
         // Geschoss
-        model.meta.gewahlterRaum.raumGeschoss =
-        m.raumGeschoss =
-            view.raumBearbeitenRaumGeschoss.selectedItem
+        metaRaum.raumGeschoss = raum.raumGeschoss = view.raumBearbeitenRaumGeschoss.selectedItem
         // Luftart
         try {
             //println "!!!: ${view.raumBearbeitenLuftart.selectedItem?.dump()}"
-            model.meta.gewahlterRaum.raumLuftart =
-            m.raumLuftart =
-                view.raumBearbeitenLuftart.selectedItem
+            metaRaum.raumLuftart = raum.raumLuftart = view.raumBearbeitenLuftart.selectedItem
         } catch (e) {
             // TODO Warum, funktioniert trotzdem? groovy.lang.MissingPropertyException: No such property: text for class: javax.swing.JComboBox
             //println "raumBearbeitenGeandert: EXCEPTION: ${e}"
         }
         // Zuluftfaktor
-        model.meta.gewahlterRaum.raumZuluftfaktor =
-        m.raumZuluftfaktor =
-            view.raumBearbeitenLuftartFaktorZuluftverteilung.text?.toDouble2()
+        metaRaum.raumZuluftfaktor = raum.raumZuluftfaktor = view.raumBearbeitenLuftartFaktorZuluftverteilung.text?.toDouble2()
         // Abluftvolumenstrom
-        model.meta.gewahlterRaum.raumAbluftVolumenstrom =
-        m.raumAbluftVolumenstrom =
-            view.raumBearbeitenLuftartAbluftVs.text?.toDouble2()
+        metaRaum.raumAbluftVolumenstrom = raum.raumAbluftVolumenstrom = view.raumBearbeitenLuftartAbluftVs.text?.toDouble2()
         // Max. Türspalthöhe
-        model.meta.gewahlterRaum.raumMaxTurspaltHohe =
-        m.raumMaxTurspaltHohe =
-            view.raumBearbeitenDetailsTurspalthohe.text?.toDouble2()
+        metaRaum.raumMaxTurspaltHohe = raum.raumMaxTurspaltHohe = view.raumBearbeitenDetailsTurspalthohe.text?.toDouble2()
         // Geometrie
-        model.meta.gewahlterRaum.raumLange =
-        m.raumLange =
-            view.raumBearbeitenOptionalRaumlange.text?.toDouble2()
-        model.meta.gewahlterRaum.raumBreite =
-        m.raumBreite =
-            view.raumBearbeitenOptionalRaumbreite.text?.toDouble2()
-        model.meta.gewahlterRaum.raumHohe =
-        m.raumHohe =
-            view.raumBearbeitenOptionalRaumhohe.text?.toDouble2()
+        /*
+        metaRaum.raumLange = raum.raumLange = view.raumBearbeitenOptionalRaumlange.text?.toDouble2()
+        metaRaum.raumBreite = raum.raumBreite = view.raumBearbeitenOptionalRaumbreite.text?.toDouble2()
+        */
+        metaRaum.raumHohe = raum.raumHohe = view.raumBearbeitenOptionalRaumhohe.text?.toDouble2()
         // Raum neu berechnen
         raumGeandert(raumPosition, -1)
         // Daten aus Model in den Dialog übertragen
         // Zuluft/Abluft
-        model.meta.gewahlterRaum.raumZuluftfaktor = m.raumZuluftfaktor
-        model.meta.gewahlterRaum.raumAbluftvolumenstrom = m.raumAbluftvolumenstrom
-        ////if (model.meta.gewahlterRaum.)
+        metaRaum.raumZuluftfaktor = raum.raumZuluftfaktor
+        metaRaum.raumAbluftvolumenstrom = raum.raumAbluftvolumenstrom
+        ////if (metaRaum.)
         // Geometrie
-        model.meta.gewahlterRaum.raumFlache = m.raumFlache
-        model.meta.gewahlterRaum.raumVolumen = m.raumVolumen
-        model.meta.gewahlterRaum.raumNummer = m.raumNummer
+        metaRaum.raumFlache = raum.raumFlache
+        metaRaum.raumVolumen = raum.raumVolumen
+        metaRaum.raumNummer = raum.raumNummer
     }
 
     /**
@@ -1526,8 +1510,7 @@ class ProjektController {
             // Zentralgerät aus View in Model übernehmen
             model.map.anlage.zentralgerat = view.raumVsZentralgerat.selectedItem
             // Hole Volumenströme des Zentralgeräts
-            model.meta.volumenstromZentralgerat =
-                wacModelService.getVolumenstromFurZentralgerat(model.map.anlage.zentralgerat)
+            model.meta.volumenstromZentralgerat = wacModelService.getVolumenstromFurZentralgerat(model.map.anlage.zentralgerat)
             // Aussenluftvolumenströme neu berechnen
             wacCalculationService.aussenluftVs(model.map)
             // Neue Auswahl setzen
@@ -1575,8 +1558,7 @@ class ProjektController {
             // Aktualisiere Volumenstrom
             GH.withDisabledActionListeners view.raumVsVolumenstrom, {
                 // Hole Volumenströme des Zentralgeräts
-                def volumenstromZentralgerat =
-                    wacModelService.getVolumenstromFurZentralgerat(view.raumVsZentralgerat.selectedItem)
+                def volumenstromZentralgerat = wacModelService.getVolumenstromFurZentralgerat(view.raumVsZentralgerat.selectedItem)
                 // 5er-Schritte
                 model.meta.volumenstromZentralgerat = []
                 def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
@@ -2084,9 +2066,7 @@ class ProjektController {
 
     /**
      *
-     */
     void generiereVerlegeplan() {
-
         try {
 
             def title = getProjektTitel() as String
@@ -2096,56 +2076,55 @@ class ProjektController {
             //userDir = userDir + "/" + title + "_" + System.currentTimeMillis() + ".pdf"
             def verlegeplanFilename = model.wpxFilename - '.wpx' + ' Verlegeplan.pdf'
 
-//            PdfCreator pdfCreator = new PdfCreator()
-//            // Create a new pdf document
-//            pdfCreator.createDocument(verlegeplanFilename)
-//
-//            def logourl = Wac2Resource.getPdfLogo()
-//            if (DEBUG)
-//                println "logourl -> ${logourl.dump()}"
-//            pdfCreator.addLogo(logourl)
-//            // Add title to document
-//            pdfCreator.addTitle(title)
-//            // create table with relative column width
-//            pdfCreator.createTable([2f, 1f, 3f, 1f] as float[])
-//
-//            if (DEBUG)
-//                println "adding zentralgerät... "
-//            // Zentralgerät
-//            def zentralgerat = "Zentralgerät: ${model.map.anlage.zentralgerat}" as String
-//            pdfCreator.addArtikelToDocument(zentralgerat)
-//            if (DEBUG)
-//                println "added zentralgerät... "
-//            // Add empty line.
-//            pdfCreator.addArtikelToDocument("  ")
-//            if (DEBUG)
-//                println "adding empty artikel"
-//
-//            model.map.raum.raume.each { r ->
-//                erzeugeRaumVerlegeplanAbluft(r, pdfCreator)
-//            }
-//            model.map.raum.raume.each { r ->
-//                erzeugeRaumVerlegeplanZuluft(r, pdfCreator)
-//            }
-//            model.map.raum.raume.each { r ->
-//                erzeugeRaumVerlegeplanUberstrom(r, pdfCreator)
-//            }
-//            erzeugeDruckverlustVerlegeplan(model.map.dvb, pdfCreator)
-//            erzeugeSchalldampferVerlegeplan(model.map.akustik.zuluft, "zuluft", pdfCreator)
-//            erzeugeSchalldampferVerlegeplan(model.map.akustik.abluft, "abluft", pdfCreator)
-//
-//            // Add table to the document
-//            pdfCreator.addTable()
-//            // Close the pdf document
-//            pdfCreator.closeDocument()
-//            /* Dialog nicht anzeigen, einfach PDF öffnen
-//            def successMsg = "Verlegeplan '${verlegeplanFilename}' erfolgreich generiert"
-//            app.controllers["Dialog"].showInformDialog(successMsg as String)
-//            */
-//            java.io.File sf = new java.io.File(verlegeplanFilename)
-//            if (sf.exists()) {
-//                java.awt.Desktop.desktop.open(sf)
-//            }
+            PdfCreator pdfCreator = new PdfCreator()
+            // Create a new pdf document
+            pdfCreator.createDocument(verlegeplanFilename)
+
+            def logourl = Wac2Resource.getPdfLogo()
+            if (DEBUG)
+                println "logourl -> ${logourl.dump()}"
+            pdfCreator.addLogo(logourl)
+            // Add title to document
+            pdfCreator.addTitle(title)
+            // create table with relative column width
+            pdfCreator.createTable([2f, 1f, 3f, 1f] as float[])
+
+            if (DEBUG)
+                println "adding zentralgerät... "
+            // Zentralgerät
+            def zentralgerat = "Zentralgerät: ${model.map.anlage.zentralgerat}" as String
+            pdfCreator.addArtikelToDocument(zentralgerat)
+            if (DEBUG)
+                println "added zentralgerät... "
+            // Add empty line.
+            pdfCreator.addArtikelToDocument("  ")
+            if (DEBUG)
+                println "adding empty artikel"
+
+            model.map.raum.raume.each { r ->
+                erzeugeRaumVerlegeplanAbluft(r, pdfCreator)
+            }
+            model.map.raum.raume.each { r ->
+                erzeugeRaumVerlegeplanZuluft(r, pdfCreator)
+            }
+            model.map.raum.raume.each { r ->
+                erzeugeRaumVerlegeplanUberstrom(r, pdfCreator)
+            }
+            erzeugeDruckverlustVerlegeplan(model.map.dvb, pdfCreator)
+            erzeugeSchalldampferVerlegeplan(model.map.akustik.zuluft, "zuluft", pdfCreator)
+            erzeugeSchalldampferVerlegeplan(model.map.akustik.abluft, "abluft", pdfCreator)
+
+            // Add table to the document
+            pdfCreator.addTable()
+            // Close the pdf document
+            pdfCreator.closeDocument()
+            // Dialog nicht anzeigen, einfach PDF öffnen
+            //def successMsg = "Verlegeplan '${verlegeplanFilename}' erfolgreich generiert"
+            //app.controllers["Dialog"].showInformDialog(successMsg as String)
+            java.io.File sf = new java.io.File(verlegeplanFilename)
+            if (sf.exists()) {
+                java.awt.Desktop.desktop.open(sf)
+            }
         } catch (e) {
             println "Error generating document: ${e.dump()}"
 
@@ -2154,78 +2133,79 @@ class ProjektController {
         }
 
     }
+    */
 
-//    /**
-//     *
-//     * @param map
-//     * @param pdfCreator
-//     */
-//    void erzeugeRaumVerlegeplanAbluft(map, pdfCreator) {
-//
-//        if (map.raumBezeichnungAbluftventile) {
-//            if (DEBUG)
-//                println "adding Abluft... ${map.dump()}"
-//            pdfCreator.addArtikel(map.raumBezeichnung, "Abluft", map.raumBezeichnungAbluftventile, map.raumAnzahlAbluftventile)
-//        }
-//    }
-//
-//    /**
-//     *
-//     * @param map
-//     * @param pdfCreator
-//     */
-//    void erzeugeRaumVerlegeplanZuluft(map, pdfCreator) {
-//        if (map.raumBezeichnungZuluftventile) {
-//            if (DEBUG)
-//                println "adding Zuluft... ${map.dump()}"
-////            pdfCreator.addArtikel(map.raumBezeichnung, "Zuluft", map.raumBezeichnungZuluftventile, map.raumAnzahlZuluftventile)
-//        }
-//    }
-//
-//    /**
-//     *
-//     * @param map
-//     * @param pdfCreator
-//     */
-//    void erzeugeRaumVerlegeplanUberstrom(map, pdfCreator) {
-//        if (map.raumAnzahlUberstromVentile && map.raumAnzahlUberstromVentile > 0) {
-//            if (DEBUG)
-//                println "adding Überström... ${map.dump()}"
-//            pdfCreator.addArtikel("", "Überström", map.raumUberstromElement, map.raumAnzahlUberstromVentile)
-//        }
-//    }
-//
-//    /**
-//     *
-//     * @param dvb
-//     * @param pdfCreator
-//     */
-//    void erzeugeDruckverlustVerlegeplan(dvb, pdfCreator) {
-//        dvb.kanalnetz.each {
-//            if (it.kanalbezeichnung) {
-//                if (DEBUG)
-//                    println "adding kanalnetz..."
-//                pdfCreator.addArtikel("", "", it.kanalbezeichnung, it.lange)
-//            }
-//        }
-//    }
-//
-//    /**
-//     *
-//     * @param akusik
-//     * @param luftart
-//     * @param pdfCreator
-//     */
-//    void erzeugeSchalldampferVerlegeplan(akustik, luftart, pdfCreator) {
-//        if (akustik.hauptschalldampfer1) {
-//            if (DEBUG)
-//                println "adding schalldampfer 1..."
-//            pdfCreator.addArtikel("", "", akustik.hauptschalldampfer1, 1)
-//        }
-//        if (akustik.hauptschalldampfer2) {
-//            if (DEBUG)
-//                println "adding schalldampfer 2..."
-//            pdfCreator.addArtikel("", "", akustik.hauptschalldampfer2, 1)
-//        }
-//    }
+    /**
+     *
+     * @param map
+     * @param pdfCreator
+     */
+    void erzeugeRaumVerlegeplanAbluft(map, pdfCreator) {
+
+        if (map.raumBezeichnungAbluftventile) {
+            if (DEBUG)
+                println "adding Abluft... ${map.dump()}"
+            pdfCreator.addArtikel(map.raumBezeichnung, "Abluft", map.raumBezeichnungAbluftventile, map.raumAnzahlAbluftventile)
+        }
+    }
+
+    /**
+     *
+     * @param map
+     * @param pdfCreator
+     */
+    void erzeugeRaumVerlegeplanZuluft(map, pdfCreator) {
+        if (map.raumBezeichnungZuluftventile) {
+            if (DEBUG)
+                println "adding Zuluft... ${map.dump()}"
+            pdfCreator.addArtikel(map.raumBezeichnung, "Zuluft", map.raumBezeichnungZuluftventile, map.raumAnzahlZuluftventile)
+        }
+    }
+
+    /**
+     *
+     * @param map
+     * @param pdfCreator
+     */
+    void erzeugeRaumVerlegeplanUberstrom(map, pdfCreator) {
+        if (map.raumAnzahlUberstromVentile && map.raumAnzahlUberstromVentile > 0) {
+            if (DEBUG)
+                println "adding Überström... ${map.dump()}"
+            pdfCreator.addArtikel("", "Überström", map.raumUberstromElement, map.raumAnzahlUberstromVentile)
+        }
+    }
+
+    /**
+     *
+     * @param dvb
+     * @param pdfCreator
+     */
+    void erzeugeDruckverlustVerlegeplan(dvb, pdfCreator) {
+        dvb.kanalnetz.each {
+            if (it.kanalbezeichnung) {
+                if (DEBUG)
+                    println "adding kanalnetz..."
+                pdfCreator.addArtikel("", "", it.kanalbezeichnung, it.lange)
+            }
+        }
+    }
+
+    /**
+     *
+     * @param akusik
+     * @param luftart
+     * @param pdfCreator
+     */
+    void erzeugeSchalldampferVerlegeplan(akustik, luftart, pdfCreator) {
+        if (akustik.hauptschalldampfer1) {
+            if (DEBUG)
+                println "adding schalldampfer 1..."
+            pdfCreator.addArtikel("", "", akustik.hauptschalldampfer1, 1)
+        }
+        if (akustik.hauptschalldampfer2) {
+            if (DEBUG)
+                println "adding schalldampfer 2..."
+            pdfCreator.addArtikel("", "", akustik.hauptschalldampfer2, 1)
+        }
+    }
 }
