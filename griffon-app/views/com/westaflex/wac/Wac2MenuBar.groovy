@@ -11,7 +11,7 @@
 package com.westaflex.wac
 
 menuBar = menuBar {
-    menu(id: 'hauptmenu', text: 'Auslegung', mnemonic: 'A') {
+    menu(id: 'menuDatei', text: 'Datei', mnemonic: 'D') {
         menuItem(neuesProjektAction)
         menuItem(projektOeffnenAction)
         // WAC-161 Zuletzt geöffnete Projekte
@@ -22,34 +22,34 @@ menuBar = menuBar {
         menuItem(projektSchliessenAction)
         // Separator
         separator()
+        menuItem(exitAction)
+    }
+    //
+    menu(id: 'menuAuslegung', text: 'Auslegung', mnemonic: 'A') {
         // WAC-151 Automatische und manuelle Berechnung
         menuItem(automatischeBerechnungAction)
-        // Separator
-        separator()
+    }
+    //
+    menu(id: 'menuDokumente', text: 'Dokumente', mnemonic: 'O') {
+        // WAC-108 Auslegung
+        menuItem(projektAuslegungErstellenAction)
         /*
         // WAC-202 Verlegeplan
         menuItem(verlegeplanAction)
         */
-        // WAC-108 Auslegung
-        menuItem(projektAuslegungErstellenAction)
         // WAC-108 Stückliste
         menuItem(projektStuecklisteErstellenAction)
-        /* rbe 2012-02-21 Warten auf westaflex
-        // WAC-108 Stückliste
+        // WAC-108 Angebot
         menuItem(projektAngebotErstellenAction)
-        */
-        /* rbe 2012-02-21 Warten auf westaflex
+        /*
+        // Separator
+        separator()
         // WAC-177 Angebotsverfolgung
         menuItem(angebotsverfolgungAction)
         */
-//      if (!isMacOSX) {
-        // Separator
-        separator()
-        menuItem(exitAction)
-//      }
     }
     // WAC-167 Info-Menü mit Über-Dialog
-    menu(id: 'infomenu', text: '?', mnemonic: 'I') {
+    menu(id: 'menuInfo', text: '?', mnemonic: 'I') {
         menuItem(aboutAction)
     }
 }

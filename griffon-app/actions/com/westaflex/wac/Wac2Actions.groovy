@@ -74,29 +74,29 @@ projektSchliessenAction = action(
         closure: controller.projektSchliessen
         )
 
-// WAC-108 Angebot mit Stückliste generieren
+// WAC-108 Auslegung
 projektAuslegungErstellenAction = action(
         id: "auslegungErstellenAction",
         name: "Auslegung erstellen",
         mnemonic: "L",
         accelerator: shortcut("L"),
-        smallIcon: imageIcon("/menu/seitenansicht.png"),
+        smallIcon: imageIcon("/menu/auslegung.png"),
         enabled: bind { model.aktivesProjekt != null },
         closure: controller.projektAuslegungErstellen
         )
 
-// WAC-108 Angebot mit Stückliste generieren.
+// WAC-108 Angebot
 projektAngebotErstellenAction = action(
         id: "angebotErstellenAction",
         name: "Angebot erstellen",
         mnemonic: "P",
         accelerator: shortcut("P"),
-        smallIcon: imageIcon("/menu/drucken.png"),
+        smallIcon: imageIcon("/menu/angebot.png"),
         enabled: bind { model.aktivesProjekt != null },
         closure: controller.projektAngebotErstellen
         )
 
-// WAC-108 Angebot mit Stückliste generieren.
+// WAC-108 Stückliste
 projektStuecklisteErstellenAction = action(
         id: "stuecklisteErstellenAction",
         name: "Stückliste erstellen",
@@ -109,7 +109,7 @@ projektStuecklisteErstellenAction = action(
 
 exitAction = action(
         id: "exitAction",
-        name: "WestaWAC beenden",
+        name: "VentPlan beenden",
         mnemonic: "Q",
         accelerator: shortcut("Q"),
         enabled: true,
