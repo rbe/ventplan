@@ -13,6 +13,7 @@ package com.westaflex.wac
 import groovy.beans.Bindable
 
 import com.westaflex.wac.*
+import ca.odell.glazedlists.*
 
 /**
  * 
@@ -68,5 +69,6 @@ class Wac2Model {
      * Wurde irgendein Model eines Projekts geändert?
      */
     @Bindable Boolean alleProjekteGeandert = false
-	
+
+    @Bindable EventList projektSuchenEventList = new BasicEventList()
 }

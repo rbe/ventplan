@@ -11,6 +11,7 @@
 package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
+import groovy.io.FileType
 
 /**
  *
@@ -25,6 +26,8 @@ class Wac2Controller {
     def view
     def wacCalculationService
     def builder
+
+    def projektSuchenDialog
 
     /**
      * Flag zum Abbrechen des Schliessen Vorgangs
@@ -718,9 +721,10 @@ class Wac2Controller {
 
     /**
      * WAC-192 Suchfunktion für WPX-Dateien
+     * Dialog für die Suche öffnen
      */
     def nachProjektSuchenDialogOeffnen = { evt = null ->
-        def projektSuchenDialog = GH.createDialog(builder, ProjektSuchenView, [title: "Projekt suchen", resizable: true, pack: true])
+        projektSuchenDialog = GH.createDialog(builder, ProjektSuchenView, [title: "Projekt suchen", resizable: true, pack: true])
         projektSuchenDialog = GH.centerDialog(app.views['wac2'], projektSuchenDialog)
         if (projektSuchenPrefs.getSearchFolder()) {
             view.projektSuchenOrdnerPfad.text = projektSuchenPrefs.getSearchFolder()
@@ -728,6 +732,11 @@ class Wac2Controller {
         projektSuchenDialog.show()
     }
 
+    /**
+     * WAC-192 Suchfunktion für WPX-Dateien
+     * Start-Verzeichnis für die Suche wählen.
+     * Dieses Verzeichnis wird in den prefs gespeichert.
+     */
     def projektSuchenOrdnerOeffnen = { evt = null ->
         def openResult = view.projektSuchenFolderChooserWindow.showOpenDialog(view.projektSuchenPanel)
         if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
@@ -738,38 +747,98 @@ class Wac2Controller {
         }
     }
 
+    /**
+     * WAC-192 Suchfunktion für WPX-Dateien
+     * Suche starten:
+     * Iteriert über das ausgewählte Verzeichnis + Unterverzeichnis und sucht in allen Dateien (*.wpx, *.vpx)
+     * nach den Wörtern.
+     * Es ist eine "Oder"-Suche
+     */
     def projektSuchenStarteSuche = { evt = null ->
         def searchInPath = view.projektSuchenOrdnerPfad.text
         if (searchInPath) {
-            File startFilePath = new File(searchInPath)
-            if (startFilePath.exists()) {
-                // zuerst alle Projektdateien auflisten
-                startFilePath.listFiles(fileFilter: [
-                        accept: { file ->
-                            return file.name.toLowerCase().endsWith('.vpx') || file.name.toLowerCase().endsWith('.wpx')
-                        }
-                ] as javax.swing.filechooser.FileFilter).each { file ->
-                    // TODO: xmlslurper...
-                }
+            File startFileDir = new File(searchInPath)
+            if (startFileDir.exists()) {
 
-                startFilePath.listFiles(fileFilter: [
-                        accept: { file ->
-                            return file.isDirectory()
+                def list = []
+                // liste leeren
+                model.projektSuchenEventList.clear()
+
+                // Sucht alle Dateien, die auf wpx enden
+                startFileDir.traverse(
+                        type:FileType.FILES,
+                        nameFilter:~/.*\.wpx|.*\.vpx/
+                ) { file ->
+                    def rootWpx = new XmlSlurper().parseText(file.getText())
+                    def projekt = rootWpx.projekt
+                    if (view.projektSuchenBauvorhaben.text) {
+                        if (projekt.bauvorhaben.text() && projekt.bauvorhaben.text().contains(view.projektSuchenBauvorhaben.text)) {
+                            if (!list.contains(file.absolutePath)) {
+                                list << file.absolutePath
+                            }
                         }
-                ] as javax.swing.filechooser.FileFilter).each { file ->
-                    // TODO: iterate through the directories...
+                    }
+
+                    def allFirma = projekt.firma
+                    def ausfuhrendeFirma = allFirma[0].name().equals('firma') && allFirma[0].rolle.text().equals('Ausfuhrende') ? allFirma[0] : allFirma[1]
+                    def grosshandelFirma = allFirma[0].name().equals('firma') && allFirma[0].rolle.text().equals('Grosshandel') ? allFirma[0] : allFirma[1]
+
+                    if (view.projektSuchenInstallateur.text) {
+                        // installateur = handwerker = Auführende Firma
+
+                        if ((ausfuhrendeFirma.firma1.text() && ausfuhrendeFirma.firma1.text().contains(view.projektSuchenInstallateur.text)) ||
+                            (ausfuhrendeFirma.firma2.text() && ausfuhrendeFirma.firma2.text().contains(view.projektSuchenInstallateur.text)) ||
+                            (ausfuhrendeFirma.ort.text() && ausfuhrendeFirma.ort.text().contains(view.projektSuchenInstallateur.text))) {
+                            if (!list.contains(file.absolutePath)) {
+                                list << file.absolutePath
+                            }
+                        }
+                    }
+                    if (view.projektSuchenHandel.text) {
+                        if ((grosshandelFirma.firma1.text() && grosshandelFirma.firma1.text().contains(view.projektSuchenHandel.text)) ||
+                            (grosshandelFirma.firma2.text() && grosshandelFirma.firma2.text().contains(view.projektSuchenHandel.text)) ||
+                            (grosshandelFirma.ort.text() && grosshandelFirma.ort.text().contains(view.projektSuchenHandel.text))) {
+                            if (!list.contains(file.absolutePath)) {
+                                list << file.absolutePath
+                            }
+                        }
+                    }
+                }
+                if (list.size() == 0) {
+                    def infoMsg = "Es wurden keine Dateien mit Ihren Suchbegriffen gefunden!"
+                    app.controllers["Dialog"].showInformDialog(infoMsg as String)
+                } else {
+                    // Gefundene Dateien in der Liste anzeigen
+                    model.projektSuchenEventList.addAll(list)
                 }
             }
+        } else {
+            def infoMsg = "Bitte wählen Sie erst einen Pfad zum Suchen aus!"
+            app.controllers["Dialog"].showInformDialog(infoMsg as String)
         }
     }
 
+    /**
+     * WAC-192 Suchfunktion für WPX-Dateien
+     * Dialog schließen.
+     */
     def projektSuchenAbbrechen = { evt = null ->
-
+        projektSuchenDialog.dispose()
     }
 
+    /**
+     * WAC-192 Suchfunktion für WPX-Dateien
+     * Gewählte Datei
+     */
     def projektSuchenDateiOeffnen = { evt = null ->
-        def file = view.projektSuchenListe.selectedValue
-        projektOffnenClosure(file)
+        def file = view.projektSuchenList.selectedValue
+        if (file) {
+            projektOffnenClosure(file)
+            projektSuchenDialog.dispose()
+        } else {
+            def infoMsg = "Sie haben keine Datei zum Öffnen ausgewählt!"
+            app.controllers["Dialog"].showInformDialog(infoMsg as String)
+        }
     }
 
 }

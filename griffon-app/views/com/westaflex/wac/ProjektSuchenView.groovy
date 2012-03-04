@@ -14,7 +14,8 @@ import net.miginfocom.swing.MigLayout
 import com.bensmann.griffon.GriffonHelper as GH
 
 import java.awt.Color
-import javax.swing.ListSelectionModel
+import ca.odell.glazedlists.*
+import ca.odell.glazedlists.swing.*
 
 // Dieser Dialog wird für die Suche von WPX-Dateien (Projekte) genutzt
 panel(id: "projektSuchenPanel", layout: new MigLayout("fillx, wrap", "[]para[fill]para[fill]", ""), constraints: "grow") {
@@ -31,8 +32,8 @@ panel(id: "projektSuchenPanel", layout: new MigLayout("fillx, wrap", "[]para[fil
     label("Bauvorhaben")
     textField(id: "projektSuchenBauvorhaben", constraints: "grow, span 2")
 
-    label("Angebotsnummer")
-    textField(id: "projektSuchenAngebotsnummer", constraints: "grow, span 2")
+//    label("Angebotsnummer")
+//    textField(id: "projektSuchenAngebotsnummer", constraints: "grow, span 2")
 
     label("Installateur")
     textField(id: "projektSuchenInstallateur", constraints: "grow, span 2")
@@ -40,17 +41,16 @@ panel(id: "projektSuchenPanel", layout: new MigLayout("fillx, wrap", "[]para[fil
     label("Handel")
     textField(id: "projektSuchenHandel", constraints: "grow, span 2")
 
-    label("", constraints: "span 2")
-    button(id: "projektSuchenStarteSuche", constraints: "grow")
-
-    list(id: "projektSuchenListe",
-         listData: null,
-         visibleRowCount: 5,
-         selectionMode:ListSelectionModel.SINGLE_SELECTION
-    )
-
+    label()
     button(id: "projektSuchenAbbruch", text: "Abbrechen")
-    // Kompletter Text, damit Dimension stimmt, wenn Text nachträglich geändert wird (durch Controller/Action)
+    button(id: "projektSuchenStarteSuche", text: "Suche starten", constraints: "grow")
+
+    scrollPane(constraints: "grow, span 3") {
+        listSearchable( id: "projektSuchenList", model: new EventListModel(model.projektSuchenEventList) )
+    }
+
+    label()
+    label()
     button(id: "projektSuchenDateiOeffnen", text: "Gewählte Datei öffnen")
 }
 
