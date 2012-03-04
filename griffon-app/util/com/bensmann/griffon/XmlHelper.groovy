@@ -1,8 +1,7 @@
 /*
- * WAC
+ * VentPlan
  *
- * Copyright (C) 2005      Informationssysteme Ralf Bensmann.
- * Copyright (C) 2009-2010 Informationssysteme Ralf Bensmann.
+ * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
  * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
@@ -11,12 +10,12 @@
 package com.bensmann.griffon
 
 class XmlHelper {
-	
+
     /**
      * Groovy DOM builder.
      */
     def static domBuilder
-	
+
     /**
      * Try to create a node.
      */
@@ -31,7 +30,7 @@ class XmlHelper {
             }
         }
     }
-	
+
     /**
      *
      */
@@ -42,7 +41,7 @@ class XmlHelper {
             }
         }
     }
-	
+
     /**
      * XML value to String
      */
@@ -53,7 +52,7 @@ class XmlHelper {
         } catch (e) { /*println e*/ }
         std
     }
-	
+
     /**
      * XML value as Integer
      */
@@ -64,7 +63,7 @@ class XmlHelper {
         } catch (e) { /*println e*/ }
         std
     }
-	
+
     /**
      * XML value as Double
      */
@@ -75,7 +74,7 @@ class XmlHelper {
         } catch (e) { /*println e*/ }
         std
     }
-	
+
     /**
      * XML value as Boolean
      */
@@ -86,5 +85,5 @@ class XmlHelper {
         } catch (e) { /*println e*/ }
         std
     }
-	
+
 }

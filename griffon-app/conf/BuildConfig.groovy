@@ -25,7 +25,7 @@ log4j {
             codehaus.griffon.commons = 'info' // core / classloading
         }
     }
-    additivity.StackTrace=false
+    additivity.StackTrace = false
 }
 // key signing information
 environments {
@@ -36,8 +36,8 @@ environments {
                 keystore = "${basedir}/griffon-app/conf/keys/devKeystore"
                 alias = 'development'
                 storepass = 'BadStorePassword'
-                keypass   = 'BadKeyPassword'
-                lazy      = true // only sign when unsigned
+                keypass = 'BadKeyPassword'
+                lazy = true // only sign when unsigned
             }
         }
     }

@@ -7,6 +7,7 @@
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
  */
+
 import com.bensmann.griffon.GriffonHelper as GH
 import javax.swing.JOptionPane
 

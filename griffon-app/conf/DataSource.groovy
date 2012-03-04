@@ -9,28 +9,28 @@
  */
 
 dataSource {
-  //driverClassName = "org.h2.Driver"
+    //driverClassName = "org.h2.Driver"
     driverClassName = "org.sqlite.JDBC"
-  //username = "sa"
+    //username = "sa"
     username = ''
     password = ''
 }
 environments {
     development {
         dataSource {
-          //url = "jdbc:h2:zip:../lib/dtmp.zip!/westawac"
+            //url = "jdbc:h2:zip:../lib/dtmp.zip!/westawac"
             url = "jdbc:sqlite:../sql/westawac.sqlite.db"
         }
     }
     test {
         dataSource {
-          //url = "jdbc:h2:zip:../lib/dtmp.zip!/westawac"
+            //url = "jdbc:h2:zip:../lib/dtmp.zip!/westawac"
             url = "jdbc:sqlite:../sql/westawac.sqlite.db"
         }
     }
     production {
         dataSource {
-          //url = "jdbc:h2:zip:lib/dtmp.zip!/westawac"
+            //url = "jdbc:h2:zip:lib/dtmp.zip!/westawac"
             //url = "jdbc:sqlite:lib/westawac.sqlite.db"
             // install dir of izpack.
             url = "jdbc:sqlite:../sql/westawac.sqlite.db"
