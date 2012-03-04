@@ -125,7 +125,7 @@ automatischeBerechnungAction = action(
         smallIcon: imageIcon(resource: "/menu/automatischeBerechnung.png"),
         enabled: bind { model.aktivesProjekt != null },
         closure: controller.automatischeBerechnung
-        )
+)
 
 // WAC-177 Angebotsverfolgung
 angebotsverfolgungAction = action(
@@ -163,6 +163,7 @@ nachProjektSuchenAction = action(
         name: "Projekt suchen",
         mnemonic: "F",
         accelerator: shortcut("F"),
+        smallIcon: imageIcon(resource: "/menu/filefind.png"),
         enabled: bind { model.aktivesProjekt == null },
         closure: controller.nachProjektSuchenDialogOeffnen
 )
