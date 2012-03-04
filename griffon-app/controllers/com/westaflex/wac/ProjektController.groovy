@@ -18,7 +18,7 @@ import com.bensmann.griffon.GriffonHelper as GH
  */
 class ProjektController {
 
-    public static boolean DEBUG = false
+    public static boolean DEBUG = true
     Boolean loadMode = false
 
     def builder

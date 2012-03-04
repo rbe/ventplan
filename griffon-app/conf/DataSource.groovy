@@ -31,9 +31,9 @@ environments {
     production {
         dataSource {
           //url = "jdbc:h2:zip:lib/dtmp.zip!/westawac"
-            url = "jdbc:sqlite:lib/westawac.sqlite.db"
+            //url = "jdbc:sqlite:lib/westawac.sqlite.db"
             // install dir of izpack.
-            //url = "jdbc:sqlite:../sql/westawac.sqlite.db"
+            url = "jdbc:sqlite:../sql/westawac.sqlite.db"
         }
     }
 }

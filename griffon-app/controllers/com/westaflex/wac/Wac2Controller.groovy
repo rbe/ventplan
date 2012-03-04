@@ -18,7 +18,7 @@ import groovy.io.FileType
  */
 class Wac2Controller {
 
-    public static boolean DEBUG = false
+    public static boolean DEBUG = true
 
     def model
     def wacModelService

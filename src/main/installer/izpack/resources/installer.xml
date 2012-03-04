@@ -73,7 +73,6 @@
     <res id="Unix_shortcutSpec.xml" src="resources/unixShortcutSpec.xml"/>
     <res id="shortcutSpec.xml" src="resources/emptyShortcutSpec.xml" />
     <res id="RegistrySpec.xml" src="resources/RegistrySpec.xml" />
-    <res id="dtmp.zip" src="resources/dtmp.zip" />
   </resources>
 
   <native type="izpack" name="ShellLink.dll"/>
@@ -112,7 +111,7 @@
         aoc customizing START
         Insert sql database to install dir /sql
       -->
-      <file src="resources/dtmp.zip" targetdir="$INSTALL_PATH/sql" />
+      <file src="resources/westawac.sqlite.db" targetdir="$INSTALL_PATH/sql" />
       <file src="resources/griffon-logo.png" targetdir="$INSTALL_PATH/icons" />
       <!-- aoc customizing END -->
 
