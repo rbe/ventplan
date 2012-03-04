@@ -19,6 +19,13 @@ class CheckUpdate implements java.lang.Runnable {
 
     private static final String version = GH.localVersion()
 
+    private static boolean updateExists = false
+
+    private static boolean userAcknowledged = false
+
+    /**
+     *
+     */
     def static unzip = { String dest ->
         //in metaclass added methods, 'delegate' is the object on which 
         //the method is called. Here it's the file to unzip
