@@ -15,17 +15,19 @@ package com.westaflex.wac
  */
 class MRUFileManager {
 
-    public static boolean DEBUG = false    
-    
-    private static final String LAST_TEN_OPEN_PROJECTS = "LastTenWacProjects"
-    private static final String PREFS_USER_NODE = "/wacprojects";
+    public static boolean DEBUG = false
+
+    //private static final String LAST_TEN_OPEN_PROJECTS = "LastTenWacProjects"
+    private static final String LAST_TEN_OPEN_PROJECTS = "LastTenProjects"
+    //private static final String PREFS_USER_NODE = "/wacprojects";
+    private static final String PREFS_USER_NODE = "/ventplanprojects";
     public static final int DEFAULT_MAX_SIZE = 10;
 
     private int currentMaxSize = 0;
     private LinkedList mruFileList;
-    
+
     private static MRUFileManager INSTANCE = null;
-    
+
     public static MRUFileManager getInstance() {
         if (null == INSTANCE) {
             return new MRUFileManager();
@@ -102,7 +104,7 @@ class MRUFileManager {
         def o = mruFileList.remove(index);
         mruFileList.addFirst(o);
     }
-    
+
     protected void setMRU(File f) {
         setMRU(f.getAbsolutePath())
     }
@@ -111,7 +113,7 @@ class MRUFileManager {
      * Adds an object to the mru.
      */
     protected void setMRU(String s) {
-        
+
         def file = new java.io.File(s.toString())
 
         if (file.exists()) {
@@ -138,10 +140,10 @@ class MRUFileManager {
                 println "setMRU: file does not exists. Could not add. ${file?.dump()}"
         }
     }
-    
+
     public String getPrefValue(int i) {
         String value = null;
-        try{
+        try {
             value = getPrefs().get("" + i, "");
             if (DEBUG)
                 println "getPrefValue value -> ${value}, index=${i}"
@@ -158,15 +160,15 @@ class MRUFileManager {
      * If no file exists, a new LinkedList is created.
      */
     protected void load() {
-        
+
         if (DEBUG)
             println "load: preferences absolute path -> ${getPrefs().absolutePath()}"
-        
+
         if (null == mruFileList) {
             mruFileList = new LinkedList();
         }
         for (int i = 0; i < DEFAULT_MAX_SIZE; i++) {
-            try{
+            try {
                 String value = getPrefValue(i);
                 if (value) {
                     if (DEBUG)
