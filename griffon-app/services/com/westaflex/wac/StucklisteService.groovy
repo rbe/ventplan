@@ -7,8 +7,6 @@
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
  */
-
-
 package com.westaflex.wac
 
 import groovy.sql.Sql
