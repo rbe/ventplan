@@ -108,10 +108,10 @@ class Wac2Resource {
      */
     def static getWacwsProperties() {
         // dev
-        def r = Wac2Resource.class.getResourceAsStream("/wacws.properties")
+        def r = Wac2Resource.class.getResourceAsStream("/ventplan.properties")
         // prod
         if (!r)
-            r = Wac2Resource.class.getResourceAsStream("/wacws/wacws.properties")
+            r = Wac2Resource.class.getResourceAsStream("/wacws/ventplan.properties")
         r
     }
 
