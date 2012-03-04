@@ -22,6 +22,4 @@
  * - execSync { // your code }
  */
 
-//println "lifecycle.Ready"
-//Wac2Splash.instance.dispose()
 new java.lang.Thread(new com.westaflex.wac.CheckUpdate()).start()

@@ -7,8 +7,7 @@
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
  */
-package com.westaflex.wac;
-
+package com.westaflex.wac
 
 import java.awt.Color
 import java.awt.Font
