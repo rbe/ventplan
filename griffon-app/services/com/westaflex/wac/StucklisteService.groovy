@@ -209,8 +209,8 @@ class StucklisteService {
         statement << 'SELECT id' <<
                 '  FROM pakete' <<
                 ' WHERE geraet = ?.gerat AND kategorie = ?.kategorie'
-        /*if (DEBUG)
-            println "${this}.getGrundpaket: statement=${statement.toString()}"*/
+        if (DEBUG)
+            println "${this}.getGrundpaket: statement=${statement.toString()}"
         List r73 = withSql { dataSourceName, sql -> sql.rows(statement.toString(), [gerat: zentralgerat, kategorie: 73]) }
         /*if (DEBUG)
             println "${this}.getGrundpaket(${zentralgerat}): grundpakete=${r73*.id}"*/
@@ -236,8 +236,8 @@ class StucklisteService {
         statement << 'SELECT id, kategorie, name' <<
                 ' FROM pakete' <<
                 ' WHERE geraet = ?.gerat AND maxvolumenstrom = ?.maxvolumenstrom AND kategorie = ?.kategorie'
-        /*if (DEBUG)
-            println "${this}.getErweiterungspaket: statement=${statement.toString()}"*/
+        if (DEBUG)
+            println "${this}.getErweiterungspaket: statement=${statement.toString()}"
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [gerat: zentralgerat, maxvolumenstrom: maxvs, kategorie: 74])
         }
@@ -264,8 +264,8 @@ class StucklisteService {
         statement << 'SELECT id, name' <<
                 ' FROM pakete' <<
                 ' WHERE geraet = ?.gerat AND maxvolumenstrom = ?.maxvolumenstrom AND kategorie = ?.kategorie'
-        /*if (DEBUG)
-            println "${this}.getGeratePaket: statement=${statement.toString()}"*/
+        if (DEBUG)
+            println "${this}.getGeratePaket: statement=${statement.toString()}"
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [gerat: zentralgerat, maxvolumenstrom: maxvs, kategorie: 72])
         }
@@ -294,8 +294,8 @@ class StucklisteService {
         statement << 'SELECT id, name' <<
                 ' FROM pakete' <<
                 ' WHERE geraet = ?.gerat AND bedingung = ?.bedingung AND kategorie = ?.kategorie'
-        /*if (DEBUG)
-            println "${this}.getAussenluftpaket: statement=${statement.toString()}"*/
+        if (DEBUG)
+            println "${this}.getAussenluftpaket: statement=${statement.toString()}"
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [gerat: zentralgerat, bedingung: bedingung, kategorie: 70])
         }
@@ -324,8 +324,8 @@ class StucklisteService {
         statement << 'SELECT id, name' <<
                 ' FROM pakete' <<
                 ' WHERE geraet = ?.gerat AND bedingung = ?.bedingung AND kategorie = ?.kategorie'
-        /*if (DEBUG)
-            println "${this}.getAussenluftpaket: statement=${statement.toString()}"*/
+        if (DEBUG)
+            println "${this}.getAussenluftpaket: statement=${statement.toString()}"
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [gerat: zentralgerat, bedingung: bedingung, kategorie: 71])
         }
@@ -347,9 +347,9 @@ class StucklisteService {
                 ' FROM pakete' <<
                 ' WHERE kategorie = ?.kategorie AND bedingung >= ?.bedingung' <<
                 ' ORDER BY bedingung ASC'
-        /*if (DEBUG) {
+        if (DEBUG) {
             println "${this}.getVerteilpakete: statement=${statement.toString()}"
-        }*/
+        }
         //
         getVerteilebenen(map).each { e ->
             if (!verteilpakete.containsKey(e)) {
@@ -387,8 +387,8 @@ class StucklisteService {
         statement << 'SELECT id, name' <<
                 ' FROM pakete' << // Feld NAME und GERAET hat in diesem Fall den gleichen Inhalt, den Luftauslass
                 ' WHERE name = ?.name AND bedingung = ?.bedingung AND kategorie = ?.kategorie'
-        /*if (DEBUG)
-            println "${this}.getLuftauslasspaket: statement=${statement.toString()}"*/
+        if (DEBUG)
+            println "${this}.getLuftauslasspaket: statement=${statement.toString()}"
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [name: luftauslass, bedingung: bedingung, kategorie: 76])
         }
@@ -410,9 +410,9 @@ class StucklisteService {
                 ' FROM pakete' <<
                 ' WHERE kategorie = ?.kategorie AND bedingung >= ?.bedingung' <<
                 ' ORDER BY bedingung ASC'
-        /*if (DEBUG) {
+        if (DEBUG) {
             println "${this}.getLuftauslasspakete: statement=${statement.toString()}"
-        }*/
+        }
         withSql { dataSourceName, Sql sql ->
             sql.firstRow(statement.toString(), [bedingung: luftauslass, kategorie: 76])
         }.ID
@@ -442,8 +442,8 @@ class StucklisteService {
         r.each { row ->
             row.each { k, v -> row[k] = getVal(v) }
         }
-        /*if (DEBUG)
-            println "${this}.paketeZuStuckliste(${pakete}): " + r.dump()*/
+        if (DEBUG)
+            println "${this}.paketeZuStuckliste(${pakete}): " + r.dump()
         return r
     }
 
@@ -549,7 +549,7 @@ class StucklisteService {
         pakete += abluftventile
         if (DEBUG) println String.format("%17s für %8s (Vs=%d), %s", 'Abluftventile', zentralgerat, volumenstrom, abluftventile)
         List zuluftventile = countZuluftventile(map).collect {
-            getLuftauslasspaket(it.key, 'AB') * it.value // TODO 'AB' nur, da 100ULC in DB mit AB steht
+            getLuftauslasspaket(it.key, 'ZU') * it.value // TODO 'AB' nur, da 100ULC in DB mit AB steht
         }.flatten()
         pakete += zuluftventile
         if (DEBUG) println String.format("%17s für %8s (Vs=%d), %s", 'Zuluftventile', zentralgerat, volumenstrom, zuluftventile)
