@@ -27,6 +27,7 @@ log4j {
     }
     additivity.StackTrace = false
 }
+// Injection
 griffon.basic_injection.disable = true
 griffon.gsql.injectInto = ['service']
 // The following properties have been added by the Upgrade process...
@@ -46,7 +47,7 @@ signingkey.params.lazy = true // only sign when unsigned
 */
 // you may now tweak memory parameters
 griffon.memory.min = '64m'
-griffon.memory.max = '128m'
+griffon.memory.max = '256m'
 griffon.memory.maxPermSize = '64m'
 //
 griffon.datasource.injectInto = ["controller", "service"]
