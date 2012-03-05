@@ -10,6 +10,7 @@
 package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
+import griffon.swing.SwingApplication
 
 /**
  * Check for an update.
@@ -18,9 +19,12 @@ class CheckUpdate implements java.lang.Runnable {
 
     private static final String version = GH.localVersion()
 
-    private static boolean updateExists = false
-
     private static boolean userAcknowledged = false
+
+    /**
+     * Griffon app.
+     */
+    SwingApplication app
 
     /**
      *
@@ -56,8 +60,9 @@ class CheckUpdate implements java.lang.Runnable {
     /**
      *
      */
-    def update = {
-        def version
+    boolean update() {
+        boolean b = false
+        //def version
         try {
             // Download ZIP from webserver
             //def u = "http://files.art-of-coding.eu/westaflex/wac/update/${version}/wacupdate.zip"
@@ -65,7 +70,7 @@ class CheckUpdate implements java.lang.Runnable {
             //println "update: trying to download ${u}"
             def buf = new byte[512 * 1024]
             // Destination for download
-            def dest = java.io.File.createTempFile("ventplan", ".tmp")
+            def dest = java.io.File.createTempFile('ventplan', '.tmp')
             dest.deleteOnExit()
             // Download data and write into temporary file
             dest.withOutputStream { ostream ->
@@ -78,7 +83,7 @@ class CheckUpdate implements java.lang.Runnable {
             }
             //println "update: downloaded into ${dest}"
             // And copy it to update/ folder
-            def dest2 = new java.io.File("ventplan", "update.zip")
+            def dest2 = new java.io.File('ventplan', 'update.zip')
             dest2.parentFile.mkdirs()
             dest.renameTo(dest2)
             // Unzip it
@@ -88,11 +93,13 @@ class CheckUpdate implements java.lang.Runnable {
             dest2.deleteOnExit()
             dest2.delete()
             //println "update: done"
+            b = true
         } catch (java.io.FileNotFoundException e) {
             //println "update: nothing found for version ${version}"
         } catch (e) {
             println "${this}.update: ${e}"
         }
+        return b
     }
 
     /**
@@ -100,8 +107,19 @@ class CheckUpdate implements java.lang.Runnable {
      */
     void run() {
         File.metaClass.unzip = CheckUpdate.unzip
-        while (true) {
-            update()
+        // Check for updates as long as: no updates were found or user acknowledged a new update
+        while (!userAcknowledged) {
+            if (update() && !userAcknowledged) {
+                // TODO mmu Bitte Dialog mit Link einbauen zu http://www.ventplan.com/latest/
+                app.controllers['Dialog'].showInformDialog('Es liegt ein Update bereit!')
+                /*
+                if (userClickedOK) {
+                    java.awt.Desktop.desktop.browse(GH.getVentplanProperties().get('update.info.url'))
+                }
+                */
+                userAcknowledged = true
+            }
+            // Check every 10 minutes
             try { Thread.sleep(10 * 60 * 1000) } catch (e) {}
         }
     }
