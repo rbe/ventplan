@@ -333,6 +333,20 @@ class GriffonHelper {
     }
 
     /**
+     * Centers the dialog within the screen.
+     * @param view Wac2View object
+     * @param dialog The dialog to center
+     * @return Returns the centered dialog
+     */
+    def static centerDialog(view, dialog) {
+        java.awt.Rectangle r = view.wac2Frame.getBounds();
+        int x = r.x + (r.width - dialog.getSize().width) / 2;
+        int y = r.y + (r.height - dialog.getSize().height) / 2;
+        dialog.setLocation(x, y);
+        dialog
+    }
+
+    /**
      * Check row to select in a table.
      */
     def static checkRow = { row, table ->
@@ -667,6 +681,16 @@ class GriffonHelper {
     /**
      *
      */
+    static Properties getVentplanProperties() {
+        Properties properties = new Properties()
+        def p = Wac2Resource.getWacwsProperties()
+        properties.load(p)
+        return properties
+    }
+
+    /**
+     *
+     */
     def static getWacwsUrl = {
         Properties properties = new Properties()
         def p = Wac2Resource.getWacwsProperties()
@@ -695,20 +719,6 @@ class GriffonHelper {
         properties.load(p)
         return properties.get("odisee.rest.path") as String
         //return "http://localhost:8080/wacws/services/wpxUpload?wsdl"
-    }
-
-    /**
-     * Centers the dialog within the screen.
-     * @param view Wac2View object
-     * @param dialog The dialog to center
-     * @return Returns the centered dialog
-     */
-    def static centerDialog(view, dialog) {
-        java.awt.Rectangle r = view.wac2Frame.getBounds();
-        int x = r.x + (r.width - dialog.getSize().width) / 2;
-        int y = r.y + (r.height - dialog.getSize().height) / 2;
-        dialog.setLocation(x, y);
-        dialog
     }
 
     /**
