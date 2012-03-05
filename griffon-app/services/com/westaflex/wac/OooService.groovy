@@ -96,6 +96,14 @@ class OooService {
     }
 
     /**
+     * Get vendor prefix from configuration.
+     * @return
+     */
+    private String getVendorPrefix() {
+        GH.getVentplanProperties().get('vendor.prefix')
+    }
+
+    /**
      *
      * @param wpxFile
      * @param map
@@ -106,12 +114,11 @@ class OooService {
         // Filename w/o extension
         def wpxFilenameWoExt = wpxFile.name - '.wpx'
         // Generate Odisee XML
-        getOutputFormat()
         DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
             request(name: wpxFilenameWoExt, id: 1) {
                 ooo(group: 'group0') {}
-                template(name: 'WestaAuslegung', revision: 'LATEST', outputFormat: getOutputFormat()) {}
+                template(name: "${getVendorPrefix()}Auslegung", revision: 'LATEST', outputFormat: getOutputFormat()) {}
                 archive(database: false, files: true) {}
                 instructions() {
                     addErsteller(domBuilder)
@@ -146,7 +153,7 @@ class OooService {
         def odisee = domBuilder.odisee() {
             request(name: wpxFilenameWoExt, id: 1) {
                 ooo(group: 'group0') {}
-                template(name: 'WestaStueckliste', revision: 'LATEST', outputFormat: getOutputFormat()) {}
+                template(name: "${getVendorPrefix()}Stueckliste", revision: 'LATEST', outputFormat: getOutputFormat()) {}
                 archive(database: false, files: true) {}
                 instructions() {
                     //
@@ -193,7 +200,7 @@ class OooService {
         def odisee = domBuilder.odisee() {
             request(name: wpxFilenameWoExt, id: 1) {
                 ooo(group: 'group0') {}
-                template(name: 'WestaAngebot', revision: 'LATEST', outputFormat: getOutputFormat()) {}
+                template(name: "${getVendorPrefix()}Angebot", revision: 'LATEST', outputFormat: getOutputFormat()) {}
                 archive(database: false, files: true) {}
                 instructions() {
                     //
