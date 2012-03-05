@@ -150,8 +150,6 @@ verlegeplanAction = action(
 aboutAction = action(
         id: "aboutAction",
         name: "Über",
-        mnemonic: "I",
-        accelerator: shortcut("I"),
         enabled: true,
         closure: controller.aboutDialogOeffnen
 )

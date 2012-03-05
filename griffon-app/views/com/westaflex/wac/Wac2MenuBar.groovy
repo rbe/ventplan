@@ -9,6 +9,8 @@
  */
 package com.westaflex.wac
 
+import static griffon.util.GriffonApplicationUtils.isMacOSX
+
 menuBar = menuBar {
     menu(id: 'menuDatei', text: 'Datei', mnemonic: 'D') {
         menuItem(neuesProjektAction)
@@ -21,9 +23,11 @@ menuBar = menuBar {
         menuItem(projektSpeichernAlsAction)
         // WAC-155 menuItem(alleProjekteSpeichernAction)
         menuItem(projektSchliessenAction)
-        // Separator
-        separator()
-        menuItem(exitAction)
+        if (!isMacOSX) {
+            // Separator
+            separator()
+            menuItem(exitAction)
+        }
     }
     //
     menu(id: 'menuAuslegung', text: 'Auslegung', mnemonic: 'A') {
@@ -50,7 +54,7 @@ menuBar = menuBar {
         */
     }
     // WAC-167 Info-Menü mit Über-Dialog
-    menu(id: 'menuInfo', text: '?', mnemonic: 'I') {
+    menu(id: 'menuInfo', text: 'Hilfe') {
         menuItem(aboutAction)
     }
 }
