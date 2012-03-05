@@ -43,7 +43,7 @@ class DialogController {
      */
     int showApplicationOnlyCloseDialog() {
         def choice = choice(
-                app.windowManager.windows.find {it.focused},
+                app.windowManager.windows.find { it.focused },
                 'Anwendung schliessen?',
                 'Möchten Sie die Anwendung wirklich schliessen?',
                 1,
@@ -61,7 +61,7 @@ class DialogController {
      */
     int showCloseProjectDialog() {
         def choice = choice(
-                app.windowManager.windows.find {it.focused},
+                app.windowManager.windows.find { it.focused },
                 'Projekt schliessen?',
                 'Das Projekt enthält nicht gespeicherte Werte.\n\nBitte wählen Sie.',
                 1,
@@ -78,7 +78,7 @@ class DialogController {
      * Zeige Informationsdialog mit mitgegebener Nachricht an.
      */
     def showInformDialog = { window = null, infoMsg ->
-        window ?: Window.windows.find {it.focused}
+        //window = window ?: Window.windows.find { it.focused }
         inform(window, 'Information', infoMsg)
     }
 
@@ -86,7 +86,7 @@ class DialogController {
      * Zeige Fehler-Informationsdialog mit mitgegebener Nachricht an.
      */
     def showErrorDialog = { window = null, errorMsg ->
-        window ?: Window.windows.find {it.focused}
+        //window = window ?: Window.windows.find { it.focused }
         inform(window, 'Fehler', errorMsg)
     }
 
@@ -94,7 +94,7 @@ class DialogController {
      * Zeige Informationsdialog für Angebotsverfolgung mit mitgegebener Nachricht an.
      */
     def showCustomInformDialog = { titel, infoMsg ->
-        TaskDialogs.inform(app.windowManager.windows.find {it.focused}, titel as String, infoMsg)
+        TaskDialogs.inform(app.windowManager.windows.find { it.focused }, titel as String, infoMsg)
     }
 
 }
