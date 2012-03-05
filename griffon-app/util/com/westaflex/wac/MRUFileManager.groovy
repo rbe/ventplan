@@ -17,9 +17,7 @@ class MRUFileManager {
 
     public static boolean DEBUG = false
 
-    //private static final String LAST_TEN_OPEN_PROJECTS = "LastTenWacProjects"
     private static final String LAST_TEN_OPEN_PROJECTS = "LastTenProjects"
-    //private static final String PREFS_USER_NODE = "/wacprojects";
     private static final String PREFS_USER_NODE = "/ventplanprojects";
     public static final int DEFAULT_MAX_SIZE = 10;
 

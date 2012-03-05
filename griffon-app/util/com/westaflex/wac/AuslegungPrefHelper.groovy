@@ -18,7 +18,7 @@ class AuslegungPrefHelper {
 
     public static boolean DEBUG = false
     private static java.util.prefs.Preferences prefs = java.util.prefs.Preferences.userNodeForPackage(this)
-    private static final String PREFS_USER_NODE = "/wacauslegung"
+    private static final String PREFS_USER_NODE = "/ventplanauslegung"
     public static final String PREFS_USER_KEY_FIRMA = "erstellerFirma"
     public static final String PREFS_USER_KEY_NAME = "erstellerName"
     public static final String PREFS_USER_KEY_STRASSE = "erstellerStrasse"

@@ -18,7 +18,7 @@ class ProjektSuchenPrefHelper {
 
     public static boolean DEBUG = false
     private static java.util.prefs.Preferences prefs = java.util.prefs.Preferences.userNodeForPackage(this)
-    private static final String PREFS_USER_NODE = "/wacprojektsuchen"
+    private static final String PREFS_USER_NODE = "/ventplanprojektsuchen"
     public static final String PREFS_USER_KEY_SUCH_ORDNER = "suchordner"
 
     /**
