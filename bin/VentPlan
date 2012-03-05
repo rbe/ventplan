@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # VentPlan
 #
@@ -9,44 +9,49 @@
 # All rights reserved. Use is subject to license terms.
 #
 
+set -o nounset
+
 # Operating system
 OS=$(uname -s)
 # Classpath
-for jar in lib/*
-do
-    exclude=0
-    for ex in juh.jar jurt.jar ridl.jar unoil.jar
-    do
-        if [ ${jar} == ${ex} ]; then
-            exclude=1
-            break
-        fi
-    done
-    [ ${exclude} -eq 0 ] && LIB_CLASSPATH="${LIB_CLASSPATH}:${jar}"
-done
+#for jar in lib/*
+#do
+#    exclude=0
+#    for ex in juh.jar jurt.jar ridl.jar unoil.jar
+#    do
+#        if [ ${jar} == ${ex} ]; then
+#            exclude=1
+#            break
+#        fi
+#    done
+#    [ ${exclude} -eq 0 ] && LIB_CLASSPATH="${LIB_CLASSPATH}:${jar}"
+#done
 # Skip first colon
-LIB_CLASSPATH=$(echo ${LIB_CLASSPATH} | cut -c 2-)
-CLASSPATH="${LIB_CLASSPATH}"
-export CLASSPATH
-# Set WAC temporary directory
+#LIB_CLASSPATH=$(echo ${LIB_CLASSPATH} | cut -c 2-)
+#CLASSPATH="${LIB_CLASSPATH}"
+#export CLASSPATH
+# Set VTP temporary directory
 case "${OS}" in
         Darwin | Linux | *BSD | SunOS)
-            WACTMP=${TMPDIR}
+            VTPTMP=${TMPDIR}
         ;;
 esac
-[ -z "${WACTMP}" ] && WACTMP=tmp
-WACTMP=${WACTMP}/wac
-export WACTMP
-mkdir -p ${WACTMP} 2>/dev/null
+[ -z "${VTPTMP}" ] && VTPTMP=tmp
+VTPTMP=${VTPTMP}/ventplan
+export VTPTMP
+mkdir -p ${VTPTMP} 2>/dev/null
+#
+LOG=${VTPTMP}/VentPlan.log
 # Update
-mv update/resources/* resources 2>>${WACTMP}/wac.log 1>&2
-mv update/lib/* lib 2>>${WACTMP}/wac.log 1>&2
-mv update/sql/* sql 2>>${WACTMP}/wac.log 1>&2
-rm -rf update 2>>${WACTMP}/wac.log 1>&2
+mv update/resources/* resources 2>>${LOG} 1>&2
+mv update/lib/* lib 2>>${LOG} 1>&2
+mv update/sql/* sql 2>>${LOG} 1>&2
+rm -rf update 2>>${LOG} 1>&2
 # Start
-java -cp "${CLASSPATH}" griffon.swing.SwingApplication 2>>${WACTMP}/wac.log 1>&2
+##java -cp "${CLASSPATH}" griffon.swing.SwingApplication 2>>${LOG} 1>&2
+java -cp lib/* griffon.swing.SwingApplication 2>>${LOG} 1>&2
 # Remove temporary directory
-cd ${WACTMP}
+cd ${VTPTMP}
 cd ..
-rm -rf wac
+rm -rf ventplan
 exit 0

@@ -8,40 +8,35 @@
   ~ Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
   ~ All rights reserved. Use is subject to license terms.
   -->
-
 <shortcuts>
-  <skipIfNotSupported/>
-
-  <programGroup defaultName="$appGroup"
-                location="applications"/>
-
-  <shortcut
-    name="VentPlan"
-    target="$INSTALL_PATH\bin\VentPlan.bat"
-    commandLine=""
-    workingDirectory="$INSTALL_PATH\bin"
-    description="Run VentPlan"
-    initialState="normal"
-    programGroup="yes"
-    desktop="yes"
-    iconFile="$INSTALL_PATH\icons\ventplan_signet_16x16.png"
-    applications="yes"
-    startMenu="no"
-    startup="no">
-  </shortcut>
-
-  <shortcut
-    name="Uninstall"
-    target="$INSTALL_PATH\Uninstaller\uninstaller.jar"
-    commandLine=""
-    workingDirectory="$INSTALL_PATH"
-    description="Uninstall VentPlan"
-    initialState="normal"
-    programGroup="yes"
-    desktop="no"
-    applications="no"
-    startMenu="no"
-    startup="no">
-  </shortcut>
-
+    <skipIfNotSupported/>
+    <programGroup defaultName="$appGroup"
+                  location="applications"/>
+    <shortcut
+            name="VentPlan"
+            target="$INSTALL_PATH\bin\VentPlan.bat"
+            commandLine=""
+            workingDirectory="$INSTALL_PATH\bin"
+            description="Run VentPlan"
+            initialState="normal"
+            programGroup="yes"
+            desktop="yes"
+            iconFile="$INSTALL_PATH\icons\ventplan_signet_16x16.png"
+            applications="yes"
+            startMenu="no"
+            startup="no">
+    </shortcut>
+    <shortcut
+            name="Uninstall"
+            target="$INSTALL_PATH\Uninstaller\uninstaller.jar"
+            commandLine=""
+            workingDirectory="$INSTALL_PATH"
+            description="Uninstall VentPlan"
+            initialState="normal"
+            programGroup="yes"
+            desktop="no"
+            applications="no"
+            startMenu="no"
+            startup="no">
+    </shortcut>
 </shortcuts>
