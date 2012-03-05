@@ -9,15 +9,16 @@
  */
 package com.westaflex.wac
 
-import groovyx.net.http.ContentType
 import com.bensmann.griffon.GriffonHelper as GH
+
+import groovyx.net.http.HTTPBuilder
 
 /**
  *
  */
 class ProjektController {
 
-    public static boolean DEBUG = true
+    public static boolean DEBUG = false
     Boolean loadMode = false
 
     def builder
@@ -375,13 +376,17 @@ class ProjektController {
                     doOutside {
                         pdfFile = postToOdisee(wpxFile, 'Auslegung', xmlDoc)
                         if (pdfFile?.exists()) {
-                            if (DEBUG)
-                                println "auslegungErstellen: doc=${pdfFile?.dump()}"
                             // Open document
                             java.awt.Desktop.desktop.open(pdfFile)
+                            //if (griffon.util.GriffonApplicationUtils.isWindows) {
+                            doLater {
+                                def msg = "Auslegung erstellen\nDie Datei ${pdfFile} wurde erzeugt." as String
+                                app.controllers["Dialog"].showInformDialog(msg)
+                            }
+                            //    }
                         } else {
-                            if (DEBUG)
-                                println "auslegungErstellen: PDF file does not exist: ${pdfFile?.dump()}"
+                            def errorMsg = "Angebot erstellen\nDie Datei ${pdfFile} konnte leider nicht geöffnet werden." as String
+                            app.controllers["Dialog"].showErrorDialog(errorMsg)
                         }
                         waitDialog?.dispose()
                     }
@@ -391,9 +396,8 @@ class ProjektController {
                     waitDialog.show()
                 }
             } catch (e) {
-                println "auslegungErstellen: Error while calling 'Auslegung' -> ${e.dump()}"
-                def errorMsg = "Auslegung konnte leider nicht erstellt werden.\n${e}" as String
-                app.controllers["Dialog"].showErrorDialog(errorMsg as String)
+                def errorMsg = "Die Auslegung konnte leider nicht erstellt werden.\n${e}" as String
+                app.controllers["Dialog"].showErrorDialog(errorMsg)
             }
         }
     }
@@ -421,13 +425,17 @@ class ProjektController {
                     doOutside {
                         pdfFile = postToOdisee(wpxFile, 'Angebot', xmlDoc)
                         if (pdfFile?.exists()) {
-                            if (DEBUG)
-                                println "angebotErstellen: doc=${pdfFile?.dump()}"
                             // Open document
                             java.awt.Desktop.desktop.open(pdfFile)
+                            //if (griffon.util.GriffonApplicationUtils.isWindows) {
+                            doLater {
+                                def msg = "Angebot erstellen\nDie Datei ${pdfFile} wurde erzeugt." as String
+                                app.controllers["Dialog"].showInformDialog(msg)
+                            }
+                            //    }
                         } else {
-                            if (DEBUG)
-                                println "angebotErstellen: PDF fFile does not exist: ${pdfFile?.dump()}"
+                            def errorMsg = "Angebot erstellen\nDie Datei ${pdfFile} konnte leider nicht geöffnet werden." as String
+                            app.controllers["Dialog"].showErrorDialog(errorMsg)
                         }
                         waitDialog?.dispose()
                     }
@@ -437,9 +445,8 @@ class ProjektController {
                     waitDialog.show()
                 }
             } catch (e) {
-                println "angebotErstellen: Error while calling 'Angebot' -> ${e.dump()}"
-                def errorMsg = "Angebot konnte leider nicht erstellt werden.\n${e}" as String
-                app.controllers["Dialog"].showErrorDialog(errorMsg as String)
+                def errorMsg = "Das Angebot konnte leider nicht erstellt werden.\n${e}" as String
+                app.controllers["Dialog"].showErrorDialog(errorMsg)
             }
         }
     }
@@ -467,13 +474,17 @@ class ProjektController {
                     doOutside {
                         pdfFile = postToOdisee(wpxFile, 'Stueckliste', xmlDoc)
                         if (pdfFile?.exists()) {
-                            if (DEBUG)
-                                println "stuecklisteErstellen: doc=${pdfFile?.dump()}"
                             // Open document
                             java.awt.Desktop.desktop.open(pdfFile)
+                            //if (griffon.util.GriffonApplicationUtils.isWindows) {
+                            doLater {
+                                def msg = "Stückliste erstellen\nDie Datei ${pdfFile} wurde erzeugt." as String
+                                app.controllers["Dialog"].showInformDialog(msg)
+                            }
+                            //    }
                         } else {
-                            if (DEBUG)
-                                println "stuecklisteErstellen: PDF file does not exist: ${pdfFile?.dump()}"
+                            def errorMsg = "Stückliste erstellen\nDie Datei ${pdfFile} konnte leider nicht geöffnet werden." as String
+                            app.controllers["Dialog"].showErrorDialog(errorMsg)
                         }
                         waitDialog?.dispose()
                     }
@@ -483,9 +494,8 @@ class ProjektController {
                     waitDialog.show()
                 }
             } catch (e) {
-                println "stuecklisteErstellen: Error while calling 'Stückliste' -> ${e.dump()}"
-                def errorMsg = "Stückliste konnte leider nicht erstellt werden.\n${e}" as String
-                app.controllers["Dialog"].showErrorDialog(errorMsg as String)
+                def errorMsg = "Die Stückliste konnte leider nicht erstellt werden.\n${e}" as String
+                app.controllers["Dialog"].showErrorDialog(errorMsg)
             }
         }
     }
@@ -500,26 +510,26 @@ class ProjektController {
      */
     java.io.File postToOdisee(File wpxFile, String fileSuffix, String xmlDoc) {
         java.io.File responseFile = null
-        def restUrl = GH.getOdiseeRestUrl() as String
-        def restPath = GH.getOdiseeRestPath() as String
+        def xml = new XmlSlurper().parseText(xmlDoc)
+        String restUrl = GH.getOdiseeRestUrl()
+        String restPath = GH.getOdiseeRestPath()
+        String outputFormat = xml.request.template.'@outputFormat'
         try {
-            withRest(id: "odisee", uri: restUrl) {
-                auth.basic 'wac', 're:Xai3u'
-                def resp = post(path: restPath, body: xmlDoc, requestContentType: ContentType.XML, responseContentType: ContentType.BINARY, charset: 'utf-8')
-                if (DEBUG)
-                    println "${new Date()}: model.wpxFilename.absolutePath -> ${model.wpxFilename}"
-                def byteArrayInputStream = new ByteArrayInputStream(resp.data.bytes)
-                responseFile = new java.io.File(model.wpxFilename - '.wpx' + "_${fileSuffix}.pdf")
-                responseFile << byteArrayInputStream
-                if (DEBUG)
-                    println "${new Date()}: response end..."
-            }
+            def h = new HTTPBuilder(restUrl)
+            h.auth.basic 'wac', 're:Xai3u'
+            def byteArrayInputStream = h.post(
+                    path: restPath,
+                    query: [outputFormat: outputFormat],
+                    body: xmlDoc,
+                    requestContentType: groovyx.net.http.ContentType.XML,
+                    responseContentType: groovyx.net.http.ContentType.BINARY
+            )
+            responseFile = new java.io.File(model.wpxFilename - '.wpx' + "_${fileSuffix}.${outputFormat}")
+            responseFile << byteArrayInputStream
         } catch (e) {
-            println "post withRest exception -> ${e.dump()}"
+            println "${this}.postToOdisee: post withRest exception -> ${e.dump()}"
             e.printStackTrace()
         }
-        if (DEBUG)
-            println "returning responsefile ${responseFile.absolutePath}"
         return responseFile
     }
 
@@ -2065,74 +2075,57 @@ class ProjektController {
 
     /**
      *
-    void generiereVerlegeplan() {
-        try {
+     void generiereVerlegeplan() {try {def title = getProjektTitel() as String
 
-            def title = getProjektTitel() as String
+     // Save document in user home dir
+     //def userDir = System.getProperty("user.home")
+     //userDir = userDir + "/" + title + "_" + System.currentTimeMillis() + ".pdf"
+     def verlegeplanFilename = model.wpxFilename - '.wpx' + ' Verlegeplan.pdf'
 
-            // Save document in user home dir
-            //def userDir = System.getProperty("user.home")
-            //userDir = userDir + "/" + title + "_" + System.currentTimeMillis() + ".pdf"
-            def verlegeplanFilename = model.wpxFilename - '.wpx' + ' Verlegeplan.pdf'
+     PdfCreator pdfCreator = new PdfCreator()
+     // Create a new pdf document
+     pdfCreator.createDocument(verlegeplanFilename)
 
-            PdfCreator pdfCreator = new PdfCreator()
-            // Create a new pdf document
-            pdfCreator.createDocument(verlegeplanFilename)
+     def logourl = Wac2Resource.getPdfLogo()
+     if (DEBUG)
+     println "logourl -> ${logourl.dump()}"
+     pdfCreator.addLogo(logourl)
+     // Add title to document
+     pdfCreator.addTitle(title)
+     // create table with relative column width
+     pdfCreator.createTable([2f, 1f, 3f, 1f] as float[])
 
-            def logourl = Wac2Resource.getPdfLogo()
-            if (DEBUG)
-                println "logourl -> ${logourl.dump()}"
-            pdfCreator.addLogo(logourl)
-            // Add title to document
-            pdfCreator.addTitle(title)
-            // create table with relative column width
-            pdfCreator.createTable([2f, 1f, 3f, 1f] as float[])
+     if (DEBUG)
+     println "adding zentralgerät... "
+     // Zentralgerät
+     def zentralgerat = "Zentralgerät: ${model.map.anlage.zentralgerat}" as String
+     pdfCreator.addArtikelToDocument(zentralgerat)
+     if (DEBUG)
+     println "added zentralgerät... "
+     // Add empty line.
+     pdfCreator.addArtikelToDocument("  ")
+     if (DEBUG)
+     println "adding empty artikel"
 
-            if (DEBUG)
-                println "adding zentralgerät... "
-            // Zentralgerät
-            def zentralgerat = "Zentralgerät: ${model.map.anlage.zentralgerat}" as String
-            pdfCreator.addArtikelToDocument(zentralgerat)
-            if (DEBUG)
-                println "added zentralgerät... "
-            // Add empty line.
-            pdfCreator.addArtikelToDocument("  ")
-            if (DEBUG)
-                println "adding empty artikel"
+     model.map.raum.raume.each { r ->
+     erzeugeRaumVerlegeplanAbluft(r, pdfCreator)}model.map.raum.raume.each { r ->
+     erzeugeRaumVerlegeplanZuluft(r, pdfCreator)}model.map.raum.raume.each { r ->
+     erzeugeRaumVerlegeplanUberstrom(r, pdfCreator)}erzeugeDruckverlustVerlegeplan(model.map.dvb, pdfCreator)
+     erzeugeSchalldampferVerlegeplan(model.map.akustik.zuluft, "zuluft", pdfCreator)
+     erzeugeSchalldampferVerlegeplan(model.map.akustik.abluft, "abluft", pdfCreator)
 
-            model.map.raum.raume.each { r ->
-                erzeugeRaumVerlegeplanAbluft(r, pdfCreator)
-            }
-            model.map.raum.raume.each { r ->
-                erzeugeRaumVerlegeplanZuluft(r, pdfCreator)
-            }
-            model.map.raum.raume.each { r ->
-                erzeugeRaumVerlegeplanUberstrom(r, pdfCreator)
-            }
-            erzeugeDruckverlustVerlegeplan(model.map.dvb, pdfCreator)
-            erzeugeSchalldampferVerlegeplan(model.map.akustik.zuluft, "zuluft", pdfCreator)
-            erzeugeSchalldampferVerlegeplan(model.map.akustik.abluft, "abluft", pdfCreator)
+     // Add table to the document
+     pdfCreator.addTable()
+     // Close the pdf document
+     pdfCreator.closeDocument()
+     // Dialog nicht anzeigen, einfach PDF öffnen
+     //def successMsg = "Verlegeplan '${verlegeplanFilename}' erfolgreich generiert"
+     //app.controllers["Dialog"].showInformDialog(successMsg as String)
+     java.io.File sf = new java.io.File(verlegeplanFilename)
+     if (sf.exists()) {java.awt.Desktop.desktop.open(sf)}} catch (e) {println "Error generating document: ${e.dump()}"
 
-            // Add table to the document
-            pdfCreator.addTable()
-            // Close the pdf document
-            pdfCreator.closeDocument()
-            // Dialog nicht anzeigen, einfach PDF öffnen
-            //def successMsg = "Verlegeplan '${verlegeplanFilename}' erfolgreich generiert"
-            //app.controllers["Dialog"].showInformDialog(successMsg as String)
-            java.io.File sf = new java.io.File(verlegeplanFilename)
-            if (sf.exists()) {
-                java.awt.Desktop.desktop.open(sf)
-            }
-        } catch (e) {
-            println "Error generating document: ${e.dump()}"
-
-            def errorMsg = "Beim generieren des Verlegeplans ist ein Fehler aufgetreten"
-            app.controllers["Dialog"].showErrorDialog(errorMsg as String)
-        }
-
-    }
-    */
+     def errorMsg = "Beim generieren des Verlegeplans ist ein Fehler aufgetreten"
+     app.controllers["Dialog"].showErrorDialog(errorMsg as String)}}*/
 
     /**
      *
