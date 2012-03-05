@@ -24,7 +24,6 @@
 
 import groovy.swing.SwingBuilder
 import static griffon.util.GriffonApplicationUtils.isMacOSX
-import com.westaflex.wac.Wac2Splash
 
 //griffon.util.groovy.swing.SwingBuilder.lookAndFeel('mac', 'nimbus', 'gtk', ['metal', [boldFonts: false]])
 SwingBuilder.lookAndFeel((isMacOSX ? 'system' : 'nimbus'), 'gtk', ['metal', [boldFonts: false]])
