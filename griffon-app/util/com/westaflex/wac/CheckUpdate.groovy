@@ -112,9 +112,6 @@ class CheckUpdate implements java.lang.Runnable {
             if (update() && !userAcknowledged) {
                 // Bitte Dialog mit Link einbauen zu http://www.ventplan.com/latest/
                 app.controllers['wac2'].checkUpdateDialogOeffnen()
-                //if (userClickedOK) {
-                //    java.awt.Desktop.desktop.browse(GH.getVentplanProperties().get('update.info.url'))
-                //}
                 userAcknowledged = true
             }
             // Check every 10 minutes
