@@ -19,53 +19,68 @@
 eventPackageResourcesEnd = {
     // IZPACK START
     // Copy customized izpack files from /src/main/installer/izpack/resources to izpack resources dir.
-    ant.copy( todir: "${projectWorkDir}/installer/izpack/resources", overwrite: true ) {
-        fileset( dir: "${basedir}/src/main/installer/izpack/resources", includes: "**" )
+    ant.copy(todir: "${projectWorkDir}/installer/izpack/resources", overwrite: true) {
+        fileset(dir: "${basedir}/src/main/installer/izpack/resources", includes: "**")
     }
     // Copy SQL Database to izpack resources dir
-    ant.copy( todir: "${projectWorkDir}/installer/izpack/resources", overwrite: true ) {
-        fileset( dir: "${basedir}/sql", includes: "*.db" )
+    ant.copy(todir: "${projectWorkDir}/installer/izpack/resources", overwrite: true) {
+        fileset(dir: "${basedir}/sql", includes: "VentPlan.db")
     }
+    /* No bin/ needed
     // Copy customized VentPlan executables from /bin to izpack bin dir.
-    ant.copy( todir: "${projectWorkDir}/installer/izpack/binary/bin", overwrite: true ) {
-        fileset( dir: "${basedir}/bin", includes: "**" )
+    ant.copy(todir: "${projectWorkDir}/installer/izpack/binary/bin", overwrite: true) {
+        fileset(dir: "${basedir}/bin", includes: "**")
     }
+    */
     // Copy VentPlan images to resource dir to display them in README.html.
-    ant.copy( todir: "${projectWorkDir}/installer/izpack/resources", overwrite: true ) {
-        fileset( dir: "${basedir}/griffon-app/resources/image", includes: "*.png" )
+    ant.copy(todir: "${projectWorkDir}/installer/izpack/resources", overwrite: true) {
+        fileset(dir: "${basedir}/griffon-app/resources/image", includes: "*.png")
     }
     // IZPACK END
 
     // JSMOOTH START
-    ant.copy( todir: "${projectWorkDir}/installer/jsmooth/dist/sql", overwrite: true ) {
-        fileset( dir: "${basedir}/sql", includes: "*.db" )
+    // OS X: SQL databases go into lib/
+    ant.copy(todir: "${projectWorkDir}/installer/mac/dist/lib", overwrite: true) {
+        fileset(dir: "${basedir}/sql", includes: "VentPlan.db")
     }
-    ant.copy( todir: "${projectWorkDir}/installer/jsmooth/dist/bin", overwrite: true ) {
-        fileset( dir: "${basedir}/bin", includes: "**" )
+    // Windows: SQL databases go into lib/
+    ant.copy(todir: "${projectWorkDir}/installer/jsmooth/dist/lib", overwrite: true) {
+        fileset(dir: "${basedir}/sql", includes: "VentPlan.db")
     }
-    ant.copy( todir: "${projectWorkDir}/installer/jsmooth", overwrite: true ) {
-        fileset( dir: "${basedir}/src/main/installer/izpack/resources", includes: "*.jsmooth" )
+    /* No bin/ needed
+    ant.copy(todir: "${projectWorkDir}/installer/jsmooth/dist/bin", overwrite: true) {
+        fileset(dir: "${basedir}/bin", includes: "**")
+    }
+    */
+    ant.copy(todir: "${projectWorkDir}/installer/jsmooth", overwrite: true) {
+        fileset(dir: "${basedir}/src/main/installer/izpack/resources", includes: "*.jsmooth")
     }
     // JSMOOTH END
 }
 
 eventCreatePackageStart = {
     // IZPACK START
+    /* No bin/ needed
     // Copy customized VentPlan executables from /bin to izpack bin dir.
-    ant.copy( todir: "${projectWorkDir}/installer/izpack/binary/bin", overwrite: true ) {
-        fileset( dir: "${basedir}/bin", includes: "**" )
+    ant.copy(todir: "${projectWorkDir}/installer/izpack/binary/bin", overwrite: true) {
+        fileset(dir: "${basedir}/bin", includes: "**")
     }
-    ant.copy( todir: "${projectWorkDir}/installer/jsmooth/dist/bin", overwrite: true ) {
-        fileset( dir: "${basedir}/bin", includes: "**" )
-    }
-    ant.copy( todir: "${projectWorkDir}/installer/jsmooth", overwrite: true ) {
-        fileset( dir: "${basedir}/src/main/installer/izpack/resources", includes: "*.jsmooth" )
-    }
+    */
     // IZPACK END
 
     // JSMOOTH START
-    ant.copy( todir: "${basedir}/dist/windows/bin", overwrite: true ) {
-        fileset( dir: "${basedir}/bin", includes: "**" )
+    /* No bin/ needed
+    ant.copy(todir: "${projectWorkDir}/installer/jsmooth/dist/bin", overwrite: true) {
+        fileset(dir: "${basedir}/bin", includes: "**")
     }
+    */
+    ant.copy(todir: "${projectWorkDir}/installer/jsmooth", overwrite: true) {
+        fileset(dir: "${basedir}/src/main/installer/izpack/resources", includes: "*.jsmooth")
+    }
+    /* No bin/ needed
+    ant.copy(todir: "${basedir}/dist/windows/bin", overwrite: true) {
+        fileset(dir: "${basedir}/bin", includes: "**")
+    }
+    */
     // JSMOOTH END
 }
