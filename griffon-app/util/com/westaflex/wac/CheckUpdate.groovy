@@ -110,13 +110,11 @@ class CheckUpdate implements java.lang.Runnable {
         // Check for updates as long as: no updates were found or user acknowledged a new update
         while (!userAcknowledged) {
             if (update() && !userAcknowledged) {
-                // TODO mmu Bitte Dialog mit Link einbauen zu http://www.ventplan.com/latest/
-                app.controllers['Dialog'].showInformDialog('Es liegt ein Update bereit!')
-                /*
-                if (userClickedOK) {
-                    java.awt.Desktop.desktop.browse(GH.getVentplanProperties().get('update.info.url'))
-                }
-                */
+                // Bitte Dialog mit Link einbauen zu http://www.ventplan.com/latest/
+                app.controllers['wac2'].checkUpdateDialogOeffnen()
+                //if (userClickedOK) {
+                //    java.awt.Desktop.desktop.browse(GH.getVentplanProperties().get('update.info.url'))
+                //}
                 userAcknowledged = true
             }
             // Check every 10 minutes

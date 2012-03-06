@@ -840,4 +840,9 @@ class Wac2Controller {
         }
     }
 
+    def checkUpdateDialogOeffnen = { evt = null ->
+        def checkUpdateDialog = GH.createDialog(builder, CheckUpdateView, [title: 'Updatecheck', resizable: false, pack:true])
+        checkUpdateDialog.show()
+    }
+
 }
