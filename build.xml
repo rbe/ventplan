@@ -14,7 +14,7 @@
     <property name="groovy.home" value="${myapp.home}/groovy/1.8.3"/>
     <property name="griffon.home" value="${myapp.home}/griffon/0.9.4"/>
     <!-- Binaries -->
-    <property name="bin.dir" value="${basedir}/bin"/>
+    <property name="bin.dir" value="${basedir}/_bin"/>
     <!-- Libraries -->
     <property name="lib.dir" value="${basedir}/lib"/>
     <!-- Build -->
@@ -80,7 +80,9 @@
         
     -->
     <target name="usbstick" depends="package">
+        <!-- TODO See ventplan.properties
         <echo file="griffon-app/resources/version.properties">version=${app.version}</echo>
+        -->
         <!-- wac -->
         <mkdir dir="${usbstick.base.dir}"/>
         <!--
@@ -110,7 +112,7 @@
             <fileset dir="${usbstick.base.dir}/wac">
                 <include name="**"/>
             </fileset>
-            <fileset dir="${bin.dir}">
+            <fileset dir="_bin">
                 <include name="VentPlan.bat"/>
             </fileset>
         </copy>
@@ -123,7 +125,7 @@
             <fileset dir="${usbstick.base.dir}/wac">
                 <include name="**"/>
             </fileset>
-            <fileset dir="${bin.dir}">
+            <fileset dir="_bin">
                 <include name="VentPlan"/>
             </fileset>
         </copy>
