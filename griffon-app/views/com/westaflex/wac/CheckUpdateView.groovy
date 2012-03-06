@@ -11,19 +11,23 @@ package com.westaflex.wac
 
 import net.miginfocom.swing.MigLayout
 import com.bensmann.griffon.GriffonHelper as GH
+import java.awt.Color
+
+def mr = { e ->
+    String url = GH.getVentplanProperties().get('ventplan.update.info.url')
+    java.awt.Desktop.desktop.browse(java.net.URI.create(url))
+}
 
 // About view
 panel(layout: new MigLayout("wrap", "[center]", "[fill]"), constraints: "grow") {
-    label(icon: imageIcon('/image/ventplan_splash.png'), constraints: 'wrap')
+    label(icon: imageIcon('/image/VentPlan_splash.png'), constraints: 'wrap', mouseReleased: mr)
 
     label(' ')
-    label('Es liegt ein Update bereit!')
+    label('Es liegt ein Update für Sie bereit!')
+    label('Bitte klicken Sie auf den nachstehenden Link.')
 
     label(' ')
-    label('http://www.ventplan.com/latest/', mouseReleased: { e ->
-        String url = GH.getVentplanProperties().get('ventplan.update.info.url')
-        java.awt.Desktop.desktop.browse(java.net.URI.create(url))
-    })
+    label('http://www.ventplan.com/latest/', foreground: Color.BLUE, mouseReleased: mr)
     /*
     label(' ')
     button('Schliessen', actionPerformed: { e ->
