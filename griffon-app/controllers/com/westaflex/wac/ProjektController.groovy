@@ -1009,6 +1009,13 @@ class ProjektController {
                     println "raumGeandert: raum[${raumPosition}] currentRaum=${raum.dump()}"
 
                 model.prufeRaumdaten(model.map.raum.raume[raumIndex])
+                // Versuchen den Zuluftfaktor neu zu setzen... Behebt den Fehler, dass der Zuluftfaktor sich nur dann
+                // ändert, wenn in der Tabelle ein anderer Raum gewählt wird, um anschließend den ursprünglichen Raum
+                // zu wählen, damit die Änderungen "sichtbar" sind.
+                try {
+                    view?.raumBearbeitenLuftartFaktorZuluftverteilung.text = model.map.raum.raume[raumIndex].raumZuluftfaktor.toString2()
+                } catch (e) {}
+
                 // WAC-65: Errechnete Werte zurücksetzen
                 model.map.raum.raume[raumIndex].with {
                     if (raumBreite && raumLange)
