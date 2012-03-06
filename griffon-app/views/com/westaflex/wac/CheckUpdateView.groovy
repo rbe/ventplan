@@ -28,10 +28,9 @@ panel(layout: new MigLayout("wrap", "[center]", "[fill]"), constraints: "grow") 
 
     label(' ')
     label('http://www.ventplan.com/latest/', foreground: Color.BLUE, mouseReleased: mr)
-    /*
+
     label(' ')
-    button('Schliessen', actionPerformed: { e ->
-        println "ACTION ${this}"
+    button('Ja, ich habe das gelesen!', actionPerformed: { e ->
+        controller.checkUpdateDialog.dispose()
     })
-    */
 }

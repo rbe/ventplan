@@ -36,8 +36,6 @@ panel(layout: new MigLayout("wrap", "[center]", "[fill]"), constraints: "grow") 
     }
     label(' ')
     button('Schliessen', actionPerformed: { e ->
-        println "ACTION ${this}"
-        println controller.aboutDialog
         controller.aboutDialog.dispose()
     })
 }
