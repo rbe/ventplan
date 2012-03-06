@@ -846,6 +846,7 @@ class Wac2Controller {
      */
     def checkUpdateDialogOeffnen = { evt = null ->
         def checkUpdateDialog = GH.createDialog(builder, CheckUpdateView, [title: 'Aktualisierung von VentPlan', resizable: false, pack: true])
+        checkUpdateDialog = GH.centerDialog(app.views['wac2'], checkUpdateDialog)
         checkUpdateDialog.show()
     }
 
