@@ -30,47 +30,15 @@
     </treeState>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32082021-41d2-4f22-a355-405631967c6f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/dtmp.zip" afterPath="$PROJECT_DIR$/lib/dtmp.zip" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application.properties" afterPath="$PROJECT_DIR$/application.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/actions/com/westaflex/wac/Wac2Actions.groovy" afterPath="$PROJECT_DIR$/griffon-app/actions/com/westaflex/wac/Wac2Actions.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/bindings/com/westaflex/wac/RaumBearbeitenBindings.groovy" afterPath="$PROJECT_DIR$/griffon-app/bindings/com/westaflex/wac/RaumBearbeitenBindings.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/conf/Application.groovy" afterPath="$PROJECT_DIR$/griffon-app/conf/Application.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/conf/BootstrapGsql.groovy" afterPath="$PROJECT_DIR$/griffon-app/conf/BootstrapGsql.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/conf/BuildConfig.groovy" afterPath="$PROJECT_DIR$/griffon-app/conf/BuildConfig.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/conf/Builder.groovy" afterPath="$PROJECT_DIR$/griffon-app/conf/Builder.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/conf/Config.groovy" afterPath="$PROJECT_DIR$/griffon-app/conf/Config.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/conf/DataSource.groovy" afterPath="$PROJECT_DIR$/griffon-app/conf/DataSource.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/conf/Events.groovy" afterPath="$PROJECT_DIR$/griffon-app/conf/Events.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/conf/metainf/spring/springbeans.groovy" afterPath="$PROJECT_DIR$/griffon-app/conf/metainf/spring/springbeans.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/conf/webstart/applet.html" afterPath="$PROJECT_DIR$/griffon-app/conf/webstart/applet.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/conf/webstart/applet.jnlp" afterPath="$PROJECT_DIR$/griffon-app/conf/webstart/applet.jnlp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/conf/webstart/application.jnlp" afterPath="$PROJECT_DIR$/griffon-app/conf/webstart/application.jnlp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/DialogController.groovy" afterPath="$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/DialogController.groovy" />
+    <list default="true" id="32082021-41d2-4f22-a355-405631967c6f" name="Default" comment="Removed unused code">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dataSources.ids" afterPath="$PROJECT_DIR$/.idea/dataSources.ids" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dataSources.xml" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/ProjektController.groovy" afterPath="$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/ProjektController.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/resources/wacws.properties" afterPath="$PROJECT_DIR$/griffon-app/resources/wacws.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/resources/xml/ventplan-project.xsd" afterPath="$PROJECT_DIR$/griffon-app/resources/xml/ventplan-project.xsd" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/resources/xml/westaflex-project.xsd" afterPath="$PROJECT_DIR$/griffon-app/resources/xml/westaflex-project.xsd" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/OooService.groovy" afterPath="$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/OooService.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/ProjektModelService.groovy" afterPath="$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/ProjektModelService.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/StucklisteService.groovy" afterPath="$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/StucklisteService.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/VerlegeplanService.groovy" afterPath="$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/VerlegeplanService.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/WacCalculationService.groovy" afterPath="$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/WacCalculationService.groovy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/Wac2Controller.groovy" afterPath="$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/Wac2Controller.groovy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/util/com/bensmann/griffon/GriffonHelper.groovy" afterPath="$PROJECT_DIR$/griffon-app/util/com/bensmann/griffon/GriffonHelper.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/AuslegungPrefHelper.groovy" afterPath="$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/AuslegungPrefHelper.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/CheckUpdate.groovy" afterPath="$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/CheckUpdate.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/Description.groovy" afterPath="$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/Description.groovy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/Wac2Resource.groovy" afterPath="$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/Wac2Resource.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/Wac2Splash.groovy" afterPath="$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/Wac2Splash.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/AboutView.groovy" afterPath="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/AboutView.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/KundendatenView.groovy" afterPath="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/KundendatenView.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/NutzerdatenView.groovy" afterPath="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/NutzerdatenView.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/ProjektView.groovy" afterPath="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/ProjektView.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/RaumBearbeitenView.groovy" afterPath="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/RaumBearbeitenView.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/Wac2MenuBar.groovy" afterPath="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/Wac2MenuBar.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/Wac2ToolBar.groovy" afterPath="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/Wac2ToolBar.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/Wac2View.groovy" afterPath="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/Wac2View.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/spring/resources.groovy" afterPath="$PROJECT_DIR$/src/spring/resources.groovy" />
     </list>
     <ignored path="wac.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -106,226 +74,143 @@
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
         <option name="NOTIFY_UNCAUGHT" value="true" />
-        <option name="ENABLED" value="false" />
+        <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
         <option name="SUSPEND_POLICY" value="SuspendAll" />
         <option name="COUNT_FILTER_ENABLED" value="false" />
         <option name="COUNT_FILTER" value="0" />
         <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="true" />
         <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <filter>
+          <option name="PATTERN" value="org.sqlite*" />
+          <option name="ENABLED" value="true" />
+        </filter>
+        <filter>
+          <option name="PATTERN" value="groovy.sql.*" />
+          <option name="ENABLED" value="true" />
+        </filter>
+        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
       </breakpoint>
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
         <option name="NOTIFY_UNCAUGHT" value="true" />
-        <option name="ENABLED" value="false" />
+        <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
         <option name="SUSPEND_POLICY" value="SuspendAll" />
         <option name="COUNT_FILTER_ENABLED" value="false" />
         <option name="COUNT_FILTER" value="0" />
         <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="true" />
         <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <filter>
+          <option name="PATTERN" value="org.sqlite*" />
+          <option name="ENABLED" value="true" />
+        </filter>
+        <filter>
+          <option name="PATTERN" value="groovy.sql.*" />
+          <option name="ENABLED" value="true" />
+        </filter>
+        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
       </breakpoint>
     </breakpoint_any>
     <breakpoint_rules />
-    <ui_properties />
+    <ui_properties>
+      <property name="line_breakpoints_groupByMethods" value="false" />
+      <property name="line_breakpoints_viewId" value="TABLE" />
+      <property name="exception_breakpoints_flattenPackages" value="true" />
+      <property name="method_breakpoints_flattenPackages" value="true" />
+      <property name="field_breakpoints_flattenPackages" value="true" />
+      <property name="exception_breakpoints_groupByMethods" value="false" />
+      <property name="line_breakpoints_groupByClasses" value="true" />
+      <property name="method_breakpoints_viewId" value="TABLE" />
+      <property name="field_breakpoints_groupByMethods" value="false" />
+      <property name="line_breakpoints_flattenPackages" value="true" />
+      <property name="field_breakpoints_groupByClasses" value="true" />
+      <property name="method_breakpoints_groupByClasses" value="true" />
+      <property name="exception_breakpoints_viewId" value="TABLE" />
+      <property name="field_breakpoints_viewId" value="TABLE" />
+      <property name="exception_breakpoints_groupByClasses" value="true" />
+      <property name="method_breakpoints_groupByMethods" value="false" />
+    </ui_properties>
   </component>
   <component name="FavoritesManager">
     <favorites_list name="wac" />
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="_Events.groovy" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/scripts/_Events.groovy">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="12" column="38" selection-start="329" selection-end="329" vertical-scroll-proportion="0.2915601">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="VentPlan.jsmooth" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/installer/izpack/resources/VentPlan.jsmooth">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="10" column="0" selection-start="331" selection-end="331" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="installer.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/installer/izpack/resources/installer.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="125" column="0" selection-start="5256" selection-end="5256" vertical-scroll-proportion="0.32142857">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AboutView.groovy" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/AboutView.groovy">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="42" column="1" selection-start="1668" selection-end="1668" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#573#1668#0" expanded="true" />
+                <element signature="e#772#1034#0" expanded="true" />
+                <element signature="e#1096#1482#0" expanded="true" />
+                <element signature="e#1540#1665#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Wac2View.groovy" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/Wac2View.groovy">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="55" column="0" selection-start="2264" selection-end="2264" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="ProjektController.groovy" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/ProjektController.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1321" column="0" selection-start="57129" selection-end="57129" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="n#!!doc" expanded="false" />
-                <element signature="e#1528#2480#0" expanded="false" />
-                <element signature="e#1635#1698#0" expanded="false" />
-                <element signature="e#1905#2466#0" expanded="false" />
-                <element signature="e#5529#5588#0" expanded="false" />
-                <element signature="e#5594#5638#0" expanded="false" />
-                <element signature="e#6208#6247#0" expanded="false" />
-                <element signature="e#6492#6665#0" expanded="false" />
-                <element signature="e#6728#6803#0" expanded="false" />
-                <element signature="e#6855#9674#0" expanded="false" />
-                <element signature="e#6963#9664#0" expanded="false" />
-                <element signature="e#10339#10896#0" expanded="false" />
-                <element signature="e#10376#10802#0" expanded="false" />
-                <element signature="e#10808#10886#0" expanded="false" />
-                <element signature="e#10907#11094#0" expanded="false" />
-                <element signature="e#13695#16697#0" expanded="false" />
-                <element signature="e#14506#16322#0" expanded="false" />
-                <element signature="e#14589#15438#0" expanded="false" />
-                <element signature="e#16328#16596#0" expanded="false" />
-                <element signature="e#16708#16786#0" expanded="false" />
-                <element signature="e#16795#16846#0" expanded="false" />
-                <element signature="e#17421#19000#0" expanded="false" />
-                <element signature="e#17483#18697#0" expanded="false" />
-                <element signature="e#17850#18113#0" expanded="false" />
-                <element signature="e#18119#18291#0" expanded="false" />
-                <element signature="e#18708#18990#0" expanded="false" />
-                <element signature="e#19567#21131#0" expanded="false" />
-                <element signature="e#19629#20834#0" expanded="false" />
-                <element signature="e#19992#20253#0" expanded="false" />
-                <element signature="e#20259#20430#0" expanded="false" />
-                <element signature="e#20845#21121#0" expanded="false" />
-                <element signature="e#21710#23302#0" expanded="false" />
-                <element signature="e#21772#22995#0" expanded="false" />
-                <element signature="e#22143#22408#0" expanded="false" />
-                <element signature="e#22414#22588#0" expanded="false" />
-                <element signature="e#23006#23292#0" expanded="false" />
-                <element signature="e#23845#24515#0" expanded="true" />
-                <element signature="e#26060#27470#0" expanded="false" />
-                <element signature="e#26613#27301#0" expanded="false" />
-                <element signature="e#27312#27460#0" expanded="false" />
-                <element signature="e#27476#27625#0" expanded="false" />
-                <element signature="e#28523#28793#0" expanded="false" />
-                <element signature="e#28902#28955#0" expanded="false" />
-                <element signature="e#28966#29042#0" expanded="false" />
-                <element signature="e#29209#29272#0" expanded="false" />
-                <element signature="e#29283#29368#0" expanded="false" />
-                <element signature="e#30486#30683#0" expanded="false" />
-                <element signature="e#34519#34621#0" expanded="false" />
-                <element signature="e#34632#34837#0" expanded="false" />
-                <element signature="e#34868#35188#0" expanded="false" />
-                <element signature="e#35199#35250#0" expanded="false" />
-                <element signature="e#35564#35645#0" expanded="false" />
-                <element signature="e#35651#35706#0" expanded="false" />
-                <element signature="e#36033#36114#0" expanded="false" />
-                <element signature="e#36120#36175#0" expanded="false" />
-                <element signature="e#42891#43003#0" expanded="false" />
-                <element signature="e#43124#46181#0" expanded="false" />
-                <element signature="e#43489#43771#0" expanded="false" />
-                <element signature="e#43620#43731#0" expanded="false" />
-                <element signature="e#43777#43841#0" expanded="false" />
-                <element signature="e#43943#44022#0" expanded="false" />
-                <element signature="e#44028#44100#0" expanded="false" />
-                <element signature="e#45255#45359#0" expanded="false" />
-                <element signature="e#49360#50237#0" expanded="false" />
-                <element signature="e#50259#50327#0" expanded="false" />
-                <element signature="e#51364#51897#0" expanded="false" />
-                <element signature="e#51621#51726#0" expanded="false" />
-                <element signature="e#52160#52644#0" expanded="false" />
-                <element signature="e#52393#52486#0" expanded="false" />
-                <element signature="e#53104#53805#0" expanded="false" />
-                <element signature="e#53811#53892#0" expanded="false" />
-                <element signature="n#!!block;n#_raumBearbeitenGeandert#0;n#!!block;n#ProjektController#0" expanded="true" />
-                <element signature="e#54647#54677#0" expanded="false" />
-                <element signature="e#55441#55626#0" expanded="false" />
-                <element signature="e#55637#55856#0" expanded="false" />
-                <element signature="e#57614#57711#0" expanded="false" />
-                <element signature="e#57918#58095#0" expanded="false" />
-                <element signature="e#58020#58071#0" expanded="false" />
-                <element signature="e#58109#58194#0" expanded="false" />
-                <element signature="e#58487#59042#0" expanded="false" />
-                <element signature="e#58819#58945#0" expanded="false" />
-                <element signature="e#58951#59032#0" expanded="false" />
-                <element signature="e#59188#59253#0" expanded="false" />
-                <element signature="e#59787#60437#0" expanded="false" />
-                <element signature="e#60057#60147#0" expanded="false" />
-                <element signature="e#60971#61084#0" expanded="false" />
-                <element signature="e#60989#61060#0" expanded="false" />
-                <element signature="e#61393#61518#0" expanded="false" />
-                <element signature="e#61524#61660#0" expanded="false" />
-                <element signature="e#61881#62008#0" expanded="false" />
-                <element signature="e#62014#62162#0" expanded="false" />
-                <element signature="e#62509#62788#0" expanded="false" />
-                <element signature="e#63377#64192#0" expanded="false" />
-                <element signature="e#63607#63739#0" expanded="false" />
-                <element signature="e#63750#63854#0" expanded="false" />
-                <element signature="e#64198#64472#0" expanded="false" />
-                <element signature="e#66027#66966#0" expanded="false" />
-                <element signature="e#69382#69470#0" expanded="false" />
-                <element signature="e#70339#70892#0" expanded="false" />
-                <element signature="e#76170#76292#0" expanded="false" />
-                <element signature="e#76380#76464#0" expanded="false" />
-                <element signature="e#76470#76568#0" expanded="false" />
-                <element signature="e#77535#77675#0" expanded="false" />
-                <element signature="e#77681#77869#0" expanded="false" />
-                <element signature="e#81046#81325#0" expanded="false" />
-                <element signature="e#86510#86555#0" expanded="false" />
-                <element signature="e#86604#86657#0" expanded="false" />
-                <element signature="e#88078#89143#0" expanded="false" />
-                <element signature="e#88158#88443#0" expanded="false" />
-                <element signature="e#89221#91731#0" expanded="false" />
-                <element signature="e#91332#91558#0" expanded="false" />
-                <element signature="e#91656#91721#0" expanded="false" />
-                <element signature="e#91742#91978#0" expanded="false" />
-                <element signature="e#92157#92376#0" expanded="false" />
-                <element signature="e#92553#92772#0" expanded="false" />
-                <element signature="e#92988#93191#0" expanded="false" />
-                <element signature="e#93390#93559#0" expanded="false" />
-                <element signature="e#93782#93942#0" expanded="false" />
-                <element signature="e#93984#94144#0" expanded="false" />
-              </folding>
+            <state line="20" column="24" selection-start="492" selection-end="492" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="OooService.groovy" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/OooService.groovy">
+      <file leaf-file-name="Wac2Controller.groovy" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/Wac2Controller.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="359" column="7" selection-start="17277" selection-end="17277" vertical-scroll-proportion="0.33305085">
+            <state line="610" column="0" selection-start="21676" selection-end="21676" vertical-scroll-proportion="0.0">
               <folding>
-                <element signature="e#1427#1544#0" expanded="false" />
-                <element signature="n#!!block;n#OooService#0;n#!!block;n#OooService#0" expanded="false" />
-                <element signature="e#2980#3939#0" expanded="true" />
-                <element signature="e#3033#3929#0" expanded="true" />
-                <element signature="e#3268#3915#0" expanded="true" />
-                <element signature="e#4500#6398#0" expanded="true" />
-                <element signature="e#4553#6388#0" expanded="true" />
-                <element signature="e#4790#6374#0" expanded="true" />
-                <element signature="e#5155#6356#0" expanded="true" />
-                <element signature="e#6973#10264#0" expanded="true" />
-                <element signature="e#7026#10254#0" expanded="true" />
-                <element signature="e#7259#10240#0" expanded="true" />
-                <element signature="e#8547#9906#0" expanded="true" />
-                <element signature="e#10868#10917#0" expanded="true" />
-                <element signature="e#11142#11201#0" expanded="true" />
-                <element signature="e#22585#23061#0" expanded="true" />
-                <element signature="e#24245#26156#0" expanded="true" />
-                <element signature="e#26258#26304#0" expanded="true" />
-                <element signature="e#26319#26402#0" expanded="true" />
-                <element signature="e#26464#26510#0" expanded="true" />
-                <element signature="e#26525#26608#0" expanded="true" />
-                <element signature="e#27827#29155#0" expanded="true" />
-                <element signature="e#30082#30723#0" expanded="true" />
-                <element signature="e#32631#33272#0" expanded="true" />
-                <element signature="e#35231#36398#0" expanded="true" />
-                <element signature="e#36583#37619#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StucklisteService.groovy" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/StucklisteService.groovy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="511" column="0" selection-start="20172" selection-end="20172" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#360#381#0" expanded="true" />
-                <element signature="e#2094#2563#0" expanded="true" />
-                <element signature="e#6285#6416#0" expanded="true" />
-                <element signature="e#8643#8782#0" expanded="true" />
-                <element signature="e#9872#10011#0" expanded="true" />
-                <element signature="e#11183#11320#0" expanded="true" />
-                <element signature="e#12487#12624#0" expanded="true" />
-                <element signature="e#13483#14592#0" expanded="true" />
-                <element signature="e#14005#14160#0" expanded="true" />
-                <element signature="e#14424#14579#0" expanded="true" />
-                <element signature="e#15513#15648#0" expanded="true" />
-                <element signature="e#16418#16544#0" expanded="true" />
-                <element signature="e#19634#20020#0" expanded="true" />
-                <element signature="e#21142#21377#0" expanded="true" />
+                <element signature="e#21452#21675#0" expanded="true" />
+                <element signature="e#23445#25798#0" expanded="false" />
+                <element signature="e#25804#26350#0" expanded="false" />
+                <element signature="e#32278#32476#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -341,6 +226,7 @@
   <component name="Git.Settings">
     <option name="CHECKOUT_INCLUDE_TAGS" value="false" />
     <option name="UPDATE_CHANGES_POLICY" value="STASH" />
+    <option name="UPDATE_TYPE" value="REBASE" />
     <option name="LINE_SEPARATORS_CONVERSION" value="ASK" />
   </component>
   <component name="GitLogSettings">
@@ -350,22 +236,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/griffon-app/actions/com/westaflex/wac/Wac2Actions.groovy" />
-        <option value="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/Wac2MenuBar.groovy" />
-        <option value="$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/DialogController.groovy" />
-        <option value="$PROJECT_DIR$/griffon-app/util/com/bensmann/griffon/GriffonHelper.groovy" />
-        <option value="$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/Description.groovy" />
-        <option value="$PROJECT_DIR$/griffon-app/resources/wacws.properties" />
-        <option value="$PROJECT_DIR$/griffon-app/bindings/com/westaflex/wac/RaumBearbeitenBindings.groovy" />
-        <option value="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/AboutView.groovy" />
-        <option value="$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/CheckUpdate.groovy" />
-        <option value="$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/Wac2Resource.groovy" />
+        <option value="$PROJECT_DIR$/application.properties" />
+        <option value="$PROJECT_DIR$/griffon-app/resources/version.properties" />
+        <option value="$PROJECT_DIR$/build.xml" />
+        <option value="$PROJECT_DIR$/src/main/installer/izpack/resources/VentPlan.jsmooth" />
+        <option value="$PROJECT_DIR$/griffon-app/conf/DataSource.groovy" />
+        <option value="$PROJECT_DIR$/scripts/_Events.groovy" />
+        <option value="$PROJECT_DIR$/src/main/installer/izpack/resources/installer.xml" />
         <option value="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/Wac2View.groovy" />
-        <option value="$PROJECT_DIR$/griffon-app/resources/xml/ventplan-project.xsd" />
-        <option value="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/KundendatenView.groovy" />
-        <option value="$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/StucklisteService.groovy" />
         <option value="$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/ProjektController.groovy" />
-        <option value="$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/OooService.groovy" />
+        <option value="$PROJECT_DIR$/griffon-app/resources/ventplan.properties" />
+        <option value="$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/Wac2Resource.groovy" />
+        <option value="$PROJECT_DIR$/griffon-app/util/com/bensmann/griffon/GriffonHelper.groovy" />
+        <option value="$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/CheckUpdate.groovy" />
+        <option value="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/CheckUpdateView.groovy" />
+        <option value="$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/Wac2Controller.groovy" />
+        <option value="$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/AboutView.groovy" />
       </list>
     </option>
   </component>
@@ -389,7 +275,7 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="165" />
+    <option name="x" value="230" />
     <option name="y" value="22" />
     <option name="width" value="2203" />
     <option name="height" value="1326" />
@@ -629,6 +515,7 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -644,6 +531,48 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="wac" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wac" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wac" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wac" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wac" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wac" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wac" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="griffon-app" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -723,28 +652,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="util" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="griffon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wac" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wac" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="griffon-app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="services" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -789,43 +696,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="xml" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wac" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wac" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="griffon-app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wac" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wac" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wac" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="griffon-app" />
+              <option name="myItemId" value="image" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -851,66 +722,21 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wac" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wac" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="griffon-app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bindings" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wac" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wac" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wac" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="griffon-app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="actions" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wac" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="322" />
-    <property name="project.structure.proportion" value="0.15" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="330" />
+    <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="Repository.Attach.JavaDocs" value="true" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="327" />
-    <property name="recentsLimit" value="5" />
-    <property name="MemberChooser.sorted" value="false" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="recentsLimit" value="5" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="327" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="334" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="1126" />
@@ -925,18 +751,19 @@
     <property name="MemberChooser.showClasses" value="true" />
     <property name="Repository.Attach.Sources" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2046371" />
     <property name="Downloaded.Files.Path" value="$PROJECT_DIR$/lib" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
+    <property name="options.splitter.details.proportions" value="0.2046371" />
     <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
-    <property name="options.lastSelected" value="Template Data Languages" />
+    <property name="options.lastSelected" value="preferences.fileTypes" />
+    <property name="DefaultHtmlFileTemplate" value="Html" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
-    <property name="options.searchVisible" value="true" />
     <property name="dynamic.classpath" value="false" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="PublishConfig">
     <servers>
@@ -1097,6 +924,17 @@
         <option name="Maven.BeforeRunTask" enabled="false" />
       </method>
     </configuration>
+    <configuration default="true" type="JavascriptDebugSession" factoryName="Local">
+      <JSDebuggerConfigurationSettings>
+        <option name="engineId" value="embedded" />
+        <option name="fileUrl" />
+      </JSDebuggerConfigurationSettings>
+      <method>
+        <option name="AntTarget" enabled="false" />
+        <option name="BuildArtifacts" enabled="false" />
+        <option name="Maven.BeforeRunTask" enabled="false" />
+      </method>
+    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
@@ -1167,7 +1005,7 @@
         <option name="INTERPRETED" value="false" />
       </RunnerSettings>
       <RunnerSettings RunnerId="Profile ">
-        <option name="myExternalizedOptions" />
+        <option name="myExternalizedOptions" value="&#10;additional-options2=onexit\=snapshot&#10;startup=12&#10;" />
       </RunnerSettings>
       <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Cover" />
@@ -1220,8 +1058,6 @@
       <updated>1330429506562</updated>
     </task>
     <task id="WAC-108" summary="Auslegung und Angebot mit Stückliste erstellen">
-      <changelist id="62174eaf-a1b6-43de-90c7-6719339e1c2f" name="WAC-108: Auslegung und Angebot mit Stückliste erstellen" comment="" />
-      <changelist id="62174eaf-a1b6-43de-90c7-6719339e1c2f" name="WAC-108: Auslegung und Angebot mit Stückliste erstellen" comment="" />
       <created>1290245940000</created>
       <option name="issue" value="true" />
       <updated>1330430184000</updated>
@@ -1236,7 +1072,7 @@
       </JIRA>
     </servers>
   </component>
-  <component name="TodoView" selected-index="0">
+  <component name="TodoView" selected-index="2">
     <todo-panel id="selected-file">
       <are-packages-shown value="false" />
       <are-modules-shown value="false" />
@@ -1257,47 +1093,47 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="165" y="22" width="2203" height="1326" extended-state="0" />
-    <editor active="true" />
+    <frame x="230" y="22" width="2203" height="1326" extended-state="0" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.49837738" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2763097" sideWeight="0.23695111" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Leiningen" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16194895" sideWeight="0.60016906" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2763097" sideWeight="0.3719967" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.47887325" sideWeight="0.49837738" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.49837586" order="14" side_tool="false" content_ui="tabs" />
-      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27053365" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2702828" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="IvyIDEA" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.0" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Griffon View" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21160093" sideWeight="0.44573322" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19332406" sideWeight="0.67025685" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19100602" sideWeight="0.67025685" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="DatabaseBrowser" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28882706" sideWeight="0.49047226" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="AWS Explorer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="DB Browser" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Commit Logs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32974318" sideWeight="0.49837738" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32891467" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Database Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2763097" sideWeight="0.75724936" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2763097" sideWeight="0.52444077" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Atlassian " active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32891467" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35708368" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Navigate" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3299304" sideWeight="0.60016906" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.47887325" sideWeight="0.49837738" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19332406" sideWeight="0.35542667" order="5" side_tool="true" content_ui="tabs" />
       <window_info id="TeamCity" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26843414" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
-      <window_info id="RESTClient" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4159072" sideWeight="0.5" order="17" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23226704" sideWeight="0.49958575" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="RESTClient" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.56669426" sideWeight="0.5" order="17" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2763097" sideWeight="0.3695112" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23783033" sideWeight="0.32974318" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29976797" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="JProfiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1938691" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" x="796" y="281" width="1009" height="300" />
+      <window_info id="Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.48798674" sideWeight="0.49837586" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Issues - JIRA" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="DatabaseBrowser" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="DB Browser" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Commit Logs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.49837738" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23155452" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Database Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974318" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.47555923" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -1305,9 +1141,9 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="true" />
-    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="true" />
-    <option name="CHECK_NEW_TODO" value="true" />
+    <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="false" />
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
     <option name="myTodoPanelSettings">
       <value>
         <are-packages-shown value="false" />
@@ -1326,7 +1162,7 @@
     <option name="ENABLE_BACKGROUND_PROCESSES" value="false" />
     <option name="CHANGED_ON_SERVER_INTERVAL" value="60" />
     <option name="SHOW_ONLY_CHANGED_IN_SELECTION_DIFF" value="true" />
-    <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
+    <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="false" />
     <option name="DEFAULT_PATCH_EXTENSION" value="patch" />
     <option name="SHORT_DIFF_HORISONTALLY" value="true" />
     <option name="SHORT_DIFF_EXTRA_LINES" value="2" />
@@ -1335,7 +1171,7 @@
     <option name="INCLUDE_TEXT_INTO_SHELF" value="false" />
     <option name="CREATE_PATCH_EXPAND_DETAILS_DEFAULT" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="WAC-108" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed unused code" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -1353,6 +1189,25 @@
     <MESSAGE value="WAC-202: Verlegeplan" />
     <MESSAGE value="Updated copyright" />
     <MESSAGE value="WAC-108" />
+    <MESSAGE value="WAC-217" />
+    <MESSAGE value="Toolbar und Menü verbessert" />
+    <MESSAGE value="Increased RAM to 256 MB max" />
+    <MESSAGE value="HTTPBuilder 0.5.2 Library hinzugefügt, da POSTs zu Odisee, die ein ODT zurückliefern nicht mit withRest() funktioniert haben: withRest möchte den ODT-Stream gern als XML parsen und findet SAX nicht" />
+    <MESSAGE value="Nicht mehr benötigt" />
+    <MESSAGE value="WAC-218" />
+    <MESSAGE value="..." />
+    <MESSAGE value="POSTs zu Odisee, die ein ODT zurückliefern nicht mit withRest() funktioniert haben: withRest möchte den ODT-Stream gern als XML parsen und findet SAX nicht" />
+    <MESSAGE value="Packages für SplashScreen-Klasse" />
+    <MESSAGE value="CheckUpdate bekommt 'app' instance, damit ein Dialog geöffnet werden kann" />
+    <MESSAGE value="Added use of VentPlan properties for URL" />
+    <MESSAGE value="Renamed bin in favor of IzPack scripts" />
+    <MESSAGE value="doc/README.txt is not needed any longer" />
+    <MESSAGE value="Renamed database, improved build process" />
+    <MESSAGE value="Changed version to 7.0.0BETA" />
+    <MESSAGE value="Renamed bin to _bin" />
+    <MESSAGE value="Integration version property into ventplan.properties" />
+    <MESSAGE value="Improved dialog, changed filename of image" />
+    <MESSAGE value="Removed unused code" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1491,369 +1346,134 @@
     </option>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/griffon-app/resources/image/splash_.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/griffon-app/resources/image/splash.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/griffon-app/resources/image/aircalc-splash.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/griffon-app/resources/image/aircalc-splash copy.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/griffon-app/resources/image/aircalc-splash copy 2.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/CheckUpdate.groovy">
+    <entry file="file://$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/OooService.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="14" selection-start="1997" selection-end="1997" vertical-scroll-proportion="0.33222592">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/Wac2Resource.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="68" selection-start="676" selection-end="676" vertical-scroll-proportion="0.33222592">
+        <state line="23" column="0" selection-start="548" selection-end="548" vertical-scroll-proportion="0.357599">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/Wac2Splash.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="6" selection-start="386" selection-end="386" vertical-scroll-proportion="0.33222592">
+        <state line="16" column="0" selection-start="368" selection-end="368" vertical-scroll-proportion="0.34818482">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/griffon-app/resources/xml/westaflex-project.xsd">
+    <entry file="file://$PROJECT_DIR$/griffon-app/lifecycle/Initialize.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="0" selection-start="22" selection-end="22" vertical-scroll-proportion="0.016493056">
+        <state line="26" column="0" selection-start="766" selection-end="766" vertical-scroll-proportion="0.6551155">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/Wac2View.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="0" selection-start="1820" selection-end="1820" vertical-scroll-proportion="0.62553555">
-          <folding>
-            <element signature="e#699#1011#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/griffon-app/resources/xml/ventplan-project.xsd">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="8" selection-start="373" selection-end="373" vertical-scroll-proportion="-0.015679443">
-          <folding>
-            <element signature="e#22#308#0" expanded="false" />
-            <element signature="e#369#414#0" expanded="false" />
-            <element signature="tag#xs:element#0;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:complexType#0;tag#xs:element#0;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:schema#0" expanded="false" />
-            <element signature="e#662#706#0" expanded="false" />
-            <element signature="tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
-            <element signature="e#2264#2308#0" expanded="false" />
-            <element signature="tag#xs:complexType#1;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#1;tag#xs:schema#0" expanded="false" />
-            <element signature="e#3120#3164#0" expanded="false" />
-            <element signature="tag#xs:complexType#2;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#2;tag#xs:schema#0" expanded="false" />
-            <element signature="e#3442#3485#0" expanded="false" />
-            <element signature="tag#xs:complexType#3;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#3;tag#xs:schema#0" expanded="false" />
-            <element signature="e#4320#4364#0" expanded="false" />
-            <element signature="tag#xs:complexType#4;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#4;tag#xs:schema#0" expanded="false" />
-            <element signature="e#4836#4884#0" expanded="false" />
-            <element signature="tag#xs:complexType#5;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#5;tag#xs:schema#0" expanded="false" />
-            <element signature="e#5178#5223#0" expanded="false" />
-            <element signature="tag#xs:complexType#6;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#6;tag#xs:schema#0" expanded="false" />
-            <element signature="e#7267#7313#0" expanded="false" />
-            <element signature="tag#xs:complexType#7;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#7;tag#xs:schema#0" expanded="false" />
-            <element signature="e#7903#7946#0" expanded="false" />
-            <element signature="tag#xs:complexType#8;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#8;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:complexType#9;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#9;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:complexType#10;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#10;tag#xs:schema#0" expanded="false" />
-            <element signature="e#9934#9975#0" expanded="false" />
-            <element signature="tag#xs:complexType#11;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#11;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:complexType#12;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#12;tag#xs:schema#0" expanded="false" />
-            <element signature="e#13343#13392#0" expanded="false" />
-            <element signature="tag#xs:complexType#13;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#13;tag#xs:schema#0" expanded="false" />
-            <element signature="e#13729#13775#0" expanded="false" />
-            <element signature="tag#xs:complexType#14;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#14;tag#xs:schema#0" expanded="false" />
-            <element signature="e#14395#14449#0" expanded="false" />
-            <element signature="tag#xs:complexType#15;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#15;tag#xs:schema#0" expanded="false" />
-            <element signature="e#15011#15055#0" expanded="false" />
-            <element signature="tag#xs:complexType#16;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#16;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:complexType#17;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:sequence#0;tag#xs:complexType#17;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:simpleType#0;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:restriction#0;tag#xs:simpleType#0;tag#xs:schema#0" expanded="false" />
-            <element signature="e#17068#17115#0" expanded="false" />
-            <element signature="tag#xs:simpleType#1;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:restriction#0;tag#xs:simpleType#1;tag#xs:schema#0" expanded="false" />
-            <element signature="e#17373#17421#0" expanded="false" />
-            <element signature="tag#xs:simpleType#2;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:restriction#0;tag#xs:simpleType#2;tag#xs:schema#0" expanded="false" />
-            <element signature="e#17638#17686#0" expanded="false" />
-            <element signature="tag#xs:simpleType#3;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:restriction#0;tag#xs:simpleType#3;tag#xs:schema#0" expanded="false" />
-            <element signature="e#17903#17953#0" expanded="false" />
-            <element signature="tag#xs:simpleType#4;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:restriction#0;tag#xs:simpleType#4;tag#xs:schema#0" expanded="false" />
-            <element signature="e#18248#18299#0" expanded="false" />
-            <element signature="tag#xs:simpleType#5;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:restriction#0;tag#xs:simpleType#5;tag#xs:schema#0" expanded="false" />
-            <element signature="e#18640#18687#0" expanded="false" />
-            <element signature="tag#xs:simpleType#6;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:restriction#0;tag#xs:simpleType#6;tag#xs:schema#0" expanded="false" />
-            <element signature="e#18945#18990#0" expanded="false" />
-            <element signature="tag#xs:simpleType#7;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:restriction#0;tag#xs:simpleType#7;tag#xs:schema#0" expanded="false" />
-            <element signature="e#19291#19335#0" expanded="false" />
-            <element signature="tag#xs:simpleType#8;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:restriction#0;tag#xs:simpleType#8;tag#xs:schema#0" expanded="false" />
-            <element signature="e#20093#20138#0" expanded="false" />
-            <element signature="tag#xs:simpleType#9;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:restriction#0;tag#xs:simpleType#9;tag#xs:schema#0" expanded="false" />
-            <element signature="e#20473#20517#0" expanded="false" />
-            <element signature="tag#xs:simpleType#10;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:restriction#0;tag#xs:simpleType#10;tag#xs:schema#0" expanded="false" />
-            <element signature="e#20811#20864#0" expanded="false" />
-            <element signature="tag#xs:simpleType#11;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:restriction#0;tag#xs:simpleType#11;tag#xs:schema#0" expanded="false" />
-            <element signature="e#21084#21145#0" expanded="false" />
-            <element signature="tag#xs:simpleType#12;tag#xs:schema#0" expanded="false" />
-            <element signature="tag#xs:restriction#0;tag#xs:simpleType#12;tag#xs:schema#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/KundendatenView.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="28" selection-start="800" selection-end="800" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#2983#3132#0" expanded="true" />
-            <element signature="e#3221#3299#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/StucklisteService.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="511" column="0" selection-start="20172" selection-end="20172" vertical-scroll-proportion="0.0">
+        <state line="372" column="0" selection-start="14521" selection-end="14521" vertical-scroll-proportion="0.08220339">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/griffon-app/util/com/bensmann/griffon/GriffonHelper.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="669" column="7" selection-start="23394" selection-end="23394" vertical-scroll-proportion="0.36378738">
           <folding>
-            <element signature="e#360#381#0" expanded="true" />
-            <element signature="e#2094#2563#0" expanded="true" />
-            <element signature="e#6285#6416#0" expanded="true" />
-            <element signature="e#8643#8782#0" expanded="true" />
-            <element signature="e#9872#10011#0" expanded="true" />
-            <element signature="e#11183#11320#0" expanded="true" />
-            <element signature="e#12487#12624#0" expanded="true" />
-            <element signature="e#13483#14592#0" expanded="true" />
-            <element signature="e#14005#14160#0" expanded="true" />
-            <element signature="e#14424#14579#0" expanded="true" />
-            <element signature="e#15513#15648#0" expanded="true" />
-            <element signature="e#16418#16544#0" expanded="true" />
-            <element signature="e#19634#20020#0" expanded="true" />
-            <element signature="e#21142#21377#0" expanded="true" />
+            <element signature="e#23417#23531#0" expanded="true" />
+            <element signature="n#!!block;n#getVentplanProperties#0;n#!!block;n#GriffonHelper#0" expanded="true" />
+            <element signature="e#23815#24077#0" expanded="true" />
+            <element signature="e#24136#24399#0" expanded="true" />
+            <element signature="e#24459#24723#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/DruckverlustView.groovy">
+    <entry file="file://$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/Wac2Resource.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="46" selection-start="996" selection-end="996" vertical-scroll-proportion="0.37446445">
+        <state line="15" column="0" selection-start="364" selection-end="364" vertical-scroll-proportion="0.24152543">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/installer/izpack/resources/VentPlan.jsmooth">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="0" selection-start="331" selection-end="331" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/griffon-app/resources/ventplan.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="0" selection-start="429" selection-end="453" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/griffon-app/util/com/westaflex/wac/CheckUpdate.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="113" column="66" selection-start="3891" selection-end="3891" vertical-scroll-proportion="0.52657807">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/CheckUpdateView.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="37" column="0" selection-start="1110" selection-end="1110" vertical-scroll-proportion="0.8106312">
           <folding>
-            <element signature="e#1070#3023#0" expanded="true" />
-            <element signature="e#2668#3004#0" expanded="true" />
+            <element signature="e#421#567#0" expanded="true" />
+            <element signature="e#663#1109#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/ProjektController.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1321" column="0" selection-start="57129" selection-end="57129" vertical-scroll-proportion="0.0">
+        <state line="20" column="24" selection-start="492" selection-end="492" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/griffon-app/controllers/com/westaflex/wac/Wac2Controller.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="610" column="0" selection-start="21676" selection-end="21676" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="n#!!doc" expanded="false" />
-            <element signature="e#1528#2480#0" expanded="false" />
-            <element signature="e#1635#1698#0" expanded="false" />
-            <element signature="e#1905#2466#0" expanded="false" />
-            <element signature="e#5529#5588#0" expanded="false" />
-            <element signature="e#5594#5638#0" expanded="false" />
-            <element signature="e#6208#6247#0" expanded="false" />
-            <element signature="e#6492#6665#0" expanded="false" />
-            <element signature="e#6728#6803#0" expanded="false" />
-            <element signature="e#6855#9674#0" expanded="false" />
-            <element signature="e#6963#9664#0" expanded="false" />
-            <element signature="e#10339#10896#0" expanded="false" />
-            <element signature="e#10376#10802#0" expanded="false" />
-            <element signature="e#10808#10886#0" expanded="false" />
-            <element signature="e#10907#11094#0" expanded="false" />
-            <element signature="e#13695#16697#0" expanded="false" />
-            <element signature="e#14506#16322#0" expanded="false" />
-            <element signature="e#14589#15438#0" expanded="false" />
-            <element signature="e#16328#16596#0" expanded="false" />
-            <element signature="e#16708#16786#0" expanded="false" />
-            <element signature="e#16795#16846#0" expanded="false" />
-            <element signature="e#17421#19000#0" expanded="false" />
-            <element signature="e#17483#18697#0" expanded="false" />
-            <element signature="e#17850#18113#0" expanded="false" />
-            <element signature="e#18119#18291#0" expanded="false" />
-            <element signature="e#18708#18990#0" expanded="false" />
-            <element signature="e#19567#21131#0" expanded="false" />
-            <element signature="e#19629#20834#0" expanded="false" />
-            <element signature="e#19992#20253#0" expanded="false" />
-            <element signature="e#20259#20430#0" expanded="false" />
-            <element signature="e#20845#21121#0" expanded="false" />
-            <element signature="e#21710#23302#0" expanded="false" />
-            <element signature="e#21772#22995#0" expanded="false" />
-            <element signature="e#22143#22408#0" expanded="false" />
-            <element signature="e#22414#22588#0" expanded="false" />
-            <element signature="e#23006#23292#0" expanded="false" />
-            <element signature="e#23845#24515#0" expanded="true" />
-            <element signature="e#26060#27470#0" expanded="false" />
-            <element signature="e#26613#27301#0" expanded="false" />
-            <element signature="e#27312#27460#0" expanded="false" />
-            <element signature="e#27476#27625#0" expanded="false" />
-            <element signature="e#28523#28793#0" expanded="false" />
-            <element signature="e#28902#28955#0" expanded="false" />
-            <element signature="e#28966#29042#0" expanded="false" />
-            <element signature="e#29209#29272#0" expanded="false" />
-            <element signature="e#29283#29368#0" expanded="false" />
-            <element signature="e#30486#30683#0" expanded="false" />
-            <element signature="e#34519#34621#0" expanded="false" />
-            <element signature="e#34632#34837#0" expanded="false" />
-            <element signature="e#34868#35188#0" expanded="false" />
-            <element signature="e#35199#35250#0" expanded="false" />
-            <element signature="e#35564#35645#0" expanded="false" />
-            <element signature="e#35651#35706#0" expanded="false" />
-            <element signature="e#36033#36114#0" expanded="false" />
-            <element signature="e#36120#36175#0" expanded="false" />
-            <element signature="e#42891#43003#0" expanded="false" />
-            <element signature="e#43124#46181#0" expanded="false" />
-            <element signature="e#43489#43771#0" expanded="false" />
-            <element signature="e#43620#43731#0" expanded="false" />
-            <element signature="e#43777#43841#0" expanded="false" />
-            <element signature="e#43943#44022#0" expanded="false" />
-            <element signature="e#44028#44100#0" expanded="false" />
-            <element signature="e#45255#45359#0" expanded="false" />
-            <element signature="e#49360#50237#0" expanded="false" />
-            <element signature="e#50259#50327#0" expanded="false" />
-            <element signature="e#51364#51897#0" expanded="false" />
-            <element signature="e#51621#51726#0" expanded="false" />
-            <element signature="e#52160#52644#0" expanded="false" />
-            <element signature="e#52393#52486#0" expanded="false" />
-            <element signature="e#53104#53805#0" expanded="false" />
-            <element signature="e#53811#53892#0" expanded="false" />
-            <element signature="n#!!block;n#_raumBearbeitenGeandert#0;n#!!block;n#ProjektController#0" expanded="true" />
-            <element signature="e#54647#54677#0" expanded="false" />
-            <element signature="e#55441#55626#0" expanded="false" />
-            <element signature="e#55637#55856#0" expanded="false" />
-            <element signature="e#57614#57711#0" expanded="false" />
-            <element signature="e#57918#58095#0" expanded="false" />
-            <element signature="e#58020#58071#0" expanded="false" />
-            <element signature="e#58109#58194#0" expanded="false" />
-            <element signature="e#58487#59042#0" expanded="false" />
-            <element signature="e#58819#58945#0" expanded="false" />
-            <element signature="e#58951#59032#0" expanded="false" />
-            <element signature="e#59188#59253#0" expanded="false" />
-            <element signature="e#59787#60437#0" expanded="false" />
-            <element signature="e#60057#60147#0" expanded="false" />
-            <element signature="e#60971#61084#0" expanded="false" />
-            <element signature="e#60989#61060#0" expanded="false" />
-            <element signature="e#61393#61518#0" expanded="false" />
-            <element signature="e#61524#61660#0" expanded="false" />
-            <element signature="e#61881#62008#0" expanded="false" />
-            <element signature="e#62014#62162#0" expanded="false" />
-            <element signature="e#62509#62788#0" expanded="false" />
-            <element signature="e#63377#64192#0" expanded="false" />
-            <element signature="e#63607#63739#0" expanded="false" />
-            <element signature="e#63750#63854#0" expanded="false" />
-            <element signature="e#64198#64472#0" expanded="false" />
-            <element signature="e#66027#66966#0" expanded="false" />
-            <element signature="e#69382#69470#0" expanded="false" />
-            <element signature="e#70339#70892#0" expanded="false" />
-            <element signature="e#76170#76292#0" expanded="false" />
-            <element signature="e#76380#76464#0" expanded="false" />
-            <element signature="e#76470#76568#0" expanded="false" />
-            <element signature="e#77535#77675#0" expanded="false" />
-            <element signature="e#77681#77869#0" expanded="false" />
-            <element signature="e#81046#81325#0" expanded="false" />
-            <element signature="e#86510#86555#0" expanded="false" />
-            <element signature="e#86604#86657#0" expanded="false" />
-            <element signature="e#88078#89143#0" expanded="false" />
-            <element signature="e#88158#88443#0" expanded="false" />
-            <element signature="e#89221#91731#0" expanded="false" />
-            <element signature="e#91332#91558#0" expanded="false" />
-            <element signature="e#91656#91721#0" expanded="false" />
-            <element signature="e#91742#91978#0" expanded="false" />
-            <element signature="e#92157#92376#0" expanded="false" />
-            <element signature="e#92553#92772#0" expanded="false" />
-            <element signature="e#92988#93191#0" expanded="false" />
-            <element signature="e#93390#93559#0" expanded="false" />
-            <element signature="e#93782#93942#0" expanded="false" />
-            <element signature="e#93984#94144#0" expanded="false" />
+            <element signature="e#21452#21675#0" expanded="true" />
+            <element signature="e#23445#25798#0" expanded="false" />
+            <element signature="e#25804#26350#0" expanded="false" />
+            <element signature="e#32278#32476#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/griffon-app/services/com/westaflex/wac/OooService.groovy">
+    <entry file="file://$PROJECT_DIR$/src/main/installer/izpack/resources/installer.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="359" column="7" selection-start="17277" selection-end="17277" vertical-scroll-proportion="0.33305085">
+        <state line="125" column="0" selection-start="5256" selection-end="5256" vertical-scroll-proportion="0.32142857">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/AboutView.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="1" selection-start="1668" selection-end="1668" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#1427#1544#0" expanded="false" />
-            <element signature="n#!!block;n#OooService#0;n#!!block;n#OooService#0" expanded="false" />
-            <element signature="e#2980#3939#0" expanded="true" />
-            <element signature="e#3033#3929#0" expanded="true" />
-            <element signature="e#3268#3915#0" expanded="true" />
-            <element signature="e#4500#6398#0" expanded="true" />
-            <element signature="e#4553#6388#0" expanded="true" />
-            <element signature="e#4790#6374#0" expanded="true" />
-            <element signature="e#5155#6356#0" expanded="true" />
-            <element signature="e#6973#10264#0" expanded="true" />
-            <element signature="e#7026#10254#0" expanded="true" />
-            <element signature="e#7259#10240#0" expanded="true" />
-            <element signature="e#8547#9906#0" expanded="true" />
-            <element signature="e#10868#10917#0" expanded="true" />
-            <element signature="e#11142#11201#0" expanded="true" />
-            <element signature="e#22585#23061#0" expanded="true" />
-            <element signature="e#24245#26156#0" expanded="true" />
-            <element signature="e#26258#26304#0" expanded="true" />
-            <element signature="e#26319#26402#0" expanded="true" />
-            <element signature="e#26464#26510#0" expanded="true" />
-            <element signature="e#26525#26608#0" expanded="true" />
-            <element signature="e#27827#29155#0" expanded="true" />
-            <element signature="e#30082#30723#0" expanded="true" />
-            <element signature="e#32631#33272#0" expanded="true" />
-            <element signature="e#35231#36398#0" expanded="true" />
-            <element signature="e#36583#37619#0" expanded="true" />
+            <element signature="e#573#1668#0" expanded="true" />
+            <element signature="e#772#1034#0" expanded="true" />
+            <element signature="e#1096#1482#0" expanded="true" />
+            <element signature="e#1540#1665#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/griffon-app/views/com/westaflex/wac/Wac2View.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="55" column="0" selection-start="2264" selection-end="2264" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/_Events.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="38" selection-start="329" selection-end="329" vertical-scroll-proportion="0.2915601">
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1898,7 +1518,7 @@
       </state>
       <state key="GlobalLibrariesConfigurable.UI">
         <settings>
-          <last-edited>griffon-0.9.4</last-edited>
+          <last-edited>YUI-3.4.1</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

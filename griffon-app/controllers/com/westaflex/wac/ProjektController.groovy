@@ -12,6 +12,8 @@ package com.westaflex.wac
 import com.bensmann.griffon.GriffonHelper as GH
 
 import groovyx.net.http.HTTPBuilder
+import java.awt.Desktop
+import griffon.util.GriffonApplicationUtils
 
 /**
  *
@@ -357,10 +359,11 @@ class ProjektController {
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      */
     def auslegungErstellen() {
+        String type = 'Auslegung'
         // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
         showNutzerdatenDialog(
-                'Auslegung erstellen - Daten eingeben',
-                'Eingaben speichern und Auslegung erstellen',
+                "${type} erstellen - Daten eingeben",
+                "Eingaben speichern und ${type} erstellen",
                 { dialog ->
                     view.auslegungErstellerAngebotsnummer.enabled = false
                     view.auslegungErstellerEmpfanger.enabled = false
@@ -371,33 +374,10 @@ class ProjektController {
             try {
                 File wpxFile = new File(model.wpxFilename)
                 String xmlDoc = oooService.performAuslegung(wpxFile, model.map, DEBUG)
-                java.io.File pdfFile
-                doLater {
-                    doOutside {
-                        pdfFile = postToOdisee(wpxFile, 'Auslegung', xmlDoc)
-                        if (pdfFile?.exists()) {
-                            // Open document
-                            java.awt.Desktop.desktop.open(pdfFile)
-                            //if (griffon.util.GriffonApplicationUtils.isWindows) {
-                            doLater {
-                                def msg = "Auslegung erstellen\nDie Datei ${pdfFile} wurde erzeugt." as String
-                                app.controllers["Dialog"].showInformDialog(msg)
-                            }
-                            //    }
-                        } else {
-                            def errorMsg = "Angebot erstellen\nDie Datei ${pdfFile} konnte leider nicht geöffnet werden." as String
-                            app.controllers["Dialog"].showErrorDialog(errorMsg)
-                        }
-                        waitDialog?.dispose()
-                    }
-                    // Dialog: Bitte warten...
-                    waitDialog = GH.createDialog(builder, WaitingView, [title: "Die Auslegung wird erstellt", resizable: false, pack: true])
-                    waitDialog = GH.centerDialog(app.views['wac2'], waitDialog)
-                    waitDialog.show()
-                }
+                makeDocument(type, wpxFile, xmlDoc)
             } catch (e) {
-                def errorMsg = "Die Auslegung konnte leider nicht erstellt werden.\n${e}" as String
-                app.controllers["Dialog"].showErrorDialog(errorMsg)
+                String errorMsg = "Die ${type} konnte leider nicht erstellt werden.\n${e}"
+                app.controllers['Dialog'].showErrorDialog(errorMsg)
             }
         }
     }
@@ -406,10 +386,11 @@ class ProjektController {
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      */
     def angebotErstellen() {
+        String type = 'Angebot'
         // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
         showNutzerdatenDialog(
-                'Angebot erstellen - Daten eingeben',
-                'Eingaben speichern und Angebot erstellen',
+                "${type} erstellen - Daten eingeben",
+                "Eingaben speichern und ${type} erstellen",
                 { dialog ->
                     view.auslegungErstellerAngebotsnummer.enabled = true
                     view.auslegungErstellerEmpfanger.enabled = true
@@ -420,33 +401,10 @@ class ProjektController {
             try {
                 File wpxFile = new File(model.wpxFilename)
                 String xmlDoc = oooService.performAngebot(wpxFile, model.map, DEBUG)
-                java.io.File pdfFile
-                doLater {
-                    doOutside {
-                        pdfFile = postToOdisee(wpxFile, 'Angebot', xmlDoc)
-                        if (pdfFile?.exists()) {
-                            // Open document
-                            java.awt.Desktop.desktop.open(pdfFile)
-                            //if (griffon.util.GriffonApplicationUtils.isWindows) {
-                            doLater {
-                                def msg = "Angebot erstellen\nDie Datei ${pdfFile} wurde erzeugt." as String
-                                app.controllers["Dialog"].showInformDialog(msg)
-                            }
-                            //    }
-                        } else {
-                            def errorMsg = "Angebot erstellen\nDie Datei ${pdfFile} konnte leider nicht geöffnet werden." as String
-                            app.controllers["Dialog"].showErrorDialog(errorMsg)
-                        }
-                        waitDialog?.dispose()
-                    }
-                    // Dialog: Bitte warten...
-                    waitDialog = GH.createDialog(builder, WaitingView, [title: "Das Angebot wird erstellt", resizable: false, pack: true])
-                    waitDialog = GH.centerDialog(app.views['wac2'], waitDialog)
-                    waitDialog.show()
-                }
+                makeDocument(type, wpxFile, xmlDoc)
             } catch (e) {
-                def errorMsg = "Das Angebot konnte leider nicht erstellt werden.\n${e}" as String
-                app.controllers["Dialog"].showErrorDialog(errorMsg)
+                String errorMsg = "Das ${type} konnte leider nicht erstellt werden.\n${e}"
+                app.controllers['Dialog'].showErrorDialog(errorMsg)
             }
         }
     }
@@ -455,10 +413,11 @@ class ProjektController {
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      */
     def stuecklisteErstellen() {
+        String type = 'Stückliste'
         // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
         showNutzerdatenDialog(
-                'Stückliste erstellen - Daten eingeben',
-                'Eingaben speichern und Stückliste erstellen',
+                "${type} erstellen - Daten eingeben",
+                "Eingaben speichern und ${type} erstellen",
                 { dialog ->
                     view.auslegungErstellerAngebotsnummer.enabled = false
                     view.auslegungErstellerEmpfanger.enabled = false
@@ -469,34 +428,54 @@ class ProjektController {
             try {
                 File wpxFile = new File(model.wpxFilename)
                 String xmlDoc = oooService.performStueckliste(wpxFile, model.map, DEBUG)
-                java.io.File pdfFile
-                doLater {
-                    doOutside {
-                        pdfFile = postToOdisee(wpxFile, 'Stueckliste', xmlDoc)
-                        if (pdfFile?.exists()) {
-                            // Open document
-                            java.awt.Desktop.desktop.open(pdfFile)
-                            //if (griffon.util.GriffonApplicationUtils.isWindows) {
-                            doLater {
-                                def msg = "Stückliste erstellen\nDie Datei ${pdfFile} wurde erzeugt." as String
-                                app.controllers["Dialog"].showInformDialog(msg)
-                            }
-                            //    }
-                        } else {
-                            def errorMsg = "Stückliste erstellen\nDie Datei ${pdfFile} konnte leider nicht geöffnet werden." as String
-                            app.controllers["Dialog"].showErrorDialog(errorMsg)
-                        }
-                        waitDialog?.dispose()
-                    }
-                    // Dialog: Bitte warten...
-                    waitDialog = GH.createDialog(builder, WaitingView, [title: "Die Stückliste wird erstellt", resizable: false, pack: true])
-                    waitDialog = GH.centerDialog(app.views['wac2'], waitDialog)
-                    waitDialog.show()
-                }
+                makeDocument(type, wpxFile, xmlDoc)
             } catch (e) {
-                def errorMsg = "Die Stückliste konnte leider nicht erstellt werden.\n${e}" as String
-                app.controllers["Dialog"].showErrorDialog(errorMsg)
+                String errorMsg = "Die ${type} konnte leider nicht erstellt werden.\n${e}"
+                app.controllers['Dialog'].showErrorDialog(errorMsg)
             }
+        }
+    }
+
+    /**
+     * 
+     * @param wpxFile
+     * @param xmlDoc
+     * @return
+     */
+    private void makeDocument(String type, File wpxFile, String xmlDoc) {
+        doLater {
+            doOutside {
+                File odiseeDocument = postToOdisee(wpxFile, type, xmlDoc)
+                if (odiseeDocument?.exists()) {
+                    try {
+                        // Open document
+                        Desktop.desktop.open(odiseeDocument)
+                    } finally {
+                        waitDialog?.dispose()
+                        if (GriffonApplicationUtils.isWindows) {
+                            doLater {
+                                def msg = "${type} erstellen\nDie Datei ${odiseeDocument} wurde erzeugt." as String
+                                app.controllers['Dialog'].showInformDialog(msg)
+                            }
+                        }
+                    }
+                } else {
+                    String errorMsg = "${type} erstellen\nDie Datei ${odiseeDocument} konnte leider nicht geöffnet werden."
+                    app.controllers['Dialog'].showErrorDialog(errorMsg)
+                }
+            }
+            // Dialog: Bitte warten...
+            waitDialog = GH.createDialog(
+                    builder,
+                    WaitingView,
+                    [
+                            title: "Die ${type} wird erstellt",
+                            resizable: false,
+                            pack: true
+                    ]
+            )
+            waitDialog = GH.centerDialog(app.views['wac2'], waitDialog)
+            waitDialog.show()
         }
     }
 
@@ -516,7 +495,7 @@ class ProjektController {
         String outputFormat = xml.request.template.'@outputFormat'
         try {
             def h = new HTTPBuilder(restUrl)
-            h.auth.basic 'wac', 're:Xai3u'
+            h.auth.basic 'ventplan', 're:Xai3u'
             def byteArrayInputStream = h.post(
                     path: restPath,
                     query: [outputFormat: outputFormat],

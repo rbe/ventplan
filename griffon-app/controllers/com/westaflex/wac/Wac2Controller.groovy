@@ -26,6 +26,7 @@ class Wac2Controller {
     def wacCalculationService
     def builder
 
+    def aboutDialog
     def projektSuchenDialog
 
     /**
@@ -603,7 +604,7 @@ class Wac2Controller {
      * Dialog mit Logo und Versionsnummer
      */
     def aboutDialogOeffnen = { evt = null ->
-        def aboutDialog = GH.createDialog(builder, AboutView, [title: "Über", resizable: false, pack: true])
+        aboutDialog = GH.createDialog(builder, AboutView, [title: 'Über', resizable: false, pack: true])
         aboutDialog = GH.centerDialog(app.views['wac2'], aboutDialog)
         aboutDialog.show()
     }
@@ -840,8 +841,11 @@ class Wac2Controller {
         }
     }
 
+    /**
+     *
+     */
     def checkUpdateDialogOeffnen = { evt = null ->
-        def checkUpdateDialog = GH.createDialog(builder, CheckUpdateView, [title: 'Updatecheck', resizable: false, pack:true])
+        def checkUpdateDialog = GH.createDialog(builder, CheckUpdateView, [title: 'Aktualisierung von VentPlan', resizable: false, pack: true])
         checkUpdateDialog.show()
     }
 

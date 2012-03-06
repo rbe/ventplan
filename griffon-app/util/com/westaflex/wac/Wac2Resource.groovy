@@ -19,10 +19,10 @@ class Wac2Resource {
      */
     def static getSplashScreenURL = {
         // dev
-        def r = Wac2Resource.class.getResource("../resources/image/ventplan_splash.png")
+        def r = Wac2Resource.class.getResource("../resources/image/VentPlan_splash.png")
         // prod
         if (!r)
-            r = Wac2Resource.class.getResource("/image/ventplan_splash.png")
+            r = Wac2Resource.class.getResource("/image/VentPlan_splash.png")
         r
     }
 
@@ -68,42 +68,6 @@ class Wac2Resource {
     }
 
     /**
-     * Get template for OpenOffice.
-     */
-    def static getOOoURL = { t ->
-        // dev
-        def r = Wac2Resource.class.getResource("../resources/ooo/${t}.ott")
-        // prod
-        if (!r)
-            r = Wac2Resource.class.getResource("/ooo/${t}.ott")
-        r
-    }
-
-    /**
-     * Get template for OpenOffice.
-     */
-    def static getOOoAsStream = { t ->
-        // dev
-        def r = Wac2Resource.class.getResourceAsStream("../resources/ooo/${t}.ott")
-        // prod
-        if (!r)
-            r = Wac2Resource.class.getResourceAsStream("/ooo/${t}.ott")
-        r
-    }
-
-    /**
-     * Get Pdf Logo.
-     */
-    def static getPdfLogo = {
-        // dev
-        def r = Wac2Resource.class.getResource("../resources/image/westaflex_logo.png")
-        // prod
-        if (!r)
-            r = Wac2Resource.class.getResource("/image/westaflex_logo.png")
-        r
-    }
-
-    /**
      * Get wac web service properties.
      */
     def static getWacwsProperties() {
@@ -112,20 +76,6 @@ class Wac2Resource {
         // prod
         if (!r)
             r = Wac2Resource.class.getResourceAsStream("/wacws/ventplan.properties")
-        r
-    }
-
-    /**
-     * Get version.
-     * Caution: 
-     * Had to change this because "version" file could not be loaded in griffon 0.9.4.
-     */
-    def static getConfVersion() {
-        // dev
-        def r = Wac2Resource.class.getResourceAsStream("/version.properties")
-        // prod
-        if (!r)
-            r = Wac2Resource.class.getResourceAsStream("/version.properties")
         r
     }
 

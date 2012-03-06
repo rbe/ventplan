@@ -661,21 +661,15 @@ class GriffonHelper {
      * Returns the current installed version.
      */
     def static localVersion = {
-        Properties properties = new Properties()
-        def p = Wac2Resource.getConfVersion()
-        properties.load(p)
-        return properties.get("version") as String
+        return getVentplanProperties().get('ventplan.version') as String
     }
 
     /**
      *
      */
     def static getUpdateUrl = {
-        Properties properties = new Properties()
-        def p = Wac2Resource.getWacwsProperties()
-        properties.load(p)
-        return properties.get("update.url") as String
-        //return "http://localhost:8080/wacws/services/wpxUpload?wsdl"
+        Properties p = getVentplanProperties()
+        return p.get('ventplan.update.check.url') as String
     }
 
     /**

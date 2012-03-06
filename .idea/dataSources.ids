@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><component name="dataSourceStorage">
-  <data-source source="LOCAL" name="westawac.sqlite.db" product="SQLite" version="3.7.2" jdbc-version="2.1" driver-version="native" uuid="9708b7b7-a779-4b13-ba92-a3b46fd57d4c">
+  <data-source source="LOCAL" name="ventplan.db" product="SQLite" version="3.7.2" jdbc-version="2.1" driver-version="native" uuid="9708b7b7-a779-4b13-ba92-a3b46fd57d4c">
     <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-    <jdbc-url>jdbc:sqlite:/Users/rbe/project/westaflex/wac/sql/westawac.sqlite.db</jdbc-url>
+    <jdbc-url>jdbc:sqlite:/Users/rbe/project/westaflex/wac/sql/ventplan.db</jdbc-url>
     <schema-pattern>*</schema-pattern>
     <libraries>
       <library>
