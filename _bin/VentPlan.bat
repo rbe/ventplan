@@ -10,8 +10,8 @@ rem All rights reserved. Use is subject to license terms.
 rem
 
 rem Java 6
-set JAVA_HOME=..\Windows\jre6
-set PATH=%JAVA_HOME%\bin;%PATH%
+rem set JAVA_HOME=..\Windows\jre6
+rem set PATH=%JAVA_HOME%\bin;%PATH%
 rem Update
 xcopy ..\update\resources\* resources /e /c /i /f /r /y 1>%TEMP%\VentPlan.log 2>&1
 xcopy ..\update\sql\* ..\sql /e /c /i /f /r /y 1>>%TEMP%\VentPlan.log 2>&1
