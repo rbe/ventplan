@@ -25,7 +25,7 @@ environments {
     production {
         dataSource {
             // install dir of izpack.
-            url = 'jdbc:sqlite:lib/VentPlan.db'
+            url = 'jdbc:sqlite:../lib/VentPlan.db'
         }
     }
 }

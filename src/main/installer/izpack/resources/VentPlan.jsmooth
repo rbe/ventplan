@@ -16,8 +16,7 @@
     <JVMSearchPath>jview</JVMSearchPath>
     <JVMSearchPath>registry</JVMSearchPath>
     @app.jars@
-    <!-- currentDirectory>./bin</currentDirectory-->
-    <currentDirectory>.</currentDirectory>
+    <currentDirectory>./bin</currentDirectory>
     <embeddedJar>false</embeddedJar>
     <executableName>VentPlan.exe</executableName>
     <iconLocation>VentPlan-icon.png</iconLocation>
