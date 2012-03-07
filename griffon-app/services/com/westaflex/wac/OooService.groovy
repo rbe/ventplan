@@ -166,7 +166,7 @@ class OooService {
                         Map artikel = stuck.value as Map
                         int reihenfolge = (int) artikel.REIHENFOLGE
                         double anzahl = (double) artikel.ANZAHL
-                        println String.format('%2d % 12d % 7.1f %6s %17s - %s', i + 1, reihenfolge, anzahl, artikel.MENGENEINHEIT, stuck.key, artikel.ARTIKELBEZEICHNUNG)
+                        //println String.format('%2d % 12d % 7.1f %6s %17s - %s', i + 1, reihenfolge, anzahl, artikel.MENGENEINHEIT, stuck.key, artikel.ARTIKELBEZEICHNUNG)
                         // Menge mit oder ohne Komma anzeigen?
                         String menge
                         if (anzahl * 10 > 0) {
