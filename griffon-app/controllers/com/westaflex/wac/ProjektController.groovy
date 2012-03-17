@@ -44,6 +44,8 @@ class ProjektController {
 
     def angebotsverfolgungDialog
 
+    def stucklisteDialog
+
     /**
      * Initialize MVC group.
      */
@@ -424,6 +426,51 @@ class ProjektController {
                 }
         )
         if (nutzerdatenGeandert) {
+            // 1. Stückliste als Map holen
+            // 2. Map in der StucklisteView anzeigen
+            // 3. Nach Artikeln suchen
+            // 4. Ergebnisliste anzeigen
+            // 5. Suchergebnisse zu der Map hinzufügen.
+
+            def stucklisteTableModel
+            if (!model?.tableModels?.stuckliste) {
+                stucklisteTableModel = model.createStucklisteUbersichtTableModel()
+            }
+
+            def artikelList = []
+            // Dialog zum Bearbeiten der Stuckliste aufrufen
+            def stuckliste = oooService.getStucklisteAsMap(model.map)
+            stuckliste.eachWithIndex { stuck, i ->
+                Map artikel = stuck.value as Map
+                int reihenfolge = (int) artikel.REIHENFOLGE
+                double anzahl = (double) artikel.ANZAHL
+                //println String.format('%2d % 12d % 7.1f %6s %17s - %s', i + 1, reihenfolge, anzahl, artikel.MENGENEINHEIT, stuck.key, artikel.ARTIKELBEZEICHNUNG)
+                // Menge mit oder ohne Komma anzeigen?
+                String menge
+                if (anzahl * 10 > 0) {
+                    menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.MENGENEINHEIT)
+                } else {
+                    menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
+                }
+                menge
+                stuck.key
+                artikel.ARTIKELBEZEICHNUNG
+                println "stuckliste - artikel -> ${artikel.dump()}"
+
+                //artikelList.addAll([reihenfolge: reihenfolge, anzahl: anzahl, artikelnummer: artikel.ARTIKELBEZEICHNUNG, text: artikel.ARTIKELBEZEICHNUNG, einzelpreis: 1.00, gesamtpreis: 1.00])
+                model.tableModels.stuckliste.addAll([reihenfolge: reihenfolge, anzahl: anzahl, artikelnummer: artikel.ARTIKELBEZEICHNUNG, text: artikel.ARTIKELBEZEICHNUNG, einzelpreis: 1.00, gesamtpreis: 1.00])
+            }
+            //model.tableModels.stuckliste.addAll(artikelList)
+
+            // TODO mmu: Erweitern.
+            showStucklisteDialog(
+                "${type} anpassen",
+                "Eingaben speichern und ${type} erstellen",
+                { dialog ->
+                    view.stucklisteUbersichtTabelle.setModel(stucklisteTableModel)
+                }
+            )
+
             // Auslegung/Dokument erstellen
             try {
                 File wpxFile = new File(model.wpxFilename)
@@ -434,6 +481,23 @@ class ProjektController {
                 app.controllers['Dialog'].showErrorDialog(errorMsg)
             }
         }
+    }
+
+    /**
+     * Stuckliste Dialog anzeigen. In einer Art "Warenkorb" können hier die Artikel gesucht und die Anzahl der
+     * Artikel verändert werden, bevor die Stückliste generiert wird.
+     */
+    def showStucklisteDialog(String title = null, String okButtonText = null, Closure closure = null) {
+        // Dialog erzeugen
+        String _title = title ?: 'Stückliste anpassen'
+        String _okButtonText = okButtonText ?: 'Eingaben speichern'
+        stucklisteDialog = GH.createDialog(builder, StucklisteView, [title: _title, size: [800, 600], resizable: true, pack: true])
+//        view.auslegungErstellerSpeichern.text = _okButtonText
+        // Closure ausführen
+        closure(stucklisteDialog)
+        // Dialog ausrichten und anzeigen
+        stucklisteDialog = GH.centerDialog(app.views['wac2'], stucklisteDialog)
+        stucklisteDialog.show()
     }
 
     /**
@@ -2185,5 +2249,9 @@ class ProjektController {
                 println "adding schalldampfer 2..."
             pdfCreator.addArtikel("", "", akustik.hauptschalldampfer2, 1)
         }
+    }
+
+    def stucklisteSucheHinzufugen = { evt = null ->
+
     }
 }

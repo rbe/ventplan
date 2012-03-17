@@ -284,7 +284,8 @@ class ProjektModel {
             dvbVentileinstellung: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList),
             wbw: [/* TableModels will be added in addWbwTableModel() */],
             akustikZuluft: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList),
-            akustikAbluft: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList)
+            akustikAbluft: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList),
+            stuckliste: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList),
     ]
 
     /**
@@ -1276,6 +1277,18 @@ class ProjektModel {
             dvbVentileinstellungButtonsEnabled = true
             firePropertyChange("dvbVentileinstellungButtonsEnabled", !dvbVentileinstellungButtonsEnabled, dvbVentileinstellungButtonsEnabled)
         }
+    }
+
+    /**
+     * StucklisteView - Tablemodel erstellen.
+     */
+    def createStucklisteUbersichtTableModel() {
+        def columnNames = ["Reihenfolge", "Anzahl", "Artikelnr.", "Text", "Einzelpreis", "Gesamtpreis"] as String[]
+        def propertyNames = ["reihenfolge", "anzahl", "artikelnummer", "text", "einzelpreis", "gesamtpreis"] as String[]
+        def propertyTypes = [Integer.class.getName(), Integer.class.getName(), Double.class.getName(), String.class.getName(), Double.class.getName(), Double.class.getName()]
+        def writable = [false, true, false, false, false, false] as boolean[]
+//        gltmClosureWithTypes(columnNames, propertyNames, propertyTypes, writable, tableModels.stuckliste)
+        gltmClosure(columnNames, propertyNames, writable, tableModels.stuckliste)
     }
 
 }

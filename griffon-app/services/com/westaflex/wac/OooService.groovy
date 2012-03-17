@@ -140,6 +140,17 @@ class OooService {
 
     /**
      *
+     * @param map
+     * @return Returns a map of all artikel
+     */
+    def getStucklisteAsMap(Map map) {
+        def stuckliste = stucklisteService.processData(map)
+        stucklisteService.makeResult(stuckliste)
+        stuckliste
+    }
+
+    /**
+     *
      * @param wpxFile
      * @param map
      * @param saveOdiseeXml Save Odisee XML in file system? Defaults to false.
