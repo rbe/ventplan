@@ -518,16 +518,19 @@ class StucklisteService {
         List geratepaket = getGeratepaket(zentralgerat, volumenstrom)
         pakete += geratepaket
         if (DEBUG) println String.format("%17s für %8s (Vs=%d) ist %s", 'Geraetepaket', zentralgerat, volumenstrom, geratepaket)
-        // Ebenen
-        List verteilebenen = getVerteilebenen(map)
         // Erweiterungspaket für alle Ebenen außer die Erste
         List erwei = getErweiterungspaket(zentralgerat, volumenstrom)
+        // Ebenen
+        List verteilebenen = getVerteilebenen(map)
+        int anzahlVerteilebenen = verteilebenen.size() - 1
+        if (anzahlVerteilebenen > 0) {
         if (DEBUG) println String.format("%17s für %8s (Vs=%d) sind %s", 'Verteilbenen', zentralgerat, volumenstrom, verteilebenen.join(', '))
-        1.upto verteilebenen.size() - 1, {
+            1.upto anzahlVerteilebenen, {
             if (DEBUG) {
                 println String.format("%17s für %8s (Vs=%d), %s für Ebene(n) %s", 'Erweiterungspaket', zentralgerat, volumenstrom, erwei, verteilebenen[it])
             }
             pakete += erwei
+        }
         }
         // Außenluftpaket
         List aussenluftpaket = getAussenluftpaket('300WAC', volumenstrom, 'Wand')
