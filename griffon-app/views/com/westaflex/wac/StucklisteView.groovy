@@ -55,7 +55,10 @@ panel(id: "stucklisteSuchePanel", layout: new MigLayout("fillx, wrap", "[fill]",
             }
         }
     }
-//   button('Schliessen', actionPerformed: { e ->
-//        controller.aboutDialog.dispose()
-//    })
+    panel(id: "stucklisteUbersichtPanel", layout: new MigLayout("fill, wrap", "[]para[]", ""), constraints: "grow") {
+        button(id: 'stucklisteWeiter', text: 'Weiter zur Stücklisten-Generierung')
+        button(id: 'stucklisteAbbrechen', text: 'Vorgang abbrechen')
+    }
 }
+
+build(StucklisteBindings)

@@ -12,8 +12,12 @@
 package com.westaflex.wac
 
 stucklisteSucheHinzufugen.actionPerformed = controller.stucklisteSucheHinzufugen
+stucklisteAbbrechen.actionPerformed = controller.stucklisteAbbrechen
+stucklisteWeiter.actionPerformed = controller.stucklisteWeiter
 
 [stucklisteSucheArtikelnummer].each {
     //it.focusLost = controller.berechneGeometrie
     //GH.onChange(it, null, controller.berechneGeometrie)
 }
+
+

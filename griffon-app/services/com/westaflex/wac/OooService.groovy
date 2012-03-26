@@ -154,9 +154,10 @@ class OooService {
      * @param wpxFile
      * @param map
      * @param saveOdiseeXml Save Odisee XML in file system? Defaults to false.
+     * @param editedStuckliste Edited map of stuckliste items.
      * @return String Odisee XML.
      */
-    String performStueckliste(File wpxFile, Map map, boolean saveOdiseeXml = false) {
+    String performStueckliste(File wpxFile, Map map, boolean saveOdiseeXml = false, Map editedStuckliste = null) {
         // Filename w/o extension
         def wpxFilenameWoExt = wpxFile.name - '.wpx'
         // Generate Odisee XML
@@ -172,7 +173,8 @@ class OooService {
                     addEmpfanger(domBuilder, map)
                     addBauvorhaben(domBuilder, map.kundendaten)
                     // Stückliste
-                    def stuckliste = stucklisteService.processData(map)
+//                    def stuckliste = stucklisteService.processData(map)
+                    def stuckliste = editedStuckliste
                     stucklisteService.makeResult(stuckliste).eachWithIndex { stuck, i ->
                         Map artikel = stuck.value as Map
                         int reihenfolge = (int) artikel.REIHENFOLGE

@@ -45,6 +45,7 @@ class ProjektController {
     def angebotsverfolgungDialog
 
     def stucklisteDialog
+    boolean stucklisteAbgebrochen
 
     /**
      * Initialize MVC group.
@@ -432,16 +433,18 @@ class ProjektController {
             // 4. Ergebnisliste anzeigen
             // 5. Suchergebnisse zu der Map hinzufügen.
 
-            def stucklisteTableModel
-            if (!model?.tableModels?.stuckliste) {
-                stucklisteTableModel = model.createStucklisteUbersichtTableModel()
-            }
+            def stucklisteTableModel = model.createStucklisteUbersichtTableModel()
 
+            // WAC-221
+            stucklisteAbgebrochen = false
             def artikelList = []
             // Dialog zum Bearbeiten der Stuckliste aufrufen
             def stuckliste = oooService.getStucklisteAsMap(model.map)
+            println "stuckliste => ${stuckliste.dump()}"
             stuckliste.eachWithIndex { stuck, i ->
                 Map artikel = stuck.value as Map
+                println " stuck => ${stuck.dump()}"
+                println "   artikel => ${artikel.dump()}"
                 int reihenfolge = (int) artikel.REIHENFOLGE
                 double anzahl = (double) artikel.ANZAHL
                 //println String.format('%2d % 12d % 7.1f %6s %17s - %s', i + 1, reihenfolge, anzahl, artikel.MENGENEINHEIT, stuck.key, artikel.ARTIKELBEZEICHNUNG)
@@ -455,10 +458,14 @@ class ProjektController {
                 menge
                 stuck.key
                 artikel.ARTIKELBEZEICHNUNG
-                println "stuckliste - artikel -> ${artikel.dump()}"
 
-                //artikelList.addAll([reihenfolge: reihenfolge, anzahl: anzahl, artikelnummer: artikel.ARTIKELBEZEICHNUNG, text: artikel.ARTIKELBEZEICHNUNG, einzelpreis: 1.00, gesamtpreis: 1.00])
-                model.tableModels.stuckliste.addAll([reihenfolge: reihenfolge, anzahl: anzahl, artikelnummer: artikel.ARTIKELBEZEICHNUNG, text: artikel.ARTIKELBEZEICHNUNG, einzelpreis: 1.00, gesamtpreis: 1.00])
+                //println "stuckliste - artikel -> ${artikel.dump()}"
+
+                def gesamtpreis = (anzahl * artikel.PREIS.toDouble2()) as double
+                model.tableModels.stuckliste.addAll([reihenfolge: reihenfolge, anzahl: anzahl,
+                        artikelnummer: artikel.ARTIKEL, text: artikel.ARTIKELBEZEICHNUNG,
+                        einzelpreis: artikel.PREIS, gesamtpreis: gesamtpreis,
+                        luftart: artikel.LUFTART, liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT])
             }
             //model.tableModels.stuckliste.addAll(artikelList)
 
@@ -471,14 +478,28 @@ class ProjektController {
                 }
             )
 
-            // Auslegung/Dokument erstellen
-            try {
-                File wpxFile = new File(model.wpxFilename)
-                String xmlDoc = oooService.performStueckliste(wpxFile, model.map, DEBUG)
-                makeDocument(type, wpxFile, xmlDoc)
-            } catch (e) {
-                String errorMsg = "Die ${type} konnte leider nicht erstellt werden.\n${e}"
-                app.controllers['Dialog'].showErrorDialog(errorMsg)
+            if (!stucklisteAbgebrochen) {
+
+                def stucklisteModel = model.tableModels.stuckliste
+//                println "model.map -> ${model.map}"
+                
+                Map newMap = new LinkedHashMap()
+                stucklisteModel.each() { a ->
+                    newMap.put(a.artikelnummer, [REIHENFOLGE: a.reihenfolge, LUFTART: a.luftart, ANZAHL: a.anzahl,
+                            MENGENEINHEIT: a.mengeneinheit, LIEFERMENGE: a.liefermenge, ARTIKEL: a.artikelnummer,
+                            ARTIKELBEZEICHNUNG: a.text, PREIS: a.einzelpreis])
+                }
+
+                // Auslegung/Dokument erstellen
+                try {
+                    File wpxFile = new File(model.wpxFilename)
+//                    String xmlDoc = oooService.performStueckliste(wpxFile, model.map, DEBUG)
+                    String xmlDoc = oooService.performStueckliste(wpxFile, model.map, DEBUG, newMap)
+                    makeDocument(type, wpxFile, xmlDoc)
+                } catch (e) {
+                    String errorMsg = "Die ${type} konnte leider nicht erstellt werden.\n${e}"
+                    app.controllers['Dialog'].showErrorDialog(errorMsg)
+                }
             }
         }
     }
@@ -498,6 +519,26 @@ class ProjektController {
         // Dialog ausrichten und anzeigen
         stucklisteDialog = GH.centerDialog(app.views['wac2'], stucklisteDialog)
         stucklisteDialog.show()
+    }
+
+    /**
+     * WAC-221
+     * Stückliste Dialog schliessen und keine Stückliste erstellen.
+     * Tablemodel muss nicht weiter abgefragt werden.
+     */
+    def stucklisteAbbrechen = { evt ->
+        // flag setzen, dass die Generierung abgebrochen werden soll
+        stucklisteAbgebrochen = true
+        stucklisteDialog.dispose()
+    }
+
+    /**
+     * WAC-221
+     * Stückliste Dialog schliessen und Werte aus Tablemodel auslesen.
+     * Hiernach wird die Stückliste generiert.
+     */
+    def stucklisteWeiter = { evt ->
+        stucklisteDialog.dispose()
     }
 
     /**
