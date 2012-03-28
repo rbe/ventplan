@@ -286,6 +286,7 @@ class ProjektModel {
             akustikZuluft: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList),
             akustikAbluft: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList),
             stuckliste: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList),
+            stucklisteSuche: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList)
     ]
 
     /**
@@ -1280,6 +1281,7 @@ class ProjektModel {
     }
 
     /**
+     * WAC-221
      * StucklisteView - Tablemodel erstellen.
      */
     def createStucklisteUbersichtTableModel() {
@@ -1289,6 +1291,19 @@ class ProjektModel {
         def writable = [false, true, false, false, false, false] as boolean[]
 //        gltmClosureWithTypes(columnNames, propertyNames, propertyTypes, writable, tableModels.stuckliste)
         gltmClosure(columnNames, propertyNames, writable, tableModels.stuckliste)
+    }
+
+    /**
+     * WAC-221
+     * StucklisteView - Tablemodel erstellen.
+     */
+    def createStucklisteErgebnisTableModel() {
+        def columnNames = ["Reihenfolge", "Anzahl", "Artikelnr.", "Text", "Einzelpreis", "Gesamtpreis"] as String[]
+        def propertyNames = ["reihenfolge", "anzahl", "artikelnummer", "text", "einzelpreis", "gesamtpreis"] as String[]
+        def propertyTypes = [Integer.class.getName(), Integer.class.getName(), Double.class.getName(), String.class.getName(), Double.class.getName(), Double.class.getName()]
+        def writable = [false, true, false, false, false, false] as boolean[]
+//        gltmClosureWithTypes(columnNames, propertyNames, propertyTypes, writable, tableModels.stucklisteSuche)
+        gltmClosure(columnNames, propertyNames, writable, tableModels.stucklisteSuche)
     }
 
 }

@@ -399,15 +399,31 @@ class ProjektController {
                     view.auslegungErstellerEmpfanger.enabled = true
                 }
         )
+
         if (nutzerdatenGeandert) {
-            // Auslegung/Dokument erstellen
-            try {
-                File wpxFile = new File(model.wpxFilename)
-                String xmlDoc = oooService.performAngebot(wpxFile, model.map, DEBUG)
-                makeDocument(type, wpxFile, xmlDoc)
-            } catch (e) {
-                String errorMsg = "Das ${type} konnte leider nicht erstellt werden.\n${e}"
-                app.controllers['Dialog'].showErrorDialog(errorMsg)
+
+            processStucklisteDialog()
+
+            if (!stucklisteAbgebrochen) {
+
+                def stucklisteModel = model.tableModels.stuckliste
+
+                Map newMap = new LinkedHashMap()
+                stucklisteModel.each() { a ->
+                    newMap.put(a.artikelnummer, [REIHENFOLGE: a.reihenfolge, LUFTART: a.luftart, ANZAHL: a.anzahl,
+                            MENGENEINHEIT: a.mengeneinheit, LIEFERMENGE: a.liefermenge, ARTIKEL: a.artikelnummer,
+                            ARTIKELBEZEICHNUNG: a.text, PREIS: a.einzelpreis])
+                }
+                // Auslegung/Dokument erstellen
+                try {
+                    File wpxFile = new File(model.wpxFilename)
+//                    String xmlDoc = oooService.performAngebot(wpxFile, model.map, DEBUG)
+                    String xmlDoc = oooService.performAngebot(wpxFile, model.map, DEBUG, )
+                    makeDocument(type, wpxFile, xmlDoc)
+                } catch (e) {
+                    String errorMsg = "Das ${type} konnte leider nicht erstellt werden.\n${e}"
+                    app.controllers['Dialog'].showErrorDialog(errorMsg)
+                }
             }
         }
     }
@@ -427,62 +443,13 @@ class ProjektController {
                 }
         )
         if (nutzerdatenGeandert) {
-            // 1. Stückliste als Map holen
-            // 2. Map in der StucklisteView anzeigen
-            // 3. Nach Artikeln suchen
-            // 4. Ergebnisliste anzeigen
-            // 5. Suchergebnisse zu der Map hinzufügen.
 
-            def stucklisteTableModel = model.createStucklisteUbersichtTableModel()
-
-            // WAC-221
-            stucklisteAbgebrochen = false
-            def artikelList = []
-            // Dialog zum Bearbeiten der Stuckliste aufrufen
-            def stuckliste = oooService.getStucklisteAsMap(model.map)
-            println "stuckliste => ${stuckliste.dump()}"
-            stuckliste.eachWithIndex { stuck, i ->
-                Map artikel = stuck.value as Map
-                println " stuck => ${stuck.dump()}"
-                println "   artikel => ${artikel.dump()}"
-                int reihenfolge = (int) artikel.REIHENFOLGE
-                double anzahl = (double) artikel.ANZAHL
-                //println String.format('%2d % 12d % 7.1f %6s %17s - %s', i + 1, reihenfolge, anzahl, artikel.MENGENEINHEIT, stuck.key, artikel.ARTIKELBEZEICHNUNG)
-                // Menge mit oder ohne Komma anzeigen?
-                String menge
-                if (anzahl * 10 > 0) {
-                    menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.MENGENEINHEIT)
-                } else {
-                    menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
-                }
-                menge
-                stuck.key
-                artikel.ARTIKELBEZEICHNUNG
-
-                //println "stuckliste - artikel -> ${artikel.dump()}"
-
-                def gesamtpreis = (anzahl * artikel.PREIS.toDouble2()) as double
-                model.tableModels.stuckliste.addAll([reihenfolge: reihenfolge, anzahl: anzahl,
-                        artikelnummer: artikel.ARTIKEL, text: artikel.ARTIKELBEZEICHNUNG,
-                        einzelpreis: artikel.PREIS, gesamtpreis: gesamtpreis,
-                        luftart: artikel.LUFTART, liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT])
-            }
-            //model.tableModels.stuckliste.addAll(artikelList)
-
-            // TODO mmu: Erweitern.
-            showStucklisteDialog(
-                "${type} anpassen",
-                "Eingaben speichern und ${type} erstellen",
-                { dialog ->
-                    view.stucklisteUbersichtTabelle.setModel(stucklisteTableModel)
-                }
-            )
+            processStucklisteDialog(type)
 
             if (!stucklisteAbgebrochen) {
 
                 def stucklisteModel = model.tableModels.stuckliste
-//                println "model.map -> ${model.map}"
-                
+
                 Map newMap = new LinkedHashMap()
                 stucklisteModel.each() { a ->
                     newMap.put(a.artikelnummer, [REIHENFOLGE: a.reihenfolge, LUFTART: a.luftart, ANZAHL: a.anzahl,
@@ -505,6 +472,55 @@ class ProjektController {
     }
 
     /**
+     * WAC-221
+     * Helper method to show the stuckliste dialog.
+     * @return Returns true if dialog was aborted.
+     */
+    def processStucklisteDialog(type) {
+
+        stucklisteAbgebrochen = false
+
+        if (model.tableModels.stucklisteSuche) {
+            model.tableModels.stucklisteSuche.clear()
+        }
+
+        def stucklisteTableModel = model.createStucklisteUbersichtTableModel()
+        def stucklisteSucheTableModel = model.createStucklisteErgebnisTableModel()
+
+        // Dialog zum Bearbeiten der Stuckliste aufrufen
+        def stuckliste = oooService.getStucklisteAsMap(model.map)
+        stuckliste.eachWithIndex { stuck, i ->
+            Map artikel = stuck.value as Map
+            int reihenfolge = (int) artikel.REIHENFOLGE
+            double anzahl = (double) artikel.ANZAHL
+            //println String.format('%2d % 12d % 7.1f %6s %17s - %s', i + 1, reihenfolge, anzahl, artikel.MENGENEINHEIT, stuck.key, artikel.ARTIKELBEZEICHNUNG)
+            // Menge mit oder ohne Komma anzeigen?
+            String menge
+            if (anzahl * 10 > 0) {
+                menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.MENGENEINHEIT)
+            } else {
+                menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
+            }
+
+            def gesamtpreis = (anzahl * artikel.PREIS.toDouble2()) as double
+            model.tableModels.stuckliste.addAll([reihenfolge: reihenfolge, anzahl: anzahl,
+                    artikelnummer: artikel.ARTIKEL, text: artikel.ARTIKELBEZEICHNUNG,
+                    einzelpreis: artikel.PREIS, gesamtpreis: gesamtpreis,
+                    luftart: artikel.LUFTART, liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT])
+        }
+
+        showStucklisteDialog(
+            "${type} anpassen",
+            "Eingaben speichern und ${type} erstellen",
+            { dialog ->
+                view.stucklisteUbersichtTabelle.setModel(stucklisteTableModel)
+                view.stucklisteErgebnisTabelle.setModel(stucklisteSucheTableModel)
+            }
+        )
+    }
+
+    /**
+     * WAC-211
      * Stuckliste Dialog anzeigen. In einer Art "Warenkorb" können hier die Artikel gesucht und die Anzahl der
      * Artikel verändert werden, bevor die Stückliste generiert wird.
      */
@@ -512,33 +528,13 @@ class ProjektController {
         // Dialog erzeugen
         String _title = title ?: 'Stückliste anpassen'
         String _okButtonText = okButtonText ?: 'Eingaben speichern'
-        stucklisteDialog = GH.createDialog(builder, StucklisteView, [title: _title, size: [800, 600], resizable: true, pack: true])
+        stucklisteDialog = GH.createDialog(builder, StucklisteView, [title: _title, size: [800, 600], resizable: true, pack: false])
 //        view.auslegungErstellerSpeichern.text = _okButtonText
         // Closure ausführen
         closure(stucklisteDialog)
         // Dialog ausrichten und anzeigen
         stucklisteDialog = GH.centerDialog(app.views['wac2'], stucklisteDialog)
         stucklisteDialog.show()
-    }
-
-    /**
-     * WAC-221
-     * Stückliste Dialog schliessen und keine Stückliste erstellen.
-     * Tablemodel muss nicht weiter abgefragt werden.
-     */
-    def stucklisteAbbrechen = { evt ->
-        // flag setzen, dass die Generierung abgebrochen werden soll
-        stucklisteAbgebrochen = true
-        stucklisteDialog.dispose()
-    }
-
-    /**
-     * WAC-221
-     * Stückliste Dialog schliessen und Werte aus Tablemodel auslesen.
-     * Hiernach wird die Stückliste generiert.
-     */
-    def stucklisteWeiter = { evt ->
-        stucklisteDialog.dispose()
     }
 
     /**
@@ -2292,7 +2288,75 @@ class ProjektController {
         }
     }
 
-    def stucklisteSucheHinzufugen = { evt = null ->
+    /**
+     * WAC-221
+     * Füge selektierten Artikel aus der Such-Ergebnisliste zur Stückliste hinzu.
+     */
+    def stucklisteSucheStarten = { evt ->
+        def text = view.stucklisteSucheArtikelnummer.text
+        def stucklisteResult = oooService.findArtikel(text)
+        stucklisteResult.each { row ->
+            def artikel = [:]
+            row.each { k, v ->
+                artikel.put(k, v)
+            }
+            int reihenfolge = (int) artikel.REIHENFOLGE
+            double anzahl = (double) artikel.ANZAHL
 
+            def gesamtpreis = (anzahl * artikel.PREIS.toDouble2()) as double
+            model.tableModels.stucklisteSuche.addAll([reihenfolge: reihenfolge, anzahl: anzahl,
+                    artikelnummer: artikel.ARTIKELNUMMER, text: artikel.ARTIKELBEZEICHNUNG,
+                    einzelpreis: artikel.PREIS, gesamtpreis: gesamtpreis,
+                    liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT])
+        }
+
+    }
+
+    /**
+     * WAC-221
+     * Starte Suche von Artikeln. Anschließend die Ergebnisse in der Ergebnis-Tabelle anzeigen.
+     */
+    def stucklisteSucheArtikelHinzufugen = { evt = null ->
+
+        def rowIndex = view.stucklisteErgebnisTabelle.getSelectedRow()
+        def artikel = model.tableModels.stucklisteSuche.get(rowIndex)
+
+        int reihenfolge = (int) artikel.reihenfolge
+        double anzahl = (double) artikel.anzahl
+
+        def gesamtpreis = (anzahl * artikel.einzelpreis.toDouble2()) as double
+        model.tableModels.stuckliste.addAll([reihenfolge: reihenfolge, anzahl: anzahl,
+                artikelnummer: artikel.artikelnummer, text: artikel.text,
+                einzelpreis: artikel.einzelpreis, gesamtpreis: gesamtpreis,
+                liefermenge: artikel.liefermenge, mengeneinheit: artikel.mengeneinheit])
+    }
+
+    /**
+     * WAC-221
+     * Stückliste Dialog schliessen und keine Stückliste erstellen.
+     * Tablemodel muss nicht weiter abgefragt werden.
+     */
+    def stucklisteAbbrechen = { evt ->
+        // flag setzen, dass die Generierung abgebrochen werden soll
+        stucklisteAbgebrochen = true
+        stucklisteDialog.dispose()
+    }
+
+    /**
+     * WAC-221
+     * Stückliste Dialog schliessen und Werte aus Tablemodel auslesen.
+     * Hiernach wird die Stückliste generiert.
+     */
+    def stucklisteWeiter = { evt ->
+        stucklisteDialog.dispose()
+    }
+
+    /**
+     * WAC-221
+     * Lösche Artikel aus der Tabelle und Tablemodel.
+     */
+    def stucklisteArtikelLoeschen = { evt ->
+        int selectedRow = view.stucklisteUbersichtTabelle.getSelectedRow()
+        model.tableModels.stuckliste.remove(selectedRow)
     }
 }

@@ -19,33 +19,21 @@ import java.text.SimpleDateFormat
 import javax.swing.table.JTableHeader
 
 // Stuckliste view
-panel(id: "stucklisteSuchePanel", layout: new MigLayout("fillx, wrap", "[fill]", "[]para[]"), constraints: "grow") {
-    panel(id: "stucklisteSuchePanel", layout: new MigLayout("fillx, wrap", "[fill]para[fill]para[fill]para[]", ""), constraints: "grow") {
-        label("Artikelnr.")
-        label("Text/Beschreibung")
-        label("Anzahl")
-        label()
+panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]', '[]para[]'), constraints: 'grow') {
+    panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]para[fill]para[fill]', ''), constraints: 'grow') {
+        label('Artikelnr.', constraints: 'span 3')
+        //label('Text/Beschreibung')
+        //label('Anzahl')
 
-        textField(id: "stucklisteSucheArtikelnummer")
-        label(id: "stucklisteSucheArtikeltext")
-        textField(id: "stucklisteSucheArtikelanzahl")
-        button(id: "stucklisteSucheHinzufugen", text: "+")
+        textField(id: 'stucklisteSucheArtikelnummer', constraints: "span 2")
+        //label(id: 'stucklisteSucheArtikeltext')
+        //textField(id: 'stucklisteSucheArtikelanzahl')
+        button(id: 'stucklisteSucheStarten', text: 'Suchen')
+
     }
-//    panel(id: "stucklisteErgebnisPanel", layout: new MigLayout("fillx, wrap", "[fill]", ""), constraints: "grow") {
-//        scrollPane() {
-//            table(id: "stucklisteErgebnisTabelle", model: model.createStucklisteUbersichtTableModel()) {
-//                //current.setRowHeight(16)
-//                current.setSortable(false)
-//                current.getTableHeader().setDefaultRenderer(new JTableHeader().getDefaultRenderer())
-//                current.setAutoCreateRowSorter(false)
-//                current.setRowSorter(null)
-//                current.setFillsViewportHeight(true)
-//            }
-//        }
-//    }
-    panel(id: "stucklisteUbersichtPanel", layout: new MigLayout("fillx, wrap", "[fill]", ""), constraints: "grow") {
+    panel(id: 'stucklisteErgebnisPanel', layout: new MigLayout('fillx, wrap', '[fill]', ''), constraints: 'grow') {
         scrollPane() {
-            table(id: "stucklisteUbersichtTabelle") {
+            table(id: 'stucklisteErgebnisTabelle', model: model.createStucklisteErgebnisTableModel()) {
                 //current.setRowHeight(16)
                 current.setSortable(false)
                 current.getTableHeader().setDefaultRenderer(new JTableHeader().getDefaultRenderer())
@@ -54,8 +42,22 @@ panel(id: "stucklisteSuchePanel", layout: new MigLayout("fillx, wrap", "[fill]",
                 current.setFillsViewportHeight(true)
             }
         }
+        button(id: 'stucklisteSucheHinzufugen', text: 'Ausgewählten Artikel zur Stückliste hinzufügen')
     }
-    panel(id: "stucklisteUbersichtPanel", layout: new MigLayout("fill, wrap", "[]para[]", ""), constraints: "grow") {
+    panel(id: 'stucklisteUbersichtPanel', layout: new MigLayout('fillx, wrap', '[fill]', ''), constraints: 'grow') {
+        scrollPane() {
+            table(id: 'stucklisteUbersichtTabelle', model: model.createStucklisteUbersichtTableModel()) {
+                //current.setRowHeight(16)
+                current.setSortable(false)
+                current.getTableHeader().setDefaultRenderer(new JTableHeader().getDefaultRenderer())
+                current.setAutoCreateRowSorter(false)
+                current.setRowSorter(null)
+                current.setFillsViewportHeight(true)
+            }
+        }
+        button(id: 'stucklisteUbersichtLoescheArtikel', text: 'Ausgewählten Artikel aus Liste löschen')
+    }
+    panel(id: 'stucklisteUbersichtPanel', layout: new MigLayout('fill, wrap', '[]para[]', ''), constraints: 'grow') {
         button(id: 'stucklisteWeiter', text: 'Weiter zur Stücklisten-Generierung')
         button(id: 'stucklisteAbbrechen', text: 'Vorgang abbrechen')
     }

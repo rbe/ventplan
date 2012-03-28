@@ -157,21 +157,25 @@ class StucklisteService {
      * @param artikelnummer
      * @return Map
      */
-    Map findArtikel(text) {
+    List findArtikel(text) {
         // Check arguments
         if (null == text) {
             throw new IllegalStateException('Kein Text angegeben!')
         }
+        text = '%' + text.value + '%'
         // JOIN pakete -> stuckliste
         StringBuilder statement = new StringBuilder()
         statement << 'SELECT a.artikelnummer, a.artikelbezeichnung, 1.0 ANZAHL, 900 REIHENFOLGE, a.mengeneinheit, a.liefermenge, a.preis' <<
                 '  FROM artikelstamm a' <<
-                ' WHERE a.artikelnummer = ?.text' <<
-                '    OR a.artikelbezeichnung = ?.text'
+                ' WHERE a.artikelnummer like ?.text' <<
+                '    OR a.artikelbezeichnung like ?.text'
         def r = withSql { dataSourceName, sql ->
-            sql.firstRow(statement.toString(), [text: text])
+            sql.rows(statement.toString(), [text: text])
         }
-        r.each { k, v -> r[k] = getVal(v) }
+
+        r.each { row ->
+            row.each { k, v -> row[k] = getVal(v) }
+        }
         /*if (DEBUG)
             println "${this}.findArtikel(${text}): " + r.dump()*/
         return r
@@ -503,6 +507,7 @@ class StucklisteService {
      */
     Map makeResult(Map stuckliste) {
         stuckliste.sort { k, v ->
+            println "makeResult -> ${v.dump()}"
             /*it.value*/v.REIHENFOLGE
         }
     }
