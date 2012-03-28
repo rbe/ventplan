@@ -143,13 +143,37 @@ class StucklisteService {
         StringBuilder statement = new StringBuilder()
         statement << 'SELECT a.artikelnummer, a.artikelbezeichnung, 1.0 ANZAHL, 900 REIHENFOLGE, a.mengeneinheit, a.liefermenge, a.preis' <<
                 '  FROM artikelstamm a' <<
-                ' WHERE artikelnummer = ?.artikelnummer'
+                ' WHERE a.artikelnummer = ?.artikelnummer'
         def r = withSql { dataSourceName, sql ->
             sql.firstRow(statement.toString(), [artikelnummer: artikelnummer])
         }
         r.each { k, v -> r[k] = getVal(v) }
         /*if (DEBUG)
-            println "${this}.artikel(${artikelnummer}): " + r.dump()*/
+            println "${this}.getArtikel(${artikelnummer}): " + r.dump()*/
+        return r
+    }
+
+    /**
+     * @param artikelnummer
+     * @return Map
+     */
+    Map findArtikel(text) {
+        // Check arguments
+        if (null == text) {
+            throw new IllegalStateException('Kein Text angegeben!')
+        }
+        // JOIN pakete -> stuckliste
+        StringBuilder statement = new StringBuilder()
+        statement << 'SELECT a.artikelnummer, a.artikelbezeichnung, 1.0 ANZAHL, 900 REIHENFOLGE, a.mengeneinheit, a.liefermenge, a.preis' <<
+                '  FROM artikelstamm a' <<
+                ' WHERE a.artikelnummer = ?.text' <<
+                '    OR a.artikelbezeichnung = ?.text'
+        def r = withSql { dataSourceName, sql ->
+            sql.firstRow(statement.toString(), [text: text])
+        }
+        r.each { k, v -> r[k] = getVal(v) }
+        /*if (DEBUG)
+            println "${this}.findArtikel(${text}): " + r.dump()*/
         return r
     }
 
@@ -478,7 +502,9 @@ class StucklisteService {
      * @param stuckliste
      */
     Map makeResult(Map stuckliste) {
-        stuckliste.sort { it.value.REIHENFOLGE }
+        stuckliste.sort { k, v ->
+            /*it.value*/v.REIHENFOLGE
+        }
     }
 
     /**
@@ -524,13 +550,13 @@ class StucklisteService {
         List verteilebenen = getVerteilebenen(map)
         int anzahlVerteilebenen = verteilebenen.size() - 1
         if (anzahlVerteilebenen > 0) {
-        if (DEBUG) println String.format("%17s für %8s (Vs=%d) sind %s", 'Verteilbenen', zentralgerat, volumenstrom, verteilebenen.join(', '))
+            if (DEBUG) println String.format("%17s für %8s (Vs=%d) sind %s", 'Verteilbenen', zentralgerat, volumenstrom, verteilebenen.join(', '))
             1.upto anzahlVerteilebenen, {
-            if (DEBUG) {
-                println String.format("%17s für %8s (Vs=%d), %s für Ebene(n) %s", 'Erweiterungspaket', zentralgerat, volumenstrom, erwei, verteilebenen[it])
+                if (DEBUG) {
+                    println String.format("%17s für %8s (Vs=%d), %s für Ebene(n) %s", 'Erweiterungspaket', zentralgerat, volumenstrom, erwei, verteilebenen[it])
+                }
+                pakete += erwei
             }
-            pakete += erwei
-        }
         }
         // Außenluftpaket
         List aussenluftpaket = getAussenluftpaket('300WAC', volumenstrom, 'Wand')
