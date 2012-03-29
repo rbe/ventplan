@@ -1285,11 +1285,14 @@ class ProjektModel {
      * StucklisteView - Tablemodel erstellen.
      */
     def createStucklisteUbersichtTableModel() {
-        def columnNames = ["Reihenfolge", "Anzahl", "Artikelnr.", "Text", "Einzelpreis", "Gesamtpreis"] as String[]
-        def propertyNames = ["reihenfolge", "anzahl", "artikelnummer", "text", "einzelpreis", "gesamtpreis"] as String[]
-        def propertyTypes = [Integer.class.getName(), Integer.class.getName(), Double.class.getName(), String.class.getName(), Double.class.getName(), Double.class.getName()]
-        def writable = [false, true, false, false, false, false] as boolean[]
-//        gltmClosureWithTypes(columnNames, propertyNames, propertyTypes, writable, tableModels.stuckliste)
+//        def columnNames = ["Reihenfolge", "Anzahl", "Artikelnr.", "Text"] as String[]
+//        def propertyNames = ["reihenfolge", "anzahl", "artikelnummer", "text", "einzelpreis", "gesamtpreis"] as String[]
+//        def propertyTypes = [Integer.class.getName(), Integer.class.getName(), Double.class.getName(), String.class.getName(), Double.class.getName(), Double.class.getName()]
+//        def writable = [false, true, false, false, false, false] as boolean[]
+        def columnNames = ["Anzahl", "Artikelnr.", "Text"] as String[]
+        def propertyNames = ["anzahl", "artikelnummer", "text"] as String[]
+        def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
+        def writable = [true, false, false] as boolean[]
         gltmClosure(columnNames, propertyNames, writable, tableModels.stuckliste)
     }
 
@@ -1298,11 +1301,14 @@ class ProjektModel {
      * StucklisteView - Tablemodel erstellen.
      */
     def createStucklisteErgebnisTableModel() {
-        def columnNames = ["Reihenfolge", "Anzahl", "Artikelnr.", "Text", "Einzelpreis", "Gesamtpreis"] as String[]
-        def propertyNames = ["reihenfolge", "anzahl", "artikelnummer", "text", "einzelpreis", "gesamtpreis"] as String[]
-        def propertyTypes = [Integer.class.getName(), Integer.class.getName(), Double.class.getName(), String.class.getName(), Double.class.getName(), Double.class.getName()]
-        def writable = [false, true, false, false, false, false] as boolean[]
-//        gltmClosureWithTypes(columnNames, propertyNames, propertyTypes, writable, tableModels.stucklisteSuche)
+//        def columnNames = ["Anzahl", "Artikelnr.", "Text"] as String[]
+//        def propertyNames = ["reihenfolge", "anzahl", "artikelnummer", "text", "einzelpreis", "gesamtpreis"] as String[]
+//        def propertyTypes = [Integer.class.getName(), Integer.class.getName(), Double.class.getName(), String.class.getName(), Double.class.getName(), Double.class.getName()]
+//        def writable = [false, true, false, false, false, false] as boolean[]
+        def columnNames = ["Anzahl", "Artikelnr.", "Text"] as String[]
+        def propertyNames = ["anzahl", "artikelnummer", "text"] as String[]
+        def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
+        def writable = [true, false, false] as boolean[]
         gltmClosure(columnNames, propertyNames, writable, tableModels.stucklisteSuche)
     }
 

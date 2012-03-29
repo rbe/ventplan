@@ -2190,15 +2190,30 @@ class ProjektController {
     def stucklisteSucheArtikelHinzufugen = { evt = null ->
         def rowIndex = view.stucklisteErgebnisTabelle.getSelectedRow()
         def artikel = model.tableModels.stucklisteSuche.get(rowIndex)
-        int reihenfolge = (int) artikel.reihenfolge
-        double anzahl = (double) artikel.anzahl
-        def gesamtpreis = (anzahl * artikel.einzelpreis.toDouble2()) as double
-        model.tableModels.stuckliste.addAll([
-                reihenfolge: reihenfolge, anzahl: anzahl,
-                artikelnummer: artikel.artikelnummer, text: artikel.text,
-                einzelpreis: artikel.einzelpreis, gesamtpreis: gesamtpreis,
-                liefermenge: artikel.liefermenge, mengeneinheit: artikel.mengeneinheit
-        ])
+
+        // Prüfen, ob Artikel bereits im Model ist.
+        // Falls vorhanden, Anzahl um 1 erhöhen und die Tabelle aktualisieren
+        boolean anzahlGeaendert = false
+        model.tableModels.stuckliste.each { s ->
+            if (s.artikelnummer.equals(artikel.artikelnummer)) {
+                s.anzahl = (double) s.anzahl + 1
+                anzahlGeaendert = true
+                // Tabelle aktualisieren, damit die Anzahl für den Artikel geändert wird.
+                view.stucklisteUbersichtTabelle.repaint()
+                return
+            }
+        }
+        if (!anzahlGeaendert) {
+            int reihenfolge = (int) artikel.reihenfolge
+            double anzahl = (double) artikel.anzahl
+            def gesamtpreis = (anzahl * artikel.einzelpreis.toDouble2()) as double
+            model.tableModels.stuckliste.addAll([
+                    reihenfolge: reihenfolge, anzahl: anzahl,
+                    artikelnummer: artikel.artikelnummer, text: artikel.text,
+                    einzelpreis: artikel.einzelpreis, gesamtpreis: gesamtpreis,
+                    liefermenge: artikel.liefermenge, mengeneinheit: artikel.mengeneinheit
+            ])
+        }
     }
 
     /**
