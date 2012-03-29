@@ -172,7 +172,6 @@ class StucklisteService {
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [text: text])
         }
-
         r.each { row ->
             row.each { k, v -> row[k] = getVal(v) }
         }
@@ -506,9 +505,8 @@ class StucklisteService {
      * @param stuckliste
      */
     Map makeResult(Map stuckliste) {
-        stuckliste.sort { k, v ->
-            println "makeResult -> ${v.dump()}"
-            /*it.value*/v.REIHENFOLGE
+        stuckliste.sort { Map.Entry map ->
+            map.value.REIHENFOLGE
         }
     }
 
@@ -539,8 +537,8 @@ class StucklisteService {
     Map processData(Map map) {
         def pakete = []
         Map stuckliste = [:]
-        String zentralgerat = '300WAC'
-        Integer volumenstrom = 170
+        String zentralgerat = map.anlage.zentralgerat
+        Integer volumenstrom = map.anlage.volumenstromZentralgerat
         // Grundpaket
         List grundpaket = getGrundpaket(zentralgerat)
         if (DEBUG) println String.format("%17s für %8s (Vs=%d) ist %s", 'Grundpaket', zentralgerat, volumenstrom, grundpaket)

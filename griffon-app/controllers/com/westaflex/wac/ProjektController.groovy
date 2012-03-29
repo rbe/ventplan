@@ -11,9 +11,10 @@ package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
 
+import griffon.util.GriffonApplicationUtils
 import groovyx.net.http.HTTPBuilder
 import java.awt.Desktop
-import griffon.util.GriffonApplicationUtils
+import javax.swing.JDialog
 
 /**
  *
@@ -27,12 +28,13 @@ class ProjektController {
     def model
     def view
 
-    def wacCalculationService
-    def wacModelService
-    def projektModelService
-    def oooService
+    WacCalculationService wacCalculationService
+    WacModelService wacModelService
+    ProjektModelService projektModelService
+    StucklisteService stucklisteService
+    OooService oooService
 
-    javax.swing.JDialog raumBearbeitenDialog
+    JDialog raumBearbeitenDialog
     def wbwDialog
     def teilstreckenDialog
 
@@ -390,35 +392,34 @@ class ProjektController {
      */
     def angebotErstellen() {
         String type = 'Angebot'
-        // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
-        showNutzerdatenDialog(
-                "${type} erstellen - Daten eingeben",
-                "Eingaben speichern und ${type} erstellen",
-                { dialog ->
-                    view.auslegungErstellerAngebotsnummer.enabled = true
-                    view.auslegungErstellerEmpfanger.enabled = true
-                }
-        )
-
-        if (nutzerdatenGeandert) {
-
-            processStucklisteDialog()
-
-            if (!stucklisteAbgebrochen) {
-
+        processStucklisteDialog()
+        if (!stucklisteAbgebrochen) {
+            // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
+            showNutzerdatenDialog(
+                    "${type} erstellen - Daten eingeben",
+                    "Eingaben speichern und ${type} erstellen",
+                    { dialog ->
+                        view.auslegungErstellerAngebotsnummer.enabled = true
+                        view.auslegungErstellerEmpfanger.enabled = true
+                    }
+            )
+            if (nutzerdatenGeandert) {
                 def stucklisteModel = model.tableModels.stuckliste
-
                 Map newMap = new LinkedHashMap()
                 stucklisteModel.each() { a ->
-                    newMap.put(a.artikelnummer, [REIHENFOLGE: a.reihenfolge, LUFTART: a.luftart, ANZAHL: a.anzahl,
-                            MENGENEINHEIT: a.mengeneinheit, LIEFERMENGE: a.liefermenge, ARTIKEL: a.artikelnummer,
-                            ARTIKELBEZEICHNUNG: a.text, PREIS: a.einzelpreis])
+                    newMap.put(
+                            a.artikelnummer,
+                            [
+                                    REIHENFOLGE: a.reihenfolge, LUFTART: a.luftart, ANZAHL: a.anzahl,
+                                    MENGENEINHEIT: a.mengeneinheit, LIEFERMENGE: a.liefermenge, ARTIKEL: a.artikelnummer,
+                                    ARTIKELBEZEICHNUNG: a.text, PREIS: a.einzelpreis
+                            ]
+                    )
                 }
                 // Auslegung/Dokument erstellen
                 try {
                     File wpxFile = new File(model.wpxFilename)
-//                    String xmlDoc = oooService.performAngebot(wpxFile, model.map, DEBUG)
-                    String xmlDoc = oooService.performAngebot(wpxFile, model.map, DEBUG, )
+                    String xmlDoc = oooService.performAngebot(wpxFile, model.map, DEBUG, newMap)
                     makeDocument(type, wpxFile, xmlDoc)
                 } catch (e) {
                     String errorMsg = "Das ${type} konnte leider nicht erstellt werden.\n${e}"
@@ -433,34 +434,33 @@ class ProjektController {
      */
     def stuecklisteErstellen() {
         String type = 'Stückliste'
-        // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
-        showNutzerdatenDialog(
-                "${type} erstellen - Daten eingeben",
-                "Eingaben speichern und ${type} erstellen",
-                { dialog ->
-                    view.auslegungErstellerAngebotsnummer.enabled = false
-                    view.auslegungErstellerEmpfanger.enabled = false
-                }
-        )
-        if (nutzerdatenGeandert) {
-
-            processStucklisteDialog(type)
-
-            if (!stucklisteAbgebrochen) {
-
+        processStucklisteDialog(type)
+        if (!stucklisteAbgebrochen) {
+            // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
+            showNutzerdatenDialog(
+                    "${type} erstellen - Daten eingeben",
+                    "Eingaben speichern und ${type} erstellen",
+                    { dialog ->
+                        view.auslegungErstellerAngebotsnummer.enabled = false
+                        view.auslegungErstellerEmpfanger.enabled = false
+                    }
+            )
+            if (nutzerdatenGeandert) {
                 def stucklisteModel = model.tableModels.stuckliste
-
                 Map newMap = new LinkedHashMap()
                 stucklisteModel.each() { a ->
-                    newMap.put(a.artikelnummer, [REIHENFOLGE: a.reihenfolge, LUFTART: a.luftart, ANZAHL: a.anzahl,
-                            MENGENEINHEIT: a.mengeneinheit, LIEFERMENGE: a.liefermenge, ARTIKEL: a.artikelnummer,
-                            ARTIKELBEZEICHNUNG: a.text, PREIS: a.einzelpreis])
+                    newMap.put(
+                            a.artikelnummer,
+                            [
+                                    REIHENFOLGE: a.reihenfolge, LUFTART: a.luftart, ANZAHL: a.anzahl,
+                                    MENGENEINHEIT: a.mengeneinheit, LIEFERMENGE: a.liefermenge, ARTIKEL: a.artikelnummer,
+                                    ARTIKELBEZEICHNUNG: a.text, PREIS: a.einzelpreis
+                            ]
+                    )
                 }
-
                 // Auslegung/Dokument erstellen
                 try {
                     File wpxFile = new File(model.wpxFilename)
-//                    String xmlDoc = oooService.performStueckliste(wpxFile, model.map, DEBUG)
                     String xmlDoc = oooService.performStueckliste(wpxFile, model.map, DEBUG, newMap)
                     makeDocument(type, wpxFile, xmlDoc)
                 } catch (e) {
@@ -477,21 +477,20 @@ class ProjektController {
      * @return Returns true if dialog was aborted.
      */
     def processStucklisteDialog(type) {
-
+        //
         stucklisteAbgebrochen = false
-
+        //
         if (model.tableModels.stucklisteSuche) {
             model.tableModels.stucklisteSuche.clear()
         }
-
+        //
         def stucklisteTableModel = model.createStucklisteUbersichtTableModel()
         def stucklisteSucheTableModel = model.createStucklisteErgebnisTableModel()
-
         // Dialog zum Bearbeiten der Stuckliste aufrufen
-        def stuckliste = oooService.getStucklisteAsMap(model.map)
+        Map stuckliste = stucklisteService.processData(model.map)
         stuckliste.eachWithIndex { stuck, i ->
             Map artikel = stuck.value as Map
-            int reihenfolge = (int) artikel.REIHENFOLGE
+            int reihenfolge = (int) artikel.REIHENFOLGE ?: 900
             double anzahl = (double) artikel.ANZAHL
             //println String.format('%2d % 12d % 7.1f %6s %17s - %s', i + 1, reihenfolge, anzahl, artikel.MENGENEINHEIT, stuck.key, artikel.ARTIKELBEZEICHNUNG)
             // Menge mit oder ohne Komma anzeigen?
@@ -501,21 +500,21 @@ class ProjektController {
             } else {
                 menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
             }
-
             def gesamtpreis = (anzahl * artikel.PREIS.toDouble2()) as double
-            model.tableModels.stuckliste.addAll([reihenfolge: reihenfolge, anzahl: anzahl,
+            model.tableModels.stuckliste.addAll([
+                    reihenfolge: reihenfolge, anzahl: anzahl,
                     artikelnummer: artikel.ARTIKEL, text: artikel.ARTIKELBEZEICHNUNG,
                     einzelpreis: artikel.PREIS, gesamtpreis: gesamtpreis,
-                    luftart: artikel.LUFTART, liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT])
+                    luftart: artikel.LUFTART, liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT
+            ])
         }
-
         showStucklisteDialog(
-            "${type} anpassen",
-            "Eingaben speichern und ${type} erstellen",
-            { dialog ->
-                view.stucklisteUbersichtTabelle.setModel(stucklisteTableModel)
-                view.stucklisteErgebnisTabelle.setModel(stucklisteSucheTableModel)
-            }
+                "${type} anpassen",
+                "Eingaben speichern und ${type} erstellen",
+                { dialog ->
+                    view.stucklisteUbersichtTabelle.setModel(stucklisteTableModel)
+                    view.stucklisteErgebnisTabelle.setModel(stucklisteSucheTableModel)
+                }
         )
     }
 
@@ -538,7 +537,7 @@ class ProjektController {
     }
 
     /**
-     * 
+     *
      * @param wpxFile
      * @param xmlDoc
      * @return
@@ -2161,140 +2160,12 @@ class ProjektController {
     }
 
     /**
-     *
-     void generiereVerlegeplan() {try {def title = getProjektTitel() as String
-
-     // Save document in user home dir
-     //def userDir = System.getProperty("user.home")
-     //userDir = userDir + "/" + title + "_" + System.currentTimeMillis() + ".pdf"
-     def verlegeplanFilename = model.wpxFilename - '.wpx' + ' Verlegeplan.pdf'
-
-     PdfCreator pdfCreator = new PdfCreator()
-     // Create a new pdf document
-     pdfCreator.createDocument(verlegeplanFilename)
-
-     def logourl = Wac2Resource.getPdfLogo()
-     if (DEBUG)
-     println "logourl -> ${logourl.dump()}"
-     pdfCreator.addLogo(logourl)
-     // Add title to document
-     pdfCreator.addTitle(title)
-     // create table with relative column width
-     pdfCreator.createTable([2f, 1f, 3f, 1f] as float[])
-
-     if (DEBUG)
-     println "adding zentralgerät... "
-     // Zentralgerät
-     def zentralgerat = "Zentralgerät: ${model.map.anlage.zentralgerat}" as String
-     pdfCreator.addArtikelToDocument(zentralgerat)
-     if (DEBUG)
-     println "added zentralgerät... "
-     // Add empty line.
-     pdfCreator.addArtikelToDocument("  ")
-     if (DEBUG)
-     println "adding empty artikel"
-
-     model.map.raum.raume.each { r ->
-     erzeugeRaumVerlegeplanAbluft(r, pdfCreator)}model.map.raum.raume.each { r ->
-     erzeugeRaumVerlegeplanZuluft(r, pdfCreator)}model.map.raum.raume.each { r ->
-     erzeugeRaumVerlegeplanUberstrom(r, pdfCreator)}erzeugeDruckverlustVerlegeplan(model.map.dvb, pdfCreator)
-     erzeugeSchalldampferVerlegeplan(model.map.akustik.zuluft, "zuluft", pdfCreator)
-     erzeugeSchalldampferVerlegeplan(model.map.akustik.abluft, "abluft", pdfCreator)
-
-     // Add table to the document
-     pdfCreator.addTable()
-     // Close the pdf document
-     pdfCreator.closeDocument()
-     // Dialog nicht anzeigen, einfach PDF öffnen
-     //def successMsg = "Verlegeplan '${verlegeplanFilename}' erfolgreich generiert"
-     //app.controllers["Dialog"].showInformDialog(successMsg as String)
-     java.io.File sf = new java.io.File(verlegeplanFilename)
-     if (sf.exists()) {java.awt.Desktop.desktop.open(sf)}} catch (e) {println "Error generating document: ${e.dump()}"
-
-     def errorMsg = "Beim generieren des Verlegeplans ist ein Fehler aufgetreten"
-     app.controllers["Dialog"].showErrorDialog(errorMsg as String)}}*/
-
-    /**
-     *
-     * @param map
-     * @param pdfCreator
-     */
-    void erzeugeRaumVerlegeplanAbluft(map, pdfCreator) {
-
-        if (map.raumBezeichnungAbluftventile) {
-            if (DEBUG)
-                println "adding Abluft... ${map.dump()}"
-            pdfCreator.addArtikel(map.raumBezeichnung, "Abluft", map.raumBezeichnungAbluftventile, map.raumAnzahlAbluftventile)
-        }
-    }
-
-    /**
-     *
-     * @param map
-     * @param pdfCreator
-     */
-    void erzeugeRaumVerlegeplanZuluft(map, pdfCreator) {
-        if (map.raumBezeichnungZuluftventile) {
-            if (DEBUG)
-                println "adding Zuluft... ${map.dump()}"
-            pdfCreator.addArtikel(map.raumBezeichnung, "Zuluft", map.raumBezeichnungZuluftventile, map.raumAnzahlZuluftventile)
-        }
-    }
-
-    /**
-     *
-     * @param map
-     * @param pdfCreator
-     */
-    void erzeugeRaumVerlegeplanUberstrom(map, pdfCreator) {
-        if (map.raumAnzahlUberstromVentile && map.raumAnzahlUberstromVentile > 0) {
-            if (DEBUG)
-                println "adding Überström... ${map.dump()}"
-            pdfCreator.addArtikel("", "Überström", map.raumUberstromElement, map.raumAnzahlUberstromVentile)
-        }
-    }
-
-    /**
-     *
-     * @param dvb
-     * @param pdfCreator
-     */
-    void erzeugeDruckverlustVerlegeplan(dvb, pdfCreator) {
-        dvb.kanalnetz.each {
-            if (it.kanalbezeichnung) {
-                if (DEBUG)
-                    println "adding kanalnetz..."
-                pdfCreator.addArtikel("", "", it.kanalbezeichnung, it.lange)
-            }
-        }
-    }
-
-    /**
-     *
-     * @param akusik
-     * @param luftart
-     * @param pdfCreator
-     */
-    void erzeugeSchalldampferVerlegeplan(akustik, luftart, pdfCreator) {
-        if (akustik.hauptschalldampfer1) {
-            if (DEBUG)
-                println "adding schalldampfer 1..."
-            pdfCreator.addArtikel("", "", akustik.hauptschalldampfer1, 1)
-        }
-        if (akustik.hauptschalldampfer2) {
-            if (DEBUG)
-                println "adding schalldampfer 2..."
-            pdfCreator.addArtikel("", "", akustik.hauptschalldampfer2, 1)
-        }
-    }
-
-    /**
      * WAC-221
      * Füge selektierten Artikel aus der Such-Ergebnisliste zur Stückliste hinzu.
      */
     def stucklisteSucheStarten = { evt ->
         def text = view.stucklisteSucheArtikelnummer.text
-        def stucklisteResult = oooService.findArtikel(text)
+        def stucklisteResult = stucklisteService.findArtikel(text)
         stucklisteResult.each { row ->
             def artikel = [:]
             row.each { k, v ->
@@ -2302,14 +2173,14 @@ class ProjektController {
             }
             int reihenfolge = (int) artikel.REIHENFOLGE
             double anzahl = (double) artikel.ANZAHL
-
             def gesamtpreis = (anzahl * artikel.PREIS.toDouble2()) as double
-            model.tableModels.stucklisteSuche.addAll([reihenfolge: reihenfolge, anzahl: anzahl,
+            model.tableModels.stucklisteSuche.addAll([
+                    reihenfolge: reihenfolge, anzahl: anzahl,
                     artikelnummer: artikel.ARTIKELNUMMER, text: artikel.ARTIKELBEZEICHNUNG,
                     einzelpreis: artikel.PREIS, gesamtpreis: gesamtpreis,
-                    liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT])
+                    liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT
+            ])
         }
-
     }
 
     /**
@@ -2317,18 +2188,17 @@ class ProjektController {
      * Starte Suche von Artikeln. Anschließend die Ergebnisse in der Ergebnis-Tabelle anzeigen.
      */
     def stucklisteSucheArtikelHinzufugen = { evt = null ->
-
         def rowIndex = view.stucklisteErgebnisTabelle.getSelectedRow()
         def artikel = model.tableModels.stucklisteSuche.get(rowIndex)
-
         int reihenfolge = (int) artikel.reihenfolge
         double anzahl = (double) artikel.anzahl
-
         def gesamtpreis = (anzahl * artikel.einzelpreis.toDouble2()) as double
-        model.tableModels.stuckliste.addAll([reihenfolge: reihenfolge, anzahl: anzahl,
+        model.tableModels.stuckliste.addAll([
+                reihenfolge: reihenfolge, anzahl: anzahl,
                 artikelnummer: artikel.artikelnummer, text: artikel.text,
                 einzelpreis: artikel.einzelpreis, gesamtpreis: gesamtpreis,
-                liefermenge: artikel.liefermenge, mengeneinheit: artikel.mengeneinheit])
+                liefermenge: artikel.liefermenge, mengeneinheit: artikel.mengeneinheit
+        ])
     }
 
     /**

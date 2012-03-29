@@ -140,26 +140,6 @@ class OooService {
 
     /**
      *
-     * @param map
-     * @return Returns a map of all artikel
-     */
-    def getStucklisteAsMap(Map map) {
-        def stuckliste = stucklisteService.processData(map)
-        //stucklisteService.makeResult(stuckliste)
-        return stuckliste
-    }
-
-    /**
-     * WAC-211
-     * @param text
-     * @return Returns a map of all artikel that we searched for
-     */
-    def findArtikel(text) {
-        return stucklisteService.findArtikel(text)
-    }
-
-    /**
-     *
      * @param wpxFile
      * @param map
      * @param saveOdiseeXml Save Odisee XML in file system? Defaults to false.
@@ -188,7 +168,6 @@ class OooService {
                     } else {
                         stuckliste = stucklisteService.processData(map)
                     }
-
                     stucklisteService.makeResult(stuckliste).eachWithIndex { stuck, i ->
                         Map artikel = stuck.value as Map
                         int reihenfolge = (int) artikel.REIHENFOLGE
@@ -297,7 +276,7 @@ class OooService {
         // Save Odisee request XML
         if (saveOdiseeXml) {
             def odiseeXmlFile = new File(wpxFile.parentFile, "${wpxFilenameWoExt}_${type}_odisee.xml")
-            odiseeXmlFile.withWriter("UTF-8") { writer ->
+            odiseeXmlFile.withWriter('UTF-8') { writer ->
                 writer.write(xml)
             }
         }
