@@ -9,6 +9,8 @@
  */
 package com.bensmann.griffon
 
+import org.xml.sax.InputSource
+
 /**
  *
  */
@@ -20,7 +22,7 @@ class CachedDTD {
     def static entityResolver = [
             resolveEntity: { publicId, systemId ->
                 try {
-                    new org.xml.sax.InputSource(CachedDTD.class.getResourceAsStream("dtd/" + systemId.split("/").last()))
+                    new InputSource(CachedDTD.class.getResourceAsStream("dtd/" + systemId.split("/").last()))
                 } catch (e) {
                     e.printStackTrace()
                     null
