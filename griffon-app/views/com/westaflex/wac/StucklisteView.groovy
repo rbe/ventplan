@@ -7,8 +7,6 @@
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
  */
-
-
 package com.westaflex.wac
 
 import net.miginfocom.swing.MigLayout
@@ -58,7 +56,7 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
         button(id: 'stucklisteUbersichtLoescheArtikel', text: 'Ausgewählten Artikel aus Liste löschen')
     }
     panel(id: 'stucklisteUbersichtPanel', layout: new MigLayout('fill, wrap', '[]para[]', ''), constraints: 'grow') {
-        button(id: 'stucklisteWeiter', text: 'Weiter zur Stücklisten-Generierung')
+        button(id: 'stucklisteWeiter', text: 'Dokument erstellen')
         button(id: 'stucklisteAbbrechen', text: 'Vorgang abbrechen')
     }
 }
