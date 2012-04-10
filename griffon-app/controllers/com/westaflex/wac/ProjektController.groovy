@@ -11,10 +11,11 @@ package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
 
-import griffon.util.GriffonApplicationUtils
 import groovyx.net.http.HTTPBuilder
+
 import java.awt.Desktop
 import javax.swing.JDialog
+import java.awt.Dialog
 
 /**
  *
@@ -392,7 +393,7 @@ class ProjektController {
      */
     def angebotErstellen() {
         String type = 'Angebot'
-        processStucklisteDialog()
+        processStucklisteDialog(type)
         if (!stucklisteAbgebrochen) {
             // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
             showNutzerdatenDialog(
@@ -478,7 +479,7 @@ class ProjektController {
      * Helper method to show the stuckliste dialog.
      * @return Returns true if dialog was aborted.
      */
-    def processStucklisteDialog(type) {
+    def processStucklisteDialog(String type) {
         //
         stucklisteAbgebrochen = false
         //
@@ -490,11 +491,13 @@ class ProjektController {
         def stucklisteSucheTableModel = model.createStucklisteErgebnisTableModel()
         // Dialog zum Bearbeiten der Stuckliste aufrufen
         Map stuckliste = stucklisteService.processData(model.map)
+        int position = 0
         stuckliste.eachWithIndex { stuck, i ->
             Map artikel = stuck.value as Map
-            int reihenfolge = (int) artikel.REIHENFOLGE ?: 900
+            //int reihenfolge = (int) artikel.REIHENFOLGE ?: 900
             double anzahl = (double) artikel.ANZAHL
             //println String.format('%2d % 12d % 7.1f %6s %17s - %s', i + 1, reihenfolge, anzahl, artikel.MENGENEINHEIT, stuck.key, artikel.ARTIKELBEZEICHNUNG)
+            /*
             // Menge mit oder ohne Komma anzeigen?
             String menge
             if (anzahl * 10 > 0) {
@@ -502,13 +505,17 @@ class ProjektController {
             } else {
                 menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
             }
+            */
             def gesamtpreis = (anzahl * artikel.PREIS.toDouble2()) as double
-            model.tableModels.stuckliste.addAll([
-                    reihenfolge: reihenfolge, anzahl: anzahl,
-                    artikelnummer: artikel.ARTIKEL, text: artikel.ARTIKELBEZEICHNUNG,
-                    einzelpreis: artikel.PREIS, gesamtpreis: gesamtpreis,
-                    luftart: artikel.LUFTART, liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT
-            ])
+            model.tableModels.stuckliste.addAll(
+                    [
+                            reihenfolge: position, anzahl: anzahl,
+                            artikelnummer: artikel.ARTIKEL, text: artikel.ARTIKELBEZEICHNUNG,
+                            einzelpreis: artikel.PREIS, gesamtpreis: gesamtpreis,
+                            luftart: artikel.LUFTART, liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT
+                    ]
+            )
+            position++
         }
         showStucklisteDialog(
                 "${type} anpassen",
@@ -530,7 +537,7 @@ class ProjektController {
         String _title = title ?: 'Stückliste anpassen'
         String _okButtonText = okButtonText ?: 'Eingaben speichern'
         stucklisteDialog = GH.createDialog(builder, StucklisteView, [title: _title, size: [800, 600], resizable: true, pack: false])
-//        view.auslegungErstellerSpeichern.text = _okButtonText
+        //view.auslegungErstellerSpeichern.text = _okButtonText
         // Closure ausführen
         closure(stucklisteDialog)
         // Dialog ausrichten und anzeigen
