@@ -446,17 +446,19 @@ class ProjektController {
                     }
             )
             if (nutzerdatenGeandert) {
+                int position = 0
                 def stucklisteModel = model.tableModels.stuckliste
                 Map newMap = new LinkedHashMap()
                 stucklisteModel.each() { a ->
                     newMap.put(
-                            a.artikelnummer,
-                            [
-                                    REIHENFOLGE: a.reihenfolge, LUFTART: a.luftart, ANZAHL: a.anzahl,
-                                    MENGENEINHEIT: a.mengeneinheit, LIEFERMENGE: a.liefermenge, ARTIKEL: a.artikelnummer,
-                                    ARTIKELBEZEICHNUNG: a.text, PREIS: a.einzelpreis
-                            ]
+                        a.artikelnummer,
+                        [
+                            REIHENFOLGE: position, LUFTART: a.luftart, ANZAHL: a.anzahl,
+                            MENGENEINHEIT: a.mengeneinheit, LIEFERMENGE: a.liefermenge, ARTIKEL: a.artikelnummer,
+                            ARTIKELBEZEICHNUNG: a.text, PREIS: a.einzelpreis
+                        ]
                     )
+                    position++
                 }
                 // Auslegung/Dokument erstellen
                 try {
@@ -2204,11 +2206,12 @@ class ProjektController {
             }
         }
         if (!anzahlGeaendert) {
-            int reihenfolge = (int) artikel.reihenfolge
+            //int reihenfolge = (int) artikel.reihenfolge
+            int position = model.tableModels.stuckliste.size()
             double anzahl = (double) artikel.anzahl
             def gesamtpreis = (anzahl * artikel.einzelpreis.toDouble2()) as double
             model.tableModels.stuckliste.addAll([
-                    reihenfolge: reihenfolge, anzahl: anzahl,
+                    reihenfolge: position, anzahl: anzahl,
                     artikelnummer: artikel.artikelnummer, text: artikel.text,
                     einzelpreis: artikel.einzelpreis, gesamtpreis: gesamtpreis,
                     liefermenge: artikel.liefermenge, mengeneinheit: artikel.mengeneinheit
@@ -2243,5 +2246,61 @@ class ProjektController {
     def stucklisteArtikelLoeschen = { evt ->
         int selectedRow = view.stucklisteUbersichtTabelle.getSelectedRow()
         model.tableModels.stuckliste.remove(selectedRow)
+    }
+
+    /**
+     * WAC-221
+     * Reihenfolge im Model ändern. Artikel nach oben verschieben.
+     */
+    def stucklisteArtikelReihenfolgeNachObenVerschieben = { evt ->
+        def rowIndex
+        try {
+            rowIndex = view.stucklisteUbersichtTabelle.getSelectedRow()
+            // nur Aktion starten, wenn ein Artikel selektiert ist.
+            if (rowIndex > 0) {
+                def artikelNachOben = model.tableModels.stuckliste.get(rowIndex)
+                def artikelNachUnten = model.tableModels.stuckliste.get(rowIndex - 1)
+
+                model.tableModels.stuckliste.set(rowIndex - 1, artikelNachOben)
+                model.tableModels.stuckliste.set(rowIndex, artikelNachUnten)
+
+                // Selektierte Zeile wieder markieren
+                view.stucklisteUbersichtTabelle.changeSelection(rowIndex - 1, 0, false, false)
+
+                view.stucklisteUbersichtTabelle.repaint()
+                return
+            }
+
+        } catch (e) {
+            // ignore me
+        }
+    }
+
+    /**
+     * WAC-221
+     * Reihenfolge im Model ändern. Artikel nach unten verschieben.
+     */
+    def stucklisteArtikelReihenfolgeNachUntenVerschieben = { evt ->
+        def rowIndex
+        try {
+            rowIndex = view.stucklisteUbersichtTabelle.getSelectedRow()
+            // nur Aktion starten, wenn ein Artikel selektiert ist.
+            if (rowIndex > -1) {
+                def artikelNachUnten = model.tableModels.stuckliste.get(rowIndex)
+                def artikelNachOben = model.tableModels.stuckliste.get(rowIndex + 1)
+
+                model.tableModels.stuckliste.set(rowIndex + 1, artikelNachUnten)
+                model.tableModels.stuckliste.set(rowIndex, artikelNachOben)
+
+                // Selektierte Zeile wieder markieren
+                view.stucklisteUbersichtTabelle.changeSelection(rowIndex + 1, 0, false, false)
+
+                view.stucklisteUbersichtTabelle.repaint()
+                return
+            }
+
+        } catch (e) {
+            // ignore me
+        }
     }
 }
