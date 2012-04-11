@@ -52,9 +52,10 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
             zl = zoneLayout {
                 zoneRow('a+*......1b^<.b')
                 zoneRow('.........1c^<.c')
-                zoneRow('........a......')
+                zoneRow('.........1d^<.d')
+                zoneRow('........a1e^<.e')
                 zoneRow('........2......')
-                zoneRow('d-............d')
+                zoneRow('f-............f')
             }
 
             scrollPane(constraints: 'a') {
@@ -67,10 +68,14 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
                     current.setFillsViewportHeight(true)
                 }
             }
-            button(id: 'stucklisteUbersichtLoescheArtikel', text: 'Ausgewählten Artikel aus Liste löschen', constraints: 'd')
 
             button(id: 'stucklisteUbersichtSortierNachObenVerschieben', text: '^', constraints: 'b')
             button(id: 'stucklisteUbersichtSortierNachUntenVerschieben', text: 'v', constraints: 'c')
+
+            button(id: 'stucklisteUbersichtArtikelMengePlusEins', text: '+', constraints: 'd')
+            button(id: 'stucklisteUbersichtArtikelMengeMinusEins', text: '-', constraints: 'e')
+
+            button(id: 'stucklisteUbersichtLoescheArtikel', text: 'Ausgewählten Artikel aus Liste löschen', constraints: 'f')
         }
     }
     panel(id: 'stucklisteUbersichtPanel', layout: new MigLayout('fill, wrap', '[]para[]', ''), constraints: 'grow') {

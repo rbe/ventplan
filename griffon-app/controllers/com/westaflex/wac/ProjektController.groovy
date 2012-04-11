@@ -2310,4 +2310,51 @@ class ProjektController {
             // ignore me
         }
     }
+
+    /**
+     * WAC-221
+     * Artikelmenge ändern. Artikel um 1 erhoehen.
+     */
+    def stucklisteUbersichtArtikelMengePlusEins = { evt ->
+        def rowIndex
+        try {
+            rowIndex = view.stucklisteUbersichtTabelle.getSelectedRow()
+            def artikel = model.tableModels.stuckliste.get(rowIndex)
+
+            artikel.anzahl = (double) artikel.anzahl + 1
+
+            model.tableModels.stuckliste.set(rowIndex, artikel)
+        } catch (e) {
+            // ignore me
+        }
+    }
+
+    /**
+     * WAC-221
+     * Artikelmenge ändern. Artikel um 1 verringern.
+     */
+    def stucklisteUbersichtArtikelMengeMinusEins = { evt ->
+        def rowIndex
+        try {
+            rowIndex = view.stucklisteUbersichtTabelle.getSelectedRow()
+            def artikel = model.tableModels.stuckliste.get(rowIndex)
+
+            if ((double) artikel.anzahl > 1.0) {
+                artikel.anzahl = (double) artikel.anzahl - 1
+            }
+
+            model.tableModels.stuckliste.set(rowIndex, artikel)
+        } catch (e) {
+            // ignore me
+        }
+    }
+
+    /**
+     * WAC-221
+     * @param calc
+     * @return
+     */
+    def stucklisteArtikelMengeAendern(boolean countUp) {
+
+    }
 }
