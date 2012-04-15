@@ -717,6 +717,8 @@ class ProjektController {
             raume.each { raum ->
                 model.addRaumTurenModel()
             }
+            // sort map when we load a new model!!!
+            model.map.raum.raume.sort { a, b -> a.position <=> b.position }
         }
         // Räume: set cell editors
         if (loadMode)
@@ -731,7 +733,7 @@ class ProjektController {
             if (DEBUG)
                 println "berechneAlles: BERECHNE RAUM ${raum.position}"
             try {
-                raumGeandert(raum.position, -1)
+                raumGeandert(raum.position)
             } catch (e) {
                 println "berechneAlles: ${raum.raumBezeichnung} ${e}"
             }
@@ -1060,13 +1062,14 @@ class ProjektController {
             if (DEBUG)
                 println "onRaumHinzufugen: raum -> ${raum}"
             model.addRaum(raum, view)
-            raumGeandert(raum.position, -1)
+            raumGeandert(raum.position)
             // WAC-210: _raumGeandert(raum.position), wird nun über Benutzer/Button gemacht
             // WAC-170: abw. Raumbezeichnung leeren
             view.raumBezeichnung.text = ""
             // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
             berechneAlles()
         }
+        println "RAumhinzufugen - raum.position=${raum.position}"
     }
 
     /**
@@ -1075,58 +1078,54 @@ class ProjektController {
      * @param setSelectedIndex Real index position in table view. Real selected index item.
      * @param isIndex Boolean value if this is the real index position in map rather than position-key in map.
      */
-    def raumGeandert = { Integer raumPosition, Integer setSelectedIndex, boolean isIndex = false ->
-        _raumGeandert(raumPosition, setSelectedIndex, isIndex)
+    def raumGeandert = { Integer raumPosition ->
+        _raumGeandert(raumPosition)
     }
 
-    def _raumGeandert(Integer raumPosition, Integer setSelectedIndex, boolean isIndex) {
+    def _raumGeandert(Integer raumPosition) {
         doLater {
             // WAC-174 (raumIndex kann == 0 sein!)
-            def isSelectedRow = false
             if (raumPosition < 0) {
                 raumPosition = view.raumTabelle.selectedRow
-                isSelectedRow = true
             }
             if (DEBUG)
                 println "raumGeandert: raum[${raumPosition}]"
             if (raumPosition > -1) {
                 if (DEBUG)
                     println "raumGeandert: raum[${raumPosition}] ${model.map.raum.raume[raumPosition]}"
-                // Raum holen
-                ////def raum = model.map.raum.raume[raumIndex]
                 // Raumdaten prüfen
-                def raum
-                def raumIndex
-                if (!isSelectedRow && !isIndex) {
-                    model.map.raum.raume.eachWithIndex { item, pos ->
-                        if (item.position == raumPosition) {
-                            raum = item
-                            raumIndex = pos
-                        }
-                    }
-                } else {
-                    raumIndex = raumPosition
-                }
+//                def raum
+//                def raumIndex
+//                if (!isSelectedRow && !isIndex) {
+//                    model.map.raum.raume.eachWithIndex { item, pos ->
+//                        if (item.position == raumPosition) {
+//                            raum = item
+//                            raumIndex = pos
+//                        }
+//                    }
+//                } else {
+//                    raumIndex = raumPosition
+//                }
                 // Diesen Raum in allen Tabellen anwählen
-                if (setSelectedIndex > -1) {
-                    onRaumInTabelleWahlen(setSelectedIndex)
-                } else {
-                    onRaumInTabelleWahlen(raumIndex)
-                }
+                //if (setSelectedIndex > -1) {
+                onRaumInTabelleWahlen(raumPosition)
+                //} else {
+                //    onRaumInTabelleWahlen(raumIndex)
+                //}
 
-                if (DEBUG)
-                    println "raumGeandert: raum[${raumPosition}] currentRaum=${raum.dump()}"
+//                if (DEBUG)
+//                    println "raumGeandert: raum[${raumPosition}] currentRaum=${raum.dump()}"
 
-                model.prufeRaumdaten(model.map.raum.raume[raumIndex])
+                model.prufeRaumdaten(model.map.raum.raume[raumPosition])
                 // Versuchen den Zuluftfaktor neu zu setzen... Behebt den Fehler, dass der Zuluftfaktor sich nur dann
                 // ändert, wenn in der Tabelle ein anderer Raum gewählt wird, um anschließend den ursprünglichen Raum
                 // zu wählen, damit die Änderungen "sichtbar" sind.
                 try {
-                    view?.raumBearbeitenLuftartFaktorZuluftverteilung.text = model.map.raum.raume[raumIndex].raumZuluftfaktor.toString2()
+                    view?.raumBearbeitenLuftartFaktorZuluftverteilung.text = model.map.raum.raume[raumPosition].raumZuluftfaktor.toString2()
                 } catch (e) {}
 
                 // WAC-65: Errechnete Werte zurücksetzen
-                model.map.raum.raume[raumIndex].with {
+                model.map.raum.raume[raumPosition].with {
                     if (raumBreite && raumLange)
                         raumFlache = raumBreite * raumLange
                     raumVolumen = raumFlache * raumHohe
@@ -1144,21 +1143,21 @@ class ProjektController {
                 // Überströmvolumenstrom
                 // WAC-151
                 if (!model.map.anlage.zentralgeratManuell) {
-                    model.map.raum.raume[raumIndex].raumUberstromVolumenstrom = 0.0d
+                    model.map.raum.raume[raumPosition].raumUberstromVolumenstrom = 0.0d
                 }
 
                 // Raumvolumenströme, (Werte abzgl. Infiltration werden zur Berechnung der Ventile benötigt) berechnen
                 wacCalculationService.autoLuftmenge(model.map)
                 // Zu-/Abluftventile
-                model.map.raum.raume[raumIndex] =
-                    wacCalculationService.berechneZuAbluftventile(model.map.raum.raume[raumIndex])
+                model.map.raum.raume[raumPosition] =
+                    wacCalculationService.berechneZuAbluftventile(model.map.raum.raume[raumPosition])
                 // Türspalt und Türen
-                model.map.raum.raume[raumIndex] =
-                    wacCalculationService.berechneTurspalt(model.map.raum.raume[raumIndex])
-                berechneTuren(null, raumIndex, isSelectedRow)
+                model.map.raum.raume[raumPosition] =
+                    wacCalculationService.berechneTurspalt(model.map.raum.raume[raumPosition])
+                berechneTuren(null, raumPosition)
                 // Überströmelement berechnen
-                model.map.raum.raume[raumIndex] =
-                    wacCalculationService.berechneUberstromelemente(model.map.raum.raume[raumIndex])
+                model.map.raum.raume[raumPosition] =
+                    wacCalculationService.berechneUberstromelemente(model.map.raum.raume[raumPosition])
             }
             // Nummern der Räume berechnen
             wacCalculationService.berechneRaumnummer(model.map)
@@ -1204,7 +1203,7 @@ class ProjektController {
         // Es hat sich was geändert...
         def raum = model.map.raum.raume[view.raumTabelle.selectedRow]
         // WAC-210: raumGeandert(raum.position)
-        raumGeandert(view.raumTabelle.selectedRow, -1, true)
+        raumGeandert(view.raumTabelle.selectedRow)
         // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
         berechneAlles()
     }
@@ -1265,7 +1264,7 @@ class ProjektController {
             // Raum zum Model hinzufügen
             model.addRaum(newMap, view, true)
             // Raum hinzugefügt
-            raumGeandert(newMap.position, -1)
+            raumGeandert(newMap.position)
             // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
             berechneAlles()
         }
@@ -1279,19 +1278,31 @@ class ProjektController {
             // Get selected row
             def row = view.raumTabelle.selectedRow
             if (row > 0) {
-                def currentRaum
-                // Recalculate positions
-                model.map.raum.raume.each {
-                    if (it.position == row - 1)
-                        it.position += 1
-                    else if (it.position == row) {
-                        it.position -= 1
-                        currentRaum = it
+
+                def raumNachOben
+                def raumNachUnten
+                def nachUntenPosition
+                def nachObenPosition
+
+                model.map.raum.raume.eachWithIndex { item, pos ->
+                    if (item.position == row - 1 ) {
+                        raumNachUnten = item
+                        nachObenPosition = pos
+                    } else if (item.position == row ) {
+                        raumNachOben = item
+                        nachUntenPosition = pos
                     }
                 }
+
+                if (DEBUG) println "Raum nach oben verschieben: nachObenPosition=${nachObenPosition} - nachUntenPosition=${nachUntenPosition}"
+                raumNachOben.position = nachObenPosition
+                raumNachUnten.position = nachUntenPosition
+                model.map.raum.raume[nachObenPosition] = raumNachOben
+                model.map.raum.raume[nachUntenPosition] = raumNachUnten
                 model.resyncRaumTableModels()
                 // Raum geändert
-                raumGeandert(currentRaum.position, row - 1)
+                raumGeandert(nachUntenPosition)
+                raumGeandert(nachObenPosition)
             }
         }
     }
@@ -1300,22 +1311,36 @@ class ProjektController {
      * Raumdaten - einen Raum in der Tabelle nach oben verschieben.
      */
     def raumNachUntenVerschieben = {
-        // Get selected row
-        def row = view.raumTabelle.selectedRow
-        if (row < view.raumTabelle.rowCount - 1) {
-            // Recalculate positions
-            def currentRaum
-            model.map.raum.raume.each {
-                if (it.position == row + 1)
-                    it.position -= 1
-                else if (it.position == row) {
-                    it.position += 1
-                    currentRaum = it
+        doLater {
+            // Get selected row
+            def row = view.raumTabelle.selectedRow
+            if (row < view.raumTabelle.getModel().getRowCount() - 1) {
+
+                def raumNachOben
+                def raumNachUnten
+                def nachUntenPosition
+                def nachObenPosition
+
+                model.map.raum.raume.eachWithIndex { item, pos ->
+                    if (item.position == row ) {
+                        raumNachUnten = item
+                        nachObenPosition = pos
+                    } else if (item.position == row + 1) {
+                        raumNachOben = item
+                        nachUntenPosition = pos
+                    }
                 }
+
+                if (DEBUG) println "Raum nach unten verschieben: nachObenPosition=${nachObenPosition} - nachUntenPosition=${nachUntenPosition}"
+                raumNachOben.position = nachObenPosition
+                raumNachUnten.position = nachUntenPosition
+                model.map.raum.raume[nachObenPosition] = raumNachOben
+                model.map.raum.raume[nachUntenPosition] = raumNachUnten
+                model.resyncRaumTableModels()
+                // Raum geändert
+                raumGeandert(nachObenPosition)
+                raumGeandert(nachUntenPosition)
             }
-            model.resyncRaumTableModels()
-            // Raum geändert
-            raumGeandert(currentRaum.position, row + 1, false)
         }
     }
 
@@ -1337,7 +1362,7 @@ class ProjektController {
                 def columnModel = view.raumBearbeitenTurenTabelle.columnModel
                 GH.makeComboboxCellEditor(columnModel.getColumn(0), model.meta.raumTurTyp)
                 GH.makeComboboxCellEditor(columnModel.getColumn(1), model.meta.raumTurbreiten)
-                berechneTuren(null, model.meta.gewahlterRaum.position, false)
+                berechneTuren(null, model.meta.gewahlterRaum.position)
 
                 raumBearbeitenDialog = GH.centerDialog(app.views['wac2'], raumBearbeitenDialog)
 
@@ -1408,7 +1433,7 @@ class ProjektController {
         */
         metaRaum.raumHohe = raum.raumHohe = view.raumBearbeitenOptionalRaumhohe.text?.toDouble2()
         // Raum neu berechnen
-        raumGeandert(raumPosition, -1)
+        raumGeandert(raumPosition)
         // Daten aus Model in den Dialog übertragen
         // Zuluft/Abluft
         metaRaum.raumZuluftfaktor = raum.raumZuluftfaktor
@@ -1423,7 +1448,7 @@ class ProjektController {
     /**
      * Berechne Türen eines bestimmten Raumes.
      */
-    def berechneTuren = { evt = null, raumIndex = null, isTableRow ->
+    def berechneTuren = { evt = null, raumIndex = null ->
         if (DEBUG)
             println "WAC-174: berechneTuren: evt=${evt?.dump()} raumIndex=${raumIndex?.dump()}"
         if (DEBUG)
@@ -1439,7 +1464,7 @@ class ProjektController {
             println "WAC-174: berechneTuren: raumIndex=${raumIndex?.dump()}"
         // Suche Raum mittels übergebenen raumIndex
         def raum
-        if (isSelectedRow || isTableRow) {
+        if (isSelectedRow) {
             model.map.raum.raume.eachWithIndex { item, pos ->
                 if (raumIndex == pos) {
                     raum = item
@@ -1505,7 +1530,7 @@ class ProjektController {
         //view.raumTabelle.changeSelection(model.meta.gewahlterRaum.position, 0, false, false) 
         view.raumTabelle.changeSelection(raumPosition, 0, false, false)
         // WAC-174: Parameter fehlten!
-        berechneTuren(null, raumIndex, false)
+        berechneTuren(null, raumIndex)
         if (reload) {
             try {
                 raumBearbeitenTurEntfernen(null, false)
@@ -1569,7 +1594,7 @@ class ProjektController {
     /**
      * Einen bestimmten Raum in allen Raum-Tabellen markieren.
      */
-    def onRaumInTabelleWahlen = { row, table = null ->
+    def onRaumInTabelleWahlen = { row, raumIndex = null, table = null ->
         doLater {
             //if (DEBUG) println "onRaumInTabelleWahlen: row=${row}"
             row = GH.checkRow(row, view.raumTabelle)
@@ -1584,9 +1609,8 @@ class ProjektController {
                     }
                 }
                 // Aktuellen Raum in Metadaten setzen
-                model.meta.gewahlterRaum.putAll(model.map.raum.raume[row])
-                // TODO Warum wird das hier gemacht??? WacCalculationService.berechneRaumnummer ist zuständig!
-                ////model.meta.gewahlterRaum.raumNummer = row + 1
+                def raum = model.map.raum.raume[row]
+                model.meta.gewahlterRaum.putAll(raum)
             } else {
                 // Remove selection in all tables
                 withAllRaumTables { t ->
@@ -1602,7 +1626,6 @@ class ProjektController {
      * Raumvolumenströme - Zentralgerät: manuelle Auswahl des Zentralgeräts.
      */
     def zentralgeratManuellGewahlt = {
-        ////publishEvent "ZentralgeratGewahlt", [view.raumVsZentralgerat.selectedItem]
         doLater {
             // Merken, dass das Zentralgerät manuell ausgewählt wurde
             // -> keine automatische Auswahl des Zentralgeräts mehr durchführen

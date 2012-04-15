@@ -669,7 +669,7 @@ class ProjektModel {
             meta.gewahlterRaum[columnIndex] = value
             //println "Edited: map.raum.raume -> ${map.raum.raume}"
             // Call ProjektController
-            app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position, -1)
+            app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position)
             resyncRaumTableModels()
         }
         gltmClosure(columnNames, propertyNames, writable, tableModels.raume, postValueSet, checkRaum)
@@ -685,7 +685,7 @@ class ProjektModel {
         def writable = [true, true, false, false, false, true, false, false, false, true, false, false, true] as boolean[]
         def postValueSet = { object, columnIndex, value ->
             // Call ProjektController
-            app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position, -1)
+            app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position)
             ////app.controllers[mvcId].raumZuAbluftventileGeandert()
             resyncRaumTableModels()
         }
@@ -707,7 +707,7 @@ class ProjektModel {
                 app.models[mvcId].map.anlage.zentralgeratManuell = true
             }
             // Call ProjektController
-            app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position, -1)
+            app.controllers[mvcId].raumGeandert(meta.gewahlterRaum.position)
             // Update TableModels
             resyncRaumTableModels()
         }
@@ -730,7 +730,7 @@ class ProjektModel {
         def writable = [true, true, false, false, true] as boolean[]
         def postValueSet = { object, columnIndex, value ->
             // Call ProjektController
-            app.controllers[mvcId].berechneTuren(null, meta.gewahlterRaum.position, false)
+            app.controllers[mvcId].berechneTuren(null, meta.gewahlterRaum.position)
         }
         gltmClosureCheckbox(columnNames, propertyNames, writable, tableModels.raumeTuren[index], postValueSet)
     }
