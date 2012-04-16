@@ -1202,8 +1202,10 @@ class ProjektModel {
                 if (DEBUG)
                     println "resyncAkustikTableModels -> view.akustikZuluftTabelle.getHeight(): ${view.akustikZuluftTabelle.getHeight()}"
                 // Zeilenhöhe anpassen
-                def rowh = (view.akustikZuluftTabelle.getHeight() - 5) / 13 as Integer
-                view.akustikZuluftTabelle.setRowHeight(rowh)
+                def rowh = (view.akustikZuluftTabelle.getHeight() - 4) / 13 as Integer
+                println "row height (akustikZuluftTabelle) = ${rowh}"
+                view.akustikZuluftTabelle.setRowHeight(rowh + 1)
+                view.akustikZuluftTabelle.setRowMargin(7)
                 // Akustikberechnung Abluft
                 tableModels.akustikAbluft.clear()
                 map.akustik.abluft.tabelle.each { tableModels.akustikAbluft.addAll(it) }
@@ -1212,7 +1214,9 @@ class ProjektModel {
                 if (DEBUG)
                     println "resyncAkustikTableModels -> view.akustikAbluftTabelle.getHeight(): ${view.akustikAbluftTabelle.getHeight()}"
                 rowh = (view.akustikAbluftTabelle.getHeight() - 4) / 13 as Integer
-                view.akustikAbluftTabelle.setRowHeight(rowh)
+                println "row height (akustikAbluftTabelle) = ${rowh}"
+                view.akustikAbluftTabelle.setRowHeight(rowh + 1)
+                view.akustikAbluftTabelle.setRowMargin(3)
             }
         }
     }

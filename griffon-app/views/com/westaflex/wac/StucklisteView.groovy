@@ -32,7 +32,6 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
     panel(id: 'stucklisteErgebnisPanel', layout: new MigLayout('fillx, wrap', '[fill]', ''), constraints: 'grow') {
         scrollPane() {
             table(id: 'stucklisteErgebnisTabelle', model: model.createStucklisteErgebnisTableModel()) {
-                //current.setRowHeight(16)
                 current.setSortable(false)
                 current.getTableHeader().setDefaultRenderer(new JTableHeader().getDefaultRenderer())
                 current.setAutoCreateRowSorter(false)
@@ -60,7 +59,6 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
 
             scrollPane(constraints: 'a') {
                 table(id: 'stucklisteUbersichtTabelle', model: model.createStucklisteUbersichtTableModel()) {
-                    //current.setRowHeight(16)
                     current.setSortable(false)
                     current.getTableHeader().setDefaultRenderer(new JTableHeader().getDefaultRenderer())
                     current.setAutoCreateRowSorter(false)

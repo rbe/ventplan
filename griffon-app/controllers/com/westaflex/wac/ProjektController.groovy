@@ -508,12 +508,12 @@ class ProjektController {
             */
             def gesamtpreis = (anzahl * artikel.PREIS.toDouble2()) as double
             model.tableModels.stuckliste.addAll(
-                    [
-                            reihenfolge: position, anzahl: anzahl,
-                            artikelnummer: artikel.ARTIKEL, text: artikel.ARTIKELBEZEICHNUNG,
-                            einzelpreis: artikel.PREIS, gesamtpreis: gesamtpreis,
-                            luftart: artikel.LUFTART, liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT
-                    ]
+                [
+                        reihenfolge: position, anzahl: anzahl,
+                        artikelnummer: artikel.ARTIKEL, text: artikel.ARTIKELBEZEICHNUNG,
+                        einzelpreis: artikel.PREIS, gesamtpreis: gesamtpreis,
+                        luftart: artikel.LUFTART, liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT
+                ]
             )
             position++
         }
@@ -521,8 +521,21 @@ class ProjektController {
                 "${type} anpassen",
                 "Eingaben speichern und ${type} erstellen",
                 { dialog ->
+                    // Set new width for columns when adding new model!!!
                     view.stucklisteUbersichtTabelle.setModel(stucklisteTableModel)
+                    view.stucklisteUbersichtTabelle.getColumnModel().getColumn(0).setWidth(30)
+                    view.stucklisteUbersichtTabelle.getColumnModel().getColumn(0).setPreferredWidth(30)
+                    view.stucklisteUbersichtTabelle.getColumnModel().getColumn(1).setWidth(70)
+                    view.stucklisteUbersichtTabelle.getColumnModel().getColumn(1).setPreferredWidth(70)
+                    view.stucklisteUbersichtTabelle.getColumnModel().getColumn(2).setWidth(400)
+                    view.stucklisteUbersichtTabelle.getColumnModel().getColumn(2).setPreferredWidth(400)
                     view.stucklisteErgebnisTabelle.setModel(stucklisteSucheTableModel)
+                    view.stucklisteErgebnisTabelle.getColumnModel().getColumn(0).setWidth(30)
+                    view.stucklisteErgebnisTabelle.getColumnModel().getColumn(0).setPreferredWidth(30)
+                    view.stucklisteErgebnisTabelle.getColumnModel().getColumn(1).setWidth(70)
+                    view.stucklisteErgebnisTabelle.getColumnModel().getColumn(1).setPreferredWidth(70)
+                    view.stucklisteErgebnisTabelle.getColumnModel().getColumn(2).setWidth(400)
+                    view.stucklisteErgebnisTabelle.getColumnModel().getColumn(2).setPreferredWidth(400)
                 }
         )
     }
