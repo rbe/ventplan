@@ -3,13 +3,8 @@ Thumbs.db
 ._*
 *.log
 CHANGE ME
-wpx
-archive
+sql
 dist
-build
 target
 staging
-usbstick
-wacupdate
-lib/dtmp.zip
 out
