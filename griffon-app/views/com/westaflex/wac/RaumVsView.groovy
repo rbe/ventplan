@@ -113,3 +113,8 @@ raumVsZuAbluftventileTabelle.packColumn(12, 10, 80)
 
 // Bindings
 build(RaumVsBindings)
+// WAC-222 Improvement for showing grid lines.
+raumVsZuAbluftventileTabelle.setShowGrid(true);
+raumVsZuAbluftventileTabelle.setGridColor(Color.GRAY);
+raumVsUberstromelementeTabelle.setShowGrid(true);
+raumVsUberstromelementeTabelle.setGridColor(Color.GRAY);
