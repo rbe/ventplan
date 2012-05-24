@@ -67,6 +67,9 @@ panel(id: "wbwPanel", layout: new MigLayout("fillx, wrap 2", "[fill][fill]", "[f
 GH.autoformatDoubleTextField(wbwWert)
 // Bindings
 build(WbwBindings)
+// WAC-222 Improvement for showing grid lines.
+wbwTabelle.setShowGrid(true);
+wbwTabelle.setGridColor(Color.GRAY);
 
 /*Numeric document model*/
 class NumericDocument extends PlainDocument {
