@@ -104,3 +104,8 @@ dvbTabGroup.with {
 }
 // Bindings
 build(DruckverlustBindings)
+// WAC-222 Improvement for showing grid lines.
+dvbKanalnetzTabelle.setShowGrid(true);
+dvbKanalnetzTabelle.setGridColor(Color.GRAY);
+dvbVentileinstellungTabelle.setShowGrid(true);
+dvbVentileinstellungTabelle.setGridColor(Color.GRAY);
