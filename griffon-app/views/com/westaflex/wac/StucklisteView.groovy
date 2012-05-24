@@ -83,3 +83,8 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
 }
 
 build(StucklisteBindings)
+// WAC-222 Improvement for showing grid lines.
+stucklisteErgebnisTabelle.setShowGrid(true);
+stucklisteErgebnisTabelle.setGridColor(Color.GRAY);
+stucklisteUbersichtTabelle.setShowGrid(true);
+stucklisteUbersichtTabelle.setGridColor(Color.GRAY);
