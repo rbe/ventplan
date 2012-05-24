@@ -136,3 +136,7 @@ build(RaumBearbeitenBindings)
 
 raumBearbeitenScrollPane.setHorizontalScrollBarPolicy(com.jidesoft.swing.JideScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 raumBearbeitenScrollPane.setVerticalScrollBarPolicy(com.jidesoft.swing.JideScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+// WAC-222 Improvement for showing grid lines.
+raumBearbeitenTurenTabelle.setShowGrid(true);
+raumBearbeitenTurenTabelle.setGridColor(Color.GRAY);
