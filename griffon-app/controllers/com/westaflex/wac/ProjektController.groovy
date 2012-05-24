@@ -1025,7 +1025,8 @@ class ProjektController {
      */
     def ltmErforderlichDialog = {
         def infoMsg = model.map.messages.ltm
-        app.controllers["Dialog"].showInformDialog(infoMsg as String)
+        // WAC-115: Hinweis LTM erforderlich ausblenden
+        //app.controllers["Dialog"].showInformDialog(infoMsg as String)
         if (DEBUG)
             println infoMsg
     }
