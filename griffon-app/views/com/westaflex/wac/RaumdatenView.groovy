@@ -66,3 +66,6 @@ GH.yellowTextField(raumBezeichnung)
 }
 // Bindings
 build(RaumdatenBindings)
+// WAC-222 Improvement for showing grid lines.
+raumTabelle.setShowGrid(true);
+raumTabelle.setGridColor(Color.GRAY);
