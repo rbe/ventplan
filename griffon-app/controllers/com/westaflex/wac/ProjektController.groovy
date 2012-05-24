@@ -109,9 +109,11 @@ class ProjektController {
         def volumenstromZentralgerat = wacModelService.getVolumenstromFurZentralgerat(model.meta.zentralgerat[0])
         // 5er-Schritte
         model.meta.volumenstromZentralgerat = []
-        def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
-        def maxVsZentralgerat = volumenstromZentralgerat.toList().last() as Integer
-        (minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
+        if (volumenstromZentralgerat.size() > 0) {
+            def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
+            def maxVsZentralgerat = volumenstromZentralgerat.toList().last() as Integer
+            (minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
+        }
         // Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
         model.meta.druckverlust.kanalnetz.kanalbezeichnung = wacModelService.getDvbKanalbezeichnung()
         // Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte
@@ -224,6 +226,15 @@ class ProjektController {
     }
 
     /**
+     * Make a filename, take care when project was not saved before.
+     * @return
+     */
+    String getFilenameSafe() {
+        String filename = model.wpxFilename
+        filename ?: "VentPlan-${new Date().format('dd.MM.yyyy-HHmm')}"
+    }
+
+    /**
      * WAC-151: Perform automatic calculations of 'everything'.
      */
     def automatischeBerechnung = {
@@ -238,10 +249,9 @@ class ProjektController {
      * @return Boolean Was project successfully saved to a file?
      */
     boolean save() {
-        if (DEBUG)
-            println "save: saving project '${getProjektTitel()}' in file ${model.wpxFilename?.dump()}"
         try {
             if (model.wpxFilename) {
+                if (DEBUG) println "save: saving project '${getProjektTitel()}' in file ${model.wpxFilename?.dump()}"
                 // Save data
                 projektModelService.save(model.map, model.wpxFilename)
                 // Set dirty-flag in project's model to false
@@ -256,10 +266,20 @@ class ProjektController {
             }
         } catch (e) {
             def errorMsg = e.printStackTrace()
-            app.controllers["Dialog"].showErrorDialog(errorMsg as String)
+            app.controllers['Dialog'].showErrorDialog(errorMsg as String)
             // Project was not saved
             false
         }
+    }
+
+    /**
+     * Projekt speichern, bevor ein Dokument erzeugt wird.
+     */
+    private void saveBeforeDocument() {
+        if (!model.wpxFilename) {
+            app.controllers['Dialog'].showInformDialog('Das Projekt wird erst gespeichert, bevor ein Dokument erzeugt wird!')
+        }
+        app.controllers['wac2'].aktivesProjektSpeichern()
     }
 
     /**
@@ -350,7 +370,7 @@ class ProjektController {
             } else {
                 def errorMsg = "Auslegung konnte nicht erstellt werden. " +
                         "Es muss mindestens Name, Anschrift, PLZ, Ort angegeben werden." as String
-                app.controllers["Dialog"].showErrorDialog(errorMsg as String)
+                app.controllers['Dialog'].showErrorDialog(errorMsg as String)
             }
             // Anzeigen, dass Daten geändert wurden
             nutzerdatenGeandert = true
@@ -375,8 +395,11 @@ class ProjektController {
                     view.auslegungErstellerEmpfanger.enabled = false
                 }
         )
+        //
         if (nutzerdatenGeandert) {
-            // Auslegung/Dokument erstellen
+            // Projekt speichern
+            saveBeforeDocument()
+            // Dokument erstellen
             try {
                 File wpxFile = new File(model.wpxFilename)
                 String xmlDoc = oooService.performAuslegung(wpxFile, model.map, DEBUG)
@@ -405,6 +428,9 @@ class ProjektController {
                     }
             )
             if (nutzerdatenGeandert) {
+                // Projekt speichern
+                saveBeforeDocument()
+                // Dokument erstellen
                 def stucklisteModel = model.tableModels.stuckliste
                 Map newMap = new LinkedHashMap()
                 stucklisteModel.each() { a ->
@@ -447,6 +473,9 @@ class ProjektController {
                     }
             )
             if (nutzerdatenGeandert) {
+                // Projekt speichern
+                saveBeforeDocument()
+                // Dokument erstellen
                 int position = 0
                 def stucklisteModel = model.tableModels.stuckliste
                 Map newMap = new LinkedHashMap()
@@ -568,21 +597,22 @@ class ProjektController {
         doLater {
             doOutside {
                 File odiseeDocument = postToOdisee(wpxFile, type, xmlDoc)
+                // Open document
                 if (odiseeDocument?.exists()) {
                     try {
-                        // Open document
                         Desktop.desktop.open(odiseeDocument)
                     } finally {
                         waitDialog?.dispose()
                         if (GriffonApplicationUtils.isWindows) {
                             doLater {
-                                def msg = "${type} erstellen\nDie Datei ${odiseeDocument} wurde erzeugt." as String
+                                def msg = "${type} erstellen\nDas Dokument ${odiseeDocument ?: '???'} wurde erzeugt." as String
                                 app.controllers['Dialog'].showInformDialog(msg)
                             }
                         }
                     }
                 } else {
-                    String errorMsg = "${type} erstellen\nDie Datei ${odiseeDocument} konnte leider nicht geöffnet werden."
+                    waitDialog?.dispose()
+                    String errorMsg = "${type} erstellen\nDas Dokument ${odiseeDocument ?: ''} konnte leider nicht geöffnet werden."
                     app.controllers['Dialog'].showErrorDialog(errorMsg)
                 }
             }
@@ -609,7 +639,7 @@ class ProjektController {
      * @param xmlDoc
      * @return
      */
-    java.io.File postToOdisee(File wpxFile, String fileSuffix, String xmlDoc) {
+    File postToOdisee(File wpxFile, String fileSuffix, String xmlDoc) {
         java.io.File responseFile = null
         def xml = new XmlSlurper().parseText(xmlDoc)
         String restUrl = GH.getOdiseeRestUrl()
@@ -895,7 +925,7 @@ class ProjektController {
                     mindestaussenluftrate = personenanzahl * aussenluftVsProPerson
                 } catch (e) {
                     def errorMsg = e.printStackTrace()
-                    app.controllers["Dialog"].showErrorDialog(errorMsg as String)
+                    app.controllers['Dialog'].showErrorDialog(errorMsg as String)
                     mindestaussenluftrate = 0.0d
                 }
             }
@@ -1025,8 +1055,7 @@ class ProjektController {
      */
     def ltmErforderlichDialog = {
         def infoMsg = model.map.messages.ltm
-        // WAC-115: Hinweis LTM erforderlich ausblenden
-        //app.controllers["Dialog"].showInformDialog(infoMsg as String)
+        app.controllers['Dialog'].showInformDialog(infoMsg as String)
         if (DEBUG)
             println infoMsg
     }
@@ -1083,7 +1112,7 @@ class ProjektController {
             // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
             berechneAlles()
         }
-        println "RAumhinzufugen - raum.position=${raum.position}"
+        //println "RAumhinzufugen - raum.position=${raum.position}"
     }
 
     /**
@@ -2013,7 +2042,7 @@ class ProjektController {
             model.map.dvb.ventileinstellung.each { ve ->
                 if (ve.einstellung == 0) {
                     def infoMsg = "Keine Einstellung für Ventil ${ve.ventilbezeichnung} gefunden! Bitte prüfen Sie die Zeile#${ve.position}."
-                    app.controllers["Dialog"].showInformDialog(infoMsg as String)
+                    app.controllers['Dialog'].showInformDialog(infoMsg as String)
                     println infoMsg
                 }
             }
