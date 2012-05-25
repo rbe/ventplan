@@ -217,7 +217,8 @@ class StucklisteService {
         }
         /*if (DEBUG)
             println "${this}.getVolumenstrom: " + r_maxvs[0].maxvolumenstrom*/
-        r_maxvs[0].MAXVOLUMENSTROM
+        // TODO MAXVOLUMENSTROM must be != 0
+        r_maxvs.size() > 0 ? r_maxvs[0].MAXVOLUMENSTROM : 0
     }
 
     /**
