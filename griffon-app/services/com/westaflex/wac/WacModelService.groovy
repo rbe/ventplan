@@ -275,6 +275,7 @@ class WacModelService {
             println "getDezibelZentralgerat($artnr,$volumenstrom,$luftart): ${r?.dump()}"
         r
     }
+
     /**
      * Akustikberechnung, Oktavmittenfrequenz.
      */

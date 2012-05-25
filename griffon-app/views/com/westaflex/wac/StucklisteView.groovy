@@ -10,9 +10,7 @@
 package com.westaflex.wac
 
 import net.miginfocom.swing.MigLayout
-
 import com.bensmann.griffon.GriffonHelper as GH
-
 import java.text.SimpleDateFormat
 import javax.swing.table.JTableHeader
 
@@ -41,7 +39,6 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
         }
         button(id: 'stucklisteSucheHinzufugen', text: 'Ausgewählten Artikel zur Stückliste hinzufügen')
     }
-
 
     panel(id: 'stucklisteUbersichtPanel', layout: new MigLayout('fillx, wrap', '[fill]', ''), constraints: 'grow') {
         zoneLayout {

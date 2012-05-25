@@ -11,7 +11,7 @@ package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
-import javax.swing.table.JTableHeader;
+import javax.swing.table.JTableHeader
 import griffon.transform.Threading
 
 jideTabbedPane(id: "akustikTabGroup", constraints: "grow, span") {
