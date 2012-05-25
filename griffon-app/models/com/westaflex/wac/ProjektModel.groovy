@@ -318,7 +318,7 @@ class ProjektModel {
             wacCalculationService.prufeZuluftfaktor(r.raumTyp, eingegebenerZuluftfaktor)
             if (zuluftfaktor != neuerZuluftfaktor) {
                 def infoMsg = "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
-                app.controllers["Dialog"].showInformDialog(infoMsg as String)
+                app.controllers['Dialog'].showInformDialog(infoMsg as String)
                 if (DEBUG)
                     println infoMsg
             }
@@ -1215,8 +1215,8 @@ class ProjektModel {
                 if (DEBUG) {
                     println "resyncAkustikTableModels -> view.akustikAbluftTabelle.getHeight(): ${view.akustikAbluftTabelle.getHeight()}"
                     rowh = (view.akustikAbluftTabelle.getHeight() - 4) / 13 as Integer
+                    println "row height (akustikAbluftTabelle) = ${rowh}"
                 }
-                println "row height (akustikAbluftTabelle) = ${rowh}"
                 view.akustikAbluftTabelle.setRowHeight(rowh + 1)
                 view.akustikAbluftTabelle.setRowMargin(3)
             }
@@ -1295,7 +1295,7 @@ class ProjektModel {
 //        def propertyNames = ["reihenfolge", "anzahl", "artikelnummer", "text", "einzelpreis", "gesamtpreis"] as String[]
 //        def propertyTypes = [Integer.class.getName(), Integer.class.getName(), Double.class.getName(), String.class.getName(), Double.class.getName(), Double.class.getName()]
 //        def writable = [false, true, false, false, false, false] as boolean[]
-        def columnNames = ["Anzahl", "Artikelnr.", "Text"] as String[]
+        def columnNames = ["Anzahl", "Artikelnr.", "Beschreibung"] as String[]
         def propertyNames = ["anzahl", "artikelnummer", "text"] as String[]
         def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
         def writable = [true, false, false] as boolean[]
@@ -1311,7 +1311,7 @@ class ProjektModel {
 //        def propertyNames = ["reihenfolge", "anzahl", "artikelnummer", "text", "einzelpreis", "gesamtpreis"] as String[]
 //        def propertyTypes = [Integer.class.getName(), Integer.class.getName(), Double.class.getName(), String.class.getName(), Double.class.getName(), Double.class.getName()]
 //        def writable = [false, true, false, false, false, false] as boolean[]
-        def columnNames = ["Anzahl", "Artikelnr.", "Text"] as String[]
+        def columnNames = ["Anzahl", "Artikelnr.", "Beschreibung"] as String[]
         def propertyNames = ["anzahl", "artikelnummer", "text"] as String[]
         def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
         def writable = [true, false, false] as boolean[]
