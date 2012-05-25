@@ -563,11 +563,11 @@ class StucklisteService {
             }
         }
         // Außenluftpaket
-        List aussenluftpaket = getAussenluftpaket('300WAC', volumenstrom, 'Wand')
+        List aussenluftpaket = getAussenluftpaket(zentralgerat, volumenstrom, 'Wand')
         if (DEBUG) println String.format("%17s für %8s (Vs=%d), %s ist %s", 'Aussenluftpaket', zentralgerat, volumenstrom, 'Wand', aussenluftpaket)
         pakete += aussenluftpaket
         // Fortluftpaket
-        List fortluftpaket = getFortluftpaket('300WAC', volumenstrom, 'Dach')
+        List fortluftpaket = getFortluftpaket(zentralgerat, volumenstrom, 'Dach')
         if (DEBUG) println String.format("%17s für %8s (Vs=%d), %s ist %s", 'Fortluftpaket', zentralgerat, volumenstrom, 'Dach', fortluftpaket)
         pakete += fortluftpaket
         // Verteilpakete
