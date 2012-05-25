@@ -73,9 +73,9 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
             button(id: 'stucklisteUbersichtLoescheArtikel', text: 'Ausgewählten Artikel aus Liste löschen', constraints: 'f')
         }
     }
-    panel(id: 'stucklisteUbersichtPanel', layout: new MigLayout('fill, wrap', '[]para[]', ''), constraints: 'grow') {
-        button(id: 'stucklisteWeiter', text: 'Weiter zur Stücklisten-Generierung')
+    panel(id: 'stucklisteBottomButtonPanel', layout: new MigLayout('fill, wrap', '[]para[]', ''), constraints: 'grow') {
         button(id: 'stucklisteAbbrechen', text: 'Vorgang abbrechen')
+        button(id: 'stucklisteWeiter', text: 'Weiter')
     }
 }
 

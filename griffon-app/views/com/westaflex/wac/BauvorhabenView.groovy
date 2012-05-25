@@ -29,7 +29,7 @@ panel(id: "bauvorhabenDialogPanel", layout: new MigLayout("fillx, wrap", "[]para
 
     label("")
     label("")
-    button(id: "bauvorhabenDialogAbsenden", text: "Eingaben speichern und Auslegung erstellen")
+    button(id: "bauvorhabenDialogAbsenden", text: "Eingaben speichern und Dokument erstellen")
 }
 
 build(BauvorhabenBindings)

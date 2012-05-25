@@ -125,12 +125,12 @@ jideTabbedPane(id: "akustikTabGroup", constraints: "grow, span") {
             label("Korrektur der A-Bewertung", constraints: "j")
 
             zl.insertTemplate('row3')
-            label(' ', constraints: 'x') // TODO: rbe -> kommt hier vielleicht 'Bewerteter Schallpegel' hin?
+            label('Bewerteter Schallpegel', constraints: 'x')
 
             zl.insertTemplate('row3')
             label(' ', constraints: 'x')
 
-            label('Bewerteter Schallpegel', constraints: 's')
+            label('', constraints: 's')
             label("Mittlerer Schalldruckpegel* dB(A) =", constraints: "t")
             label(id: "akustikZuluftMittlererSchalldruckpegel", text: "0,00", constraints: "u")
 
@@ -249,13 +249,13 @@ jideTabbedPane(id: "akustikTabGroup", constraints: "grow, span") {
             label("Korrektur der A-Bewertung", constraints: "j")
 
             zl.insertTemplate('row3')
-            label(' ', constraints: 'x') // TODO: rbe -> kommt hier vielleicht 'Bewerteter Schallpegel' hin?
+            label('Bewerteter Schallpegel', constraints: 'x')
 
             zl.insertTemplate('row3')
             label(' ', constraints: 'x')
 
 
-            label("Bewerteter Schallpegel", constraints: "s")
+            label('', constraints: "s")
             label("Mittlerer Schalldruckpegel* dB(A) =", constraints: "t")
             label(id: "akustikAbluftMittlererSchalldruckpegel", text: "0,00", constraints: "u")
 
