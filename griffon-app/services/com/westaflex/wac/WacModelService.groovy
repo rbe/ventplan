@@ -58,9 +58,9 @@ class WacModelService {
     String getZentralgeratFurVolumenstrom(Integer luftung) {
         def r = withSql { dataSourceName, sql ->
             sql.firstRow("SELECT artikelnummer FROM artikelstamm"
-                    + " WHERE kategorie = 1 AND maxvolumenstrom >= ?"
+                    + " WHERE kategorie = 1 AND gesperrt = ? AND maxvolumenstrom >= ?"
                     + " ORDER BY artikelnummer",
-                    [luftung])
+                    [false, luftung])
         }
         if (DEBUG)
             println "getZentralgeratForVolumenstrom: ${luftung} -> ${r}"
