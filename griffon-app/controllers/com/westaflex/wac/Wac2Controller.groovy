@@ -7,6 +7,8 @@
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
  */
+
+
 package com.westaflex.wac
 
 import com.bensmann.griffon.GriffonHelper as GH
@@ -118,7 +120,7 @@ class Wac2Controller {
         def canClose = canClose()
         //if (DEBUG) println "exitApplication: ${canClose}"
         if (canClose) {
-            def choice = app.controllers["Dialog"].showApplicationOnlyCloseDialog()
+            def choice = app.controllers['Dialog'].showApplicationOnlyCloseDialog()
             if (DEBUG)
                 println "exitApplication: choice=${choice}"
             switch (choice) {
@@ -142,7 +144,7 @@ class Wac2Controller {
             if (DEBUG)
                 println "exitApplication: there are unsaved changes"
             // Show dialog: ask user for save all, cancel, quit
-            def choice = app.controllers["Dialog"].showApplicationSaveAndCloseDialog()
+            def choice = app.controllers['Dialog'].showApplicationSaveAndCloseDialog()
             if (DEBUG)
                 println "exitApplication: choice=${choice}"
             switch (choice) {
@@ -343,7 +345,7 @@ class Wac2Controller {
         if (!canClose) {
             if (DEBUG)
                 println "projektSchliessen: canClose=${canClose}, there's unsaved data"
-            def choice = app.controllers["Dialog"].showCloseProjectDialog()
+            def choice = app.controllers['Dialog'].showCloseProjectDialog()
             if (DEBUG)
                 println "projektSchliessen: choice=${choice}"
             switch (choice) {
@@ -446,7 +448,7 @@ class Wac2Controller {
                     projektModel.enableDvbButtons()
                 } else {
                     def errorMsg = "projektOffnen: Konnte Projekt nicht öffnen!"
-                    app.controllers["Dialog"].showErrorDialog(errorMsg as String)
+                    app.controllers['Dialog'].showErrorDialog(errorMsg as String)
                     if (DEBUG)
                         println errorMsg
                 }
@@ -688,7 +690,7 @@ class Wac2Controller {
      if (postWpxFile(file, inputName)) {fileMsg = fileMsg + file.name + "\n"
      isError = isError ?: true}}} catch (e) {if (DEBUG) println "catching inner each... ${e}"
      def errMsg = "Fehler beim Übermitteln der WPX-Datei."
-     app.controllers["Dialog"].showErrorDialog("Fehler bei Angebotsverfolgung" as String, errMsg as String)
+     app.controllers['Dialog'].showErrorDialog("Fehler bei Angebotsverfolgung" as String, errMsg as String)
      isError = isError ?: true}}} else {model.statusBarText = "Lade WPX-Datei hoch..." as String
      if (postWpxFile(it, inputName)) {fileMsg = fileMsg + it.name + "\n"
      isError = isError ?: true}}}// do sth. when the task is done.
@@ -699,8 +701,8 @@ class Wac2Controller {
      model.statusBarText = "Bereit."
 
      def infoMsg = "Übermittlung der WPX-Dateien erfolgreich abgeschlossen."
-     if (isError || fileMsg.length() > 0) {infoMsg = "Übermittlung der WPX-Dateien mit Fehler abgeschlossen.\n ${fileMsg}"}if (DEBUG) println "Wac2Controller.angebotsverfolgungFilesClosure -> ${app.controllers["Dialog"]?.dump()}"
-     app.controllers["Dialog"].showCustomInformDialog("Angebotsverfolgung" as String, infoMsg as String)}}}*/
+     if (isError || fileMsg.length() > 0) {infoMsg = "Übermittlung der WPX-Dateien mit Fehler abgeschlossen.\n ${fileMsg}"}if (DEBUG) println "Wac2Controller.angebotsverfolgungFilesClosure -> ${app.controllers['Dialog']?.dump()}"
+     app.controllers['Dialog'].showCustomInformDialog("Angebotsverfolgung" as String, infoMsg as String)}}}*/
 
     /**
      * Post text of file object.
@@ -807,7 +809,7 @@ class Wac2Controller {
                 }
                 if (list.size() == 0) {
                     def infoMsg = "Es wurden keine Dateien mit Ihren Suchbegriffen gefunden!"
-                    app.controllers["Dialog"].showInformDialog(infoMsg as String)
+                    app.controllers['Dialog'].showInformDialog(infoMsg as String)
                 } else {
                     // Gefundene Dateien in der Liste anzeigen
                     model.projektSuchenEventList.addAll(list)
@@ -815,7 +817,7 @@ class Wac2Controller {
             }
         } else {
             def infoMsg = "Bitte wählen Sie erst einen Pfad zum Suchen aus!"
-            app.controllers["Dialog"].showInformDialog(infoMsg as String)
+            app.controllers['Dialog'].showInformDialog(infoMsg as String)
         }
     }
 
@@ -838,7 +840,7 @@ class Wac2Controller {
             projektSuchenDialog.dispose()
         } else {
             def infoMsg = "Sie haben keine Datei zum Öffnen ausgewählt!"
-            app.controllers["Dialog"].showInformDialog(infoMsg as String)
+            app.controllers['Dialog'].showInformDialog(infoMsg as String)
         }
     }
 

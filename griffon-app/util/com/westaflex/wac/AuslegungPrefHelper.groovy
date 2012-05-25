@@ -7,6 +7,8 @@
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
  */
+
+
 package com.westaflex.wac
 
 /**
@@ -80,8 +82,8 @@ class AuslegungPrefHelper {
     /**
      * Get a value from the preferences by its preferences key.
      */
-    public getPrefValue = {String prefKey ->
-        String value = null;
+    public getPrefValue = { String prefKey ->
+        String value = null
         try {
             value = prefs.get(prefKey, '')
         } catch (Exception e) {
