@@ -16,6 +16,7 @@ import groovy.xml.StreamingMarkupBuilder
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
+import eu.artofcoding.ventplan.ZipcodeService
 
 /**
  *
@@ -23,6 +24,11 @@ import java.text.SimpleDateFormat
 class OooService {
 
     private static final boolean DEBUG = false
+
+    /**
+     * Service for zip codes.
+     */
+    ZipcodeService zipcodeService
 
     /**
      * Helper for preferences.
@@ -213,7 +219,6 @@ class OooService {
                     addErsteller(domBuilder)
                     addEmpfanger(domBuilder, map)
                     addBauvorhaben(domBuilder, map.kundendaten)
-                    addWerksvertretung(domBuilder)
                     // Angebotsdatum
                     domBuilder.userfield(name: 'Angebotsdatum', germanDate.format(new Date()))
                     // Angebot: Angebotsnummer, Datum, Kürzel des Erstellers, zufällige/lfd. Nummer
@@ -376,18 +381,23 @@ class OooService {
     }
 
     /**
-     * Werksvertretung.
+     * Handelsvertretung, Werksvertretung.
      * @param domBuilder
      */
-    private void addWerksvertretung(domBuilder) {
-        domBuilder.userfield(name: 'WerksvertretungFirma', '')
-        domBuilder.userfield(name: 'WerksvertretungName', '')
-        domBuilder.userfield(name: 'WerksvertretungAnschrift', '')
-        domBuilder.userfield(name: 'WerksvertretungPLZ', '')
-        domBuilder.userfield(name: 'WerksvertretungOrt', '')
-        domBuilder.userfield(name: 'WerksvertretungTelefon', '')
-        domBuilder.userfield(name: 'WerksvertretungTelefax', '')
-        domBuilder.userfield(name: 'WerksvertretungEmail', '')
+    private void addHandelsvertretung(domBuilder, String zipcode) {
+        if (null != zipcode && zipcode.length() == 5) {
+            Map vertreter = zipcodeService.findVertreter(zipcode)
+            if (vertreter) {
+                domBuilder.userfield(name: 'WerksvertretungFirma', vertreter.name ?: '')
+                domBuilder.userfield(name: 'WerksvertretungName', vertreter.name2 ?: '')
+                domBuilder.userfield(name: 'WerksvertretungAnschrift', vertreter.anschrift ?: '')
+                domBuilder.userfield(name: 'WerksvertretungPLZ', vertreter.plz ?: '')
+                domBuilder.userfield(name: 'WerksvertretungOrt', vertreter.ort ?: '')
+                domBuilder.userfield(name: 'WerksvertretungTelefon', vertreter.telefon ?: '')
+                domBuilder.userfield(name: 'WerksvertretungTelefax', vertreter.telefax ?: '')
+                domBuilder.userfield(name: 'WerksvertretungEmail', vertreter.email ?: '')
+            }
+        }
     }
 
     /**
