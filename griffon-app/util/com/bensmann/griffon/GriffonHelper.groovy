@@ -723,7 +723,7 @@ class GriffonHelper {
         def p = Wac2Resource.getWacwsProperties()
         properties.load(p)
         //return properties.get("odisee.wac177.rest.url") as String
-        return "http://wac.service.odisee.de"
+        return "http://ventplan.service.odisee.de"
     }
 
     /**
@@ -734,7 +734,7 @@ class GriffonHelper {
         def p = Wac2Resource.getWacwsProperties()
         properties.load(p)
         //return properties.get("odisee.wac177.rest.path") as String
-        return "/wac/177/"
+        return "/service/177/"
     }
 
 }
