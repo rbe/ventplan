@@ -17,7 +17,7 @@
     <content url="file://$USER_HOME$/.griffon/0.9.4/projects/ventplan/plugins/tray-builder-0.6" />
     <content url="file://$USER_HOME$/.griffon/0.9.4/projects/ventplan/plugins/wsclient-0.4.2" />
     <content url="file://$USER_HOME$/.griffon/0.9.4/projects/ventplan/plugins/zonelayout-0.2" />
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Java 1.6.0" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="griffon-0.9.4" level="application" />
     <orderEntry type="module-library" exported="">

@@ -10,8 +10,17 @@
       <sourceFolder url="file://$MODULE_DIR$/griffon-app/services" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test/unit" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/test/integration" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/griffon-app/actions" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/griffon-app/bindings" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/griffon-app/conf" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/griffon-app/lifecycle" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/griffon-app/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/griffon-app/util" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/scripts" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/griffon-app/conf/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/staging" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Java 1.6.0" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="griffon-0.9.4" level="application" />
     <orderEntry type="module-library" exported="">
