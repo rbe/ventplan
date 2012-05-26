@@ -6,3 +6,5 @@ target
 staging
 out
 .idea
+atlassian-ide-plugin.xml
+*.iml
