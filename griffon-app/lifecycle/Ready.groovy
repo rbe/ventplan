@@ -22,4 +22,4 @@
  * - execSync { // your code }
  */
 
-new java.lang.Thread(new com.westaflex.wac.CheckUpdate(app: app)).start()
+new java.lang.Thread(new com.ventplan.desktop.CheckUpdate(app: app)).start()

@@ -9,7 +9,7 @@
  */
 package com.bensmann.griffon
 
-import com.westaflex.wac.Wac2Resource
+import com.ventplan.desktop.Wac2Resource
 import griffon.transform.Threading
 
 /**

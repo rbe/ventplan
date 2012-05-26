@@ -10,23 +10,23 @@
 
 application {
     title = 'VentPlan'
-    startupGroups = ['wac2', 'Dialog']
+    startupGroups = ['MainFrame', 'Dialog']
     autoShutdown = false
 }
 mvcGroups {
     'Projekt' {
-        model = 'com.westaflex.wac.ProjektModel'
-        controller = 'com.westaflex.wac.ProjektController'
-        actions = 'com.westaflex.wac.ProjektActions'
-        view = 'com.westaflex.wac.ProjektView'
+        model = 'com.ventplan.desktop.ProjektModel'
+        controller = 'com.ventplan.desktop.ProjektController'
+        actions = 'com.ventplan.desktop.ProjektActions'
+        view = 'com.ventplan.desktop.ProjektView'
     }
-    'wac2' {
-        model = 'com.westaflex.wac.Wac2Model'
-        controller = 'com.westaflex.wac.Wac2Controller'
-        actions = 'com.westaflex.wac.Wac2Actions'
-        view = 'com.westaflex.wac.Wac2View'
+    'MainFrame' {
+        model = 'com.ventplan.desktop.Wac2Model'
+        controller = 'com.ventplan.desktop.Wac2Controller'
+        actions = 'com.ventplan.desktop.Wac2Actions'
+        view = 'com.ventplan.desktop.Wac2View'
     }
     Dialog {
-        controller = 'com.westaflex.wac.DialogController'
+        controller = 'com.ventplan.desktop.DialogController'
     }
 }

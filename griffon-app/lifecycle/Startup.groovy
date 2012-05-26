@@ -23,4 +23,4 @@
  */
 
 // Set splash screen status text
-com.westaflex.wac.Wac2Splash.instance.startingUp()
+com.ventplan.desktop.Wac2Splash.instance.startingUp()

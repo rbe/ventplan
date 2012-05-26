@@ -74,8 +74,8 @@ class ProjektController {
                     // Dirty-flag im eigenen und Wac2Model setzen
                     model.map.dirty = true
                     // Wac2Model über Änderung informieren
-                    app.models["wac2"].aktivesProjektGeandert =
-                    app.models["wac2"].alleProjekteGeandert =
+                    app.models['MainFrame'].aktivesProjektGeandert =
+                        app.models['MainFrame'].alleProjekteGeandert =
                         true
                     // Change tab title (show a star)
                     ////println "popertyChangeListener: calling setTabTitle: ${evt.propertyName}"
@@ -279,7 +279,7 @@ class ProjektController {
         if (!model.wpxFilename) {
             app.controllers['Dialog'].showInformDialog('Das Projekt wird erst gespeichert, bevor ein Dokument erzeugt wird!')
         }
-        app.controllers['wac2'].aktivesProjektSpeichern()
+        app.controllers['MainFrame'].aktivesProjektSpeichern()
     }
 
     /**
@@ -307,7 +307,7 @@ class ProjektController {
         // Closure ausführen
         closure(nutzerdatenDialog)
         // Dialog ausrichten und anzeigen
-        nutzerdatenDialog = GH.centerDialog(app.views['wac2'], nutzerdatenDialog)
+        nutzerdatenDialog = GH.centerDialog(app.views['MainFrame'], nutzerdatenDialog)
         nutzerdatenDialog.show()
     }
 
@@ -583,7 +583,7 @@ class ProjektController {
         // Closure ausführen
         closure(stucklisteDialog)
         // Dialog ausrichten und anzeigen
-        stucklisteDialog = GH.centerDialog(app.views['wac2'], stucklisteDialog)
+        stucklisteDialog = GH.centerDialog(app.views['MainFrame'], stucklisteDialog)
         stucklisteDialog.show()
     }
 
@@ -626,7 +626,7 @@ class ProjektController {
                             pack: true
                     ]
             )
-            waitDialog = GH.centerDialog(app.views['wac2'], waitDialog)
+            waitDialog = GH.centerDialog(app.views['MainFrame'], waitDialog)
             waitDialog.show()
         }
     }
@@ -678,7 +678,7 @@ class ProjektController {
         view.angebotsverfolgungDialogPlz.text = model.map.kundendaten.bauvorhabenPlz
         view.angebotsverfolgungDialogOrt.text = model.map.kundendaten.bauvorhabenOrt
         // Dialog anzeigen
-        angebotsverfolgungDialog = GH.centerDialog(app.views['wac2'], angebotsverfolgungDialog)
+        angebotsverfolgungDialog = GH.centerDialog(app.views['MainFrame'], angebotsverfolgungDialog)
         angebotsverfolgungDialog.show()
     }
 
@@ -1056,9 +1056,11 @@ class ProjektController {
      */
     def ltmErforderlichDialog = {
         def infoMsg = model.map.messages.ltm
+        /* WAC-115
         app.controllers['Dialog'].showInformDialog(infoMsg as String)
         if (DEBUG)
             println infoMsg
+        */
     }
 
     /**
@@ -1156,10 +1158,8 @@ class ProjektController {
                 //} else {
                 //    onRaumInTabelleWahlen(raumIndex)
                 //}
-
 //                if (DEBUG)
 //                    println "raumGeandert: raum[${raumPosition}] currentRaum=${raum.dump()}"
-
                 model.prufeRaumdaten(model.map.raum.raume[raumPosition])
                 // Versuchen den Zuluftfaktor neu zu setzen... Behebt den Fehler, dass der Zuluftfaktor sich nur dann
                 // ändert, wenn in der Tabelle ein anderer Raum gewählt wird, um anschließend den ursprünglichen Raum
@@ -1167,7 +1167,6 @@ class ProjektController {
                 try {
                     view?.raumBearbeitenLuftartFaktorZuluftverteilung.text = model.map.raum.raume[raumPosition].raumZuluftfaktor.toString2()
                 } catch (e) {}
-
                 // WAC-65: Errechnete Werte zurücksetzen
                 model.map.raum.raume[raumPosition].with {
                     if (raumBreite && raumLange)
@@ -1189,7 +1188,6 @@ class ProjektController {
                 if (!model.map.anlage.zentralgeratManuell) {
                     model.map.raum.raume[raumPosition].raumUberstromVolumenstrom = 0.0d
                 }
-
                 // Raumvolumenströme, (Werte abzgl. Infiltration werden zur Berechnung der Ventile benötigt) berechnen
                 wacCalculationService.autoLuftmenge(model.map)
                 // Zu-/Abluftventile
@@ -1213,24 +1211,22 @@ class ProjektController {
             onZentralgeratAktualisieren()
             // WAC-171: Finde Räume ohne Türen oder ÜB-Elemente
             def raumeOhneTuren = model.map.raum.raume.findAll { raum ->
-                raum.raumUberstromVolumenstrom > 0 && !raum.turen.any { it.turBreite > 0 }
+                raum.raumUberstromVolumenstrom > 0 /*&& !raum.turen.any { it.turBreite > 0 }*/
             }
+            raumeOhneTuren = raumeOhneTuren.findAll { raum -> !raum.turen.any { it.turBreite > 0 } }
+            raumeOhneTuren = raumeOhneTuren.findAll { raum -> !raum.turen.any { it.turBezeichnung == 'Durchgang' } }
             def raumeOhneUbElemente = []
             raumeOhneUbElemente = model.map.raum.raume.findAll { raum ->
                 def turSpalthoheUberschritten = raum.turen.findAll {
                     it.turSpalthohe > raum.raumMaxTurspaltHohe.toDouble2()
                 }?.size() ?: 0
-                if (DEBUG)
-                    println "WAC-171: Raum=${raum.raumBezeichnung}, turspalthoheUberschritten=${turSpalthoheUberschritten}"
-                if (DEBUG)
-                    println "WAC-171: ${raum.raumUberstromVolumenstrom > 0} && ${turSpalthoheUberschritten > 0} && ${!raum.raumUberstromElement}"
+                if (DEBUG) println "WAC-171: Raum=${raum.raumBezeichnung}, turspalthoheUberschritten=${turSpalthoheUberschritten}"
+                if (DEBUG) println "WAC-171: ${raum.raumUberstromVolumenstrom > 0} && ${turSpalthoheUberschritten > 0} && ${!raum.raumUberstromElement}"
                 // WAC-187
                 raum.raumUberstromVolumenstrom > 0 && turSpalthoheUberschritten > 0 && !raum.raumUberstromElement
             }
-            model.map.raum.raumVs.turenHinweis = raumeOhneTuren.size() > 0 ?
-                "Hinweis: bitte Türen prüfen: ${raumeOhneTuren.collect { it.raumBezeichnung }.join(", ")}" : ""
-            model.map.raum.raumVs.ubElementeHinweis = raumeOhneUbElemente.size() > 0 ?
-                "Hinweis: bitte ÜB-Elemente prüfen: ${raumeOhneUbElemente.collect { it.raumBezeichnung }.join(", ")}" : ""
+            model.map.raum.raumVs.turenHinweis = raumeOhneTuren.size() > 0 ? "Hinweis: bitte Türen prüfen: ${raumeOhneTuren.collect { it.raumBezeichnung }.join(', ')}" : ''
+            model.map.raum.raumVs.ubElementeHinweis = raumeOhneUbElemente.size() > 0 ? "Hinweis: bitte ÜB-Elemente prüfen: ${raumeOhneUbElemente.collect { it.raumBezeichnung }.join(', ')}" : ''
         }
     }
 
@@ -1408,7 +1404,7 @@ class ProjektController {
                 GH.makeComboboxCellEditor(columnModel.getColumn(1), model.meta.raumTurbreiten)
                 berechneTuren(null, model.meta.gewahlterRaum.position)
 
-                raumBearbeitenDialog = GH.centerDialog(app.views['wac2'], raumBearbeitenDialog)
+                raumBearbeitenDialog = GH.centerDialog(app.views['MainFrame'], raumBearbeitenDialog)
 
                 raumBearbeitenDialog.show()
             } else {
@@ -2076,7 +2072,7 @@ class ProjektController {
      */
     def dvbVentileinstellungTeilstreckeDialog = {
         teilstreckenDialog = GH.createDialog(builder, TeilstreckenView, [title: "Teilstrecken", pack: true])
-        teilstreckenDialog = GH.centerDialog(app.views['wac2'], teilstreckenDialog)
+        teilstreckenDialog = GH.centerDialog(app.views['MainFrame'], teilstreckenDialog)
 
         def listModel = view.teilstreckenVerfugbareListe.model
         model.map.dvb.kanalnetz.each { listModel.addElement(it.teilstrecke) }

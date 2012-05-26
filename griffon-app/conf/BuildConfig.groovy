@@ -27,6 +27,7 @@ log4j {
     }
     additivity.StackTrace = false
 }
+
 // key signing information
 environments {
     development {
@@ -112,6 +113,11 @@ griffon {
         jnlp = 'applet.jnlp'
         html = 'applet.html'
     }
+    doc {
+        logo = '<a href="http://griffon.codehaus.org" target="_blank"><img alt="The Griffon Framework" src="../img/griffon.png" border="0"/></a>'
+        sponsorLogo = "<br/>"
+        footer = "<br/><br/>Made with Griffon (0.9)"
+    }
 }
 
 griffon.project.dependency.resolution = {
@@ -138,26 +144,17 @@ griffon.project.dependency.resolution = {
     }
 }
 
-griffon {
-    doc {
-        logo = '<a href="http://griffon.codehaus.org" target="_blank"><img alt="The Griffon Framework" src="../img/griffon.png" border="0"/></a>'
-        sponsorLogo = "<br/>"
-        footer = "<br/><br/>Made with Griffon (0.9)"
-    }
-}
-
 app.archetype = 'default'
 app.fileType = '.groovy'
-app.defaultPackageName = 'com.westaflex.wac'
-
-application.icon = '/griffon-app/VentPlan.icns'
+app.defaultPackageName = 'com.ventplan.desktop'
+application.icon = '/griffon-app/resources/VentPlan.icns'
 
 compiler {
     threading {
         com {
-            westaflex {
+            ventplan {
                 /*
-                wac {
+                desktop {
                     Wac2Controller = true
                     ProjektModel = true
                     ProjektController = true
@@ -173,7 +170,7 @@ compiler {
                     AuslegungView = true
                 }
                 */
-                wac = false
+                desktop = false
             }
         }
     }

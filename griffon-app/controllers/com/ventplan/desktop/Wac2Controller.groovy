@@ -608,7 +608,7 @@ class Wac2Controller {
      */
     def aboutDialogOeffnen = { evt = null ->
         aboutDialog = GH.createDialog(builder, AboutView, [title: 'Über', resizable: false, pack: true])
-        aboutDialog = GH.centerDialog(app.views['wac2'], aboutDialog)
+        aboutDialog = GH.centerDialog(app.views['MainFrame'], aboutDialog)
         aboutDialog.show()
     }
 
@@ -728,7 +728,7 @@ class Wac2Controller {
      */
     def nachProjektSuchenDialogOeffnen = { evt = null ->
         projektSuchenDialog = GH.createDialog(builder, ProjektSuchenView, [title: "Projekt suchen", resizable: true, pack: true])
-        projektSuchenDialog = GH.centerDialog(app.views['wac2'], projektSuchenDialog)
+        projektSuchenDialog = GH.centerDialog(app.views['MainFrame'], projektSuchenDialog)
         if (projektSuchenPrefs.getSearchFolder()) {
             view.projektSuchenOrdnerPfad.text = projektSuchenPrefs.getSearchFolder()
         }
@@ -849,7 +849,7 @@ class Wac2Controller {
      */
     def checkUpdateDialogOeffnen = { evt = null ->
         checkUpdateDialog = GH.createDialog(builder, CheckUpdateView, [title: 'Aktualisierung von VentPlan', resizable: false, pack: true])
-        checkUpdateDialog = GH.centerDialog(app.views['wac2'], checkUpdateDialog)
+        checkUpdateDialog = GH.centerDialog(app.views['MainFrame'], checkUpdateDialog)
         checkUpdateDialog.show()
     }
 

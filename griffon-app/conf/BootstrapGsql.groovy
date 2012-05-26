@@ -20,7 +20,7 @@ class BootstrapGsql {
      */
     def init = { String dataSourceName = 'default', Sql sql ->
         // Set splash screen status text
-        com.westaflex.wac.Wac2Splash.instance.connectingDatabase()
+        com.ventplan.desktop.Wac2Splash.instance.connectingDatabase()
         //println "BootstrapGsql.init: ${sql}"
     }
 
