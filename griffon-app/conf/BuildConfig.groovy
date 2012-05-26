@@ -155,7 +155,7 @@ compiler {
             ventplan {
                 /*
                 desktop {
-                    Wac2Controller = true
+                    VentplanController = true
                     ProjektModel = true
                     ProjektController = true
                     AkustikView = true
@@ -164,9 +164,9 @@ compiler {
                     //Wac2MainPane = true
                     //Wac2View = true
                     RaumVsView
-                    ProjektModelService = true
-                    WacCalculationService = true
-                    WacModelService = true
+                    VpxModelService = true
+                    CalculationService = true
+                    VentplanModelService = true
                     AuslegungView = true
                 }
                 */

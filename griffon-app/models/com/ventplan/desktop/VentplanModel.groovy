@@ -14,7 +14,7 @@ import ca.odell.glazedlists.*
 /**
  *
  */
-class Wac2Model {
+class VentplanModel {
 
     /**
      * Status bar.

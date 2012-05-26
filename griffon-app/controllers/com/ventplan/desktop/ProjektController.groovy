@@ -29,11 +29,11 @@ class ProjektController {
     def model
     def view
 
-    WacCalculationService wacCalculationService
-    WacModelService wacModelService
-    ProjektModelService projektModelService
+    CalculationService calculationService
+    VentplanModelService ventplanModelService
+    VpxModelService vpxModelService
     StucklisteService stucklisteService
-    OooService oooService
+    OdiseeService odiseeService
 
     JDialog raumBearbeitenDialog
     def wbwDialog
@@ -71,9 +71,9 @@ class ProjektController {
                 // Only set dirty flag, when modified property is not the dirty flag
                 // Used for loading and saving
                 else if (evt.propertyName != "dirty" && !model.map.dirty) {
-                    // Dirty-flag im eigenen und Wac2Model setzen
+                    // Dirty-flag im eigenen und VentplanModel setzen
                     model.map.dirty = true
-                    // Wac2Model über Änderung informieren
+                    // VentplanModel über Änderung informieren
                     app.models['MainFrame'].aktivesProjektGeandert =
                         app.models['MainFrame'].alleProjekteGeandert =
                         true
@@ -95,18 +95,18 @@ class ProjektController {
         model.meta.raumTurTyp = ["Tür", "Durchgang"]
         model.meta.raumTurbreiten = [610, 735, 860, 985, 1110, 1235, 1485, 1735, 1985]
         // Raumvolumenströme - Bezeichnungen der Zu-/Abluftventile
-        model.meta.raum.raumVsBezeichnungZuluftventile = wacModelService.getZuluftventile()
-        model.meta.raum.raumVsBezeichnungAbluftventile = wacModelService.getAbluftventile()
+        model.meta.raum.raumVsBezeichnungZuluftventile = ventplanModelService.getZuluftventile()
+        model.meta.raum.raumVsBezeichnungAbluftventile = ventplanModelService.getAbluftventile()
         // Raumvolumenströme - Überströmelemente
-        model.meta.raum.raumVsUberstromelemente = wacModelService.getUberstromelemente()
+        model.meta.raum.raumVsUberstromelemente = ventplanModelService.getUberstromelemente()
         // Fix: raum typ setzen, sonst wird bei den AkustikBindings eine Exception geworfen.
         //model.meta.raum.typ = ["Wohnzimmer", "Kinderzimmer", "Schlafzimmer", "Esszimmer", "Arbeitszimmer", "Gästezimmer",
         //          "Hausarbeitsraum", "Kellerraum", "WC", "Küche", "Kochnische", "Bad mit/ohne WC", "Duschraum",
         //          "Sauna", "Flur", "Diele"]
         // Raumvolumenströme - Zentralgerät + Volumenstrom
-        model.meta.zentralgerat = wacModelService.getZentralgerat()
+        model.meta.zentralgerat = ventplanModelService.getZentralgerat()
         // Liste aller möglichen Volumenströme des 1. Zentralgeräts
-        def volumenstromZentralgerat = wacModelService.getVolumenstromFurZentralgerat(model.meta.zentralgerat[0])
+        def volumenstromZentralgerat = ventplanModelService.getVolumenstromFurZentralgerat(model.meta.zentralgerat[0])
         // 5er-Schritte
         model.meta.volumenstromZentralgerat = []
         if (volumenstromZentralgerat.size() > 0) {
@@ -115,13 +115,13 @@ class ProjektController {
             (minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
         }
         // Druckverlustberechnung - Kanalnetz - Kanalbezeichnung
-        model.meta.druckverlust.kanalnetz.kanalbezeichnung = wacModelService.getDvbKanalbezeichnung()
+        model.meta.druckverlust.kanalnetz.kanalbezeichnung = ventplanModelService.getDvbKanalbezeichnung()
         // Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte
-        model.meta.wbw = wacModelService.getWbw()
+        model.meta.wbw = ventplanModelService.getWbw()
         // Druckverlustberechnung - Ventileinstellung - Ventilbezeichnung
-        model.meta.druckverlust.ventileinstellung.ventilbezeichnung = wacModelService.getDvbVentileinstellung()
+        model.meta.druckverlust.ventileinstellung.ventilbezeichnung = ventplanModelService.getDvbVentileinstellung()
         // Akustikberechnung - 1. Hauptschalldämpfer
-        model.meta.akustik.schalldampfer = wacModelService.getSchalldampfer()
+        model.meta.akustik.schalldampfer = ventplanModelService.getSchalldampfer()
         //
         doLater {
             // Raumvolumenströme, Zentralgerät
@@ -253,7 +253,7 @@ class ProjektController {
             if (model.wpxFilename) {
                 if (DEBUG) println "save: saving project '${getProjektTitel()}' in file ${model.wpxFilename?.dump()}"
                 // Save data
-                projektModelService.save(model.map, model.wpxFilename)
+                vpxModelService.save(model.map, model.wpxFilename)
                 // Set dirty-flag in project's model to false
                 model.map.dirty = false
                 // Update tab title to ensure that no "unsaved-data-star" is displayed
@@ -402,7 +402,7 @@ class ProjektController {
             // Dokument erstellen
             try {
                 File wpxFile = new File(model.wpxFilename)
-                String xmlDoc = oooService.performAuslegung(wpxFile, model.map, DEBUG)
+                String xmlDoc = odiseeService.performAuslegung(wpxFile, model.map, DEBUG)
                 makeDocument(type, wpxFile, xmlDoc)
             } catch (e) {
                 String errorMsg = "Die ${type} konnte leider nicht erstellt werden.\n${e}"
@@ -446,7 +446,7 @@ class ProjektController {
                 // Auslegung/Dokument erstellen
                 try {
                     File wpxFile = new File(model.wpxFilename)
-                    String xmlDoc = oooService.performAngebot(wpxFile, model.map, DEBUG, newMap)
+                    String xmlDoc = odiseeService.performAngebot(wpxFile, model.map, DEBUG, newMap)
                     makeDocument(type, wpxFile, xmlDoc)
                 } catch (e) {
                     String errorMsg = "Das ${type} konnte leider nicht erstellt werden.\n${e}"
@@ -493,7 +493,7 @@ class ProjektController {
                 // Auslegung/Dokument erstellen
                 try {
                     File wpxFile = new File(model.wpxFilename)
-                    String xmlDoc = oooService.performStueckliste(wpxFile, model.map, DEBUG, newMap)
+                    String xmlDoc = odiseeService.performStueckliste(wpxFile, model.map, DEBUG, newMap)
                     makeDocument(type, wpxFile, xmlDoc)
                 } catch (e) {
                     String errorMsg = "Die ${type} konnte leider nicht erstellt werden.\n${e}"
@@ -791,7 +791,7 @@ class ProjektController {
             dvbKanalnetzGeandert(it.position)
         }
         // Ventile berechnen
-        wacCalculationService.berechneVentileinstellung(model.map)
+        calculationService.berechneVentileinstellung(model.map)
         // CellEditors, TableModels aktualisieren
         model.resyncDvbKanalnetzTableModels()
         model.resyncDvbVentileinstellungTableModels()
@@ -840,8 +840,8 @@ class ProjektController {
             //model.map.gebaude.geometrie.gelufteteFlache = g.gelufteteFlache
             model.map.gebaude.geometrie.gelufteteaVolumen = g.geluftetesVolumen
             //
-            wacCalculationService.geometrie(model.map)
-            wacCalculationService.aussenluftVs(model.map)
+            calculationService.geometrie(model.map)
+            calculationService.aussenluftVs(model.map)
             // Zentralgerät bestimmen
             onZentralgeratAktualisieren()
         }
@@ -995,7 +995,7 @@ class ProjektController {
      */
     def berechneAussenluftVs = {
         // Mit/ohne Infiltrationsanteil berechnen
-        wacCalculationService.aussenluftVs(model.map)
+        calculationService.aussenluftVs(model.map)
         // Zentralgerät bestimmen
         onZentralgeratAktualisieren()
     }
@@ -1189,24 +1189,24 @@ class ProjektController {
                     model.map.raum.raume[raumPosition].raumUberstromVolumenstrom = 0.0d
                 }
                 // Raumvolumenströme, (Werte abzgl. Infiltration werden zur Berechnung der Ventile benötigt) berechnen
-                wacCalculationService.autoLuftmenge(model.map)
+                calculationService.autoLuftmenge(model.map)
                 // Zu-/Abluftventile
                 model.map.raum.raume[raumPosition] =
-                    wacCalculationService.berechneZuAbluftventile(model.map.raum.raume[raumPosition])
+                    calculationService.berechneZuAbluftventile(model.map.raum.raume[raumPosition])
                 // Türspalt und Türen
                 model.map.raum.raume[raumPosition] =
-                    wacCalculationService.berechneTurspalt(model.map.raum.raume[raumPosition])
+                    calculationService.berechneTurspalt(model.map.raum.raume[raumPosition])
                 berechneTuren(null, raumPosition)
                 // Überströmelement berechnen
                 model.map.raum.raume[raumPosition] =
-                    wacCalculationService.berechneUberstromelemente(model.map.raum.raume[raumPosition])
+                    calculationService.berechneUberstromelemente(model.map.raum.raume[raumPosition])
             }
             // Nummern der Räume berechnen
-            wacCalculationService.berechneRaumnummer(model.map)
+            calculationService.berechneRaumnummer(model.map)
             // Gebäude-Geometrie berechnen
-            wacCalculationService.geometrieAusRaumdaten(model.map)
+            calculationService.geometrieAusRaumdaten(model.map)
             // Aussenluftvolumenströme berechnen
-            wacCalculationService.aussenluftVs(model.map)
+            calculationService.aussenluftVs(model.map)
             // Zentralgerät bestimmen
             onZentralgeratAktualisieren()
             // WAC-171: Finde Räume ohne Türen oder ÜB-Elemente
@@ -1522,7 +1522,7 @@ class ProjektController {
         if (DEBUG)
             println "raum.turen -> ${raum?.turen.dump()}"
         if (raum?.turen.findAll { it.turBreite > 0 }?.size() > 0 && raum.raumUberstromVolumenstrom) {
-            wacCalculationService.berechneTurspalt(raum)
+            calculationService.berechneTurspalt(raum)
             // WAC-165: Hinweis: Türspalt > max. Türspalthöhe?
             def turSpalthoheUberschritten = raum.turen.findAll {
                 it.turSpalthohe > raum.raumMaxTurspaltHohe.toDouble2()
@@ -1587,7 +1587,7 @@ class ProjektController {
         if (DEBUG)
             println "raumZuAbluftventileGeandert: raumIndex=${raumIndex}"
         if (raumIndex > -1) {
-            wacCalculationService.berechneZuAbluftventile(model.map.raum.raume.find { it.position == raumIndex })
+            calculationService.berechneZuAbluftventile(model.map.raum.raume.find { it.position == raumIndex })
         } else {
             if (DEBUG)
                 println "raumZuAbluftventileGeandert: Kein Raum ausgewählt, es wird nichts berechnet"
@@ -1600,7 +1600,7 @@ class ProjektController {
     def raumUberstromelementeGeandert = {
         def raumIndex = view.raumVsUberstromelementeTabelle.selectedRow
         if (raumIndex > -1) {
-            wacCalculationService.berechneUberstromelemente(model.map.raum.raume.find { it.position == raumIndex })
+            calculationService.berechneUberstromelemente(model.map.raum.raume.find { it.position == raumIndex })
         } else {
             if (DEBUG)
                 println "raumUberstromelementeLuftmengeBerechnen: Kein Raum ausgewählt, es wird nichts berechnet"
@@ -1678,9 +1678,9 @@ class ProjektController {
             // Zentralgerät aus View in Model übernehmen
             model.map.anlage.zentralgerat = view.raumVsZentralgerat.selectedItem
             // Hole Volumenströme des Zentralgeräts
-            model.meta.volumenstromZentralgerat = wacModelService.getVolumenstromFurZentralgerat(model.map.anlage.zentralgerat)
+            model.meta.volumenstromZentralgerat = ventplanModelService.getVolumenstromFurZentralgerat(model.map.anlage.zentralgerat)
             // Aussenluftvolumenströme neu berechnen
-            wacCalculationService.aussenluftVs(model.map)
+            calculationService.aussenluftVs(model.map)
             // Neue Auswahl setzen
             zentralgeratAktualisieren()
         }
@@ -1726,7 +1726,7 @@ class ProjektController {
             // Aktualisiere Volumenstrom
             GH.withDisabledActionListeners view.raumVsVolumenstrom, {
                 // Hole Volumenströme des Zentralgeräts
-                def volumenstromZentralgerat = wacModelService.getVolumenstromFurZentralgerat(view.raumVsZentralgerat.selectedItem)
+                def volumenstromZentralgerat = ventplanModelService.getVolumenstromFurZentralgerat(view.raumVsZentralgerat.selectedItem)
                 // 5er-Schritte
                 model.meta.volumenstromZentralgerat = []
                 def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
@@ -1748,7 +1748,7 @@ class ProjektController {
                 }
 
                 // Selektiere errechneten Volumenstrom
-                def roundedVs = wacCalculationService.round5(model.map.anlage.volumenstromZentralgerat)
+                def roundedVs = calculationService.round5(model.map.anlage.volumenstromZentralgerat)
                 if (DEBUG)
                     println "zentralgeratAktualisieren: model.map.anlage.volumenstromZentralgerat=${model.map.anlage.volumenstromZentralgerat} roundedVs=${roundedVs}"
                 def foundVs = model.meta.volumenstromZentralgerat.find { it.toInteger() == roundedVs }
@@ -1776,9 +1776,9 @@ class ProjektController {
                 println "onZentralgeratAktualisieren: zentralgeratManuell=${model.map.anlage.zentralgeratManuell}"
             if (!model.map.anlage.zentralgeratManuell) {
                 // Berechne Zentralgerät und Volumenstrom
-                def (zentralgerat, nl) = wacCalculationService.berechneZentralgerat(model.map)
+                def (zentralgerat, nl) = calculationService.berechneZentralgerat(model.map)
                 model.map.anlage.zentralgerat = zentralgerat
-                model.map.anlage.volumenstromZentralgerat = wacCalculationService.round5(nl)
+                model.map.anlage.volumenstromZentralgerat = calculationService.round5(nl)
                 if (DEBUG)
                     println "onZentralgeratAktualisieren: zentralgerat=${model.map.anlage.zentralgerat}, nl=${nl}/${model.map.anlage.volumenstromZentralgerat}"
                 zentralgeratAktualisieren()
@@ -1820,7 +1820,7 @@ class ProjektController {
                     gesamtwiderstandszahl: 0.0d
             ] as ObservableMap
             // Berechne die Teilstrecke
-            k = wacCalculationService.berechneTeilstrecke(k)
+            k = calculationService.berechneTeilstrecke(k)
             // Add values to model
             model.addDvbKanalnetz(k, view)
             // Add PropertyChangeListener to our model.map
@@ -1852,7 +1852,7 @@ class ProjektController {
             if (DEBUG)
                 println "kanalnetzIndex -> ${kanalnetzIndex}, kanalnetz -> ${model.map.dvb.kanalnetz.dump()}"
             model.map.dvb.kanalnetz[kanalnetzIndex] =
-                wacCalculationService.berechneTeilstrecke(model.map.dvb.kanalnetz[kanalnetzIndex])
+                calculationService.berechneTeilstrecke(model.map.dvb.kanalnetz[kanalnetzIndex])
             //
             !loadMode && onDvbKanalnetzInTabelleWahlen(kanalnetzIndex)
         }
@@ -1889,7 +1889,7 @@ class ProjektController {
         wbwSummieren()
         // Show dialog
         // Ist zentriert!
-        wbwDialog = GH.createDialog(builder, WbwView, [title: "Widerstandsbeiwerte", size: [750, 650], locationRelativeTo: app.windowManager.findWindow('wac2Frame')])
+        wbwDialog = GH.createDialog(builder, WbwView, [title: "Widerstandsbeiwerte", size: [750, 650], locationRelativeTo: app.windowManager.findWindow('ventplanFrame')])
         wbwDialog.show()
         if (DEBUG)
             println "widerstandsbeiwerteBearbeiten: dialog '${dialog.title}'"
@@ -1991,7 +1991,7 @@ class ProjektController {
         def map = model.map.dvb.kanalnetz[index]
         // Berechne Teilstrecke
         wbwSummieren()
-        wacCalculationService.berechneTeilstrecke(map)
+        calculationService.berechneTeilstrecke(map)
         // Resync model
         //model.resyncDvbKanalnetzTableModels()
         // Close dialog
@@ -2052,7 +2052,7 @@ class ProjektController {
      */
     def dvbVentileinstellungGeandert = { ventileinstellungIndex ->
         doLater {
-            wacCalculationService.berechneVentileinstellung(model.map)
+            calculationService.berechneVentileinstellung(model.map)
             onDvbVentileinstellungInTabelleWahlen(ventileinstellungIndex)
         }
     }
@@ -2168,7 +2168,7 @@ class ProjektController {
             p.removeAllItems()
             // Hole Volumenströme des Zentralgeräts und füge diese in Combobox hinzu
             // TODO 5er-Schritte
-            wacModelService.getVolumenstromFurZentralgerat(zg.selectedItem).each {
+            ventplanModelService.getVolumenstromFurZentralgerat(zg.selectedItem).each {
                 p.addItem(it)
             }
         }
@@ -2218,12 +2218,12 @@ class ProjektController {
                 view."akustik${tabname}Pegel".selectedItem = model.meta.volumenstromZentralgerat[0]
             }
             // Berechne Akustik
-            wacCalculationService.berechneAkustik(tabname, input, model.map)
+            calculationService.berechneAkustik(tabname, input, model.map)
             // Zentralgerät, Überschrift
             view."akustik${tabname}${tabname}Zentralgerat".text = input.zentralgerat
             // db(A)
             m.dbA = view."akustik${tabname}dbA".text =
-                wacModelService.getDezibelZentralgerat(input.zentralgerat, input.volumenstrom, tabname).toString2()
+                ventplanModelService.getDezibelZentralgerat(input.zentralgerat, input.volumenstrom, tabname).toString2()
             // Mittlerer Schalldruckpegel
             view."akustik${tabname}MittlererSchalldruckpegel".text =
                 m.mittlererSchalldruckpegel?.toString2() ?: 0d.toString2()

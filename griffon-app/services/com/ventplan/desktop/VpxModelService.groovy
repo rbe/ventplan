@@ -15,7 +15,7 @@ import com.ventplan.desktop.VentplanConstants as WX
 /**
  * Speichern und Laden von WAC-Projekten im WPX-Format.
  */
-class ProjektModelService {
+class VpxModelService {
 
     def validator
 
@@ -28,10 +28,10 @@ class ProjektModelService {
     /**
      *
      */
-    def ProjektModelService() {
+    def VpxModelService() {
         // Load XSD
         def xsdStream = VentplanResource.getWPXXSDAsStream()
-        //println "ProjektModelService: found XSD for WPX: ${xsdStream.getClass()}"
+        //println "VpxModelService: found XSD for WPX: ${xsdStream.getClass()}"
         validator = javax.xml.validation.SchemaFactory
                 .newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI)
                 .newSchema(new javax.xml.transform.stream.StreamSource(xsdStream))

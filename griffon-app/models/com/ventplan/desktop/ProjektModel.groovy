@@ -33,7 +33,7 @@ class ProjektModel {
     /**
      * WAC calculation service.
      */
-    def wacCalculationService
+    CalculationService calculationService
 
     /**
      * Template für alle Werte eines Raumes.
@@ -314,7 +314,7 @@ class ProjektModel {
             // Prüfe Toleranzwerte für Zuluftfaktor
             def eingegebenerZuluftfaktor = r.raumZuluftfaktor.toDouble2()
             def (zuluftfaktor, neuerZuluftfaktor) =
-            wacCalculationService.prufeZuluftfaktor(r.raumTyp, eingegebenerZuluftfaktor)
+            calculationService.prufeZuluftfaktor(r.raumTyp, eingegebenerZuluftfaktor)
             if (zuluftfaktor != neuerZuluftfaktor) {
                 def infoMsg = "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
                 app.controllers['Dialog'].showInformDialog(infoMsg as String)

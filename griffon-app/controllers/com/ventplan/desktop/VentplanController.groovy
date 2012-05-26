@@ -12,20 +12,20 @@
 package com.ventplan.desktop
 
 import com.bensmann.griffon.GriffonHelper as GH
+
 import groovy.io.FileType
 
 /**
  *
  */
-class Wac2Controller {
+class VentplanController {
 
     public static boolean DEBUG = false
 
+    VpxModelService vpxModelService
+
     def model
-    def wacModelService
-    def projektModelService
     def view
-    def wacCalculationService
     def builder
 
     def aboutDialog
@@ -45,8 +45,8 @@ class Wac2Controller {
 
     /**
      * User's settings.
+     private def prefs = Preferences.userNodeForPackage(VentplanController)
      */
-    private def prefs = java.util.prefs.Preferences.userNodeForPackage(Wac2Controller)
 
     def static mruFileManager = MRUFileManager.getInstance()
 
@@ -61,7 +61,7 @@ class Wac2Controller {
     def static projektSuchenPrefs = ProjektSuchenPrefHelper.getInstance()
 
     /**
-     * Initialize wac2 MVC group.
+     * Initialize MVC group.
      */
     void mvcGroupInit(Map args) {
     }
@@ -192,9 +192,9 @@ class Wac2Controller {
      * TODO Documentation
      */
     String generateMVCId() {
-        def c = Wac2Controller.projektCounter++
+        def c = VentplanController.projektCounter++
         def t = "Projekt ${c.toString()}".toString()
-        //println "Wac2Controller.generateMVCId -> t=${t.dump()}"
+        //println "VentplanController.generateMVCId -> t=${t.dump()}"
         t
     }
 
@@ -202,7 +202,7 @@ class Wac2Controller {
      * Ein neues Projekt erstellen.
      */
     def neuesProjekt = { evt = null ->
-        // Progress bar in Wac2View.
+        // Progress bar in VentplanView.
         jxwithWorker(start: true) {
             // initialize the worker
             onInit {
@@ -227,13 +227,13 @@ class Wac2Controller {
                     projektAktivieren(mvcId)
                     // resize the frame to validate the components.
                     try {
-                        def dim = wac2Frame.getSize()
-                        wac2Frame.setSize((int) dim.width + 1, (int) dim.height)
-                        wac2Frame.invalidate()
-                        wac2Frame.validate()
-                        wac2Frame.setSize(dim)
-                        wac2Frame.invalidate()
-                        wac2Frame.validate()
+                        def dim = ventplanFrame.getSize()
+                        ventplanFrame.setSize((int) dim.width + 1, (int) dim.height)
+                        ventplanFrame.invalidate()
+                        ventplanFrame.validate()
+                        ventplanFrame.setSize(dim)
+                        ventplanFrame.invalidate()
+                        ventplanFrame.validate()
                     } catch (e) {
                         e.printStackTrace()
                     }
@@ -255,13 +255,13 @@ class Wac2Controller {
     }
 
     /**
-     * Ein Projekt aktivieren -- MVC ID an Wac2Model übergeben.
+     * Ein Projekt aktivieren -- MVC ID an VentplanModel übergeben.
      */
     def projektAktivieren = { mvcId ->
         if (DEBUG)
-            println "Wac2Controller.projektAktivieren: mvcId=${mvcId} model.aktivesProjekt=${model?.aktivesProjekt}"
+            println "VentplanController.projektAktivieren: mvcId=${mvcId} model.aktivesProjekt=${model?.aktivesProjekt}"
         if (DEBUG)
-            println "Wac2Controller.projektAktivieren: model=${model?.dump()}"
+            println "VentplanController.projektAktivieren: model=${model?.dump()}"
         // Anderes Projekt wurde aktiviert?
         if (mvcId && mvcId != model?.aktivesProjekt) {
             // MVC ID merken
@@ -270,15 +270,15 @@ class Wac2Controller {
             try {
                 def mvcGroup = getMVCGroup(mvcId)
                 if (DEBUG)
-                    println "Wac2Controller.projektAktivieren: getMVCGroup(mvcGroup)=${mvcGroup}, wpx=${mvcGroup.model?.wpxFilename}"
+                    println "VentplanController.projektAktivieren: getMVCGroup(mvcGroup)=${mvcGroup}, wpx=${mvcGroup.model?.wpxFilename}"
                 if (DEBUG)
-                    println "Wac2Controller.projektAktivieren: getMVCGroup(mvcGroup)=${mvcGroup.dump()}"
+                    println "VentplanController.projektAktivieren: getMVCGroup(mvcGroup)=${mvcGroup.dump()}"
                 model.aktivesProjektGeandert = mvcGroup.model?.map.dirty
             } catch (e) {
                 e.printStackTrace()
             }
             if (DEBUG)
-                println "Wac2Controller.projektAktivieren: mvcId=${model.aktivesProjekt}"
+                println "VentplanController.projektAktivieren: mvcId=${model.aktivesProjekt}"
         }
         /*
         else {
@@ -288,7 +288,7 @@ class Wac2Controller {
     }
 
     /**
-     * Ein Projekt aktivieren -- MVC ID an Wac2Model übergeben.
+     * Ein Projekt aktivieren -- MVC ID an VentplanModel übergeben.
      */
     def projektIndexAktivieren = { index ->
         if (index > -1) {
@@ -377,7 +377,7 @@ class Wac2Controller {
      * aus dem XML in das ProjektModel.
      */
     def projektOffnen = { evt = null ->
-        def openResult = view.wpxFileChooserWindow.showOpenDialog(view.wac2Frame)
+        def openResult = view.wpxFileChooserWindow.showOpenDialog(view.ventplanFrame)
         if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
             def file = view.wpxFileChooserWindow.selectedFile
             projektOffnenClosure(file)
@@ -421,18 +421,16 @@ class Wac2Controller {
                 model.statusBarText = "Phase 2/3: Lade Daten..."
                 def projektModel, projektView, projektController
                 // May return null due to org.xml.sax.SAXParseException while validating against XSD
-                def document = projektModelService.load(file)
+                def document = vpxModelService.load(file)
                 if (document) {
                     //if (DEBUG) println "projektOffnen: document=${document?.dump()}"
                     // Create new Projekt MVC group
                     String mvcId = generateMVCId()
-                    (projektModel, projektView, projektController) =
-                        createMVCGroup("Projekt", mvcId,
-                                [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+                    (projektModel, projektView, projektController) = createMVCGroup("Projekt", mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
                     // Set filename in model
                     projektModel.wpxFilename = file
                     // Convert loaded XML into map
-                    def map = projektModelService.toMap(document)
+                    def map = vpxModelService.toMap(document)
                     // Recursively copy map to model
                     // ATTENTION: DOES NOT fire bindings and events asynchronously/in background!
                     // They are fired after leaving this method.
@@ -442,7 +440,6 @@ class Wac2Controller {
                     model.projekte << mvcId
                     // Projekt aktivieren
                     projektAktivieren(mvcId)
-
                     projektModel.enableDisableRaumButtons(true)
                     // Fixes WAC-216
                     projektModel.enableDvbButtons()
@@ -634,7 +631,7 @@ class Wac2Controller {
     def buildRecentlyOpenedMenuItems = {
         if (mruFileManager.size() > 0) {
             if (DEBUG)
-                println "Wac2Controller.buildRecentlyOpenedMenuItems view dump -> ${view.dump()}"
+                println "VentplanController.buildRecentlyOpenedMenuItems view dump -> ${view.dump()}"
             view.recentlyOpenedMenu.removeAll()
 
             def mruList = mruFileManager.getMRUFileList()
@@ -642,7 +639,7 @@ class Wac2Controller {
             edt {
                 mruList.each() { f ->
                     if (DEBUG)
-                        println "Wac2Controller.buildRecentlyOpenedMenuItems -> f = ${f}".toString()
+                        println "VentplanController.buildRecentlyOpenedMenuItems -> f = ${f}".toString()
                     def newMenuItem = builder.menuItem(f)
                     newMenuItem.setAction(builder.action(
                             id: "zuletztGeoffnetesProjektAction" as String,
@@ -701,7 +698,7 @@ class Wac2Controller {
      model.statusBarText = "Bereit."
 
      def infoMsg = "Übermittlung der WPX-Dateien erfolgreich abgeschlossen."
-     if (isError || fileMsg.length() > 0) {infoMsg = "Übermittlung der WPX-Dateien mit Fehler abgeschlossen.\n ${fileMsg}"}if (DEBUG) println "Wac2Controller.angebotsverfolgungFilesClosure -> ${app.controllers['Dialog']?.dump()}"
+     if (isError || fileMsg.length() > 0) {infoMsg = "Übermittlung der WPX-Dateien mit Fehler abgeschlossen.\n ${fileMsg}"}if (DEBUG) println "VentplanController.angebotsverfolgungFilesClosure -> ${app.controllers['Dialog']?.dump()}"
      app.controllers['Dialog'].showCustomInformDialog("Angebotsverfolgung" as String, infoMsg as String)}}}*/
 
     /**
@@ -769,8 +766,8 @@ class Wac2Controller {
 
                 // Sucht alle Dateien, die auf wpx enden
                 startFileDir.traverse(
-                        type:FileType.FILES,
-                        nameFilter:~/.*\.wpx|.*\.vpx/
+                        type: FileType.FILES,
+                        nameFilter: ~/.*\.wpx|.*\.vpx/
                 ) { file ->
                     def rootWpx = new XmlSlurper().parseText(file.getText())
                     def projekt = rootWpx.projekt
@@ -790,8 +787,8 @@ class Wac2Controller {
                         // installateur = handwerker = Auführende Firma
 
                         if ((ausfuhrendeFirma.firma1.text() && ausfuhrendeFirma.firma1.text().contains(view.projektSuchenInstallateur.text)) ||
-                            (ausfuhrendeFirma.firma2.text() && ausfuhrendeFirma.firma2.text().contains(view.projektSuchenInstallateur.text)) ||
-                            (ausfuhrendeFirma.ort.text() && ausfuhrendeFirma.ort.text().contains(view.projektSuchenInstallateur.text))) {
+                                (ausfuhrendeFirma.firma2.text() && ausfuhrendeFirma.firma2.text().contains(view.projektSuchenInstallateur.text)) ||
+                                (ausfuhrendeFirma.ort.text() && ausfuhrendeFirma.ort.text().contains(view.projektSuchenInstallateur.text))) {
                             if (!list.contains(file.absolutePath)) {
                                 list << file.absolutePath
                             }
@@ -799,8 +796,8 @@ class Wac2Controller {
                     }
                     if (view.projektSuchenHandel.text) {
                         if ((grosshandelFirma.firma1.text() && grosshandelFirma.firma1.text().contains(view.projektSuchenHandel.text)) ||
-                            (grosshandelFirma.firma2.text() && grosshandelFirma.firma2.text().contains(view.projektSuchenHandel.text)) ||
-                            (grosshandelFirma.ort.text() && grosshandelFirma.ort.text().contains(view.projektSuchenHandel.text))) {
+                                (grosshandelFirma.firma2.text() && grosshandelFirma.firma2.text().contains(view.projektSuchenHandel.text)) ||
+                                (grosshandelFirma.ort.text() && grosshandelFirma.ort.text().contains(view.projektSuchenHandel.text))) {
                             if (!list.contains(file.absolutePath)) {
                                 list << file.absolutePath
                             }

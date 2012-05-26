@@ -12,7 +12,7 @@ package com.ventplan.desktop
 /**
  * Communicate with WestaWAC database.
  */
-class WacModelService {
+class VentplanModelService {
 
     /**
      *

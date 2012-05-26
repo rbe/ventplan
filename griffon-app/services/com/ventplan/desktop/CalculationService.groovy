@@ -12,14 +12,14 @@ package com.ventplan.desktop
 /**
  *
  */
-class WacCalculationService {
+class CalculationService {
 
     public static boolean DEBUG = false
 
     /**
      * The WAC model service.
      */
-    def wacModelService
+    VentplanModelService ventplanModelService
 
     /**
      * Dezimalzahl auf 5 runden.
@@ -638,7 +638,7 @@ class WacCalculationService {
      */
     def berechneZentralgerat(map) {
         def nl = map.aussenluftVs.gesamtLvsLtmLvsNl as Integer
-        String zentralgerat = wacModelService.getZentralgeratFurVolumenstrom(nl)
+        String zentralgerat = ventplanModelService.getZentralgeratFurVolumenstrom(nl)
         [zentralgerat, nl]
     }
 
@@ -654,7 +654,7 @@ class WacCalculationService {
             if (DEBUG)
                 println "berechneZuAbluftventile: ${map.raumBezeichnung}: raumBezeichnungZuluftventile=${ventil}"
             if (ventil) {
-                def maxVolumenstrom = wacModelService.getMaxVolumenstrom(ventil)
+                def maxVolumenstrom = ventplanModelService.getMaxVolumenstrom(ventil)
                 // Anzahl Ventile; abzgl. Infiltration
                 map.raumAnzahlZuluftventile = java.lang.Math.ceil(map.raumZuluftVolumenstromInfiltration / maxVolumenstrom)
                 if (DEBUG)
@@ -670,7 +670,7 @@ class WacCalculationService {
             if (DEBUG)
                 println "berechneZuAbluftventile: ${map.raumBezeichnung}: raumBezeichnungAbluftventile=${ventil}"
             if (ventil) {
-                def maxVolumenstrom = wacModelService.getMaxVolumenstrom(ventil)
+                def maxVolumenstrom = ventplanModelService.getMaxVolumenstrom(ventil)
                 // Anzahl Ventile; abzgl. Infiltration
                 map.raumAnzahlAbluftventile = java.lang.Math.ceil(map.raumAbluftVolumenstromInfiltration / maxVolumenstrom)
                 if (DEBUG)
@@ -696,7 +696,7 @@ class WacCalculationService {
         if (DEBUG)
             println "berechneUberstromelemente: map.raumUberstromElement=${map?.raumUberstromElement?.dump()} map=${map?.dump()}"
         if (map?.raumUberstromElement) {
-            def maxVolumenstrom = wacModelService.getMaxVolumenstrom(map.raumUberstromElement)
+            def maxVolumenstrom = ventplanModelService.getMaxVolumenstrom(map.raumUberstromElement)
             // 5b
             if (DEBUG)
                 println "berechneUberstromelemente: map.turen=${map?.turen?.dump()}"
@@ -738,7 +738,7 @@ class WacCalculationService {
     def berechneTeilstrecke(map) {
         if (DEBUG)
             println "berechneTeilstrecke: map=${map.dump()}"
-        def kanal = wacModelService.getKanal(map.kanalbezeichnung)
+        def kanal = ventplanModelService.getKanal(map.kanalbezeichnung)
         map.geschwindigkeit = map.luftVs * 1000000 / (kanal.flaeche * 3600)
         def lambda
         switch (kanal.klasse?.toInteger()) {
@@ -860,7 +860,7 @@ class WacCalculationService {
             if (luftVsLts > 0.0d) {
                 // Berechne dP offen
                 ve.dpOffen =
-                    wacModelService.getMinimalerDruckverlustFurVentil(ve.ventilbezeichnung, ve.luftart, luftVsLts)
+                    ventplanModelService.getMinimalerDruckverlustFurVentil(ve.ventilbezeichnung, ve.luftart, luftVsLts)
                 // Berechne Gesamtwiderstand aller Teilstrecken
                 def x = teilstrecken(ve.teilstrecken).collect { t ->
                     map.dvb.kanalnetz.find {
@@ -896,7 +896,7 @@ class WacCalculationService {
             }
             ve.abgleich = ve.differenz + ve.dpOffen
             ve.einstellung =
-                wacModelService.getEinstellung(ve.ventilbezeichnung, ve.luftart, luftVsLetzteTeilstrecke(ve), ve.abgleich)
+                ventplanModelService.getEinstellung(ve.ventilbezeichnung, ve.luftart, luftVsLetzteTeilstrecke(ve), ve.abgleich)
         }
     }
 
@@ -965,9 +965,9 @@ class WacCalculationService {
         def m = map.akustik."${typ.toLowerCase()}"
         def t = m.tabelle
         // Row 1
-        t[0] = wacModelService.getOktavmittenfrequenz(input.zentralgerat, input.volumenstrom, typ)
+        t[0] = ventplanModelService.getOktavmittenfrequenz(input.zentralgerat, input.volumenstrom, typ)
         // Row 2
-        def pegelerhohungExternerDruck = wacModelService.getPegelerhohungExternerDruck(input.zentralgerat)
+        def pegelerhohungExternerDruck = ventplanModelService.getPegelerhohungExternerDruck(input.zentralgerat)
         if (DEBUG)
             println "pegelerhohungExternerDruck=$pegelerhohungExternerDruck"
         //t[1] = [:]
@@ -976,9 +976,9 @@ class WacCalculationService {
         //t[2] = [:]
         pegelerhohungExternerDruck.each { k, v -> t[2][k.toLowerCase()] = (v * input.slpErhohungFilter) / 100 }
         // Row 4
-        t[3] = minus1(wacModelService.getSchallleistungspegel(input.hauptschalldampfer1)) ?: zero
+        t[3] = minus1(ventplanModelService.getSchallleistungspegel(input.hauptschalldampfer1)) ?: zero
         // Row 5
-        t[4] = minus1(wacModelService.getSchallleistungspegel(input.hauptschalldampfer2)) ?: zero
+        t[4] = minus1(ventplanModelService.getSchallleistungspegel(input.hauptschalldampfer2)) ?: zero
         // Row 6
         def umlenkungenWert = input.umlenkungen * 0.9d
         t[5] = minus1(zero.inject([:], { o, n -> o[n.key] = umlenkungenWert; o }))
@@ -991,13 +991,13 @@ class WacCalculationService {
                 t[6] = [slp125: -3d, slp250: -3d, slp500: -3d, slp1000: -3d, slp2000: -3d, slp4000: -3d]
         }
         // Row 8
-        def slpLangsdampfung = wacModelService.getSchallleistungspegel(input.langsdampfungKanal)
+        def slpLangsdampfung = ventplanModelService.getSchallleistungspegel(input.langsdampfungKanal)
         slpLangsdampfung ? slpLangsdampfung.each { k, v -> t[7][k.toLowerCase()] = (v * input.langsdampfungKanalLfdmMeter) } : zero
         t[7] = minus1(t[7])
         // Row 9
-        t[8] = minus1(wacModelService.getSchallleistungspegel(input.schalldampferVentil)) ?: zero
+        t[8] = minus1(ventplanModelService.getSchallleistungspegel(input.schalldampferVentil)) ?: zero
         // Row 10
-        t[9] = minus1(wacModelService.getSchallleistungspegel(input.einfugungsdammwert)) ?: zero
+        t[9] = minus1(ventplanModelService.getSchallleistungspegel(input.einfugungsdammwert)) ?: zero
         // Row 11
         switch (input.raumabsorption) {
             case "BAD":

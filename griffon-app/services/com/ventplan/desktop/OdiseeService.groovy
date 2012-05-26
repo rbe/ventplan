@@ -16,12 +16,11 @@ import groovy.xml.StreamingMarkupBuilder
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
-import eu.artofcoding.ventplan.ZipcodeService
 
 /**
  *
  */
-class OooService {
+class OdiseeService {
 
     private static final boolean DEBUG = false
 
@@ -68,7 +67,7 @@ class OooService {
     /**
      * Constructor.
      */
-    def OooService() {
+    def OdiseeService() {
     }
 
     /**

@@ -339,7 +339,7 @@ class GriffonHelper {
      * @return Returns the centered dialog
      */
     def static centerDialog(view, dialog) {
-        java.awt.Rectangle r = view.wac2Frame.getBounds();
+        java.awt.Rectangle r = view.ventplanFrame.getBounds();
         int x = r.x + (r.width - dialog.getSize().width) / 2;
         int y = r.y + (r.height - dialog.getSize().height) / 2;
         dialog.setLocation(x, y);

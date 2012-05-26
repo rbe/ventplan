@@ -21,10 +21,10 @@ mvcGroups {
         view = 'com.ventplan.desktop.ProjektView'
     }
     'MainFrame' {
-        model = 'com.ventplan.desktop.Wac2Model'
-        controller = 'com.ventplan.desktop.Wac2Controller'
-        actions = 'com.ventplan.desktop.Wac2Actions'
-        view = 'com.ventplan.desktop.Wac2View'
+        model = 'com.ventplan.desktop.VentplanModel'
+        controller = 'com.ventplan.desktop.VentplanController'
+        actions = 'com.ventplan.desktop.VentplanActions'
+        view = 'com.ventplan.desktop.VentplanView'
     }
     Dialog {
         controller = 'com.ventplan.desktop.DialogController'

@@ -11,5 +11,5 @@ package com.ventplan.desktop
 
 // ChangeListener for active tab; tell model about its MVC ID
 projektTabGroup.addChangeListener({ evt ->
-		controller.projektIndexAktivieren(evt.source.selectedIndex)
-	} as javax.swing.event.ChangeListener)
+    controller.projektIndexAktivieren(evt.source.selectedIndex)
+} as javax.swing.event.ChangeListener)

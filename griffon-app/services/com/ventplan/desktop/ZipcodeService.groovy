@@ -7,7 +7,7 @@
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
  */
-package eu.artofcoding.ventplan
+package com.ventplan.desktop
 
 class ZipcodeService {
 
