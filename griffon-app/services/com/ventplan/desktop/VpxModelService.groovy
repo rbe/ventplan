@@ -19,9 +19,6 @@ class VpxModelService {
 
     def validator
 
-    def xmlns
-    def xsd
-
     def xmlSlurper
     def domBuilder
 
@@ -273,7 +270,7 @@ class VpxModelService {
                             fortluft: [
                                     dach: X.vb { gebaude."fortluft".find { it.text() == "DAC" } == "DAC" },
                                     wand: X.vb { gebaude."fortluft".find { it.text() == "WAN" } == "WAN" },
-                                    lichtschacht: X.vb { gebaude."fortluft".find { it.text() == "LIC" } == "LIC" || gebaude."fortluft".find { it.text() == "BOG135" } == "BOG135" },
+                                    bogen135: X.vb { gebaude."fortluft".find { it.text() == "LIC" } == "LIC" || gebaude."fortluft".find { it.text() == "BOG135" } == "BOG135" },
                             ],
                             energie: [
                                     zuAbluftWarme: X.vb { zentralgerat."energie"."zuAbluftWarme".text() == "true" },
