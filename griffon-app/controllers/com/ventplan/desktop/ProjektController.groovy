@@ -327,6 +327,7 @@ class ProjektController {
      */
     def nutzerdatenSpeichern = {
         try {
+            def error = false
             // Daten aus dem Dialog holen
             def firma = view.auslegungErstellerFirma.text
             def name = view.auslegungErstellerName.text
@@ -371,9 +372,13 @@ class ProjektController {
                 def errorMsg = "Auslegung konnte nicht erstellt werden. " +
                         "Es muss mindestens Name, Anschrift, PLZ, Ort angegeben werden." as String
                 app.controllers['Dialog'].showErrorDialog(errorMsg as String)
+                // Fix Stückliste Generierung
+                error = true
             }
             // Anzeigen, dass Daten geändert wurden
-            nutzerdatenGeandert = true
+            // Fix: Prüfen, ob ein Fehler aufgetreten ist und Variable entsprechend ändern, sonst wird die
+            // Stückliste dennoch generiert.
+            nutzerdatenGeandert = !error
         } catch (e) {
             println "Error saving ersteller values -> ${e.dump()}"
         } finally {
@@ -514,6 +519,10 @@ class ProjektController {
         //
         if (model.tableModels.stucklisteSuche) {
             model.tableModels.stucklisteSuche.clear()
+        }
+        // WAC-227: Stückliste wird mehrfach erzeugt
+        if (model.tableModels.stuckliste) {
+            model.tableModels.stuckliste.clear()
         }
         //
         def stucklisteTableModel = model.createStucklisteUbersichtTableModel()
