@@ -1225,6 +1225,7 @@ class ProjektController {
                 // WAC-187
                 raum.raumUberstromVolumenstrom > 0 && turSpalthoheUberschritten > 0 && !raum.raumUberstromElement
             }
+            raumeOhneUbElemente = raumeOhneUbElemente.findAll { raum -> !raum.turen.any { it.turBezeichnung == 'Durchgang' } }
             model.map.raum.raumVs.turenHinweis = raumeOhneTuren.size() > 0 ? "Hinweis: bitte Türen prüfen: ${raumeOhneTuren.collect { it.raumBezeichnung }.join(', ')}" : ''
             model.map.raum.raumVs.ubElementeHinweis = raumeOhneUbElemente.size() > 0 ? "Hinweis: bitte ÜB-Elemente prüfen: ${raumeOhneUbElemente.collect { it.raumBezeichnung }.join(', ')}" : ''
         }
