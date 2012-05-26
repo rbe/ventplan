@@ -13,7 +13,7 @@ package com.ventplan.desktop
  * Manage a splash screen.
  */
 @Singleton
-class Wac2Splash {
+class VentplanSplash {
 
     /**
      * Instance of Griffon splash screen plugin
@@ -26,7 +26,7 @@ class Wac2Splash {
     def setup = {
         //println "Wac2Splash setup"
         // Set a splash image
-        URL url = Wac2Resource.getSplashScreenURL()
+        URL url = VentplanResource.getSplashScreenURL()
         griffon.plugins.splash.SplashScreen.instance.setImage(url)
         griffon.plugins.splash.SplashScreen.instance.showStatus("...")
         // Show splash screen

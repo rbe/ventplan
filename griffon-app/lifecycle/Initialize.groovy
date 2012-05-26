@@ -24,8 +24,9 @@
 
 import groovy.swing.SwingBuilder
 import static griffon.util.GriffonApplicationUtils.isMacOSX
+import com.ventplan.desktop.VentplanSplash
 
 //griffon.util.groovy.swing.SwingBuilder.lookAndFeel('mac', 'nimbus', 'gtk', ['metal', [boldFonts: false]])
 SwingBuilder.lookAndFeel((isMacOSX ? 'system' : 'nimbus'), 'gtk', ['metal', [boldFonts: false]])
-com.ventplan.desktop.Wac2Splash.instance.setup()
-com.ventplan.desktop.Wac2Splash.instance.initializing()
+VentplanSplash.instance.setup()
+VentplanSplash.instance.initializing()

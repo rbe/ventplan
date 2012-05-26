@@ -1910,7 +1910,7 @@ class ProjektController {
         javax.swing.ImageIcon image = null
         // Neu generierte WBWs haben kein Image. Exception abfangen.
         try {
-            def url = Wac2Resource.getWiderstandURL(wbw.id)
+            def url = VentplanResource.getWiderstandURL(wbw.id)
             image = new javax.swing.ImageIcon(url)
         } catch (NullPointerException e) { }
         // Image und Text setzen

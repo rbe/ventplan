@@ -21,6 +21,7 @@
  * - execAsync { // your code }
  * - execSync { // your code }
  */
+import com.ventplan.desktop.VentplanSplash
 
 // Set splash screen status text
-com.ventplan.desktop.Wac2Splash.instance.startingUp()
+VentplanSplash.instance.startingUp()

@@ -16,7 +16,7 @@ import com.bensmann.griffon.GriffonHelper as GH
  * Wird vor allem wegen den Abkürzungen aus der Webversion genutzt.
  * Siehe Ticket #20.
  */
-class WpxConstants {
+class VentplanConstants {
 
     private static boolean DEBUG = false
 
@@ -76,10 +76,10 @@ class WpxConstants {
     def static get(String p) {
         if (DEBUG)
             print "WpxConstants: mapping ${p?.dump()}"
-        def r = WpxConstants.m[p]
+        def r = VentplanConstants.m[p]
         // Search reverse (value -> key)
         if (!r)
-            r = GH.invertMap(WpxConstants.m)[p]
+            r = GH.invertMap(VentplanConstants.m)[p]
         // No result? Return input.
         if (!r)
             r = p

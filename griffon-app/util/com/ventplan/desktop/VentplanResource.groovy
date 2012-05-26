@@ -12,17 +12,17 @@ package com.ventplan.desktop
 /**
  * Provide access to resources.
  */
-class Wac2Resource {
+class VentplanResource {
 
     /**
      * Get URL for splash screen.
      */
     def static getSplashScreenURL = {
         // dev
-        def r = Wac2Resource.class.getResource("../resources/image/VentPlan_splash.png")
+        def r = VentplanResource.class.getResource("../resources/image/ventplan_splash.png")
         // prod
         if (!r)
-            r = Wac2Resource.class.getResource("/image/VentPlan_splash.png")
+            r = VentplanResource.class.getResource("/image/ventplan_splash.png")
         r
     }
 
@@ -32,22 +32,23 @@ class Wac2Resource {
      */
     def static getWPXXSDAsURL = {
         // dev
-        def r = Wac2Resource.class.getResource("../resources/xml/ventplan-project.xsd")
+        def r = VentplanResource.class.getResource("../resources/xml/ventplan-project.xsd")
         // prod
         if (!r)
-            r = Wac2Resource.class.getResource("/xml/ventplan-project.xsd")
+            r = VentplanResource.class.getResource("/xml/ventplan-project.xsd")
         r.toURI()
     }
 
     /**
+     * TODO Rename to VPX
      * Get stream for XSD of WPX files.
      */
     def static getWPXXSDAsStream = {
         // dev
-        def r = Wac2Resource.class.getResourceAsStream("../resources/xml/ventplan-project.xsd")
+        def r = VentplanResource.class.getResourceAsStream("../resources/xml/ventplan-project.xsd")
         // prod
         if (!r)
-            r = Wac2Resource.class.getResourceAsStream("/xml/ventplan-project.xsd")
+            r = VentplanResource.class.getResourceAsStream("/xml/ventplan-project.xsd")
         r
     }
 
@@ -58,10 +59,10 @@ class Wac2Resource {
         def r
         try {
             // dev
-            r = Wac2Resource.class.getResource("../resources/widerstand/${n}.jpg")
+            r = VentplanResource.class.getResource("../resources/widerstand/${n}.jpg")
             // prod
             if (!r)
-                r = Wac2Resource.class.getResource("/widerstand/${n}.jpg")
+                r = VentplanResource.class.getResource("/widerstand/${n}.jpg")
         } catch (NullPointerException e) {
             r = ""
         }
@@ -74,10 +75,10 @@ class Wac2Resource {
      */
     def static getWacwsProperties() {
         // dev
-        def r = Wac2Resource.class.getResourceAsStream("/ventplan.properties")
+        def r = VentplanResource.class.getResourceAsStream("/ventplan.properties")
         // prod
         if (!r)
-            r = Wac2Resource.class.getResourceAsStream("/wacws/ventplan.properties")
+            r = VentplanResource.class.getResourceAsStream("/wacws/ventplan.properties")
         r
     }
 

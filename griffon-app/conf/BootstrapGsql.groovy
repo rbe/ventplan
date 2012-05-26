@@ -9,6 +9,7 @@
  */
 
 import groovy.sql.Sql
+import com.ventplan.desktop.VentplanSplash
 
 /**
  *
@@ -20,7 +21,7 @@ class BootstrapGsql {
      */
     def init = { String dataSourceName = 'default', Sql sql ->
         // Set splash screen status text
-        com.ventplan.desktop.Wac2Splash.instance.connectingDatabase()
+        VentplanSplash.instance.connectingDatabase()
         //println "BootstrapGsql.init: ${sql}"
     }
 

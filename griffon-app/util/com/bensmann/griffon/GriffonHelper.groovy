@@ -9,7 +9,7 @@
  */
 package com.bensmann.griffon
 
-import com.ventplan.desktop.Wac2Resource
+import com.ventplan.desktop.VentplanResource
 import griffon.transform.Threading
 
 /**
@@ -677,7 +677,7 @@ class GriffonHelper {
      */
     static Properties getVentplanProperties() {
         Properties properties = new Properties()
-        def p = Wac2Resource.getWacwsProperties()
+        def p = VentplanResource.getWacwsProperties()
         properties.load(p)
         return properties
     }
@@ -687,7 +687,7 @@ class GriffonHelper {
      */
     def static getWacwsUrl = {
         Properties properties = new Properties()
-        def p = Wac2Resource.getWacwsProperties()
+        def p = VentplanResource.getWacwsProperties()
         properties.load(p)
         return properties.get("webservice.url") as String
         //return "http://localhost:8080/wacws/services/wpxUpload?wsdl"
@@ -698,7 +698,7 @@ class GriffonHelper {
      */
     def static getOdiseeRestUrl = {
         Properties properties = new Properties()
-        def p = Wac2Resource.getWacwsProperties()
+        def p = VentplanResource.getWacwsProperties()
         properties.load(p)
         return properties.get("odisee.rest.url") as String
         //return "http://localhost:8080/wacws/services/wpxUpload?wsdl"
@@ -709,7 +709,7 @@ class GriffonHelper {
      */
     def static getOdiseeRestPath = {
         Properties properties = new Properties()
-        def p = Wac2Resource.getWacwsProperties()
+        def p = VentplanResource.getWacwsProperties()
         properties.load(p)
         return properties.get("odisee.rest.path") as String
         //return "http://localhost:8080/wacws/services/wpxUpload?wsdl"
@@ -720,7 +720,7 @@ class GriffonHelper {
      */
     def static getOdiseeWac177RestUrl = {
         Properties properties = new Properties()
-        def p = Wac2Resource.getWacwsProperties()
+        def p = VentplanResource.getWacwsProperties()
         properties.load(p)
         //return properties.get("odisee.wac177.rest.url") as String
         return "http://ventplan.service.odisee.de"
@@ -731,7 +731,7 @@ class GriffonHelper {
      */
     def static getOdiseeWac177RestPath = {
         Properties properties = new Properties()
-        def p = Wac2Resource.getWacwsProperties()
+        def p = VentplanResource.getWacwsProperties()
         properties.load(p)
         //return properties.get("odisee.wac177.rest.path") as String
         return "/service/177/"

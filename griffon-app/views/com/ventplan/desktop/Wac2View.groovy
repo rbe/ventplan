@@ -58,11 +58,11 @@ wac2Frame = application(
         size: [1280, 800], //[screen.width as int, screen.height as int],
         pack: false,
         locationByPlatform: true,
-        iconImage: imageIcon('/image/VentPlan_signet_48x48.png').image,
+        iconImage: imageIcon('/image/ventplan_signet_48x48.png').image,
         iconImages: [
-                imageIcon('/image/VentPlan_signet_48x48.png').image,
-                imageIcon('/image/VentPlan_signet_32x32.png').image,
-                imageIcon('/image/VentPlan_signet_16x16.png').image
+                imageIcon('/image/ventplan_signet_48x48.png').image,
+                imageIcon('/image/ventplan_signet_32x32.png').image,
+                imageIcon('/image/ventplan_signet_16x16.png').image
         ],
         layout: new MigLayout("fill", "[grow,200::]"),
         // Our window close listener

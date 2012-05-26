@@ -24,7 +24,7 @@ eventPackageResourcesEnd = {
     }
     // Copy SQL Database to izpack resources dir
     ant.copy(todir: "${projectWorkDir}/installer/izpack/resources", overwrite: true) {
-        fileset(dir: "${basedir}/sql", includes: "VentPlan.db")
+        fileset(dir: "${basedir}/sql", includes: "ventplan.db")
     }
     /* No bin/ needed
     // Copy customized VentPlan executables from /bin to izpack bin dir.
@@ -41,11 +41,11 @@ eventPackageResourcesEnd = {
     // JSMOOTH START
     // OS X: SQL databases go into lib/
     ant.copy(todir: "${projectWorkDir}/installer/mac/dist/lib", overwrite: true) {
-        fileset(dir: "${basedir}/sql", includes: "VentPlan.db")
+        fileset(dir: "${basedir}/sql", includes: "ventplan.db")
     }
     // Windows: SQL databases go into lib/
     ant.copy(todir: "${projectWorkDir}/installer/jsmooth/dist/lib", overwrite: true) {
-        fileset(dir: "${basedir}/sql", includes: "VentPlan.db")
+        fileset(dir: "${basedir}/sql", includes: "ventplan.db")
     }
     /* No bin/ needed
     ant.copy(todir: "${projectWorkDir}/installer/jsmooth/dist/bin", overwrite: true) {
