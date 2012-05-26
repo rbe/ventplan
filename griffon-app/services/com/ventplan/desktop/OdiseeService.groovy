@@ -503,7 +503,7 @@ class OdiseeService {
                     break
                 case 'ZU/AB':
                     // ZU/AB: größeren Wert nehmen
-                    vs = java.lang.Math.max(r.raumZuluftVolumenstromInfiltration, r.raumAbluftVolumenstromInfiltration)
+                    vs = java.lang.Math.max(r.raumZuluftVolumenstromInfiltration ?: 0.0d, r.raumAbluftVolumenstromInfiltration ?: 0.0d)
                     break
             }
             domBuilder.userfield(name: "lmeTabelleTable!B${i + 3}", r.raumBezeichnung ?: '?')
