@@ -31,8 +31,7 @@ panel(layout: new MigLayout("wrap", "[center]", "[fill]"), constraints: "grow") 
         label('Diese Software wurde gemeinsam mit einem Hersteller von')
         label('Lüftungsanlagen unter Orientierung an der DIN 1946-6 entwickelt.')
         label('Trotz grösster Sorgfalt bei Entwicklung von Software kann')
-        label('keine Garantie für die Berechnungen und deren Richtigkeit')
-        label('im Hinblick auf das konkrete Bauvorhaben gegeben werden.')
+        label('keine Garantie für die Berechnungen und deren Richtigkeit gegeben werden.')
     }
     label(' ')
     button('Schliessen', actionPerformed: { e ->
