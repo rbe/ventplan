@@ -78,18 +78,20 @@ panel(layout: new MigLayout("fill, wrap", "[fill, grow]", "[fill,grow]"), constr
                 comboBox(id: "raumVsVolumenstrom", items: model.meta.volumenstromZentralgerat)
             }
         }
+        /* WAC-233
         panel(layout: new MigLayout("ins 0 n 0 n", "[fill, grow]", "[] 10 []"), constraints: "wrap") {
             button(id: "raumVsRaumBearbeiten", text: "Raum bearbeiten", constraints: "wrap")
             //button(id: "raumVsZuAbluftventileSpeichern", text: "Speichern", constraints: "wrap")
             button(id: "raumVsZuAbluftventileAngebotErstellen", text: "Angebot erstellen", constraints: "wrap")
         }
+        */
     }
 }
 
 // raumVsVentileTabGroup
 raumVsVentileTabGroup.with {
-	setTabColorProvider(com.jidesoft.swing.JideTabbedPane.ONENOTE_COLOR_PROVIDER)
-	setBoldActiveTab(true)
+    setTabColorProvider(com.jidesoft.swing.JideTabbedPane.ONENOTE_COLOR_PROVIDER)
+    setBoldActiveTab(true)
 }
 
 /*

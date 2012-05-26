@@ -36,5 +36,6 @@ bind(source: model.map.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsFs", target
 bind(source: model.map.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsRl", target: raumVsAussenluftVsDerLtmRl, targetProperty: "text", converter: GH.toString2Round5Converter)
 bind(source: model.map.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsNl", target: raumVsAussenluftVsDerLtmNl, targetProperty: "text", converter: GH.toString2Round5Converter)
 bind(source: model.map.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsIl", target: raumVsAussenluftVsDerLtmIl, targetProperty: "text", converter: GH.toString2Round5Converter)
-//
+/* WAC-233
 raumVsRaumBearbeiten.actionPerformed = controller.raumBearbeiten
+*/
