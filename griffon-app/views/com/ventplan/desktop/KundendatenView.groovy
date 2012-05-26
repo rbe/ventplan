@@ -16,7 +16,7 @@ import net.miginfocom.swing.MigLayout
 
 // Großhandel
 panel(id: "kundendatenHauptPanel", layout: new MigLayout("ins 0 n 0 n, wrap 2","[grow,fill] [grow,fill]"), constraints: "grow") {
-    panel(id: "kundendatenGrosshandel", border: titledBorder(title: "Großhandel"), layout: new MigLayout("ins 0 n 0 n, wrap 2, fill", "[right] 16 [grow,fill] [grow,fill]"), constraints: "grow") {
+    panel(id: "kundendatenGrosshandel", border: titledBorder(title: "Großhandel"), layout: new MigLayout("ins 0 n 0 n, wrap 2, fill", "[right] 16 [grow,fill] []"), constraints: "grow") {
         // Row 1
         label("Firma 1")
         textField(id: "grosshandelFirma1")
