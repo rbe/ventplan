@@ -11,7 +11,9 @@
  */
 package com.ventplan.desktop
 
-def vertSep = {-> separator(orientation: javax.swing.SwingConstants.VERTICAL) }
+import javax.swing.SwingConstants
+
+def vertSep = {-> separator(orientation: SwingConstants.VERTICAL) }
 
 toolBar(id: 'toolbar', rollover: true) {
     button(neuesProjektAction, text: null, toolTipText: 'Ein neues Projekt starten')
@@ -32,4 +34,6 @@ toolBar(id: 'toolbar', rollover: true) {
     button(projektStuecklisteErstellenAction, text: null, toolTipText: 'Dokument "Stückliste" erstellen')
     // WAC-108 Angebot
     button(projektAngebotErstellenAction, text: null, toolTipText: 'Dokument "Angebot" erstellen')
+    // WAC-202 Verlegeplan
+    button(projektVerlegeplanErstellenAction, text: null, toolTipText: 'Grafik "Verlegeplan" erstellen')
 }

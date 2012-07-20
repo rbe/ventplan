@@ -13,17 +13,14 @@ package com.ventplan.desktop
 
 import net.miginfocom.swing.MigLayout
 
-import com.bensmann.griffon.GriffonHelper as GH
-
 import javax.swing.filechooser.FileFilter
 
-def screen = Toolkit.defaultToolkit.screenSize
-
-wpxFileChooserWindow = fileChooser(
-        dialogTitle: 'Bitte wählen Sie eine VentPlan-Datei',
+//<editor-fold desc="FileChooser">
+vpxFileChooserWindow = fileChooser(
+        dialogTitle: 'Bitte wählen Sie eine Ventplan-Datei',
         multiSelectionEnabled: false,
         fileFilter: [
-                getDescription: {-> 'VentPlan Projekt XML' },
+                getDescription: {-> 'Ventplan Projekt XML' },
                 accept: { file ->
                     //println "wpxFileChooser: filtering ${file.dump()} isDirectory=${file.isDirectory()} endsWith(wpx)=${file.name.endsWith(".wpx")}"
                     return file.isDirectory() || file.name.toLowerCase().endsWith('.vpx') || file.name.toLowerCase().endsWith('.wpx')
@@ -57,6 +54,7 @@ angebotsverfolgungChooserWindow = fileChooser(
                 } ] as javax.swing.filechooser.FileFilter
     )
 */
+//</editor-fold>
 
 ventplanFrame = application(
         title: "VentPlan ${GH.localVersion()}",
@@ -69,14 +67,9 @@ ventplanFrame = application(
                 imageIcon('/image/ventplan_signet_32x32.png').image,
                 imageIcon('/image/ventplan_signet_16x16.png').image
         ],
-        layout: new MigLayout("fill", "[grow,200::]"),
-        // Our window close listener
-        defaultCloseOperation: WindowConstants.DO_NOTHING_ON_CLOSE,
-        windowClosing: { evt ->
-            //println "windowClosing -> ${evt.dump()}"
-            //controller.exitApplication
-            app.shutdown()
-        }
+        layout: new MigLayout('fill', '[grow,200::]'),
+        defaultCloseOperation: WindowConstants.DO_NOTHING_ON_CLOSE, // Our window close listener
+        windowClosing: { evt -> app.shutdown() }
 ) {
     // Build menu bar
     build(VentplanMenubar)
@@ -84,8 +77,8 @@ ventplanFrame = application(
     toolBar(build(VentplanToolBar))
     // Content
     widget(
-            // set scrollpane for all projects
-            jideScrollPane(id: "mainScrollPane", constraints: "grow") {
+            // Set scrollpane for all projects
+            jideScrollPane(id: 'mainScrollPane', constraints: 'grow') {
                 build(VentplanMainPane)
             }
     )
@@ -95,9 +88,9 @@ ventplanFrame = application(
     // Bindings
     build(VentplanBindings)
     // The status bar
-    statusBar(id: "mainStatusBar") {
-        progressBar(id: "mainStatusProgressBar", minimum: 0, maximum: 100, indeterminate: bind { model.statusProgressBarIndeterminate })
-        label(id: "mainStatusBarText", text: bind { model.statusBarText })
+    statusBar(id: 'mainStatusBar') {
+        progressBar(id: 'mainStatusProgressBar', minimum: 0, maximum: 100, indeterminate: bind { model.statusProgressBarIndeterminate })
+        label(id: 'mainStatusBarText', text: bind { model.statusBarText })
     }
     // WAC-161: Zuletzt geöffnete Projekte in das Menu laden
     controller.buildRecentlyOpenedMenuItems()
