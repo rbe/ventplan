@@ -10,20 +10,20 @@
  * rbe, 7/16/12 10:35 AM
  */
 
-
 package com.ventplan.desktop
 
 import com.bensmann.griffon.GriffonHelper as GH
 
 import groovy.io.FileType
 
+import javax.swing.JFileChooser
+
 /**
  *
  */
 class VentplanController {
 
-    public static boolean DEBUG = false
-
+    //<editor-fold desc="Instance fields">
     VpxModelService vpxModelService
 
     def model
@@ -50,24 +50,20 @@ class VentplanController {
      private def prefs = Preferences.userNodeForPackage(VentplanController)
      */
 
-    def static mruFileManager = MRUFileManager.getInstance()
+    def static mruFileManager = MRUFileManager.instance
 
     /**
      *
+     private def wacwsUrl = GH.getWacwsUrl()
      */
-    private def wacwsUrl = GH.getWacwsUrl()
 
     /**
-     * WAC-192 - Saving file path of search folder
+     * WAC-192 Saving file path of search folder
      */
-    def static projektSuchenPrefs = ProjektSuchenPrefHelper.getInstance()
+    def static projektSuchenPrefs = ProjektSuchenPrefHelper.instance
+    //</editor-fold>
 
-    /**
-     * Initialize MVC group.
-     */
-    void mvcGroupInit(Map args) {
-    }
-
+    //<editor-fold desc="MVC">
     /**
      * Get access to all components of a MVC group by its ID.
      */
@@ -84,28 +80,56 @@ class VentplanController {
      * Hole MVC Group des aktiven Projekts.
      */
     def getMVCGroupAktivesProjekt() {
-        if (DEBUG)
-            println "getMVCGroupAktivesProjekt: model.aktivesProjekt=${model.aktivesProjekt}"
-        getMVCGroup(model.aktivesProjekt)
+        def projekt = model.aktivesProjekt
+        if (!projekt) {
+            throw new IllegalStateException('Missing MVC ID')
+        }
+        getMVCGroup(projekt)
+    }
+
+    String generateMVCId() {
+        def c = VentplanController.projektCounter++
+        def t = "Projekt ${c.toString()}".toString()
+        t
     }
 
     /**
-     * Shutdown application and all resources.
+     * Ein Projekt aktivieren -- MVC ID an VentplanModel übergeben.
      */
-    def _shutdown() {
-        // Shutdown application
-        app.shutdown()
+    def projektAktivieren = { mvcId ->
+        // Anderes Projekt wurde aktiviert?
+        if (mvcId && mvcId != model?.aktivesProjekt) {
+            // MVC ID merken
+            model.aktivesProjekt = mvcId
+            // Dirty-flag aus Projekt-Model übernehmen
+            try {
+                def mvcGroup = getMVCGroup(mvcId)
+                model.aktivesProjektGeandert = mvcGroup.model?.map?.dirty
+            } catch (e) {
+                e.printStackTrace()
+            }
+        }
     }
 
+    /**
+     * Ein Projekt aktivieren -- MVC ID an VentplanModel übergeben.
+     */
+    def projektIndexAktivieren = { index ->
+        if (index > -1) {
+            projektAktivieren(model.projekte[index])
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Exiting the application">
     /**
      * Schliessen? Alle Projekte fragen, ob ungesicherte Daten existieren.
      */
     boolean canClose() {
         model.projekte.inject(true) { o, n ->
             def c = getMVCGroup(n).controller
-            if (DEBUG)
-                println "o=${o} c.canClose=${c.canClose()}"
             o &= c.canClose()
+            o // Added as error before was "Assignment is unused"
         }
     }
 
@@ -114,60 +138,35 @@ class VentplanController {
     }
 
     /**
-     * WAC-8: Behebt den Fehler aus dem Ticket
+     * WAC-8
      */
     boolean canExitApplication(evt) {
         boolean proceed = false
         // Ask if we can close
         def canClose = canClose()
-        //if (DEBUG) println "exitApplication: ${canClose}"
         if (canClose) {
             def choice = app.controllers['Dialog'].showApplicationOnlyCloseDialog()
-            if (DEBUG)
-                println "exitApplication: choice=${choice}"
             switch (choice) {
                 case 0:
-                    if (DEBUG)
-                        println "Ja"
                     alleProjekteSpeichern(evt)
-                    if (abortClosing) {
-                        proceed = false
-                    } else {
-                        proceed = true
-                    }
+                    proceed = !abortClosing
                     break
                 case 1: // Cancel: do nothing...
-                    if (DEBUG)
-                        println "Nein"
                     proceed = false
                     break
             }
         } else {
-            if (DEBUG)
-                println "exitApplication: there are unsaved changes"
             // Show dialog: ask user for save all, cancel, quit
             def choice = app.controllers['Dialog'].showApplicationSaveAndCloseDialog()
-            if (DEBUG)
-                println "exitApplication: choice=${choice}"
             switch (choice) {
                 case 0:
-                    if (DEBUG)
-                        println "Alles speichern"
                     alleProjekteSpeichern(evt)
-                    if (abortClosing) {
-                        proceed = false
-                    } else {
-                        proceed = true
-                    }
+                    proceed = !abortClosing
                     break
                 case 1: // Cancel: do nothing...
-                    if (DEBUG)
-                        println "Abbrechen..."
                     proceed = false
                     break
                 case 2:
-                    if (DEBUG)
-                        println "Schliessen"
                     proceed = true
                     break
             }
@@ -175,213 +174,46 @@ class VentplanController {
         mruFileManager.save()
         return proceed
     }
+    //</editor-fold>
 
     /**
      * Disable last tab of JTabbedPane 'projektTabGroup'.
-     */
-    def disableLastProjektTab = {
-        view.projektTabGroup.setEnabledAt(view.projektTabGroup.tabCount - 1, false)
-    }
+     def disableLastProjektTab = {view.projektTabGroup.setEnabledAt(view.projektTabGroup.tabCount - 1, false)}*/
 
     /**
      * Enable last tab of JTabbedPane 'projektTabGroup'.
+     def enableLastProjektTab = {view.projektTabGroup.setEnabledAt(view.projektTabGroup.tabCount - 1, true)}*/
+
+    //<editor-fold desc="Sonstige Dialoge">
+    /**
+     * WAC-167 Info-Menü mit Über-Dialog
+     * Dialog mit Logo und Versionsnummer
      */
-    def enableLastProjektTab = {
-        view.projektTabGroup.setEnabledAt(view.projektTabGroup.tabCount - 1, true)
+    def aboutDialogOeffnen = { evt = null ->
+        aboutDialog = GH.createDialog(builder, AboutView, [title: 'Über', resizable: false, pack: true])
+        aboutDialog = GH.centerDialog(app.views['MainFrame'], aboutDialog)
+        aboutDialog.show()
     }
 
     /**
-     * TODO Documentation
+     * Dialog "Aktualisierungen prüfen" öffnen.
      */
-    String generateMVCId() {
-        def c = VentplanController.projektCounter++
-        def t = "Projekt ${c.toString()}".toString()
-        //println "VentplanController.generateMVCId -> t=${t.dump()}"
-        t
+    def checkUpdateDialogOeffnen = { evt = null ->
+        checkUpdateDialog = GH.createDialog(builder, CheckUpdateView, [title: 'Aktualisierung von Ventplan', resizable: false, pack: true])
+        checkUpdateDialog = GH.centerDialog(app.views['MainFrame'], checkUpdateDialog)
+        checkUpdateDialog.show()
     }
+    //</editor-fold>
 
-    /**
-     * Ein neues Projekt erstellen.
-     */
-    def neuesProjekt = { evt = null ->
-        // Progress bar in VentplanView.
-        jxwithWorker(start: true) {
-            // initialize the worker
-            onInit {
-                model.statusProgressBarIndeterminate = true
-                view.mainStatusBarText.text = "Phase 1/3: Erstelle ein neues Projekt..."
-            }
-            // do the task
-            work {
-                // Die hier vergebene MVC ID wird immer genutzt, selbst wenn das Projekt anders benannt wird!
-                // (durch Bauvorhaben, Speichern)
-                // Es wird also immer "Projekt 1", "Projekt 2" etc. genutzt, nach Reihenfolge der Erstellung
-                view.mainStatusBarText.text = ""
-                view.mainStatusBarText.text = "Phase 2/3: Initialisiere das Projekt..."
-                String mvcId = generateMVCId()
-                def (m, v, c) = createMVCGroup("Projekt", mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
-                view.mainStatusBarText.text = ""
-                view.mainStatusBarText.text = "Phase 3/3: Erstelle Benutzeroberfläche für das Projekt..."
-                doLater {
-                    // MVC ID zur Liste der Projekte hinzufügen
-                    model.projekte << mvcId
-                    // Projekt aktivieren
-                    projektAktivieren(mvcId)
-                    // resize the frame to validate the components.
-                    try {
-                        def dim = ventplanFrame.getSize()
-                        ventplanFrame.setSize((int) dim.width + 1, (int) dim.height)
-                        ventplanFrame.invalidate()
-                        ventplanFrame.validate()
-                        ventplanFrame.setSize(dim)
-                        ventplanFrame.invalidate()
-                        ventplanFrame.validate()
-                    } catch (e) {
-                        e.printStackTrace()
-                    }
-                }
-                model.statusBarText = ""
-                view.mainStatusBarText.text = ""
-            }
-            // do sth. when the task is done.
-            onDone {
-                view.mainStatusBarText.text = ""
-                //model.statusBarText = ""
-                model.statusProgressBarIndeterminate = false
-                //model.statusBarText = "Bereit."
-                view.mainStatusBarText.text = "Bereit."
-                model.statusBarText = ""
-                model.statusBarText = "Bereit."
-            }
-        }
-    }
-
-    /**
-     * Ein Projekt aktivieren -- MVC ID an VentplanModel übergeben.
-     */
-    def projektAktivieren = { mvcId ->
-        if (DEBUG)
-            println "VentplanController.projektAktivieren: mvcId=${mvcId} model.aktivesProjekt=${model?.aktivesProjekt}"
-        if (DEBUG)
-            println "VentplanController.projektAktivieren: model=${model?.dump()}"
-        // Anderes Projekt wurde aktiviert?
-        if (mvcId && mvcId != model?.aktivesProjekt) {
-            // MVC ID merken
-            model.aktivesProjekt = mvcId
-            // Dirty-flag aus Projekt-Model übernehmen
-            try {
-                def mvcGroup = getMVCGroup(mvcId)
-                if (DEBUG)
-                    println "VentplanController.projektAktivieren: getMVCGroup(mvcGroup)=${mvcGroup}, wpx=${mvcGroup.model?.wpxFilename}"
-                if (DEBUG)
-                    println "VentplanController.projektAktivieren: getMVCGroup(mvcGroup)=${mvcGroup.dump()}"
-                model.aktivesProjektGeandert = mvcGroup.model?.map.dirty
-            } catch (e) {
-                e.printStackTrace()
-            }
-            if (DEBUG)
-                println "VentplanController.projektAktivieren: mvcId=${model.aktivesProjekt}"
-        }
-        /*
-        else {
-        	if (DEBUG) println "projektAktivieren: no change"
-        }
-         */
-    }
-
-    /**
-     * Ein Projekt aktivieren -- MVC ID an VentplanModel übergeben.
-     */
-    def projektIndexAktivieren = { index ->
-        if (index > -1) {
-            //if (DEBUG) println "projektIndexAktivieren: model.projekte=${model.projekte.dump()}"
-            projektAktivieren(model.projekte[index])
-            //if (DEBUG) println "projektIndexAktivieren: index=${index} -> ${model.aktivesProjekt}"
-        }
-        /*
-        else {
-        if (DEBUG) println "projektIndexAktivieren: index=${index}: Kein Projekt vorhanden!"
-        }
-         */
-    }
-
-    /**
-     * Das aktive Projekt schliessen.
-     */
-    def projektSchliessen = { evt = null ->
-        // Closure for closing the active project
-        def clacpr = { mvc ->
-            // Tab entfernen
-            view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
-            // MVC Gruppe zerstören
-            destroyMVCGroup(mvc.mvcId)
-            // Aus Liste der Projekte entfernen
-            if (DEBUG)
-                println "projektSchliessen: removing ${model.aktivesProjekt} from model.projekte=${model.projekte.dump()}"
-            model.projekte.remove(mvc.mvcId)
-            // aktives Projekt auf null setzen.
-            // Wichtig für die Bindings in den Menus
-            model.aktivesProjekt = null
-            // aktives Projekt nur setzen, wenn noch weitere Projekte offen sind.
-            if (view.projektTabGroup.selectedIndex > -1) {
-                model.aktivesProjekt = model.projekte[view.projektTabGroup.selectedIndex]
-            }
-            if (DEBUG)
-                println "projektSchliessen: model.projekte=${model.projekte.dump()}"
-            // NOT NEEDED projektIndexAktivieren(view.projektTabGroup.selectedIndex)
-            // Wird durch die Tab und den ChangeListener erledigt.
-            // Das aktive Projekt wurde geandert... nein, geschlossen.
-            model.aktivesProjektGeandert = false
-        }
-        // Projekt zur aktiven Tab finden
-        if (DEBUG)
-            println "projektSchliessen: "
-        def mvc = getMVCGroupAktivesProjekt()
-        if (!mvc) {
-            println "projektSchliessen: kein aktives Projekt!"
-            return
-        }
-        if (DEBUG)
-            println "projektSchliessen: model.aktivesProjekt=${model.aktivesProjekt} mvc=${mvc}"
-        def canClose = mvc.controller.canClose()
-        if (!canClose) {
-            if (DEBUG)
-                println "projektSchliessen: canClose=${canClose}, there's unsaved data"
-            def choice = app.controllers['Dialog'].showCloseProjectDialog()
-            if (DEBUG)
-                println "projektSchliessen: choice=${choice}"
-            switch (choice) {
-                case 0: // Save: save and close project
-                    if (DEBUG)
-                        println "projektSchliessen: save and close"
-                    aktivesProjektSpeichern(evt)
-                    clacpr(mvc)
-                    break
-                case 1: // Cancel: do nothing...
-                    if (DEBUG)
-                        println "projektSchliessen: cancel"
-                    break
-                case 2: // Close: just close the tab...
-                    if (DEBUG)
-                        println "projektSchliessen: close without save"
-                    clacpr(mvc)
-                    break
-            }
-        } else {
-            if (DEBUG)
-                println "projektSchliessen: else... close!!"
-            clacpr(mvc)
-        }
-    }
-
+    //<editor-fold desc="Projekt öffnen">
     /**
      * Projekt öffnen: zeige FileChooser, lese XML, erstelle eine MVC Group und übertrage die Werte
      * aus dem XML in das ProjektModel.
      */
     def projektOffnen = { evt = null ->
-        def openResult = view.wpxFileChooserWindow.showOpenDialog(view.ventplanFrame)
-        if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
-            def file = view.wpxFileChooserWindow.selectedFile
+        def openResult = view.vpxFileChooserWindow.showOpenDialog(view.ventplanFrame)
+        if (JFileChooser.APPROVE_OPTION == openResult) {
+            def file = view.vpxFileChooserWindow.selectedFile
             projektOffnenClosure(file)
         }
     }
@@ -395,7 +227,7 @@ class VentplanController {
             projektOffnenClosure(file)
         }
         catch (Exception e) {
-            println "ERROR in zuletztGeoffnetesProjekt: Could not load file ${file} caused by: ${e.dump()}"
+            println "VentplanController#zuletztGeoffnetesProjekt: ERROR: Could not load file ${file} caused by: ${e.dump()}"
         }
     }
 
@@ -409,28 +241,26 @@ class VentplanController {
             // initialize the worker
             onInit {
                 model.statusProgressBarIndeterminate = true
-                model.statusBarText = "Phase 1/3: Projektdatei wählen..."
+                model.statusBarText = 'Phase 1/3: Projektdatei wählen ...'
             }
             // do the task
             work {
                 // Add file to MRU list
                 addRecentlyOpenedFile(file)
                 // ... and reset it in FileChooser
-                view.wpxFileChooserWindow.selectedFile = null
-                if (DEBUG)
-                    println "projektOffnen: file=${file?.dump()}"
+                view.vpxFileChooserWindow.selectedFile = null
                 // Load data; start thread
-                model.statusBarText = "Phase 2/3: Lade Daten..."
-                def projektModel, projektView, projektController
+                model.statusBarText = 'Phase 2/3: Lade Daten ...'
+                def projektModel //, projektView, projektController
                 // May return null due to org.xml.sax.SAXParseException while validating against XSD
                 def document = vpxModelService.load(file)
                 if (document) {
-                    //if (DEBUG) println "projektOffnen: document=${document?.dump()}"
                     // Create new Projekt MVC group
                     String mvcId = generateMVCId()
-                    (projektModel, projektView, projektController) = createMVCGroup("Projekt", mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+                    //(projektModel, projektView, projektController) = createMVCGroup('Projekt', mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+                    (projektModel, _, _) = createMVCGroup('Projekt', mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
                     // Set filename in model
-                    projektModel.wpxFilename = file
+                    projektModel.vpxFilename = file
                     // Convert loaded XML into map
                     def map = vpxModelService.toMap(document)
                     // Recursively copy map to model
@@ -446,28 +276,31 @@ class VentplanController {
                     // Fixes WAC-216
                     projektModel.enableDvbButtons()
                 } else {
-                    def errorMsg = "projektOffnen: Konnte Projekt nicht öffnen!"
-                    app.controllers['Dialog'].showErrorDialog(errorMsg as String)
-                    if (DEBUG)
-                        println errorMsg
+                    def errorMsg = 'Konnte Projekt nicht öffnen!'
+                    app.controllers['Dialog'].showErrorDialog(errorMsg)
                 }
             }
             // do sth. when the task is done.
             onDone {
+                model.statusBarText = 'Phase 3/3: Berechne Projekt ...'
                 def mvc = getMVCGroupAktivesProjekt()
-                model.statusBarText = "Phase 3/3: Berechne Projekt..."
                 //
                 try {
-                    ///println "calling berechneAlles()"
+                    ///println 'calling berechneAlles()'
                     mvc.controller.berechneAlles(true)
-                } catch (e) {}
-                //
-                model.statusProgressBarIndeterminate = false
-                model.statusBarText = "Bereit."
+                    model.statusBarText = 'Bereit.'
+                } catch (e) {
+                    model.statusBarText = 'Fehler!'
+                    e.printStackTrace()
+                } finally {
+                    model.statusProgressBarIndeterminate = false
+                }
             }
         }
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Projekt speichern">
     /**
      * Wird über action aufgerufen. Weiterleiten an projektSpeichern.
      * @return Boolean Was project saved sucessfully?
@@ -478,21 +311,15 @@ class VentplanController {
     }
 
     /**
-     * Projekt speichern. Es wird der Dateiname aus dem ProjektModel 'wpxFilename' verwendet.
+     * Projekt speichern. Es wird der Dateiname aus dem ProjektModel 'vpxFilename' verwendet.
      * Ist er nicht gesetzt, wird "Projekt speichern als" aufgerufen.
      */
     def projektSpeichern = { mvc ->
         def saved = mvc.controller.save()
-        if (saved) {
-            if (DEBUG)
-                println "aktivesProjektSpeichern: Projekt gespeichert in ${mvc.model.wpxFilename}"
-            //saved
-        } else {
-            if (DEBUG)
-                println "aktivesProjektSpeichern: Projekt nicht gespeichert, kein Dateiname (mvc.model.wpxFilename=${mvc.model.wpxFilename?.dump()})?"
+        if (!saved) {
             aktivesProjektSpeichernAls()
         }
-        addRecentlyOpenedFile(mvc.model.wpxFilename)
+        addRecentlyOpenedFile(mvc.model.vpxFilename)
     }
 
     /**
@@ -501,8 +328,6 @@ class VentplanController {
      */
     def aktivesProjektSpeichernAls = { evt = null ->
         def mvc = getMVCGroupAktivesProjekt()
-        if (DEBUG)
-            println "mvc -> ${mvc?.dump()}"
         projektSpeichernAls(mvc)
     }
 
@@ -511,16 +336,17 @@ class VentplanController {
      */
     def projektSpeichernAls = { mvc ->
         // Reset selected filename
-        view.wpxFileChooserWindow.selectedFile = null
+        view.vpxFileChooserWindow.selectedFile = null
         // Open filechooser
-        def openResult = view.wpxFileChooserWindow.showSaveDialog(app.windowManager.windows.find {it.focused})
-        if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
-            def fname = view.wpxFileChooserWindow.selectedFile.toString()
-            if (!fname.endsWith(".wpx"))
-                fname += ".wpx"
-            mvc.model.wpxFilename = fname
-            if (DEBUG)
-                println "projektSpeichernAls: wpxFilename=${mvc.model.wpxFilename?.dump()}"
+        def openResult = view.vpxFileChooserWindow.showSaveDialog(app.windowManager.windows.find {it.focused})
+        if (JFileChooser.APPROVE_OPTION == openResult) {
+            def fname = view.vpxFileChooserWindow.selectedFile.toString()
+            // Take care of file extension
+            if (!fname.endsWith('.vpx')) {
+                fname -= '.wpx'
+                fname += '.vpx'
+            }
+            mvc.model.vpxFilename = fname
             // Save data
             projektSpeichern(mvc)
         }
@@ -530,7 +356,7 @@ class VentplanController {
     }
 
     /**
-     * Projekt speichern. Es wird der Dateiname aus dem ProjektModel 'wpxFilename' verwendet.
+     * Projekt speichern. Es wird der Dateiname aus dem ProjektModel 'vpxFilename' verwendet.
      * Ist er nicht gesetzt, wird "Projekt speichern als" aufgerufen.
      * @return Boolean Was project saved sucessfully?
      */
@@ -545,18 +371,122 @@ class VentplanController {
         model.projekte.each {
             def mvc = getMVCGroup(it)
             def saved = mvc.controller.save()
-            if (saved) {
-                if (DEBUG)
-                    println "alleProjekteSpeichern: Projekt gespeichert in ${mvc.model.wpxFilename}"
-                //saved
-            } else {
-                if (DEBUG)
-                    println "alleProjekteSpeichern: Projekt nicht gespeichert, kein Dateiname (mvc.model.wpxFilename=${mvc.model.wpxFilename?.dump()})?"
+            if (!saved) {
                 projektSpeichernAls(mvc)
             }
         }
     }
+    //</editor-fold>
 
+    /**
+     * Ein neues Projekt erstellen.
+     */
+    def neuesProjekt = { evt = null ->
+        // Progress bar in VentplanView.
+        jxwithWorker(start: true) {
+            // initialize the worker
+            onInit {
+                model.statusProgressBarIndeterminate = true
+                view.mainStatusBarText.text = 'Phase 1/3: Erstelle ein neues Projekt...'
+            }
+            // do the task
+            work {
+                // Die hier vergebene MVC ID wird immer genutzt, selbst wenn das Projekt anders benannt wird!
+                // (durch Bauvorhaben, Speichern)
+                // Es wird also immer 'Projekt 1', 'Projekt 2' etc. genutzt, nach Reihenfolge der Erstellung
+                view.mainStatusBarText.text = ''
+                view.mainStatusBarText.text = 'Phase 2/3: Initialisiere das Projekt...'
+                try {
+                    String mvcId = generateMVCId()
+                    /*def (m, v, c) =*/ createMVCGroup('Projekt', mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+                    view.mainStatusBarText.text = ''
+                    view.mainStatusBarText.text = 'Phase 3/3: Erstelle Benutzeroberfläche für das Projekt...'
+                    doLater {
+                        // MVC ID zur Liste der Projekte hinzufügen
+                        model.projekte << mvcId
+                        // Projekt aktivieren
+                        projektAktivieren(mvcId)
+                        // resize the frame to validate the components.
+                        try {
+                            def dim = ventplanFrame.getSize()
+                            ventplanFrame.setSize((int) dim.width + 1, (int) dim.height)
+                            ventplanFrame.invalidate()
+                            ventplanFrame.validate()
+                            ventplanFrame.setSize(dim)
+                            ventplanFrame.invalidate()
+                            ventplanFrame.validate()
+                        } catch (e) {
+                            e.printStackTrace()
+                        }
+                    }
+                    model.statusBarText = ''
+                    view.mainStatusBarText.text = ''
+                } catch (Exception e) {
+                    e.printStackTrace()
+                }
+            }
+            // do sth. when the task is done.
+            onDone {
+                view.mainStatusBarText.text = ''
+                //model.statusBarText = ''
+                model.statusProgressBarIndeterminate = false
+                //model.statusBarText = 'Bereit.'
+                view.mainStatusBarText.text = 'Bereit.'
+                model.statusBarText = 'Bereit.'
+            }
+        }
+    }
+
+    /**
+     * Das aktive Projekt schliessen.
+     */
+    def projektSchliessen = { evt = null ->
+        // Closure for closing the active project
+        def clacpr = { mvc ->
+            // Tab entfernen
+            view.projektTabGroup.remove(view.projektTabGroup.selectedComponent)
+            // MVC Gruppe zerstören
+            destroyMVCGroup(mvc.mvcId)
+            // Aus Liste der Projekte entfernen
+            model.projekte.remove(mvc.mvcId)
+            // aktives Projekt auf null setzen.
+            // Wichtig für die Bindings in den Menus
+            model.aktivesProjekt = null
+            // aktives Projekt nur setzen, wenn noch weitere Projekte offen sind.
+            if (view.projektTabGroup.selectedIndex > -1) {
+                model.aktivesProjekt = model.projekte[view.projektTabGroup.selectedIndex]
+            }
+            // NOT NEEDED projektIndexAktivieren(view.projektTabGroup.selectedIndex)
+            // Wird durch die Tab und den ChangeListener erledigt.
+            // Das aktive Projekt wurde geandert... nein, geschlossen.
+            model.aktivesProjektGeandert = false
+        }
+        // Projekt zur aktiven Tab finden
+        def mvc = getMVCGroupAktivesProjekt()
+        if (!mvc) {
+            //println 'projektSchliessen: kein aktives Projekt!'
+            return
+        }
+        def canClose = mvc.controller.canClose()
+        if (!canClose) {
+            def choice = app.controllers['Dialog'].showCloseProjectDialog()
+            switch (choice) {
+                case 0: // Save: save and close project
+                    aktivesProjektSpeichern(evt)
+                    clacpr(mvc)
+                    break
+                case 1: // Cancel: do nothing...
+                    break
+                case 2: // Close: just close the tab...
+                    clacpr(mvc)
+                    break
+            }
+        } else {
+            clacpr(mvc)
+        }
+    }
+
+    //<editor-fold desc="WAC-108 Odisee">
     /**
      * WAC-108 Auslegung
      */
@@ -577,18 +507,19 @@ class VentplanController {
     def projektStuecklisteErstellen = { evt = null ->
         getMVCGroupAktivesProjekt().controller.stuecklisteErstellen()
     }
+    //</editor-fold>
 
+    //<editor-fold desc="WAC-151 Automatische und manuelle Berechnung">
     /**
      * WAC-151 Automatische und manuelle Berechnung
      */
     def automatischeBerechnung = { evt = null ->
         def mvc = getMVCGroupAktivesProjekt()
-
         jxwithWorker(start: true) {
             // initialize the worker
             onInit {
                 model.statusProgressBarIndeterminate = true
-                model.statusBarText = "Berechne..."
+                model.statusBarText = 'Berechne ...'
             }
             work {
                 // Neu berechnen
@@ -596,32 +527,24 @@ class VentplanController {
             }
             onDone {
                 model.statusProgressBarIndeterminate = false
-                model.statusBarText = "Bereit."
+                model.statusBarText = 'Bereit.'
             }
         }
     }
+    //</editor-fold>
 
-    /**
-     * WAC-167 Info-Menü mit Über-Dialog
-     * Dialog mit Logo und Versionsnummer
-     */
-    def aboutDialogOeffnen = { evt = null ->
-        aboutDialog = GH.createDialog(builder, AboutView, [title: 'Über', resizable: false, pack: true])
-        aboutDialog = GH.centerDialog(app.views['MainFrame'], aboutDialog)
-        aboutDialog.show()
-    }
-
+    //<editor-fold desc="WAC-161 Zuletzt geöffnete Projekte">
     /**
      * WAC-161 Zuletzt geöffnete Projekte
      */
     def addRecentlyOpenedFile = { filename ->
-        if (DEBUG)
-            println "addRecentlyOpenedFile -> filename: ${filename}"
+        /* TODO mmu
         // Add file to MRU list
         if (mruFileManager.size() == MRUFileManager.DEFAULT_MAX_SIZE) {
             //def position = 6 + MRUFileManager.DEFAULT_MAX_SIZE
             //view.mainMenu.remove(position)
         }
+        */
         mruFileManager.setMRU(filename)
         mruFileManager.save()
         buildRecentlyOpenedMenuItems()
@@ -632,19 +555,13 @@ class VentplanController {
      */
     def buildRecentlyOpenedMenuItems = {
         if (mruFileManager.size() > 0) {
-            if (DEBUG)
-                println "VentplanController.buildRecentlyOpenedMenuItems view dump -> ${view.dump()}"
             view.recentlyOpenedMenu.removeAll()
-
             def mruList = mruFileManager.getMRUFileList()
-
             edt {
                 mruList.each() { f ->
-                    if (DEBUG)
-                        println "VentplanController.buildRecentlyOpenedMenuItems -> f = ${f}".toString()
                     def newMenuItem = builder.menuItem(f)
                     newMenuItem.setAction(builder.action(
-                            id: "zuletztGeoffnetesProjektAction" as String,
+                            id: 'zuletztGeoffnetesProjektAction',
                             name: "${f}".toString(),
                             enabled: true,
                             closure: zuletztGeoffnetesProjekt
@@ -654,86 +571,9 @@ class VentplanController {
             }
         }
     }
+    //</editor-fold>
 
-    /**
-     * WAC-177 Angebotsverfolgung
-     */
-    def angebotsverfolgung = {
-        getMVCGroupAktivesProjekt().controller.angebotsverfolgung()
-    }
-
-    /**
-     * Iterate through the files and submit each file to the web service.
-     * Informs the user with dialogs what happens: error, success...
-     def angebotsverfolgungFilesClosure = { files, inputName ->
-
-     def wacwsUrl
-
-     boolean isError = false
-     def fileMsg = "" as String
-     jxwithWorker(start: true) {// initialize the worker
-     onInit {model.statusProgressBarIndeterminate = true
-     model.statusBarText = "WPX-Dateien werden hochgeladen..."}// do the task
-     work {// ... and reset it in FileChooser
-     view.angebotsverfolgungChooserWindow.selectedFile = null
-     // check if files array is directory
-     if (files?.class.isArray()) {files.each { file ->
-     try {if (file.isDirectory()) {model.statusBarText = "Lade WPX-Dateien aus Verzeichnis ${file.path} hoch..." as String
-
-     def listFiles = file.listFiles()
-
-     listFiles.each { f ->
-     if (f.name.toLowerCase().endsWith(".wpx")) {model.statusBarText = "Lade WPX-Datei hoch..." as String
-     if (postWpxFile(f, inputName)) {fileMsg = fileMsg + f.name + "\n"
-     isError = isError ?: true}}}} else {model.statusBarText = "Lade WPX-Datei hoch..." as String
-     if (postWpxFile(file, inputName)) {fileMsg = fileMsg + file.name + "\n"
-     isError = isError ?: true}}} catch (e) {if (DEBUG) println "catching inner each... ${e}"
-     def errMsg = "Fehler beim Übermitteln der WPX-Datei."
-     app.controllers['Dialog'].showErrorDialog("Fehler bei Angebotsverfolgung" as String, errMsg as String)
-     isError = isError ?: true}}} else {model.statusBarText = "Lade WPX-Datei hoch..." as String
-     if (postWpxFile(it, inputName)) {fileMsg = fileMsg + it.name + "\n"
-     isError = isError ?: true}}}// do sth. when the task is done.
-     onDone {def mvc = getMVCGroupAktivesProjekt()
-     model.statusBarText = "Alle WPX-Dateien hochgeladen..."
-     //
-     model.statusProgressBarIndeterminate = false
-     model.statusBarText = "Bereit."
-
-     def infoMsg = "Übermittlung der WPX-Dateien erfolgreich abgeschlossen."
-     if (isError || fileMsg.length() > 0) {infoMsg = "Übermittlung der WPX-Dateien mit Fehler abgeschlossen.\n ${fileMsg}"}if (DEBUG) println "VentplanController.angebotsverfolgungFilesClosure -> ${app.controllers['Dialog']?.dump()}"
-     app.controllers['Dialog'].showCustomInformDialog("Angebotsverfolgung" as String, infoMsg as String)}}}*/
-
-    /**
-     * Post text of file object.
-     def postWpxFile = { f, inputName ->
-     doOutside {try {if (DEBUG) println "wacwsUrl -> ${wacwsUrl}"
-     // call webservice with paramter
-     def result = withWs(wsdl: wacwsUrl) {uploadWpx(f?.text, inputName)}doLater {if (DEBUG) println "postWpxFile: SOAP Webservice response is: ${result}" as String}return true} catch (e) {if (DEBUG) println "postWpxFile: SOAP call failed. Error=${e}"
-     return false} finally {if (DEBUG) println "postWpxFile: End of postWpxFile file ${f.name}..." as String}}}*/
-
-    /**
-     * WAC-202 Verlegeplan
-     */
-    def verlegeplan = {
-        // Projekt zur aktiven Tab finden
-        def mvc = getMVCGroupAktivesProjekt()
-        // Erzeuge Stückliste für aktives Projekt.
-        mvc.controller.generiereVerlegeplan()
-    }
-
-    /**
-     * WAC-192 Suchfunktion für WPX-Dateien
-     * Dialog für die Suche öffnen
-     */
-    def nachProjektSuchenDialogOeffnen = { evt = null ->
-        projektSuchenDialog = GH.createDialog(builder, ProjektSuchenView, [title: "Projekt suchen", resizable: true, pack: true])
-        projektSuchenDialog = GH.centerDialog(app.views['MainFrame'], projektSuchenDialog)
-        if (projektSuchenPrefs.getSearchFolder()) {
-            view.projektSuchenOrdnerPfad.text = projektSuchenPrefs.getSearchFolder()
-        }
-        projektSuchenDialog.show()
-    }
-
+    //<editor-fold desc="WAC-192 Suchfunktion für WPX-Dateien"> 
     /**
      * WAC-192 Suchfunktion für WPX-Dateien
      * Start-Verzeichnis für die Suche wählen.
@@ -741,7 +581,7 @@ class VentplanController {
      */
     def projektSuchenOrdnerOeffnen = { evt = null ->
         def openResult = view.projektSuchenFolderChooserWindow.showOpenDialog(view.projektSuchenPanel)
-        if (javax.swing.JFileChooser.APPROVE_OPTION == openResult) {
+        if (JFileChooser.APPROVE_OPTION == openResult) {
             def file = view.projektSuchenFolderChooserWindow.selectedFile
             view.projektSuchenOrdnerPfad.text = file.absolutePath
             // Save file path for later use...
@@ -757,7 +597,7 @@ class VentplanController {
      * Es ist eine "Oder"-Suche
      */
     def projektSuchenStarteSuche = { evt = null ->
-        def searchInPath = view.projektSuchenOrdnerPfad.text
+        String searchInPath = view.projektSuchenOrdnerPfad.text
         if (searchInPath) {
             File startFileDir = new File(searchInPath)
             if (startFileDir.exists()) {
@@ -807,7 +647,7 @@ class VentplanController {
                     }
                 }
                 if (list.size() == 0) {
-                    def infoMsg = "Es wurden keine Dateien mit Ihren Suchbegriffen gefunden!"
+                    def infoMsg = 'Es wurden keine Dateien mit Ihren Suchbegriffen gefunden!'
                     app.controllers['Dialog'].showInformDialog(infoMsg as String)
                 } else {
                     // Gefundene Dateien in der Liste anzeigen
@@ -815,7 +655,7 @@ class VentplanController {
                 }
             }
         } else {
-            def infoMsg = "Bitte wählen Sie erst einen Pfad zum Suchen aus!"
+            def infoMsg = 'Bitte wählen Sie erst einen Pfad zum Suchen aus!'
             app.controllers['Dialog'].showInformDialog(infoMsg as String)
         }
     }
@@ -830,6 +670,19 @@ class VentplanController {
 
     /**
      * WAC-192 Suchfunktion für WPX-Dateien
+     * Dialog für die Suche öffnen
+     */
+    def nachProjektSuchenDialogOeffnen = { evt = null ->
+        projektSuchenDialog = GH.createDialog(builder, ProjektSuchenView, [title: 'Projekt suchen', resizable: true, pack: true])
+        projektSuchenDialog = GH.centerDialog(app.views['MainFrame'], projektSuchenDialog)
+        if (projektSuchenPrefs.getSearchFolder()) {
+            view.projektSuchenOrdnerPfad.text = projektSuchenPrefs.getSearchFolder()
+        }
+        projektSuchenDialog.show()
+    }
+
+    /**
+     * WAC-192 Suchfunktion für WPX-Dateien
      * Gewählte Datei
      */
     def projektSuchenDateiOeffnen = { evt = null ->
@@ -838,18 +691,24 @@ class VentplanController {
             projektOffnenClosure(file)
             projektSuchenDialog.dispose()
         } else {
-            def infoMsg = "Sie haben keine Datei zum Öffnen ausgewählt!"
+            def infoMsg = 'Sie haben keine Datei zum Öffnen ausgewählt!'
             app.controllers['Dialog'].showInformDialog(infoMsg as String)
         }
     }
+    //</editor-fold>
+
+    //<editor-fold desc="WAC-202 Verlegeplan">
+    /**
+     * WAC-202 Verlegeplan
+     */
+    def projektVerlegeplanErstellen = {
+        // Erzeuge Stückliste für aktives Projekt.
+        getMVCGroupAktivesProjekt()?.controller?.generiereVerlegeplan()
+    }
+    //</editor-fold>
 
     /**
-     *
-     */
-    def checkUpdateDialogOeffnen = { evt = null ->
-        checkUpdateDialog = GH.createDialog(builder, CheckUpdateView, [title: 'Aktualisierung von VentPlan', resizable: false, pack: true])
-        checkUpdateDialog = GH.centerDialog(app.views['MainFrame'], checkUpdateDialog)
-        checkUpdateDialog.show()
-    }
+     * WAC-177 Angebotsverfolgung
+     def angebotsverfolgung = {getMVCGroupAktivesProjekt().controller.angebotsverfolgung()}*/
 
 }
