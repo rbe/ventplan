@@ -16,7 +16,7 @@
         Root element: westaflex-wpx
 
     -->
-    <xs:element name="westaflex-wpx">
+    <xs:element name="ventplan-project">
         <xs:complexType>
             <xs:sequence minOccurs="1" maxOccurs="1">
                 <xs:element name="projekt" type="project"/>
