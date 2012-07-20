@@ -114,7 +114,7 @@ class CalculationService {
      * Summe der Fläche aller Räume.
      */
     Double summeRaumFlache(map) {
-        def flache = map.raum.raume.inject(0.0d) { o, n -> o + n.raumFlache }
+        Double flache = map.raum.raume.inject(0.0d) { o, n -> o + n.raumFlache }
         flache
     }
 
@@ -122,13 +122,13 @@ class CalculationService {
      * Summe der Volumen aller Räume.
      */
     Double summeRaumVolumen(map) {
-        def volumen = map.raum.raume.inject(0.0d) { o, n -> o + n.raumVolumen }
+        Double volumen = map.raum.raume.inject(0.0d) { o, n -> o + n.raumVolumen }
         // Minimum
         def mittlereRaumhohe = map.gebaude.geometrie.raumhohe
         if (mittlereRaumhohe) {
             if (volumen < 30.0d * mittlereRaumhohe) {
                 volumen = 30.0d * mittlereRaumhohe
-        }
+            }
         }
         volumen
     }
@@ -140,7 +140,7 @@ class CalculationService {
         // Hole alle Räume mit der entsprechenden Luftart; oder alle
         def raume = luftart ? map.raum.raume.grep { it.raumLuftart.contains(luftart) } : map.raum.raume
         def mittlereRaumhohe = map.gebaude.geometrie.raumhohe
-        def volumen = raume.inject(0.0d) { o, n ->
+        Double volumen = raume.inject(0.0d) { o, n ->
             o + n.raumVolumen
         }
         // Minimum
@@ -175,7 +175,7 @@ class CalculationService {
     /**
      * Prüfe den Zuluftfaktor, Rückgabe: [übergebener wert, neuer wert]
      */
-    def prufeZuluftfaktor(String raumTyp, Double zf) {
+    List prufeZuluftfaktor(String raumTyp, Double zf) {
         def minMax = { v, min, max ->
             if (v < min) { min }
             else if (v > max) { max } else { v }
@@ -228,7 +228,7 @@ class CalculationService {
      * Wärmeschutz: hoch, niedrig
      */
     Double warmeschutzFaktor(map) {
-        def r = map.gebaude.warmeschutz.with {
+        Double r = map.gebaude.warmeschutz.with {
             if (hoch) {
                 0.3f
             } else if (niedrig) {
@@ -245,12 +245,12 @@ class CalculationService {
      * DIN1946, Seite 37, Tabelle 10, Freie Lüftung
      */
     Double diffDruck(map) {
-        def r = map.gebaude.lage.with {
+        Double r = map.gebaude.lage.with {
             if (windschwach) {
                 2.0d
             } else if (windstark) {
                 4.0d
-        }
+            }
         }
         r
     }
@@ -668,7 +668,7 @@ class CalculationService {
     def berechneTeilstrecke(map) {
         def kanal = ventplanModelService.getKanal(map.kanalbezeichnung)
         map.geschwindigkeit = map.luftVs * 1000000 / (kanal.flaeche * 3600)
-        def lambda
+        double lambda = 1.0d // TODO Set default to prevent NullPointer
         switch (kanal.klasse?.toInteger()) {
             case 4:
                 lambda = calcDruckverlustKlasse4(kanal.durchmesser, kanal.seiteA, kanal.seiteB)
@@ -680,11 +680,10 @@ class CalculationService {
                 println "CalculationService#berechneTeilstrecke(): switch/default. Klasse=${kanal.klasse} not defined ==> lambda not set"
         }
         //
-        def geschwPow2 = Math.pow(map.geschwindigkeit, 2)
+        def geschwPow2 = Math.pow(map.geschwindigkeit ?: 1.0d, 2) // TODO Ternary operator added '... cannot be applied to (null, Integer)'
         // Gesamtwiderstandszahl wurde via ProjektController.wbwOkButton gesetzt
         // Reibungswiderstand
-        map.reibungswiderstand =
-            lambda * map.lange * 1.2 * geschwPow2 / (2 * (kanal.durchmesser + 0.0d) / 1000)
+        map.reibungswiderstand = lambda * map.lange * 1.2 * geschwPow2 / (2 * (kanal.durchmesser + 0.0d) / 1000)
         // Einzelwiderstand berechnen
         map.einzelwiderstand = 0.6d * map.gesamtwiderstandszahl * geschwPow2
         // Widerstand der Teilstrecke = Reibungswiderstand + Einzelwiderstand
