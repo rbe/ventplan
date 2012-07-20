@@ -1,16 +1,20 @@
 /*
- * VentPlan
- *
- * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
+ * Ventplan
+ * ventplan, ventplan
+ * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
+ * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
+ *
+ * rbe, 7/16/12 10:35 AM
  */
 package com.bensmann.griffon
 
-import com.ventplan.desktop.VentplanResource
 import griffon.transform.Threading
+
+import java.awt.Color
+import java.math.RoundingMode
 
 /**
  * Several helpers for Griffon.
@@ -18,12 +22,10 @@ import griffon.transform.Threading
  */
 class GriffonHelper {
 
-    public static boolean DEBUG = false
-
     /**
      * Standard rounding mode.
      */
-    public static ROUNDING_MODE = java.math.RoundingMode.HALF_UP
+    public static ROUNDING_MODE = RoundingMode.HALF_UP
 
     /**
      * Cache for created dialog instances.
@@ -161,7 +163,6 @@ class GriffonHelper {
                 return d
             }
         }
-        //if (GriffonHelper.DEBUG) println "toDouble2(): ${d?.dump()} -> ${r?.dump()}"
         r
     }
 
@@ -201,13 +202,12 @@ class GriffonHelper {
      */
     def static addMapPropertyChangeListener = { name, map, closure = null ->
         // This map
-        if (GriffonHelper.DEBUG)
-            println "addMapPropertyChangeListener: adding PropertyChangeListener for ${name}"
+        //if (DEBUG) println "addMapPropertyChangeListener: adding PropertyChangeListener for ${name}"
         map.addPropertyChangeListener({ evt ->
-            if (GriffonHelper.DEBUG)
-                println "C! ${name}.${evt.propertyName}: ${evt.oldValue?.dump()} -> ${evt.newValue?.dump()}"
-            if (closure)
+            // if (DEBUG) println "C! ${name}.${evt.propertyName}: ${evt.oldValue?.dump()} -> ${evt.newValue?.dump()}"
+            if (closure) {
                 closure(evt)
+            }
         } as java.beans.PropertyChangeListener)
         // All nested maps
         map.each { k, v ->
@@ -231,14 +231,12 @@ class GriffonHelper {
                 try {
                     m[k] = v
                 } catch (e) {
-                    if (DEBUG) {
                         println "deepCopyMap: else; v=$v k=$k m=$m"
                         println "deepCopyMap: ${e}"
                     }
                 }
             }
         }
-    }
 
     /**
      * Dezimalzahl auf 5 runden.
@@ -269,7 +267,6 @@ class GriffonHelper {
      * Establish private EventPublisher relationship between two classes.
      */
     def static tieEventListener = { Object me, Class klass, Map props = [:] ->
-        //if (GriffonHelper.DEBUG) println "tieEventListener: setting up eventlistener relationship with ${klass}"
         def el = klass.newInstance(props)
         me.addEventListener(el)
         el.addEventListener(me)
@@ -350,7 +347,6 @@ class GriffonHelper {
      * Check row to select in a table.
      */
     def static checkRow = { row, table ->
-        //if (GriffonHelper.DEBUG) println "checkRow: row=${row}, table=${table}"
         if (0 <= row && row < table.rowCount)
             return row
         else if (row < 0)
@@ -369,7 +365,6 @@ class GriffonHelper {
         def lsl = lsm.listSelectionListeners
         lsl.each {
             // Will throw UnsupportedOperationException!
-            //if (GriffonHelper.DEBUG) println "withDisabledListSelectionListeners: removing ${it}"
             lsm.removeListSelectionListener(it)
         }
         // Execute closure
@@ -378,7 +373,6 @@ class GriffonHelper {
         // Re-add ListSelectionListener(s)
         lsl.each {
             // Will throw UnsupportedOperationException!
-            //if (GriffonHelper.DEBUG) println "withDisabledListSelectionListeners: re-adding ${it}"
             lsm.addListSelectionListener(it)
         }
         // Repaint, as default decorator was removed and e.g. table model has changed
@@ -393,8 +387,6 @@ class GriffonHelper {
         //javax.swing.SwingUtilities.invokeLater {
         def actionListeners = component.actionListeners
         actionListeners.each {
-            if (GriffonHelper.DEBUG)
-                println "withDisabledActionListener: removing ${it}"
             component.removeActionListener(it)
         }
         // Execute closure
@@ -402,8 +394,6 @@ class GriffonHelper {
         closure()
         // Re-add ActionListener(s)
         actionListeners.each {
-            if (GriffonHelper.DEBUG)
-                println "withDisabledActionListener: re-adding ${it}"
             component.addActionListener(it)
         }
         //}
@@ -416,8 +406,6 @@ class GriffonHelper {
         // Save existing KeyListener(s)
         def keyListeners = component.keyListeners
         keyListeners.each {
-            if (GriffonHelper.DEBUG)
-                println "withDisabledKeyListeners: removing ${it}"
             component.removeKeyListener(it)
         }
         // Execute closure
@@ -425,8 +413,6 @@ class GriffonHelper {
         closure()
         // Re-add ActionListener(s)
         keyListeners.each {
-            if (GriffonHelper.DEBUG)
-                println "withDisabledKeyListeners: re-adding ${it}"
             component.addKeyListener(it)
         }
     }
@@ -435,7 +421,6 @@ class GriffonHelper {
      * Apply a closure to a component (JTextField/JTextArea) or recurse component's components and apply closure.
      */
     def static recurse(component, closure) {
-        //if (GriffonHelper.DEBUG) println "recurse: ${component.getClass()} ${component instanceof javax.swing.JTextField} ${component instanceof javax.swing.JPanel}"
         if (component instanceof javax.swing.JTextField || component instanceof javax.swing.JTextArea || component instanceof javax.swing.JComboBox) {
             try {
                 closure(component)
@@ -462,7 +447,6 @@ class GriffonHelper {
      * Set textfield to have a yellow background when focused.
      */
     def static yellowTextField = { component ->
-        //if (GriffonHelper.DEBUG) println "yellowTextField: ${component.class}"
         if (component instanceof javax.swing.JTextField) {
             // Editable: set yellow background when focused
             if (component.editable) {
@@ -484,7 +468,6 @@ class GriffonHelper {
      * Right align text.
      */
     def static rightAlignTextField = { component ->
-        //if (GriffonHelper.DEBUG) println "rightAlignTextField: ${component.class}"
         if (component instanceof javax.swing.JTextField) {
             component.horizontalAlignment = javax.swing.JTextField.RIGHT
         }
@@ -499,11 +482,7 @@ class GriffonHelper {
             if (evt.id == java.awt.event.FocusEvent.FOCUS_GAINED) {
                 // If component is editable and 'is empty', select entire contents for easy editing
                 if (component.editable && isEmptyDouble(component)) {
-                    //javax.swing.SwingUtilities.invokeLater {
-                    if (GriffonHelper.DEBUG)
-                        println "selectAllTextField: selecting all: component.text = " + component.text + " -> isEmptyDouble=" + isEmptyDouble(component)
                     GriffonHelper.withDisabledKeyListeners component, { component.selectAll() }
-                    //}
                 }
             }
         } as java.awt.event.FocusListener)
@@ -514,7 +493,6 @@ class GriffonHelper {
      * yellow background + right align, select all on focus gained
      */
     def static doubleTextField = { component ->
-        //if (GriffonHelper.DEBUG) println "doubleTextField: ${component.class}"
         if (component instanceof javax.swing.JTextField) {
             // Set yellow background while editing
             GriffonHelper.yellowTextField(component)
@@ -530,7 +508,6 @@ class GriffonHelper {
      * doubleTextField plus: convert value to formatted double on focus lost
      */
     def static autoformatDoubleTextField = { component ->
-        //if (GriffonHelper.DEBUG) println "autoformatDoubleTextField: ${component.class}"
         if (component instanceof javax.swing.JTextField) {
             GriffonHelper.doubleTextField(component)
             // Add focus listener
@@ -562,10 +539,8 @@ class GriffonHelper {
         // Extract values from components
         bindings.each { k, v ->
             if (v instanceof javax.swing.JTextField) {
-                //if (GriffonHelper.DEBUG) println "getValuesFromView: JTextField: ${k} -> ${v.text}"
                 map["${k}"] = v.text
             } else if (v instanceof javax.swing.JComboBox) {
-                //if (GriffonHelper.DEBUG) println "getValuesFromView: JComboBox: ${k} -> ${v.selectedItem}"
                 map["${k}"] = v.selectedItem
             }
         }

@@ -1,24 +1,34 @@
 /*
- * VentPlan
- *
- * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
+ * Ventplan
+ * ventplan, ventplan
+ * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
+ * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
+ *
+ * rbe, 7/16/12 10:35 AM
  */
 package com.ventplan.desktop
 
 import com.bensmann.griffon.GriffonHelper as GH
 
+import ca.odell.glazedlists.BasicEventList
+import ca.odell.glazedlists.EventList
+import ca.odell.glazedlists.GlazedLists
+import ca.odell.glazedlists.SortedList
+import ca.odell.glazedlists.gui.WritableTableFormat
+import ca.odell.glazedlists.swing.EventTableModel
+import ca.odell.glazedlists.swing.GlazedListsSwing
+import com.bensmann.griffon.AdvancedWritableTableFormat
+
 import javax.swing.DefaultComboBoxModel
+import javax.swing.SwingUtilities
 
 /**
  *
  */
 class ProjektModel {
-
-    public static boolean DEBUG = false
 
     /**
      * The MVC id.
@@ -39,9 +49,9 @@ class ProjektModel {
      * Template für alle Werte eines Raumes.
      */
     def raumMapTemplate = [
-            raumBezeichnung: "",
-            raumLuftart: "",
-            raumGeschoss: "",
+            raumBezeichnung: '',
+            raumLuftart: '',
+            raumGeschoss: '',
             raumLange: 0.0d,
             raumBreite: 0.0d,
             raumFlache: 0.0d,
@@ -53,17 +63,17 @@ class ProjektModel {
             raumZuluftVolumenstromInfiltration: 0.0d, // Zuluftfaktor abzgl. Infiltration
             raumAbluftVolumenstrom: 0.0d,
             raumAbluftVolumenstromInfiltration: 0.0d, // Abluftvs abzgl. Infiltration
-            raumBezeichnungAbluftventile: "",
+            raumBezeichnungAbluftventile: '',
             raumAnzahlAbluftventile: 0,
             raumAbluftmengeJeVentil: 0.0d,
-            raumBezeichnungZuluftventile: "",
+            raumBezeichnungZuluftventile: '',
             raumAnzahlZuluftventile: 0,
             raumZuluftmengeJeVentil: 0.0d,
-            raumVerteilebene: "",
+            raumVerteilebene: '',
             raumAnzahlUberstromVentile: 0,
-            raumUberstromElement: "",
+            raumUberstromElement: '',
             raumUberstromVolumenstrom: 0.0d,
-            raumNummer: "",
+            raumNummer: '',
             raumMaxTurspaltHohe: 10.0d,
             turen: []
     ]
@@ -72,21 +82,21 @@ class ProjektModel {
      * Template für Türen eines Raumes.
      */
     def raumTurenTemplate = [
-            [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-            [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-            [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-            [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-            [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
+            [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+            [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+            [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+            [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+            [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
     ] /*as ObservableList*/
 
     /**
      * Template für alle Werte bei Druckverlust - Kanalnetz.
      */
     def dvbKanalnetzMapTemplate = [
-            luftart: "",
+            luftart: '',
             teilstrecke: 0,
             luftVs: 0.0d,
-            kanalbezeichnung: "",
+            kanalbezeichnung: '',
             lange: 0.0d,
             geschwindigkeit: 0.0d,
             reibungswiderstand: 0.0d,
@@ -99,10 +109,10 @@ class ProjektModel {
      * Template for alle Werte bei Druckverlust - Ventileinstellung.
      */
     def dvbVentileinstellungMapTemplate = [
-            luftart: "",
-            raum: "",
-            teilstrecken: "",
-            ventilbezeichnung: "",
+            luftart: '',
+            raum: '',
+            teilstrecken: '',
+            ventilbezeichnung: '',
             dpOffen: 0.0d,
             gesamtWiderstand: 0.0d,
             differenz: 0.0d,
@@ -113,26 +123,27 @@ class ProjektModel {
     /**
      * Meta-data: will be initialized by ProjektController.
      */
-    @Bindable meta = [
+    @Bindable
+            meta = [
             raum: [
-                    typ: ["Wohnzimmer", "Kinderzimmer", "Schlafzimmer", "Esszimmer", "Arbeitszimmer", "Gästezimmer",
-                            "Hausarbeitsraum", "Kellerraum", "WC", "Küche", "Kochnische", "Bad mit/ohne WC", "Duschraum",
-                            "Sauna", "Flur", "Diele"],
-                    geschoss: ["KG", "EG", "OG", "DG", "SB"],
-                    luftart: ["ZU", "AB", "ZU/AB", "ÜB"],
+                            typ: ['Wohnzimmer', 'Kinderzimmer', 'Schlafzimmer', 'Esszimmer', 'Arbeitszimmer', 'Gästezimmer',
+                                    'Hausarbeitsraum', 'Kellerraum', 'WC', 'Küche', 'Kochnische', 'Bad mit/ohne WC', 'Duschraum',
+                                    'Sauna', 'Flur', 'Diele'],
+                            geschoss: ['KG', 'EG', 'OG', 'DG', 'SB'],
+                            luftart: ['ZU', 'AB', 'ZU/AB', 'ÜB'],
                     raumVsBezeichnungZuluftventile: [/* initialized in ProjektController.mvcGroupInit */],
                     raumVsBezeichnungAbluftventile: [/* initialized in ProjektController.mvcGroupInit */],
                     raumVsUberstromelemente: [/* initialized in ProjektController.mvcGroupInit */],
-                    raumVsVerteilebene: ["KG", "EG", "OG", "DG", "SB"],
+                            raumVsVerteilebene: ['KG', 'EG', 'OG', 'DG', 'SB'],
             ],
             gewahlterRaum: [:] as ObservableMap,
             druckverlust: [
                     kanalnetz: [
-                            luftart: ["ZU", "AB"],
+                                    luftart: ['ZU', 'AB'],
                             kanalbezeichnung: [/* initialized in ProjektController.mvcGroupInit */]
                     ],
                     ventileinstellung: [
-                            luftart: ["ZU", "AB", "AU", "FO"],
+                                    luftart: ['ZU', 'AB', 'AU', 'FO'],
                             ventilbezeichnung: [/* initialized in ProjektController.mvcGroupInit */]
                     ]
             ],
@@ -151,16 +162,16 @@ class ProjektModel {
      */
     @Bindable
             map = [
-                    messages: [ltm: ""] as ObservableMap,
+                    messages: [ltm: ''] as ObservableMap,
                     dirty: false,
                     kundendaten: [
                             grosshandel: [:] as ObservableMap,
                             ausfuhrendeFirma: [:] as ObservableMap,
-                            bauvorhaben: "",    // WAC-177, WAC-108
-                            bauvorhabenAnschrift: "", // WAC-177, WAC-108
-                            bauvorhabenPlz: "", // WAC-177, WAC-108
-                            bauvorhabenOrt: "", // WAC-177, WAC-108
-                            angebotsnummerkurz: "", // WAC-177, WAC-108
+                            bauvorhaben: '',    // WAC-177, WAC-108
+                            bauvorhabenAnschrift: '', // WAC-177, WAC-108
+                            bauvorhabenPlz: '', // WAC-177, WAC-108
+                            bauvorhabenOrt: '', // WAC-177, WAC-108
+                            angebotsnummerkurz: '', // WAC-177, WAC-108
                     ] as ObservableMap,
                     gebaude: [
                             typ: [mfh: true] as ObservableMap,
@@ -190,10 +201,11 @@ class ProjektModel {
                             zuluft: [:] as ObservableMap,
                             abluft: [:] as ObservableMap,
                             fortluft: [dach: true] as ObservableMap,
-                            energie: [zuAbluftWarme: true, nachricht: " "] as ObservableMap,
-                            hygiene: [nachricht: " "] as ObservableMap,
-                            kennzeichnungLuftungsanlage: "ZuAbLS-Z-WE-WÜT-0-0-0-0-0",
                             zentralgerat: "",
+                            energie: [zuAbluftWarme: true, nachricht: ' '] as ObservableMap,
+                            hygiene: [nachricht: ' '] as ObservableMap,
+                            kennzeichnungLuftungsanlage: 'ZuAbLS-Z-WE-WÜT-0-0-0-0-0',
+                            zentralgerat: '',
                             zentralgeratManuell: false,
                             volumenstromZentralgerat: 0,
                     ] as ObservableMap,
@@ -211,7 +223,7 @@ class ProjektModel {
                     ] as ObservableMap,
                     aussenluftVs: [
                             infiltrationBerechnen: true,
-                            massnahme: " ",
+                            massnahme: ' ',
                             gesamtLvsLtmLvsFs: 0.0d,
                             gesamtLvsLtmLvsRl: 0.0d,
                             gesamtLvsLtmLvsNl: 0.0d,
@@ -275,17 +287,17 @@ class ProjektModel {
     def tmNameComparator = { a, b -> a.name <=> b.name } as Comparator
     def tmNothingComparator = { a, b -> 0 } as Comparator
     def tableModels = [
-            raume: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList),
+            raume: GlazedLists.threadSafeList(new SortedList(new BasicEventList(), tmPositionComparator) as EventList),
             raumeTuren: [/* TableModels will be added in addRaum() */],
-            raumeVsZuAbluftventile: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList),
-            raumeVsUberstromventile: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList),
-            dvbKanalnetz: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList),
-            dvbVentileinstellung: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList),
+            raumeVsZuAbluftventile: GlazedLists.threadSafeList(new SortedList(new BasicEventList(), tmPositionComparator) as EventList),
+            raumeVsUberstromventile: GlazedLists.threadSafeList(new SortedList(new BasicEventList(), tmPositionComparator) as EventList),
+            dvbKanalnetz: GlazedLists.threadSafeList(new SortedList(new BasicEventList(), tmPositionComparator) as EventList),
+            dvbVentileinstellung: GlazedLists.threadSafeList(new SortedList(new BasicEventList(), tmPositionComparator) as EventList),
             wbw: [/* TableModels will be added in addWbwTableModel() */],
-            akustikZuluft: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList),
-            akustikAbluft: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList),
-            stuckliste: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList),
-            stucklisteSuche: ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNothingComparator) as ca.odell.glazedlists.EventList)
+            akustikZuluft: GlazedLists.threadSafeList(new SortedList(new BasicEventList(), tmNothingComparator) as EventList),
+            akustikAbluft: GlazedLists.threadSafeList(new SortedList(new BasicEventList(), tmNothingComparator) as EventList),
+            stuckliste: GlazedLists.threadSafeList(new SortedList(new BasicEventList(), tmNothingComparator) as EventList),
+            stucklisteSuche: GlazedLists.threadSafeList(new SortedList(new BasicEventList(), tmNothingComparator) as EventList)
     ]
 
     /**
@@ -318,56 +330,52 @@ class ProjektModel {
             if (zuluftfaktor != neuerZuluftfaktor) {
                 def infoMsg = "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
                 app.controllers['Dialog'].showInformDialog(infoMsg as String)
-                if (DEBUG)
-                    println infoMsg
             }
             r.raumZuluftfaktor = neuerZuluftfaktor
         }
         // Anhand des Raumtyps nicht benötigte Werte löschen
         switch (raum.raumLuftart) {
-            case "ZU":
+            case 'ZU':
                 raum.with {
                     raumAnzahlAbluftventile = 0
                     raumAbluftmengeJeVentil = 0.0d
-                    raumBezeichnungAbluftventile = ""
+                    raumBezeichnungAbluftventile = ''
                     raumAbluftVolumenstrom = 0.0d
                     raumAbluftVolumenstromInfiltration = 0.0d
                 }
                 prufeFaktor(raum)
                 break
-            case "ZU/AB":
+            case 'ZU/AB':
                 prufeFaktor(raum)
                 break
-            case "AB":
+            case 'AB':
                 raum.with {
                     raumAnzahlZuluftventile = 0
                     raumZuluftmengeJeVentil = 0.0d
-                    raumBezeichnungZuluftventile = ""
+                    raumBezeichnungZuluftventile = ''
                     raumZuluftVolumenstrom = 0.0d
                     raumZuluftfaktor = 0.0d
                 }
                 break
         }
         // Wenn Raum = ÜB dann Zu/Abluftventile leeren
-        if (raum.raumLuftart == "ÜB") {
+        if (raum.raumLuftart == 'ÜB') {
             raum.with {
                 // Zuluft
                 raumAnzahlZuluftventile = 0
                 raumZuluftmengeJeVentil = 0.0d
-                raumBezeichnungZuluftventile = ""
+                raumBezeichnungZuluftventile = ''
                 raumZuluftVolumenstrom = 0.0d
                 raumZuluftfaktor = 0.0d
                 // Abluft
                 raumAnzahlAbluftventile = 0
                 raumAbluftmengeJeVentil = 0.0d
-                raumBezeichnungAbluftventile = ""
+                raumBezeichnungAbluftventile = ''
                 raumAbluftVolumenstrom = 0.0d
                 raumAbluftVolumenstromInfiltration = 0.0d
             }
         }
         //
-        if (DEBUG)
-            println "checkRaum: ${raum}"
         raum
     }
 
@@ -377,8 +385,6 @@ class ProjektModel {
      * Siehe Ticket #60, #66.
      */
     def checkRaum = { object, property, value, columnIndex ->
-        if (DEBUG)
-            println "checkRaum: $object, $property, $value, $columnIndex"
         // Try to save double value; see ticket 60
         object[property] = value?.toDouble2()
         prufeRaumdaten(map.raum.raume.find { it.position == object.position })
@@ -401,37 +407,32 @@ class ProjektModel {
                     try {
                         object?."${propertyNames[columnIndex]}"?.toString2()
                     } catch (e) {
-                        if (DEBUG)
-                            println "gltmClosure, getColumnValue: ${e}: ${object?.dump()}"
                         object?.toString()
                     }
                 },
                 isEditable: { object, columnIndex -> writable[columnIndex] },
                 setColumnValue: { object, value, columnIndex ->
                     def property = propertyNames[columnIndex]
-                    if (DEBUG)
-                        println "gltmClosure, setColumnValue: ${property}=${value}"
                     // Call pre-value-set closure
-                    if (preValueSet)
+                    if (preValueSet) {
                         object = preValueSet(object, property, value, columnIndex)
-                    else {
+                    } else {
                         // Try to save double value; see ticket #60
                         object[property] = value.toDouble2()
                     }
                     // Call post-value-set closure
-                    if (postValueSet)
+                    if (postValueSet) {
                         postValueSet(object, columnIndex, value)
+                    }
                     // VERY IMPORTANT: return null value to prevent e.g. returning
                     // a boolean value. Table would display the wrong value in all
                     // cells !!!
                     null
                 },
                 getValueAt: { rowIndex, columnIndex ->
-                    if (DEBUG)
-                        println "gltmClosure, getValueAt: rowIndex=${rowIndex}, columnIndex=${columnIndex}"
                     //no value to get...
                 }
-        ] as ca.odell.glazedlists.gui.WritableTableFormat)
+        ] as WritableTableFormat)
     }
 
     /**
@@ -444,44 +445,39 @@ class ProjektModel {
      * @param preValueSet Closure to execute before value was set
      */
     def gltmClosureWithVisibleColumns = { columnNames, propertyNames, writable, visible, tableModel, postValueSet = null, preValueSet = null ->
-        new ca.odell.glazedlists.swing.EventTableModel(tableModel, [
+        new EventTableModel(tableModel, [
                 getColumnCount: { columnNames.size() },
                 getColumnName: { columnIndex -> columnNames[columnIndex] },
                 getColumnValue: { object, columnIndex ->
                     try {
                         object?."${propertyNames[columnIndex]}"?.toString2()
                     } catch (e) {
-                        if (DEBUG)
-                            println "gltmClosure, getColumnValue: ${e}: ${object?.dump()}"
                         object?.toString()
                     }
                 },
                 isEditable: { object, columnIndex -> writable[columnIndex] },
                 setColumnValue: { object, value, columnIndex ->
                     def property = propertyNames[columnIndex]
-                    if (DEBUG)
-                        println "gltmClosure, setColumnValue: ${property}=${value}"
                     // Call pre-value-set closure
-                    if (preValueSet)
+                    if (preValueSet) {
                         object = preValueSet(object, property, value, columnIndex)
-                    else {
+                    } else {
                         // Try to save double value; see ticket #60
                         object[property] = value.toDouble2()
                     }
                     // Call post-value-set closure
-                    if (postValueSet)
+                    if (postValueSet) {
                         postValueSet(object, columnIndex, value)
+                    }
                     // VERY IMPORTANT: return null value to prevent e.g. returning
                     // a boolean value. Table would display the wrong value in all
                     // cells !!!
                     null
                 },
                 getValueAt: { rowIndex, columnIndex ->
-                    if (DEBUG)
-                        println "gltmClosure, getValueAt: rowIndex=${rowIndex}, columnIndex=${columnIndex}"
                     //no value to get...
                 }
-        ] as ca.odell.glazedlists.gui.WritableTableFormat)
+        ] as WritableTableFormat)
     }
 
     /**
@@ -495,7 +491,7 @@ class ProjektModel {
      * @param preValueSet Closure to execute before value was set
      */
     def gltmClosureWithTypes = { columnNames, propertyNames, propertyTypes, writable, tableModel, postValueSet = null, preValueSet = null ->
-        new ca.odell.glazedlists.swing.EventTableModel(tableModel, [
+        new EventTableModel(tableModel, [
                 getColumnCount: { columnNames.size() },
                 getColumnName: { columnIndex -> columnNames[columnIndex] },
                 getColumnValue: { object, columnIndex ->
@@ -517,20 +513,16 @@ class ProjektModel {
                             object."${propertyNames[columnIndex]}"?.toString2()
                         }
                     } catch (e) {
-                        if (DEBUG)
-                            println "gltmClosureWithTypes, getColumnValue: ${e}: ${object?.dump()}"
                         object?.toString()
                     }
                 },
                 isEditable: { object, columnIndex -> writable[columnIndex] },
                 setColumnValue: { object, value, columnIndex ->
                     try {
-                        if (DEBUG)
-                            println "gltmClosureWithTypes, start..."
                         def property = propertyNames[columnIndex]
                         /*
                         def propertyType = propertyTypes[columnIndex]
-                        if (DEBUG) println "gltmClosureWithTypes, setColumnValue: ${property}=${value}"
+                        println "gltmClosureWithTypes, setColumnValue: ${property}=${value}"
                         // Call pre-value-set closure
                         def oldValue = object."${propertyNames[columnIndex]}"
                         if (propertyTypes[columnIndex].equals(Integer.class.getName())) {
@@ -547,7 +539,6 @@ class ProjektModel {
                             }
                         }
                         */
-
                         if (preValueSet) {
                             object = preValueSet(object, property, value, columnIndex)
                         }
@@ -556,10 +547,9 @@ class ProjektModel {
                             object[property] = value.toDouble2()
                         }
                         // Call post-value-set closure
-                        if (postValueSet)
+                        if (postValueSet) {
                             postValueSet(object, columnIndex, value)
-                        if (DEBUG)
-                            println "gltmClosureWithTypes postValueSet... done"
+                        }
                     } catch (e) {
                         println "gltmClosureWithTypes: Error ${e.dump()} "
                     }
@@ -569,11 +559,9 @@ class ProjektModel {
                     null
                 },
                 getValueAt: { rowIndex, columnIndex ->
-                    if (DEBUG)
-                        println "gltmClosure, getValueAt: rowIndex=${rowIndex}, columnIndex=${columnIndex}"
                     //no value to get...
                 }
-        ] as ca.odell.glazedlists.gui.WritableTableFormat)
+        ] as WritableTableFormat)
     }
 
     /**
@@ -586,16 +574,10 @@ class ProjektModel {
      * @param preValueSet Closure to execute before value was set
      */
     def gltmClosureCheckbox = { columnNames, propertyNames, writable, tableModel, postValueSet = null, preValueSet = null ->
-        if (DEBUG)
-            println "gltmClosureCheckbox: tablelModel=${tableModel?.dump()}"
-        new ca.odell.glazedlists.swing.EventTableModel(tableModel, [
+        new EventTableModel(tableModel, [
                 getColumnCount: { columnNames.size() },
                 getColumnName: { columnIndex -> columnNames[columnIndex] },
                 getColumnValue: { object, columnIndex ->
-                    try {
-                        if (DEBUG)
-                            println "###### gltmClosureCheckbox: object -> ${object?.dump()}"
-                    } catch (e) {}
                     if (columnIndex == 4) {
                         def tempValue = object."${propertyNames[columnIndex]}"
                         //println "tempValue ${tempValue}"
@@ -608,8 +590,7 @@ class ProjektModel {
                         try {
                             object."${propertyNames[columnIndex]}"?.toString2()
                         } catch (e) {
-                            if (DEBUG)
-                                println "WAC-174: gltmClosureCheckbox, getColumnValue: ${e}: object=${object}"
+                            // WAC-174
                             object?.toString()
                         }
                     }
@@ -617,8 +598,6 @@ class ProjektModel {
                 isEditable: { object, columnIndex -> writable[columnIndex] },
                 setColumnValue: { object, value, columnIndex ->
                     def property = propertyNames[columnIndex]
-                    if (DEBUG)
-                        println "gltmClosureCheckbox, setColumnValue: ${property}=${value}"
                     if (columnIndex == 4) {
                         object[property] = value
                     } else {
@@ -631,16 +610,15 @@ class ProjektModel {
                         }
                     }
                     // Call post-value-set closure
-                    if (postValueSet)
+                    if (postValueSet) {
                         postValueSet(object, columnIndex, value)
+                    }
                     // VERY IMPORTANT: return null value to prevent e.g. returning
                     // a boolean value. Table would display the wrong value in all
                     // cells !!!
                     null
                 },
                 getValueAt: { rowIndex, columnIndex ->
-                    if (DEBUG)
-                        println "gltmClosureCheckbox, getValueAt: rowIndex=${rowIndex}, columnIndex=${columnIndex}"
                     // No value to get...
                 },
                 getColumnClass: { columnIndex ->
@@ -651,7 +629,7 @@ class ProjektModel {
                 getColumnComparator: { columnIndex ->
                     null
                 }
-        ] as com.bensmann.griffon.AdvancedWritableTableFormat)
+        ] as AdvancedWritableTableFormat)
     }
 
     /**
@@ -659,8 +637,8 @@ class ProjektModel {
      * Eingegebenen Abluftvolumenstrom (ohne Abzug Infiltration) anzeigen.
      */
     def createRaumTableModel() {
-        def columnNames = ["Raum", "Geschoss", "Luftart", ws("Raumfläche<br/>[m²]"), ws("Raumhöhe<br/>[m]"), "Zuluftfaktor", "Abluftvolumenstrom"] as String[]
-        def propertyNames = ["raumBezeichnung", "raumGeschoss", "raumLuftart", "raumFlache", "raumHohe", "raumZuluftfaktor", "raumAbluftVolumenstrom"] as String[]
+        def columnNames = ['Raum', 'Geschoss', 'Luftart', ws('Raumfläche<br/>[m²]'), ws('Raumhöhe<br/>[m]'), 'Zuluftfaktor', 'Abluftvolumenstrom'] as String[]
+        def propertyNames = ['raumBezeichnung', 'raumGeschoss', 'raumLuftart', 'raumFlache', 'raumHohe', 'raumZuluftfaktor', 'raumAbluftVolumenstrom'] as String[]
         def writable = [true, true, true, true, true, true, true] as boolean[]
         def postValueSet = { object, columnIndex, value ->
             def myTempMap = map.raum.raume.find { it.position == object.position }
@@ -679,8 +657,8 @@ class ProjektModel {
      * Abluftvolumenstrom abzgl. Infiltration anzeigen (nicht änderbar).
      */
     def createRaumVsZuAbluftventileTableModel() {
-        def columnNames = ["Raum", "Luftart", ws("Raum [m³]"), ws("LW [1/h]"), ws("Zuluft [m³/h]"), ws("Bezeichnung<br/>ZU-Ventile"), ws("Anzahl<br/>ZU-Ventile"), ws("Zuluftmenge<br/>je Ventil"), ws("Abluft [m³/h]"), ws("Bezeichnung<br/>AB-Ventile"), ws("Anzahl<br/>AB-Ventile"), ws("Abluftmenge<br/>je Ventil"), "Ebene"] as String[]
-        def propertyNames = ["raumBezeichnung", "raumLuftart", "raumVolumen", "raumLuftwechsel", "raumZuluftVolumenstromInfiltration", "raumBezeichnungZuluftventile", "raumAnzahlZuluftventile", "raumZuluftmengeJeVentil", "raumAbluftVolumenstromInfiltration", "raumBezeichnungAbluftventile", "raumAnzahlAbluftventile", "raumAbluftmengeJeVentil", "raumVerteilebene"] as String[]
+        def columnNames = ['Raum', 'Luftart', ws('Raum [m³]'), ws('LW [1/h]'), ws('Zuluft [m³/h]'), ws('Bezeichnung<br/>ZU-Ventile'), ws('Anzahl<br/>ZU-Ventile'), ws('Zuluftmenge<br/>je Ventil'), ws('Abluft [m³/h]'), ws('Bezeichnung<br/>AB-Ventile'), ws('Anzahl<br/>AB-Ventile'), ws('Abluftmenge<br/>je Ventil'), 'Ebene'] as String[]
+        def propertyNames = ['raumBezeichnung', 'raumLuftart', 'raumVolumen', 'raumLuftwechsel', 'raumZuluftVolumenstromInfiltration', 'raumBezeichnungZuluftventile', 'raumAnzahlZuluftventile', 'raumZuluftmengeJeVentil', 'raumAbluftVolumenstromInfiltration', 'raumBezeichnungAbluftventile', 'raumAnzahlAbluftventile', 'raumAbluftmengeJeVentil', 'raumVerteilebene'] as String[]
         def writable = [true, true, false, false, false, true, false, false, false, true, false, false, true] as boolean[]
         def postValueSet = { object, columnIndex, value ->
             // Call ProjektController
@@ -695,13 +673,11 @@ class ProjektModel {
      * Raumvolumenströme - Überströmventile TableModel
      */
     def createRaumVsUberstromelementeTableModel() {
-        def columnNames = ["Raum", "Luftart", "Anzahl Ventile", "Überström [m³/h]", "Überström-Elemente"] as String[]
-        def propertyNames = ["raumBezeichnung", "raumLuftart", "raumAnzahlUberstromVentile", "raumUberstromVolumenstrom", "raumUberstromElement"] as String[]
+        def columnNames = ['Raum', 'Luftart', 'Anzahl Ventile', 'Überström [m³/h]', 'Überström-Elemente'] as String[]
+        def propertyNames = ['raumBezeichnung', 'raumLuftart', 'raumAnzahlUberstromVentile', 'raumUberstromVolumenstrom', 'raumUberstromElement'] as String[]
         def writable = [true, true, false, true, true] as boolean[]
         def postValueSet = { object, columnIndex, value ->
             // WAC-151: zentralgeratManuell = true setzen, wenn Überströmvolumenstrom geändert wurde
-            if (DEBUG)
-                println "WAC-151: propertyNames[${columnIndex}]=${propertyNames[columnIndex]}"
             if (propertyNames[columnIndex] == "raumUberstromVolumenstrom") {
                 app.models[mvcId].map.anlage.zentralgeratManuell = true
             }
@@ -718,14 +694,8 @@ class ProjektModel {
      */
     def createRaumTurenTableModel() {
         def index = meta.gewahlterRaum.position
-        if (DEBUG) {
-            println "createRaumTurenTableModel: index=${index}"
-            tableModels.raumeTuren.eachWithIndex { rt, i ->
-                println "createRaumTurenTableModel: raumeTuren: index=${i} ${tableModels.raumeTuren[i]}"
-            }
-        }
-        def columnNames = ["Bezeichnung", "Breite [mm]", "Querschnittsfläche [mm²]", "Spaltenhöhe [mm]", "mit Dichtung"] as String[]
-        def propertyNames = ["turBezeichnung", "turBreite", "turQuerschnitt", "turSpalthohe", "turDichtung"] as String[]
+        def columnNames = ['Bezeichnung', 'Breite [mm]', 'Querschnittsfläche [mm²]', 'Spaltenhöhe [mm]', 'mit Dichtung'] as String[]
+        def propertyNames = ['turBezeichnung', 'turBreite', 'turQuerschnitt', 'turSpalthohe', 'turDichtung'] as String[]
         def writable = [true, true, false, false, true] as boolean[]
         def postValueSet = { object, columnIndex, value ->
             // Call ProjektController
@@ -738,19 +708,14 @@ class ProjektModel {
      * Druckverlustberechnung - Kanalnetz.
      */
     def createDvbKanalnetzTableModel() {
-        def columnNames = ["Luftart", "Teilstrecke", ws("Luft [m³/h]"), "Kanalbezeichnung", ws("Kanallänge<br/>[m]"), ws("Geschwindigkeit<br/>[m/s]"), ws("Reibungswiderstand<br/>gerader Kanal<br/>[Pa]"), ws("Gesamtwider-<br/>standszahl"), ws("Einzelwider-<br/>stand<br/>[Pa]"), ws("Widerstand<br/>Teilstrecke<br/><[Pa]")] as String[]
-        def propertyNames = ["luftart", "teilstrecke", "luftVs", "kanalbezeichnung", "lange", "geschwindigkeit", "reibungswiderstand", "gesamtwiderstandszahl", "einzelwiderstand", "widerstandTeilstrecke"] as String[]
+        def columnNames = ['Luftart', 'Teilstrecke', ws('Luft [m³/h]'), 'Kanalbezeichnung', ws('Kanallänge<br/>[m]'), ws('Geschwindigkeit<br/>[m/s]'), ws('Reibungswiderstand<br/>gerader Kanal<br/>[Pa]'), ws('Gesamtwider-<br/>standszahl'), ws('Einzelwider-<br/>stand<br/>[Pa]'), ws('Widerstand<br/>Teilstrecke<br/><[Pa]')] as String[]
+        def propertyNames = ['luftart', 'teilstrecke', 'luftVs', 'kanalbezeichnung', 'lange', 'geschwindigkeit', 'reibungswiderstand', 'gesamtwiderstandszahl', 'einzelwiderstand', 'widerstandTeilstrecke'] as String[]
         //def propertyTypes = [Object.class.getName(), Integer.class.getName(), Double.class.getName(), Object.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName()] as String[]
         //def writable      = [false,         true,           true,                                    true,               true,                     false,                           false,                                               true/* TODO false*/,               false,                                 false] as boolean[]
         def writable = [false, false, false, false, false, false, false, false, false, false] as boolean[]
         def postValueSet = { object, columnIndex, value ->
             def myTempMap = map.dvb.kanalnetz.find { it.position == object.position }
-            if (DEBUG)
-                println "createDvbKanalnetzTableModel: myTempMap=${myTempMap?.dump()}"
-
             myTempMap[columnIndex] = value
-            if (DEBUG)
-                println "Edited: map.dvb.kanalnetz -> ${map.dvb.kanalnetz}"
             // Call ProjektController
             app.controllers[mvcId].dvbKanalnetzGeandert(object.position)
             //resyncDvbKanalnetzTableModels()
@@ -763,16 +728,14 @@ class ProjektModel {
      * Druckverlustberechnung - Ventileinstellung.
      */
     def createDvbVentileinstellungTableModel() {
-        def columnNames = ["Raum", "Luftart", "Teilstrecken", "Ventiltyp", "dP offen [Pa]", "Gesamt [Pa]", "Differenz", "Abgleich [Pa]", "Einstellung"] as String[]
-        def propertyNames = ["raum", "luftart", "teilstrecken", "ventilbezeichnung", "dpOffen", "gesamtWiderstand", "differenz", "abgleich", "einstellung"] as String[]
+        def columnNames = ['Raum', 'Luftart', 'Teilstrecken', 'Ventiltyp', 'dP offen [Pa]', 'Gesamt [Pa]', 'Differenz', 'Abgleich [Pa]', 'Einstellung'] as String[]
+        def propertyNames = ['raum', 'luftart', 'teilstrecken', 'ventilbezeichnung', 'dpOffen', 'gesamtWiderstand', 'differenz', 'abgleich', 'einstellung'] as String[]
         //def propertyTypes = [Object.class.getName(), Object.class.getName(), String.class.getName(), Object.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName(), Double.class.getName()] as String[]
         //def writable      = [true,   false,         true,           true,                false,           false,              false,       false,            false] as boolean[]
         def writable = [false, false, false, false, false, false, false, false, false] as boolean[]
         def postValueSet = { object, columnIndex, value ->
             def myTempMap = map.dvb.ventileinstellung.find { it.position == object.position }
             myTempMap[columnIndex] = value
-            if (DEBUG)
-                println "Edited: map.dvb.ventileinstellung -> ${map.dvb.ventileinstellung}"
             // Call ProjektController
             app.controllers[mvcId].dvbVentileinstellungGeandert(object.position)
             //resyncDvbVentileinstellungTableModels()
@@ -784,14 +747,13 @@ class ProjektModel {
      * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
      */
     def addWbwTableModel(index) {
-        //javax.swing.SwingUtilities.invokeLater {
-        if (DEBUG)
-            println "addWbwTableModel(${index}): ${tableModels.wbw[index]}"
+        //SwingUtilities.invokeLater {
         // TableModel schon vorhanden?
-        if (tableModels.wbw[index])
+        if (tableModels.wbw[index]) {
             return
+        }
         // Neues TableModel erstellen und füllen
-        tableModels.wbw << ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmNameComparator) as ca.odell.glazedlists.EventList)
+        tableModels.wbw << GlazedLists.threadSafeList(new SortedList(new BasicEventList(), tmNameComparator) as EventList)
         meta.wbw.each {
             //tableModels.wbw[index].add([id: it.id, anzahl: 0 as Integer, name: it.bezeichnung, widerstandsbeiwert: it.wert])
             tableModels.wbw[index].add([anzahl: 0 as Integer, name: it.bezeichnung, widerstandsbeiwert: it.wert, id: it.id])
@@ -812,10 +774,8 @@ class ProjektModel {
      */
     def createWbwTableModel() {
         def index = meta.dvbKanalnetzGewahlt
-        if (DEBUG)
-            println "createWbwTableModel: index=${index}"
-        def columnNames = ["Anzahl", "Bezeichnung", "Widerstandsbeiwert", ""] as String[]
-        def propertyNames = ["anzahl", "name", "widerstandsbeiwert", "id"] as String[]
+        def columnNames = ['Anzahl', 'Bezeichnung', 'Widerstandsbeiwert', ''] as String[]
+        def propertyNames = ['anzahl', 'name', 'widerstandsbeiwert', 'id'] as String[]
         def propertyTypes = [Integer.class.getName(), String.class.getName(), Double.class.getName(), Integer.class.getName()] as String[]
         def writable = [true, true, true, false] as boolean[]
         def postValueSet = { object, columnIndex, value ->
@@ -824,7 +784,7 @@ class ProjektModel {
         }
         // Widerstandsbeiwerte für die gewählte Kanalnetz in tableModels.wbw übertragen
         //gltmClosureWithTypes(columnNames, propertyNames, propertyTypes, writable, tableModels.wbw[index], postValueSet)
-        println "tableModels.wbw[index] -> ${tableModels.wbw[index]}"
+        //println "tableModels.wbw[index] -> ${tableModels.wbw[index]}"
         /*
         if (!tableModels.wbw[index]) {
             addWbwTableModel(index)
@@ -837,8 +797,8 @@ class ProjektModel {
      * Akustikberechnung - Zuluft.
      */
     def createAkustikZuluftTableModel() {
-        def columnNames = ["125", "250", "500", "1000", "2000", "4000"] as String[]
-        def propertyNames = ["slp125", "slp250", "slp500", "slp1000", "slp2000", "slp4000"] as String[]
+        def columnNames = ['125', '250', '500', '1000', '2000', '4000'] as String[]
+        def propertyNames = ['slp125', 'slp250', 'slp500', 'slp1000', 'slp2000', 'slp4000'] as String[]
         def writable = [false] * columnNames.length as boolean[]
         def g = gltmClosure(columnNames, propertyNames, writable, tableModels.akustikZuluft)
         (1..13).collect([]) { i ->
@@ -851,8 +811,8 @@ class ProjektModel {
      * Akustikberechnung - Abluft.
      */
     def createAkustikAbluftTableModel() {
-        def columnNames = ["125", "250", "500", "1000", "2000", "4000"] as String[]
-        def propertyNames = ["slp125", "slp250", "slp500", "slp1000", "slp2000", "slp4000"] as String[]
+        def columnNames = ['125', '250', '500', '1000', '2000', '4000'] as String[]
+        def propertyNames = ['slp125', 'slp250', 'slp500', 'slp1000', 'slp2000', 'slp4000'] as String[]
         def writable = [false] * columnNames.length as boolean[]
         gltmClosure(columnNames, propertyNames, writable, tableModels.akustikAbluft)
     }
@@ -861,15 +821,14 @@ class ProjektModel {
      * Raum, Turen: add model.
      */
     def addRaumTurenModel() {
-        tableModels.raumeTuren <<
-                ca.odell.glazedlists.GlazedLists.threadSafeList(new ca.odell.glazedlists.SortedList(new ca.odell.glazedlists.BasicEventList(), tmPositionComparator) as ca.odell.glazedlists.EventList)
+        tableModels.raumeTuren << GlazedLists.threadSafeList(new SortedList(new BasicEventList(), tmPositionComparator) as EventList)
     }
 
     /**
      * Setze CellEditor für Combobox in Tabellen.
      */
     void setRaumEditors(view) {
-        javax.swing.SwingUtilities.invokeLater {
+        SwingUtilities.invokeLater {
             // Raumdaten - Geschoss
             GH.makeComboboxCellEditor(view.raumTabelle.columnModel.getColumn(1), meta.raum.geschoss)
             // Raumdaten - Luftart
@@ -904,40 +863,24 @@ class ProjektModel {
         synchronized (map.raum.raume) {
             raum = prufeRaumdaten(raum)
             // Raumdaten mit Template zusammführen
-            if (DEBUG)
-                println "addRaum: isCopy -> ${isCopy}"
-            if (isCopy || isCopy == "true") {
+            if (isCopy || isCopy == 'true') {
                 map.raum.raume.add(raum)
-                if (DEBUG)
-                    println "addRaum: copy -> map: ${map.raum.raume}"
             } else {
-                if (DEBUG)
-                    println "${raum}"
                 // Türen erstellen und mit bereits vorhandenen überschreiben!
                 def r = ([turen:
                         [
-                                [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-                                [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-                                [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-                                [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
-                                [turBezeichnung: "", turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
+                                [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+                                [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+                                [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+                                [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+                                [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
                         ]
                 ] + raum) as ObservableMap
-                if (DEBUG)
-                    println "addRaum: adding raum=${r?.dump()}"
-                if (DEBUG)
-                    println "addRaum: raumMapTemplate=${raumMapTemplate.turen}"
-                if (DEBUG)
-                    println "addRaum: adding raum after editing r.turen=${r?.dump()}"
                 // Raum in der Map hinzufügen
                 map.raum.raume << raum
-                if (DEBUG)
-                    println "addRaum: adding raum.raume=${map.raum.raume}"
             }
-
             // Buttons aktivieren / deaktivieren
             enableDisableRaumButtons(true)
-
             // TODO mmu Sortierung funktioniert aber!?
             // Disables sorting in raumTabelle
             try {
@@ -978,14 +921,8 @@ class ProjektModel {
 
     def _removeRaum(raumIndex, view) {
         synchronized (map.raum.raume) {
-            if (DEBUG)
-                println "removeRaum: removing raumIndex=${raumIndex}"
             map.raum.raume.remove(raumIndex)
-            if (DEBUG)
-                println "removeRaum: map.raum.raume = ${map.raum.raume.dump()}"
-
             enableDisableRaumButtons(false)
-
             // Sync table models
             [tableModels.raume, tableModels.raumeVsZuAbluftventile, tableModels.raumeVsUberstromventile].each {
                 it.remove(raumIndex)
@@ -1009,24 +946,20 @@ class ProjektModel {
               println "resyncRaumTableModels: ${r.raumBezeichnung}: i=${i} == position=${r.position}?"
           }
           */
-        javax.swing.SwingUtilities.invokeLater {
-            synchronized (tableModels) {
+        SwingUtilities.invokeLater {
+            synchronized (tableModels) { // TODO Synchronization on non-final field
                 // Remember selected row
                 def view = app.views[mvcId]
                 def selected = view.raumTabelle.selectedRow
                 //println "-" * 80
                 //println "resyncRaumTableModels"
                 // Raumdaten
-                def newRaume = ca.odell.glazedlists.swing.GlazedListsSwing.swingThreadProxyList(tableModels.raume)
+                def newRaume = GlazedListsSwing.swingThreadProxyList(tableModels.raume)
                 //tableModels.raume.clear()
                 //tableModels.raume.addAll(map.raum.raume)
                 newRaume.clear()
                 newRaume.addAll(map.raum.raume)
                 // Türen
-                if (DEBUG)
-                    println "tableModels.raume -> ${tableModels.raume}"
-                if (DEBUG)
-                    println "tableModels.raumeTuren -> BEFORE -> ${tableModels.raumeTuren}"
                 //tableModels.raume.each {
                 newRaume.each {
                     def m = tableModels.raumeTuren[it.position]
@@ -1034,33 +967,28 @@ class ProjektModel {
                     try {
                         m.clear()
                         m.addAll(it.turen)
-                        if (DEBUG)
-                            println "tableModels.raume.each -> raumeTuren: ${m}"
-                    } catch (e) {}
+                    } catch (e) {
+                        e.printStackTrace()
+                    }
                 }
-                if (DEBUG)
-                    println "tableModels.raumeTuren -> AFTER -> ${tableModels.raumeTuren}"
                 // Raumvolumentströme - Zu-/Abluftventile
-                def newRaumeVsZuAbluftventile = ca.odell.glazedlists.swing.GlazedListsSwing.swingThreadProxyList(tableModels.raumeVsZuAbluftventile)
+                def newRaumeVsZuAbluftventile = GlazedListsSwing.swingThreadProxyList(tableModels.raumeVsZuAbluftventile)
                 //tableModels.raumeVsZuAbluftventile.clear()
                 //tableModels.raumeVsZuAbluftventile.addAll(map.raum.raume)
                 newRaumeVsZuAbluftventile.clear()
                 newRaumeVsZuAbluftventile.addAll(map.raum.raume)
                 // Raumvolumentströme - Überströmventile
-                def newRaumeVsUberstromventile = ca.odell.glazedlists.swing.GlazedListsSwing.swingThreadProxyList(tableModels.raumeVsUberstromventile)
+                def newRaumeVsUberstromventile = GlazedListsSwing.swingThreadProxyList(tableModels.raumeVsUberstromventile)
                 //tableModels.raumeVsUberstromventile.clear()
                 //tableModels.raumeVsUberstromventile.addAll(map.raum.raume)
                 newRaumeVsUberstromventile.clear()
                 newRaumeVsUberstromventile.addAll(map.raum.raume)
-
                 // java.lang.NullPointerException: Cannot invoke method addAll() on null object
                 // when RaumBearbeitenDialog was not opened before
                 // Quickfix: added null-safe-operator
                 tableModels.raumeBearbeiten?.addAll(map.raum.raume)
                 //println "-" * 80
                 // Select previously selected row
-                if (DEBUG)
-                    println "resyncRaumTableModels selected -> ${selected?.dump()}"
                 if (selected && selected > -1) {
                     view.raumTabelle.changeSelection(selected, 0, false, false)
                 }
@@ -1075,8 +1003,6 @@ class ProjektModel {
         synchronized (map.dvb.kanalnetz) {
             // Kanalnetz mit Template zusammenführen
             def k = (dvbKanalnetzMapTemplate + kanalnetz) as ObservableMap
-            if (DEBUG)
-                println "addDvbKanalnetz: adding kanalnetz=${k.dump()}"
             // In der Map hinzufügen
             map.dvb.kanalnetz << k
             // Sync table model
@@ -1088,7 +1014,7 @@ class ProjektModel {
             // wbw setzen
             addWbwTableModel(tableModels.dvbKanalnetz.size() - 1)
             dvbKanalnetzButtonsEnabled = true
-            firePropertyChange("dvbKanalnetzButtonsEnabled", !dvbKanalnetzButtonsEnabled, dvbKanalnetzButtonsEnabled)
+            firePropertyChange('dvbKanalnetzButtonsEnabled', !dvbKanalnetzButtonsEnabled, dvbKanalnetzButtonsEnabled)
         }
     }
 
@@ -1105,7 +1031,7 @@ class ProjektModel {
             }
             if (tableModels.dvbKanalnetz.size() < 1) {
                 dvbKanalnetzButtonsEnabled = false
-                firePropertyChange("dvbKanalnetzButtonsEnabled", !dvbKanalnetzButtonsEnabled, dvbKanalnetzButtonsEnabled)
+                firePropertyChange('dvbKanalnetzButtonsEnabled', !dvbKanalnetzButtonsEnabled, dvbKanalnetzButtonsEnabled)
             }
         }
     }
@@ -1115,8 +1041,6 @@ class ProjektModel {
      */
     def addDvbVentileinstellung = { ventileinstellung, view ->
         def v = (dvbVentileinstellungMapTemplate + ventileinstellung) as ObservableMap
-        if (DEBUG)
-            println "addDvbVentileinstellung: adding ventileinstellung=${v.dump()}"
         map.dvb.ventileinstellung << v
         // Sync table model
         [tableModels.dvbVentileinstellung].each {
@@ -1125,14 +1049,14 @@ class ProjektModel {
         // Comboboxen in den Tabellen hinzufügen
         setDvbVentileinstellungEditors(view)
         dvbVentileinstellungButtonsEnabled = true
-        firePropertyChange("dvbVentileinstellungButtonsEnabled", !dvbVentileinstellungButtonsEnabled, dvbVentileinstellungButtonsEnabled)
+        firePropertyChange('dvbVentileinstellungButtonsEnabled', !dvbVentileinstellungButtonsEnabled, dvbVentileinstellungButtonsEnabled)
     }
 
     /**
      * WAC-7: ComboBox model für die Räume in der Druckverlustberechnung Ventileinstellung setzen.
      */
     def updateDvbVentileinstellungComboBoxModel = { view ->
-        def newComboBoxModel = ["-- Eingegebene Räume --"] + map.raum.raume.raumBezeichnung + ["-- Raumtypen --"] + meta.raum.typ /*as Set*/
+        def newComboBoxModel = ['-- Eingegebene Räume --'] + map.raum.raume.raumBezeichnung + ['-- Raumtypen --'] + meta.raum.typ /*as Set*/
         view.dvbVentileinstellungRaum.setModel(new DefaultComboBoxModel(newComboBoxModel.toArray()))
     }
 
@@ -1148,7 +1072,7 @@ class ProjektModel {
             }
             if (tableModels.dvbVentileinstellung.size() < 1) {
                 dvbVentileinstellungButtonsEnabled = false
-                firePropertyChange("dvbVentileinstellungButtonsEnabled", !dvbVentileinstellungButtonsEnabled, dvbVentileinstellungButtonsEnabled)
+                firePropertyChange('dvbVentileinstellungButtonsEnabled', !dvbVentileinstellungButtonsEnabled, dvbVentileinstellungButtonsEnabled)
             }
         }
     }
@@ -1158,8 +1082,8 @@ class ProjektModel {
      */
     void resyncDvbKanalnetzTableModels() {
         // Druckverlust - Kanalnetz
-        javax.swing.SwingUtilities.invokeLater {
-            synchronized (tableModels) {
+        SwingUtilities.invokeLater {
+            synchronized (tableModels) { // TODO Synchronization on non-final field
                 tableModels.dvbKanalnetz.clear()
                 tableModels.dvbKanalnetz.addAll(map.dvb.kanalnetz)
             }
@@ -1178,8 +1102,8 @@ class ProjektModel {
      */
     def resyncDvbVentileinstellungTableModels() {
         // Druckverlust - Ventileinstellung
-        javax.swing.SwingUtilities.invokeLater {
-            synchronized (tableModels) {
+        SwingUtilities.invokeLater {
+            synchronized (tableModels) { // TODO Synchronization on non-final field
                 tableModels.dvbVentileinstellung.clear()
                 tableModels.dvbVentileinstellung.addAll(map.dvb.ventileinstellung)
             }
@@ -1190,20 +1114,28 @@ class ProjektModel {
      * Synchronize all Swing table models depending on map.akustik.*.tabelle.
      */
     def resyncAkustikTableModels(view) {
-        if (DEBUG)
-            println "resyncAkustikTableModels()"
-        javax.swing.SwingUtilities.invokeLater {
-            synchronized (tableModels) {
+        SwingUtilities.invokeLater {
+            synchronized (tableModels) { // TODO Synchronization on non-final field
                 // Akustikberechnung Zuluft
                 tableModels.akustikZuluft.clear()
+                try {
+                    // TODO java.lang.NullPointerException
+                    /*
+                       2012-07-09 12:52:11,485 ERROR  GriffonExceptionHandler - Uncaught Exception
+                       java.lang.NullPointerException
+                           at ca.odell.glazedlists.AbstractEventList.addAll(AbstractEventList.java:331)
+                           at ca.odell.glazedlists.TransformedList.addAll(TransformedList.java:82)
+                           at ca.odell.glazedlists.AbstractEventList.addAll(AbstractEventList.java:295)
+                           at ca.odell.glazedlists.impl.ThreadSafeList.addAll(ThreadSafeList.java:197)
+                           at java_util_List$addAll.call(Unknown Source)
+                           at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:42)
+                           at java_util_List$addAll.call(Unknown Source)
+                           at com.ventplan.desktop.ProjektModel$_resyncAkustikTableModels_closure31_closure73.doCall(ProjektModel.groovy:1119)
+                    */
                 map.akustik.zuluft.tabelle.each { tableModels.akustikZuluft.addAll(it) }
                 map.akustik.zuluft.volumenstromZentralgerat = view.akustikZuluftZuluftstutzenZentralgerat.selectedItem
-                if (DEBUG)
-                    println "resyncAkustikTableModels -> view.akustikZuluftTabelle.getHeight(): ${view.akustikZuluftTabelle.getHeight()}"
                 // Zeilenhöhe anpassen
                 def rowh = (view.akustikZuluftTabelle.getHeight() - 4) / 13 as Integer
-                if (DEBUG)
-                    println "row height (akustikZuluftTabelle) = ${rowh}"
                 view.akustikZuluftTabelle.setRowHeight(rowh + 1)
                 view.akustikZuluftTabelle.setRowMargin(7)
                 // Akustikberechnung Abluft
@@ -1211,13 +1143,16 @@ class ProjektModel {
                 map.akustik.abluft.tabelle.each { tableModels.akustikAbluft.addAll(it) }
                 map.akustik.abluft.volumenstromZentralgerat = view.akustikAbluftAbluftstutzenZentralgerat.selectedItem
                 // Zeilenhöhe anpassen
-                if (DEBUG) {
+                    /*
                     println "resyncAkustikTableModels -> view.akustikAbluftTabelle.getHeight(): ${view.akustikAbluftTabelle.getHeight()}"
                     rowh = (view.akustikAbluftTabelle.getHeight() - 4) / 13 as Integer
                     println "row height (akustikAbluftTabelle) = ${rowh}"
-                }
+                    */
                 view.akustikAbluftTabelle.setRowHeight(rowh + 1)
                 view.akustikAbluftTabelle.setRowMargin(3)
+                } catch (NullPointerException e) {
+                    e.printStackTrace()
+                }
             }
         }
     }
@@ -1226,7 +1161,7 @@ class ProjektModel {
      *
      */
     def setDvbKanalnetzEditors(view) {
-        javax.swing.SwingUtilities.invokeLater {
+        SwingUtilities.invokeLater {
             GH.makeComboboxCellEditor(view.dvbKanalnetzTabelle.columnModel.getColumn(0), meta.druckverlust.kanalnetz.luftart)
             GH.makeComboboxCellEditor(view.dvbKanalnetzTabelle.columnModel.getColumn(3), meta.druckverlust.kanalnetz.kanalbezeichnung)
         }
@@ -1236,7 +1171,7 @@ class ProjektModel {
      *
      */
     def setDvbVentileinstellungEditors(view) {
-        javax.swing.SwingUtilities.invokeLater {
+        SwingUtilities.invokeLater {
             GH.makeComboboxCellEditor view.dvbVentileinstellungTabelle.columnModel.getColumn(1), meta.druckverlust.ventileinstellung.luftart
             GH.makeComboboxCellEditor view.dvbVentileinstellungTabelle.columnModel.getColumn(3), meta.druckverlust.ventileinstellung.ventilbezeichnung
         }
@@ -1252,36 +1187,36 @@ class ProjektModel {
         if (enable) {
             if (!raumButtonsEnabled && map.raum.raume.size() > 0) {
                 raumButtonsEnabled = true
-                firePropertyChange("raumButtonsEnabled", !raumButtonsEnabled, raumButtonsEnabled)
+                firePropertyChange('raumButtonsEnabled', !raumButtonsEnabled, raumButtonsEnabled)
             }
             if (!raumVerschiebenButtonsEnabled && map.raum.raume.size() > 1) {
                 raumVerschiebenButtonsEnabled = true
-                firePropertyChange("raumVerschiebenButtonsEnabled", !raumVerschiebenButtonsEnabled, raumVerschiebenButtonsEnabled)
+                firePropertyChange('raumVerschiebenButtonsEnabled', !raumVerschiebenButtonsEnabled, raumVerschiebenButtonsEnabled)
             }
         } else { // removed raum...
             if (raumButtonsEnabled && map.raum.raume.size() < 1) {
                 raumButtonsEnabled = false
-                firePropertyChange("raumButtonsEnabled", !raumButtonsEnabled, raumButtonsEnabled)
+                firePropertyChange('raumButtonsEnabled', !raumButtonsEnabled, raumButtonsEnabled)
             }
             if (raumVerschiebenButtonsEnabled && map.raum.raume.size() < 2) {
                 raumVerschiebenButtonsEnabled = false
-                firePropertyChange("raumVerschiebenButtonsEnabled", !raumVerschiebenButtonsEnabled, raumVerschiebenButtonsEnabled)
+                firePropertyChange('raumVerschiebenButtonsEnabled', !raumVerschiebenButtonsEnabled, raumVerschiebenButtonsEnabled)
             }
         }
     }
 
     /**
-     * Fixes WAC-216:
+     * WAC-216
      * Enable buttons in DruckverlustBerechnung view.
      */
     def enableDvbButtons() {
         if (map.dvb.kanalnetz.size() > 0) {
             dvbKanalnetzButtonsEnabled = true
-            firePropertyChange("dvbKanalnetzButtonsEnabled", !dvbKanalnetzButtonsEnabled, dvbKanalnetzButtonsEnabled)
+            firePropertyChange('dvbKanalnetzButtonsEnabled', !dvbKanalnetzButtonsEnabled, dvbKanalnetzButtonsEnabled)
         }
         if (map.dvb.ventileinstellung.size() > 0) {
             dvbVentileinstellungButtonsEnabled = true
-            firePropertyChange("dvbVentileinstellungButtonsEnabled", !dvbVentileinstellungButtonsEnabled, dvbVentileinstellungButtonsEnabled)
+            firePropertyChange('dvbVentileinstellungButtonsEnabled', !dvbVentileinstellungButtonsEnabled, dvbVentileinstellungButtonsEnabled)
         }
     }
 
@@ -1290,12 +1225,12 @@ class ProjektModel {
      * StucklisteView - Tablemodel erstellen.
      */
     def createStucklisteUbersichtTableModel() {
-//        def columnNames = ["Reihenfolge", "Anzahl", "Artikelnr.", "Text"] as String[]
-//        def propertyNames = ["reihenfolge", "anzahl", "artikelnummer", "text", "einzelpreis", "gesamtpreis"] as String[]
+//        def columnNames = ['Reihenfolge', 'Anzahl', 'Artikelnr.', 'Text'] as String[]
+//        def propertyNames = ['reihenfolge', 'anzahl', 'artikelnummer', 'text', 'einzelpreis', 'gesamtpreis'] as String[]
 //        def propertyTypes = [Integer.class.getName(), Integer.class.getName(), Double.class.getName(), String.class.getName(), Double.class.getName(), Double.class.getName()]
 //        def writable = [false, true, false, false, false, false] as boolean[]
-        def columnNames = ["Anzahl", "Artikelnr.", "Beschreibung"] as String[]
-        def propertyNames = ["anzahl", "artikelnummer", "text"] as String[]
+        def columnNames = ['Anzahl', 'Artikelnr.', 'Beschreibung'] as String[]
+        def propertyNames = ['anzahl', 'artikelnummer', 'text'] as String[]
         def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
         def writable = [true, false, false] as boolean[]
         gltmClosure(columnNames, propertyNames, writable, tableModels.stuckliste)
@@ -1306,12 +1241,12 @@ class ProjektModel {
      * StucklisteView - Tablemodel erstellen.
      */
     def createStucklisteErgebnisTableModel() {
-//        def columnNames = ["Anzahl", "Artikelnr.", "Text"] as String[]
-//        def propertyNames = ["reihenfolge", "anzahl", "artikelnummer", "text", "einzelpreis", "gesamtpreis"] as String[]
+//        def columnNames = ['Anzahl', 'Artikelnr.', 'Text'] as String[]
+//        def propertyNames = ['reihenfolge', 'anzahl', 'artikelnummer', 'text', 'einzelpreis', 'gesamtpreis'] as String[]
 //        def propertyTypes = [Integer.class.getName(), Integer.class.getName(), Double.class.getName(), String.class.getName(), Double.class.getName(), Double.class.getName()]
 //        def writable = [false, true, false, false, false, false] as boolean[]
-        def columnNames = ["Anzahl", "Artikelnr.", "Beschreibung"] as String[]
-        def propertyNames = ["anzahl", "artikelnummer", "text"] as String[]
+        def columnNames = ['Anzahl', 'Artikelnr.', 'Beschreibung'] as String[]
+        def propertyNames = ['anzahl', 'artikelnummer', 'text'] as String[]
         def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
         def writable = [true, false, false] as boolean[]
         gltmClosure(columnNames, propertyNames, writable, tableModels.stucklisteSuche)

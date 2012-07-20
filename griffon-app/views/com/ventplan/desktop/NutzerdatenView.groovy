@@ -1,11 +1,13 @@
 /*
- * VentPlan
- *
- * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
+ * Ventplan
+ * ventplan, ventplan
+ * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
+ * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
+ *
+ * rbe, 7/16/12 10:35 AM
  */
 package com.ventplan.desktop
 
@@ -15,7 +17,7 @@ import com.bensmann.griffon.GriffonHelper as GH
 
 // Dierser Dialog wird nun für die Erstellung aller möglichen Dokumente genutzt
 // Auslegung input dialog view
-panel(id: "auslegungErstellerPanel", layout: new MigLayout("fillx, wrap", "[]para[fill]para[fill]", ""), constraints: "grow") {
+panel(id: "auslegungErstellerPanel", layout: new MigLayout("fillx, wrap", "[]para[fill]para[fill]", ''), constraints: "grow") {
     // Informationen über den Ersteller
     label("Informationen über den Ersteller des Dokuments", foreground: Color.BLUE, constraints: "grow, span 3")
 
@@ -71,7 +73,7 @@ panel(id: "auslegungErstellerPanel", layout: new MigLayout("fillx, wrap", "[]par
     // Abbrechen
     label(' ', constraints: "grow, span 3")
     label("Und nun?", foreground: Color.BLUE, constraints: "grow, span 3")
-    label("")
+    label('')
     button(id: "auslegungErstellerAbbruch", text: "Abbrechen")
     // Kompletter Text, damit Dimension stimmt, wenn Text nachträglich geändert wird (durch Controller/Action)
     button(id: "auslegungErstellerSpeichern", text: "Eingaben speichern und Dokument erstellen")

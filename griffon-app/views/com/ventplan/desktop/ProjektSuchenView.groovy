@@ -1,11 +1,13 @@
 /*
- * VentPlan
- *
- * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
+ * Ventplan
+ * ventplan, ventplan
+ * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
+ * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
+ *
+ * rbe, 7/16/12 10:35 AM
  */
 
 
@@ -17,7 +19,7 @@ import ca.odell.glazedlists.*
 import ca.odell.glazedlists.swing.*
 
 // Dieser Dialog wird für die Suche von WPX-Dateien (Projekte) genutzt
-panel(id: "projektSuchenPanel", layout: new MigLayout("fillx, wrap", "[]para[fill]para[fill]", ""), constraints: "grow") {
+panel(id: "projektSuchenPanel", layout: new MigLayout("fillx, wrap", "[]para[fill]para[fill]", ''), constraints: "grow") {
     // Informationen über den Ersteller
     label("Volltextsuche im Ordner", foreground: Color.BLUE, constraints: "grow, span 3")
 

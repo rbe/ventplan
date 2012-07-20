@@ -1,11 +1,13 @@
 /*
- * VentPlan
- *
- * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
+ * Ventplan
+ * ventplan, ventplan
+ * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
+ * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
+ *
+ * rbe, 7/16/12 10:35 AM
  */
 package com.ventplan.desktop
 
@@ -21,16 +23,16 @@ panel(id: "dvbTabPanel", layout: new MigLayout("ins 0 n 0 n, fill, wrap 1", "[fi
         // Druckverlustberechnung - Kanalnetz
         panel(id: "dvbKanalnetzTab", title: "Kanalnetz", layout: new MigLayout("ins 0 n 0 n, fill", "[fill,grow]", "[fill]"), constraints: "grow") {
             jideScrollPane(constraints: "grow") {
-                panel(id: "dvbKanalnetzPanel", layout: new MigLayout("ins 0 n 0 n", "[grow]", ""), constraints: "grow") {
-                    panel(id: "dvbKanalnetzInput", layout: new MigLayout("", "[fill] 16 [fill] 16 [fill] 16 [fill] 16 [fill] 16 [fill] 16 [fill]", ""), constraints: "grow, wrap") {
+                panel(id: "dvbKanalnetzPanel", layout: new MigLayout("ins 0 n 0 n", "[grow]", ''), constraints: "grow") {
+                    panel(id: "dvbKanalnetzInput", layout: new MigLayout('', "[fill] 16 [fill] 16 [fill] 16 [fill] 16 [fill] 16 [fill] 16 [fill]", ''), constraints: "grow, wrap") {
 
                         label("Luftart")
                         label("Nr. Teilstrecke")
                         label("Luftmenge (m³/h)")
                         label("Kanalbezeichnung")
                         label("Länge (m)")
-                        label("")
-                        label("", constraints: "wrap")
+                        label('')
+                        label('', constraints: "wrap")
 
                         comboBox(id: "dvbKanalnetzLuftart", items: ["ZU", "AB"])
                         textField(id: "dvbKanalnetzNrTeilstrecke", constraints: "width 80px")
@@ -40,13 +42,13 @@ panel(id: "dvbTabPanel", layout: new MigLayout("ins 0 n 0 n, fill, wrap 1", "[fi
                         button(id: "dvbKanalnetzHinzufugen", text: "Hinzufügen", constraints: "wrap")
                     }
 
-                    panel(id: "dvbKanalnetzTabellePanel", layout: new MigLayout("ins 0 n 0 n, fill", "[grow]", ""), constraints: "span, grow, wrap") {
+                    panel(id: "dvbKanalnetzTabellePanel", layout: new MigLayout("ins 0 n 0 n, fill", "[grow]", ''), constraints: "span, grow, wrap") {
                         jideScrollPane(constraints: "grow") {
                             table(id: 'dvbKanalnetzTabelle', model: model.createDvbKanalnetzTableModel())
                         }
                     }
 
-                    panel(layout: new MigLayout("ins 0 n 0 n, fillx", "[left] 16 []", ""), constraints: "span, wrap") {
+                    panel(layout: new MigLayout("ins 0 n 0 n, fillx", "[left] 16 []", ''), constraints: "span, wrap") {
                         button(id: "dvbKanalnetzEntfernen",        enabled: bind { model.dvbKanalnetzButtonsEnabled }, text: "Entfernen", constraints: "split 2")
                         button(id: "dvbKanalnetzWiderstandswerte", enabled: bind { model.dvbKanalnetzButtonsEnabled }, text: "Widerstandsbeiwerte...")
                     }
@@ -60,14 +62,14 @@ panel(id: "dvbTabPanel", layout: new MigLayout("ins 0 n 0 n, fill, wrap 1", "[fi
             // Druckverlustberechnung - Ventileinstellung
             jideScrollPane(constraints: "grow") {
                 panel(id: "dvbVentileinstellungPanel", layout: new MigLayout("ins 0 n 0 n", "[grow]"), constraints: "grow") {
-                    panel(id: "dvbVentileinstellungInput", layout: new MigLayout("", "[] 16 [] 16 [] 16 [] 16 [] 16 [] 16 []", ""), constraints: "grow, wrap") {
+                    panel(id: "dvbVentileinstellungInput", layout: new MigLayout('', "[] 16 [] 16 [] 16 [] 16 [] 16 [] 16 []", ''), constraints: "grow, wrap") {
 
                         label("Luftart")
                         label("Raum")
                         label("Teilstrecken")
-                        label("")
+                        label('')
                         label("Ventilbezeichnung")
-                        label("", constraints: "wrap")
+                        label('', constraints: "wrap")
 
                         comboBox(id: "dvbVentileinstellungLuftart", items: ["ZU", "AB", "AU", "FO"])
                         comboBox(id: "dvbVentileinstellungRaum", items: model.meta.raum.typ + [/* items werden nach RaumHinzufugen aktualisiert, siehe WAC-7 */])
@@ -78,13 +80,13 @@ panel(id: "dvbTabPanel", layout: new MigLayout("ins 0 n 0 n, fill, wrap 1", "[fi
                         // Nach Rücksprache mit Stukemeier erstmal ausblenden; label("Mindesteingabe 5 Teilstrecken", foreground: java.awt.Color.RED, constraints: "wrap")
                     }
 
-                    panel(id: "dvbVentileinstellungTabellePanel", layout: new MigLayout("ins 0 n 0 n, fill", "[fill,grow]", ""), constraints: "span, grow, wrap") {
+                    panel(id: "dvbVentileinstellungTabellePanel", layout: new MigLayout("ins 0 n 0 n, fill", "[fill,grow]", ''), constraints: "span, grow, wrap") {
                         jideScrollPane(constraints: "grow") {
                             table(id: 'dvbVentileinstellungTabelle', model: model.createDvbVentileinstellungTableModel())
                         }
                     }
 
-                    panel(layout: new MigLayout("ins 0 n 0 n, fillx", "[left] 16 []", ""), constraints: "span, wrap") {
+                    panel(layout: new MigLayout("ins 0 n 0 n, fillx", "[left] 16 []", ''), constraints: "span, wrap") {
                         button(id: "dvbVentileinstellungEntfernen", text: "Entfernen", enabled: bind { model.dvbVentileinstellungButtonsEnabled })
                     }
 

@@ -1,13 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ VentPlan
-  ~
-  ~ Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
-  ~ Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
-  ~
-  ~ Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
-  ~ All rights reserved. Use is subject to license terms.
-  -->
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
     <!--

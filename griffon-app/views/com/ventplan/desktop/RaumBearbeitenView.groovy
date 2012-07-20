@@ -1,11 +1,13 @@
 /*
- * VentPlan
- *
- * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
+ * Ventplan
+ * ventplan, ventplan
+ * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
+ * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
+ *
+ * rbe, 7/16/12 10:35 AM
  */
 package com.ventplan.desktop
 
@@ -16,13 +18,13 @@ import net.miginfocom.swing.MigLayout
 jideScrollPane(id: "raumBearbeitenScrollPane") {
     panel(id: "raumBearbeitenTabPanel", layout: new MigLayout("fill", "[]", "[]0[]")) {
         panel(id: "raumVsZuAbluftventileTabellePanel", layout: new MigLayout("wrap", "[]", "[]0[]")) {
-            panel(id: "raumBearbeitenPanel", border: titledBorder("Raum"), layout: new MigLayout("", "[left]para[right]para[left]para[left]para[left,fill]para[left,fill]para[left]"), constraints: "cell 0 0, grow") {
-                label(id: "", text: "Geschoss")
-                label("")
-                label(id: "", text: "Raumnummer", constraints: "span 2")
-                label(id: "", text: "Raumname")
-                label(id: "", text: "Raumtyp")
-                label("", constraints: "wrap")
+            panel(id: "raumBearbeitenPanel", border: titledBorder("Raum"), layout: new MigLayout('', "[left]para[right]para[left]para[left]para[left,fill]para[left,fill]para[left]"), constraints: "cell 0 0, grow") {
+                label(id: '', text: "Geschoss")
+                label('')
+                label(id: '', text: "Raumnummer", constraints: "span 2")
+                label(id: '', text: "Raumname")
+                label(id: '', text: "Raumtyp")
+                label('', constraints: "wrap")
 
                 comboBox(id: "raumBearbeitenRaumGeschoss", items: model.meta.raum.geschoss)
                 // TODO mmu
@@ -30,20 +32,20 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
                 textField(id: "raumBearbeitenRaumnummer", constraints: "width 50px")
                 // TODO mmu
                 button(id: "raumBearbeitenRaumRechts", text: " > ", visible: false)
-                textField(id: "raumBearbeitenBezeichnung", text: "", constraints: "width 100px")
+                textField(id: "raumBearbeitenBezeichnung", text: '', constraints: "width 100px")
                 comboBox(id: "raumBearbeitenRaumtyp", items: model.meta.raum.typ)
             }
-            panel(id: "raumBearbeitenLuftartPanel", border: titledBorder("Luftart"), layout: new MigLayout("", "[]para[]para[]", ""), constraints: "cell 0 1, grow") {
+            panel(id: "raumBearbeitenLuftartPanel", border: titledBorder("Luftart"), layout: new MigLayout('', "[]para[]para[]", ''), constraints: "cell 0 1, grow") {
                 comboBox(id: "raumBearbeitenLuftart", constraints: "width 100px", items: model.meta.raum.luftart, selectedItem: model.meta.gewahlterRaum.raumLuftart)
-                textField(id: "raumBearbeitenLuftartFaktorZuluftverteilung", enabled: bind { (model.meta.gewahlterRaum?.raumLuftart == "ZU" || model.meta.gewahlterRaum?.raumLuftart == "ZU/AB") ? true : false }, text: "", constraints: "width 100px")
+                textField(id: "raumBearbeitenLuftartFaktorZuluftverteilung", enabled: bind { (model.meta.gewahlterRaum?.raumLuftart == "ZU" || model.meta.gewahlterRaum?.raumLuftart == "ZU/AB") ? true : false }, text: '', constraints: "width 100px")
                 label(id: "raumBearbeitenFaktorZuluftverteilungLabel", text: "Faktor Zuluftverteilung", constraints: "wrap")
 
-                label("")
-                textField(id: "raumBearbeitenLuftartAbluftVs", enabled: bind { (model.meta.gewahlterRaum?.raumLuftart == "AB" || model.meta.gewahlterRaum?.raumLuftart == "ZU/AB") ? true : false }, text: "", constraints: "width 100px")
+                label('')
+                textField(id: "raumBearbeitenLuftartAbluftVs", enabled: bind { (model.meta.gewahlterRaum?.raumLuftart == "AB" || model.meta.gewahlterRaum?.raumLuftart == "ZU/AB") ? true : false }, text: '', constraints: "width 100px")
                 label(id: "raumBearbeitenLuftartAbluftVsLabel", text: "Abluftvolumentstrom in m³/h", constraints: "cell 2 1")
             }
 
-            panel(id: "raumBearbeitenTabellePanel", layout: new MigLayout("", "[left]para[left]para[left]", "[]0[]"), constraints: "cell 0 2") {
+            panel(id: "raumBearbeitenTabellePanel", layout: new MigLayout('', "[left]para[left]para[left]", "[]0[]"), constraints: "cell 0 2") {
                 label(text: "Maximale Türspalthöhe [mm]")
                 textField(id: "raumBearbeitenDetailsTurspalthohe"/*, text: "10,00"*/, constraints: "width 100px")
                 button(id: "raumBearbeitenDetailsTurentfernen", text: "Tür entfernen", constraints: "wrap")
@@ -57,7 +59,7 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
                 label(id: "raumBearbeitenTurspaltHinweis", foreground: java.awt.Color.RED, constraints: "height 14px!, span 2")
             }
 
-            panel(id: "raumBearbeitenOptionalPanel", border: titledBorder("Optional"), layout: new MigLayout("", "[left]para[right]para[left]para[left]para[right]para[left]para[left]para[right]para[left]", "[]0[]"), constraints: "cell 0 3") {
+            panel(id: "raumBearbeitenOptionalPanel", border: titledBorder("Optional"), layout: new MigLayout('', "[left]para[right]para[left]para[left]para[right]para[left]para[left]para[right]para[left]", "[]0[]"), constraints: "cell 0 3") {
                 label(text: "Raumlänge")
                 textField(id: "raumBearbeitenOptionalRaumlange", constraints: "width 100px")
                 label(text: "m")
@@ -74,11 +76,11 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
                 label(text: "Raumvolumen")
                 textField(id: "raumBearbeitenOptionalRaumvolumen", constraints: "width 100px", editable: false)
                 label(text: "m³")
-                label("")
-                label("")
-                label("")
+                label('')
+                label('')
+                label('')
             }
-//            panel(id: "raumBearbeitenDurchlassposition",  border: titledBorder("Durchlassposition"), layout: new MigLayout("", "[left,fill]para[left,fill]para[left,fill]", "[]0[]"), constraints: "cell 0 4, grow") {
+//            panel(id: "raumBearbeitenDurchlassposition",  border: titledBorder("Durchlassposition"), layout: new MigLayout('', "[left,fill]para[left,fill]para[left,fill]", "[]0[]"), constraints: "cell 0 4, grow") {
 //                button(id: "raumBearbeitenDurchlasspositionInfo", text: "Info...", constraints: "cell 0 0")
 //                label(text: "Zuluft", constraints: "cell 1 0")
 //                buttonGroup().with {
@@ -95,7 +97,7 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
 //                    add radioButton(id: "raumBearbeitenDurchlasspositionAbluftBoden", text: "Boden", constraints: "cell 2 4")
 //                }
 //            }
-//            panel(id: "raumBearbeitenKanalanschluss", border: titledBorder("Kanalanschluss"), layout: new MigLayout("", "[left,fill]para[left,fill]para[left,fill]", "[]0[]"), constraints: "cell 0 4, grow") {
+//            panel(id: "raumBearbeitenKanalanschluss", border: titledBorder("Kanalanschluss"), layout: new MigLayout('', "[left,fill]para[left,fill]para[left,fill]", "[]0[]"), constraints: "cell 0 4, grow") {
 //                button(id: "raumBearbeitenKanalanschlussInfo", text: "Info...", constraints: "cell 0 0")
 //                label(text: "Zuluft", constraints: "cell 1 0")
 //                buttonGroup().with {

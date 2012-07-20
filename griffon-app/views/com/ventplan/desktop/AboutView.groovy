@@ -1,33 +1,34 @@
 /*
- * VentPlan
- *
- * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
+ * Ventplan
+ * ventplan, ventplan
+ * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
+ * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
+ *
+ * rbe, 7/16/12 10:35 AM
  */
 package com.ventplan.desktop
 
 import net.miginfocom.swing.MigLayout
-
-import com.bensmann.griffon.GriffonHelper as GH
 
 import java.text.SimpleDateFormat
 
 SimpleDateFormat sdf = new SimpleDateFormat('yyyy')
 
 // About view
-panel(layout: new MigLayout("wrap", "[center]", "[fill]"), constraints: "grow") {
-    label(icon: imageIcon('/image/VentPlan_splash.png'), constraints: "wrap")
+panel(layout: new MigLayout('wrap', '[center]', '[fill]'), constraints: 'grow') {
+    label(icon: imageIcon('/image/ventplan_splash.png'), constraints: 'wrap')
     label(' ')
-    label("Version: ${GH.localVersion()}")
-    panel(layout: new MigLayout("wrap", "[left]", "[fill]")) {
+    label("Version: ${VentplanResource.ventplanVersion}")
+    panel(layout: new MigLayout('wrap', '[left]', '[fill]')) {
         label('Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann')
         label("Copyright (C) 2011-${sdf.format(new Date())} art of coding UG (haftungsbeschränkt)")
         label("Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.")
     }
-    panel(layout: new MigLayout("wrap", "[left]", "[fill]")) {
+    panel(layout: new MigLayout('wrap', '[left]', '[fill]')) {
+        label('Haftungsausschluss:')
         label('Diese Software wurde gemeinsam mit einem Hersteller von')
         label('Lüftungsanlagen unter Orientierung an der DIN 1946-6 entwickelt.')
         label('Trotz grösster Sorgfalt bei Entwicklung von Software kann')

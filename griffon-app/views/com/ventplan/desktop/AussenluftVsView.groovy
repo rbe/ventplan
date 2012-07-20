@@ -1,11 +1,13 @@
 /*
- * VentPlan
- *
- * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
+ * Ventplan
+ * ventplan, ventplan
+ * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
+ * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
+ *
+ * rbe, 7/16/12 10:35 AM
  */
 package com.ventplan.desktop
 
@@ -27,15 +29,15 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
 
     // Gesamt-Außenluftvolumenströme für Nutzungseinheit
     panel(id: "aussenluftVsGesamtAussenluftVsNutzungseinheit", border: titledBorder(title: "Gesamt-Außenluftvolumenströme für Nutzungseinheit"), layout: new MigLayout("wrap", "[left,182px!]30[right]para[left]30[right]para[left]44[right]para[left]30[right]para[left]", "rel[]rel")) {
-        label("", constraints: "width 182px!")
+        label('', constraints: "width 182px!")
         label("Lüftung zum Feuchteschutz")
-        label("")
+        label('')
         label("Reduzierte Lüftung")
-        label("")
+        label('')
         label("Nennlüftung")
-        label("")
+        label('')
         label("Intensivlüftung")
-        label("")
+        label('')
 
         label("Luftvolumenstrom")
         label(id: "gesamtAvsNeLvsFs", text: "0,00"); label("m³/h")
@@ -52,15 +54,15 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
 
     // Gesamtabluftvolumenströme der Räume
     panel(id: "aussenluftVsGesamtabluftVsRaume", border: titledBorder(title: "Gesamtabluftvolumenströme der Räume"), layout: new MigLayout("wrap", "[left,182px!]30[right]para[left]30[right]para[left]44[right]para[left]30[right]para[left]", "rel[]rel")) {
-        label("")
+        label('')
         label("Lüftung zum Feuchteschutz")
-        label("")
+        label('')
         label("Reduzierte Lüftung")
-        label("")
+        label('')
         label("Nennlüftung")
-        label("")
+        label('')
         label("Intensivlüftung")
-        label("")
+        label('')
 
         label("Luftvolumenstrom", constraints: "width 120px!")
         label(id: "gesamtAvsRaumLvsFs", text: "0,00"); label("m³/h")
@@ -77,15 +79,15 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
 
     // personenbezogene Gesamt-Abluftvolumenströme
     panel(id: "aussenluftVsPersonenbezogeneGesamtabluftVs", border: titledBorder(title: "Personenbezogene Gesamt-Abluftvolumenströme"), layout: new MigLayout("wrap", "[left,182px!]30[right]para[left]30[right]para[left]44[right]para[left]30[right]para[left]", "rel[]rel")) {
-        label("")
+        label('')
         label(id: "aussenluftVsLuftungZumFeuchteschutzLabel", "Lüftung zum Feuchteschutz")
-        label("")
+        label('')
         label("Reduzierte Lüftung", constraints: "right, width 120px!")
-        label("")
+        label('')
         label("Nennlüftung")
-        label("")
+        label('')
         label("Intensivlüftung")
-        label("")
+        label('')
 
         label("Luftvolumenstrom", constraints: "width 120px!")
         label(id: "gesamtAvsPersonLvsFs", text: "0,00"); label("m³/h")
@@ -103,15 +105,15 @@ panel(constraints: "grow", layout: new MigLayout("fillx, wrap", "[fill]", "[fill
     // Gesamt-Luftvolumenstrom für lüftungstechnische Maßnahmen
     //panel(id: "aussenluftVsGesamtLTM", border: titledBorder(title: "Gesamt-Luftvolumenstrom für lüftungstechnische Maßnahmen"), layout: new MigLayout("wrap", "[left,236px!]30[right]para[left]72[right]para[left]30[right]para[left]30[left]", "rel[]rel")) {
     panel(id: "aussenluftVsGesamtLTM", border: titledBorder(title: "Gesamt-Luftvolumenstrom für lüftungstechnische Maßnahmen"), layout: new MigLayout("wrap", "[left,182px!]30[right]para[left]30[right]para[left]44[right]para[left]30[right]para[left]", "rel[]rel")) {
-        label("")
+        label('')
         label(id: "aussenluftVsGesamtLTMZumFeuchteschutzLabel", "Lüftung zum Feuchteschutz")
-        label("")
+        label('')
         label(id: "aussenluftVsGesamtLTMLabel", "Reduzierte Lüftung")
-        label("")
+        label('')
         label("Nennlüftung")
-        label("")
+        label('')
         label("Intensivlüftung")
-        label("")
+        label('')
 
         label("Luftvolumenstrom", constraints: "width 120px!")
         label(id: "gesamtLvsLtmLvsFs", text: "0,00"); label("m³/h")

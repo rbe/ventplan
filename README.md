@@ -1,4 +1,4 @@
-# VentPlan
+# Ventplan
 
 [www.ventplan.com](http://www.ventplan.com/)
 

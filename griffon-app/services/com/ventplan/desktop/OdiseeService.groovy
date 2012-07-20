@@ -1,11 +1,13 @@
 /*
- * VentPlan
- *
- * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
+ * Ventplan
+ * ventplan, ventplan
+ * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
+ * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
+ *
+ * rbe, 7/16/12 10:35 AM
  */
 package com.ventplan.desktop
 
@@ -21,13 +23,6 @@ import java.text.SimpleDateFormat
  *
  */
 class OdiseeService {
-
-    private static final boolean DEBUG = false
-
-    /**
-     * Service for zip codes.
-     */
-    ZipcodeService zipcodeService
 
     /**
      * Helper for preferences.
@@ -55,9 +50,19 @@ class OdiseeService {
     private static NumberFormat germanNumberFormat = DecimalFormat.getInstance(Locale.GERMANY)
 
     /**
+     * Service for Ventplan Project XML/.vpx files.
+     */
+    VpxModelService  vpxModelService
+    
+    /**
      * Service for 'Stückliste'.
      */
     StucklisteService stucklisteService
+
+    /**
+     * Service for zip codes.
+     */
+    ZipcodeService zipcodeService
 
     static {
         germanNumberFormat.setMinimumFractionDigits(2)
@@ -81,8 +86,8 @@ class OdiseeService {
 
     /**
      * Return value of map.key as String, or an empty String when key is not present:
-     * key=Decke -> map[decke] set, then "Decke" else ""
-     * key= -> map[decke] set, then "Decke" else ""
+     * key=Decke -> map[decke] set, then "Decke" else ''
+     * key= -> map[decke] set, then "Decke" else ''
      */
     private String gt(Map map, key, value) {
         def val = map[key]

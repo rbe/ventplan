@@ -1,11 +1,13 @@
 /*
- * VentPlan
- *
- * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
+ * Ventplan
+ * ventplan, ventplan
+ * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
+ * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
+ *
+ * rbe, 7/16/12 10:35 AM
  */
 package com.ventplan.desktop
 
@@ -14,8 +16,6 @@ package com.ventplan.desktop
  * Save and load preferences for a Most Recently Used (MRU) list.
  */
 class MRUFileManager {
-
-    public static boolean DEBUG = false
 
     private static final String LAST_TEN_OPEN_PROJECTS = "LastTenProjects"
     private static final String PREFS_USER_NODE = "/ventplanprojects";
@@ -51,10 +51,10 @@ class MRUFileManager {
                 if (i < DEFAULT_MAX_SIZE) {
                     def f = mruFileList.get(i)
                     if (f instanceof java.io.File) {
-                        getPrefs().put("" + i, f.getAbsolutePath());
+                        getPrefs().put('' + i, f.getAbsolutePath());
                     }
                     else {
-                        getPrefs().put("" + i, f);
+                        getPrefs().put('' + i, f);
                     }
                 }
             }
@@ -111,9 +111,7 @@ class MRUFileManager {
      * Adds an object to the mru.
      */
     protected void setMRU(String s) {
-
         def file = new java.io.File(s.toString())
-
         if (file.exists()) {
             def contains = false
             mruFileList.each {
@@ -122,33 +120,24 @@ class MRUFileManager {
                 }
             }
             if (!contains) {
-                if (DEBUG)
-                    println "setMRU: add file to list -> ${mruFileList.dump()} file=${s}"
                 mruFileList.addFirst(s);
                 setMaxSize(DEFAULT_MAX_SIZE);
             } else {
                 int index = mruFileList.indexOf(s);
-                if (DEBUG)
-                    println "setMRU: move file to top -> ${mruFileList.dump()} file=${s} index=${index}"
                 moveToTop(index);
             }
-        }
-        else {
-            if (DEBUG)
-                println "setMRU: file does not exists. Could not add. ${file?.dump()}"
+        } else {
+            //println "setMRU: file does not exists. Could not add. ${file?.dump()}"
         }
     }
 
     public String getPrefValue(int i) {
         String value = null;
         try {
-            value = getPrefs().get("" + i, "");
-            if (DEBUG)
-                println "getPrefValue value -> ${value}, index=${i}"
-        }
-        catch (Exception e) {
-            if (DEBUG)
-                println "getPrefValue -> ${e}"
+            value = getPrefs().get('' + i, '');
+        } catch (Exception e) {
+            //println "getPrefValue -> ${e}"
+            e.printStackTrace()
         }
         return value;
     }
@@ -158,10 +147,6 @@ class MRUFileManager {
      * If no file exists, a new LinkedList is created.
      */
     protected void load() {
-
-        if (DEBUG)
-            println "load: preferences absolute path -> ${getPrefs().absolutePath()}"
-
         if (null == mruFileList) {
             mruFileList = new LinkedList();
         }
@@ -169,12 +154,10 @@ class MRUFileManager {
             try {
                 String value = getPrefValue(i);
                 if (value) {
-                    if (DEBUG)
-                        println "load -> setMRU: ${value.dump()}"
                     setMRU(value);
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
+                e.printStackTrace()
                 // key is not in prefs...
                 break
             }
@@ -190,20 +173,11 @@ class MRUFileManager {
      * Ensures that the MRU list will have a MaxSize.
      */
     protected void setMaxSize(int maxSize) {
-        if (DEBUG)
-            println "setMaxSize ... ${maxSize < mruFileList.size()}"
-        if (DEBUG)
-            println "setMaxSize ...maxSize = ${maxSize}"
-        if (DEBUG)
-            println "setMaxSize ...mruFileList.size() = ${mruFileList.size()}"
         if (maxSize < mruFileList.size()) {
             for (int i = 0; i < mruFileList.size() - maxSize; i++) {
-                if (DEBUG)
-                    println "removeLast ... ${mruFileList.dump()}"
                 mruFileList.removeLast();
             }
         }
-
         currentMaxSize = maxSize;
     }
 

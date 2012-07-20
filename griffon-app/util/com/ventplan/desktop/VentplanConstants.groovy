@@ -1,24 +1,24 @@
 /*
- * VentPlan
- *
- * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
+ * Ventplan
+ * ventplan, ventplan
+ * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
+ * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
+ *
+ * rbe, 7/16/12 10:35 AM
  */
 package com.ventplan.desktop
 
 import com.bensmann.griffon.GriffonHelper as GH
 
 /**
+ * WAC-17 WAC-103 WAC-164
  * Konstanten für das Mapping von Schlüsseln aus dem "ProjektModel" nach XML.
  * Wird vor allem wegen den Abkürzungen aus der Webversion genutzt.
- * Siehe Ticket #20.
  */
 class VentplanConstants {
-
-    private static boolean DEBUG = false
 
     private static final m = [
             // Gebäudetyp
@@ -70,19 +70,18 @@ class VentplanConstants {
     ]
 
     /**
-     * Mapping old WPX constants into new ones
-     * Ticket #20
+     * Mapping old VPX constants into new ones.
      */
     def static get(String p) {
-        if (DEBUG) print "WpxConstants: mapping ${p?.dump()}"
         def r = VentplanConstants.m[p]
         // Search reverse (value -> key)
-        if (!r)
+        if (!r) {
             r = GH.invertMap(VentplanConstants.m)[p]
+        }
         // No result? Return input.
-        if (!r)
+        if (!r) {
             r = p
-        if (DEBUG) println " -> ${r?.dump()}"
+        }
         r
     }
 

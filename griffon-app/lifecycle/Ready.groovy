@@ -1,11 +1,13 @@
 /*
- * VentPlan
- *
- * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
+ * Ventplan
+ * ventplan, ventplan
+ * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
+ * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
+ *
+ * rbe, 7/18/12 2:41 PM
  */
 
 /*
@@ -22,4 +24,4 @@
  * - execSync { // your code }
  */
 
-new java.lang.Thread(new com.ventplan.desktop.CheckUpdate(app: app)).start()
+new Thread(new com.ventplan.desktop.CheckUpdate(app: app)).start()

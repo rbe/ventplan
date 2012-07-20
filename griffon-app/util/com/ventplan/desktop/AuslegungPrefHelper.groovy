@@ -1,14 +1,14 @@
 /*
- * VentPlan
- *
- * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
+ * Ventplan
+ * ventplan, ventplan
+ * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
+ * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
+ *
+ * rbe, 7/16/12 10:35 AM
  */
-
-
 package com.ventplan.desktop
 
 /**
@@ -18,7 +18,6 @@ package com.ventplan.desktop
 @Singleton
 class AuslegungPrefHelper {
 
-    public static boolean DEBUG = false
     private static java.util.prefs.Preferences prefs = java.util.prefs.Preferences.userNodeForPackage(this)
     private static final String PREFS_USER_NODE = "/ventplanauslegung"
     public static final String PREFS_USER_KEY_FIRMA = "erstellerFirma"

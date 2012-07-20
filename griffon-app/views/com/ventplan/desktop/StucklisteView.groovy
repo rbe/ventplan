@@ -1,11 +1,13 @@
 /*
- * VentPlan
- *
- * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
+ * Ventplan
+ * ventplan, ventplan
+ * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
+ * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
+ *
+ * rbe, 7/16/12 10:35 AM
  */
 package com.ventplan.desktop
 
@@ -13,6 +15,7 @@ import net.miginfocom.swing.MigLayout
 
 // Stuckliste view
 panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]', '[]para[]'), constraints: 'grow') {
+
     panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]para[fill]para[fill]', ''), constraints: 'grow') {
         label('Artikelnr.', constraints: 'span 3')
         //label('Text/Beschreibung')
@@ -28,7 +31,7 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
         scrollPane() {
             table(id: 'stucklisteErgebnisTabelle', model: model.createStucklisteErgebnisTableModel()) {
                 current.setSortable(false)
-                current.getTableHeader().setDefaultRenderer(new JTableHeader().getDefaultRenderer())
+                current.getTableHeader().setDefaultRenderer(new JTableHeader().defaultRenderer)
                 current.setAutoCreateRowSorter(false)
                 current.setRowSorter(null)
                 current.setFillsViewportHeight(true)
@@ -74,11 +77,12 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
         button(id: 'stucklisteAbbrechen', text: 'Vorgang abbrechen')
         button(id: 'stucklisteWeiter', text: 'Weiter')
     }
+
 }
 
 build(StucklisteBindings)
 // WAC-222 Improvement for showing grid lines.
-stucklisteErgebnisTabelle.setShowGrid(true);
-stucklisteErgebnisTabelle.setGridColor(Color.GRAY);
-stucklisteUbersichtTabelle.setShowGrid(true);
-stucklisteUbersichtTabelle.setGridColor(Color.GRAY);
+stucklisteErgebnisTabelle.showGrid = true
+stucklisteErgebnisTabelle.gridColor = Color.GRAY
+stucklisteUbersichtTabelle.showGrid = true
+stucklisteUbersichtTabelle.gridColor = Color.GRAY

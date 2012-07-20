@@ -1,23 +1,25 @@
 /*
- * VentPlan
- *
- * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
+ * Ventplan
+ * ventplan, ventplan
+ * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
+ * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
+ *
+ * rbe, 7/16/12 10:35 AM
  */
 package com.ventplan.desktop
 
-import com.bensmann.griffon.GriffonHelper as GH
 import griffon.swing.SwingApplication
+import java.util.zip.ZipInputStream
 
 /**
  * Check for an update.
  */
-class CheckUpdate implements java.lang.Runnable {
 
     private static final String version = GH.localVersion()
+class CheckUpdate implements Runnable {
 
     private static boolean userAcknowledged = false
 
@@ -26,13 +28,10 @@ class CheckUpdate implements java.lang.Runnable {
      */
     SwingApplication app
 
-    /**
-     *
-     */
     def static unzip = { String dest ->
         //in metaclass added methods, 'delegate' is the object on which 
         //the method is called. Here it's the file to unzip
-        def result = new java.util.zip.ZipInputStream(new java.io.FileInputStream(delegate))
+        def result = new ZipInputStream(new FileInputStream(delegate))
         def destFile = new File(dest)
         if (!destFile.exists()) {
             destFile.mkdir()
@@ -41,8 +40,8 @@ class CheckUpdate implements java.lang.Runnable {
             def entry
             while (entry = result.nextEntry) {
                 if (!entry.isDirectory()) {
-                    new java.io.File("${dest}/${entry.name}").parentFile?.mkdirs()
-                    def output = new java.io.FileOutputStream("${dest}/${entry.name}")
+                    new File("${dest}/${entry.name}").parentFile?.mkdirs()
+                    def output = new FileOutputStream("${dest}/${entry.name}")
                     output.withStream {
                         int len = 0
                         byte[] buffer = new byte[32 * 1024]
@@ -51,15 +50,12 @@ class CheckUpdate implements java.lang.Runnable {
                         }
                     }
                 } else {
-                    new java.io.File("${dest}/${entry.name}").mkdir()
+                    new File("${dest}/${entry.name}").mkdir()
                 }
             }
         }
     }
 
-    /**
-     *
-     */
     boolean update() {
         boolean b = false
         //def version
@@ -93,7 +89,7 @@ class CheckUpdate implements java.lang.Runnable {
             dest2.delete()
             //println "update: done"
             b = true
-        } catch (java.io.FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             //println "update: nothing found for version ${version}"
         } catch (e) {
             println "${this}.update: ${e}"
@@ -101,9 +97,6 @@ class CheckUpdate implements java.lang.Runnable {
         return b
     }
 
-    /**
-     *
-     */
     void run() {
         File.metaClass.unzip = CheckUpdate.unzip
         // Check for updates as long as: no updates were found or user acknowledged a new update

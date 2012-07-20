@@ -1,11 +1,13 @@
 /*
- * VentPlan
- *
- * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
- * Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
+ * Ventplan
+ * ventplan, ventplan
+ * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
+ * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
+ *
+ * rbe, 7/16/12 10:35 AM
  */
 package com.bensmann.griffon
 
@@ -37,7 +39,7 @@ class XmlHelper {
     def static m = { keys, map ->
         if (map) {
             keys.each { k ->
-                XmlHelper.tc { domBuilder."${k}"(map[k] ?: "") } { XmlHelper.domBuilder."${k}"() }
+                XmlHelper.tc { domBuilder."${k}"(map[k] ?: '') } { XmlHelper.domBuilder."${k}"() }
             }
         }
     }
@@ -46,7 +48,7 @@ class XmlHelper {
      * XML value to String
      */
     def static vs = { closure ->
-        def std = ""
+        def std = ''
         try {
             return closure() ?: std
         } catch (e) { /*println e*/ }
