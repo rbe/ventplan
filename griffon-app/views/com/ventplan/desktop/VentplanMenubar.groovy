@@ -19,7 +19,7 @@ menuBar = menuBar {
         menuItem(neuesProjektAction)
         menuItem(projektOeffnenAction)
         // WAC-161 Zuletzt geöffnete Projekte
-        menu(id: 'recentlyOpenedMenu', text: 'Zuletzt geöffnete Projekte', enabled: bind { model.aktivesProjekt == null })
+        menu(id: 'recentlyOpenedMenu', text: 'Zuletzt geöffnete Projekte', icon: imageIcon(resource: '/menu/project_recently_opened.png'), enabled: bind { model.aktivesProjekt == null })
         // WAC-192 Suchfunktion für WPX-Dateien
         menuItem(nachProjektSuchenAction)
         menuItem(projektSpeichernAction)
