@@ -32,3 +32,5 @@ import com.ventplan.desktop.VentplanSplash
 SwingBuilder.lookAndFeel((isMacOSX ? 'system' : 'nimbus'), 'gtk', ['metal', [boldFonts: false]])
 VentplanSplash.instance.setup()
 VentplanSplash.instance.initializing()
+
+println "Initialize: Working directory is ${System.getProperty('user.dir')}"
