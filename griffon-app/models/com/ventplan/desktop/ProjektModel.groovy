@@ -36,9 +36,9 @@ class ProjektModel {
     String mvcId
 
     /**
-     * Filename of .wpx file.
+     * Filename of Ventplan Project XML/.vpx file.
      */
-    String wpxFilename
+    String vpxFilename
 
     /**
      * WAC calculation service.

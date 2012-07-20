@@ -57,7 +57,7 @@ angebotsverfolgungChooserWindow = fileChooser(
 //</editor-fold>
 
 ventplanFrame = application(
-        title: "VentPlan ${GH.localVersion()}",
+        title: "Ventplan ${VentplanResource.ventplanVersion}",
         size: [1280, 800], //[screen.width as int, screen.height as int],
         pack: false,
         locationByPlatform: true,

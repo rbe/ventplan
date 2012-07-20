@@ -17,8 +17,6 @@ import java.util.zip.ZipInputStream
 /**
  * Check for an update.
  */
-
-    private static final String version = GH.localVersion()
 class CheckUpdate implements Runnable {
 
     private static boolean userAcknowledged = false
@@ -61,7 +59,7 @@ class CheckUpdate implements Runnable {
         //def version
         try {
             // Download ZIP from webserver
-            def u = String.format(GH.getUpdateUrl(), GH.localVersion())
+            def u = String.format(VentplanResource.updateUrl, VentplanResource.ventplanVersion)
             //println "update: trying to download ${u}"
             def buf = new byte[512 * 1024]
             // Destination for download

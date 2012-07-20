@@ -12,10 +12,9 @@
 package com.ventplan.desktop
 
 import net.miginfocom.swing.MigLayout
-import com.bensmann.griffon.GriffonHelper as GH
 
 def mr = { e ->
-    String url = GH.getVentplanProperties().get('ventplan.update.info.url')
+    String url = VentplanResource.getVentplanProperties().get('ventplan.update.info.url')
     java.awt.Desktop.desktop.browse(java.net.URI.create(url))
 }
 
