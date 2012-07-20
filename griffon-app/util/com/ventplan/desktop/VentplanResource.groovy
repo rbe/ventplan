@@ -19,7 +19,7 @@ class VentplanResource {
     /**
      * Get URL for splash screen.
      */
-    def static getSplashScreenURL = {
+    static URL getSplashScreenURL() {
         // dev
         def r = VentplanResource.class.getResource('../resources/image/ventplan_splash.png')
         // prod
@@ -30,10 +30,9 @@ class VentplanResource {
     }
 
     /**
-     * TODO Rename to VPX
      * Get URI for XSD of WPX files.
      */
-    def static getWPXXSDAsURL = {
+    static URI getVPXXSDAsURI() {
         // dev
         def r = VentplanResource.class.getResource('../resources/xml/ventplan-project.xsd')
         // prod
@@ -44,10 +43,9 @@ class VentplanResource {
     }
 
     /**
-     * TODO Rename to VPX
      * Get stream for XSD of WPX files.
      */
-    def static getWPXXSDAsStream = {
+    static InputStream getVPXXSDAsStream() {
         // dev
         def r = VentplanResource.class.getResourceAsStream('../resources/xml/ventplan-project.xsd')
         // prod
@@ -62,7 +60,7 @@ class VentplanResource {
      * @param n ID of image below resources/widerstand/xxx.jpg
      * @return URL to image.
      */
-    def static getWiderstandURL = { n ->
+    static URL getWiderstandURL(String n) {
         def r
         try {
             // dev
@@ -78,16 +76,51 @@ class VentplanResource {
     }
 
     /**
-     * TODO Rename method
-     * Get VentPlan web service properties.
+     * URL for Ventplan updates.
      */
-    def static getWacwsProperties() {
+    static String getUpdateUrl() {
+        return getVentplanProperties().get('ventplan.update.check.url') as String
+    }
+
+    static String getVerlegeplanSoapUrl() {
+        return getVentplanProperties().get('service.verlegeplan.soap.url') as String
+    }
+
+    static String getOdiseeServiceRestUrl() {
+        return getVentplanProperties().get('service.odisee.rest.url') as String
+    }
+
+    static String getOdiseeServiceRestPath() {
+        return getVentplanProperties().get('service.odisee.rest.path') as String
+    }
+
+    static String getVentplanVersion() {
+        return getVentplanProperties().get('ventplan.version') as String
+    }
+
+    /**
+     * Get Ventplan properties as a stream.
+     * @return InputStream reference.
+     */
+    static InputStream getVentplanPropertiesAsStream() {
         // dev
-        def r = VentplanResource.class.getResourceAsStream("/ventplan.properties")
+        def r = VentplanResource.class.getResourceAsStream('/ventplan.properties')
         // prod
-        if (!r)
-            r = VentplanResource.class.getResourceAsStream("/wacws/ventplan.properties")
+        if (!r) {
+            r = VentplanResource.class.getResourceAsStream('/wacws/ventplan.properties')
+        }
         r
+    }
+
+    /**
+     * Get Ventplan properties.
+     * @return Properties reference.
+     */
+    static Properties getVentplanProperties() {
+        Properties properties = new Properties()
+        def p = VentplanResource.getVentplanPropertiesAsStream()
+        properties.load(p)
+        return properties
     }
 
 }

@@ -35,9 +35,9 @@ class GriffonHelper {
     /**
      * Colors.
      */
-    private static final java.awt.Color MY_YELLOW = new java.awt.Color(255, 255, 180)
-    private static final java.awt.Color MY_RED = new java.awt.Color(255, 0, 0)
-    private static final java.awt.Color MY_GREEN = new java.awt.Color(51, 153, 0)
+    public static final java.awt.Color MY_YELLOW = new Color(255, 255, 180)
+    public static final java.awt.Color MY_RED = new Color(255, 0, 0)
+    public static final java.awt.Color MY_GREEN = new Color(51, 153, 0)
 
     /**
      * Key codes: 0 .. 9.
@@ -168,20 +168,10 @@ class GriffonHelper {
 
     /**
      * Map.flatten
-     */
-    def static installMapFlatten = {
-        Map.metaClass.flatten = { String prefix = '' ->
-            delegate.inject([:]) { map, v ->
-                def kstr = "${prefix$ {prefix ? '.' : ''} $v.key}"
-                if (v.value instanceof Map) {
-                    map += v.value.flatten(kstr)
-                } else {
-                    map[kstr] = v.value
-                }
-                map
-            }
-        }
-    }
+     def static installMapFlatten = {Map.metaClass.flatten = { String prefix = '' ->
+     delegate.inject([:]) { map, v ->
+     def kstr = "${prefix$ {prefix ? '.' : ''} $v.key}"
+     if (v.value instanceof Map) {map += v.value.flatten(kstr)} else {map[kstr] = v.value}map}}}*/
 
     /**
      * Invert a map. Taken from http://jira.codehaus.org/browse/GROOVY-4294.
@@ -231,12 +221,12 @@ class GriffonHelper {
                 try {
                     m[k] = v
                 } catch (e) {
-                        println "deepCopyMap: else; v=$v k=$k m=$m"
-                        println "deepCopyMap: ${e}"
-                    }
+                    println "deepCopyMap: else; v=$v k=$k m=$m"
+                    println "deepCopyMap: ${e}"
                 }
             }
         }
+    }
 
     /**
      * Dezimalzahl auf 5 runden.
@@ -630,86 +620,6 @@ class GriffonHelper {
                     break
             }
         }
-    }
-
-    /**
-     * Returns the current installed version.
-     */
-    def static localVersion = {
-        return getVentplanProperties().get('ventplan.version') as String
-    }
-
-    /**
-     *
-     */
-    def static getUpdateUrl = {
-        Properties p = getVentplanProperties()
-        return p.get('ventplan.update.check.url') as String
-    }
-
-    /**
-     *
-     */
-    static Properties getVentplanProperties() {
-        Properties properties = new Properties()
-        def p = VentplanResource.getWacwsProperties()
-        properties.load(p)
-        return properties
-    }
-
-    /**
-     *
-     */
-    def static getWacwsUrl = {
-        Properties properties = new Properties()
-        def p = VentplanResource.getWacwsProperties()
-        properties.load(p)
-        return properties.get("webservice.url") as String
-        //return "http://localhost:8080/wacws/services/wpxUpload?wsdl"
-    }
-
-    /**
-     *
-     */
-    def static getOdiseeRestUrl = {
-        Properties properties = new Properties()
-        def p = VentplanResource.getWacwsProperties()
-        properties.load(p)
-        return properties.get("odisee.rest.url") as String
-        //return "http://localhost:8080/wacws/services/wpxUpload?wsdl"
-    }
-
-    /**
-     *
-     */
-    def static getOdiseeRestPath = {
-        Properties properties = new Properties()
-        def p = VentplanResource.getWacwsProperties()
-        properties.load(p)
-        return properties.get("odisee.rest.path") as String
-        //return "http://localhost:8080/wacws/services/wpxUpload?wsdl"
-    }
-
-    /**
-     *
-     */
-    def static getOdiseeWac177RestUrl = {
-        Properties properties = new Properties()
-        def p = VentplanResource.getWacwsProperties()
-        properties.load(p)
-        //return properties.get("odisee.wac177.rest.url") as String
-        return "http://ventplan.service.odisee.de"
-    }
-
-    /**
-     *
-     */
-    def static getOdiseeWac177RestPath = {
-        Properties properties = new Properties()
-        def p = VentplanResource.getWacwsProperties()
-        properties.load(p)
-        //return properties.get("odisee.wac177.rest.path") as String
-        return "/service/177/"
     }
 
 }
