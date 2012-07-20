@@ -110,7 +110,7 @@ class OdiseeService {
      * @return
      */
     private String getVendorPrefix() {
-        GH.getVentplanProperties().get('vendor.prefix')
+        VentplanResource.getVentplanProperties().get('vendor.prefix')
     }
 
     /**
@@ -122,11 +122,11 @@ class OdiseeService {
      */
     String performAuslegung(File wpxFile, Map map, boolean saveOdiseeXml = false) {
         // Filename w/o extension
-        String wpxFilenameWoExt = wpxFile.name - '.wpx'
+        String vpxFilenameWoExt = vpxModelService.filenameWoExtension(wpxFile)
         // Generate Odisee XML
         DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
-            request(name: wpxFilenameWoExt, id: 1) {
+            request(name: vpxFilenameWoExt, id: 1) {
                 ooo(group: 'group0') {}
                 template(name: "${getVendorPrefix()}Auslegung", revision: 'LATEST', outputFormat: getOutputFormat()) {}
                 archive(database: false, files: true) {}
@@ -158,11 +158,11 @@ class OdiseeService {
      */
     String performStueckliste(File wpxFile, Map map, boolean saveOdiseeXml = false, Map editedStuckliste = null) {
         // Filename w/o extension
-        String wpxFilenameWoExt = wpxFile.name - '.wpx'
+        String vpxFilenameWoExt = vpxModelService.filenameWoExtension(wpxFile)
         // Generate Odisee XML
         DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
-            request(name: wpxFilenameWoExt, id: 1) {
+            request(name: vpxFilenameWoExt, id: 1) {
                 ooo(group: 'group0') {}
                 template(name: "${getVendorPrefix()}Stueckliste", revision: 'LATEST', outputFormat: getOutputFormat()) {}
                 archive(database: false, files: true) {}
@@ -210,11 +210,11 @@ class OdiseeService {
      */
     String performAngebot(File wpxFile, Map map, boolean saveOdiseeXml = false, Map editedStuckliste = null) {
         // Filename w/o extension
-        String wpxFilenameWoExt = wpxFile.name - '.wpx'
+        String vpxFilenameWoExt = vpxModelService.filenameWoExtension(wpxFile)
         // Generate Odisee XML
         DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
-            request(name: wpxFilenameWoExt, id: 1) {
+            request(name: vpxFilenameWoExt, id: 1) {
                 ooo(group: 'group0') {}
                 template(name: "${getVendorPrefix()}Angebot", revision: 'LATEST', outputFormat: getOutputFormat()) {}
                 archive(database: false, files: true) {}
@@ -279,14 +279,14 @@ class OdiseeService {
      */
     private String prepareXml(odisee, File wpxFile, String type, boolean saveOdiseeXml) {
         // Filename w/o extension
-        String wpxFilenameWoExt = wpxFile.name - '.wpx'
+        String vpxFilenameWoExt = vpxModelService.filenameWoExtension(wpxFile)
         // Convert XML to string (StreamingMarkupBuilder will generate XML with correct german umlauts)
         String xml = new StreamingMarkupBuilder().bind {
             mkp.yieldUnescaped odisee
         }.toString()
         // Save Odisee request XML
         if (saveOdiseeXml) {
-            def odiseeXmlFile = new File(wpxFile.parentFile, "${wpxFilenameWoExt}_${type}_odisee.xml")
+            def odiseeXmlFile = new File(wpxFile.parentFile, "${vpxFilenameWoExt}_${type}_odisee.xml")
             odiseeXmlFile.withWriter('UTF-8') { writer ->
                 writer.write(xml)
             }
