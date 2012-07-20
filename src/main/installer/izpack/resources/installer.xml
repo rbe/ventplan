@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!--
-  ~ VentPlan
-  ~
-  ~ Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
-  ~ Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
-  ~
-  ~ Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
-  ~ All rights reserved. Use is subject to license terms.
-  -->
 <installation version="1.0">
     <variables>
-        <variable name="appGroup" value="VentPlan"/>
-        <variable name="appTitle" value="VentPlan"/>
-        <variable name="appSubPath" value="VentPlan"/>
-        <variable name="appVersion" value="7.0.0BETA"/>
+        <variable name="appGroup" value="Ventplan"/>
+        <variable name="appTitle" value="Ventplan"/>
+        <variable name="appSubPath" value="Ventplan"/>
+        <variable name="appVersion" value="7.0.5"/>
         <!-- pre-select desktop shortcut checkbox -->
         <variable name="DesktopShortcutCheckboxEnabled" value="true"/>
     </variables>
@@ -24,8 +15,8 @@
     <info>
         <run-privileged/>
         <javaversion>1.6</javaversion>
-        <appname>VentPlan</appname>
-        <appsubpath>VentPlan</appsubpath>
+        <appname>Ventplan</appname>
+        <appsubpath>Ventplan</appsubpath>
         <appversion>7.0.0BETA</appversion>
         <!-- following appears in HelloPanel -->
         <authors>
@@ -60,8 +51,8 @@
         -->
     </locale>
     <resources>
-        <res id="Heading.image" src="resources/VentPlan_signet.png"/>
-        <res id="ventplan.logo" src="resources/VentPlan_logo.png"/>
+        <res id="Heading.image" src="resources/image/ventplan_signet.png"/>
+        <res id="ventplan.logo" src="resources/image/ventplan_logo.png"/>
         <!--
         <res id="HTMLLicencePanel.licence" src="resources/asl2.html" />
         -->
@@ -94,8 +85,8 @@
         </listener>
     </listeners>
     <packs>
-        <pack name="VentPlan" required="yes">
-            <description>VentPlan</description>
+        <pack name="Ventplan" required="yes">
+            <description>Ventplan</description>
             <fileset dir="binary/"
                      targetdir="$INSTALL_PATH">
             </fileset>
@@ -103,8 +94,8 @@
               aoc customizing START
               Insert sql database to install dir /sql
             -->
-            <file src="resources/VentPlan.db" targetdir="$INSTALL_PATH/lib"/>
-            <file src="resources/VentPlan_logo.png" targetdir="$INSTALL_PATH/icons"/>
+            <file src="resources/ventplan.db" targetdir="$INSTALL_PATH/lib"/>
+            <file src="resources/image/ventplan_logo.png" targetdir="$INSTALL_PATH/icons"/>
             <!-- aoc customizing END -->
             <file src="resources/README.html" targetdir="$INSTALL_PATH"/>
             <!--
@@ -114,10 +105,10 @@
             <parsable targetfile="$INSTALL_PATH/Uninstaller/pre-uninstall.bat" os="windows"/>
             <executable targetfile="$INSTALL_PATH/Uninstaller/pre-uninstall.bat" os="windows" stage="uninstall"/>
             <!-- Make files executable under Unix -->
-            <executable stage="never" targetfile="$INSTALL_PATH/bin/VentPlan" os="unix"/>
+            <executable stage="never" targetfile="$INSTALL_PATH/bin/ventplan" os="unix"/>
             <executable stage="never" targetfile="$INSTALL_PATH/bin/startApp" os="unix"/>
             <!--
-            <executable stage="never" targetfile="$INSTALL_PATH/bin/VentPlan.bat" os="windows"/>
+            <executable stage="never" targetfile="$INSTALL_PATH/bin/ventplan.bat" os="windows"/>
             <executable stage="never" targetfile="$INSTALL_PATH/bin/startApp.bat" os="windows"/>
             -->
         </pack>

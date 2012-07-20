@@ -1,13 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<!--
-  ~ VentPlan
-  ~
-  ~ Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
-  ~ Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
-  ~
-  ~ Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
-  ~ All rights reserved. Use is subject to license terms.
-  -->
+<?xml version="1.0" encoding="UTF-8"?>
 <jsmoothproject>
     <JVMSearchPath>javahome</JVMSearchPath>
     <JVMSearchPath>jrepath</JVMSearchPath>
@@ -18,8 +9,8 @@
     @app.jars@
     <currentDirectory>./bin</currentDirectory>
     <embeddedJar>false</embeddedJar>
-    <executableName>VentPlan.exe</executableName>
-    <iconLocation>VentPlan-icon.png</iconLocation>
+    <executableName>ventplan.exe</executableName>
+    <iconLocation>ventplan-icon.png</iconLocation>
     <initialMemoryHeap>134217728</initialMemoryHeap>
     <javaProperties>
         <name>griffon.start.dir</name>
@@ -27,7 +18,7 @@
     </javaProperties>
     <javaProperties>
         <name>program.name</name>
-        <value>VentPlan</value>
+        <value>Ventplan</value>
     </javaProperties>
     <mainClassName>griffon.swing.SwingApplication</mainClassName>
     <maximumMemoryHeap>268435456</maximumMemoryHeap>
@@ -36,8 +27,8 @@
     <skeletonName>Autodownload Wrapper</skeletonName>
     <skeletonProperties>
         <key>Message</key>
-        <value>Java 6 wurde nicht auf Ihrem Computer gefunden.
-Möchten Sie Java herunterladen?
+        <value>Java 6 oder hÃ¶her wurde nicht auf Ihrem Computer gefunden.
+MÃ¶chten Sie es herunterladen?
         </value>
     </skeletonProperties>
     <skeletonProperties>

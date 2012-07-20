@@ -1,23 +1,14 @@
-<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
-<!--
-  ~ VentPlan
-  ~
-  ~ Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann.
-  ~ Copyright (C) 2011-2012 art of coding UG (haftungsbeschränkt).
-  ~
-  ~ Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
-  ~ All rights reserved. Use is subject to license terms.
-  -->
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <shortcuts>
     <skipIfNotSupported/>
     <programGroup defaultName="$appGroup"
                   location="applications"/>
     <shortcut
-            name="VentPlan"
-            target="$INSTALL_PATH\bin\VentPlan.bat"
+            name="Ventplan"
+            target="$INSTALL_PATH\bin\ventplan.bat"
             commandLine=""
             workingDirectory="$INSTALL_PATH\bin"
-            description="Run VentPlan"
+            description="Run Ventplan"
             initialState="normal"
             programGroup="yes"
             desktop="yes"
@@ -31,7 +22,7 @@
             target="$INSTALL_PATH\Uninstaller\uninstaller.jar"
             commandLine=""
             workingDirectory="$INSTALL_PATH"
-            description="Uninstall VentPlan"
+            description="Uninstall Ventplan"
             initialState="normal"
             programGroup="yes"
             desktop="no"
