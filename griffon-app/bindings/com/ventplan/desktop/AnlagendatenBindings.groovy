@@ -26,6 +26,7 @@ bind(source: model.map.anlage.luftkanalverlegung, sourceProperty: 'spitzboden', 
 bind(source: model.map.anlage.aussenluft, sourceProperty: 'dach',        target: anlageAussenluftDach,        targetProperty: 'selected',     mutual: true)
 bind(source: model.map.anlage.aussenluft, sourceProperty: 'wand',        target: anlageAussenluftWand,        targetProperty: 'selected',     mutual: true)
 bind(source: model.map.anlage.aussenluft, sourceProperty: 'erdwarme',    target: anlageAussenluftErdwarme,    targetProperty: 'selected',     mutual: true)
+bind(source: model.map.anlage.aussenluft, sourceProperty: 'lufteinlass', target: anlageAussenluftLufteinlass, targetProperty: 'selectedItem', mutual: true)
 // Anlagendaten - Zuluft
 bind(source: model.map.anlage.zuluft, sourceProperty: 'tellerventile' , target: anlageZuluftTellerventile,  targetProperty: 'selected', mutual: true)
 bind(source: model.map.anlage.zuluft, sourceProperty: 'schlitzauslass', target: anlageZuluftSchlitzauslass, targetProperty: 'selected', mutual: true)
@@ -37,6 +38,7 @@ bind(source: model.map.anlage.abluft, sourceProperty: 'tellerventile' , target: 
 bind(source: model.map.anlage.fortluft, sourceProperty: 'dach',         target: anlageFortluftDach,         targetProperty: 'selected',     mutual: true)
 bind(source: model.map.anlage.fortluft, sourceProperty: 'wand',         target: anlageFortluftWand,         targetProperty: 'selected',     mutual: true)
 bind(source: model.map.anlage.fortluft, sourceProperty: 'bogen135',     target: anlageFortluftBogen135,     targetProperty: 'selected',     mutual: true)
+bind(source: model.map.anlage.fortluft, sourceProperty: 'luftgitter',   target: anlageFortluftLuftgitter,   targetProperty: 'selectedItem', mutual: true)
 // Anlagendaten - Energie-Kennzeichen
 bind(source: model.map.anlage.energie, sourceProperty: 'zuAbluftWarme', target: anlageEnergieZuAbluftWarme, targetProperty: 'selected', mutual: true)
 bind(source: model.map.anlage.energie, sourceProperty: 'bemessung',     target: anlageEnergieBemessung,     targetProperty: 'selected', mutual: true)
@@ -49,7 +51,7 @@ bind(source: anlageEnergieZuAbluftWarme, sourceProperty: 'selected', target: anl
 //
 bind(source: model.map.anlage.energie, sourceProperty: 'nachricht',     target: anlageEnergieNachricht,     targetProperty: 'text')
 [anlageEnergieZuAbluftWarme, anlageEnergieBemessung, anlageEnergieRuckgewinnung, anlageEnergieRegelung].each {
-	it.actionPerformed = controller.berechneEnergieKennzeichen
+    it.actionPerformed = controller.berechneEnergieKennzeichen
 }
 // Anlagendaten - Hygiene-Kennzeichen
 bind(source: model.map.anlage.hygiene, sourceProperty: 'ausfuhrung',         target: anlageHygieneAusfuhrung,         targetProperty: 'selected', mutual: true)
@@ -59,7 +61,7 @@ bind(source: model.map.anlage.hygiene, sourceProperty: 'dichtheitsklasseB',  tar
 //
 bind(source: model.map.anlage.hygiene, sourceProperty: 'nachricht',     target: anlageHygieneNachricht,     targetProperty: 'text')
 [anlageHygieneAusfuhrung, anlageHygieneFilterung, anlageHygieneKeineVerschmutzung, anlageHygieneDichtheitsklasseB].each {
-	it.actionPerformed = controller.berechneHygieneKennzeichen
+    it.actionPerformed = controller.berechneHygieneKennzeichen
 }
 // Anlagendaten - Rückschlagkappe, Schallschutz-Kennzeichnung, Feuerstätten-Kennzeichnung, Kennzeichnung der Lüftungsanlage
 bind(source: model.map.anlage, sourceProperty: 'ruckschlagklappe',            target: anlageruckschlagklappe,            targetProperty: 'selected', mutual: true)
@@ -67,5 +69,5 @@ bind(source: model.map.anlage, sourceProperty: 'schallschutz',                ta
 bind(source: model.map.anlage, sourceProperty: 'feuerstatte',                 target: anlageFeuerstatte,                 targetProperty: 'selected', mutual: true)
 bind(source: model.map.anlage, sourceProperty: 'kennzeichnungLuftungsanlage', target: anlageKennzeichnungLuftungsanlage, targetProperty: 'text')
 [anlageruckschlagklappe, anlageSchallschutz, anlageFeuerstatte].each {
-	it.actionPerformed = controller.berechneKennzeichenLuftungsanlage
+    it.actionPerformed = controller.berechneKennzeichenLuftungsanlage
 }

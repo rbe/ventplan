@@ -125,34 +125,34 @@ class ProjektModel {
      */
     @Bindable
             meta = [
-            raum: [
+                    raum: [
                             typ: ['Wohnzimmer', 'Kinderzimmer', 'Schlafzimmer', 'Esszimmer', 'Arbeitszimmer', 'Gästezimmer',
                                     'Hausarbeitsraum', 'Kellerraum', 'WC', 'Küche', 'Kochnische', 'Bad mit/ohne WC', 'Duschraum',
                                     'Sauna', 'Flur', 'Diele'],
                             geschoss: ['KG', 'EG', 'OG', 'DG', 'SB'],
                             luftart: ['ZU', 'AB', 'ZU/AB', 'ÜB'],
-                    raumVsBezeichnungZuluftventile: [/* initialized in ProjektController.mvcGroupInit */],
-                    raumVsBezeichnungAbluftventile: [/* initialized in ProjektController.mvcGroupInit */],
-                    raumVsUberstromelemente: [/* initialized in ProjektController.mvcGroupInit */],
+                            raumVsBezeichnungZuluftventile: [/* initialized in ProjektController.mvcGroupInit */],
+                            raumVsBezeichnungAbluftventile: [/* initialized in ProjektController.mvcGroupInit */],
+                            raumVsUberstromelemente: [/* initialized in ProjektController.mvcGroupInit */],
                             raumVsVerteilebene: ['KG', 'EG', 'OG', 'DG', 'SB'],
-            ],
-            gewahlterRaum: [:] as ObservableMap,
-            druckverlust: [
-                    kanalnetz: [
-                                    luftart: ['ZU', 'AB'],
-                            kanalbezeichnung: [/* initialized in ProjektController.mvcGroupInit */]
                     ],
-                    ventileinstellung: [
+                    gewahlterRaum: [:] as ObservableMap,
+                    druckverlust: [
+                            kanalnetz: [
+                                    luftart: ['ZU', 'AB'],
+                                    kanalbezeichnung: [/* initialized in ProjektController.mvcGroupInit */]
+                            ],
+                            ventileinstellung: [
                                     luftart: ['ZU', 'AB', 'AU', 'FO'],
-                            ventilbezeichnung: [/* initialized in ProjektController.mvcGroupInit */]
+                                    ventilbezeichnung: [/* initialized in ProjektController.mvcGroupInit */]
+                            ]
+                    ],
+                    summeAktuelleWBW: 0.0d,
+                    wbw: [] as ObservableList,
+                    akustik: [
+                            schalldampfer: [/* initialized in ProjektController.mvcGroupInit */]
                     ]
-            ],
-            summeAktuelleWBW: 0.0d,
-            wbw: [] as ObservableList,
-            akustik: [
-                    schalldampfer: [/* initialized in ProjektController.mvcGroupInit */]
-            ]
-    ] as ObservableMap
+            ] as ObservableMap
 
     /**
      * Our central model.
@@ -197,11 +197,10 @@ class ProjektModel {
                     anlage: [
                             standort: [EG: true] as ObservableMap,
                             luftkanalverlegung: [:] as ObservableMap,
-                            aussenluft: [:] as ObservableMap,
+                            aussenluft: [lufteinlass: ['200LE004', '200LE008']] as ObservableMap,
                             zuluft: [:] as ObservableMap,
                             abluft: [:] as ObservableMap,
-                            fortluft: [dach: true] as ObservableMap,
-                            zentralgerat: "",
+                            fortluft: [dach: true, luftgitter: ['200LG002', '200LG004']] as ObservableMap,
                             energie: [zuAbluftWarme: true, nachricht: ' '] as ObservableMap,
                             hygiene: [nachricht: ' '] as ObservableMap,
                             kennzeichnungLuftungsanlage: 'ZuAbLS-Z-WE-WÜT-0-0-0-0-0',
@@ -1132,24 +1131,24 @@ class ProjektModel {
                            at java_util_List$addAll.call(Unknown Source)
                            at com.ventplan.desktop.ProjektModel$_resyncAkustikTableModels_closure31_closure73.doCall(ProjektModel.groovy:1119)
                     */
-                map.akustik.zuluft.tabelle.each { tableModels.akustikZuluft.addAll(it) }
-                map.akustik.zuluft.volumenstromZentralgerat = view.akustikZuluftZuluftstutzenZentralgerat.selectedItem
-                // Zeilenhöhe anpassen
-                def rowh = (view.akustikZuluftTabelle.getHeight() - 4) / 13 as Integer
-                view.akustikZuluftTabelle.setRowHeight(rowh + 1)
-                view.akustikZuluftTabelle.setRowMargin(7)
-                // Akustikberechnung Abluft
-                tableModels.akustikAbluft.clear()
-                map.akustik.abluft.tabelle.each { tableModels.akustikAbluft.addAll(it) }
-                map.akustik.abluft.volumenstromZentralgerat = view.akustikAbluftAbluftstutzenZentralgerat.selectedItem
-                // Zeilenhöhe anpassen
+                    map.akustik.zuluft.tabelle.each { tableModels.akustikZuluft.addAll(it) }
+                    map.akustik.zuluft.volumenstromZentralgerat = view.akustikZuluftZuluftstutzenZentralgerat.selectedItem
+                    // Zeilenhöhe anpassen
+                    def rowh = (view.akustikZuluftTabelle.getHeight() - 4) / 13 as Integer
+                    view.akustikZuluftTabelle.setRowHeight(rowh + 1)
+                    view.akustikZuluftTabelle.setRowMargin(7)
+                    // Akustikberechnung Abluft
+                    tableModels.akustikAbluft.clear()
+                    map.akustik.abluft.tabelle.each { tableModels.akustikAbluft.addAll(it) }
+                    map.akustik.abluft.volumenstromZentralgerat = view.akustikAbluftAbluftstutzenZentralgerat.selectedItem
+                    // Zeilenhöhe anpassen
                     /*
                     println "resyncAkustikTableModels -> view.akustikAbluftTabelle.getHeight(): ${view.akustikAbluftTabelle.getHeight()}"
                     rowh = (view.akustikAbluftTabelle.getHeight() - 4) / 13 as Integer
                     println "row height (akustikAbluftTabelle) = ${rowh}"
                     */
-                view.akustikAbluftTabelle.setRowHeight(rowh + 1)
-                view.akustikAbluftTabelle.setRowMargin(3)
+                    view.akustikAbluftTabelle.setRowHeight(rowh + 1)
+                    view.akustikAbluftTabelle.setRowMargin(3)
                 } catch (NullPointerException e) {
                     e.printStackTrace()
                 }

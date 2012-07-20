@@ -56,6 +56,7 @@ panel(constraints: 'a', border: compoundBorder(outer: emptyBorder(5), inner: emp
             add radioButton(id: "anlageAussenluftErdwarme", text: "Erdwärmetauscher")
         }
         label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
+        comboBox(id: 'anlageAussenluftLufteinlass', items: model.map.anlage.aussenluft.lufteinlass)
     }
 
     zl.insertTemplate('valueRow');
@@ -80,6 +81,7 @@ panel(constraints: 'a', border: compoundBorder(outer: emptyBorder(5), inner: emp
             add radioButton(id: "anlageFortluftBogen135",     text: "Bogen 135°")
         }
         label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
+        comboBox(id: 'anlageFortluftLuftgitter', items: model.map.anlage.fortluft.luftgitter)
     }
 
     zl.insertTemplate('valueRow2');
