@@ -263,6 +263,8 @@ class VentplanController {
                     projektModel.vpxFilename = file
                     // Convert loaded XML into map
                     def map = vpxModelService.toMap(document)
+                    // WAC-226: Stuckliste laden
+                    projektModel.stucklisteMap = vpxModelService.stucklisteToMap(document)
                     // Recursively copy map to model
                     // ATTENTION: DOES NOT fire bindings and events asynchronously/in background!
                     // They are fired after leaving this method.

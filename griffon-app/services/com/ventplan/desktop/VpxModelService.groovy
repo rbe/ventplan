@@ -317,6 +317,33 @@ class VpxModelService {
         }
     }
 
+    /**
+     * WAC-226: Gespeicherte Stuckliste aus dem XML-Projekt laden.
+     */
+    def stucklisteToMap = { xml ->
+        Map artikelMap = new LinkedHashMap()
+        use(DOMCategory) {
+            def p = xml.'projekt'
+            def stuckliste = p?.'stuckliste'
+            stuckliste?.'artikel'?.each { article ->
+                artikelMap.put(
+                    article.artikelnummer,
+                    [
+                        REIHENFOLGE: X.vi { article?.'position'.text() },
+                        ANZAHL: X.vd { article?.'anzahl'.text() },
+                        ARTIKEL: X.vs { article?.'artikelnummer'.text() },
+                        ARTIKELBEZEICHNUNG: X.vs { article?.'artikelbezeichnung'.text() },
+                        LUFTART: X.vs { WX[article?.'luftart'.text()] },
+                        LIEFERMENGE: X.vd { article?.'liefermenge'.text() },
+                        PREIS: X.vd { article?.'preis'.text() },
+                        MENGENEINHEIT: X.vs { article?.'mengeneinheit'.text() }
+                    ]
+                )
+            }
+        }
+        artikelMap
+    }
+
     def makeAdresse = { map ->
         domBuilder.adresse() {
             X.m(['strasse', 'ort', 'postleitzahl', 'land'], map)
@@ -507,7 +534,7 @@ class VpxModelService {
         }
     }
 
-    def save = { map, file ->
+    def save = { map, file, stuckliste = null ->
         def prefHelper = AuslegungPrefHelper.instance
         //def wpx = domBuilder.'westaflex-wpx' { // TODO Rename root element to 'ventplan'
         def wpx = domBuilder.'ventplan-project' {
@@ -543,6 +570,12 @@ class VpxModelService {
                 }
                 makeFirma('Grosshandel', map.kundendaten.grosshandel)
                 makeFirma('Ausfuhrende', map.kundendaten.ausfuhrendeFirma)
+                // WAC-226: Stuckliste erzeugen und speichern
+                if (stuckliste) {
+                    domBuilder.stuckliste() {
+                        stuckliste.each { key, value -> makeStuckliste(value) }
+                    }
+                }
             }
         }
         if (file) {
@@ -550,6 +583,23 @@ class VpxModelService {
             fh.withWriter('UTF-8') { writer ->
                 writer.write(XmlUtil.serialize(wpx))
             }
+        }
+    }
+
+    /**
+     * WAC-226: Stuckliste im XML speichern
+     */
+    def makeStuckliste = { a ->
+
+        domBuilder.artikel() {
+            X.tc { position(a.REIHENFOLGE) }
+            X.tc { anzahl(a.ANZAHL) }
+            X.tc { artikelnummer(a.ARTIKEL) }
+            X.tc { artikelbezeichnung(a.ARTIKELBEZEICHNUNG) }
+            X.tc { luftart(a.LUFTART) }
+            X.tc { liefermenge(a.LIEFERMENGE) }
+            X.tc { preis(a.PREIS) }
+            X.tc { mengeneinheit(a.MENGENEINHEIT) }
         }
     }
 

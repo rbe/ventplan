@@ -289,7 +289,7 @@ class ProjektController {
         try {
             if (model.vpxFilename) {
                 // Save data
-                vpxModelService.save(model.map, model.vpxFilename)
+                vpxModelService.save(model.map, model.vpxFilename, model.stucklisteMap)
                 // Set dirty-flag in project's model to false
                 model.map.dirty = false
                 // Update tab title to ensure that no "unsaved-data-star" is displayed
@@ -1842,6 +1842,10 @@ class ProjektController {
                     )
                     position++
                 }
+                // WAC-226: Stuckliste speichern, damit die Änderungen später aktiv bleiben!
+                model.stucklisteMap = newMap
+                vpxModelService.save(model.map, model.vpxFilename, newMap)
+
                 // Auslegung/Dokument erstellen
                 try {
                     File wpxFile = new File(model.vpxFilename)
@@ -1874,33 +1878,53 @@ class ProjektController {
         //
         def stucklisteTableModel = model.createStucklisteUbersichtTableModel()
         def stucklisteSucheTableModel = model.createStucklisteErgebnisTableModel()
-        // Dialog zum Bearbeiten der Stuckliste aufrufen
-        Map stuckliste = stucklisteService.processData(model.map)
-        int position = 0
-        stuckliste.eachWithIndex { stuck, i ->
-            Map artikel = stuck.value as Map
-            //int reihenfolge = (int) artikel.REIHENFOLGE ?: 900
-            double anzahl = (double) artikel.ANZAHL
-            //println String.format('%2d % 12d % 7.1f %6s %17s - %s', i + 1, reihenfolge, anzahl, artikel.MENGENEINHEIT, stuck.key, artikel.ARTIKELBEZEICHNUNG)
-            /*
-            // Menge mit oder ohne Komma anzeigen?
-            String menge
-            if (anzahl * 10 > 0) {
-                menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.MENGENEINHEIT)
-            } else {
-                menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
-            }
-            */
-            def gesamtpreis = (anzahl * artikel.PREIS.toDouble2()) as double
-            model.tableModels.stuckliste.addAll(
+
+        // WAC-226: Geladene Stuckliste bzw. bereits erstellt Stuckliste nehmen, falls vorhanden
+        if (model.stucklisteMap) {
+
+            model.stucklisteMap.each { key, a ->
+                println "stucklisteMap -> ${a.dump()}"
+                def gesamtpreis = (a.ANZAHL * a.PREIS.toDouble2()) as double
+                model.tableModels.stuckliste.addAll(
                     [
-                            reihenfolge: position, anzahl: anzahl,
-                            artikelnummer: artikel.ARTIKEL, text: artikel.ARTIKELBEZEICHNUNG,
-                            einzelpreis: artikel.PREIS, gesamtpreis: gesamtpreis,
-                            luftart: artikel.LUFTART, liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT
+                        reihenfolge: a.REIHENFOLGE, anzahl: a.ANZAHL,
+                        artikelnummer: a.ARTIKELNUMMER, text: a.ARTIKELBEZEICHNUNG,
+                        einzelpreis: a.PREIS, gesamtpreis: gesamtpreis,
+                        luftart: a.LUFTART, liefermenge: a.LIEFERMENGE, mengeneinheit: a.MENGENEINHEIT
                     ]
-            )
-            position++
+                )
+            }
+
+        } else {
+            // Keine gespeicherte Stuckliste bzw. erste Stuckliste erstellen
+            // Dialog zum Bearbeiten der Stuckliste aufrufen
+            Map stuckliste = stucklisteService.processData(model.map)
+            int position = 0
+            stuckliste.eachWithIndex { stuck, i ->
+                Map artikel = stuck.value as Map
+                //int reihenfolge = (int) artikel.REIHENFOLGE ?: 900
+                double anzahl = (double) artikel.ANZAHL
+                //println String.format('%2d % 12d % 7.1f %6s %17s - %s', i + 1, reihenfolge, anzahl, artikel.MENGENEINHEIT, stuck.key, artikel.ARTIKELBEZEICHNUNG)
+                /*
+                // Menge mit oder ohne Komma anzeigen?
+                String menge
+                if (anzahl * 10 > 0) {
+                    menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.MENGENEINHEIT)
+                } else {
+                    menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
+                }
+                */
+                def gesamtpreis = (anzahl * artikel.PREIS.toDouble2()) as double
+                model.tableModels.stuckliste.addAll(
+                    [
+                        reihenfolge: position, anzahl: anzahl,
+                        artikelnummer: artikel.ARTIKEL, text: artikel.ARTIKELBEZEICHNUNG,
+                        einzelpreis: artikel.PREIS, gesamtpreis: gesamtpreis,
+                        luftart: artikel.LUFTART, liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT
+                    ]
+                )
+                position++
+            }
         }
         showStucklisteDialog(
                 "${type} anpassen",
