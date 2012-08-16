@@ -282,6 +282,8 @@ class ProjektController {
     def automatischeBerechnung = {
         // Flags setzen
         model.map.anlage.zentralgeratManuell = false
+        // WAC-226
+        model.stucklisteMap = null
         // Neu berechnen
         berechneAlles()
     }
@@ -1927,23 +1929,19 @@ class ProjektController {
         //
         def stucklisteTableModel = model.createStucklisteUbersichtTableModel()
         def stucklisteSucheTableModel = model.createStucklisteErgebnisTableModel()
-
-        // WAC-226: Geladene Stuckliste bzw. bereits erstellt Stuckliste nehmen, falls vorhanden
+        // WAC-226 Geladene Stuckliste bzw. bereits erstellt Stuckliste nehmen, falls vorhanden
         if (model.stucklisteMap) {
-
             model.stucklisteMap.each { key, a ->
-                println "stucklisteMap -> ${a.dump()}"
                 def gesamtpreis = (a.ANZAHL * a.PREIS.toDouble2()) as double
                 model.tableModels.stuckliste.addAll(
                     [
                         reihenfolge: a.REIHENFOLGE, anzahl: a.ANZAHL,
-                        artikelnummer: a.ARTIKELNUMMER, text: a.ARTIKELBEZEICHNUNG,
+                        artikelnummer: a.ARTIKEL/*NUMMER*/, text: a.ARTIKELBEZEICHNUNG,
                         einzelpreis: a.PREIS, gesamtpreis: gesamtpreis,
                         luftart: a.LUFTART, liefermenge: a.LIEFERMENGE, mengeneinheit: a.MENGENEINHEIT
                     ]
                 )
             }
-
         } else {
             // Keine gespeicherte Stuckliste bzw. erste Stuckliste erstellen
             // Dialog zum Bearbeiten der Stuckliste aufrufen
