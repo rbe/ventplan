@@ -46,6 +46,11 @@ class ProjektModel {
     CalculationService calculationService
 
     /**
+     * WAC-226: Stuckliste loaded from Ventplan Project file.
+     */
+    def stucklisteMap
+
+    /**
      * Template für alle Werte eines Raumes.
      */
     def raumMapTemplate = [

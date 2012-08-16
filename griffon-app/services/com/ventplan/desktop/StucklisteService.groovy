@@ -170,4 +170,8 @@ class StucklisteService {
         return stuckliste
     }
 
+    List findArtikel(text) {
+        ventplanModelService.findArtikel(text)
+    }
+
 }

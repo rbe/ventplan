@@ -456,4 +456,46 @@
             <xs:enumeration value="FO"/>
         </xs:restriction>
     </xs:simpleType>
+
+    <!--
+
+        Complex type: stuckliste
+
+    -->
+    <xs:complexType name="stuckliste">
+        <xs:sequence>
+            <xs:element name="artikel" type="artikel" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!--
+
+        Complex type: artikel
+
+    -->
+    <xs:complexType name="artikel">
+        <xs:sequence>
+            <xs:element name="position" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="anzahl" type="xs:double" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="artikelnummer" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="artikelbezeichnung" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="luftart" type="luftart" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="liefermenge" type="xs:double" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="preis" type="xs:double" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="mengeneinheit" type="stucklisteMengeneinheit" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!--
+
+        Complex type: Mengeneinheit
+        TODO: mengeneinheit
+
+    -->
+    <xs:simpleType name="stucklisteMengeneinheit">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Meter"/>
+            <xs:enumeration value="Stück"/>
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>
