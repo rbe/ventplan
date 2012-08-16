@@ -16,7 +16,15 @@ import static griffon.util.GriffonApplicationUtils.isMacOSX
 menuBar = menuBar {
     // Datei
     menu(id: 'menuDatei', text: 'Datei', mnemonic: 'D') {
+        // Neu
+        menu(id: 'menuProjektNeu', text: 'Neu...', icon: imageIcon(resource: '/menu/project_new.png')) {
+            menuItem(neuesProjektAction_EFH4ZKBWC)
+            menuItem(neuesProjektAction_EFH5ZKBHWWC)
+            menuItem(neuesProjektAction_EFH5ZKBWC2KRHW)
+            menuItem(neuesProjektAction_EFH5ZKBWCDG)
+        }
         menuItem(neuesProjektAction)
+        //
         menuItem(projektOeffnenAction)
         // WAC-161 Zuletzt geöffnete Projekte
         menu(id: 'recentlyOpenedMenu', text: 'Zuletzt geöffnete Projekte', icon: imageIcon(resource: '/menu/project_recently_opened.png'), enabled: bind { model.aktivesProjekt == null })
@@ -38,8 +46,8 @@ menuBar = menuBar {
         menuItem(automatischeBerechnungAction)
         // WAC-108 Auslegung
         menuItem(projektAuslegungErstellenAction)
-        // WAC-202 Verlegeplan
-        menuItem(projektVerlegeplanErstellenAction)
+        // WAC-202 Prinzipskizze
+        menuItem(projektPrinzipskizzeErstellenAction)
     }
     // Dokumente
     menu(id: 'menuDokumente', text: 'Dokumente', mnemonic: 'O') {

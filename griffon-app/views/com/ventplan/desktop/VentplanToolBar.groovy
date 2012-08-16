@@ -34,6 +34,6 @@ toolBar(id: 'toolbar', rollover: true) {
     button(projektStuecklisteErstellenAction, text: null, toolTipText: 'Dokument "Stückliste" erstellen')
     // WAC-108 Angebot
     button(projektAngebotErstellenAction, text: null, toolTipText: 'Dokument "Angebot" erstellen')
-    // WAC-202 Verlegeplan
-    button(projektVerlegeplanErstellenAction, text: null, toolTipText: 'Grafik "Verlegeplan" erstellen')
+    // WAC-202 Prinzipskizze
+    button(projektPrinzipskizzeErstellenAction, text: null, toolTipText: 'Prinzipskizze erstellen')
 }

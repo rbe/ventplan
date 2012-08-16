@@ -31,16 +31,18 @@ class StucklisteService {
      */
     void artikelAufStuckliste(Map stuckliste, artikel, paket = null) {
         if (null == stuckliste || null == artikel) {
-            throw new IllegalArgumentException('stuckliste or artikel == null?')
+            //throw new IllegalArgumentException('stuckliste or artikel == null?')
+            return
         }
         def artikelnummer = ventplanModelService.getArtikelnummer(artikel)
+        artikel.ARTIKEL = artikel.ARTIKELNUMMER = artikelnummer
         if (stuckliste.containsKey(artikelnummer)) {
             //def alt = stuckliste[artikelnummer].ANZAHL
             stuckliste[artikelnummer].ANZAHL += artikel.ANZAHL ?: 1.0
             //println String.format('+      Artikel hinzu: Paket=%5s Artikel=%17s Anzahl=%4.1f (%4.1f + %4.1f)', paket ?: '', artikelnummer, stuckliste[artikelnummer].ANZAHL, artikel.ANZAHL, alt)
         } else {
-            stuckliste[artikelnummer] = artikel
             //println String.format('* Füge Artikel hinzu: Paket=%5s Artikel=%17s Anzahl=%4.1f', paket ?: '', artikelnummer, artikel.ANZAHL)
+            stuckliste[artikelnummer] = artikel
             // Prüfe Artikel auf Gültigkeit
             if (!ventplanModelService.isArticleValidToday(artikelnummer)) {
                 stuckliste[artikelnummer].ARTIKELBEZEICHNUNG = '*** ' + stuckliste[artikelnummer].ARTIKELBEZEICHNUNG
@@ -56,6 +58,14 @@ class StucklisteService {
         stuckliste.sort { Map.Entry map ->
             map.value.REIHENFOLGE
         }
+        /* WAC-223
+        stuckliste.each { Map.Entry map ->
+            // Prüfe Artikel auf Gültigkeit
+            if (!ventplanModelService.isArticleValidToday(map.ARTIKELNUMMER)) {
+                map.ARTIKELBEZEICHNUNG = '*** ' + map.ARTIKELBEZEICHNUNG
+            }
+        }
+        */
     }
 
     /**
@@ -108,11 +118,18 @@ class StucklisteService {
             }
         }
         // Außenluftpaket
-        List aussenluftpaket = ventplanModelService.getAussenluftpaket(zentralgerat, volumenstrom, 'Wand')
+        String aussenluft = map.anlage.aussenluft.grep { it.value == true }?.key[0]
+        aussenluft = aussenluft[0].toUpperCase() + aussenluft[1..-1]
+        if (aussenluft == 'Erdwarme') {
+            aussenluft = 'EWT'
+        }
+        List aussenluftpaket = ventplanModelService.getAussenluftpaket(zentralgerat, volumenstrom, aussenluft)
         //println String.format("%17s für %8s (Vs=%d), %s ist %s", 'Aussenluftpaket', zentralgerat, volumenstrom, 'Wand', aussenluftpaket)
         pakete += aussenluftpaket
         // Fortluftpaket
-        List fortluftpaket = ventplanModelService.getFortluftpaket(zentralgerat, volumenstrom, 'Dach')
+        String fortluft = map.anlage.fortluft.grep { it.value == true }?.key[0]
+        fortluft = fortluft[0].toUpperCase() + fortluft[1..-1]
+        List fortluftpaket = ventplanModelService.getFortluftpaket(zentralgerat, volumenstrom, fortluft)
         //println String.format("%17s für %8s (Vs=%d), %s ist %s", 'Fortluftpaket', zentralgerat, volumenstrom, 'Dach', fortluftpaket)
         pakete += fortluftpaket
         // Verteilpakete
@@ -132,18 +149,23 @@ class StucklisteService {
         pakete += zuluftventile
         //println String.format("%17s für %8s (Vs=%d), %s", 'Zuluftventile', zentralgerat, volumenstrom, zuluftventile)
         // Raumvolumenströme, Überströmelemente, m=[Übertrömelement:Anzahl]
-        Map<String, Integer> uberstromventile = ventplanModelService.countUberstromelemente(map)
+        List uberstromventile = ventplanModelService.countUberstromelemente(map).collect() {
+            ventplanModelService.getArtikel(it.key)
+        }.flatten()
         //
         /*
-            println String.format("%17s für %8s (Vs=%d) sind %s", 'Gesamte Pakete', zentralgerat, volumenstrom, pakete)
-            println "${this}"
-            println "HOLE ARTIKEL FÜR JEDES PAKET"
-            println "============================"
+        println String.format("%17s für %8s (Vs=%d) sind %s", 'Gesamte Pakete', zentralgerat, volumenstrom, pakete)
+        println "${this}"
+        println "HOLE ARTIKEL FÜR JEDES PAKET"
+        println "============================"
         */
         pakete.each { p ->
             ventplanModelService.paketeZuStuckliste([p]).each { st ->
                 artikelAufStuckliste(stuckliste, st, p)
             }
+        }
+        uberstromventile.each { st ->
+            artikelAufStuckliste(stuckliste, st)
         }
         return stuckliste
     }

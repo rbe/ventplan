@@ -26,14 +26,14 @@ environments {
     }
     production {
         dataSource {
-            // install dir of izpack.
-            url = 'jdbc:sqlite:../lib/ventplan.db'
+            // install4j
+            url = 'jdbc:sqlite:lib/ventplan.db'
             //
             // Windows
             //
             // griffon prod prepare-windows
             // griffon prod create-windows
-            // url = 'jdbc:sqlite:../lib/ventplan.db'
+            //url = 'jdbc:sqlite:../lib/ventplan.db'
             //
             // OS X
             //

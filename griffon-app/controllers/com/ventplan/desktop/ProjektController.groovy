@@ -13,7 +13,7 @@ package com.ventplan.desktop
 
 import com.bensmann.griffon.GriffonHelper as GH
 
-import com.ventplan.verlegeplan.VerlegeplanClient
+import com.ventplan.verlegeplan.PrinzipskizzeClient
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
 
@@ -43,12 +43,11 @@ class ProjektController {
     def wbwDialog
     def teilstreckenDialog
 
-    def static auslegungPrefs = AuslegungPrefHelper.instance
-    def nutzerdatenDialog
+    static AuslegungPrefHelper auslegungPrefs = AuslegungPrefHelper.instance
+    boolean nutzerdatenGeandert
+    def nutzerdatenDialog // org.jdesktop.swingx.JXDialog
 
     def documentWaitDialog
-    boolean nutzerdatenGeandert
-
     def angebotsverfolgungDialog
 
     def stucklisteDialog
@@ -96,11 +95,15 @@ class ProjektController {
      * Setze Standardwerte (meist in Comboboxen).
      */
     def setDefaultValues() {
-        if (!ventplanModelService) throw new IllegalStateException("VentplanModelService missing!")
+        if (!ventplanModelService) {
+            throw new IllegalStateException('VentplanModelService missing!')
+        }
         // Lookup values from database and put them into our model
+        /*
         // Raumdaten - Türen
         model.meta.raumTurTyp = ['Tür', 'Durchgang']
         model.meta.raumTurbreiten = [610, 735, 860, 985, 1110, 1235, 1485, 1735, 1985]
+        */
         // Raumvolumenströme - Bezeichnungen der Zu-/Abluftventile
         model.meta.raum.raumVsBezeichnungZuluftventile = ventplanModelService.getZuluftventile()
         model.meta.raum.raumVsBezeichnungAbluftventile = ventplanModelService.getAbluftventile()
@@ -145,6 +148,8 @@ class ProjektController {
         model.map.dirty == false
     }
     //</editor-fold>
+
+    int i_;
 
     //<editor-fold desc="Tab title">
     /**
@@ -200,6 +205,8 @@ class ProjektController {
         }
     }
     //</editor-fold>
+
+    int i__;
 
     //<editor-fold desc="Berechnungen nach Projekt laden, WAC-151 Automatische und manuelle Berechnung">
     /**
@@ -620,17 +627,21 @@ class ProjektController {
             // Standard Türspalthöhe ist 10 mm
             raumTurspaltHohe = 10.0d
         }
-        doLater {
-            // Raum im Model hinzufügen
-            model.addRaum(raum, view)
-            raumGeandert(raum.position)
-            // WAC-210: _raumGeandert(raum.position), wird nun über Benutzer/Button gemacht
-            // WAC-170: abw. Raumbezeichnung leeren
-            view.raumBezeichnung.text = ''
-            // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
-            berechneAlles()
+        // TODO Regeln zur Prüfung von Räumen (Drools?)
+        if (raum.raumFlache > 0) {
+            doLater {
+                // Raum im Model hinzufügen
+                model.addRaum(raum, view)
+                raumGeandert(raum.position)
+                // WAC-210: _raumGeandert(raum.position), wird nun über Benutzer/Button gemacht
+                // WAC-170: abw. Raumbezeichnung leeren
+                view.raumBezeichnung.text = ''
+                // WAC-179: Abluftmenge je Ventil / Anzahl AB-Ventile ändert sich nicht, wenn ein Abluftraum gelöscht wird
+                berechneAlles()
+            }
+        } else {
+            app.controllers['Dialog'].showErrorDialog('Die Fläche des Raumes muss größer 0 sein!')
         }
-        //println "RAumhinzufugen - raum.position=${raum.position}"
     }
 
     /**
@@ -927,6 +938,8 @@ class ProjektController {
     }
     //</editor-fold>
 
+    int i___;
+
     //<editor-fold desc="Raum bearbeiten">
     /**
      * Raumdaten - einen Raum bearbeiten.
@@ -1121,6 +1134,8 @@ class ProjektController {
     }
     //</editor-fold>
 
+    int i____;
+
     //<editor-fold desc="Zentralgerät">
     /**
      * Aktualisiere Zentralgerät und Volumenstrom in allen Comboboxen
@@ -1242,6 +1257,8 @@ class ProjektController {
         findInvalidArticles()
     }
     //</editor-fold>
+
+    int i_____;
 
     //<editor-fold desc="Druckverlustberechnung">
     /**
@@ -1446,6 +1463,8 @@ class ProjektController {
     }
     //</editor-fold>
 
+    int i______;
+
     //<editor-fold desc="Druckverlustberechnung, Kanalnetz, Widerstandsbeiwerte">
     /**
      * Druckverlustberechnung - Kanalnetz - Widerstandsbeiwerte.
@@ -1564,6 +1583,8 @@ class ProjektController {
     }
     //</editor-fold>
 
+    int i_______;
+
     //<editor-fold desc="Akustik">
     /**
      * Akustikberechnung - Zentralgerät geändert.
@@ -1639,38 +1660,53 @@ class ProjektController {
     }
     //</editor-fold>
 
+    int i________;
+
     //<editor-fold desc="Nutzerdaten">
     /**
-     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
+     * Nutzerdaten abfragen.
      */
-    def showNutzerdatenDialog(String title = null, String okButtonText = null, Closure closure = null) {
+    def showNutzerdatenDialog(Class dialogClass, String title = null, String okButtonText = null, Closure closure = null) {
         // Anzeigen, dass Daten nicht geändert wurden (da dieser Dialog erneut angezeigt wird)
         nutzerdatenGeandert = false
         // Dialog erzeugen
         String _title = title ?: 'Informationen über den Ersteller'
-        String _okButtonText = okButtonText ?: 'Eingaben speichern'
-        nutzerdatenDialog = GH.createDialog(builder, NutzerdatenView, [title: _title, resizable: false, pack: true])
-        view.auslegungErstellerSpeichern.text = _okButtonText
+        nutzerdatenDialog = GH.createDialog(builder, dialogClass, [title: _title, resizable: false, pack: true])
+        String _okButtonText = okButtonText ?: 'Eingaben speichern und Dokument erstellen'
+        view.nutzerdatenSpeichernButton.text = _okButtonText
         // Gespeicherte Daten holen und in den Dialog setzen
-        view.auslegungErstellerFirma.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA)
-        view.auslegungErstellerName.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME)
-        view.auslegungErstellerAnschrift.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE)
-        view.auslegungErstellerPlz.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_PLZ)
-        view.auslegungErstellerOrt.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_ORT)
-        view.auslegungErstellerTelefon.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_TEL)
-        view.auslegungErstellerFax.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FAX)
-        view.auslegungErstellerEmail.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL)
-        view.auslegungErstellerEmpfanger.selectedItem = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMPFANGER)
-        view.auslegungErstellerDokumenttyp.selectedItem = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_DOKUMENTTYP)
+        view.erstellerFirma.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA)
+        view.erstellerName.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME)
+        view.erstellerAnschrift.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE)
+        view.erstellerPlz.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_PLZ)
+        view.erstellerOrt.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_ORT)
+        view.erstellerTelefon.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_TEL)
+        view.erstellerFax.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FAX)
+        view.erstellerEmail.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL)
+        try {
+            view.dokumentEmpfanger.selectedItem = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMPFANGER)
+        } catch (MissingPropertyException e) {
+            // maybe... ok to ignore.
+        }
+        // AuslegungNutzerdatenView
+        if (dialogClass == AuslegungNutzerdatenView) {
+            view.auslegungAllgemeineDaten.selected = model.map.odisee.auslegung.auslegungAllgemeineDaten = true
+            view.auslegungLufmengen.selected = model.map.odisee.auslegung.auslegungLufmengen = true
+            view.auslegungAkustikberechnung.selected = model.map.odisee.auslegung.auslegungAkustikberechnung = false
+            view.auslegungDruckverlustberechnung.selected = model.map.odisee.auslegung.auslegungDruckverlustberechnung = false
+        }
+        view.erstellerDokumenttyp.selectedItem = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_DOKUMENTTYP)
         // Closure ausführen
-        closure(nutzerdatenDialog)
+        if (closure) {
+            closure(nutzerdatenDialog)
+        }
         // Dialog ausrichten und anzeigen
         nutzerdatenDialog = GH.centerDialog(app.views['MainFrame'], nutzerdatenDialog)
         nutzerdatenDialog.show()
     }
 
     /**
-     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
+     * Nutzerdaten abfragen.
      * Dialog schliessen und nichts tun.
      */
     def nutzerdatenAbbrechen = {
@@ -1680,39 +1716,52 @@ class ProjektController {
     }
 
     /**
-     * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
+     * Nutzerdaten abfragen.
      * Action: Saves Auslegung Ersteller information to preferences.
      */
     def nutzerdatenSpeichern = {
         try {
+            Map map = [:]
             def error = false
+            /*
             // Daten aus dem Dialog holen
-            def firma = view.auslegungErstellerFirma.text
-            def name = view.auslegungErstellerName.text
-            def anschrift = view.auslegungErstellerAnschrift.text
-            def plz = view.auslegungErstellerPlz.text
-            def ort = view.auslegungErstellerOrt.text
-            def tel = view.auslegungErstellerTelefon.text
-            def fax = view.auslegungErstellerFax.text
-            def email = view.auslegungErstellerEmail.text
-            def angebotsnummer = view.auslegungErstellerAngebotsnummer.text
-            def empfanger = view.auslegungErstellerEmpfanger.selectedItem
-            def dokumenttyp = view.auslegungErstellerDokumenttyp.selectedItem
+            String firma = view.erstellerFirma.text
+            String name = view.erstellerName.text
+            String anschrift = view.erstellerAnschrift.text
+            String plz = view.erstellerPlz.text
+            String ort = view.erstellerOrt.text
+            String tel = view.erstellerTelefon.text
+            String fax = view.erstellerFax.text
+            String email = view.erstellerEmail.text
             if (name?.trim() && anschrift?.trim() && plz?.trim() && ort?.trim()) {
-                // Daten speichern
-                def map = [:]
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA, firma)
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_NAME, name)
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE, anschrift)
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_PLZ, plz)
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_ORT, ort)
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_TEL, tel)
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_FAX, fax)
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL, email)
+            */
+            map.put(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA, view.erstellerFirma.text.trim())
+            map.put(AuslegungPrefHelper.PREFS_USER_KEY_NAME, view.erstellerName.text.trim())
+            map.put(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE, view.erstellerAnschrift.text.trim())
+            map.put(AuslegungPrefHelper.PREFS_USER_KEY_PLZ, view.erstellerPlz.text.trim())
+            map.put(AuslegungPrefHelper.PREFS_USER_KEY_ORT, view.erstellerOrt.text.trim())
+            map.put(AuslegungPrefHelper.PREFS_USER_KEY_TEL, view.erstellerTelefon.text.trim())
+            map.put(AuslegungPrefHelper.PREFS_USER_KEY_FAX, view.erstellerFax.text.trim())
+            map.put(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL, view.erstellerEmail.text.trim())
+            try {
+                String angebotsnummer = view.erstellerAngebotsnummer.text
                 map.put(AuslegungPrefHelper.PREFS_USER_KEY_ANGEBOTSNUMMER, angebotsnummer)
+            } catch (MissingPropertyException e) {
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_ANGEBOTSNUMMER, '')
+            }
+            try {
+                String empfanger = view.dokumentEmpfanger.selectedItem
                 map.put(AuslegungPrefHelper.PREFS_USER_KEY_EMPFANGER, empfanger)
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_DOKUMENTTYP, dokumenttyp)
-                auslegungPrefs.save(map)
+            } catch (MissingPropertyException e) {
+                map.put(AuslegungPrefHelper.PREFS_USER_KEY_EMPFANGER, '')
+            }
+            String dokumenttyp = view.erstellerDokumenttyp.selectedItem
+            map.put(AuslegungPrefHelper.PREFS_USER_KEY_DOKUMENTTYP, dokumenttyp)
+            // Daten via Preferences API speichern
+            auslegungPrefs.save(map)
+            // Benutzerdaten wurden geändert, bitte fortfahren...
+            nutzerdatenGeandert = true
+            /*
             } else {
                 def errorMsg = 'Auslegung konnte nicht erstellt werden. Es muss mindestens Name, Anschrift, PLZ, Ort angegeben werden.'
                 app.controllers['Dialog'].showErrorDialog(errorMsg as String)
@@ -1723,6 +1772,7 @@ class ProjektController {
             // Fix: Prüfen, ob ein Fehler aufgetreten ist und Variable entsprechend ändern, sonst wird die
             // Stückliste dennoch generiert.
             nutzerdatenGeandert = !error
+            */
         } catch (e) {
             //println "Error saving ersteller values -> ${e.dump()}"
             e.printStackTrace()
@@ -1732,33 +1782,34 @@ class ProjektController {
     }
     //</editor-fold>
 
+    int i_________;
+
     //<editor-fold desc="Dokumente">
     /**
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      */
     def auslegungErstellen() {
-        String type = 'Auslegung'
         // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
-        showNutzerdatenDialog(
-                "${type} erstellen - Daten eingeben",
-                "Eingaben speichern und ${type} erstellen",
-                { dialog ->
-                    view.auslegungErstellerAngebotsnummer.enabled = false
-                    view.auslegungErstellerEmpfanger.enabled = false
-                }
-        )
+        showNutzerdatenDialog(AuslegungNutzerdatenView, 'Auslegung erstellen', 'Eingaben speichern und Auslegung erstellen')
         //
         if (nutzerdatenGeandert) {
             // Projekt speichern
             saveBeforeDocument()
             // Dokument erstellen
             try {
-                File wpxFile = new File(model.vpxFilename)
-                String xmlDoc = odiseeService.performAuslegung(wpxFile, model.map, /*DEBUG*/ false)
-                makeDocumentWithOdisee(type, wpxFile, xmlDoc)
+                File vpxFile = new File(model.vpxFilename)
+                model.map.odisee.auslegung = [
+                        auslegungAllgemeineDaten: view.auslegungAllgemeineDaten.selected,
+                        auslegungLufmengen: view.auslegungLufmengen.selected,
+                        auslegungAkustikberechnung: view.auslegungAkustikberechnung.selected,
+                        auslegungDruckverlustberechnung: view.auslegungDruckverlustberechnung.selected
+                ]
+                String xmlDoc = odiseeService.performAuslegung(vpxFile, model.map, /*DEBUG*/ false)
+                makeDocumentWithOdisee('Auslegung', vpxFile, xmlDoc)
             } catch (e) {
-                String errorMsg = "Die ${type} konnte leider nicht erstellt werden.\n${e}"
+                String errorMsg = "Die Auslegung konnte leider nicht erstellt werden.\n${e}"
                 app.controllers['Dialog'].showErrorDialog(errorMsg)
+                e.printStackTrace()
             }
         }
     }
@@ -1767,18 +1818,10 @@ class ProjektController {
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      */
     def angebotErstellen() {
-        String type = 'Angebot'
-        processStucklisteDialog(type)
+        processStucklisteDialog('Angebot')
         if (!stucklisteAbgebrochen) {
             // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
-            showNutzerdatenDialog(
-                    "${type} erstellen - Daten eingeben",
-                    "Eingaben speichern und ${type} erstellen",
-                    { dialog ->
-                        view.auslegungErstellerAngebotsnummer.enabled = true
-                        view.auslegungErstellerEmpfanger.enabled = true
-                    }
-            )
+            showNutzerdatenDialog(AngebotNutzerdatenView, 'Angebot erstellen', 'Eingaben speichern und Angebot erstellen')
             if (nutzerdatenGeandert) {
                 // Projekt speichern
                 saveBeforeDocument()
@@ -1786,22 +1829,29 @@ class ProjektController {
                 def stucklisteModel = model.tableModels.stuckliste
                 Map newMap = new LinkedHashMap()
                 stucklisteModel.each() { a ->
+                    /*
+                    // WAC-223 Kaufmännisch und technische Artikel
+                    if (artikel.ARTIKELNUMMER && !ventplanModelService.isArticleValidToday(artikel.ARTIKELNUMMER) && !artikel.ARTIKELBEZEICHNUNG.startsWith('***')) {
+                        artikel.ARTIKELBEZEICHNUNG = '*** ' + artikel.ARTIKELBEZEICHNUNG
+                    }
+                    */
                     newMap.put(
                             a.artikelnummer,
                             [
                                     REIHENFOLGE: a.reihenfolge, LUFTART: a.luftart, ANZAHL: a.anzahl,
-                                    MENGENEINHEIT: a.mengeneinheit, LIEFERMENGE: a.liefermenge, ARTIKEL: a.artikelnummer,
+                                    MENGENEINHEIT: a.mengeneinheit, LIEFERMENGE: a.liefermenge,
+                                    ARTIKEL: a.artikelnummer, ARTIKELNUMMER: a.artikelnummer,
                                     ARTIKELBEZEICHNUNG: a.text, PREIS: a.einzelpreis
                             ]
                     )
                 }
                 // Auslegung/Dokument erstellen
                 try {
-                    File wpxFile = new File(model.vpxFilename)
-                    String xmlDoc = odiseeService.performAngebot(wpxFile, model.map, /*DEBUG*/ false, newMap)
-                    makeDocumentWithOdisee(type, wpxFile, xmlDoc)
+                    File vpxFile = new File(model.vpxFilename)
+                    String xmlDoc = odiseeService.performAngebot(vpxFile, model.map, /*DEBUG*/ false, newMap)
+                    makeDocumentWithOdisee('Angebot', vpxFile, xmlDoc)
                 } catch (e) {
-                    String errorMsg = "Das ${type} konnte leider nicht erstellt werden.\n${e}"
+                    String errorMsg = "Das Angebot konnte leider nicht erstellt werden.\n${e}"
                     app.controllers['Dialog'].showErrorDialog(errorMsg)
                 }
             }
@@ -1812,18 +1862,10 @@ class ProjektController {
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      */
     def stuecklisteErstellen() {
-        String type = 'Stückliste'
-        processStucklisteDialog(type)
+        processStucklisteDialog('Stückliste')
         if (!stucklisteAbgebrochen) {
             // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
-            showNutzerdatenDialog(
-                    "${type} erstellen - Daten eingeben",
-                    "Eingaben speichern und ${type} erstellen",
-                    { dialog ->
-                        view.auslegungErstellerAngebotsnummer.enabled = false
-                        view.auslegungErstellerEmpfanger.enabled = false
-                    }
-            )
+            showNutzerdatenDialog(StucklisteNutzerdatenView, 'Stückliste erstellen - Daten eingeben', 'Eingaben speichern und Stückliste erstellen')
             if (nutzerdatenGeandert) {
                 // Projekt speichern
                 saveBeforeDocument()
@@ -1832,11 +1874,18 @@ class ProjektController {
                 def stucklisteModel = model.tableModels.stuckliste
                 Map newMap = new LinkedHashMap()
                 stucklisteModel.each() { a ->
+                    /*
+                    // WAC-223 Kaufmännisch und technische Artikel
+                    if (artikel.ARTIKELNUMMER && !ventplanModelService.isArticleValidToday(artikel.ARTIKELNUMMER) && !artikel.ARTIKELBEZEICHNUNG.startsWith('***')) {
+                        artikel.ARTIKELBEZEICHNUNG = '*** ' + artikel.ARTIKELBEZEICHNUNG
+                    }
+                    */
                     newMap.put(
                             a.artikelnummer,
                             [
                                     REIHENFOLGE: position, LUFTART: a.luftart, ANZAHL: a.anzahl,
-                                    MENGENEINHEIT: a.mengeneinheit, LIEFERMENGE: a.liefermenge, ARTIKEL: a.artikelnummer,
+                                    MENGENEINHEIT: a.mengeneinheit, LIEFERMENGE: a.liefermenge,
+                                    ARTIKEL: a.artikelnummer, ARTIKELNUMMER: a.artikelnummer,
                                     ARTIKELBEZEICHNUNG: a.text, PREIS: a.einzelpreis
                             ]
                     )
@@ -1844,11 +1893,11 @@ class ProjektController {
                 }
                 // Auslegung/Dokument erstellen
                 try {
-                    File wpxFile = new File(model.vpxFilename)
-                    String xmlDoc = odiseeService.performStueckliste(wpxFile, model.map, /*DEBUG*/ false, newMap)
-                    makeDocumentWithOdisee(type, wpxFile, xmlDoc)
+                    File vpxFile = new File(model.vpxFilename)
+                    String xmlDoc = odiseeService.performStueckliste(vpxFile, model.map, /*DEBUG*/ false, newMap)
+                    makeDocumentWithOdisee('Stückliste', vpxFile, xmlDoc)
                 } catch (e) {
-                    String errorMsg = "Die ${type} konnte leider nicht erstellt werden.\n${e}"
+                    String errorMsg = "Die Stückliste konnte leider nicht erstellt werden.\n${e}"
                     app.controllers['Dialog'].showErrorDialog(errorMsg)
                 }
             }
@@ -1935,7 +1984,7 @@ class ProjektController {
         String _title = title ?: 'Stückliste anpassen'
         String _okButtonText = okButtonText ?: 'Eingaben speichern'
         stucklisteDialog = GH.createDialog(builder, StucklisteView, [title: _title, size: [800, 600], resizable: true, pack: false])
-        //view.auslegungErstellerSpeichern.text = _okButtonText
+        //view.nutzerdatenSpeichernButton.text = _okButtonText
         // Closure ausführen
         closure(stucklisteDialog)
         // Dialog ausrichten und anzeigen
@@ -1944,16 +1993,25 @@ class ProjektController {
     }
     //</editor-fold>
 
+    int i__________;
+
     //<editor-fold desc="WAC-108 Odisee">
-    private void makeDocumentWithOdisee(String type, File wpxFile, String xmlDoc) {
+    private void makeDocumentWithOdisee(String type, File vpxFile, String xmlDoc) {
         doLater {
             doOutside {
-                File odiseeDocument = postToOdisee(wpxFile, type, xmlDoc)
-                // Open document
-                if (odiseeDocument?.exists()) {
-                    openDocument(type, odiseeDocument)
-                } else {
-                    documentWaitDialog?.dispose()
+                try {
+                    File odiseeDocument = postToOdisee(vpxFile, type, xmlDoc)
+                    // Open document
+                    if (odiseeDocument?.exists()) {
+                        openDocument(type, odiseeDocument)
+                    } else {
+                        documentWaitDialog?.dispose()
+                        String errorMsg = "${type} erstellen\nDas Dokument ${odiseeDocument ?: ''} konnte leider nicht geöffnet werden."
+                        app.controllers['Dialog'].showErrorDialog(errorMsg)
+                    }
+                } catch (ConnectException e) {
+                    app.controllers['Dialog'].showErrorDialog('Der Server für die Erstellung der Dokumente kann nicht erreicht werden.\nBitte prüfen Sie die Internet-Verbindung.')
+                } catch (Exception e) {
                     String errorMsg = "${type} erstellen\nDas Dokument ${odiseeDocument ?: ''} konnte leider nicht geöffnet werden."
                     app.controllers['Dialog'].showErrorDialog(errorMsg)
                 }
@@ -1963,7 +2021,7 @@ class ProjektController {
                     builder,
                     WaitingView,
                     [
-                            title: "Die ${type} wird erstellt",
+                            title: "Dokument '${type}' wird erstellt",
                             resizable: false,
                             pack: true
                     ]
@@ -1983,29 +2041,26 @@ class ProjektController {
      */
     File postToOdisee(File wpxFile, String fileSuffix, String xmlDoc) {
         File responseFile = null
-        def xml = new XmlSlurper().parseText(xmlDoc)
         String restUrl = VentplanResource.getOdiseeServiceRestUrl()
         String restPath = VentplanResource.getOdiseeServiceRestPath()
+        def xml = new XmlSlurper().parseText(xmlDoc)
         String outputFormat = xml.request.template.'@outputFormat'
-        try {
-            def h = new HTTPBuilder(restUrl)
-            h.auth.basic 'ventplan', 're:Xai3u'
-            def byteArrayInputStream = h.post(
-                    path: restPath,
-                    query: [outputFormat: outputFormat],
-                    body: xmlDoc,
-                    requestContentType: groovyx.net.http.ContentType.XML,
-                    responseContentType: groovyx.net.http.ContentType.BINARY
-            )
-            responseFile = new File(vpxModelService.filenameWoExtension(model.vpxFilename) + "_${fileSuffix}.${outputFormat}")
-            responseFile << byteArrayInputStream
-        } catch (e) {
-            //println "${this}.postToOdisee: post withRest exception -> ${e.dump()}"
-            e.printStackTrace()
-        }
+        HTTPBuilder h = new HTTPBuilder(restUrl)
+        h.auth.basic 'ventplan', 're:Xai3u'
+        def byteArrayInputStream = h.post(
+                path: restPath,
+                query: [outputFormat: outputFormat],
+                body: xmlDoc,
+                requestContentType: groovyx.net.http.ContentType.XML,
+                responseContentType: groovyx.net.http.ContentType.BINARY
+        )
+        responseFile = new File(vpxModelService.filenameWoExtension(model.vpxFilename) + "_${fileSuffix}.${outputFormat}")
+        responseFile << byteArrayInputStream
         return responseFile
     }
     //</editor-fold>
+
+    int i___________;
 
     //<editor-fold desc="WAC-177 Angebotsverfolgung">
     /**
@@ -2084,15 +2139,15 @@ class ProjektController {
     }
     //</editor-fold>
 
-    //<editor-fold desc="WAC-202 Verlegeplan">
-    def generiereVerlegeplan() {
+    //<editor-fold desc="WAC-202 Prinzipskizze">
+    def generierePrinzipskizze() {
         // Projekt speichern
         saveBeforeDocument()
         try {
-            makeVerlegeplan()
+            makePrinzipskizze()
         } catch (Exception e) {
             // Show dialog
-            String errorMsg = "Leider konnte der Verlegeplan nicht erstellt werden\n${e}"
+            String errorMsg = "Leider konnte der Prinzipskizze nicht erstellt werden\n${e}"
             app.controllers['Dialog'].showErrorDialog(errorMsg)
             e.printStackTrace()
         } finally {
@@ -2100,12 +2155,14 @@ class ProjektController {
         }
     }
 
-    private void makeVerlegeplan() {
+    private void makePrinzipskizze() {
         doLater {
             doOutside {
                 try {
-                    String aussenluft = model.map.anlage.aussenluft.lufteinlass // '200LE04/8'
-                    String fortluft = model.map.anlage.fortluft.luftgitter // '200LG002/4'
+                    // TODO Aus Stückliste ermitteln
+                    String aussenluft = 'z.B. 200LE04/8' //model.map.anlage.aussenluft.lufteinlass
+                    // TODO Aus Stückliste ermitteln
+                    String fortluft = 'z.B. 200LG002/4' //model.map.anlage.fortluft.luftgitter
                     String zentralgerat = model.map.anlage.zentralgerat
                     def findRaum = { String luftart, String geschoss ->
                         StringBuilder builder = new StringBuilder()
@@ -2113,11 +2170,18 @@ class ProjektController {
                             r.raumGeschoss == geschoss
                         }
                         List raume2 = raume.collect { raum ->
-                            if (builder.length() > 0) builder.delete(0, builder.length())
+                            if (builder.length() > 0)
+                                builder.delete(0, builder.length())
                             if (raum.raumLuftart.contains(luftart)) {
-                                if (raum.raumAnzahlZuluftventile > 0) builder << raum.raumAnzahlZuluftventile.toString2(0) << ' x ' << raum.raumBezeichnungZuluftventile
-                                if (builder.length() > 0) builder << ', '
-                                if (raum.raumAnzahlAbluftventile > 0) builder << raum.raumAnzahlAbluftventile.toString2(0) << ' x ' << raum.raumBezeichnungAbluftventile
+                                if (raum.raumAnzahlZuluftventile > 0) {
+                                    builder << raum.raumAnzahlZuluftventile.toString2(0) << ' x ' << raum.raumBezeichnungZuluftventile
+                                }
+                                if (builder.length() > 0) {
+                                    builder << ', '
+                                }
+                                if (raum.raumAnzahlAbluftventile > 0) {
+                                    builder << raum.raumAnzahlAbluftventile.toString2(0) << ' x ' << raum.raumBezeichnungAbluftventile
+                                }
                                 raum.raumGeschoss + ', ' + raum.raumBezeichnung + ': ' + builder.toString()
                             } else {
                                 null
@@ -2125,37 +2189,47 @@ class ProjektController {
                         }
                         raume2?.size() > 0 ? raume2.findAll { null != it } : null
                     }
-                    List<String> abluftEG = findRaum('AB', 'EG')
-                    List<String> abluftDG = findRaum('AB', 'DG')
-                    List<String> abluftOG = findRaum('AB', 'OG')
-                    List<String> zuluftEG = findRaum('ZU', 'EG')
-                    List<String> zuluftDG = findRaum('ZU', 'DG')
-                    List<String> zuluftOG = findRaum('ZU', 'OG')
-                    File verlegeplanGrafik = null
+                    // Abluft
+                    List<String> abluft0 = findRaum('AB', 'KG')
+                    List<String> abluft1 = findRaum('AB', 'EG')
+                    List<String> abluft2 = findRaum('AB', 'DG')
+                    List<String> abluft3 = findRaum('AB', 'OG')
+                    List<String> abluft4 = findRaum('AB', 'SB')
+                    def (ab1, ab2, ab3) = [abluft0, abluft1, abluft2, abluft3, abluft4].grep { it }
+                    // Zuluft
+                    List<String> zuluft0 = findRaum('ZU', 'KG')
+                    List<String> zuluft1 = findRaum('ZU', 'EG')
+                    List<String> zuluft2 = findRaum('ZU', 'DG')
+                    List<String> zuluft3 = findRaum('ZU', 'OG')
+                    List<String> zuluft4 = findRaum('ZU', 'SB')
+                    def (zu1, zu2, zu3) = [zuluft0, zuluft1, zuluft2, zuluft3, zuluft4].grep { it }
+                    File prinzipskizzeGrafik = null
                     // SOAP service URL
-                    URL verlegplanServiceURL = new URL(VentplanResource.verlegeplanSoapUrl)
-                    VerlegeplanClient verlegeplanClient = new VerlegeplanClient()
-                    byte[] b = verlegeplanClient.create(verlegplanServiceURL, aussenluft, fortluft, zentralgerat, abluftEG, abluftDG, abluftOG, zuluftEG, zuluftDG, zuluftOG)
+                    URL prinzipskizzeServiceURL = new URL(VentplanResource.prinzipskizzeSoapUrl)
+                    PrinzipskizzeClient prinzipskizzeClient = new PrinzipskizzeClient()
+                    byte[] b = prinzipskizzeClient.create(prinzipskizzeServiceURL, aussenluft, fortluft, zentralgerat, ab1, ab2, ab3, zu1, zu2, zu3)
                     if (b != null && b.size() > 0) {
-                        verlegeplanGrafik = new File(vpxModelService.filenameWoExtension(model.vpxFilename) + "_Verlegeplan.png")
-                        FileOutputStream fos = new FileOutputStream(verlegeplanGrafik);
-                        fos.write(b);
-                        fos.close();
+                        prinzipskizzeGrafik = new File(vpxModelService.filenameWoExtension(model.vpxFilename) + "_Prinzipskizze.png")
+                        FileOutputStream fos = new FileOutputStream(prinzipskizzeGrafik)
+                        fos.write(b)
+                        fos.close()
                     }
                     // Open document
-                    if (verlegeplanGrafik.exists()) {
-                        openDocument('Verlegeplan', verlegeplanGrafik)
+                    if (prinzipskizzeGrafik?.exists()) {
+                        openDocument('Prinzipskizze', prinzipskizzeGrafik)
                     } else {
                         documentWaitDialog?.dispose()
                         // Show dialog
-                        String errorMsg = "Leider konnte der Verlegeplan nicht erstellt werdenn\nEswurden keine Daten vom Web Service empfangen...\n${e.message}"
+                        String errorMsg = "Leider konnte der Prinzipskizze nicht erstellt werden\nEs wurden keine Daten vom Web Service empfangen...\n${e.message}"
                         app.controllers['Dialog'].showErrorDialog(errorMsg)
                     }
+                } catch (ConnectException e) {
+                    app.controllers['Dialog'].showErrorDialog('Der Server für die Erstellung der Dokumente kann nicht erreicht werden.\nBitte prüfen Sie die Internet-Verbindung.')
                 } catch (Exception e) {
                     documentWaitDialog?.dispose()
                     e.printStackTrace()
                     // Show dialog
-                    String errorMsg = "Leider konnte der Verlegeplan nicht erstellt werdenn\nEswurden keine Daten vom Web Service empfangen..."
+                    String errorMsg = "Leider konnte der Prinzipskizze nicht erstellt werden\nEs wurden keine Daten vom Web Service empfangen..."
                     app.controllers['Dialog'].showErrorDialog(errorMsg)
                 }
             }
@@ -2164,7 +2238,7 @@ class ProjektController {
                     builder,
                     WaitingView,
                     [
-                            title: "Verlegeplan wird erstellt",
+                            title: "Prinzipskizze wird erstellt",
                             resizable: false,
                             pack: true
                     ]
@@ -2182,7 +2256,17 @@ class ProjektController {
      */
     def stucklisteSucheStarten = { evt ->
         def text = view.stucklisteSucheArtikelnummer.text
-        def stucklisteResult = stucklisteService.findArtikel(text)
+        int _entries = view.stucklisteErgebnisTabelle.rowCount - 1 // model.tableModels.stucklisteSuche.size() - 1
+        if (_entries > 0) {
+            0.upto(_entries) {
+                try {
+                    model.tableModels.stucklisteSuche.remove(0)
+                } catch (e) {
+                    //println "Cannot remove index ${it}: ${e}"
+                }
+            }
+        }
+        def stucklisteResult = ventplanModelService.findArtikel(text)
         stucklisteResult.each { row ->
             def artikel = [:]
             row.each { k, v ->
@@ -2207,7 +2291,6 @@ class ProjektController {
     def stucklisteSucheArtikelHinzufugen = { evt = null ->
         def rowIndex = view.stucklisteErgebnisTabelle.getSelectedRow()
         def artikel = model.tableModels.stucklisteSuche.get(rowIndex)
-
         // Prüfen, ob Artikel bereits im Model ist.
         // Falls vorhanden, Anzahl um 1 erhöhen und die Tabelle aktualisieren
         boolean anzahlGeaendert = false
@@ -2348,6 +2431,8 @@ class ProjektController {
     }
     //</editor-fold>
 
+    int i____________;
+
     //<editor-fold desc="Helper">
     /**
      * Zeige Dialog "lüftungstechnische Maßnahmen erforderlich."
@@ -2369,12 +2454,12 @@ class ProjektController {
             Desktop.desktop.open(document)
         } finally {
             documentWaitDialog?.dispose()
-            //if (GriffonApplicationUtils.isWindows) {
-            doLater {
-                def msg = "${type} erstellen\n${document ?: 'Das Dokument'} wurde erzeugt." as String
-                app.controllers['Dialog'].showInformDialog(msg)
+            if (GriffonApplicationUtils.isWindows) {
+                doLater {
+                    def msg = "${type} erstellen\n${document ?: 'Das Dokument'} wurde erzeugt." as String
+                    app.controllers['Dialog'].showInformDialog(msg)
+                }
             }
-            //}
         }
     }
 
@@ -2389,7 +2474,7 @@ class ProjektController {
             }
             model.map.raum.raume.each { raum ->
                 Map veralteteArtikel = [:]
-                ['raumBezeichnungAbluftventile', 'raumBezeichnungZuluftventile'].each { t ->
+                ['raumBezeichnungAbluftventile', 'raumBezeichnungZuluftventile', 'raumUberstromElement'].each { t ->
                     if (raum[t]) {
                         veralteteArtikel[raum[t]] = ventplanModelService.isArticleValidToday(raum[t])
                     }

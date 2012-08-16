@@ -26,7 +26,7 @@ bind(source: model.map.anlage.luftkanalverlegung, sourceProperty: 'spitzboden', 
 bind(source: model.map.anlage.aussenluft, sourceProperty: 'dach',        target: anlageAussenluftDach,        targetProperty: 'selected',     mutual: true)
 bind(source: model.map.anlage.aussenluft, sourceProperty: 'wand',        target: anlageAussenluftWand,        targetProperty: 'selected',     mutual: true)
 bind(source: model.map.anlage.aussenluft, sourceProperty: 'erdwarme',    target: anlageAussenluftErdwarme,    targetProperty: 'selected',     mutual: true)
-bind(source: model.map.anlage.aussenluft, sourceProperty: 'lufteinlass', target: anlageAussenluftLufteinlass, targetProperty: 'selectedItem', mutual: true)
+//bind(source: model.map.anlage.aussenluft, sourceProperty: 'lufteinlass', target: anlageAussenluftLufteinlass, targetProperty: 'selectedItem', mutual: true)
 // Anlagendaten - Zuluft
 bind(source: model.map.anlage.zuluft, sourceProperty: 'tellerventile' , target: anlageZuluftTellerventile,  targetProperty: 'selected', mutual: true)
 bind(source: model.map.anlage.zuluft, sourceProperty: 'schlitzauslass', target: anlageZuluftSchlitzauslass, targetProperty: 'selected', mutual: true)
@@ -38,7 +38,7 @@ bind(source: model.map.anlage.abluft, sourceProperty: 'tellerventile' , target: 
 bind(source: model.map.anlage.fortluft, sourceProperty: 'dach',         target: anlageFortluftDach,         targetProperty: 'selected',     mutual: true)
 bind(source: model.map.anlage.fortluft, sourceProperty: 'wand',         target: anlageFortluftWand,         targetProperty: 'selected',     mutual: true)
 bind(source: model.map.anlage.fortluft, sourceProperty: 'bogen135',     target: anlageFortluftBogen135,     targetProperty: 'selected',     mutual: true)
-bind(source: model.map.anlage.fortluft, sourceProperty: 'luftgitter',   target: anlageFortluftLuftgitter,   targetProperty: 'selectedItem', mutual: true)
+//bind(source: model.map.anlage.fortluft, sourceProperty: 'luftgitter',   target: anlageFortluftLuftgitter,   targetProperty: 'selectedItem', mutual: true)
 // Anlagendaten - Energie-Kennzeichen
 bind(source: model.map.anlage.energie, sourceProperty: 'zuAbluftWarme', target: anlageEnergieZuAbluftWarme, targetProperty: 'selected', mutual: true)
 bind(source: model.map.anlage.energie, sourceProperty: 'bemessung',     target: anlageEnergieBemessung,     targetProperty: 'selected', mutual: true)

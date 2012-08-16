@@ -35,9 +35,10 @@ class VentplanModelService {
             }
             String gueltigvon = r[0]?.gueltigvon
             String gueltigbis = r[0]?.gueltigbis
-            if (gueltigvon) {
-                //b = Today.isTodayInDateRangeOrAtLeastAfterBegin(gueltigvon, gueltigbis)
+            if (gueltigvon && gueltigbis) {
                 b = Today.isTodayInDateRange(gueltigvon, gueltigbis)
+            } else if (gueltigvon) {
+                b = Today.isTodayInDateRangeOrAtLeastAfterBegin(gueltigvon, gueltigbis)
             }
         }
         b
@@ -154,8 +155,10 @@ class VentplanModelService {
             r.raumUberstromElement
         }.inject [:], { Map o, Map n ->
             String k = n.raumUberstromElement
-            int v = n.raumAnzahlUberstromVentile
-            o.containsKey(k) ? (o[k] += v) : (o[k] = v)
+            if (k) {
+                int v = n.raumAnzahlUberstromVentile
+                o.containsKey(k) ? (o[k] += v) : (o[k] = v)
+            }
             return o
         }
     }
@@ -177,8 +180,14 @@ class VentplanModelService {
         def r = withSql { dataSourceName, sql ->
             sql.firstRow(statement.toString(), [artikelnummer: artikelnummer])
         }
-        r.each { k, v -> r[k] = getVal(v) }
-        return r
+        // Convert GroovySQLRowResult into Map
+        Map artikel = [:]
+        r.each { k, v -> artikel[k] = getVal(v) }
+        // Ensure artikel/artiklenummer
+        if (!artikel.artikel && artikel.artikelnummer) {
+            artikel.artikel = artikel.artikelnummer
+        }
+        artikel
     }
 
     /**
@@ -212,9 +221,16 @@ class VentplanModelService {
      * @return String Die Artikelnummer
      */
     String getArtikelnummer(Map artikel) {
+        /*
         try { // STUECKLISTE
             artikel.ARTIKEL
-        } catch (groovy.lang.MissingPropertyException e) { // ARTIKEL
+        } catch (MissingPropertyException e) { // ARTIKEL
+            artikel.ARTIKELNUMMER
+        }
+        */
+        if (artikel.containsKey("ARTIKEL")) {
+            artikel.ARTIKEL
+        } else if (artikel.containsKey("ARTIKELNUMMER")) {
             artikel.ARTIKELNUMMER
         }
     }
@@ -380,19 +396,22 @@ class VentplanModelService {
         //
         getVerteilebenen(map).each { e ->
             if (!verteilpakete.containsKey(e)) {
-                verteilpakete[e] = ['AB': ['anzahl': 0, 'paket': 0], 'ZU': ['anzahl': 0, 'paket': 0]]
+                verteilpakete[e] = [
+                        'AB': ['anzahl': 0, 'paket': 0],
+                        'ZU': ['anzahl': 0, 'paket': 0]
+                ]
             }
             def raumeAufEbene = map.raum.raume.grep { r -> r.raumVerteilebene.equals(e) }
             // Errechne Anzahl aller Abluftventile und hole Paket
             verteilpakete[e]['AB']['anzahl'] = countVentileProVerteilebene(raumeAufEbene, 'Ab').inject 0, { int o, n -> o + (int) n.value }
             verteilpakete[e]['AB']['paket'] = withSql { dataSourceName, Sql sql ->
                 sql.firstRow(statement.toString(), [bedingung: verteilpakete[e]['AB']['anzahl'], kategorie: 75])
-            }.ID
+            }?.ID
             // Errechne Anzahl aller Zuluftventile und hole Paket
             verteilpakete[e]['ZU']['anzahl'] = countVentileProVerteilebene(raumeAufEbene, 'Zu').inject 0, { int o, n -> o + (int) n.value }
             verteilpakete[e]['ZU']['paket'] = withSql { dataSourceName, Sql sql ->
                 sql.firstRow(statement.toString(), [bedingung: verteilpakete[e]['ZU']['anzahl'], kategorie: 75])
-            }.ID
+            }?.ID // Kein Ergebnis wenn keine Verteilpakete mit BEDINGUNG == Anzahl Ventile in der Tabelle PAKETE vorhanden sind
         }
         //
         return verteilpakete

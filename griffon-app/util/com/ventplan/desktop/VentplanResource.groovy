@@ -82,8 +82,8 @@ class VentplanResource {
         return getVentplanProperties().get('ventplan.update.check.url') as String
     }
 
-    static String getVerlegeplanSoapUrl() {
-        return getVentplanProperties().get('service.verlegeplan.soap.url') as String
+    static String getPrinzipskizzeSoapUrl() {
+        return getVentplanProperties().get('service.prinzipskizze.soap.url') as String
     }
 
     static String getOdiseeServiceRestUrl() {

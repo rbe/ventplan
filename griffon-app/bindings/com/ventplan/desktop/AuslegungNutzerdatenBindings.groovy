@@ -7,8 +7,9 @@
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
  *
- * rbe, 7/16/12 10:35 AM
+ * rbe, 29.07.12 16:14
  */
 package com.ventplan.desktop
 
-nutzerdatenSpeichernButton.actionPerformed = controller.auslegungErstellen
+nutzerdatenAbbrechenButton.actionPerformed = controller.nutzerdatenAbbrechen
+nutzerdatenSpeichernButton.actionPerformed = controller.nutzerdatenSpeichern

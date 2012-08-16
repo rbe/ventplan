@@ -16,12 +16,12 @@ import com.ventplan.desktop.VentplanConstants as WX
 
 import com.bensmann.griffon.CachedDTD
 import groovy.xml.DOMBuilder
+import groovy.xml.XmlUtil
 import groovy.xml.dom.DOMCategory
 
 import javax.xml.XMLConstants
 import javax.xml.transform.stream.StreamSource
 import javax.xml.validation.SchemaFactory
-import groovy.xml.XmlUtil
 import javax.xml.validation.Validator
 
 /**
@@ -47,12 +47,11 @@ class VpxModelService {
         // Create DOMBuilder and set it in XmlHelper too
         X.domBuilder = domBuilder = DOMBuilder.newInstance()
     }
-    
+
     String filenameWoExtension(String filename) {
-        filename -= '.wpx' - '.vpx'
-        filename
+        filename - '.wpx' - '.vpx'
     }
-    
+
     String filenameWoExtension(File file) {
         filenameWoExtension(file.name)
     }
@@ -262,8 +261,8 @@ class VpxModelService {
                             aussenluft: [
                                     dach: X.vb { gebaude.'aussenluft'.find { it.text() == 'DAC' } == 'DAC' },
                                     wand: X.vb { gebaude.'aussenluft'.find { it.text() == 'WAN' } == 'WAN' },
-                                    erdwarme: X.vb { gebaude.'aussenluft'.find { it.text() == 'ERD' } == 'ERD' },
-                                    lufteinlass: X.vs { gebaude.'aussenluftLufteinlass'.text() }
+                                    erdwarme: X.vb { gebaude.'aussenluft'.find { it.text() == 'ERD' } == 'ERD' }
+                                    //lufteinlass: X.vs { gebaude.'aussenluftLufteinlass'.text() }
                             ],
                             zuluft: [
                                     tellerventile: X.vb { gebaude.'zuluftdurchlasse'.find { it.text() == 'TEL' } == 'TEL' },
@@ -277,8 +276,8 @@ class VpxModelService {
                             fortluft: [
                                     dach: X.vb { gebaude.'fortluft'.find { it.text() == 'DAC' } == 'DAC' },
                                     wand: X.vb { gebaude.'fortluft'.find { it.text() == 'WAN' } == 'WAN' },
-                                    bogen135: X.vb { gebaude.'fortluft'.find { it.text() == 'LIC' } == 'LIC' || gebaude.'fortluft'.find { it.text() == 'BOG135' } == 'BOG135' },
-                                    luftgitter: X.vs { gebaude.'fortluftLuftgitter'.text() }
+                                    bogen135: X.vb { gebaude.'fortluft'.find { it.text() == 'LIC' } == 'LIC' || gebaude.'fortluft'.find { it.text() == 'BOG135' } == 'BOG135' }
+                                    //luftgitter: X.vs { gebaude.'fortluftLuftgitter'.text() }
                             ],
                             energie: [
                                     zuAbluftWarme: X.vb { zentralgerat.'energie'.'zuAbluftWarme'.text() == 'true' },
@@ -349,6 +348,7 @@ class VpxModelService {
             makeKontakt(rolle: 'Ansprechpartner', person: [name: map.ansprechpartner])
         }
     }
+
     def makeRaum = { map ->
         domBuilder.raum() {
             X.tc { position(map.position) }
@@ -408,9 +408,9 @@ class VpxModelService {
             X.tc { personenVolumen(g.geplanteBelegung.aussenluftVsProPerson) }
             // mindestaussenluftrate
             X.tc { aussenluft(WX[a.aussenluft.grep { it.value == true }?.key[0]]) }
-            X.tc { aussenluftLufteinlass(a.aussenluft.lufteinlass ?: '')}
+            //X.tc { aussenluftLufteinlass(a.aussenluft.lufteinlass ?: '')}
             X.tc { fortluft(WX[a.fortluft.grep { it.value == true }?.key[0]]) }
-            X.tc { fortluftLuftgitter(a.fortluft.luftgitter ?: '')}
+            //X.tc { fortluftLuftgitter(a.fortluft.luftgitter ?: '')}
             X.tc {
                 a.luftkanalverlegung.grep { it.value }.collect { it.key }.each {
                     luftkanalverlegung(WX[it])

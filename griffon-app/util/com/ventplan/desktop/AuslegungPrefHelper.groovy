@@ -73,8 +73,7 @@ class AuslegungPrefHelper {
             }
             prefs.flush();
         } catch (Exception e) {
-            // do nothing
-            println "${this}.save: EXCEPTION=${e}"
+            e.printStackTrace()
         }
     }
 

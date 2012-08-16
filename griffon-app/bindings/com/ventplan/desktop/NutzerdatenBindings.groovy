@@ -11,5 +11,5 @@
  */
 package com.ventplan.desktop
 
-auslegungErstellerAbbruch.actionPerformed = controller.nutzerdatenAbbrechen
-auslegungErstellerSpeichern.actionPerformed = controller.nutzerdatenSpeichern
+nutzerdatenAbbrechenButton.actionPerformed = controller.nutzerdatenAbbrechen
+nutzerdatenSpeichernButton.actionPerformed = controller.nutzerdatenSpeichern

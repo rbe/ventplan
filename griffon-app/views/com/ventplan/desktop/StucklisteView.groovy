@@ -25,7 +25,6 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
         //label(id: 'stucklisteSucheArtikeltext')
         //textField(id: 'stucklisteSucheArtikelanzahl')
         button(id: 'stucklisteSucheStarten', text: 'Suchen')
-
     }
     panel(id: 'stucklisteErgebnisPanel', layout: new MigLayout('fillx, wrap', '[fill]', ''), constraints: 'grow') {
         scrollPane() {

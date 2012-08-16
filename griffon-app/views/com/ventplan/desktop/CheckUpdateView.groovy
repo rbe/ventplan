@@ -20,14 +20,14 @@ def mr = { e ->
 
 // About view
 panel(layout: new MigLayout("wrap", "[center]", "[fill]"), constraints: "grow") {
-    label(icon: imageIcon('/image/Ventplan_splash.png'), constraints: 'wrap', mouseReleased: mr)
+    label(icon: imageIcon('/image/ventplan_splash.png'), constraints: 'wrap', mouseReleased: mr)
 
     label(' ')
     label('Es liegt ein Update für Sie bereit!')
     label('Bitte klicken Sie auf den nachstehenden Link.')
 
     label(' ')
-    label('http://www.ventplan.com/latest/', foreground: Color.BLUE, mouseReleased: mr)
+    label('http://www.ventplan.com/download.html', foreground: Color.BLUE, mouseReleased: mr)
 
     label(' ')
     button('Ja, ich habe das gelesen!', actionPerformed: { e ->

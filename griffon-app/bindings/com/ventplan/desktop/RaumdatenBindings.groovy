@@ -11,16 +11,19 @@
  */
 package com.ventplan.desktop
 
+import javax.swing.event.ListSelectionListener
+
 // Raumdaten - Raum-Eingabe
 // Add list selection listener to synchronize every table's selection and model.meta.gewahlterRaum
 [raumTabelle].each {
-	it.selectionModel.addListSelectionListener([
-		valueChanged: { evt ->
-				controller.raumInTabelleGewahlt(evt, it)
-			}
-		] as javax.swing.event.ListSelectionListener)
+    it.selectionModel.addListSelectionListener([
+            valueChanged: { evt ->
+                controller.raumInTabelleGewahlt(evt, it)
+            }
+    ] as ListSelectionListener)
 }
 // Binding for items of comboboxes is done in RaumdatenView!
+//raumEingabePanel.inputMap.put(KeyStroke.getKeyStroke("ENTER"), { ActionEvent e -> println "here we go: ${e}" } as AbstractAction)
 // Combobox Raumtyp
 raumTyp.actionPerformed = controller.raumTypGeandert
 // Raum-Buttons unten

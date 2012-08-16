@@ -15,6 +15,7 @@ import com.bensmann.griffon.GriffonHelper as GH
 
 import groovy.xml.DOMBuilder
 import groovy.xml.StreamingMarkupBuilder
+
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
@@ -52,8 +53,13 @@ class OdiseeService {
     /**
      * Service for Ventplan Project XML/.vpx files.
      */
-    VpxModelService  vpxModelService
-    
+    VpxModelService vpxModelService
+
+    /**
+     * Service for our model.
+     */
+    VentplanModelService ventplanModelService
+
     /**
      * Service for 'Stückliste'.
      */
@@ -123,6 +129,8 @@ class OdiseeService {
     String performAuslegung(File wpxFile, Map map, boolean saveOdiseeXml = false) {
         // Filename w/o extension
         String vpxFilenameWoExt = vpxModelService.filenameWoExtension(wpxFile)
+        // HACK Ventplan -> Odisee + Umlaute
+        vpxFilenameWoExt = vpxFilenameWoExt.replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('Ä', 'Ae').replace('Ö', 'Oe').replace('Ü', 'Ue')
         // Generate Odisee XML
         DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
@@ -142,6 +150,10 @@ class OdiseeService {
                     addAkustikBerechnung(domBuilder, map)
                     addDvbKanalnetz(domBuilder, map)
                     addDvbVentileinstellung(domBuilder, map)
+                    userfield(name: '_CS_Allgemein', map.odisee.auslegung.auslegungAllgemeineDaten ? '1' : '1') // OO 3.2-LO 3.5 bug, we must have at least one region
+                    userfield(name: '_CS_Luftmengen', map.odisee.auslegung.auslegungLufmengen ? '1' : '0')
+                    userfield(name: '_CS_Akustik', map.odisee.auslegung.auslegungAkustikberechnung ? '1' : '0')
+                    userfield(name: '_CS_Druckverlust', map.odisee.auslegung.auslegungDruckverlustberechnung ? '1' : '0')
                 }
             }
         }
@@ -159,6 +171,8 @@ class OdiseeService {
     String performStueckliste(File wpxFile, Map map, boolean saveOdiseeXml = false, Map editedStuckliste = null) {
         // Filename w/o extension
         String vpxFilenameWoExt = vpxModelService.filenameWoExtension(wpxFile)
+        // HACK Ventplan -> Odisee + Umlaute
+        vpxFilenameWoExt = vpxFilenameWoExt.replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('Ä', 'Ae').replace('Ö', 'Oe').replace('Ü', 'Ue')
         // Generate Odisee XML
         DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
@@ -173,7 +187,7 @@ class OdiseeService {
                     addBauvorhaben(domBuilder, map.kundendaten)
                     // Stückliste
                     def stuckliste
-                    if (editedStuckliste) {
+                    if (editedStuckliste) { // TODO Always true?
                         stuckliste = editedStuckliste
                     } else {
                         stuckliste = stucklisteService.makeResult(stucklisteService.processData(map))
@@ -190,10 +204,15 @@ class OdiseeService {
                         } else {
                             menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
                         }
+                        // WAC-223 Kaufmännisch und technische Artikel
+                        if (artikel.ARTIKELNUMMER && !ventplanModelService.isArticleValidToday(artikel.ARTIKELNUMMER) && !artikel.ARTIKELBEZEICHNUNG.startsWith('***')) {
+                            artikel.ARTIKELBEZEICHNUNG = '*** ' + artikel.ARTIKELBEZEICHNUNG
+                        }
                         domBuilder.userfield(name: "TabelleStueckliste!A${i + 2}", i + 1)
                         domBuilder.userfield(name: "TabelleStueckliste!B${i + 2}", menge ?: '?')
-                        domBuilder.userfield(name: "TabelleStueckliste!C${i + 2}", stuck.key ?: '?')
-                        domBuilder.userfield(name: "TabelleStueckliste!D${i + 2}", artikel.ARTIKELBEZEICHNUNG ?: '?')
+                        //domBuilder.userfield(name: "TabelleStueckliste!C${i + 2}", stuck.key ?: '?')
+                        domBuilder.userfield(name: "TabelleStueckliste!C${i + 2}", artikel.ARTIKELNUMMER ?: '?')
+                        domBuilder.userfield(name: "TabelleStueckliste!D${i + 2}", artikel.ARTIKELBEZEICHNUNG ?: '--- keine Bezeichnung ---')
                     }
                 }
             }
@@ -211,6 +230,8 @@ class OdiseeService {
     String performAngebot(File wpxFile, Map map, boolean saveOdiseeXml = false, Map editedStuckliste = null) {
         // Filename w/o extension
         String vpxFilenameWoExt = vpxModelService.filenameWoExtension(wpxFile)
+        // HACK Ventplan -> Odisee + Umlaute
+        vpxFilenameWoExt = vpxFilenameWoExt.replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('Ä', 'Ae').replace('Ö', 'Oe').replace('Ü', 'Ue')
         // Generate Odisee XML
         DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
@@ -252,9 +273,15 @@ class OdiseeService {
                         } else {
                             menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
                         }
+                        // WAC-223 Kaufmännisch und technische Artikel
+                        if (artikel.ARTIKELNUMMER &&!ventplanModelService.isArticleValidToday(artikel.ARTIKELNUMMER) && !artikel.ARTIKELBEZEICHNUNG.startsWith('***')) {
+                            artikel.ARTIKELBEZEICHNUNG = '*** ' + artikel.ARTIKELBEZEICHNUNG
+                        }
+                        // Tabelle
                         domBuilder.userfield(name: "TabelleStueckliste!A${i + 2}", i + 1)
                         domBuilder.userfield(name: "TabelleStueckliste!B${i + 2}", menge ?: '?')
-                        domBuilder.userfield(name: "TabelleStueckliste!C${i + 2}", "${stuck.key}\n${artikel.ARTIKELBEZEICHNUNG}")
+                        //domBuilder.userfield(name: "TabelleStueckliste!C${i + 2}", "${stuck.key}\n${artikel.ARTIKELBEZEICHNUNG}")
+                        domBuilder.userfield(name: "TabelleStueckliste!C${i + 2}", "${artikel.ARTIKELNUMMER ?: '?'}\n${artikel.ARTIKELBEZEICHNUNG ?: '--- keine Bezeichnung ---'}")
                         domBuilder.userfield(name: "TabelleStueckliste!D${i + 2}", germanNumberFormat.format(artikel.PREIS)) //String.format(Locale.GERMANY, "%.2f", artikel.PREIS)
                         domBuilder.userfield(name: "TabelleStueckliste!E${i + 2}", germanNumberFormat.format(anzahl * artikel.PREIS)) //String.format(Locale.GERMANY, "%.2f", anzahl * artikel.PREIS)
                         summe += anzahl * artikel.PREIS
@@ -280,8 +307,13 @@ class OdiseeService {
     private String prepareXml(odisee, File wpxFile, String type, boolean saveOdiseeXml) {
         // Filename w/o extension
         String vpxFilenameWoExt = vpxModelService.filenameWoExtension(wpxFile)
+        // HACK Ventplan -> Odisee + Umlaute
+        vpxFilenameWoExt = vpxFilenameWoExt.replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('Ä', 'Ae').replace('Ö', 'Oe').replace('Ü', 'Ue')
         // Convert XML to string (StreamingMarkupBuilder will generate XML with correct german umlauts)
-        String xml = new StreamingMarkupBuilder().bind {
+        def builder = new StreamingMarkupBuilder()
+        //builder.encoding = 'UTF-8'
+        String xml = builder.bind {
+            //mkp.xmlDeclaration()
             mkp.yieldUnescaped odisee
         }.toString()
         // Save Odisee request XML
@@ -479,11 +511,18 @@ class OdiseeService {
             domBuilder.userfield(name: "wfTabelleTable!F${i + 3}", GH.toString2Converter(r.raumHohe))
         }
         // Zusammenfassung
-        def zuSumme = map.raum.raume.findAll { it.raumLuftart == 'ZU' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
+        // Zuluft
+        double zuSumme = map.raum.raume.findAll { it.raumLuftart == 'ZU' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
+        double zuSumme2 = map.raum.raume.findAll { it.raumLuftart == 'ZU/AB' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
+        zuSumme += 0.5d * zuSumme2
         domBuilder.userfield(name: 'lmeZuSummeWertLabel', GH.toString2Converter(zuSumme))
-        def abSumme = map.raum.raume.findAll { it.raumLuftart == 'AB' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
+        // Abluft
+        double abSumme = map.raum.raume.findAll { it.raumLuftart == 'AB' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
+        double abSumme2 = map.raum.raume.findAll { it.raumLuftart == 'ZU/AB' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
+        abSumme += 0.5d * abSumme2
         domBuilder.userfield(name: 'lmeAbSummeWertLabel', GH.toString2Converter(abSumme))
-        def ubSumme = map.raum.raume.findAll { it.raumLuftart == 'ÜB' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
+        // Überström
+        double ubSumme = map.raum.raume.findAll { it.raumLuftart == 'ÜB' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
         domBuilder.userfield(name: 'lmeUebSummeWertLabel', GH.toString2Converter(ubSumme))
         domBuilder.userfield(name: 'lmeGesamtvolumenWertLabel', GH.toString2Converter(map.raum.raumVs.gesamtVolumenNE))
         domBuilder.userfield(name: 'kzKennzeichenLabel', map.anlage.kennzeichnungLuftungsanlage ?: '?')
@@ -498,22 +537,10 @@ class OdiseeService {
     private void addRaumvolumenstrome(domBuilder, map) {
         // Tabelle
         map.raum.raume.eachWithIndex { r, i ->
-            def vs
-            switch (r.raumLuftart) {
-                case 'ZU':
-                    vs = r.raumZuluftVolumenstromInfiltration
-                    break
-                case 'AB':
-                    vs = r.raumAbluftVolumenstromInfiltration
-                    break
-                case 'ZU/AB':
-                    // ZU/AB: größeren Wert nehmen
-                    vs = java.lang.Math.max(r.raumZuluftVolumenstromInfiltration ?: 0.0d, r.raumAbluftVolumenstromInfiltration ?: 0.0d)
-                    break
-            }
             domBuilder.userfield(name: "lmeTabelleTable!B${i + 3}", r.raumBezeichnung ?: '?')
             domBuilder.userfield(name: "lmeTabelleTable!C${i + 3}", noZero(GH.toString2Converter(r.raumVolumen)))
             domBuilder.userfield(name: "lmeTabelleTable!D${i + 3}", r.raumLuftart ?: '?')
+            double vs = volumenstrom(r)
             domBuilder.userfield(name: "lmeTabelleTable!E${i + 3}", noZero(GH.toString2Converter(vs)))
             domBuilder.userfield(name: "lmeTabelleTable!F${i + 3}", noZero(GH.toString2Converter(r.raumLuftwechsel)))
             domBuilder.userfield(name: "lmeTabelleTable!G${i + 3}", noZero(GH.toString0Converter(r.raumAnzahlZuluftventile)))
@@ -525,16 +552,8 @@ class OdiseeService {
             domBuilder.userfield(name: "lmeTabelleTable!M${i + 3}", r.raumVerteilebene ?: '')
         }
         // Ergebnis der Berechnungen
-        double ltmZuluftSumme = (double) map.raum.raume.findAll {
-            it.raumLuftart == 'ZU'
-        }?.inject(0.0d, { double o, Map n ->
-            o + n.raumZuluftVolumenstromInfiltration
-        }) ?: 0.0d
-        def ltmAbluftSumme = map.raum.raume.findAll {
-            it.raumLuftart == 'AB'
-        }?.inject(0.0d, { double o, Map n ->
-            o + n.raumAbluftVolumenstromInfiltration
-        }) ?: 0.0d
+        double ltmZuluftSumme = summeZuluft(map)
+        double ltmAbluftSumme = summeAbluft(map)
         // Höchster Wert Nennlüftung ohne Abzug Infiltration
         def nennluftungVolumen = [
                 map.aussenluftVs.gesamtAvsNeLvsNl,
@@ -561,20 +580,6 @@ class OdiseeService {
         // Tabelle
         def m = [:]
         map.raum.raume.eachWithIndex { r, i ->
-            def vs
-            // TODO Uberstromelemente: Wert abzgl. Infiltration?
-            switch (r.raumLuftart) {
-                case 'ZU':
-                    vs = r.raumZuluftVolumenstromInfiltration
-                    break
-                case 'AB':
-                    vs = r.lmeSumLTMZuluftmengeWertLabel
-                    break
-                case 'ZU/AB':
-                    // ZU/AB: größeren Wert nehmen
-                    vs = java.lang.Math.max(r.raumZuluftVolumenstromInfiltration, r.lmeSumLTMZuluftmengeWertLabel)
-                    break
-            }
             domBuilder.userfield(name: "lmeTabelleUeberstroemTable!B${i + 3}", r.raumBezeichnung)
             domBuilder.userfield(name: "lmeTabelleUeberstroemTable!C${i + 3}", noZero(GH.toString2Converter(r.raumVolumen)))
             domBuilder.userfield(name: "lmeTabelleUeberstroemTable!D${i + 3}", r.raumLuftart)
@@ -684,6 +689,41 @@ class OdiseeService {
             domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!I${i + 3}", GH.toString2Converter(ve.abgleich))
             domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!J${i + 3}", GH.toString2Converter(ve.einstellung))
         }
+    }
+
+    private double volumenstrom(raum) {
+        double vs = 0.0d
+        switch (raum.raumLuftart) {
+            case 'ZU':
+                vs = raum.raumZuluftVolumenstromInfiltration
+                break
+            case 'AB':
+                vs = raum.raumAbluftVolumenstromInfiltration
+                break
+            case 'ZU/AB':
+                // ZU/AB: größeren Wert nehmen
+                vs = java.lang.Math.max(raum.raumZuluftVolumenstromInfiltration ?: 0.0d, raum.raumAbluftVolumenstromInfiltration ?: 0.0d)
+                break
+        }
+        vs
+    }
+
+    private double summeZuluft(map) {
+        double ltmZuluftSumme = (double) map.raum.raume.findAll {
+            it.raumLuftart == 'ZU'
+        }?.inject(0.0d, { double o, Map n ->
+            o + n.raumZuluftVolumenstromInfiltration
+        }) ?: 0.0d
+        ltmZuluftSumme
+    }
+
+    private double summeAbluft(map) {
+        double ltmAbluftSumme = (double) map.raum.raume.findAll {
+            it.raumLuftart == 'AB'
+        }?.inject(0.0d, { double o, Map n ->
+            o + n.raumAbluftVolumenstromInfiltration
+        }) ?: 0.0d
+        ltmAbluftSumme
     }
 
 }

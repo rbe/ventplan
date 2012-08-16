@@ -9,6 +9,7 @@
  *
  * rbe, 7/16/12 10:35 AM
  */
+
 package com.ventplan.desktop
 
 exitAction = action(
@@ -19,6 +20,39 @@ exitAction = action(
         smallIcon: imageIcon(resource: '/menu/app_exit.png'),
         enabled: true,
         closure: controller.exitApplication
+)
+
+// EFH-4ZKB-WC.vpx
+neuesProjektAction_EFH4ZKBWC = action(
+        id: 'neuesProjektAction_EFH4ZKBWC',
+        name: 'EFH, 4 ZKB WC',
+        //smallIcon: imageIcon(resource: '/menu/project_new.png'),
+        enabled: bind { model.aktivesProjekt == null },
+        closure: controller.neuesProjekt_EFH4ZKBWC
+)
+// EFH-5ZKB-HW-WC.vpx
+neuesProjektAction_EFH5ZKBHWWC = action(
+        id: 'neuesProjektAction_EFH5ZKBHWWC',
+        name: 'EFH, 5 ZKB WC',
+        //smallIcon: imageIcon(resource: '/menu/project_new.png'),
+        enabled: bind { model.aktivesProjekt == null },
+        closure: controller.neuesProjekt_EFH5ZKBHWWC
+)
+// EFH-5ZKB-WC-2KR-HW.vpx
+neuesProjektAction_EFH5ZKBWC2KRHW = action(
+        id: 'neuesProjektAction_EFH5ZKBWC2KRHW',
+        name: 'EFH, 5 ZKB WC, HW, 2 Keller',
+        //smallIcon: imageIcon(resource: '/menu/project_new.png'),
+        enabled: bind { model.aktivesProjekt == null },
+        closure: controller.neuesProjekt_EFH5ZKBWC2KRHW
+)
+// EFH-5ZKB-WC-DG.vpx
+neuesProjektAction_EFH5ZKBWCDG = action(
+        id: 'neuesProjektAction_EFH5ZKBWCDG',
+        name: 'EFH, 5 ZKB WC, Dachgeschoß',
+        //smallIcon: imageIcon(resource: '/menu/project_new.png'),
+        enabled: bind { model.aktivesProjekt == null },
+        closure: controller.neuesProjekt_EFH5ZKBWCDG
 )
 
 neuesProjektAction = action(
@@ -161,13 +195,13 @@ nachProjektSuchenAction = action(
         closure: controller.nachProjektSuchenDialogOeffnen
 )
 
-// WAC-202 Verlegeplan
-projektVerlegeplanErstellenAction = action(
-        id: 'verlegeplanAction',
-        name: 'Verlegeplan erstellen',
+// WAC-202 Prinzipskizze
+projektPrinzipskizzeErstellenAction = action(
+        id: 'prinzipskizzeAction',
+        name: 'Prinzipskizze erstellen',
         mnemonic: 'G',
         accelerator: shortcut('G'),
         smallIcon: imageIcon(resource: '/menu/project_package_utilities.png'),
         enabled: bind { model.aktivesProjekt != null },
-        closure: controller.projektVerlegeplanErstellen
+        closure: controller.projektPrinzipskizzeErstellen
 )

@@ -52,11 +52,11 @@ panel(constraints: 'a', border: compoundBorder(outer: emptyBorder(5), inner: emp
     panel(id: "anlageAussenluftPanel", border: titledBorder(title: "Außenluft"), constraints: 'c', layout: new MigLayout("ins 0 n 0 n, wrap 1")) {
         buttonGroup().with {
             add radioButton(id: "anlageAussenluftDach",     text: "Dachdurchführung")
-            add radioButton(id: "anlageAussenluftWand",     text: "Wand (Luftgitter)"  )
+            add radioButton(id: "anlageAussenluftWand",     text: "Wand (Luftgitter)")
             add radioButton(id: "anlageAussenluftErdwarme", text: "Erdwärmetauscher")
         }
         label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
-        comboBox(id: 'anlageAussenluftLufteinlass', items: model.map.anlage.aussenluft.lufteinlass)
+        //comboBox(id: 'anlageAussenluftLufteinlass', items: model.meta.anlage.lufteinlass)
     }
 
     zl.insertTemplate('valueRow');
@@ -81,7 +81,7 @@ panel(constraints: 'a', border: compoundBorder(outer: emptyBorder(5), inner: emp
             add radioButton(id: "anlageFortluftBogen135",     text: "Bogen 135°")
         }
         label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
-        comboBox(id: 'anlageFortluftLuftgitter', items: model.map.anlage.fortluft.luftgitter)
+        //comboBox(id: 'anlageFortluftLuftgitter', items: model.meta.anlage.luftgitter)
     }
 
     zl.insertTemplate('valueRow2');

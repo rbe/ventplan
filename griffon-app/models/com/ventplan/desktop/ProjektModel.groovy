@@ -125,6 +125,18 @@ class ProjektModel {
      */
     @Bindable
             meta = [
+                    empfanger: [
+                            '',
+                            'Grosshandel',
+                            'Ausführende Firma',
+                            'Bauherr/Investor'
+                    ],
+                    /* rbe-2012-08-14 AnlagendatenView, derzeit nicht verwendet, ergibt sich über die Pakete
+                    anlage: [
+                            lufteinlass: ['200LE004', '200LE008'],
+                            luftgitter: ['200LG002', '200LG004', '200LD01'],
+                    ],
+                    */
                     raum: [
                             typ: ['Wohnzimmer', 'Kinderzimmer', 'Schlafzimmer', 'Esszimmer', 'Arbeitszimmer', 'Gästezimmer',
                                     'Hausarbeitsraum', 'Kellerraum', 'WC', 'Küche', 'Kochnische', 'Bad mit/ohne WC', 'Duschraum',
@@ -136,6 +148,8 @@ class ProjektModel {
                             raumVsUberstromelemente: [/* initialized in ProjektController.mvcGroupInit */],
                             raumVsVerteilebene: ['KG', 'EG', 'OG', 'DG', 'SB'],
                     ],
+                    raumTurTyp: ['Tür', 'Durchgang'],
+                    raumTurbreiten: [610, 735, 860, 985, 1110, 1235, 1485, 1735, 1985],
                     gewahlterRaum: [:] as ObservableMap,
                     druckverlust: [
                             kanalnetz: [
@@ -162,6 +176,14 @@ class ProjektModel {
      */
     @Bindable
             map = [
+                    odisee: [
+                            auslegung: [
+                                    auslegungAllgemeineDaten: true,
+                                    auslegungLufmengen: true,
+                                    auslegungAkustikberechnung: false,
+                                    auslegungDruckverlustberechnung: false
+                            ] as ObservableMap
+                    ],
                     messages: [ltm: ''] as ObservableMap,
                     dirty: false,
                     kundendaten: [
@@ -197,10 +219,10 @@ class ProjektModel {
                     anlage: [
                             standort: [EG: true] as ObservableMap,
                             luftkanalverlegung: [:] as ObservableMap,
-                            aussenluft: [lufteinlass: ['200LE004', '200LE008']] as ObservableMap,
+                            aussenluft: [lufteinlass: ''] as ObservableMap,
                             zuluft: [:] as ObservableMap,
                             abluft: [:] as ObservableMap,
-                            fortluft: [dach: true, luftgitter: ['200LG002', '200LG004']] as ObservableMap,
+                            fortluft: [dach: true, luftgitter: ''] as ObservableMap,
                             energie: [zuAbluftWarme: true, nachricht: ' '] as ObservableMap,
                             hygiene: [nachricht: ' '] as ObservableMap,
                             kennzeichnungLuftungsanlage: 'ZuAbLS-Z-WE-WÜT-0-0-0-0-0',

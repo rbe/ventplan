@@ -43,7 +43,7 @@ panel(id: "auslegungErstellerPanel", layout: new MigLayout("fillx, wrap", "[]par
 
     label('')
     label('')
-    button(id: "auslegungErstellerSpeichern", text: "Eingaben speichern und Auslegung erstellen")
+    button(id: "nutzerdatenSpeichernButton", text: "Eingaben speichern und Auslegung erstellen")
 }
 
 build(AuslegungBindings)

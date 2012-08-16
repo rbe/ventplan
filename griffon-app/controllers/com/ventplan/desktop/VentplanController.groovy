@@ -378,6 +378,24 @@ class VentplanController {
     }
     //</editor-fold>
 
+    def neuesProjekt_EFH4ZKBWC = {
+        File tmp = File.createTempFile('ventplan_', '.vpx')
+        
+        //projektOffnenClosure('EFH-4ZKB-WC.vpx')
+    }
+
+    def neuesProjekt_EFH5ZKBHWWC = {
+        //projektOffnenClosure('EFH-5ZKB-HW-WC.vpx')
+    }
+
+    def neuesProjekt_EFH5ZKBWC2KRHW = {
+        //projektOffnenClosure('EFH-5ZKB-WC-2KR-HW.vpx')
+    }
+
+    def neuesProjekt_EFH5ZKBWCDG = {
+        //projektOffnenClosure('EFH-5ZKB-WC-DG.vpx')
+    }
+
     /**
      * Ein neues Projekt erstellen.
      */
@@ -697,13 +715,13 @@ class VentplanController {
     }
     //</editor-fold>
 
-    //<editor-fold desc="WAC-202 Verlegeplan">
+    //<editor-fold desc="WAC-202 Prinzipskizze">
     /**
-     * WAC-202 Verlegeplan
+     * WAC-202 Prinzipskizze
      */
-    def projektVerlegeplanErstellen = {
+    def projektPrinzipskizzeErstellen = {
         // Erzeuge Stückliste für aktives Projekt.
-        getMVCGroupAktivesProjekt()?.controller?.generiereVerlegeplan()
+        getMVCGroupAktivesProjekt()?.controller?.generierePrinzipskizze()
     }
     //</editor-fold>
 

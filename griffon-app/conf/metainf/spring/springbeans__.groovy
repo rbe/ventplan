@@ -10,5 +10,9 @@
  */
 
 // This file is empty.
+/*
 beans = {}
 resources = {}
+*/
+beans = {}
+

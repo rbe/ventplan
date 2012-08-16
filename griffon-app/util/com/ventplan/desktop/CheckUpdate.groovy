@@ -63,12 +63,12 @@ class CheckUpdate implements Runnable {
             //println "update: trying to download ${u}"
             def buf = new byte[512 * 1024]
             // Destination for download
-            def dest = java.io.File.createTempFile('ventplan', '.tmp')
+            def dest = File.createTempFile('ventplan', '.tmp')
             dest.deleteOnExit()
             // Download data and write into temporary file
             dest.withOutputStream { ostream ->
                 def r
-                new java.net.URL(u).withInputStream { istream ->
+                new URL(u).withInputStream { istream ->
                     while ((r = istream.read(buf, 0, buf.length)) > -1) {
                         ostream.write(buf, 0, r)
                     }
@@ -76,7 +76,7 @@ class CheckUpdate implements Runnable {
             }
             //println "update: downloaded into ${dest}"
             // And copy it to update/ folder
-            def dest2 = new java.io.File('ventplan', 'update.zip')
+            def dest2 = new File('ventplan', 'update.zip')
             dest2.parentFile.mkdirs()
             dest.renameTo(dest2)
             // Unzip it
@@ -88,8 +88,8 @@ class CheckUpdate implements Runnable {
             //println "update: done"
             b = true
         } catch (FileNotFoundException e) {
-            //println "update: nothing found for version ${version}"
-        } catch (e) {
+            //println "${this}.update: nothing found for version ${VentplanResource.ventplanVersion}"
+        } catch (Exception e) {
             println "${this}.update: ${e}"
         }
         return b
