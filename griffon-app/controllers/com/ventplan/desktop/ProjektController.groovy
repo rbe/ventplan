@@ -987,8 +987,12 @@ class ProjektController {
 
     def _raumBearbeitenGeandert(evt = null) {
         // Do nothing when just cursor is moved
-        if (evt?.keyCode && evt?.keyCode in GH.CURSOR_KEY_CODES) {
-            return
+        try {
+            if (evt && evt?.keyCode && evt?.keyCode in GH.CURSOR_KEY_CODES) {
+                return
+            }
+        } catch (Exception e) {
+            // .keyCode existiert nicht... je nach Event
         }
         // WAC-174: Immer Raum Index/Position aus Metadaten nehmen
         //def raumIndex = view.raumTabelle.selectedRow
