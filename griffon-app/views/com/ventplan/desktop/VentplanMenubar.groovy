@@ -16,13 +16,15 @@ import static griffon.util.GriffonApplicationUtils.isMacOSX
 menuBar = menuBar {
     // Datei
     menu(id: 'menuDatei', text: 'Datei', mnemonic: 'D') {
-        // Neu
+        /*
+        // Neu...
         menu(id: 'menuProjektNeu', text: 'Neu...', icon: imageIcon(resource: '/menu/project_new.png')) {
             menuItem(neuesProjektAction_EFH4ZKBWC)
             menuItem(neuesProjektAction_EFH5ZKBHWWC)
             menuItem(neuesProjektAction_EFH5ZKBWC2KRHW)
             menuItem(neuesProjektAction_EFH5ZKBWCDG)
         }
+        */
         menuItem(neuesProjektAction)
         //
         menuItem(projektOeffnenAction)
