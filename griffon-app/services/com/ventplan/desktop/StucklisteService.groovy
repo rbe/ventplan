@@ -12,6 +12,7 @@
 package com.ventplan.desktop
 
 import groovy.sql.Sql
+import groovy.sql.GroovyRowResult
 
 /**
  *
@@ -166,6 +167,16 @@ class StucklisteService {
         }
         uberstromventile.each { st ->
             artikelAufStuckliste(stuckliste, st)
+        }
+        // Rohrlängen, Liefermenge
+        stuckliste.each { Map.Entry st ->
+            String artikel = st.key
+            GroovyRowResult r = st.value
+            if (r.MENGENEINHEIT == 'Meter' && r.KATEGORIE in [3, 4]) {
+                double meterZuStueckelung = Math.ceil(r.ANZAHL / r.LIEFERMENGE)
+                double richtigeAnzahl = meterZuStueckelung * r.LIEFERMENGE
+                r.ANZAHL = richtigeAnzahl
+            }
         }
         return stuckliste
     }

@@ -174,7 +174,7 @@ class VentplanModelService {
         }
         // JOIN pakete -> stuckliste
         StringBuilder statement = new StringBuilder()
-        statement << 'SELECT a.artikelnummer, a.artikelbezeichnung, 1.0 ANZAHL, 900 REIHENFOLGE, a.mengeneinheit, a.liefermenge, a.preis' <<
+        statement << 'SELECT a.artikelnummer, a.artikelbezeichnung, 1.0 ANZAHL, 900 REIHENFOLGE, a.mengeneinheit, a.liefermenge, a.preis, a.kategorie, a.klasse' <<
                 '  FROM artikelstamm a' <<
                 ' WHERE a.artikelnummer = ?.artikelnummer'
         def r = withSql { dataSourceName, sql ->
@@ -202,7 +202,7 @@ class VentplanModelService {
         text = '%' + text.value + '%'
         // JOIN pakete -> stuckliste
         StringBuilder statement = new StringBuilder()
-        statement << 'SELECT a.artikelnummer, a.artikelbezeichnung, 1.0 ANZAHL, 900 REIHENFOLGE, a.mengeneinheit, a.liefermenge, a.preis' <<
+        statement << 'SELECT a.artikelnummer, a.artikelbezeichnung, 1.0 ANZAHL, 900 REIHENFOLGE, a.mengeneinheit, a.liefermenge, a.preis, a.kategorie, a.klasse' <<
                 '  FROM artikelstamm a' <<
                 ' WHERE a.artikelnummer like ?.text' <<
                 '    OR a.artikelbezeichnung like ?.text'
@@ -468,7 +468,7 @@ class VentplanModelService {
         }
         // JOIN pakete -> stuckliste
         StringBuilder statement = new StringBuilder()
-        statement << 'SELECT s.reihenfolge, s.luftart, SUM(s.anzahl) ANZAHL, a.mengeneinheit, a.liefermenge, s.artikel, a.artikelbezeichnung, a.preis' <<
+        statement << 'SELECT s.reihenfolge, s.luftart, SUM(s.anzahl) ANZAHL, a.mengeneinheit, a.liefermenge, s.artikel, a.artikelbezeichnung, a.preis, a.kategorie, a.klasse' <<
                 '  FROM stueckliste s' <<
                 ' INNER JOIN artikelstamm a ON s.artikel = a.artikelnummer' <<
                 ' WHERE paket IN (' << pakete.join(', ') << ')' <<
