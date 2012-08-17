@@ -291,7 +291,7 @@ class VpxModelService {
                                     keineVerschmutzung: X.vb { zentralgerat.'hygiene'.'keineVerschmutzung'.text() == 'true' },
                                     dichtheitsklasseB: X.vb { zentralgerat.'hygiene'.'dichtheitsklasseB'.text() == 'true' }
                             ],
-                            ruckschlagklappe: X.vb { zentralgerat.'ruckschlagklappe'.text() == 'true' },
+                            ruckschlagkappe: X.vb { zentralgerat.'ruckschlagkappe'.text() == 'true' },
                             schallschutz: X.vb { zentralgerat.'schallschutz'.text() == 'true' },
                             feuerstatte: X.vb { zentralgerat.'feuerstatte'.text() == 'true' },
                             //kennzeichnungLuftungsanlage: 'ZuAbLS-Z-WE-WÜT-0-0-0-0-0', // Will be calculated

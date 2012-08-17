@@ -106,7 +106,7 @@ panel(constraints: 'a', border: compoundBorder(outer: emptyBorder(5), inner: emp
 
     zl.insertTemplate('valueRow');
     panel(id: "anlageRuckschlagPanel", border: titledBorder(title: "Rückschlagkappe"), constraints: 'a', layout: new MigLayout("ins 0 n 0 n, wrap 1")) {
-        checkBox(id: "anlageruckschlagklappe", text: "Lüftungsanlage mit Rückschlagkappe")
+        checkBox(id: "anlageruckschlagkappe", text: "Lüftungsanlage mit Rückschlagkappe")
     }
 
     // Schallschutz-Kennzeichnung

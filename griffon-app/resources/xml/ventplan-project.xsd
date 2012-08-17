@@ -99,7 +99,7 @@
             <xs:element name="geratestandort" type="geratestandort" minOccurs="0" maxOccurs="1"/>
             <xs:element name="energie" type="deviceEnergy" minOccurs="0" maxOccurs="1"/>
             <xs:element name="hygiene" type="deviceHygiene" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="ruckschlagklappe" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ruckschlagkappe" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
             <xs:element name="schallschutz" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
             <xs:element name="feuerstatte" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
