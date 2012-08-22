@@ -172,10 +172,13 @@ class StucklisteService {
         stuckliste.each { Map.Entry st ->
             String artikel = st.key
             GroovyRowResult r = st.value
-            if (r.MENGENEINHEIT == 'Meter' && r.KATEGORIE in [3, 4]) {
-                double meterZuStueckelung = Math.ceil(r.ANZAHL / r.LIEFERMENGE)
-                double richtigeAnzahl = meterZuStueckelung * r.LIEFERMENGE
-                r.ANZAHL = richtigeAnzahl
+            // Bugfix: NullPointer wenn die Mengeneinheit fehlt (Warum fehlt sie? Kann immer gesetzt werden!)
+            if (r.hasProperty('MENGENEINHEIT') && r.hasProperty('KATEGORIE')) {
+                if (r.MENGENEINHEIT == 'Meter' && r.KATEGORIE in [3, 4]) {
+                    double meterZuStueckelung = Math.ceil(r.ANZAHL / r.LIEFERMENGE)
+                    double richtigeAnzahl = meterZuStueckelung * r.LIEFERMENGE
+                    r.ANZAHL = richtigeAnzahl
+                }
             }
         }
         return stuckliste
