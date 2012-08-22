@@ -994,7 +994,7 @@ class ProjektModel {
                         m.clear()
                         m.addAll(it.turen)
                     } catch (e) {
-                        e.printStackTrace()
+                        // e.printStackTrace()
                     }
                 }
                 // Raumvolumentströme - Zu-/Abluftventile
