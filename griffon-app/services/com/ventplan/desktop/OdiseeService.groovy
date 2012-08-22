@@ -85,8 +85,9 @@ class OdiseeService {
      * Strings containing zero numbers are made empty.
      */
     private String noZero(String val) {
-        if (val == '0,00' || val == '0')
+        if (val == '0,00' || val == '0') {
             val = ''
+        }
         val
     }
 
@@ -584,7 +585,12 @@ class OdiseeService {
             domBuilder.userfield(name: "lmeTabelleUeberstroemTable!C${i + 3}", noZero(GH.toString2Converter(r.raumVolumen)))
             domBuilder.userfield(name: "lmeTabelleUeberstroemTable!D${i + 3}", r.raumLuftart)
             domBuilder.userfield(name: "lmeTabelleUeberstroemTable!E${i + 3}", noZero(GH.toString2Converter(r.raumUberstromVolumenstrom)))
-            domBuilder.userfield(name: "lmeTabelleUeberstroemTable!F${i + 3}", noZero(GH.toString0Converter(r.raumAnzahlUberstromVentile)))
+            // ÜB-Element nicht erreichnet, aber manuell ausgewählt!?
+            if (r.raumAnzahlUberstromVentile < 0) {
+                domBuilder.userfield(name: "lmeTabelleUeberstroemTable!F${i + 3}", noZero(GH.toString0Converter(r.raumAnzahlUberstromVentile * -1)))
+            } else {
+                domBuilder.userfield(name: "lmeTabelleUeberstroemTable!F${i + 3}", noZero(GH.toString0Converter(r.raumAnzahlUberstromVentile)))
+            }
             domBuilder.userfield(name: "lmeTabelleUeberstroemTable!G${i + 3}", r.raumUberstromElement)
         }
         // Einstellungen am Lüftungsgerät und an der Fernbedienung
