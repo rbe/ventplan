@@ -381,8 +381,10 @@ class VentplanController {
     //</editor-fold>
 
     def neuesProjekt_EFH4ZKBWC = {
+        // Temporary file
         File tmp = File.createTempFile('ventplan_', '.vpx')
-        
+        // Write stream from classpath into temporary file
+        // Open file
         //projektOffnenClosure('EFH-4ZKB-WC.vpx')
     }
 
