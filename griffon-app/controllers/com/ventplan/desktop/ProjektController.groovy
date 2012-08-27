@@ -744,8 +744,8 @@ class ProjektController {
                 raum.raumUberstromVolumenstrom > 0 && turSpalthoheUberschritten > 0 && !raum.raumUberstromElement
             }
             raumeOhneUbElemente = raumeOhneUbElemente.findAll { raum -> !raum.turen.any { it.turBezeichnung == 'Durchgang' } }
-            model.map.raum.raumVs.turenHinweis = raumeOhneTuren.size() > 0 ? "Bitte Türen prüfen: ${raumeOhneTuren.collect { it.raumBezeichnung }.join(', ')}" : ''
-            model.map.raum.raumVs.ubElementeHinweis = raumeOhneUbElemente.size() > 0 ? "Bitte ÜB-Elemente prüfen: ${raumeOhneUbElemente.collect { it.raumBezeichnung }.join(', ')}" : ''
+            model.map.raum.raumVs.turenHinweis = raumeOhneTuren.size() > 0 ? "<html><b>Bitte Türen prüfen: ${raumeOhneTuren.collect { it.raumBezeichnung }.join(', ')}</b></html>" : ''
+            model.map.raum.raumVs.ubElementeHinweis = raumeOhneUbElemente.size() > 0 ? "<html><b>Bitte ÜB-Elemente prüfen: ${raumeOhneUbElemente.collect { it.raumBezeichnung }.join(', ')}</b></html>" : ''
             // WAC-223
             findInvalidArticles()
         }
@@ -2517,7 +2517,7 @@ class ProjektController {
                 }
             }
             if (text.length() > 0) {
-                model.map.raum.raumVs.kaufmannischeArtikelHinweis = '<html>Veraltete Artikel:' + text.toString() + '</html>'
+                model.map.raum.raumVs.kaufmannischeArtikelHinweis = '<html><b>Veraltete Artikel:' + text.toString() + '</b></html>'
             } else {
                 model.map.raum.raumVs.kaufmannischeArtikelHinweis = '<html></html>'
             }
