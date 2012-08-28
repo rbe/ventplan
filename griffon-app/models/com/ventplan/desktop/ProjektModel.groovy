@@ -351,59 +351,59 @@ class ProjektModel {
         if (null == raum) {
             println "${this}.prufeRaumdaten(${raum})"
         } else {
-        def prufeFaktor = { r ->
-            // Prüfe Toleranzwerte für Zuluftfaktor
-            def eingegebenerZuluftfaktor = r.raumZuluftfaktor.toDouble2()
-            def (zuluftfaktor, neuerZuluftfaktor) =
-            calculationService.prufeZuluftfaktor(r.raumTyp, eingegebenerZuluftfaktor)
-            if (zuluftfaktor != neuerZuluftfaktor) {
-                def infoMsg = "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
-                app.controllers['Dialog'].showInformDialog(infoMsg as String)
+            def prufeFaktor = { r ->
+                // Prüfe Toleranzwerte für Zuluftfaktor
+                def eingegebenerZuluftfaktor = r.raumZuluftfaktor.toDouble2()
+                def (zuluftfaktor, neuerZuluftfaktor) =
+                calculationService.prufeZuluftfaktor(r.raumTyp, eingegebenerZuluftfaktor)
+                if (zuluftfaktor != neuerZuluftfaktor) {
+                    def infoMsg = "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
+                    app.controllers['Dialog'].showInformDialog(infoMsg as String)
+                }
+                r.raumZuluftfaktor = neuerZuluftfaktor
             }
-            r.raumZuluftfaktor = neuerZuluftfaktor
-        }
-        // Anhand des Raumtyps nicht benötigte Werte löschen
-        switch (raum.raumLuftart) {
-            case 'ZU':
+            // Anhand des Raumtyps nicht benötigte Werte löschen
+            switch (raum.raumLuftart) {
+                case 'ZU':
+                    raum.with {
+                        raumAnzahlAbluftventile = 0
+                        raumAbluftmengeJeVentil = 0.0d
+                        raumBezeichnungAbluftventile = ''
+                        raumAbluftVolumenstrom = 0.0d
+                        raumAbluftVolumenstromInfiltration = 0.0d
+                    }
+                    prufeFaktor(raum)
+                    break
+                case 'ZU/AB':
+                    prufeFaktor(raum)
+                    break
+                case 'AB':
+                    raum.with {
+                        raumAnzahlZuluftventile = 0
+                        raumZuluftmengeJeVentil = 0.0d
+                        raumBezeichnungZuluftventile = ''
+                        raumZuluftVolumenstrom = 0.0d
+                        raumZuluftfaktor = 0.0d
+                    }
+                    break
+            }
+            // Wenn Raum = ÜB dann Zu/Abluftventile leeren
+            if (raum.raumLuftart == 'ÜB') {
                 raum.with {
+                    // Zuluft
+                    raumAnzahlZuluftventile = 0
+                    raumZuluftmengeJeVentil = 0.0d
+                    raumBezeichnungZuluftventile = ''
+                    raumZuluftVolumenstrom = 0.0d
+                    raumZuluftfaktor = 0.0d
+                    // Abluft
                     raumAnzahlAbluftventile = 0
                     raumAbluftmengeJeVentil = 0.0d
                     raumBezeichnungAbluftventile = ''
                     raumAbluftVolumenstrom = 0.0d
                     raumAbluftVolumenstromInfiltration = 0.0d
                 }
-                prufeFaktor(raum)
-                break
-            case 'ZU/AB':
-                prufeFaktor(raum)
-                break
-            case 'AB':
-                raum.with {
-                    raumAnzahlZuluftventile = 0
-                    raumZuluftmengeJeVentil = 0.0d
-                    raumBezeichnungZuluftventile = ''
-                    raumZuluftVolumenstrom = 0.0d
-                    raumZuluftfaktor = 0.0d
-                }
-                break
-        }
-        // Wenn Raum = ÜB dann Zu/Abluftventile leeren
-        if (raum.raumLuftart == 'ÜB') {
-            raum.with {
-                // Zuluft
-                raumAnzahlZuluftventile = 0
-                raumZuluftmengeJeVentil = 0.0d
-                raumBezeichnungZuluftventile = ''
-                raumZuluftVolumenstrom = 0.0d
-                raumZuluftfaktor = 0.0d
-                // Abluft
-                raumAnzahlAbluftventile = 0
-                raumAbluftmengeJeVentil = 0.0d
-                raumBezeichnungAbluftventile = ''
-                raumAbluftVolumenstrom = 0.0d
-                raumAbluftVolumenstromInfiltration = 0.0d
             }
-        }
         }
         //
         raum
