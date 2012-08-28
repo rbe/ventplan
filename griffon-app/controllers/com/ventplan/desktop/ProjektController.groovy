@@ -692,9 +692,18 @@ class ProjektController {
                 } catch (e) {}
                 // WAC-65: Errechnete Werte zurücksetzen
                 model.map.raum.raume[raumPosition].with {
-                    if (raumBreite && raumLange)
+                    try {
+                        if (raumBreite && raumLange) {
                         raumFlache = raumBreite * raumLange
+                        }
+                    } catch (NullPointerException e) {
+                        // ignore
+                    }
+                    try {
                     raumVolumen = raumFlache * raumHohe
+                    } catch (NullPointerException e) {
+                        // ignore
+                    }
                     raumLuftwechsel = 0.0d
                     // Abluft
                     raumAbluftVolumenstromInfiltration = 0.0d // Abluftvs abzgl. Infiltration
