@@ -272,11 +272,12 @@ class VentplanModelService {
         }
         // 1 x Grundpaket, unabhängig vom Volumenstrom
         StringBuilder statement = new StringBuilder()
-        statement << 'SELECT id' <<
+        statement << 'SELECT id, reihenfolge' <<
                 '  FROM pakete' <<
-                ' WHERE geraet = ?.gerat AND kategorie = ?.kategorie'
+                ' WHERE geraet = ?.gerat AND kategorie = ?.kategorie' <<
+                ' ORDER BY reihenfolge'
         List r73 = withSql { dataSourceName, sql -> sql.rows(statement.toString(), [gerat: zentralgerat, kategorie: 73]) }
-        r73*.id
+        r73//*.id
     }
 
     /**
@@ -295,13 +296,14 @@ class VentplanModelService {
         Integer maxvs = getVolumenstrom(zentralgerat, volumenstrom)
         //
         StringBuilder statement = new StringBuilder()
-        statement << 'SELECT id, kategorie, name' <<
+        statement << 'SELECT id, kategorie, name, reihenfolge' <<
                 ' FROM pakete' <<
-                ' WHERE geraet = ?.gerat AND maxvolumenstrom = ?.maxvolumenstrom AND kategorie = ?.kategorie'
+                ' WHERE geraet = ?.gerat AND maxvolumenstrom = ?.maxvolumenstrom AND kategorie = ?.kategorie' <<
+                ' ORDER BY reihenfolge'
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [gerat: zentralgerat, maxvolumenstrom: maxvs, kategorie: 74])
         }
-        return r*.id
+        r//*.id
     }
 
     /**
@@ -319,13 +321,14 @@ class VentplanModelService {
         Integer maxvs = getVolumenstrom(zentralgerat, volumenstrom)
         //
         StringBuilder statement = new StringBuilder()
-        statement << 'SELECT id, name' <<
+        statement << 'SELECT id, name, reihenfolge' <<
                 ' FROM pakete' <<
-                ' WHERE geraet = ?.gerat AND maxvolumenstrom = ?.maxvolumenstrom AND kategorie = ?.kategorie'
+                ' WHERE geraet = ?.gerat AND maxvolumenstrom = ?.maxvolumenstrom AND kategorie = ?.kategorie' <<
+                ' ORDER BY reihenfolge'
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [gerat: zentralgerat, maxvolumenstrom: maxvs, kategorie: 72])
         }
-        return r*.id
+        r//*.id
     }
 
     /**
@@ -345,13 +348,14 @@ class VentplanModelService {
         */
         //
         StringBuilder statement = new StringBuilder()
-        statement << 'SELECT id, name' <<
+        statement << 'SELECT id, name, reihenfolge' <<
                 ' FROM pakete' <<
-                ' WHERE geraet = ?.gerat AND bedingung = ?.bedingung AND kategorie = ?.kategorie'
+                ' WHERE geraet = ?.gerat AND bedingung = ?.bedingung AND kategorie = ?.kategorie' <<
+                ' ORDER BY reihenfolge'
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [gerat: zentralgerat, bedingung: bedingung, kategorie: 70])
         }
-        return r*.id
+        r//*.id
     }
 
     /**
@@ -371,13 +375,14 @@ class VentplanModelService {
         */
         //
         StringBuilder statement = new StringBuilder()
-        statement << 'SELECT id, name' <<
+        statement << 'SELECT id, name, reihenfolge' <<
                 ' FROM pakete' <<
-                ' WHERE geraet = ?.gerat AND bedingung = ?.bedingung AND kategorie = ?.kategorie'
+                ' WHERE geraet = ?.gerat AND bedingung = ?.bedingung AND kategorie = ?.kategorie' <<
+                ' ORDER BY reihenfolge'
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [gerat: zentralgerat, bedingung: bedingung, kategorie: 71])
         }
-        return r*.id
+        r//*.id
     }
 
     /**
@@ -389,10 +394,10 @@ class VentplanModelService {
         Map<String, Map<String, Integer>> verteilpakete = [:]
         // SQL statement
         StringBuilder statement = new StringBuilder()
-        statement << 'SELECT id, name' <<
+        statement << 'SELECT id, name, reihenfolge' <<
                 ' FROM pakete' <<
                 ' WHERE kategorie = ?.kategorie AND bedingung >= ?.bedingung' <<
-                ' ORDER BY bedingung ASC'
+                ' ORDER BY reihenfolge, bedingung ASC'
         //
         getVerteilebenen(map).each { e ->
             if (!verteilpakete.containsKey(e)) {
@@ -406,15 +411,15 @@ class VentplanModelService {
             verteilpakete[e]['AB']['anzahl'] = countVentileProVerteilebene(raumeAufEbene, 'Ab').inject 0, { int o, n -> o + (int) n.value }
             verteilpakete[e]['AB']['paket'] = withSql { dataSourceName, Sql sql ->
                 sql.firstRow(statement.toString(), [bedingung: verteilpakete[e]['AB']['anzahl'], kategorie: 75])
-            }?.ID
+            }//?.ID
             // Errechne Anzahl aller Zuluftventile und hole Paket
             verteilpakete[e]['ZU']['anzahl'] = countVentileProVerteilebene(raumeAufEbene, 'Zu').inject 0, { int o, n -> o + (int) n.value }
             verteilpakete[e]['ZU']['paket'] = withSql { dataSourceName, Sql sql ->
                 sql.firstRow(statement.toString(), [bedingung: verteilpakete[e]['ZU']['anzahl'], kategorie: 75])
-            }?.ID // Kein Ergebnis wenn keine Verteilpakete mit BEDINGUNG == Anzahl Ventile in der Tabelle PAKETE vorhanden sind
+            }//?.ID // Kein Ergebnis wenn keine Verteilpakete mit BEDINGUNG == Anzahl Ventile in der Tabelle PAKETE vorhanden sind
         }
         //
-        return verteilpakete
+        verteilpakete
     }
 
     /**
@@ -430,13 +435,14 @@ class VentplanModelService {
         }
         //
         StringBuilder statement = new StringBuilder()
-        statement << 'SELECT id, name' <<
+        statement << 'SELECT id, name, reihenfolge' <<
                 ' FROM pakete' << // Feld NAME und GERAET hat in diesem Fall den gleichen Inhalt, den Luftauslass
-                ' WHERE name = ?.name AND bedingung = ?.bedingung AND kategorie = ?.kategorie'
+                ' WHERE name = ?.name AND bedingung = ?.bedingung AND kategorie = ?.kategorie' <<
+                ' ORDER BY reihenfolge'
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [name: luftauslass, bedingung: bedingung, kategorie: 76])
         }
-        return r*.id
+        r//*.id
     }
 
     /**
@@ -447,13 +453,13 @@ class VentplanModelService {
     Map<String, Integer> getLuftauslasspakete(Map map) {
         // SQL statement
         StringBuilder statement = new StringBuilder()
-        statement << 'SELECT id, name' <<
+        statement << 'SELECT id, name, reihenfolge' <<
                 ' FROM pakete' <<
                 ' WHERE kategorie = ?.kategorie AND bedingung >= ?.bedingung' <<
-                ' ORDER BY bedingung ASC'
+                ' ORDER BY reihenfolge, bedingung ASC'
         withSql { dataSourceName, Sql sql ->
             sql.firstRow(statement.toString(), [bedingung: luftauslass, kategorie: 76])
-        }.ID
+        }//.ID
     }
 
     /**
@@ -473,7 +479,7 @@ class VentplanModelService {
                 ' INNER JOIN artikelstamm a ON s.artikel = a.artikelnummer' <<
                 ' WHERE paket IN (' << pakete.join(', ') << ')' <<
                 ' GROUP BY s.reihenfolge, s.artikel, s.luftart' <<
-                ' ORDER BY s.luftart, s.reihenfolge'
+                ' ORDER BY s.reihenfolge, s.luftart'
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString())
         }

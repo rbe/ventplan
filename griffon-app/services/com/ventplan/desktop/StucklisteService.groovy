@@ -7,7 +7,7 @@
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
  *
- * rbe, 7/16/12 10:35 AM
+ * rbe, 28.08.12 17:21
  */
 package com.ventplan.desktop
 
@@ -145,7 +145,7 @@ class StucklisteService {
         pakete += abluftventile
         //println String.format("%17s für %8s (Vs=%d), %s", 'Abluftventile', zentralgerat, volumenstrom, abluftventile)
         List zuluftventile = ventplanModelService.countZuluftventile(map).collect {
-            ventplanModelService.getLuftauslasspaket(it.key, 'ZU') * it.value // TODO 'AB' nur, da 100ULC in DB mit AB steht
+            ventplanModelService.getLuftauslasspaket(it.key, 'ZU') * it.value
         }.flatten()
         pakete += zuluftventile
         //println String.format("%17s für %8s (Vs=%d), %s", 'Zuluftventile', zentralgerat, volumenstrom, zuluftventile)
@@ -160,8 +160,8 @@ class StucklisteService {
         println "HOLE ARTIKEL FÜR JEDES PAKET"
         println "============================"
         */
-        pakete.each { p ->
-            ventplanModelService.paketeZuStuckliste([p]).each { st ->
+        pakete.sort { p -> p.REIHENFOLGE }.each { p ->
+            ventplanModelService.paketeZuStuckliste(/*[p]*/[p.ID]).each { st ->
                 artikelAufStuckliste(stuckliste, st, p)
             }
         }
@@ -184,8 +184,9 @@ class StucklisteService {
         return stuckliste
     }
 
+    /*
     List findArtikel(text) {
         ventplanModelService.findArtikel(text)
     }
-
+    */
 }
