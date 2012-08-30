@@ -513,14 +513,22 @@ class OdiseeService {
         }
         // Zusammenfassung
         // Zuluft
+        /*
+        // TODO volumenstromInfiltration
         double zuSumme = map.raum.raume.findAll { it.raumLuftart == 'ZU' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
         double zuSumme2 = map.raum.raume.findAll { it.raumLuftart == 'ZU/AB' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
         zuSumme += 0.5d * zuSumme2
+        */
+        double zuSumme = map.raum.raume.findAll { it.raumLuftart.contains('ZU') }?.inject(0.0d, { o, n -> o + volumenstromInfiltration(n) }) ?: 0.0d
         domBuilder.userfield(name: 'lmeZuSummeWertLabel', GH.toString2Converter(zuSumme))
         // Abluft
+        /*
+        // TODO volumenstromInfiltration
         double abSumme = map.raum.raume.findAll { it.raumLuftart == 'AB' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
         double abSumme2 = map.raum.raume.findAll { it.raumLuftart == 'ZU/AB' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
         abSumme += 0.5d * abSumme2
+        */
+        double abSumme = map.raum.raume.findAll { it.raumLuftart.contains('AB') }?.inject(0.0d, { o, n -> o + volumenstromInfiltration(n) }) ?: 0.0d
         domBuilder.userfield(name: 'lmeAbSummeWertLabel', GH.toString2Converter(abSumme))
         // Überström
         double ubSumme = map.raum.raume.findAll { it.raumLuftart == 'ÜB' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
@@ -541,7 +549,7 @@ class OdiseeService {
             domBuilder.userfield(name: "lmeTabelleTable!B${i + 3}", r.raumBezeichnung ?: '?')
             domBuilder.userfield(name: "lmeTabelleTable!C${i + 3}", noZero(GH.toString2Converter(r.raumVolumen)))
             domBuilder.userfield(name: "lmeTabelleTable!D${i + 3}", r.raumLuftart ?: '?')
-            double vs = volumenstrom(r)
+            double vs = volumenstromInfiltration(r)
             domBuilder.userfield(name: "lmeTabelleTable!E${i + 3}", noZero(GH.toString2Converter(vs)))
             domBuilder.userfield(name: "lmeTabelleTable!F${i + 3}", noZero(GH.toString2Converter(r.raumLuftwechsel)))
             domBuilder.userfield(name: "lmeTabelleTable!G${i + 3}", noZero(GH.toString0Converter(r.raumAnzahlZuluftventile)))
@@ -553,8 +561,8 @@ class OdiseeService {
             domBuilder.userfield(name: "lmeTabelleTable!M${i + 3}", r.raumVerteilebene ?: '')
         }
         // Ergebnis der Berechnungen
-        double ltmZuluftSumme = summeZuluft(map)
-        double ltmAbluftSumme = summeAbluft(map)
+        double ltmZuluftSumme = summeZuluftInfiltration(map)
+        double ltmAbluftSumme = summeAbluftInfiltration(map)
         // Höchster Wert Nennlüftung ohne Abzug Infiltration
         def nennluftungVolumen = [
                 map.aussenluftVs.gesamtAvsNeLvsNl,
@@ -701,6 +709,23 @@ class OdiseeService {
         double vs = 0.0d
         switch (raum.raumLuftart) {
             case 'ZU':
+                vs = raum.raumZuluftVolumenstrom
+                break
+            case 'AB':
+                vs = raum.raumAbluftVolumenstrom
+                break
+            case 'ZU/AB':
+                // ZU/AB: größeren Wert nehmen
+                vs = Math.max(raum.raumZuluftVolumenstrom ?: 0.0d, raum.raumAbluftVolumenstrom ?: 0.0d)
+                break
+        }
+        vs
+    }
+
+    private double volumenstromInfiltration(raum) {
+        double vs = 0.0d
+        switch (raum.raumLuftart) {
+            case 'ZU':
                 vs = raum.raumZuluftVolumenstromInfiltration
                 break
             case 'AB':
@@ -708,13 +733,13 @@ class OdiseeService {
                 break
             case 'ZU/AB':
                 // ZU/AB: größeren Wert nehmen
-                vs = java.lang.Math.max(raum.raumZuluftVolumenstromInfiltration ?: 0.0d, raum.raumAbluftVolumenstromInfiltration ?: 0.0d)
+                vs = Math.max(raum.raumZuluftVolumenstromInfiltration ?: 0.0d, raum.raumAbluftVolumenstromInfiltration ?: 0.0d)
                 break
         }
         vs
     }
 
-    private double summeZuluft(map) {
+    private double summeZuluftInfiltration(map) {
         double ltmZuluftSumme = (double) map.raum.raume.findAll {
             it.raumLuftart == 'ZU'
         }?.inject(0.0d, { double o, Map n ->
@@ -723,7 +748,7 @@ class OdiseeService {
         ltmZuluftSumme
     }
 
-    private double summeAbluft(map) {
+    private double summeAbluftInfiltration(map) {
         double ltmAbluftSumme = (double) map.raum.raume.findAll {
             it.raumLuftart == 'AB'
         }?.inject(0.0d, { double o, Map n ->
