@@ -16,6 +16,13 @@ import net.miginfocom.swing.MigLayout
 // Stuckliste view
 panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]', '[]para[]'), constraints: 'grow') {
 
+    /* TODO mmu Nimmt zu viel Platz weg
+    panel(id: 'stucklisteInfoPanel', layout: new MigLayout('fillx, wrap', '[fill]para[fill]para[fill]', ''), constraints: 'grow') {
+        label('Die Stückliste wurde möglicherweise gespeichert und geladen, bei Bedarf bitte', constraints: 'span 3')
+        label('über die automatische Berechnung neu erstellen!', constraints: 'span 3')
+    }
+    */
+
     panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]para[fill]para[fill]', ''), constraints: 'grow') {
         label('Artikelnr.', constraints: 'span 3')
         //label('Text/Beschreibung')
