@@ -26,7 +26,7 @@ menuBar = menuBar {
         }
         */
         menuItem(neuesProjektAction)
-        //
+        // WAC-234 Wizard Dialog
         menuItem(neuesProjektWizardAction)
         //
         menuItem(projektOeffnenAction)

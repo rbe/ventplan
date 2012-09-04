@@ -206,6 +206,7 @@ projektPrinzipskizzeErstellenAction = action(
         closure: controller.projektPrinzipskizzeErstellen
 )
 
+// WAC-234 Wizard Dialog
 neuesProjektWizardAction = action(
         id: 'neuesProjektWizardAction',
         name: 'Neues Projekt erstellen (Wizard)',
