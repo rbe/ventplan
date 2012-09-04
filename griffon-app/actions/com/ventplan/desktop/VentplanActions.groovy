@@ -205,3 +205,12 @@ projektPrinzipskizzeErstellenAction = action(
         enabled: bind { model.aktivesProjekt != null },
         closure: controller.projektPrinzipskizzeErstellen
 )
+
+neuesProjektWizardAction = action(
+        id: 'neuesProjektWizardAction',
+        name: 'Neues Projekt erstellen (Wizard)',
+        mnemonic: 'Z',
+        accelerator: shortcut('Z'),
+        enabled: bind { model.aktivesProjekt == null },
+        closure: controller.neuesProjektWizard
+)

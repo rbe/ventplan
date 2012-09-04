@@ -662,7 +662,7 @@ class ProjektController {
             if (raumPosition < 0) {
                 raumPosition = view.raumTabelle.selectedRow
             }
-            if (raumPosition > -1) {
+            if (raumPosition > -1 && raumPosition < model.map.raum.raume.size()) {
                 // Raumdaten prüfen
 //                def raum
 //                def raumIndex
@@ -691,16 +691,18 @@ class ProjektController {
                     view?.raumBearbeitenLuftartFaktorZuluftverteilung?.text = model.map.raum.raume[raumPosition].raumZuluftfaktor.toString2()
                 } catch (e) {}
                 // WAC-65: Errechnete Werte zurücksetzen
+                println "raumPosition -> ${raumPosition}"
+                println "model.map.raum.raume -> ${model.map.raum.raume.dump()}"
                 model.map.raum.raume[raumPosition].with {
                     try {
                         if (raumBreite && raumLange) {
-                        raumFlache = raumBreite * raumLange
+                            raumFlache = raumBreite * raumLange
                         }
                     } catch (NullPointerException e) {
                         // ignore
                     }
                     try {
-                    raumVolumen = raumFlache * raumHohe
+                        raumVolumen = raumFlache * raumHohe
                     } catch (NullPointerException e) {
                         // ignore
                     }

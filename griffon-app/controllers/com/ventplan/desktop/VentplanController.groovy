@@ -17,6 +17,7 @@ import com.bensmann.griffon.GriffonHelper as GH
 import groovy.io.FileType
 
 import javax.swing.JFileChooser
+import javax.swing.JDialog
 
 /**
  *
@@ -33,6 +34,8 @@ class VentplanController {
     def aboutDialog
     def checkUpdateDialog
     def projektSuchenDialog
+
+    JDialog neuesProjektWizardDialog
 
     /**
      * Flag zum Abbrechen des Schliessen Vorgangs
@@ -732,5 +735,16 @@ class VentplanController {
     /**
      * WAC-177 Angebotsverfolgung
      def angebotsverfolgung = {getMVCGroupAktivesProjekt().controller.angebotsverfolgung()}*/
+
+    /**
+     *
+     */
+    def neuesProjektWizard = { evt = null ->
+        // Show dialog
+        neuesProjektWizardDialog = GH.createDialog(builder, WizardView, [title: "Neues Projekt erstellen", size: [750, 550], resizable: true, pack: false])
+        // Modify TableModel for Turen
+        neuesProjektWizardDialog = GH.centerDialog(app.views['MainFrame'], neuesProjektWizardDialog)
+        neuesProjektWizardDialog.show()
+    }
 
 }
