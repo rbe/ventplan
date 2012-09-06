@@ -2486,14 +2486,16 @@ class ProjektController {
     private void openDocument(String type, File document) {
         try {
             Desktop.desktop.open(document)
-        } finally {
-            documentWaitDialog?.dispose()
-            if (GriffonApplicationUtils.isWindows) {
+            //if (GriffonApplicationUtils.isWindows) {
                 doLater {
                     def msg = "${type} erstellen\n${document ?: 'Das Dokument'} wurde erzeugt." as String
                     app.controllers['Dialog'].showInformDialog(msg)
                 }
-            }
+            //}
+        } catch (e) {
+            println "openDocument: ${e}"
+        } finally {
+            documentWaitDialog?.dispose()
         }
     }
 
