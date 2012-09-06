@@ -691,8 +691,6 @@ class ProjektController {
                     view?.raumBearbeitenLuftartFaktorZuluftverteilung?.text = model.map.raum.raume[raumPosition].raumZuluftfaktor.toString2()
                 } catch (e) {}
                 // WAC-65: Errechnete Werte zurücksetzen
-                println "raumPosition -> ${raumPosition}"
-                println "model.map.raum.raume -> ${model.map.raum.raume.dump()}"
                 model.map.raum.raume[raumPosition].with {
                     try {
                         if (raumBreite && raumLange) {
