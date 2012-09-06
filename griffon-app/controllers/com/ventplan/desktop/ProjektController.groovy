@@ -1860,6 +1860,9 @@ class ProjektController {
                             ]
                     )
                 }
+                // WAC-226: Stuckliste speichern, damit die Änderungen später aktiv bleiben!
+                model.stucklisteMap = newMap
+                vpxModelService.save(model.map, model.vpxFilename, newMap)
                 // Auslegung/Dokument erstellen
                 try {
                     File vpxFile = new File(model.vpxFilename)
