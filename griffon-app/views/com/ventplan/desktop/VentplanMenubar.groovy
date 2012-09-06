@@ -27,6 +27,8 @@ menuBar = menuBar {
         */
         menuItem(neuesProjektAction)
         //
+        menuItem(neuesProjektWizardAction)
+        //
         menuItem(projektOeffnenAction)
         // WAC-161 Zuletzt geöffnete Projekte
         menu(id: 'recentlyOpenedMenu', text: 'Zuletzt geöffnete Projekte', icon: imageIcon(resource: '/menu/project_recently_opened.png'), enabled: bind { model.aktivesProjekt == null })
