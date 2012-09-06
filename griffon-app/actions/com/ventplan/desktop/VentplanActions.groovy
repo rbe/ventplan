@@ -209,9 +209,10 @@ projektPrinzipskizzeErstellenAction = action(
 // WAC-234 Wizard Dialog
 neuesProjektWizardAction = action(
         id: 'neuesProjektWizardAction',
-        name: 'Neues Projekt erstellen (Wizard)',
-        mnemonic: 'Z',
-        accelerator: shortcut('Z'),
+        name: 'Wizard für neues Projekt',
+        mnemonic: 'X',
+        accelerator: shortcut('X'),
+        smallIcon: imageIcon(resource: '/menu/project_wizard.png'),
         enabled: bind { model.aktivesProjekt == null },
         closure: controller.neuesProjektWizard
 )

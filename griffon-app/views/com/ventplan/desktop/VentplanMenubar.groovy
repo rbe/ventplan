@@ -26,8 +26,10 @@ menuBar = menuBar {
         }
         */
         menuItem(neuesProjektAction)
+        /* target 7.0.9
         // WAC-234 Wizard Dialog
         menuItem(neuesProjektWizardAction)
+        */
         //
         menuItem(projektOeffnenAction)
         // WAC-161 Zuletzt geöffnete Projekte
