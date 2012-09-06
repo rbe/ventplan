@@ -694,13 +694,13 @@ class ProjektController {
                 model.map.raum.raume[raumPosition].with {
                     try {
                         if (raumBreite && raumLange) {
-                        raumFlache = raumBreite * raumLange
+                            raumFlache = raumBreite * raumLange
                         }
                     } catch (NullPointerException e) {
                         // ignore
                     }
                     try {
-                    raumVolumen = raumFlache * raumHohe
+                        raumVolumen = raumFlache * raumHohe
                     } catch (NullPointerException e) {
                         // ignore
                     }
@@ -2490,10 +2490,10 @@ class ProjektController {
         try {
             Desktop.desktop.open(document)
             //if (GriffonApplicationUtils.isWindows) {
-                doLater {
-                    def msg = "${type} erstellen\n${document ?: 'Das Dokument'} wurde erzeugt." as String
-                    app.controllers['Dialog'].showInformDialog(msg)
-                }
+            doLater {
+                def msg = "${type} erstellen\n${document ?: 'Das Dokument'} wurde erzeugt." as String
+                app.controllers['Dialog'].showInformDialog(msg)
+            }
             //}
         } catch (e) {
             println "openDocument: ${e}"
