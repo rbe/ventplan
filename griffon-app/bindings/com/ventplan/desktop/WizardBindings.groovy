@@ -13,6 +13,8 @@ package com.ventplan.desktop
 
 import com.bensmann.griffon.GriffonHelper as GH
 
+// WAC-234 Wizard Dialog
+
 //// Gebäudedaten - Gebäudetyp
 //bind(source: model.map.gebaude.typ, sourceProperty: "mfh",        target: gebaudeTypMFH,        targetProperty: "selected", mutual: true)
 //bind(source: model.map.gebaude.typ, sourceProperty: "efh",        target: gebaudeTypEFH,        targetProperty: "selected", mutual: true)

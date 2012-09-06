@@ -737,7 +737,7 @@ class VentplanController {
      def angebotsverfolgung = {getMVCGroupAktivesProjekt().controller.angebotsverfolgung()}*/
 
     /**
-     *
+     * WAC-234 Wizard Dialog
      */
     def neuesProjektWizard = { evt = null ->
         // Show dialog

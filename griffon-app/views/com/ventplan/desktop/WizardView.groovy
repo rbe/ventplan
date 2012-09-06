@@ -13,7 +13,7 @@ package com.ventplan.desktop
 
 import net.miginfocom.swing.MigLayout
 
-// Wizard view
+// WAC-234 Wizard Dialog view
 zoneLayout {
     zoneRow('x+*x')
 }
