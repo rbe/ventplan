@@ -17,15 +17,15 @@ import net.miginfocom.swing.MigLayout
 panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]', '[]para[]'), constraints: 'grow') {
 
     panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]para[fill]para[fill]', ''), constraints: 'grow') {
-        label('Die Stückliste wurde möglicherweise gespeichert und geladen, bei Bedarf bitte', constraints: 'span 3')
-        label('über die automatische Berechnung neu erstellen!', constraints: 'span 3')
+        label('Bitte prüfen: Möglicherweise wurde die Stückliste nach der automatischen Berechnung', constraints: 'span 3')
+        label('manuell verändert und gespeichert. Neu berechnen über Menü Auslegung -> Autom. Berechnung', constraints: 'span 3')
         label('', constraints: 'span 3')
 
         label('Artikelnr.', constraints: 'span 3')
         //label('Text/Beschreibung')
         //label('Anzahl')
 
-        textField(id: 'stucklisteSucheArtikelnummer', constraints: "span 2")
+        textField(id: 'stucklisteSucheArtikelnummer', constraints: 'span 2')
         //label(id: 'stucklisteSucheArtikeltext')
         //textField(id: 'stucklisteSucheArtikelanzahl')
         button(id: 'stucklisteSucheStarten', text: 'Suchen')
