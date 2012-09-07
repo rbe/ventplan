@@ -99,60 +99,89 @@ class StucklisteService {
         String zentralgerat = map.anlage.zentralgerat
         Integer volumenstrom = map.anlage.volumenstromZentralgerat
         // Grundpaket
-        List grundpaket = ventplanModelService.getGrundpaket(zentralgerat)
-        //println String.format("%17s für %8s (Vs=%d) ist %s", 'Grundpaket', zentralgerat, volumenstrom, grundpaket)
-        pakete += grundpaket
+        try {
+            List grundpaket = ventplanModelService.getGrundpaket(zentralgerat)
+            //println String.format("%17s für %8s (Vs=%d) ist %s", 'Grundpaket', zentralgerat, volumenstrom, grundpaket)
+            pakete += grundpaket
+        } catch (e) {
+        }
         // Gerätepaket
-        List geratepaket = ventplanModelService.getGeratepaket(zentralgerat, volumenstrom)
-        pakete += geratepaket
-        //println String.format("%17s für %8s (Vs=%d) ist %s", 'Geraetepaket', zentralgerat, volumenstrom, geratepaket)
+        try {
+            List geratepaket = ventplanModelService.getGeratepaket(zentralgerat, volumenstrom)
+            //println String.format("%17s für %8s (Vs=%d) ist %s", 'Geraetepaket', zentralgerat, volumenstrom, geratepaket)
+            pakete += geratepaket
+        } catch (e) {
+        }
         // Erweiterungspaket für alle Ebenen außer die Erste
-        List erwei = ventplanModelService.getErweiterungspaket(zentralgerat, volumenstrom)
-        // Ebenen
-        List verteilebenen = ventplanModelService.getVerteilebenen(map)
-        int anzahlVerteilebenen = verteilebenen.size() - 1
-        if (anzahlVerteilebenen > 0) {
-            //println String.format("%17s für %8s (Vs=%d) sind %s", 'Verteilbenen', zentralgerat, volumenstrom, verteilebenen.join(', '))
-            1.upto anzahlVerteilebenen, {
-                //println String.format("%17s für %8s (Vs=%d), %s für Ebene(n) %s", 'Erweiterungspaket', zentralgerat, volumenstrom, erwei, verteilebenen[it])
-                pakete += erwei
+        try {
+            List erwei = ventplanModelService.getErweiterungspaket(zentralgerat, volumenstrom)
+            // Ebenen
+            List verteilebenen = ventplanModelService.getVerteilebenen(map)
+            int anzahlVerteilebenen = verteilebenen.size() - 1
+            if (anzahlVerteilebenen > 0) {
+                //println String.format("%17s für %8s (Vs=%d) sind %s", 'Verteilbenen', zentralgerat, volumenstrom, verteilebenen.join(', '))
+                1.upto anzahlVerteilebenen, {
+                    //println String.format("%17s für %8s (Vs=%d), %s für Ebene(n) %s", 'Erweiterungspaket', zentralgerat, volumenstrom, erwei, verteilebenen[it])
+                    pakete += erwei
+                }
             }
+        } catch (e) {
         }
         // Außenluftpaket
-        String aussenluft = map.anlage.aussenluft.grep { it.value == true }?.key[0]
-        aussenluft = aussenluft[0].toUpperCase() + aussenluft[1..-1]
-        if (aussenluft == 'Erdwarme') {
-            aussenluft = 'EWT'
+        try {
+            String aussenluft = map.anlage.aussenluft.grep { it.value == true }?.key[0]
+            aussenluft = aussenluft[0].toUpperCase() + aussenluft[1..-1]
+            if (aussenluft == 'Erdwarme') {
+                aussenluft = 'EWT'
+            }
+            List aussenluftpaket = ventplanModelService.getAussenluftpaket(zentralgerat, volumenstrom, aussenluft)
+            //println String.format("%17s für %8s (Vs=%d), %s ist %s", 'Aussenluftpaket', zentralgerat, volumenstrom, 'Wand', aussenluftpaket)
+            pakete += aussenluftpaket
+        } catch (e) {
         }
-        List aussenluftpaket = ventplanModelService.getAussenluftpaket(zentralgerat, volumenstrom, aussenluft)
-        //println String.format("%17s für %8s (Vs=%d), %s ist %s", 'Aussenluftpaket', zentralgerat, volumenstrom, 'Wand', aussenluftpaket)
-        pakete += aussenluftpaket
         // Fortluftpaket
-        String fortluft = map.anlage.fortluft.grep { it.value == true }?.key[0]
-        fortluft = fortluft[0].toUpperCase() + fortluft[1..-1]
-        List fortluftpaket = ventplanModelService.getFortluftpaket(zentralgerat, volumenstrom, fortluft)
-        //println String.format("%17s für %8s (Vs=%d), %s ist %s", 'Fortluftpaket', zentralgerat, volumenstrom, 'Dach', fortluftpaket)
-        pakete += fortluftpaket
+        try {
+            String fortluft = map.anlage.fortluft.grep { it.value == true }?.key[0]
+            fortluft = fortluft[0].toUpperCase() + fortluft[1..-1]
+            List fortluftpaket = ventplanModelService.getFortluftpaket(zentralgerat, volumenstrom, fortluft)
+            //println String.format("%17s für %8s (Vs=%d), %s ist %s", 'Fortluftpaket', zentralgerat, volumenstrom, 'Dach', fortluftpaket)
+            pakete += fortluftpaket
+        } catch (e) {
+        }
         // Verteilpakete
-        def _verteilpakete = ventplanModelService.getVerteilpakete(map)
-        def verteilpakete = _verteilpakete*.value['AB']['paket'] + _verteilpakete*.value['ZU']['paket']
-        //println String.format("%17s für %8s (Vs=%d), sind %s", 'Verteilpakete', zentralgerat, volumenstrom, verteilpakete)
-        pakete += verteilpakete
+        try {
+            def _verteilpakete = ventplanModelService.getVerteilpakete(map)
+            def verteilpakete = _verteilpakete*.value['AB']['paket'] + _verteilpakete*.value['ZU']['paket']
+            //println String.format("%17s für %8s (Vs=%d), sind %s", 'Verteilpakete', zentralgerat, volumenstrom, verteilpakete)
+            pakete += verteilpakete
+        } catch (e) {
+        }
         // Luftauslässe
-        List abluftventile = ventplanModelService.countAbluftventile(map).collect {
-            ventplanModelService.getLuftauslasspaket(it.key, 'AB') * it.value
-        }.flatten()
-        pakete += abluftventile
-        //println String.format("%17s für %8s (Vs=%d), %s", 'Abluftventile', zentralgerat, volumenstrom, abluftventile)
-        List zuluftventile = ventplanModelService.countZuluftventile(map).collect {
-            ventplanModelService.getLuftauslasspaket(it.key, 'ZU') * it.value
-        }.flatten()
-        pakete += zuluftventile
-        //println String.format("%17s für %8s (Vs=%d), %s", 'Zuluftventile', zentralgerat, volumenstrom, zuluftventile)
+        try {
+            List abluftventile = ventplanModelService.countAbluftventile(map).collect {
+                ventplanModelService.getLuftauslasspaket(it.key, 'AB') * it.value
+            }.flatten()
+            //println String.format("%17s für %8s (Vs=%d), %s", 'Abluftventile', zentralgerat, volumenstrom, abluftventile)
+            pakete += abluftventile
+        } catch (e) {
+        }
+        // Lufteinlässe
+        try {
+            List zuluftventile = ventplanModelService.countZuluftventile(map).collect {
+                ventplanModelService.getLuftauslasspaket(it.key, 'ZU') * it.value
+            }.flatten()
+            //println String.format("%17s für %8s (Vs=%d), %s", 'Zuluftventile', zentralgerat, volumenstrom, zuluftventile)
+            pakete += zuluftventile
+        } catch (e) {
+        }
         // Raumvolumenströme, Überströmelemente, m=[Übertrömelement:Anzahl]
-        List uberstromventile = ventplanModelService.countUberstromelemente(map).collect() {
-            ventplanModelService.getArtikel(it.key)
-        }.flatten()
+        List uberstromventile = null
+        try {
+            uberstromventile = ventplanModelService.countUberstromelemente(map).collect() {
+                ventplanModelService.getArtikel(it.key)
+            }.flatten()
+        } catch (e) {
+        }
         //
         /*
         println String.format("%17s für %8s (Vs=%d) sind %s", 'Gesamte Pakete', zentralgerat, volumenstrom, pakete)
@@ -161,11 +190,11 @@ class StucklisteService {
         println "============================"
         */
         pakete.sort { p -> p.REIHENFOLGE }.each { p ->
-            ventplanModelService.paketeZuStuckliste(/*[p]*/[p.ID]).each { st ->
+            ventplanModelService.paketeZuStuckliste([p.ID]).each { st ->
                 artikelAufStuckliste(stuckliste, st, p)
             }
         }
-        uberstromventile.each { st ->
+        uberstromventile?.each { st ->
             artikelAufStuckliste(stuckliste, st)
         }
         // Rohrlängen, Liefermenge
