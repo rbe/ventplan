@@ -26,10 +26,9 @@ menuBar = menuBar {
         }
         */
         menuItem(neuesProjektAction)
-        /* TODO target 7.0.9
+        // TODO target 7.0.9
         // WAC-234 Wizard Dialog
         menuItem(neuesProjektWizardAction)
-        */
         //
         menuItem(projektOeffnenAction)
         // WAC-161 Zuletzt geöffnete Projekte
