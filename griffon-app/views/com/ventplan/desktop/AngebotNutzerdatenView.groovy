@@ -19,7 +19,7 @@ import net.miginfocom.swing.MigLayout
 // Auslegung input dialog view
 panel(id: 'erstellerPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]para[fill]', ''), constraints: 'grow') {
     // Informationen über den Ersteller
-    label('Informationen über den Ersteller des Dokuments', foreground: Color.BLUE, constraints: 'grow, span 3')
+    label('Informationen über den Ersteller des Dokuments (optional)', foreground: Color.BLUE, constraints: 'grow, span 3')
 
     label('Firma')
     textField(id: 'erstellerFirma', constraints: 'grow, span 2')
