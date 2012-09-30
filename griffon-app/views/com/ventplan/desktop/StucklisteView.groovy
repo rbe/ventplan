@@ -18,7 +18,7 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
 
     panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]para[fill]para[fill]', ''), constraints: 'grow') {
         label('Bitte prüfen: Möglicherweise wurde die Stückliste nach der automatischen Berechnung', constraints: 'span 3')
-        label('manuell verändert und gespeichert. Neu berechnen über Menü Auslegung -> Autom. Berechnung', constraints: 'span 3')
+        label('manuell verändert und gespeichert.', constraints: 'span 3')
         label('', constraints: 'span 3')
 
         label('Artikelnr.', constraints: 'span 3')
