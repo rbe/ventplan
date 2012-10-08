@@ -322,7 +322,7 @@ class ProjektController {
      */
     private void saveBeforeDocument() {
         if (!model.vpxFilename) {
-            app.controllers['Dialog'].showInformDialog('Das Projekt wird erst gespeichert, bevor eins weiter verarbeitet wird!')
+            app.controllers['Dialog'].showInformDialog('Sie müssen das Projekt jetzt speichern, damit das Dokument erstellt werden kann!')
         }
         app.controllers['MainFrame'].aktivesProjektSpeichern()
     }
