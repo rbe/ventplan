@@ -322,7 +322,7 @@ class ProjektController {
      */
     private void saveBeforeDocument() {
         if (!model.vpxFilename) {
-            app.controllers['Dialog'].showInformDialog('Das Projekt wird erst gespeichert, bevor eins weiter verarbeitet wird!')
+            app.controllers['Dialog'].showInformDialog('Sie müssen das Projekt jetzt speichern, damit das Dokument erstellt werden kann!')
         }
         app.controllers['MainFrame'].aktivesProjektSpeichern()
     }
@@ -1687,7 +1687,7 @@ class ProjektController {
         // Dialog erzeugen
         String _title = title ?: 'Informationen über den Ersteller'
         nutzerdatenDialog = GH.createDialog(builder, dialogClass, [title: _title, resizable: false, pack: true])
-        String _okButtonText = okButtonText ?: 'Eingaben speichern und Dokument erstellen'
+        String _okButtonText = okButtonText ?: 'Dokument erstellen'
         view.nutzerdatenSpeichernButton.text = _okButtonText
         // Gespeicherte Daten holen und in den Dialog setzen
         view.erstellerFirma.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA)
@@ -1805,7 +1805,7 @@ class ProjektController {
      */
     def auslegungErstellen() {
         // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
-        showNutzerdatenDialog(AuslegungNutzerdatenView, 'Auslegung erstellen', 'Eingaben speichern und Auslegung erstellen')
+        showNutzerdatenDialog(AuslegungNutzerdatenView, 'Auslegung erstellen', 'Auslegung erstellen')
         //
         if (nutzerdatenGeandert) {
             // Projekt speichern
@@ -1836,7 +1836,7 @@ class ProjektController {
         processStucklisteDialog('Angebot')
         if (!stucklisteAbgebrochen) {
             // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
-            showNutzerdatenDialog(AngebotNutzerdatenView, 'Angebot erstellen', 'Eingaben speichern und Angebot erstellen')
+            showNutzerdatenDialog(AngebotNutzerdatenView, 'Angebot erstellen', 'Angebot erstellen')
             if (nutzerdatenGeandert) {
                 // Projekt speichern
                 saveBeforeDocument()
@@ -1883,7 +1883,7 @@ class ProjektController {
         processStucklisteDialog('Stückliste')
         if (!stucklisteAbgebrochen) {
             // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
-            showNutzerdatenDialog(StucklisteNutzerdatenView, 'Stückliste erstellen - Daten eingeben', 'Eingaben speichern und Stückliste erstellen')
+            showNutzerdatenDialog(StucklisteNutzerdatenView, 'Stückliste erstellen - Daten eingeben', 'Stückliste erstellen')
             if (nutzerdatenGeandert) {
                 // Projekt speichern
                 saveBeforeDocument()

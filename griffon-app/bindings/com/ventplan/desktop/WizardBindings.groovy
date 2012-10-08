@@ -15,22 +15,30 @@ import com.bensmann.griffon.GriffonHelper as GH
 
 // WAC-234 Wizard Dialog
 
-//// Gebäudedaten - Gebäudetyp
-//bind(source: model.map.gebaude.typ, sourceProperty: "mfh",        target: gebaudeTypMFH,        targetProperty: "selected", mutual: true)
-//bind(source: model.map.gebaude.typ, sourceProperty: "efh",        target: gebaudeTypEFH,        targetProperty: "selected", mutual: true)
-//bind(source: model.map.gebaude.typ, sourceProperty: "maisonette", target: gebaudeTypMaisonette, targetProperty: "selected", mutual: true)
+
+wizardAbbrechen.actionPerformed = controller.wizardAbbrechen
+wizardProjektErstellen.actionPerformed = controller.wizardProjektErstellen
+
+// Gebäudetyp
+bind(source: model.wizardmap.gebaude.typ, sourceProperty: 'mfh',        target: wizardGebaudeTypMFH,        targetProperty: 'selected', mutual: true)
+bind(source: model.wizardmap.gebaude.typ, sourceProperty: 'efh',        target: wizardGebaudeTypEFH,        targetProperty: 'selected', mutual: true)
+bind(source: model.wizardmap.gebaude.typ, sourceProperty: 'maisonette', target: wizardGebaudeTypMaisonette, targetProperty: 'selected', mutual: true)
 //[gebaudeTypMFH, gebaudeTypEFH, gebaudeTypMaisonette].each {
 //    GH.onChange(it, null, controller.gebaudedatenGeandert)
 //}
-//// Gebäudedaten - Gebäudelage
-//bind(source: model.map.gebaude.lage, sourceProperty: "windschwach", target: gebaudeLageWindschwach, targetProperty: "selected", mutual: true)
-//bind(source: model.map.gebaude.lage, sourceProperty: "windstark",   target: gebaudeLageWindstark,   targetProperty: "selected", mutual: true)
+// Wärmeschutz
+bind(source: model.wizardmap.gebaude.warmeschutz, sourceProperty: 'hoch',    target: wizardGebaudeWarmeschutzHoch,    targetProperty: 'selected', mutual: true)
+bind(source: model.wizardmap.gebaude.warmeschutz, sourceProperty: 'niedrig', target: wizardGebaudeWarmeschutzNiedrig, targetProperty: 'selected', mutual: true)
+// Gebäudelage
+bind(source: model.wizardmap.gebaude.lage, sourceProperty: 'windschwach', target: wizardGebaudeLageWindschwach, targetProperty: 'selected', mutual: true)
+bind(source: model.wizardmap.gebaude.lage, sourceProperty: 'windstark',   target: wizardGebaudeLageWindstark,   targetProperty: 'selected', mutual: true)
 //[gebaudeLageWindschwach, gebaudeLageWindstark].each {
 //    GH.onChange(it, null, controller.gebaudedatenGeandert)
 //}
-//bind(source: model.map.gebaude.geplanteBelegung, sourceProperty: "personenanzahl",        target: gebaudeGeplantePersonenanzahl,        targetProperty: "value")
-//bind(source: model.map.gebaude.geplanteBelegung, sourceProperty: "aussenluftVsProPerson", target: gebaudeGeplanteAussenluftVsProPerson, targetProperty: "value")
-//bind(source: model.map.gebaude.geplanteBelegung, sourceProperty: "mindestaussenluftrate", target: gebaudeGeplanteMindestaussenluftrate, targetProperty: "text",  converter: GH.toString2Converter)
+// Geplante Belegung
+bind(source: model.wizardmap.gebaude.geplanteBelegung, sourceProperty: 'personenanzahl',        target: wizardHausPersonenanzahl,        targetProperty: 'value')
+bind(source: model.wizardmap.gebaude.geplanteBelegung, sourceProperty: 'aussenluftVsProPerson', target: wizardHausAussenluftVsProPerson, targetProperty: 'value')
+//bind(source: model.wizardmap.gebaude.geplanteBelegung, sourceProperty: 'mindestaussenluftrate', target: gebaudeGeplanteMindestaussenluftrate, targetProperty: 'text',  converter: GH.toString2Converter)
 //[gebaudeGeplantePersonenanzahl, gebaudeGeplanteAussenluftVsProPerson].each {
 //	it.stateChanged = controller.berechneMindestaussenluftrate
 //    GH.installKeyAdapter(it.editor.textField, GH.NUMBER_KEY_CODES, { evt ->
