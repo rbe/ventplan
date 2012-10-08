@@ -741,10 +741,148 @@ class VentplanController {
      */
     def neuesProjektWizard = { evt = null ->
         // Show dialog
-        neuesProjektWizardDialog = GH.createDialog(builder, WizardView, [title: "Neues Projekt erstellen", size: [750, 550], resizable: true, pack: false])
+        neuesProjektWizardDialog = GH.createDialog(builder, WizardView, [title: "Neues Projekt mit dem Wizard erstellen", size: [850, 580], resizable: true, pack: false])
         // Modify TableModel for Turen
         neuesProjektWizardDialog = GH.centerDialog(app.views['MainFrame'], neuesProjektWizardDialog)
         neuesProjektWizardDialog.show()
     }
+
+    /**
+     * WAC-234 Wizard Dialog
+     */
+    def wizardAbbrechen = { evt = null ->
+        neuesProjektWizardDialog.dispose()
+    }
+
+    /**
+     * WAC-234 Wizard Dialog
+     * Neues Projekt erstellen
+     */
+    def wizardProjektErstellen = { evt = null ->
+//        neuesProjektWizardDialog.wizardGebaudeTypMFH.selected
+//        neuesProjektWizardDialog.wizardGebaudeTypEFH.selected
+//        neuesProjektWizardDialog.wizardGebaudeTypMaisonette.selected
+//
+//        neuesProjektWizardDialog.wizardGebaudeLageWindschwach.selected
+//        neuesProjektWizardDialog.wizardGebaudeLageWindstark.selected
+//
+//        neuesProjektWizardDialog.wizardGebaudeWarmeschutzHoch.selected
+//        neuesProjektWizardDialog.wizardGebaudeWarmeschutzNiedrig.selected
+//
+//
+//        neuesProjektWizardDialog.wizardHausPersonenanzahl.text()
+//
+//        neuesProjektWizardDialog.wizardHausAussenluftVsProPerson.text()
+
+        def wzAnzahl = view.wizardRaumTypWohnzimmer.text == '' ? 0 : view.wizardRaumTypWohnzimmer.text.toInteger()
+        addRaume('Wohnzimmer', wzAnzahl)
+        def wcAnzahl = view.wizardRaumTypWC.text == '' ? 0 : view.wizardRaumTypWC.text.toInteger()
+        addRaume('WC', wcAnzahl)
+        def kzAnzahl = view.wizardRaumTypKinderzimmer.text == '' ? 0 : view.wizardRaumTypKinderzimmer.text.toInteger()
+        addRaume('Kinderzimmer', kzAnzahl)
+        def kAnzahl = view.wizardRaumTypKuche.text == '' ? 0 : view.wizardRaumTypKuche.text.toInteger()
+        addRaume('Küche', kAnzahl)
+        def szAnzahl = view.wizardRaumTypSchlafzimmer.text == '' ? 0 : view.wizardRaumTypSchlafzimmer.text.toInteger()
+        addRaume('Schlafzimmer', szAnzahl)
+        def knAnzahl = view.wizardRaumTypKochnische.text == '' ? 0 : view.wizardRaumTypKochnische.text.toInteger()
+        addRaume('Kochnische', knAnzahl)
+        def ezAnzahl = view.wizardRaumTypEsszimmer.text == '' ? 0 : view.wizardRaumTypEsszimmer.text.toInteger()
+        addRaume('Esszimmer', ezAnzahl)
+        def bAnzahl = view.wizardRaumTypBad.text == '' ? 0 : view.wizardRaumTypBad.text.toInteger()
+        addRaume('Bad mit/ohne WC', bAnzahl)
+        def azAnzahl = view.wizardRaumTypArbeitszimmer.text == '' ? 0 : view.wizardRaumTypArbeitszimmer.text.toInteger()
+        addRaume('Arbeitszimmer', azAnzahl)
+        def drAnzahl = view.wizardRaumTypDuschraum.text == '' ? 0 : view.wizardRaumTypDuschraum.text.toInteger()
+        addRaume('Duschraum', drAnzahl)
+        def gzAnzahl = view.wizardRaumTypGastezimmer.text == '' ? 0 : view.wizardRaumTypGastezimmer.text.toInteger()
+        addRaume('Gästezimmer', gzAnzahl)
+        def sAnzahl = view.wizardRaumTypSauna.text == '' ? 0 : view.wizardRaumTypSauna.text.toInteger()
+        addRaume('Sauna', sAnzahl)
+        def hrAnzahl = view.wizardRaumTypHausarbeitsraum.text == '' ? 0 : view.wizardRaumTypHausarbeitsraum.text.toInteger()
+        addRaume('Hausarbeitsraum', hrAnzahl)
+        def fAnzahl = view.wizardRaumTypFlur.text == '' ? 0 : view.wizardRaumTypFlur.text.toInteger()
+        addRaume('Flur', fAnzahl)
+        def krAnzahl = view.wizardRaumTypKellerraum.text == '' ? 0 : view.wizardRaumTypKellerraum.text.toInteger()
+        addRaume('Kellerraum', krAnzahl)
+        def dAnzahl = view.wizardRaumTypDiele.text == '' ? 0 : view.wizardRaumTypDiele.text.toInteger()
+        addRaume('Diele', dAnzahl)
+
+        neuesProjektWizardDialog.dispose()
+
+        println "Wizard neues Projekt: model.wizardmap=${model.wizardmap.dump()}"
+    }
+
+
+    def addRaume(raumTyp, anzahl) {
+
+        def raumName
+        for (int i = 1; i <= anzahl; i++) {
+            raumName = raumTyp + ' ' + i.toString()
+
+            def raum = raumMapTemplate.clone()
+
+            def raumSize = (model.wizardmap.raum?.raume?.size() + 1).toString()
+
+            raum.turen = [
+                    [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+                    [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+                    [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+                    [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
+                    [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
+            ] as ObservableList
+            // Hole Werte für neuen Raum aus der View und füge Raum hinzu
+            raum.with {
+                // Übernehme Wert für Bezeichnung vom Typ?
+                raumBezeichnung = raumName
+                // Länge + Breite
+                raumLange = 5.0d
+                raumBreite = 4.0d
+                // Fläche, Höhe, Volumen
+                raumFlache = raumFlache.toDouble2()
+                raumHohe = raumHohe.toDouble2()
+                raumVolumen = raumFlache * raumHohe
+                // Zuluftfaktor
+                raumZuluftfaktor = raumZuluftfaktor?.toDouble2() ?: 0.0d
+                // Abluftvolumenstrom
+                raumAbluftVolumenstrom = raumAbluftVolumenstrom?.toDouble2() ?: 0.0d
+                // Standard Türspalthöhe ist 10 mm
+                raumTurspaltHohe = 10.0d
+
+                raumNummer = '' + raumSize
+            }
+
+            model.wizardmap.raum.raume << raum
+        }
+    }
+
+    def raumMapTemplate = [
+        raumBezeichnung: '',
+        raumLuftart: '',
+        raumGeschoss: '',
+        raumLange: 0.0d,
+        raumBreite: 0.0d,
+        raumFlache: 0.0d,
+        raumHohe: 0.0d,
+        raumZuluftfaktor: 0.0d,
+        raumVolumen: 0.0d,
+        raumLuftwechsel: 0.0d,
+        raumZuluftVolumenstrom: 0.0d,
+        raumZuluftVolumenstromInfiltration: 0.0d, // Zuluftfaktor abzgl. Infiltration
+        raumAbluftVolumenstrom: 0.0d,
+        raumAbluftVolumenstromInfiltration: 0.0d, // Abluftvs abzgl. Infiltration
+        raumBezeichnungAbluftventile: '',
+        raumAnzahlAbluftventile: 0,
+        raumAbluftmengeJeVentil: 0.0d,
+        raumBezeichnungZuluftventile: '',
+        raumAnzahlZuluftventile: 0,
+        raumZuluftmengeJeVentil: 0.0d,
+        raumVerteilebene: '',
+        raumAnzahlUberstromVentile: 0,
+        raumUberstromElement: '',
+        raumUberstromVolumenstrom: 0.0d,
+        raumNummer: '',
+        raumMaxTurspaltHohe: 10.0d,
+        turen: []
+    ]
 
 }
