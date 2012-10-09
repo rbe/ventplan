@@ -56,10 +56,10 @@ panel(constraints: 'x', border: compoundBorder(outer: emptyBorder(5), inner: emp
     // GebäudeGeplanteBelegung
     panel(id: 'wizardGebaudeGeplanteBelegung', border: titledBorder(title: 'Geplante Belegung'), constraints: 'd', layout: new MigLayout('ins 0 n 0 n, fill', '[fill]', '')) {
         label('Personenanzahl')
-        textField(id: 'wizardHausPersonenanzahl', constraints: 'width 60px!, wrap')
+        textField(id: 'wizardHausPersonenanzahl', constraints: 'width 60px!, wrap', text: '2')
 
         label('Außenluftvolumenstrom pro Person (m³/h)')
-        textField(id: 'wizardHausAussenluftVsProPerson', constraints: 'width 60px!')
+        textField(id: 'wizardHausAussenluftVsProPerson', constraints: 'width 60px!', text: '30')
     }
 
     zl.insertTemplate('valueRow3')
@@ -69,19 +69,19 @@ panel(constraints: 'x', border: compoundBorder(outer: emptyBorder(5), inner: emp
         }
         zl2.insertTemplate('r')
         label('Wohnzimmer', constraints: 'a')
-        textField(id: 'wizardRaumTypWohnzimmer', size: [60,15], constraints: 'b')
+        textField(id: 'wizardRaumTypWohnzimmer', size: [60,15], constraints: 'b', text: '1')
         label('WC', constraints: 'c')
         textField(id: 'wizardRaumTypWC', size: [60,15], constraints: 'd')
 
         zl2.insertTemplate('r')
         label('Kinderzimmer', constraints: 'a')
-        textField(id: 'wizardRaumTypKinderzimmer', size: [60,15], constraints: 'b')
+        textField(id: 'wizardRaumTypKinderzimmer', size: [60,15], constraints: 'b', text: '2')
         label('Küche', constraints: 'c')
         textField(id: 'wizardRaumTypKuche', size: [60,15], constraints: 'd')
 
         zl2.insertTemplate('r')
         label('Schlafzimmer', constraints: 'a')
-        textField(id: 'wizardRaumTypSchlafzimmer', size: [60,15], constraints: 'b')
+        textField(id: 'wizardRaumTypSchlafzimmer', size: [60,15], constraints: 'b', text: '1')
         label('Kochnische', constraints: 'c')
         textField(id: 'wizardRaumTypKochnische', size: [60,15], constraints: 'd')
 

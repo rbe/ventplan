@@ -186,4 +186,38 @@ class VentplanModel {
         ] as ObservableMap,
         raumBezeichnung: [] as ObservableList // TODO Wofür genutzt?
     ] as ObservableMap
+
+    /**
+     * Template für Wizard-Dialog
+     */
+    def raumMapTemplate = [
+            position: 0,
+            raumBezeichnung: '',
+            raumLuftart: 'ZU',
+            raumGeschoss: 'EG',
+            raumLange: 0.0d,
+            raumBreite: 0.0d,
+            raumFlache: 0.0d,
+            raumHohe: 0.0d,
+            raumZuluftfaktor: 0.0d,
+            raumVolumen: 0.0d,
+            raumLuftwechsel: 0.0d,
+            raumZuluftVolumenstrom: 0.0d,
+            raumZuluftVolumenstromInfiltration: 0.0d, // Zuluftfaktor abzgl. Infiltration
+            raumAbluftVolumenstrom: 0.0d,
+            raumAbluftVolumenstromInfiltration: 0.0d, // Abluftvs abzgl. Infiltration
+            raumBezeichnungAbluftventile: '',
+            raumAnzahlAbluftventile: 0,
+            raumAbluftmengeJeVentil: 0.0d,
+            raumBezeichnungZuluftventile: '',
+            raumAnzahlZuluftventile: 0,
+            raumZuluftmengeJeVentil: 0.0d,
+            raumVerteilebene: '',
+            raumAnzahlUberstromVentile: 0,
+            raumUberstromElement: '',
+            raumUberstromVolumenstrom: 0.0d,
+            raumNummer: '',
+            raumMaxTurspaltHohe: 10.0d,
+            turen: []
+    ]
 }

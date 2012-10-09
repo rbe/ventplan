@@ -431,6 +431,27 @@ class VentplanController {
                         model.projekte << mvcId
                         // Projekt aktivieren
                         projektAktivieren(mvcId)
+                        // Räume hinzufügen
+                        if (model.wizardmap.raum?.raume?.size() > 0) {
+                            def mvc = getMVCGroup(mvcId)
+                            model.wizardmap.raum.raume.each { raum ->
+                                println "raum=${raum.dump()}"
+                                doLater {
+                                    mvc.model.map.raum.raume.add(raum)
+                                    mvc.controller.raumGeandert(raum.position)
+                                }
+                            }
+                            doLater {
+                                mvc.controller.berechneAlles()
+                            }
+//                            doLater {
+//                                // Raum im Model hinzufügen
+//                                mvc.model.addRaum(raum, view)
+
+
+//                            }
+                            //GH.deepCopyMap mvc.model.map.raum, model.wizardmap.raum
+                        }
                         // resize the frame to validate the components.
                         try {
                             def dim = ventplanFrame.getSize()
@@ -809,6 +830,8 @@ class VentplanController {
 
         neuesProjektWizardDialog.dispose()
 
+        neuesProjekt()
+
         println "Wizard neues Projekt: model.wizardmap=${model.wizardmap.dump()}"
     }
 
@@ -819,8 +842,9 @@ class VentplanController {
         for (int i = 1; i <= anzahl; i++) {
             raumName = raumTyp + ' ' + i.toString()
 
-            def raum = raumMapTemplate.clone()
+            def raum = model.raumMapTemplate.clone() as ObservableMap
 
+            def pos = model.wizardmap.raum?.raume?.size()
             def raumSize = (model.wizardmap.raum?.raume?.size() + 1).toString()
 
             raum.turen = [
@@ -839,7 +863,7 @@ class VentplanController {
                 raumBreite = 4.0d
                 // Fläche, Höhe, Volumen
                 raumFlache = raumFlache.toDouble2()
-                raumHohe = raumHohe.toDouble2()
+                raumHohe = 2.5d
                 raumVolumen = raumFlache * raumHohe
                 // Zuluftfaktor
                 raumZuluftfaktor = raumZuluftfaktor?.toDouble2() ?: 0.0d
@@ -849,40 +873,13 @@ class VentplanController {
                 raumTurspaltHohe = 10.0d
 
                 raumNummer = '' + raumSize
+                position = pos
             }
 
             model.wizardmap.raum.raume << raum
         }
     }
 
-    def raumMapTemplate = [
-        raumBezeichnung: '',
-        raumLuftart: '',
-        raumGeschoss: '',
-        raumLange: 0.0d,
-        raumBreite: 0.0d,
-        raumFlache: 0.0d,
-        raumHohe: 0.0d,
-        raumZuluftfaktor: 0.0d,
-        raumVolumen: 0.0d,
-        raumLuftwechsel: 0.0d,
-        raumZuluftVolumenstrom: 0.0d,
-        raumZuluftVolumenstromInfiltration: 0.0d, // Zuluftfaktor abzgl. Infiltration
-        raumAbluftVolumenstrom: 0.0d,
-        raumAbluftVolumenstromInfiltration: 0.0d, // Abluftvs abzgl. Infiltration
-        raumBezeichnungAbluftventile: '',
-        raumAnzahlAbluftventile: 0,
-        raumAbluftmengeJeVentil: 0.0d,
-        raumBezeichnungZuluftventile: '',
-        raumAnzahlZuluftventile: 0,
-        raumZuluftmengeJeVentil: 0.0d,
-        raumVerteilebene: '',
-        raumAnzahlUberstromVentile: 0,
-        raumUberstromElement: '',
-        raumUberstromVolumenstrom: 0.0d,
-        raumNummer: '',
-        raumMaxTurspaltHohe: 10.0d,
-        turen: []
-    ]
+
 
 }
