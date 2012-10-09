@@ -189,9 +189,12 @@ class StucklisteService {
         println "HOLE ARTIKEL FÜR JEDES PAKET"
         println "============================"
         */
-        pakete.sort { p -> p.REIHENFOLGE }.each { p ->
-            ventplanModelService.paketeZuStuckliste([p.ID]).each { st ->
-                artikelAufStuckliste(stuckliste, st, p)
+        // ArrayList can contain a hole, like element 9 is set, 10 is null, 11 is set
+        pakete?.sort { p -> p?.REIHENFOLGE }.each { p ->
+            if (p) {
+                ventplanModelService.paketeZuStuckliste([p.ID]).each { st ->
+                    artikelAufStuckliste(stuckliste, st, p)
+                }
             }
         }
         uberstromventile?.each { st ->
