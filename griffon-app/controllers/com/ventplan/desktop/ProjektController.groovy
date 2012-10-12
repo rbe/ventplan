@@ -2196,10 +2196,40 @@ class ProjektController {
         doLater {
             doOutside {
                 try {
-                    // TODO Aus Stückliste ermitteln
+                    String x = ''
+                    // WAC-245
                     String aussenluft = 'z.B. 200LE04/8' //model.map.anlage.aussenluft.lufteinlass
-                    // TODO Aus Stückliste ermitteln
+                    try {
+                        x = model.map.anlage.aussenluft.grep { it.value == true }?.key[0] // dach, wand, erdwarme
+                        switch (x) {
+                            case 'dach':
+                                aussenluft = '200DDF003'
+                                break
+                            case 'wand':
+                                aussenluft = '200LG002/004'
+                                break
+                            case 'erdwarme':
+                                aussenluft = '200LE008/250LE'
+                                break
+                        }
+                    } catch (e) {} 
+                    // WAC-245
                     String fortluft = 'z.B. 200LG002/4' //model.map.anlage.fortluft.luftgitter
+                    try {
+                        x = model.map.anlage.fortluft.grep { it.value == true }?.key[0]  // dach, wand, bogen135
+                        switch (x) {
+                            case 'dach':
+                                fortluft = '200DDF003'
+                                break
+                            case 'wand':
+                                fortluft = '200LG002/004'
+                                break
+                            case 'bogen135':
+                                fortluft = '200LD001'
+                                break
+                        }
+                    } catch (e) {}
+                    // Zentralgerät
                     String zentralgerat = model.map.anlage.zentralgerat
                     def findRaum = { String luftart, String geschoss ->
                         StringBuilder builder = new StringBuilder()
