@@ -409,6 +409,8 @@ class VentplanController {
     def neuesProjekt = { evt = null ->
         // Progress bar in VentplanView.
         jxwithWorker(start: true) {
+            //
+            String mvcId = ''
             // initialize the worker
             onInit {
                 model.statusProgressBarIndeterminate = true
@@ -422,7 +424,7 @@ class VentplanController {
                 view.mainStatusBarText.text = ''
                 view.mainStatusBarText.text = 'Phase 2/3: Initialisiere das Projekt...'
                 try {
-                    String mvcId = generateMVCId()
+                    mvcId = generateMVCId()
                     /*def (m, v, c) =*/ createMVCGroup('Projekt', mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
                     view.mainStatusBarText.text = ''
                     view.mainStatusBarText.text = 'Phase 3/3: Erstelle Benutzeroberfläche für das Projekt...'
@@ -431,9 +433,10 @@ class VentplanController {
                         model.projekte << mvcId
                         // Projekt aktivieren
                         projektAktivieren(mvcId)
-                        // Räume hinzufügen
+                        // WAC-234 Räume hinzufügen
                         if (model.wizardmap.raum?.raume?.size() > 0) {
                             def mvc = getMVCGroup(mvcId)
+
                             model.wizardmap.raum.raume.each { raum ->
                                 println "raum=${raum.dump()}"
                                 doLater {
@@ -441,16 +444,6 @@ class VentplanController {
                                     mvc.controller.raumGeandert(raum.position)
                                 }
                             }
-                            doLater {
-                                mvc.controller.berechneAlles()
-                            }
-//                            doLater {
-//                                // Raum im Model hinzufügen
-//                                mvc.model.addRaum(raum, view)
-
-
-//                            }
-                            //GH.deepCopyMap mvc.model.map.raum, model.wizardmap.raum
                         }
                         // resize the frame to validate the components.
                         try {
@@ -479,6 +472,24 @@ class VentplanController {
                 //model.statusBarText = 'Bereit.'
                 view.mainStatusBarText.text = 'Bereit.'
                 model.statusBarText = 'Bereit.'
+                // WAC-234 alles neu berechnen, wenn Wizard ausgeführt wurde.
+                if (model.wizardmap.raum?.raume?.size() > 0) {
+                    doLater {
+                        def mvc = getMVCGroup(mvcId)
+
+                        // Gebaude-Werte einfügen
+                        mvc.model.map.gebaude << model.wizardmap.gebaude
+
+                        println "mvc.model.map.gebaude1=${mvc.model.map.gebaude.dump()}"
+
+                        mvc.controller.gebaudedatenGeandert()
+                        mvc.controller.berechneMindestaussenluftrate()
+
+                        println "mvc.model.map.gebaude2=${mvc.model.map.gebaude.dump()}"
+
+                        mvc.controller.berechneAlles()
+                    }
+                }
             }
         }
     }
@@ -780,21 +791,21 @@ class VentplanController {
      * Neues Projekt erstellen
      */
     def wizardProjektErstellen = { evt = null ->
-//        neuesProjektWizardDialog.wizardGebaudeTypMFH.selected
-//        neuesProjektWizardDialog.wizardGebaudeTypEFH.selected
-//        neuesProjektWizardDialog.wizardGebaudeTypMaisonette.selected
-//
-//        neuesProjektWizardDialog.wizardGebaudeLageWindschwach.selected
-//        neuesProjektWizardDialog.wizardGebaudeLageWindstark.selected
-//
-//        neuesProjektWizardDialog.wizardGebaudeWarmeschutzHoch.selected
-//        neuesProjektWizardDialog.wizardGebaudeWarmeschutzNiedrig.selected
-//
-//
-//        neuesProjektWizardDialog.wizardHausPersonenanzahl.text()
-//
-//        neuesProjektWizardDialog.wizardHausAussenluftVsProPerson.text()
+        def typ = [mfh: view.wizardGebaudeTypMFH.selected, efh: view.wizardGebaudeTypEFH.selected, maisonette: view.wizardGebaudeTypMaisonette.selected]
+        model.wizardmap.gebaude.typ << typ
 
+        def lage = [windschwach: view.wizardGebaudeLageWindschwach.selected, windstark: view.wizardGebaudeLageWindstark.selected]
+        model.wizardmap.gebaude.lage << lage
+
+        def warmeschutz = [ hoch: view.wizardGebaudeWarmeschutzHoch.selected, niedrig: view.wizardGebaudeWarmeschutzNiedrig.selected]
+        model.wizardmap.gebaude.warmeschutz << warmeschutz
+
+        def personenanzahlValue = Integer.valueOf(view.wizardHausPersonenanzahl.text)
+        def aussenluftVsProPersonValue = Double.valueOf(view.wizardHausAussenluftVsProPerson.text)
+        def geplanteBelegung = [personenanzahl: personenanzahlValue, aussenluftVsProPerson: aussenluftVsProPersonValue, mindestaussenluftrate: 0.0d]
+        model.wizardmap.gebaude.geplanteBelegung << geplanteBelegung
+
+        // Räume validieren
         def wzAnzahl = view.wizardRaumTypWohnzimmer.text == '' ? 0 : view.wizardRaumTypWohnzimmer.text.toInteger()
         addRaume('Wohnzimmer', wzAnzahl)
         def wcAnzahl = view.wizardRaumTypWC.text == '' ? 0 : view.wizardRaumTypWC.text.toInteger()
@@ -832,7 +843,7 @@ class VentplanController {
 
         neuesProjekt()
 
-        println "Wizard neues Projekt: model.wizardmap=${model.wizardmap.dump()}"
+        //println "Wizard neues Projekt: model.wizardmap=${model.wizardmap.dump()}"
     }
 
 
