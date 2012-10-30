@@ -437,6 +437,24 @@ class VentplanController {
                         if (model.wizardmap.raum?.raume?.size() > 0) {
                             def mvc = getMVCGroup(mvcId)
 
+                            // Gebaude-Werte einfügen
+                            mvc.model.map.gebaude << model.wizardmap.gebaude
+
+                            // Jetzt noch die View aktualisieren
+                            mvc.view.gebaudeTypMFH.selected = mvc.model.map.gebaude.typ['mfh']
+                            mvc.view.gebaudeTypEFH.selected = mvc.model.map.gebaude.typ['efh']
+                            mvc.view.gebaudeTypMaisonette.selected = mvc.model.map.gebaude.typ['maisonette']
+
+                            mvc.view.gebaudeLageWindschwach.selected = mvc.model.map.gebaude.lage['windschwach']
+                            mvc.view.gebaudeLageWindstark.selected = mvc.model.map.gebaude.lage['windstark']
+
+                            mvc.view.gebaudeWarmeschutzHoch.selected = mvc.model.map.gebaude.warmeschutz['hoch']
+                            mvc.view.gebaudeWarmeschutzNiedrig.selected = mvc.model.map.gebaude.warmeschutz['niedrig']
+
+                            mvc.view.gebaudeGeplantePersonenanzahl.value = mvc.model.map.gebaude.geplanteBelegung['personenanzahl']
+                            mvc.view.gebaudeGeplanteAussenluftVsProPerson.value = mvc.model.map.gebaude.geplanteBelegung['aussenluftVsProPerson']
+                            mvc.view.gebaudeGeplanteMindestaussenluftrate.value = mvc.model.map.gebaude.geplanteBelegung['mindestaussenluftrate']
+
                             model.wizardmap.raum.raume.each { raum ->
                                 println "raum=${raum.dump()}"
                                 doLater {
@@ -476,17 +494,7 @@ class VentplanController {
                 if (model.wizardmap.raum?.raume?.size() > 0) {
                     doLater {
                         def mvc = getMVCGroup(mvcId)
-
-                        // Gebaude-Werte einfügen
-                        mvc.model.map.gebaude << model.wizardmap.gebaude
-
-                        println "mvc.model.map.gebaude1=${mvc.model.map.gebaude.dump()}"
-
                         mvc.controller.gebaudedatenGeandert()
-                        mvc.controller.berechneMindestaussenluftrate()
-
-                        println "mvc.model.map.gebaude2=${mvc.model.map.gebaude.dump()}"
-
                         mvc.controller.berechneAlles()
                     }
                 }
@@ -802,7 +810,8 @@ class VentplanController {
 
         def personenanzahlValue = Integer.valueOf(view.wizardHausPersonenanzahl.text)
         def aussenluftVsProPersonValue = Double.valueOf(view.wizardHausAussenluftVsProPerson.text)
-        def geplanteBelegung = [personenanzahl: personenanzahlValue, aussenluftVsProPerson: aussenluftVsProPersonValue, mindestaussenluftrate: 0.0d]
+        def minAussenluftRate = personenanzahlValue * aussenluftVsProPersonValue
+        def geplanteBelegung = [personenanzahl: personenanzahlValue, aussenluftVsProPerson: aussenluftVsProPersonValue, mindestaussenluftrate: minAussenluftRate]
         model.wizardmap.gebaude.geplanteBelegung << geplanteBelegung
 
         // Räume validieren
