@@ -835,23 +835,27 @@ class ProjektController {
             // Get selected row
             def row = view.raumTabelle.selectedRow
             if (row > 0) {
-                def raumNachOben
-                def raumNachUnten
+                def raumNachObenSchieben
+                def raumNachUntenSchieben
                 def nachUntenPosition
                 def nachObenPosition
                 model.map.raum.raume.eachWithIndex { item, pos ->
-                    if (item.position == row - 1) {
-                        raumNachUnten = item
+                    println "raumNachObenVerschieben => item=${item.dump()} + pos=${pos}"
+                    if (pos == row - 1) {
+                        raumNachUntenSchieben = item
                         nachObenPosition = pos
-                    } else if (item.position == row) {
-                        raumNachOben = item
+                        println "raumNachObenVerschieben => raumNachUntenSchieben=${raumNachUntenSchieben.dump()} + pos=${pos}"
+                    } else if (pos == row) {
+                        raumNachObenSchieben = item
                         nachUntenPosition = pos
+                        println "raumNachObenVerschieben => raumNachObenSchieben=${raumNachObenSchieben.dump()} + pos=${pos}"
                     }
                 }
-                raumNachOben.position = nachObenPosition
-                raumNachUnten.position = nachUntenPosition
-                model.map.raum.raume[nachObenPosition] = raumNachOben
-                model.map.raum.raume[nachUntenPosition] = raumNachUnten
+                def tempPosition = raumNachObenSchieben.position
+                raumNachObenSchieben.position = raumNachUntenSchieben.position
+                raumNachUntenSchieben.position = tempPosition
+                model.map.raum.raume[nachObenPosition] = raumNachObenSchieben
+                model.map.raum.raume[nachUntenPosition] = raumNachUntenSchieben
                 model.resyncRaumTableModels()
                 // Raum geändert
                 raumGeandert(nachUntenPosition)
@@ -868,23 +872,24 @@ class ProjektController {
             // Get selected row
             def row = view.raumTabelle.selectedRow
             if (row < view.raumTabelle.getModel().getRowCount() - 1) {
-                def raumNachOben
-                def raumNachUnten
+                def raumNachObenSchieben
+                def raumNachUntenSchieben
                 def nachUntenPosition
                 def nachObenPosition
                 model.map.raum.raume.eachWithIndex { item, pos ->
-                    if (item.position == row) {
-                        raumNachUnten = item
+                    if (pos == row) {
+                        raumNachUntenSchieben = item
                         nachObenPosition = pos
-                    } else if (item.position == row + 1) {
-                        raumNachOben = item
+                    } else if (pos == row + 1) {
+                        raumNachObenSchieben = item
                         nachUntenPosition = pos
                     }
                 }
-                raumNachOben.position = nachObenPosition
-                raumNachUnten.position = nachUntenPosition
-                model.map.raum.raume[nachObenPosition] = raumNachOben
-                model.map.raum.raume[nachUntenPosition] = raumNachUnten
+                def tempPosition = raumNachObenSchieben.position
+                raumNachObenSchieben.position = raumNachUntenSchieben.position
+                raumNachUntenSchieben.position = tempPosition
+                model.map.raum.raume[nachObenPosition] = raumNachObenSchieben
+                model.map.raum.raume[nachUntenPosition] = raumNachUntenSchieben
                 model.resyncRaumTableModels()
                 // Raum geändert
                 raumGeandert(nachObenPosition)
