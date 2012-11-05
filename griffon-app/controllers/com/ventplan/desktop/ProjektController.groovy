@@ -1954,12 +1954,12 @@ class ProjektController {
             model.stucklisteMap.each { key, a ->
                 def gesamtpreis = (a.ANZAHL * a.PREIS.toDouble2()) as double
                 model.tableModels.stuckliste.addAll(
-                    [
-                        reihenfolge: a.REIHENFOLGE, anzahl: a.ANZAHL,
-                        artikelnummer: a.ARTIKEL/*NUMMER*/, text: a.ARTIKELBEZEICHNUNG,
-                        einzelpreis: a.PREIS, gesamtpreis: gesamtpreis,
-                        luftart: a.LUFTART, liefermenge: a.LIEFERMENGE, mengeneinheit: a.MENGENEINHEIT
-                    ]
+                        [
+                                reihenfolge: a.REIHENFOLGE, anzahl: a.ANZAHL,
+                                artikelnummer: a.ARTIKEL/*NUMMER*/, text: a.ARTIKELBEZEICHNUNG,
+                                einzelpreis: a.PREIS, gesamtpreis: gesamtpreis,
+                                luftart: a.LUFTART, liefermenge: a.LIEFERMENGE, mengeneinheit: a.MENGENEINHEIT
+                        ]
                 )
             }
         } else {
@@ -1983,12 +1983,12 @@ class ProjektController {
                 */
                 def gesamtpreis = (anzahl * artikel.PREIS.toDouble2()) as double
                 model.tableModels.stuckliste.addAll(
-                    [
-                        reihenfolge: position, anzahl: anzahl,
-                        artikelnummer: artikel.ARTIKEL, text: artikel.ARTIKELBEZEICHNUNG,
-                        einzelpreis: artikel.PREIS, gesamtpreis: gesamtpreis,
-                        luftart: artikel.LUFTART, liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT
-                    ]
+                        [
+                                reihenfolge: position, anzahl: anzahl,
+                                artikelnummer: artikel.ARTIKEL, text: artikel.ARTIKELBEZEICHNUNG,
+                                einzelpreis: artikel.PREIS, gesamtpreis: gesamtpreis,
+                                luftart: artikel.LUFTART, liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT
+                        ]
                 )
                 position++
             }
@@ -2181,6 +2181,64 @@ class ProjektController {
     }
     //</editor-fold>
 
+    //<editor-fold desc="WAC-245 Artikel für Aussenluft- und Fortluftauslässe">
+    String artikelfurAussenluftauslass() {
+        String aussenluft = 'z.B. 200LG002/004' //model.map.anlage.aussenluft.lufteinlass
+        try {
+            Integer volumenstromZentralgerat = model.map.anlage.volumenstromZentralgerat
+            String x = model.map.anlage.aussenluft.grep { it.value == true }?.key[0] // dach, wand, erdwarme
+            switch (x) {
+                case 'dach':
+                    aussenluft = '200DDF003'
+                    break
+                case 'wand':
+                    if (volumenstromZentralgerat <= 210) {
+                        aussenluft = '200LG002'
+                    } else {
+                        aussenluft = '200LG004'
+                    }
+                    break
+                case 'erdwarme':
+                    if (volumenstromZentralgerat <= 210) {
+                        aussenluft = '200LE008'
+                    } else {
+                        aussenluft = '250LE'
+                    }
+                    break
+            }
+        } catch (e) {
+            // ignore
+        }
+        aussenluft
+    }
+
+    String artikelFurFortluftauslass() {
+        String fortluft = 'z.B. 200LG002/4'
+        try {
+            Integer volumenstromZentralgerat = model.map.anlage.volumenstromZentralgerat
+            String x = model.map.anlage.fortluft.grep { it.value == true }?.key[0]  // dach, wand, bogen135
+            switch (x) {
+                case 'dach':
+                    fortluft = '200DDF003'
+                    break
+                case 'wand':
+                    if (volumenstromZentralgerat <= 210) {
+                        fortluft = '200LG002'
+                    } else {
+                        fortluft = '200LG004'
+                    }
+                    break
+                case 'bogen135':
+                    fortluft = '200LD001'
+                    break
+            }
+        } catch (e) {
+            // ignore
+        }
+        fortluft
+    }
+    //</editor-fold>
+
     //<editor-fold desc="WAC-202 Prinzipskizze">
     def generierePrinzipskizze() {
         // Projekt speichern
@@ -2201,10 +2259,10 @@ class ProjektController {
         doLater {
             doOutside {
                 try {
-                    // TODO Aus Stückliste ermitteln
-                    String aussenluft = 'z.B. 200LE04/8' //model.map.anlage.aussenluft.lufteinlass
-                    // TODO Aus Stückliste ermitteln
-                    String fortluft = 'z.B. 200LG002/4' //model.map.anlage.fortluft.luftgitter
+                    // WAC-245
+                    String aussenluft = artikelfurAussenluftauslass()
+                    String fortluft = artikelFurFortluftauslass()
+                    // Zentralgerät
                     String zentralgerat = model.map.anlage.zentralgerat
                     def findRaum = { String luftart, String geschoss ->
                         StringBuilder builder = new StringBuilder()

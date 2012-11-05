@@ -224,10 +224,10 @@ class ProjektModel {
                     anlage: [
                             standort: [EG: true] as ObservableMap,
                             luftkanalverlegung: [:] as ObservableMap,
-                            aussenluft: [lufteinlass: ''] as ObservableMap,
+                            aussenluft: [] as ObservableMap,
                             zuluft: [:] as ObservableMap,
                             abluft: [:] as ObservableMap,
-                            fortluft: [dach: true, luftgitter: ''] as ObservableMap,
+                            fortluft: [dach: true] as ObservableMap,
                             energie: [zuAbluftWarme: true, nachricht: ' '] as ObservableMap,
                             hygiene: [nachricht: ' '] as ObservableMap,
                             kennzeichnungLuftungsanlage: 'ZuAbLS-Z-WE-WÜT-0-0-0-0-0',
