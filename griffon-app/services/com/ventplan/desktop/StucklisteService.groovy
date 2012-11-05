@@ -159,7 +159,10 @@ class StucklisteService {
         // Luftauslässe
         try {
             List abluftventile = ventplanModelService.countAbluftventile(map).collect {
-                ventplanModelService.getLuftauslasspaket(it.key, 'AB') * it.value
+                // WAC-235
+                if (!it.key.startsWith('0.0')) {
+                    ventplanModelService.getLuftauslasspaket(it.key, 'AB') * it.value
+                }
             }.flatten()
             //println String.format("%17s für %8s (Vs=%d), %s", 'Abluftventile', zentralgerat, volumenstrom, abluftventile)
             pakete += abluftventile
@@ -168,7 +171,10 @@ class StucklisteService {
         // Lufteinlässe
         try {
             List zuluftventile = ventplanModelService.countZuluftventile(map).collect {
-                ventplanModelService.getLuftauslasspaket(it.key, 'ZU') * it.value
+                // WAC-235
+                if (!it.key.startsWith('0.0')) {
+                    ventplanModelService.getLuftauslasspaket(it.key, 'ZU') * it.value
+                }
             }.flatten()
             //println String.format("%17s für %8s (Vs=%d), %s", 'Zuluftventile', zentralgerat, volumenstrom, zuluftventile)
             pakete += zuluftventile
