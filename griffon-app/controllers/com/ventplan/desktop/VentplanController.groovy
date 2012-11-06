@@ -448,36 +448,6 @@ class VentplanController {
                         model.projekte << mvcId
                         // Projekt aktivieren
                         projektAktivieren(mvcId)
-                        // WAC-234 Räume hinzufügen
-                        if (model.wizardmap.raum?.raume?.size() > 0) {
-                            def mvc = getMVCGroup(mvcId)
-
-                            // Gebaude-Werte einfügen
-                            mvc.model.map.gebaude << model.wizardmap.gebaude
-
-                            // Jetzt noch die View aktualisieren
-                            mvc.view.gebaudeTypMFH.selected = mvc.model.map.gebaude.typ['mfh']
-                            mvc.view.gebaudeTypEFH.selected = mvc.model.map.gebaude.typ['efh']
-                            mvc.view.gebaudeTypMaisonette.selected = mvc.model.map.gebaude.typ['maisonette']
-
-                            mvc.view.gebaudeLageWindschwach.selected = mvc.model.map.gebaude.lage['windschwach']
-                            mvc.view.gebaudeLageWindstark.selected = mvc.model.map.gebaude.lage['windstark']
-
-                            mvc.view.gebaudeWarmeschutzHoch.selected = mvc.model.map.gebaude.warmeschutz['hoch']
-                            mvc.view.gebaudeWarmeschutzNiedrig.selected = mvc.model.map.gebaude.warmeschutz['niedrig']
-
-                            mvc.view.gebaudeGeplantePersonenanzahl.value = mvc.model.map.gebaude.geplanteBelegung['personenanzahl']
-                            mvc.view.gebaudeGeplanteAussenluftVsProPerson.value = mvc.model.map.gebaude.geplanteBelegung['aussenluftVsProPerson']
-                            mvc.view.gebaudeGeplanteMindestaussenluftrate.value = mvc.model.map.gebaude.geplanteBelegung['mindestaussenluftrate']
-
-                            model.wizardmap.raum.raume.each { raum ->
-                                println "raum=${raum.dump()}"
-                                doLater {
-                                    mvc.model.map.raum.raume.add(raum)
-                                    mvc.controller.raumGeandert(raum.position)
-                                }
-                            }
-                        }
                         // resize the frame to validate the components.
                         try {
                             def dim = ventplanFrame.getSize()
@@ -505,14 +475,6 @@ class VentplanController {
                 //model.statusBarText = 'Bereit.'
                 view.mainStatusBarText.text = 'Bereit.'
                 model.statusBarText = 'Bereit.'
-                // WAC-234 alles neu berechnen, wenn Wizard ausgeführt wurde.
-                if (model.wizardmap.raum?.raume?.size() > 0) {
-                    doLater {
-                        def mvc = getMVCGroup(mvcId)
-                        mvc.controller.gebaudedatenGeandert()
-                        mvc.controller.berechneAlles()
-                    }
-                }
             }
         }
     }
