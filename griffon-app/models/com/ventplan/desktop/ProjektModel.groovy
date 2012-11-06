@@ -347,7 +347,7 @@ class ProjektModel {
      * Prüfe Raumdaten auf Richtigkeit.
      * @return raum
      */
-    def prufeRaumdaten = { raum ->
+    def prufeRaumdaten = { raum, expressModus = false ->
         if (null == raum) {
             println "${this}.prufeRaumdaten(${raum})"
         } else {
@@ -356,7 +356,7 @@ class ProjektModel {
                 def eingegebenerZuluftfaktor = r.raumZuluftfaktor.toDouble2()
                 def (zuluftfaktor, neuerZuluftfaktor) =
                 calculationService.prufeZuluftfaktor(r.raumTyp, eingegebenerZuluftfaktor)
-                if (zuluftfaktor != neuerZuluftfaktor) {
+                if (zuluftfaktor != neuerZuluftfaktor && !expressModus) {
                     def infoMsg = "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
                     app.controllers['Dialog'].showInformDialog(infoMsg as String)
                 }
