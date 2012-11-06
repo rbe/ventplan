@@ -470,9 +470,11 @@ class GriffonHelper {
         // Add focus listener
         component.addFocusListener({ evt ->
             if (evt.id == java.awt.event.FocusEvent.FOCUS_GAINED) {
-                // If component is editable and 'is empty', select entire contents for easy editing
-                if (component.editable && isEmptyDouble(component)) {
-                    GriffonHelper.withDisabledKeyListeners component, { component.selectAll() }
+                // If component is editable, select entire contents for easy editing
+                if (component.editable) {
+                    GriffonHelper.withDisabledKeyListeners component, {
+                        component.selectAll()
+                    }
                 }
             }
         } as java.awt.event.FocusListener)
@@ -593,7 +595,7 @@ class GriffonHelper {
         if (closure) {
             switch (component) {
                 case { it instanceof javax.swing.JTextArea || it instanceof javax.swing.JTextField }:
-                    GriffonHelper.installKeyAdapter(component, keyCodes, closure)
+                    GriffonHelper.installFocusLostAdapter(component, closure)
                     break
                 case { it instanceof javax.swing.JComboBox || it instanceof javax.swing.JRadioButton}:
                     component.addActionListener(

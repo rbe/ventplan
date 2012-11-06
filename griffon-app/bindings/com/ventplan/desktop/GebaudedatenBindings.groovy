@@ -40,7 +40,6 @@ bind(source: model.map.gebaude.geometrie, sourceProperty: "luftvolumen",       t
 // bind(source: model.map.gebaude.geometrie, sourceProperty: "gelufteteFlache",   target: gebaudeGeometrieGelufteteFlache,   targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.gebaude.geometrie, sourceProperty: "geluftetesVolumen", target: gebaudeGeometrieGeluftetesVolumen, targetProperty: "text", converter: GH.toString2Converter)
 [gebaudeGeometrieWohnflache, gebaudeGeometrieMittlereRaumhohe/*, gebaudeGeometrieGelufteteFlache*/].each {
-	//it.focusLost = controller.berechneGeometrie
     GH.onChange(it, null, controller.berechneGeometrie)
 }
 // Luftdichtheit der Gebäudehülle
@@ -59,7 +58,6 @@ bind(source: model.map.gebaude.luftdichtheit, sourceProperty: "druckdifferenz", 
 bind(source: model.map.gebaude.luftdichtheit, sourceProperty: "luftwechsel",    target: gebaudeLuftdichtheitLuftwechsel,    targetProperty: "text", converter: GH.toString2Converter)
 bind(source: model.map.gebaude.luftdichtheit, sourceProperty: "druckexponent",  target: gebaudeLuftdichtheitDruckexponent,  targetProperty: "text", converter: GH.toString3Converter)
 [gebaudeLuftdichtheitDruckdifferenz, gebaudeLuftdichtheitLuftwechsel, gebaudeLuftdichtheitDruckexponent].each {
-	//it.focusLost = controller.speichereLuftdichtheit
     GH.onChange(it, null, controller.speichereLuftdichtheit)
 }
 // Besondere Anforderungen
@@ -72,7 +70,7 @@ bind(source: model.map.gebaude.geplanteBelegung, sourceProperty: "personenanzahl
 bind(source: model.map.gebaude.geplanteBelegung, sourceProperty: "aussenluftVsProPerson", target: gebaudeGeplanteAussenluftVsProPerson, targetProperty: "value")
 bind(source: model.map.gebaude.geplanteBelegung, sourceProperty: "mindestaussenluftrate", target: gebaudeGeplanteMindestaussenluftrate, targetProperty: "text",  converter: GH.toString2Converter)
 [gebaudeGeplantePersonenanzahl, gebaudeGeplanteAussenluftVsProPerson].each {
-	it.stateChanged = controller.berechneMindestaussenluftrate
+    it.stateChanged = controller.berechneMindestaussenluftrate
     GH.installKeyAdapter(it.editor.textField, GH.NUMBER_KEY_CODES, { evt ->
             controller.berechneMindestaussenluftrate()
         })
