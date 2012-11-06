@@ -440,7 +440,7 @@ class VentplanController {
                 view.mainStatusBarText.text = 'Phase 2/3: Initialisiere das Projekt...'
                 try {
                     mvcId = generateMVCId()
-                    /*def (m, v, c) =*/ createMVCGroup('Projekt', mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+                    def (m, v, c) = createMVCGroup('Projekt', mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
                     view.mainStatusBarText.text = ''
                     view.mainStatusBarText.text = 'Phase 3/3: Erstelle Benutzeroberfläche für das Projekt...'
                     doLater {
@@ -865,9 +865,14 @@ class VentplanController {
 
         neuesProjektWizardDialog.dispose()
 
-        neuesProjekt()
-
-        //println "Wizard neues Projekt: model.wizardmap=${model.wizardmap.dump()}"
+        // Temporäre Datei erzeugen
+        def saveFile = java.io.File.createTempFile('ventplan', 'vpx')
+        // Temporäre Datei beim Beenden löschen
+        saveFile.deleteOnExit()
+        // Model speichern und ...
+        vpxModelService.save(model.wizardmap, saveFile)
+        // ... anschließend wieder laden
+        projektOffnenClosure(saveFile)
     }
 
 
@@ -897,7 +902,7 @@ class VentplanController {
                 raumLange = 5.0d
                 raumBreite = 4.0d
                 // Fläche, Höhe, Volumen
-                raumFlache = raumFlache.toDouble2()
+                raumFlache = raumLange * raumBreite
                 raumHohe = 2.5d
                 raumVolumen = raumFlache * raumHohe
                 // Zuluftfaktor
