@@ -590,7 +590,6 @@ class VpxModelService {
      * WAC-226: Stuckliste im XML speichern
      */
     def makeStuckliste = { a ->
-
         domBuilder.artikel() {
             X.tc { position(a.REIHENFOLGE) }
             X.tc { anzahl(a.ANZAHL) }

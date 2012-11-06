@@ -16,8 +16,8 @@ import com.bensmann.griffon.GriffonHelper as GH
 
 import groovy.io.FileType
 
-import javax.swing.JFileChooser
 import javax.swing.JDialog
+import javax.swing.JFileChooser
 
 /**
  *
@@ -214,6 +214,8 @@ class VentplanController {
      * aus dem XML in das ProjektModel.
      */
     def projektOffnen = { evt = null ->
+        // WAC-246 Choose Ventplan directory
+        view.vpxFileChooserWindow.currentDirectory = getVentplanDir()
         def openResult = view.vpxFileChooserWindow.showOpenDialog(view.ventplanFrame)
         if (JFileChooser.APPROVE_OPTION == openResult) {
             def file = view.vpxFileChooserWindow.selectedFile
@@ -337,11 +339,24 @@ class VentplanController {
     }
 
     /**
+     * WAC-246
+     * @return
+     */
+    File getVentplanDir() {
+        File vpxDir = new File("${System.getProperty('user.home')}/Ventplan")
+        if (!vpxDir.exists()) {
+            vpxDir.mkdirs()
+        }
+        vpxDir
+    }
+
+    /**
      * Zeige FileChooser, setze gewählten Dateinamen im ProjektModel und rufe "Projekt speichern".
      */
     def projektSpeichernAls = { mvc ->
-        // Reset selected filename
-        view.vpxFileChooserWindow.selectedFile = null
+        // WAC-246 Set selected filename and choose Ventplan directory
+        view.vpxFileChooserWindow.selectedFile = new File("${mvc.model.map.kundendaten.bauvorhaben}.vpx")
+        view.vpxFileChooserWindow.currentDirectory = getVentplanDir()
         // Open filechooser
         def openResult = view.vpxFileChooserWindow.showSaveDialog(app.windowManager.windows.find {it.focused})
         if (JFileChooser.APPROVE_OPTION == openResult) {
@@ -805,7 +820,7 @@ class VentplanController {
         def lage = [windschwach: view.wizardGebaudeLageWindschwach.selected, windstark: view.wizardGebaudeLageWindstark.selected]
         model.wizardmap.gebaude.lage << lage
 
-        def warmeschutz = [ hoch: view.wizardGebaudeWarmeschutzHoch.selected, niedrig: view.wizardGebaudeWarmeschutzNiedrig.selected]
+        def warmeschutz = [hoch: view.wizardGebaudeWarmeschutzHoch.selected, niedrig: view.wizardGebaudeWarmeschutzNiedrig.selected]
         model.wizardmap.gebaude.warmeschutz << warmeschutz
 
         def personenanzahlValue = Integer.valueOf(view.wizardHausPersonenanzahl.text)
@@ -899,7 +914,5 @@ class VentplanController {
             model.wizardmap.raum.raume << raum
         }
     }
-
-
 
 }
