@@ -659,26 +659,9 @@ class ProjektController {
     def _raumGeandert(Integer raumPosition) {
         doLater {
             if (raumPosition > -1 && raumPosition < model.map.raum.raume.size()) {
-                // Raumdaten prüfen
-//                def raum
-//                def raumIndex
-//                if (!isSelectedRow && !isIndex) {
-//                    model.map.raum.raume.eachWithIndex { item, pos ->
-//                        if (item.position == raumPosition) {
-//                            raum = item
-//                            raumIndex = pos
-//                        }
-//                    }
-//                } else {
-//                    raumIndex = raumPosition
-//                }
                 // Diesen Raum in allen Tabellen anwählen
-                //if (setSelectedIndex > -1) {
                 onRaumInTabelleWahlen(raumPosition)
-                //} else {
-                //    onRaumInTabelleWahlen(raumIndex)
-                //}
-//                println "raumGeandert: raum[${raumPosition}] currentRaum=${raum.dump()}"
+                // Raumdaten prüfen
                 model.prufeRaumdaten(model.map.raum.raume[raumPosition])
                 // Versuchen den Zuluftfaktor neu zu setzen... Behebt den Fehler, dass der Zuluftfaktor sich nur dann
                 // ändert, wenn in der Tabelle ein anderer Raum gewählt wird, um anschließend den ursprünglichen Raum
