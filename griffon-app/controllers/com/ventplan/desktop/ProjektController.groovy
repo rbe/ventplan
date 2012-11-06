@@ -660,7 +660,7 @@ class ProjektController {
         doLater {
             if (raumPosition > -1 && raumPosition < model.map.raum.raume.size()) {
                 // Diesen Raum in allen Tabellen anwählen
-                onRaumInTabelleWahlen(raumPosition)
+                //onRaumInTabelleWahlen(raumPosition)
                 // Raumdaten prüfen
                 model.prufeRaumdaten(model.map.raum.raume[raumPosition])
                 // Versuchen den Zuluftfaktor neu zu setzen... Behebt den Fehler, dass der Zuluftfaktor sich nur dann
@@ -839,6 +839,7 @@ class ProjektController {
                 // Raum geändert
                 //raumGeandert(nachUntenPosition)
                 raumGeandert(nachObenPosition)
+                view.raumTabelle.changeSelection(nachObenPosition/*view.raumTabelle.selectedRow - 1*/, 0, false, false)
             }
         }
     }
@@ -873,6 +874,7 @@ class ProjektController {
                 // Raum geändert
                 //raumGeandert(nachObenPosition)
                 raumGeandert(nachUntenPosition)
+                view.raumTabelle.changeSelection(nachUntenPosition, 0, false, false)
             }
         }
     }
@@ -890,12 +892,18 @@ class ProjektController {
             onRaumInTabelleWahlen(selectedRow, table)
         }
         */
+        if (!evt.isAdjusting && evt.firstIndex > -1 && evt.lastIndex > -1) {
+            // Aktuellen Raum in Metadaten setzen
+            def raum = model.map.raum.raume[evt.source.leadSelectionIndex]
+            model.meta.gewahlterRaum.putAll(raum)
+        }
     }
 
     /**
      * Einen bestimmten Raum in allen Raum-Tabellen markieren.
      */
     def onRaumInTabelleWahlen = { row, raumIndex = null, table = null ->
+        /*
         doLater {
             row = GH.checkRow(row, view.raumTabelle)
             if (row > -1) {
@@ -911,7 +919,6 @@ class ProjektController {
                 // Aktuellen Raum in Metadaten setzen
                 def raum = model.map.raum.raume[row]
                 model.meta.gewahlterRaum.putAll(raum)
-                // 
             } else {
                 // Remove selection in all tables
                 withAllRaumTables { t ->
@@ -921,6 +928,7 @@ class ProjektController {
                 model.meta.gewahlterRaum.clear()
             }
         }
+        */
     }
 
     /**
