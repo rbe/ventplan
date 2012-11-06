@@ -657,11 +657,11 @@ class ProjektController {
     }
 
     def _raumGeandert(Integer raumPosition) {
-        doLater {
+   //    doLater { 
             // WAC-174 (raumIndex kann == 0 sein!)
-            if (raumPosition < 0) {
+     // WAC-249?       if (raumPosition < 0) {
                 raumPosition = view.raumTabelle.selectedRow
-            }
+     //       }
             if (raumPosition > -1 && raumPosition < model.map.raum.raume.size()) {
                 // Raumdaten prüfen
 //                def raum
@@ -757,7 +757,7 @@ class ProjektController {
             model.map.raum.raumVs.ubElementeHinweis = raumeOhneUbElemente.size() > 0 ? "<html><b>Bitte ÜB-Elemente prüfen: ${raumeOhneUbElemente.collect { it.raumBezeichnung }.join(', ')}</b></html>" : ''
             // WAC-223
             findInvalidArticles()
-        }
+  //      }
     }
 
     /**
