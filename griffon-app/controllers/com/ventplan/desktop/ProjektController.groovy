@@ -657,11 +657,7 @@ class ProjektController {
     }
 
     def _raumGeandert(Integer raumPosition) {
-   //    doLater { 
-            // WAC-174 (raumIndex kann == 0 sein!)
-     // WAC-249?       if (raumPosition < 0) {
-                raumPosition = view.raumTabelle.selectedRow
-     //       }
+        doLater {
             if (raumPosition > -1 && raumPosition < model.map.raum.raume.size()) {
                 // Raumdaten prüfen
 //                def raum
@@ -757,7 +753,7 @@ class ProjektController {
             model.map.raum.raumVs.ubElementeHinweis = raumeOhneUbElemente.size() > 0 ? "<html><b>Bitte ÜB-Elemente prüfen: ${raumeOhneUbElemente.collect { it.raumBezeichnung }.join(', ')}</b></html>" : ''
             // WAC-223
             findInvalidArticles()
-  //      }
+        }
     }
 
     /**
@@ -840,15 +836,15 @@ class ProjektController {
                 def nachUntenPosition
                 def nachObenPosition
                 model.map.raum.raume.eachWithIndex { item, pos ->
-                    println "raumNachObenVerschieben => item=${item.dump()} + pos=${pos}"
+                    //println "raumNachObenVerschieben => item=${item.dump()} + pos=${pos}"
                     if (pos == row - 1) {
                         raumNachUntenSchieben = item
                         nachObenPosition = pos
-                        println "raumNachObenVerschieben => raumNachUntenSchieben=${raumNachUntenSchieben.dump()} + pos=${pos}"
+                        //println "raumNachObenVerschieben => raumNachUntenSchieben=${raumNachUntenSchieben.dump()} + pos=${pos}"
                     } else if (pos == row) {
                         raumNachObenSchieben = item
                         nachUntenPosition = pos
-                        println "raumNachObenVerschieben => raumNachObenSchieben=${raumNachObenSchieben.dump()} + pos=${pos}"
+                        //println "raumNachObenVerschieben => raumNachObenSchieben=${raumNachObenSchieben.dump()} + pos=${pos}"
                     }
                 }
                 def tempPosition = raumNachObenSchieben.position
@@ -858,7 +854,7 @@ class ProjektController {
                 model.map.raum.raume[nachUntenPosition] = raumNachUntenSchieben
                 model.resyncRaumTableModels()
                 // Raum geändert
-                raumGeandert(nachUntenPosition)
+                //raumGeandert(nachUntenPosition)
                 raumGeandert(nachObenPosition)
             }
         }
@@ -892,7 +888,7 @@ class ProjektController {
                 model.map.raum.raume[nachUntenPosition] = raumNachUntenSchieben
                 model.resyncRaumTableModels()
                 // Raum geändert
-                raumGeandert(nachObenPosition)
+                //raumGeandert(nachObenPosition)
                 raumGeandert(nachUntenPosition)
             }
         }
@@ -904,11 +900,13 @@ class ProjektController {
      * @param evt javax.swing.event.ListSelectionEvent
      */
     def raumInTabelleGewahlt = { evt, table ->
+        /* WAC-249 Zu viele Events mit Events und Events...
         if (!evt.isAdjusting && evt.firstIndex > -1 && evt.lastIndex > -1) {
             // source = javax.swing.ListSelectionModel
             def selectedRow = evt.source.leadSelectionIndex
             onRaumInTabelleWahlen(selectedRow, table)
         }
+        */
     }
 
     /**
