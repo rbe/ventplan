@@ -174,7 +174,7 @@ class ProjektController {
         // Dateiname des Projekts oder MVC ID
         tabTitle << " (${model.vpxFilename ?: view.mvcId})"
         // Ungespeicherte Daten?
-        if (model.map.dirty) {
+        if (model.map.dirty && !loadMode) {
             tabTitle << '*'
         }
         //

@@ -241,7 +241,7 @@ class VentplanController {
      * Die zu ladende Datei wird in den MRUFileManager als zuletzt geöffnetes Projekt gespeichert.
      * Alle Werte werden neu berechnet.
      */
-    def projektOffnenClosure = { file ->
+    def projektOffnenClosure = { file, resetFilename = false ->
         jxwithWorker(start: true) {
             // initialize the worker
             onInit {
@@ -291,15 +291,16 @@ class VentplanController {
             onDone {
                 model.statusBarText = 'Phase 3/3: Berechne Projekt ...'
                 def mvc = getMVCGroupAktivesProjekt()
-                //
                 try {
-                    ///println 'calling berechneAlles()'
                     mvc.controller.berechneAlles(true)
                     model.statusBarText = 'Bereit.'
                 } catch (e) {
                     model.statusBarText = 'Fehler!'
                     e.printStackTrace()
                 } finally {
+                    if (resetFilename) {
+                        mvc.model.vpxFilename = null
+                    }
                     model.statusProgressBarIndeterminate = false
                 }
             }
@@ -419,9 +420,11 @@ class VentplanController {
         def saveFile = makeTemporaryProject()
         // Write stream from classpath into temporary file
         InputStream stream = this.getClass().getResourceAsStream("/vpx/${name}.vpx")
+        if (null != stream) {
+            // Save VPX and open file
         saveFile.write(stream.getText('UTF-8'), 'UTF-8')
-        // Open file
-        projektOffnenClosure(saveFile)
+            projektOffnenClosure(saveFile, true)
+        }
     }
 
     /**
@@ -435,21 +438,21 @@ class VentplanController {
      * WAC-230
      */
     def neuesProjekt_EFH5ZKBHWWC = {
-        openVpxResource('EFH-5ZKB-HW-WC.vpx')
+        openVpxResource('EFH-5ZKB-HW-WC')
     }
 
     /**
      * WAC-230
      */
     def neuesProjekt_EFH5ZKBWC2KRHW = {
-        openVpxResource('EFH-5ZKB-WC-2KR-HW.vpx')
+        openVpxResource('EFH-5ZKB-WC-2KR-HW')
     }
 
     /**
      * WAC-230
      */
     def neuesProjekt_EFH5ZKBWCDG = {
-        openVpxResource('EFH-5ZKB-WC-DG.vpx')
+        openVpxResource('EFH-5ZKB-WC-DG')
     }
 
     /**
@@ -530,7 +533,7 @@ class VentplanController {
         // Model speichern und ...
         vpxModelService.save(model.wizardmap, saveFile)
         // ... anschließend wieder laden
-        projektOffnenClosure(saveFile)
+        projektOffnenClosure(saveFile, true)
     }
 
     def addRaume(raumTyp, anzahl) {
