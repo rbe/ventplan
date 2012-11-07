@@ -26,6 +26,11 @@ panel(constraints: 'x', border: compoundBorder(outer: emptyBorder(5), inner: emp
         zoneRow('f>......f', template: 'valueRow4')
     }
 
+    zl.insertTemplate('valueRow3')
+    panel(id: 'wizardExpressProjekt', border: titledBorder(title: 'Anzahl der Raumtypen festlegen'), constraints: 'e', layout: new MigLayout('ins 0 n 0 n', '[]', '')) {
+        label('Projektname')
+        textField(id: 'wizardProjektName', constraints: 'width 200px!')
+    }
     zl.insertTemplate('valueRow1')
     // Gebäudetyp
     panel(id: 'wizardGebaudeTyp', border: titledBorder(title: 'Gebäudetyp'), constraints: 'a', layout: new MigLayout('ins 0 n 0 n, wrap', '[]', '')) {

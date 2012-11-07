@@ -776,6 +776,9 @@ class VentplanController {
      * Neues Projekt erstellen
      */
     def wizardProjektErstellen = { evt = null ->
+        Date date = new Date()
+        def projektName = view.wizardProjektName.text == '' ? 'Ventplan_Express_Projekt_' + date.getDateTimeString() + '.vpx' : view.wizardProjektName.text + '.vpx'
+
         def typ = [mfh: view.wizardGebaudeTypMFH.selected, efh: view.wizardGebaudeTypEFH.selected, maisonette: view.wizardGebaudeTypMaisonette.selected]
         model.wizardmap.gebaude.typ << typ
 
@@ -828,9 +831,7 @@ class VentplanController {
         neuesProjektWizardDialog.dispose()
 
         // Temporäre Datei erzeugen
-        def saveFile = java.io.File.createTempFile('ventplan', 'vpx')
-        // Temporäre Datei beim Beenden löschen
-        saveFile.deleteOnExit()
+        def saveFile = new File(getVentplanDir(), projektName)
         // Model speichern und ...
         vpxModelService.save(model.wizardmap, saveFile)
         // ... anschließend wieder laden
@@ -877,9 +878,53 @@ class VentplanController {
                 raumNummer = '' + raumSize
                 position = pos
             }
+            raum = raumTypAendern(pos, raum)
+
+            // TODO: falls dies nötig ist...
+            // prufeRaumDaten(raum, expressModus)
+            println "raum -> ${raum.dump()}"
 
             model.wizardmap.raum.raume << raum
         }
+    }
+
+    def raumTypAendern = { pos, raum ->
+        switch (pos) {
+        // Zulufträume
+            case 0..5:
+                raum.raumLuftart = 'ZU'
+                switch (pos) {
+                    case 0:
+                        raum.raumZuluftfaktor = 3.0d
+                        break
+                    case 1..2:
+                        raum.raumZuluftfaktor = 2.0d
+                        break
+                    case 3..5:
+                        raum.raumZuluftfaktor = 1.5d
+                        break
+                }
+                break
+        // Ablufträume
+            case 6..13:
+                raum.raumLuftart = 'AB'
+                switch (pos) {
+                    case 6..8:
+                        raum.raumAbluftVolumenstrom = 25.0d
+                        break
+                    case 9..12:
+                        raum.raumAbluftVolumenstrom = 45.0d
+                        break
+                    case 13:
+                        raum.raumAbluftVolumenstrom = 100.0d
+                        break
+                }
+                break
+        // Überströmräume
+            case { it > 13 }:
+                raum.raumLuftart = 'ÜB'
+        }
+        return raum
     }
 
 }
