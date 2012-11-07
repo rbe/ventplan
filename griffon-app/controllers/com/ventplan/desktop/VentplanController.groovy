@@ -422,7 +422,7 @@ class VentplanController {
         InputStream stream = this.getClass().getResourceAsStream("/vpx/${name}.vpx")
         if (null != stream) {
             // Save VPX and open file
-        saveFile.write(stream.getText('UTF-8'), 'UTF-8')
+            saveFile.write(stream.getText('UTF-8'), 'UTF-8')
             projektOffnenClosure(saveFile, true)
         }
     }
@@ -987,7 +987,6 @@ class VentplanController {
 
     /**
      * WAC-177 Angebotsverfolgung
-     def angebotsverfolgung = {getMVCGroupAktivesProjekt().controller.angebotsverfolgung()}
-     */
+     def angebotsverfolgung = {getMVCGroupAktivesProjekt().controller.angebotsverfolgung()}*/
 
 }
