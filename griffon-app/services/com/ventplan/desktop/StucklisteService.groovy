@@ -160,7 +160,7 @@ class StucklisteService {
         try {
             List abluftventile = ventplanModelService.countAbluftventile(map).collect {
                 // WAC-235
-                if (!it.key.startsWith('0.0')) {
+                if (!it.key.startsWith('0.0') && !it.key.startsWith('0,0')) {
                     ventplanModelService.getLuftauslasspaket(it.key, 'AB') * it.value
                 }
             }.flatten()
