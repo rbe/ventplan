@@ -16,7 +16,6 @@ import static griffon.util.GriffonApplicationUtils.isMacOSX
 menuBar = menuBar {
     // Datei
     menu(id: 'menuDatei', text: 'Datei', mnemonic: 'D') {
-        /* TODO target 7.1
         // Neu...
         menu(id: 'menuProjektNeu', text: 'Neu...', icon: imageIcon(resource: '/menu/project_new.png')) {
             menuItem(neuesProjektAction_EFH4ZKBWC)
@@ -24,9 +23,7 @@ menuBar = menuBar {
             menuItem(neuesProjektAction_EFH5ZKBWC2KRHW)
             menuItem(neuesProjektAction_EFH5ZKBWCDG)
         }
-        */
         menuItem(neuesProjektAction)
-        // TODO target 7.1
         // WAC-234 Wizard Dialog
         menuItem(neuesProjektWizardAction)
         //
