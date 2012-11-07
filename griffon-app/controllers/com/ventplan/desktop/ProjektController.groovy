@@ -736,6 +736,8 @@ class ProjektController {
             model.map.raum.raumVs.ubElementeHinweis = raumeOhneUbElemente.size() > 0 ? "<html><b>Bitte ÜB-Elemente prüfen: ${raumeOhneUbElemente.collect { it.raumBezeichnung }.join(', ')}</b></html>" : ''
             // WAC-223
             findInvalidArticles()
+            //
+            model.resyncRaumTableModels()
         }
     }
 
