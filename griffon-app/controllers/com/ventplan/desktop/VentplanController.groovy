@@ -478,20 +478,35 @@ class VentplanController {
      * Neues Projekt erstellen
      */
     def wizardProjektErstellen = { evt = null ->
+        model.wizardmap = model.makeWizardMap()
         //
-        def typ = [mfh: view.wizardGebaudeTypMFH.selected, efh: view.wizardGebaudeTypEFH.selected, maisonette: view.wizardGebaudeTypMaisonette.selected]
+        def typ = [
+                mfh: view.wizardGebaudeTypMFH.selected,
+                efh: view.wizardGebaudeTypEFH.selected,
+                maisonette: view.wizardGebaudeTypMaisonette.selected
+        ]
         model.wizardmap.gebaude.typ << typ
         //
-        def lage = [windschwach: view.wizardGebaudeLageWindschwach.selected, windstark: view.wizardGebaudeLageWindstark.selected]
+        def lage = [
+                windschwach: view.wizardGebaudeLageWindschwach.selected,
+                windstark: view.wizardGebaudeLageWindstark.selected
+        ]
         model.wizardmap.gebaude.lage << lage
         //
-        def warmeschutz = [hoch: view.wizardGebaudeWarmeschutzHoch.selected, niedrig: view.wizardGebaudeWarmeschutzNiedrig.selected]
+        def warmeschutz = [
+                hoch: view.wizardGebaudeWarmeschutzHoch.selected,
+                niedrig: view.wizardGebaudeWarmeschutzNiedrig.selected
+        ]
         model.wizardmap.gebaude.warmeschutz << warmeschutz
         //
         def personenanzahlValue = Integer.valueOf(view.wizardHausPersonenanzahl.text)
         def aussenluftVsProPersonValue = Double.valueOf(view.wizardHausAussenluftVsProPerson.text)
         def minAussenluftRate = personenanzahlValue * aussenluftVsProPersonValue
-        def geplanteBelegung = [personenanzahl: personenanzahlValue, aussenluftVsProPerson: aussenluftVsProPersonValue, mindestaussenluftrate: minAussenluftRate]
+        def geplanteBelegung = [
+                personenanzahl: personenanzahlValue,
+                aussenluftVsProPerson: aussenluftVsProPersonValue,
+                mindestaussenluftrate: minAussenluftRate
+        ]
         model.wizardmap.gebaude.geplanteBelegung << geplanteBelegung
         // Räume validieren
         def wzAnzahl = view.wizardRaumTypWohnzimmer.text == '' ? 0 : view.wizardRaumTypWohnzimmer.text.toInteger()
