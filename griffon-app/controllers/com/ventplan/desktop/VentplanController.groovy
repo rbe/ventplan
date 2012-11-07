@@ -777,7 +777,7 @@ class VentplanController {
      */
     def wizardProjektErstellen = { evt = null ->
         Date date = new Date()
-        def projektName = view.wizardProjektName.text == '' ? 'Ventplan_Express_Projekt_' + date.getDateTimeString() + '.vpx' : view.wizardProjektName.text + '.vpx'
+        def projektName = view.wizardProjektName.text == '' ? 'VentplanExpress_' + date.getDateTimeString() + '.vpx' : view.wizardProjektName.text + '.vpx'
 
         def typ = [mfh: view.wizardGebaudeTypMFH.selected, efh: view.wizardGebaudeTypEFH.selected, maisonette: view.wizardGebaudeTypMaisonette.selected]
         model.wizardmap.gebaude.typ << typ
