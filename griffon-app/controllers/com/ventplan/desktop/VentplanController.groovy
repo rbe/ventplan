@@ -406,7 +406,7 @@ class VentplanController {
      */
     File makeTemporaryProject(String wizardProjektName = '') {
         Date date = new Date()
-        String projektName = wizardProjektName == '' ? "VentplanExpress_${date.dateTimeString}.vpx" : "${wizardProjektName}.vpx"
+        String projektName = wizardProjektName == '' ? "VentplanExpress_${date.format('dd.MM.yyyy HHmmss')}.vpx" : "${wizardProjektName}.vpx"
         File file = new File(getVentplanDir(), projektName)
         file.deleteOnExit()
         file
