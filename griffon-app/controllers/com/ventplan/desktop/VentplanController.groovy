@@ -460,7 +460,7 @@ class VentplanController {
      */
     def neuesProjektWizard = { evt = null ->
         // Show dialog
-        neuesProjektWizardDialog = GH.createDialog(builder, WizardView, [title: "Neues Projekt mit dem Wizard erstellen", size: [850, 580], resizable: true, pack: false])
+        neuesProjektWizardDialog = GH.createDialog(builder, WizardView, [title: "Neues Projekt mit dem Wizard erstellen", size: [850, 652], resizable: true, pack: false])
         // Modify TableModel for Turen
         neuesProjektWizardDialog = GH.centerDialog(app.views['MainFrame'], neuesProjektWizardDialog)
         neuesProjektWizardDialog.show()
