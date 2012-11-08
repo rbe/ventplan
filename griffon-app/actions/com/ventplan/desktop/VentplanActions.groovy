@@ -209,7 +209,7 @@ projektPrinzipskizzeErstellenAction = action(
 // WAC-234 Wizard Dialog
 neuesProjektWizardAction = action(
         id: 'neuesProjektWizardAction',
-        name: 'Wizard für neues Projekt',
+        name: 'Express-Modus',
         mnemonic: 'X',
         accelerator: shortcut('X'),
         smallIcon: imageIcon(resource: '/menu/project_wizard.png'),

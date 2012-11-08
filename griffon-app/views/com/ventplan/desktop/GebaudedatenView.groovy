@@ -211,16 +211,16 @@ panel(constraints: 'a', border: compoundBorder(outer: emptyBorder(5), inner: emp
 }
 
 // Format fields
-GH.autoformatDoubleTextField(gebaudeGeometrieWohnflache)
-GH.autoformatDoubleTextField(gebaudeGeometrieMittlereRaumhohe)
-GH.autoformatDoubleTextField(gebaudeGeometrieLuftvolumen)
-GH.autoformatDoubleTextField(gebaudeGeometrieGeluftetesVolumen)
-GH.autoformatDoubleTextField(gebaudeLuftdichtheitDruckdifferenz)
-GH.autoformatDoubleTextField(gebaudeLuftdichtheitLuftwechsel)
-GH.autoformatDoubleTextField(gebaudeLuftdichtheitDruckexponent)
-GH.autoformatDoubleTextField(faktorBesondereAnforderungen)
+GH.doubleTextField(gebaudeGeometrieWohnflache)
+GH.doubleTextField(gebaudeGeometrieMittlereRaumhohe)
+GH.doubleTextField(gebaudeGeometrieLuftvolumen)
+GH.doubleTextField(gebaudeGeometrieGeluftetesVolumen)
+GH.doubleTextField(gebaudeLuftdichtheitDruckdifferenz)
+GH.doubleTextField(gebaudeLuftdichtheitLuftwechsel)
+GH.doubleTextField(gebaudeLuftdichtheitDruckexponent)
+GH.doubleTextField(faktorBesondereAnforderungen)
 GH.selectAllTextField(gebaudeGeplantePersonenanzahl.editor.textField)
-GH.yellowTextField(gebaudeGeplantePersonenanzahl.editor.textField)
-GH.autoformatDoubleTextField(gebaudeGeplanteAussenluftVsProPerson.editor.textField)
+GH.doubleTextField(gebaudeGeplantePersonenanzahl.editor.textField)
+GH.doubleTextField(gebaudeGeplanteAussenluftVsProPerson.editor.textField)
 // Bindings
 build(GebaudedatenBindings)

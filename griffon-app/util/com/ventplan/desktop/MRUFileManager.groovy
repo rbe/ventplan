@@ -104,7 +104,9 @@ class MRUFileManager {
     }
 
     protected void setMRU(File f) {
-        setMRU(f.getAbsolutePath())
+        if (null != f) { // java.lang.NullPointerException: Cannot invoke method getAbsolutePath() on null object
+            setMRU(f.getAbsolutePath())
+        }
     }
 
     /**

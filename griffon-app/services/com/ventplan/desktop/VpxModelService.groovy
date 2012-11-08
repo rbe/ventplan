@@ -97,9 +97,9 @@ class VpxModelService {
             def zentralgerat = p.'zentralgerat'
             // Räume
             def raume = []
-            gebaude.'raum'.each { room ->
+            gebaude.'raum'.eachWithIndex { room, i ->
                 def r = [
-                        position: X.vi { room.'position'.text() },
+                        position: i, // X.vi { room.'position'.text() },
                         raumNummer: X.vs { room.'raumnummer'.text() },
                         raumBezeichnung: X.vs { room.'bezeichnung'.text() },
                         raumTyp: X.vs { WX[room.'raumtyp'.text()] },
@@ -462,7 +462,9 @@ class VpxModelService {
                 X.tc { gelufteteFlache(geo.gelufteteFlache) }
             }
             // Räume
-            map.raum.raume.each { r -> makeRaum(r) }
+            map.raum.raume.eachWithIndex { r, i ->
+                if (r) makeRaum(r + [position: i])
+            }
         }
         // Anlagendaten, Zentralgerät
         domBuilder.zentralgerat() {
@@ -590,7 +592,6 @@ class VpxModelService {
      * WAC-226: Stuckliste im XML speichern
      */
     def makeStuckliste = { a ->
-
         domBuilder.artikel() {
             X.tc { position(a.REIHENFOLGE) }
             X.tc { anzahl(a.ANZAHL) }
