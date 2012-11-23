@@ -12,7 +12,6 @@
 package com.ventplan.desktop
 
 import com.bensmann.griffon.GriffonHelper as GH
-
 import groovy.xml.DOMBuilder
 import groovy.xml.StreamingMarkupBuilder
 
@@ -121,17 +120,38 @@ class OdiseeService {
     }
 
     /**
+     * Cleanup filename for Odisee, no special characters.
+     * @param vpxFile File object.
+     * @return String with filename w/o extension and special characters.
+     */
+    private String odiseeRequestName(File vpxFile) {
+        String vpxFilenameWoExt = vpxModelService.filenameWoExtension(vpxFile)
+        /*
+        // HACK Ventplan -> Odisee + Umlaute
+        return vpxFilenameWoExt
+                .replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('Ä', 'Ae').replace('Ö', 'Oe').replace('Ü', 'Ue')
+                .replace(':', '').replace('/', '').replace('\\', '')
+        */
+        StringBuilder builder = new StringBuilder()
+        for (char c : vpxFilenameWoExt.chars) {
+            int i = (int) c
+            if ((i >= 48 && i <= 57) || (i >= 65 && i <= 90) || (i >= 97 && i <= 122)) {
+                builder.append(c)
+            }
+        }
+        return builder.toString()
+    }
+
+    /**
      *
-     * @param wpxFile
+     * @param vpxFile
      * @param map
      * @param saveOdiseeXml Save Odisee XML in file system? Defaults to false.
      * @return String Odisee XML.
      */
-    String performAuslegung(File wpxFile, Map map, boolean saveOdiseeXml = false) {
+    String performAuslegung(File vpxFile, Map map, boolean saveOdiseeXml = false) {
         // Filename w/o extension
-        String vpxFilenameWoExt = vpxModelService.filenameWoExtension(wpxFile)
-        // HACK Ventplan -> Odisee + Umlaute
-        vpxFilenameWoExt = vpxFilenameWoExt.replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('Ä', 'Ae').replace('Ö', 'Oe').replace('Ü', 'Ue')
+        String vpxFilenameWoExt = odiseeRequestName(vpxFile)
         // Generate Odisee XML
         DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
@@ -158,22 +178,20 @@ class OdiseeService {
                 }
             }
         }
-        prepareXml(odisee, wpxFile, 'Auslegung', saveOdiseeXml)
+        prepareXml(odisee, vpxFile, 'Auslegung', saveOdiseeXml)
     }
 
     /**
      *
-     * @param wpxFile
+     * @param vpxFile
      * @param map
      * @param saveOdiseeXml Save Odisee XML in file system? Defaults to false.
      * @param editedStuckliste Edited map of stuckliste items.
      * @return String Odisee XML.
      */
-    String performStueckliste(File wpxFile, Map map, boolean saveOdiseeXml = false, Map editedStuckliste = null) {
+    String performStueckliste(File vpxFile, Map map, boolean saveOdiseeXml = false, Map editedStuckliste = null) {
         // Filename w/o extension
-        String vpxFilenameWoExt = vpxModelService.filenameWoExtension(wpxFile)
-        // HACK Ventplan -> Odisee + Umlaute
-        vpxFilenameWoExt = vpxFilenameWoExt.replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('Ä', 'Ae').replace('Ö', 'Oe').replace('Ü', 'Ue')
+        String vpxFilenameWoExt = odiseeRequestName(vpxFile)
         // Generate Odisee XML
         DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
@@ -218,21 +236,19 @@ class OdiseeService {
                 }
             }
         }
-        prepareXml(odisee, wpxFile, 'Stückliste', saveOdiseeXml)
+        prepareXml(odisee, vpxFile, 'Stückliste', saveOdiseeXml)
     }
 
     /**
      *
-     * @param wpxFile
+     * @param vpxFile
      * @param map The whole model.
      * @param saveOdiseeXml Save Odisee XML in file system? Defaults to false.
      * @return String Odisee XML.
      */
-    String performAngebot(File wpxFile, Map map, boolean saveOdiseeXml = false, Map editedStuckliste = null) {
+    String performAngebot(File vpxFile, Map map, boolean saveOdiseeXml = false, Map editedStuckliste = null) {
         // Filename w/o extension
-        String vpxFilenameWoExt = vpxModelService.filenameWoExtension(wpxFile)
-        // HACK Ventplan -> Odisee + Umlaute
-        vpxFilenameWoExt = vpxFilenameWoExt.replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('Ä', 'Ae').replace('Ö', 'Oe').replace('Ü', 'Ue')
+        String vpxFilenameWoExt = odiseeRequestName(vpxFile)
         // Generate Odisee XML
         DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
@@ -275,7 +291,7 @@ class OdiseeService {
                             menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
                         }
                         // WAC-223 Kaufmännisch und technische Artikel
-                        if (artikel.ARTIKELNUMMER &&!ventplanModelService.isArticleValidToday(artikel.ARTIKELNUMMER) && !artikel.ARTIKELBEZEICHNUNG.startsWith('***')) {
+                        if (artikel.ARTIKELNUMMER && !ventplanModelService.isArticleValidToday(artikel.ARTIKELNUMMER) && !artikel.ARTIKELBEZEICHNUNG.startsWith('***')) {
                             artikel.ARTIKELBEZEICHNUNG = '*** ' + artikel.ARTIKELBEZEICHNUNG
                         }
                         // Tabelle
@@ -295,21 +311,19 @@ class OdiseeService {
                 }
             }
         }
-        prepareXml(odisee, wpxFile, 'Angebot', saveOdiseeXml)
+        prepareXml(odisee, vpxFile, 'Angebot', saveOdiseeXml)
     }
 
     /**
      * @param odisee
-     * @param wpxFile
+     * @param vpxFile
      * @param type Just a name included in Odisee XML filename.
      * @param saveOdiseeXml Save Odisee XML in file system?
      * @return
      */
-    private String prepareXml(odisee, File wpxFile, String type, boolean saveOdiseeXml) {
+    private String prepareXml(odisee, File vpxFile, String type, boolean saveOdiseeXml) {
         // Filename w/o extension
-        String vpxFilenameWoExt = vpxModelService.filenameWoExtension(wpxFile)
-        // HACK Ventplan -> Odisee + Umlaute
-        vpxFilenameWoExt = vpxFilenameWoExt.replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('Ä', 'Ae').replace('Ö', 'Oe').replace('Ü', 'Ue')
+        String vpxFilenameWoExt = odiseeRequestName(vpxFile)
         // Convert XML to string (StreamingMarkupBuilder will generate XML with correct german umlauts)
         def builder = new StreamingMarkupBuilder()
         //builder.encoding = 'UTF-8'
@@ -319,7 +333,7 @@ class OdiseeService {
         }.toString()
         // Save Odisee request XML
         if (saveOdiseeXml) {
-            def odiseeXmlFile = new File(wpxFile.parentFile, "${vpxFilenameWoExt}_${type}_odisee.xml")
+            def odiseeXmlFile = new File(vpxFile.parentFile, "${vpxFilenameWoExt}_${type}_odisee.xml")
             odiseeXmlFile.withWriter('UTF-8') { writer ->
                 writer.write(xml)
             }
