@@ -531,9 +531,9 @@ class VentplanModelService {
         def r = withSql { dataSourceName, sql ->
             sql.firstRow("SELECT artikelnummer"
                     + " FROM artikelstamm" //+ " WHERE kategorie = 1 AND gesperrt = ? AND maxvolumenstrom >= ?"
-                    + " WHERE kategorie = 1 AND maxvolumenstrom >= ?"
+                    + " WHERE kategorie = 1 AND maxvolumenstrom >= ? AND gueltigbis >= ?.text"
                     + " ORDER BY artikelnummer", // [false, luftung])
-                    [luftung])
+                    [luftung, Date.format("yyyy-MM-dd")])
         }
         r ? r.ARTIKELNUMMER : ''
     }
