@@ -2254,7 +2254,7 @@ class ProjektController {
                     String aussenluft = artikelfurAussenluftauslass()
                     String fortluft = artikelFurFortluftauslass()
                     // Zentralgerät
-                    String zentralgerat = model.map.anlage.zentralgerat
+                    String zentralgerat = "${model.map.anlage.zentralgerat} (${model.map.anlage.standort.grep { it.value == true }?.key[0]})"
                     def findRaum = { String luftart, String geschoss ->
                         StringBuilder builder = new StringBuilder()
                         List raume = model.map.raum.raume.findAll { r ->
