@@ -11,6 +11,8 @@
  */
 package com.ventplan.desktop
 
+import java.util.prefs.Preferences
+
 /**
  * WAC-161: Zuletzt geöffnete Projekte
  * Save and load preferences for a Most Recently Used (MRU) list.
@@ -18,21 +20,16 @@ package com.ventplan.desktop
 @Singleton
 class ProjektSuchenPrefHelper {
 
-    private static java.util.prefs.Preferences prefs = java.util.prefs.Preferences.userNodeForPackage(this)
+    private static Preferences prefs = java.util.prefs.Preferences.userNodeForPackage(this)
+
     private static final String PREFS_USER_NODE = "/ventplanprojektsuchen"
+
     public static final String PREFS_USER_KEY_SUCH_ORDNER = "suchordner"
 
-    /**
-     *
-     */
     private ProjektSuchenPrefHelper() {
         // WAC-108 Angebotsnummer soll jedesmal eingegeben werden und wird nur temporär gespeichert
     }
 
-    /**
-     *
-     * @return
-     */
     public boolean hasSavedValues() {
         try {
             def value = getPrefValue(PREFS_USER_KEY_NAME)
