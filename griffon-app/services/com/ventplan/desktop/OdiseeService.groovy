@@ -147,6 +147,7 @@ class OdiseeService {
      * @param saveOdiseeXml Save Odisee XML in file system? Defaults to false.
      * @return String Odisee XML.
      */
+    @SuppressWarnings("GrUnresolvedAccess")
     String performAuslegung(File vpxFile, Map map, boolean saveOdiseeXml = false) {
         // Filename w/o extension
         String vpxFilenameWoExt = odiseeRequestName(vpxFile)
@@ -187,6 +188,7 @@ class OdiseeService {
      * @param editedStuckliste Edited map of stuckliste items.
      * @return String Odisee XML.
      */
+    @SuppressWarnings("GrUnresolvedAccess")
     String performStueckliste(File vpxFile, Map map, boolean saveOdiseeXml = false, Map editedStuckliste = null) {
         // Filename w/o extension
         String vpxFilenameWoExt = odiseeRequestName(vpxFile)
@@ -243,6 +245,7 @@ class OdiseeService {
      * @param saveOdiseeXml Save Odisee XML in file system? Defaults to false.
      * @return String Odisee XML.
      */
+    @SuppressWarnings("GrUnresolvedAccess")
     String performAngebot(File vpxFile, Map map, boolean saveOdiseeXml = false, Map editedStuckliste = null) {
         // Filename w/o extension
         String vpxFilenameWoExt = odiseeRequestName(vpxFile)
@@ -318,6 +321,7 @@ class OdiseeService {
      * @param saveOdiseeXml Save Odisee XML in file system?
      * @return
      */
+    @SuppressWarnings("GrUnresolvedAccess")
     private String prepareXml(odisee, File vpxFile, String type, boolean saveOdiseeXml) {
         // Filename w/o extension
         String vpxFilenameWoExt = odiseeRequestName(vpxFile)
@@ -341,6 +345,7 @@ class OdiseeService {
     /**
      * @param domBuilder
      */
+    @SuppressWarnings("GrUnresolvedAccess")
     private static void addErsteller(DOMBuilder domBuilder) {
         AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
         // Ersteller
@@ -368,6 +373,7 @@ class OdiseeService {
     /**
      * @param domBuilder
      */
+    @SuppressWarnings("GrUnresolvedAccess")
     private static void addEmpfanger(DOMBuilder domBuilder, Map map) {
         AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
         switch (prefHelper.getPrefValue(PREFS_USER_KEY_EMPFANGER)) {
@@ -405,6 +411,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map model.map.kundendaten
      */
+    @SuppressWarnings("GrUnresolvedAccess")
     private static void addGrosshandel(DOMBuilder domBuilder, Map map) {
         // Grosshandel
         domBuilder.userfield(name: 'ghFirma1TextField', map.grosshandel.firma1 ?: '')
@@ -420,6 +427,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map model.map.kundendaten
      */
+    @SuppressWarnings("GrUnresolvedAccess")
     private static void addAusfuhrendeFirma(DOMBuilder domBuilder, Map map) {
         // Ausführende Firma
         domBuilder.userfield(name: 'afFirma1TextField', map.ausfuhrendeFirma.firma1 ?: '')
@@ -435,6 +443,7 @@ class OdiseeService {
      * Handelsvertretung, Werksvertretung.
      * @param domBuilder
      */
+    @SuppressWarnings("GrUnresolvedAccess")
     private void addHandelsvertretung(DOMBuilder domBuilder, String zipcode) {
         if (null != zipcode && zipcode.length() == 5) {
             Map vertreter = zipcodeService.findVertreter(zipcode)
@@ -455,6 +464,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map model.map.kundendaten
      */
+    @SuppressWarnings("GrUnresolvedAccess")
     private static void addBauvorhaben(DOMBuilder domBuilder, Map map) {
         domBuilder.userfield(name: 'adBauvorhabenTextField', map.bauvorhaben ?: '')
         domBuilder.userfield(name: 'ProjektBV', map.bauvorhaben ?: '')
@@ -464,6 +474,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map
      */
+    @SuppressWarnings("GrUnresolvedAccess")
     private static void addGebaude(DOMBuilder domBuilder, Map map) {
         // Gerätestandort
         domBuilder.userfield(name: 'gsKellergeschossRadioButton', gt(map.anlage.standort, 'KG', 'Kellergeschoss'))
@@ -514,6 +525,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map model.map
      */
+    @SuppressWarnings("GrUnresolvedAccess")
     private static void addRaumdaten(DOMBuilder domBuilder, Map map) {
         // Tabelle
         map.raum.raume.eachWithIndex { r, i ->
@@ -567,6 +579,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map model.map
      */
+    @SuppressWarnings("GrUnresolvedAccess")
     private static void addRaumvolumenstrome(DOMBuilder domBuilder, Map map) {
         // Tabelle
         map.raum.raume.eachWithIndex { r, i ->
@@ -609,6 +622,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map model.map
      */
+    @SuppressWarnings("GrUnresolvedAccess")
     private static void addUberstromelemente(DOMBuilder domBuilder, Map map) {
         // Tabelle
         map.raum.raume.eachWithIndex { r, i ->
@@ -636,6 +650,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map model.map
      */
+    @SuppressWarnings("GrUnresolvedAccess")
     private static void addAkustikBerechnung(DOMBuilder domBuilder, Map map) {
         // Zuluft
         //abZuTabelleUberschrift2Label = "Zuluft"
@@ -695,6 +710,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map model.map
      */
+    @SuppressWarnings("GrUnresolvedAccess")
     private static void addDvbKanalnetz(DOMBuilder domBuilder, Map map) {
         map.dvb.kanalnetz.eachWithIndex { kn, i ->
             domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!B${i + 3}", kn.luftart)
@@ -714,6 +730,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map model.map
      */
+    @SuppressWarnings("GrUnresolvedAccess")
     private static void addDvbVentileinstellung(DOMBuilder domBuilder, Map map) {
         map.dvb.ventileinstellung.eachWithIndex { ve, i ->
             domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!B${i + 3}", ve.luftart)
