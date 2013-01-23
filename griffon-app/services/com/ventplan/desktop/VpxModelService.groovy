@@ -30,14 +30,19 @@ import javax.xml.validation.Validator
 @SuppressWarnings("GroovyAssignabilityCheck")
 class VpxModelService {
 
+    ZipcodeService zipcodeService
+    
     Validator validator
-    def xmlSlurper
-    def domBuilder
+    XmlSlurper xmlSlurper
+    DOMBuilder domBuilder
 
-    def VpxModelService() {
+    /**
+     * Public constructor.
+     */
+    public VpxModelService() {
         // Load XSD
-        InputStream xsdStream = VentplanResource.getVPXXSDAsStream()
-        validator = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(new StreamSource(xsdStream)).newValidator()
+        StreamSource xsdStream = new StreamSource(VentplanResource.getVPXXSDAsStream())
+        validator = SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI).newSchema(xsdStream).newValidator()
         // XmlSlurper for reading XML
         xmlSlurper = new XmlSlurper()
         // Read XML using locally cached DTDs
@@ -581,7 +586,7 @@ class VpxModelService {
             }
         }
         if (file) {
-            def fh = file instanceof File ? file : new File(file)
+            File fh = file instanceof File ? file : new File(file)
             fh.withWriter('UTF-8') { writer ->
                 writer.write(XmlUtil.serialize(wpx))
             }
