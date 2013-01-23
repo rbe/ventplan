@@ -72,9 +72,9 @@ class OdiseeService {
     }
 
     /**
-     * Constructor.
+     * Public constructor.
      */
-    def OdiseeService() {
+    public OdiseeService() {
     }
 
     /**
@@ -227,7 +227,6 @@ class OdiseeService {
                         }
                         domBuilder.userfield(name: "TabelleStueckliste!A${i + 2}", i + 1)
                         domBuilder.userfield(name: "TabelleStueckliste!B${i + 2}", menge ?: '?')
-                        //domBuilder.userfield(name: "TabelleStueckliste!C${i + 2}", stuck.key ?: '?')
                         domBuilder.userfield(name: "TabelleStueckliste!C${i + 2}", artikel.ARTIKELNUMMER ?: '?')
                         domBuilder.userfield(name: "TabelleStueckliste!D${i + 2}", artikel.ARTIKELBEZEICHNUNG ?: '--- keine Bezeichnung ---')
                     }
@@ -323,7 +322,6 @@ class OdiseeService {
         // Filename w/o extension
         String vpxFilenameWoExt = odiseeRequestName(vpxFile)
         // Convert XML to string (StreamingMarkupBuilder will generate XML with correct german umlauts)
-        //builder.encoding = 'UTF-8'
         StreamingMarkupBuilder builder = new StreamingMarkupBuilder()
         String xml = builder.bind {
             //mkp.xmlDeclaration()
@@ -613,7 +611,6 @@ class OdiseeService {
      */
     private static void addUberstromelemente(DOMBuilder domBuilder, Map map) {
         // Tabelle
-        def m = [:]
         map.raum.raume.eachWithIndex { r, i ->
             domBuilder.userfield(name: "lmeTabelleUeberstroemTable!B${i + 3}", r.raumBezeichnung)
             domBuilder.userfield(name: "lmeTabelleUeberstroemTable!C${i + 3}", noZero(GH.toString2Converter(r.raumVolumen)))
