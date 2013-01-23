@@ -9,9 +9,9 @@
  *
  * rbe, 28.08.12 17:21
  */
+
 package com.ventplan.desktop
 
-import groovy.sql.Sql
 import groovy.sql.GroovyRowResult
 
 /**
