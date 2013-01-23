@@ -14,7 +14,7 @@ package com.ventplan.desktop
 import java.text.SimpleDateFormat
 
 /**
- *
+ * Calculations around dates, especially 'today'.
  */
 class Today {
 
