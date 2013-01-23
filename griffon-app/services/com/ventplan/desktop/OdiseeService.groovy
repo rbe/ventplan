@@ -83,7 +83,7 @@ class OdiseeService {
     /**
      * Strings containing zero numbers are made empty.
      */
-    private String noZero(String val) {
+    private static String noZero(String val) {
         if (val == '0,00' || val == '0') {
             val = ''
         }
@@ -95,7 +95,7 @@ class OdiseeService {
      * key=Decke -> map[decke] set, then "Decke" else ''
      * key= -> map[decke] set, then "Decke" else ''
      */
-    private String gt(Map map, key, value) {
+    private static String gt(Map map, key, value) {
         def val = map[key]
         val ? value as String : ''
     }
@@ -103,7 +103,7 @@ class OdiseeService {
     /**
      * @return String File extension for desired document format.
      */
-    private String getOutputFormat() {
+    private static String getOutputFormat() {
         String outputFormat = 'pdf'
         if (prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_DOKUMENTTYP).contains('ODF')) {
             outputFormat = 'odt'
@@ -115,7 +115,7 @@ class OdiseeService {
      * Get vendor prefix from configuration.
      * @return
      */
-    private String getVendorPrefix() {
+    private static String getVendorPrefix() {
         VentplanResource.getVentplanProperties().get('vendor.prefix')
     }
 
@@ -345,7 +345,7 @@ class OdiseeService {
     /**
      * @param domBuilder
      */
-    private void addErsteller(domBuilder) {
+    private static void addErsteller(DOMBuilder domBuilder) {
         // Ersteller
         domBuilder.userfield(name: 'ErstellerFirma', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA))
         domBuilder.userfield(name: 'ErstellerName', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME))
@@ -371,7 +371,7 @@ class OdiseeService {
     /**
      * @param domBuilder
      */
-    private void addEmpfanger(domBuilder, map) {
+    private static void addEmpfanger(DOMBuilder domBuilder, Map map) {
         switch (prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMPFANGER)) {
             case 'Grosshandel':
                 domBuilder.userfield(name: 'EmpfFirma', (map.kundendaten.grosshandel.firma1 ?: '') + ' ' + (map.kundendaten.grosshandel.firma2 ?: ''))
@@ -407,7 +407,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map model.map.kundendaten
      */
-    private void addGrosshandel(domBuilder, map) {
+    private static void addGrosshandel(DOMBuilder domBuilder, Map map) {
         // Grosshandel
         domBuilder.userfield(name: 'ghFirma1TextField', map.grosshandel.firma1 ?: '')
         domBuilder.userfield(name: 'ghFirma2TextField', map.grosshandel.firma2 ?: '')
@@ -422,7 +422,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map model.map.kundendaten
      */
-    private void addAusfuhrendeFirma(domBuilder, map) {
+    private static void addAusfuhrendeFirma(DOMBuilder domBuilder, Map map) {
         // Ausführende Firma
         domBuilder.userfield(name: 'afFirma1TextField', map.ausfuhrendeFirma.firma1 ?: '')
         domBuilder.userfield(name: 'afFirma2TextField', map.ausfuhrendeFirma.firma2 ?: '')
@@ -437,7 +437,7 @@ class OdiseeService {
      * Handelsvertretung, Werksvertretung.
      * @param domBuilder
      */
-    private void addHandelsvertretung(domBuilder, String zipcode) {
+    private void addHandelsvertretung(DOMBuilder domBuilder, String zipcode) {
         if (null != zipcode && zipcode.length() == 5) {
             Map vertreter = zipcodeService.findVertreter(zipcode)
             if (vertreter) {
@@ -457,7 +457,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map model.map.kundendaten
      */
-    private void addBauvorhaben(domBuilder, map) {
+    private static void addBauvorhaben(DOMBuilder domBuilder, Map map) {
         domBuilder.userfield(name: 'adBauvorhabenTextField', map.bauvorhaben ?: '')
         domBuilder.userfield(name: 'ProjektBV', map.bauvorhaben ?: '')
     }
@@ -466,7 +466,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map
      */
-    private void addGebaude(domBuilder, map) {
+    private static void addGebaude(DOMBuilder domBuilder, Map map) {
         // Gerätestandort
         domBuilder.userfield(name: 'gsKellergeschossRadioButton', gt(map.anlage.standort, 'KG', 'Kellergeschoss'))
         domBuilder.userfield(name: 'gsErdgeschossRadioButton', gt(map.anlage.standort, 'EG', 'Erdgeschoss'))
@@ -516,7 +516,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map model.map
      */
-    private void addRaumdaten(domBuilder, map) {
+    private static void addRaumdaten(DOMBuilder domBuilder, Map map) {
         // Tabelle
         map.raum.raume.eachWithIndex { r, i ->
             domBuilder.userfield(name: "wfTabelleTable!B${i + 3}", r.raumBezeichnung ?: '?')
@@ -557,7 +557,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map model.map
      */
-    private void addRaumvolumenstrome(domBuilder, map) {
+    private static void addRaumvolumenstrome(DOMBuilder domBuilder, Map map) {
         // Tabelle
         map.raum.raume.eachWithIndex { r, i ->
             domBuilder.userfield(name: "lmeTabelleTable!B${i + 3}", r.raumBezeichnung ?: '?')
@@ -599,7 +599,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map model.map
      */
-    private void addUberstromelemente(domBuilder, map) {
+    private static void addUberstromelemente(DOMBuilder domBuilder, Map map) {
         // Tabelle
         def m = [:]
         map.raum.raume.eachWithIndex { r, i ->
@@ -627,7 +627,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map model.map
      */
-    private void addAkustikBerechnung(domBuilder, map) {
+    private static void addAkustikBerechnung(DOMBuilder domBuilder, Map map) {
         // Zuluft
         //abZuTabelleUberschrift2Label = "Zuluft"
         map.akustik.zuluft.tabelle.eachWithIndex { ak, i ->
@@ -686,7 +686,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map model.map
      */
-    private void addDvbKanalnetz(domBuilder, map) {
+    private static void addDvbKanalnetz(DOMBuilder domBuilder, Map map) {
         map.dvb.kanalnetz.eachWithIndex { kn, i ->
             domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!B${i + 3}", kn.luftart)
             domBuilder.userfield(name: "dvbTeilstreckenTabelleTable!C${i + 3}", kn.teilstrecke)
@@ -705,7 +705,7 @@ class OdiseeService {
      * @param domBuilder
      * @param map model.map
      */
-    private void addDvbVentileinstellung(domBuilder, map) {
+    private static void addDvbVentileinstellung(DOMBuilder domBuilder, Map map) {
         map.dvb.ventileinstellung.eachWithIndex { ve, i ->
             domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!B${i + 3}", ve.luftart)
             domBuilder.userfield(name: "dvbVentileinstellungTabelleTable!C${i + 3}", ve.raum)
@@ -719,7 +719,7 @@ class OdiseeService {
         }
     }
 
-    private double volumenstrom(raum) {
+    private static double volumenstrom(Map raum) {
         double vs = 0.0d
         switch (raum.raumLuftart) {
             case 'ZU':
@@ -736,7 +736,7 @@ class OdiseeService {
         vs
     }
 
-    private double volumenstromInfiltration(raum) {
+    private static double volumenstromInfiltration(Map raum) {
         double vs = 0.0d
         switch (raum.raumLuftart) {
             case 'ZU':
@@ -753,7 +753,7 @@ class OdiseeService {
         vs
     }
 
-    private double summeZuluftInfiltration(map) {
+    private static double summeZuluftInfiltration(Map map) {
         double ltmZuluftSumme = (double) map.raum.raume.findAll {
             it.raumLuftart == 'ZU'
         }?.inject(0.0d, { double o, Map n ->
@@ -762,7 +762,7 @@ class OdiseeService {
         ltmZuluftSumme
     }
 
-    private double summeAbluftInfiltration(map) {
+    private static double summeAbluftInfiltration(Map map) {
         double ltmAbluftSumme = (double) map.raum.raume.findAll {
             it.raumLuftart == 'AB'
         }?.inject(0.0d, { double o, Map n ->
