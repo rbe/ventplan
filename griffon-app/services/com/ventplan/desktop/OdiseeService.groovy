@@ -159,9 +159,9 @@ class OdiseeService {
                 archive(database: false, files: true) {}
                 instructions() {
                     addErsteller(domBuilder)
-                    addGrosshandel(domBuilder, map.kundendaten)
-                    addAusfuhrendeFirma(domBuilder, map.kundendaten)
-                    addBauvorhaben(domBuilder, map.kundendaten)
+                    addGrosshandel(domBuilder, (Map) map.kundendaten)
+                    addAusfuhrendeFirma(domBuilder, (Map) map.kundendaten)
+                    addBauvorhaben(domBuilder, (Map) map.kundendaten)
                     addGebaude(domBuilder, map)
                     addRaumdaten(domBuilder, map)
                     addRaumvolumenstrome(domBuilder, map)
@@ -201,7 +201,7 @@ class OdiseeService {
                     //
                     addErsteller(domBuilder)
                     addEmpfanger(domBuilder, map)
-                    addBauvorhaben(domBuilder, map.kundendaten)
+                    addBauvorhaben(domBuilder, (Map) map.kundendaten)
                     // Stückliste
                     def stuckliste
                     if (editedStuckliste) { // TODO Always true?
@@ -210,8 +210,8 @@ class OdiseeService {
                         stuckliste = stucklisteService.makeResult(stucklisteService.processData(map))
                     }
                     stuckliste.eachWithIndex { stuck, i ->
-                        Map artikel = stuck.value as Map
-                        int reihenfolge = (int) artikel.REIHENFOLGE
+                        Map artikel =  (Map) stuck.value //as Map
+                        //int reihenfolge = (int) artikel.REIHENFOLGE
                         double anzahl = (double) artikel.ANZAHL
                         //println String.format('%2d % 12d % 7.1f %6s %17s - %s', i + 1, reihenfolge, anzahl, artikel.MENGENEINHEIT, stuck.key, artikel.ARTIKELBEZEICHNUNG)
                         // Menge mit oder ohne Komma anzeigen?
@@ -299,7 +299,7 @@ class OdiseeService {
                         domBuilder.userfield(name: "TabelleStueckliste!C${i + 2}", "${artikel.ARTIKELNUMMER ?: '?'}\n${artikel.ARTIKELBEZEICHNUNG ?: '--- keine Bezeichnung ---'}")
                         domBuilder.userfield(name: "TabelleStueckliste!D${i + 2}", germanNumberFormat.format(artikel.PREIS)) //String.format(Locale.GERMANY, "%.2f", artikel.PREIS)
                         domBuilder.userfield(name: "TabelleStueckliste!E${i + 2}", germanNumberFormat.format(anzahl * artikel.PREIS)) //String.format(Locale.GERMANY, "%.2f", anzahl * artikel.PREIS)
-                        summe += anzahl * artikel.PREIS
+                        summe += anzahl * (double) artikel.PREIS
                         summenZeile = i + 1
                     }
                     // Summe in EUR
@@ -323,15 +323,15 @@ class OdiseeService {
         // Filename w/o extension
         String vpxFilenameWoExt = odiseeRequestName(vpxFile)
         // Convert XML to string (StreamingMarkupBuilder will generate XML with correct german umlauts)
-        def builder = new StreamingMarkupBuilder()
         //builder.encoding = 'UTF-8'
+        StreamingMarkupBuilder builder = new StreamingMarkupBuilder()
         String xml = builder.bind {
             //mkp.xmlDeclaration()
             mkp.yieldUnescaped odisee
         }.toString()
         // Save Odisee request XML
         if (saveOdiseeXml) {
-            def odiseeXmlFile = new File(vpxFile.parentFile, "${vpxFilenameWoExt}_${type}_odisee.xml")
+            File odiseeXmlFile = new File(vpxFile.parentFile, "${vpxFilenameWoExt}_${type}_odisee.xml")
             odiseeXmlFile.withWriter('UTF-8') { writer ->
                 writer.write(xml)
             }
@@ -533,7 +533,11 @@ class OdiseeService {
         double zuSumme2 = map.raum.raume.findAll { it.raumLuftart == 'ZU/AB' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
         zuSumme += 0.5d * zuSumme2
         */
-        double zuSumme = map.raum.raume.findAll { it.raumLuftart.contains('ZU') }?.inject(0.0d, { o, n -> o + volumenstromInfiltration(n) }) ?: 0.0d
+        double zuSumme = map.raum.raume.findAll {
+            it.raumLuftart.contains('ZU')
+        }?.inject(0.0d, { double o, double n ->
+            o + volumenstromInfiltration(n)
+        }) as double ?: 0.0d
         domBuilder.userfield(name: 'lmeZuSummeWertLabel', GH.toString2Converter(zuSumme))
         // Abluft
         /*
@@ -542,10 +546,18 @@ class OdiseeService {
         double abSumme2 = map.raum.raume.findAll { it.raumLuftart == 'ZU/AB' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
         abSumme += 0.5d * abSumme2
         */
-        double abSumme = map.raum.raume.findAll { it.raumLuftart.contains('AB') }?.inject(0.0d, { o, n -> o + volumenstromInfiltration(n) }) ?: 0.0d
+        double abSumme = map.raum.raume.findAll {
+            it.raumLuftart.contains('AB')
+        }?.inject(0.0d, { double o, double n ->
+            o + volumenstromInfiltration(n)
+        }) as double ?: 0.0d
         domBuilder.userfield(name: 'lmeAbSummeWertLabel', GH.toString2Converter(abSumme))
         // Überström
-        double ubSumme = map.raum.raume.findAll { it.raumLuftart == 'ÜB' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
+        double ubSumme = map.raum.raume.findAll {
+            it.raumLuftart == 'ÜB'
+        }?.inject(0.0d, { double o, Map n ->
+            o + n.raumVolumen
+        }) as double ?: 0.0d
         domBuilder.userfield(name: 'lmeUebSummeWertLabel', GH.toString2Converter(ubSumme))
         domBuilder.userfield(name: 'lmeGesamtvolumenWertLabel', GH.toString2Converter(map.raum.raumVs.gesamtVolumenNE))
         domBuilder.userfield(name: 'kzKennzeichenLabel', map.anlage.kennzeichnungLuftungsanlage ?: '?')
