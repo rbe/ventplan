@@ -1260,7 +1260,7 @@ class ProjektModel {
 //        def writable = [false, true, false, false, false, false] as boolean[]
         def columnNames = ['Anzahl', 'Artikelnr.', 'Beschreibung'] as String[]
         def propertyNames = ['anzahl', 'artikelnummer', 'text'] as String[]
-        def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
+//        def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
         def writable = [true, false, false] as boolean[]
         gltmClosure(columnNames, propertyNames, writable, tableModels.stuckliste)
     }
@@ -1276,7 +1276,7 @@ class ProjektModel {
 //        def writable = [false, true, false, false, false, false] as boolean[]
         def columnNames = ['Anzahl', 'Artikelnr.', 'Beschreibung'] as String[]
         def propertyNames = ['anzahl', 'artikelnummer', 'text'] as String[]
-        def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
+//        def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
         def writable = [true, false, false] as boolean[]
         gltmClosure(columnNames, propertyNames, writable, tableModels.stucklisteSuche)
     }
