@@ -542,8 +542,7 @@ class VpxModelService {
     }
 
     def save = { map, file, stuckliste = null ->
-        def prefHelper = AuslegungPrefHelper.instance
-        //def wpx = domBuilder.'westaflex-wpx' { // TODO Rename root element to 'ventplan'
+        AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
         def wpx = domBuilder.'ventplan-project' {
             projekt() {
                 X.tc {
