@@ -11,18 +11,18 @@
  */
 package com.ventplan.desktop
 
+import com.bensmann.griffon.CachedDTD
 import com.bensmann.griffon.XmlHelper as X
 import com.ventplan.desktop.VentplanConstants as WX
-
-import com.bensmann.griffon.CachedDTD
 import groovy.xml.DOMBuilder
 import groovy.xml.XmlUtil
 import groovy.xml.dom.DOMCategory
 
-import javax.xml.XMLConstants
 import javax.xml.transform.stream.StreamSource
 import javax.xml.validation.SchemaFactory
 import javax.xml.validation.Validator
+
+import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI
 
 /**
  * Speichern und Laden von WAC-Projekten im WPX-Format.
