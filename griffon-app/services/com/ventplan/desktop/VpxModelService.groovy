@@ -331,17 +331,17 @@ class VpxModelService {
             def stuckliste = p?.'stuckliste'
             stuckliste?.'artikel'?.each { article ->
                 artikelMap.put(
-                    article.artikelnummer,
-                    [
-                        REIHENFOLGE: X.vi { article?.'position'.text() },
-                        ANZAHL: X.vd { article?.'anzahl'.text() },
-                        ARTIKEL: X.vs { article?.'artikelnummer'.text() },
-                        ARTIKELBEZEICHNUNG: X.vs { article?.'artikelbezeichnung'.text() },
-                        LUFTART: X.vs { WX[article?.'luftart'.text()] },
-                        LIEFERMENGE: X.vd { article?.'liefermenge'.text() },
-                        PREIS: X.vd { article?.'preis'.text() },
-                        MENGENEINHEIT: X.vs { article?.'mengeneinheit'.text() }
-                    ]
+                        article.artikelnummer,
+                        [
+                                REIHENFOLGE: X.vi { article?.'position'.text() },
+                                ANZAHL: X.vd { article?.'anzahl'.text() },
+                                ARTIKEL: X.vs { article?.'artikelnummer'.text() },
+                                ARTIKELBEZEICHNUNG: X.vs { article?.'artikelbezeichnung'.text() },
+                                LUFTART: X.vs { WX[article?.'luftart'.text()] },
+                                LIEFERMENGE: X.vd { article?.'liefermenge'.text() },
+                                PREIS: X.vd { article?.'preis'.text() },
+                                MENGENEINHEIT: X.vs { article?.'mengeneinheit'.text() }
+                        ]
                 )
             }
         }
@@ -562,6 +562,9 @@ class VpxModelService {
                         }
                     }
                 } { ersteller() { person() } }
+                X.tc { erstellt() } { erstellt() }
+                X.tc { bearbeitet() } { bearbeitet() }
+                // TODO Bauvorhaben should be its own type
                 X.tc { bauvorhaben(map.kundendaten.bauvorhaben) } { bauvorhaben() }
                 X.tc { bauvorhabenAnschrift(map.kundendaten.bauvorhabenAnschrift) } { bauvorhabenAnschrift() }
                 X.tc { bauvorhabenPlz(map.kundendaten.bauvorhabenPlz) } { bauvorhabenPlz() }
