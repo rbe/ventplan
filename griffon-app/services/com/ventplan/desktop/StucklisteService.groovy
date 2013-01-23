@@ -206,16 +206,16 @@ class StucklisteService {
         uberstromventile?.each { st ->
             artikelAufStuckliste(stuckliste, st)
         }
+        // WAC-231 Sprungmengen
         // Rohrlängen, Liefermenge
         stuckliste.each { Map.Entry st ->
             String artikel = st.key
-            GroovyRowResult r = st.value
-            // Bugfix: NullPointer wenn die Mengeneinheit fehlt (Warum fehlt sie? Kann immer gesetzt werden!)
-            if (r.hasProperty('MENGENEINHEIT') && r.hasProperty('KATEGORIE')) {
-                if (r.MENGENEINHEIT == 'Meter' && r.KATEGORIE in [3, 4]) {
-                    double meterZuStueckelung = Math.ceil(r.ANZAHL / r.LIEFERMENGE)
-                    double richtigeAnzahl = meterZuStueckelung * r.LIEFERMENGE
-                    r.ANZAHL = richtigeAnzahl
+            GroovyRowResult r = (GroovyRowResult) st.value
+            if (r.MENGENEINHEIT && r.LIEFERMENGE) {
+                if (r.LIEFERMENGE > 1.0d) {
+                    double richtig = Math.ceil(r.ANZAHL / r.LIEFERMENGE)
+                    println "${artikel} ==> ${r.LIEFERMENGE} x ${r.MENGENEINHEIT}: ${r.ANZAHL} -> ${richtig}"
+                    r.ANZAHL = richtig
                 }
             }
         }
