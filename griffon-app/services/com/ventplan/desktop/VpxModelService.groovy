@@ -53,11 +53,11 @@ class VpxModelService {
         X.domBuilder = domBuilder = DOMBuilder.newInstance()
     }
 
-    String filenameWoExtension(String filename) {
+    public static String filenameWoExtension(String filename) {
         filename - '.wpx' - '.vpx'
     }
 
-    String filenameWoExtension(File file) {
+    public static String filenameWoExtension(File file) {
         filenameWoExtension(file.name)
     }
 
