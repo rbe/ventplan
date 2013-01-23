@@ -312,7 +312,7 @@ class ProjektModel {
     def tmPositionComparator = { a, b -> a.position <=> b.position } as Comparator
     def tmNameComparator = { a, b -> a.name <=> b.name } as Comparator
     def tmNothingComparator = { a, b -> 0 } as Comparator
-    def tableModels = [
+    final Map tableModels = [
             raume: GlazedLists.threadSafeList(new SortedList(new BasicEventList(), tmPositionComparator) as EventList),
             raumeTuren: [/* TableModels will be added in addRaum() */],
             raumeVsZuAbluftventile: GlazedLists.threadSafeList(new SortedList(new BasicEventList(), tmPositionComparator) as EventList),
