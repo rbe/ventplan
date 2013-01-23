@@ -19,15 +19,12 @@ import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 
+import static com.ventplan.desktop.AuslegungPrefHelper.*
+
 /**
  *
  */
 class OdiseeService {
-
-    /**
-     * Helper for preferences.
-     */
-    private static AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
 
     /**
      * German date, e.g. used for userfield Angebotsdatum.
@@ -105,7 +102,8 @@ class OdiseeService {
      */
     private static String getOutputFormat() {
         String outputFormat = 'pdf'
-        if (prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_DOKUMENTTYP).contains('ODF')) {
+        AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
+        if (prefHelper.getPrefValue(PREFS_USER_KEY_DOKUMENTTYP).contains('ODF')) {
             outputFormat = 'odt'
         }
         return outputFormat
@@ -265,7 +263,7 @@ class OdiseeService {
                     domBuilder.userfield(name: 'Angebotsdatum', germanDate.format(new Date()))
                     // Angebot: Angebotsnummer, Datum, Kürzel des Erstellers, zufällige/lfd. Nummer
                     String datum = shortIsoDate.format(new java.util.Date())
-                    String kuerzel = prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME).grep { it in ('A'..'Z') }.join()
+                    String kuerzel = prefHelper.getPrefValue(PREFS_USER_KEY_NAME).grep { it in ('A'..'Z') }.join()
                     String angebotsnrkurz = map.angebotsnummerkurz ?: justTime.format(new Date()) //String.format("%04d", Math.round(Math.random() * 10000))
                     domBuilder.userfield(name: 'Angebotsnummer', "${datum}-${kuerzel}-${angebotsnrkurz}")
                     domBuilder.userfield(name: 'AngebotsnummerKurz', angebotsnrkurz ?: '')
@@ -346,9 +344,10 @@ class OdiseeService {
      * @param domBuilder
      */
     private static void addErsteller(DOMBuilder domBuilder) {
+        AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
         // Ersteller
-        domBuilder.userfield(name: 'ErstellerFirma', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA))
-        domBuilder.userfield(name: 'ErstellerName', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME))
+        domBuilder.userfield(name: 'ErstellerFirma', prefHelper.getPrefValue(PREFS_USER_KEY_FIRMA))
+        domBuilder.userfield(name: 'ErstellerName', prefHelper.getPrefValue(PREFS_USER_KEY_NAME))
         domBuilder.userfield(name: 'ErstellerAnschrift', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE))
         domBuilder.userfield(name: 'ErstellerPLZ', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_PLZ))
         domBuilder.userfield(name: 'ErstellerOrt', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_ORT))
@@ -372,7 +371,8 @@ class OdiseeService {
      * @param domBuilder
      */
     private static void addEmpfanger(DOMBuilder domBuilder, Map map) {
-        switch (prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMPFANGER)) {
+        AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
+        switch (prefHelper.getPrefValue(PREFS_USER_KEY_EMPFANGER)) {
             case 'Grosshandel':
                 domBuilder.userfield(name: 'EmpfFirma', (map.kundendaten.grosshandel.firma1 ?: '') + ' ' + (map.kundendaten.grosshandel.firma2 ?: ''))
                 domBuilder.userfield(name: 'EmpfName', map.kundendaten.grosshandel.ansprechpartner ?: '')
