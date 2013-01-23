@@ -122,22 +122,8 @@ class OdiseeService {
      * @param vpxFile File object.
      * @return String with filename w/o extension and special characters.
      */
-    private String odiseeRequestName(File vpxFile) {
-        String vpxFilenameWoExt = vpxModelService.filenameWoExtension(vpxFile)
-        /*
-        // HACK Ventplan -> Odisee + Umlaute
-        return vpxFilenameWoExt
-                .replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('Ä', 'Ae').replace('Ö', 'Oe').replace('Ü', 'Ue')
-                .replace(':', '').replace('/', '').replace('\\', '')
-        */
-        StringBuilder builder = new StringBuilder()
-        for (char c : vpxFilenameWoExt.chars) {
-            int i = (int) c
-            if ((i >= 48 && i <= 57) || (i >= 65 && i <= 90) || (i >= 97 && i <= 122)) {
-                builder.append(c)
-            }
-        }
-        return builder.toString()
+    private static String odiseeRequestName(File vpxFile) {
+        Odisee.odiseeRequestName(vpxFile)
     }
 
     /**
