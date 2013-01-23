@@ -383,11 +383,14 @@ class ProjektController {
      */
     def luftdichtheitKategorieA = {
         doLater {
-            model.map.gebaude.luftdichtheit.with {
-                druckdifferenz = 2.0d
-                luftwechsel = 1.0d
-                druckexponent = 0.666f
+            def d = model.map.gebaude.luftdichtheit
+            if (model.map.gebaude.lage.windschwach) {
+                d.druckdifferenz = 2.0d
+            } else if (model.map.gebaude.lage.windstark) {
+                d.druckdifferenz = 4.0d
             }
+            d.luftwechsel = 1.0d
+            d.druckexponent = 0.666d
             berechneAussenluftVs()
         }
     }
@@ -397,11 +400,14 @@ class ProjektController {
      */
     def luftdichtheitKategorieB = {
         doLater {
-            model.map.gebaude.luftdichtheit.with {
-                druckdifferenz = 2.0d
-                luftwechsel = 1.5f
-                druckexponent = 0.666f
+            def d = model.map.gebaude.luftdichtheit
+            if (model.map.gebaude.lage.windschwach) {
+                d.druckdifferenz = 2.0d
+            } else if (model.map.gebaude.lage.windstark) {
+                d.druckdifferenz = 4.0d
             }
+            d.luftwechsel = 1.5f
+            d.druckexponent = 0.666f
             berechneAussenluftVs()
         }
     }
@@ -411,11 +417,14 @@ class ProjektController {
      */
     def luftdichtheitKategorieC = {
         doLater {
-            model.map.gebaude.luftdichtheit.with {
-                druckdifferenz = 2.0d
-                luftwechsel = 2.0d
-                druckexponent = 0.666f
+            def d = model.map.gebaude.luftdichtheit
+            if (model.map.gebaude.lage.windschwach) {
+                d.druckdifferenz = 2.0d
+            } else if (model.map.gebaude.lage.windstark) {
+                d.druckdifferenz = 4.0d
             }
+            d.luftwechsel = 2.0d
+            d.druckexponent = 0.666f
             berechneAussenluftVs()
         }
     }
