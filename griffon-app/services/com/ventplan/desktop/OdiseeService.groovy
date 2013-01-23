@@ -306,8 +306,10 @@ class OdiseeService {
                     }
                     // Summe in EUR
                     domBuilder.userfield(name: "TabelleStueckliste!B${summenZeile + 2}", 'Summe')
+                    boolean groupingUsed = germanNumberFormat.groupingUsed
                     germanNumberFormat.groupingUsed = true
                     domBuilder.userfield(name: "TabelleStueckliste!E${summenZeile + 2}", germanNumberFormat.format(summe))
+                    germanNumberFormat.groupingUsed = groupingUsed
                 }
             }
         }
