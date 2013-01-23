@@ -546,6 +546,7 @@ class VpxModelService {
         def wpx = domBuilder.'ventplan-project' {
             projekt() {
                 X.tc {
+                    // WAC-212
                     ersteller() {
                         rolle('Bearbeiter')
                         person() {
@@ -576,6 +577,21 @@ class VpxModelService {
                 }
                 makeFirma('Grosshandel', map.kundendaten.grosshandel)
                 makeFirma('Ausfuhrende', map.kundendaten.ausfuhrendeFirma)
+                // WAC-212
+                Map vertretung = zipcodeService.findVertreter(zipcode)
+                if (vertretung) {
+                    makeFirma('Vertretung', [
+                            firma1: vertretung.name,
+                            firma2: vertretung.name2,
+                            email: vertretung.email,
+                            tel: vertretung.telefon,
+                            fax: vertretung.telefax,
+                            strasse: vertretung.anschrift,
+                            plz: vertretung.plz,
+                            ort: vertretung.ort,
+                            ansprechpartner: null,
+                    ])
+                }
                 // WAC-226: Stuckliste erzeugen und speichern
                 if (stuckliste) {
                     domBuilder.stuckliste() {
