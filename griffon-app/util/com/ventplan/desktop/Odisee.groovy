@@ -38,6 +38,7 @@ public class Odisee {
         StringBuilder builder = new StringBuilder()
         for (char c : vpxFilenameWoExt.chars) {
             int i = (int) c
+            // ASCII 0-9 A-Z a-z
             if ((i >= 48 && i <= 57) || (i >= 65 && i <= 90) || (i >= 97 && i <= 122)) {
                 builder.append(c)
             }
