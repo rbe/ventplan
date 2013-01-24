@@ -23,7 +23,7 @@ public class Odisee {
     }
 
     /**
-     * Cleanup filename for Odisee, no special characters.
+     * WAC-251 Cleanup filename for Odisee, no special characters.
      * @param vpxFile File object.
      * @return String with filename w/o extension and special characters.
      */
