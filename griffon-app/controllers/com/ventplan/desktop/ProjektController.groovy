@@ -383,6 +383,7 @@ class ProjektController {
      */
     def luftdichtheitKategorieA = {
         doLater {
+            // Siehe gebaudedatenGeandert
             def d = model.map.gebaude.luftdichtheit
             if (model.map.gebaude.lage.windschwach) {
                 d.druckdifferenz = 2.0d
@@ -400,6 +401,7 @@ class ProjektController {
      */
     def luftdichtheitKategorieB = {
         doLater {
+            // Siehe gebaudedatenGeandert
             def d = model.map.gebaude.luftdichtheit
             if (model.map.gebaude.lage.windschwach) {
                 d.druckdifferenz = 2.0d
@@ -417,6 +419,7 @@ class ProjektController {
      */
     def luftdichtheitKategorieC = {
         doLater {
+            // Siehe gebaudedatenGeandert
             def d = model.map.gebaude.luftdichtheit
             if (model.map.gebaude.lage.windschwach) {
                 d.druckdifferenz = 2.0d
