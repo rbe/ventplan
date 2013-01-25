@@ -387,7 +387,7 @@ class OdiseeService {
                 break
             case 'Bauherr/Investor':
                 domBuilder.userfield(name: 'EmpfFirma', '')
-                domBuilder.userfield(name: 'EmpfName', map.kundendaten.bauvorhaben ?: '')
+                domBuilder.userfield(name: 'EmpfName', map.kundendaten.bauvorhabenEmpfanger ?: '')
                 domBuilder.userfield(name: 'EmpfAnschrift', map.kundendaten.bauvorhabenAnschrift ?: '')
                 domBuilder.userfield(name: 'EmpfPLZ', map.kundendaten.bauvorhabenPlz ?: '')
                 domBuilder.userfield(name: 'EmpfOrt', map.kundendaten.bauvorhabenOrt ?: '')

@@ -193,6 +193,7 @@ class VpxModelService {
                     erstellt: X.vdate { p.'erstellt'.text() },
                     kundendaten: [
                             bauvorhaben: X.vs { p.'bauvorhaben'.text() },
+                            bauvorhabenEmpfanger: X.vs { p.'bauvorhabenEmpfanger'.text() },
                             bauvorhabenAnschrift: X.vs { p.'bauvorhabenAnschrift'.text() },
                             bauvorhabenPlz: X.vs { p.'bauvorhabenPlz'.text() },
                             bauvorhabenOrt: X.vs { p.'bauvorhabenOrt'.text() },
@@ -570,6 +571,7 @@ class VpxModelService {
                 X.tc { bearbeitet(new Date().format(VentplanConstants.ISO_DATE_FORMAT)) } { bearbeitet() }
                 // TODO Bauvorhaben should be its own type
                 X.tc { bauvorhaben(map.kundendaten.bauvorhaben) } { bauvorhaben() }
+                X.tc { bauvorhabenEmpfanger(map.kundendaten.bauvorhabenEmpfanger) } { bauvorhabenAnschrift() }
                 X.tc { bauvorhabenAnschrift(map.kundendaten.bauvorhabenAnschrift) } { bauvorhabenAnschrift() }
                 X.tc { bauvorhabenPlz(map.kundendaten.bauvorhabenPlz) } { bauvorhabenPlz() }
                 X.tc { bauvorhabenOrt(map.kundendaten.bauvorhabenOrt) } { bauvorhabenOrt() }
