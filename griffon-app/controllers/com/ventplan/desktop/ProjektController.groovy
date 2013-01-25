@@ -2602,7 +2602,7 @@ class ProjektController {
                     // Küche, Bad, Dusche und Sauna
                     def n = ['Küche', 'Bad', 'Dusche', 'Sauna']
                     n.each {
-                        if (raum.raumBezeichnung ==~ /${it}.*/) {
+                        if (raum.raumBezeichnung ==~ /${it}.*/ || raum.raumTyp ==~ /${it}.*/) {
                             raum.raumBezeichnungAbluftventile = '125URH'
                         }
                     }
