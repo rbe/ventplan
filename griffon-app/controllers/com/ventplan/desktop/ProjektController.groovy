@@ -12,14 +12,13 @@
 package com.ventplan.desktop
 
 import com.bensmann.griffon.GriffonHelper as GH
-
 import com.ventplan.verlegeplan.PrinzipskizzeClient
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
 
-import java.awt.Desktop
-import javax.swing.ImageIcon
-import javax.swing.JDialog
+import javax.swing.*
+import java.awt.*
+import java.util.List
 
 /**
  *
@@ -88,7 +87,6 @@ class ProjektController {
                 }
             }
         })
-        //}
     }
 
     /**

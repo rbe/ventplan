@@ -13,6 +13,8 @@ package com.ventplan.desktop
 
 import groovy.sql.Sql
 
+import java.sql.Clob
+
 /**
  * Communicate with Ventplan database.
  */
@@ -59,9 +61,9 @@ class VentplanModelService {
      * Get value from JDBC result, e.g. take care of CLOB.
      * @param value
      */
-    def getVal(value) {
+    def static getVal(value) {
         switch (value) {
-            case { it instanceof java.sql.Clob }:
+            case { it instanceof Clob }:
                 value.asciiStream.getText('UTF-8')
                 break
             default:
