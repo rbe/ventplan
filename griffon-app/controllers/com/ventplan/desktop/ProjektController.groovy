@@ -1817,7 +1817,7 @@ class ProjektController {
             saveBeforeDocument()
             // Dokument erstellen
             try {
-                File vpxFile = new File(model.vpxFilename)
+                File vpxFile = new File((String) model.vpxFilename)
                 model.map.odisee.auslegung = [
                         auslegungAllgemeineDaten: view.auslegungAllgemeineDaten.selected,
                         auslegungLufmengen: view.auslegungLufmengen.selected,
@@ -1870,7 +1870,7 @@ class ProjektController {
                 vpxModelService.save(model.map, model.vpxFilename, newMap)
                 // Auslegung/Dokument erstellen
                 try {
-                    File vpxFile = new File(model.vpxFilename)
+                    File vpxFile = new File((String) model.vpxFilename)
                     String xmlDoc = odiseeService.performAngebot(vpxFile, (Map) model.map, DEBUG, newMap)
                     makeDocumentWithOdisee('Angebot', vpxFile, xmlDoc)
                 } catch (e) {
@@ -1919,7 +1919,7 @@ class ProjektController {
                 vpxModelService.save(model.map, model.vpxFilename, newMap)
                 // Stückliste/Dokument erstellen
                 try {
-                    File vpxFile = new File(model.vpxFilename)
+                    File vpxFile = new File((String) model.vpxFilename)
                     String xmlDoc = odiseeService.performStueckliste(vpxFile, (Map) model.map, DEBUG, newMap)
                     makeDocumentWithOdisee('Stückliste', vpxFile, xmlDoc)
                 } catch (e) {

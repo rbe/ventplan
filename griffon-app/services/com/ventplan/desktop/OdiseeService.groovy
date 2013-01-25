@@ -246,17 +246,17 @@ class OdiseeService {
                     //
                     addErsteller(domBuilder)
                     addEmpfanger(domBuilder, map)
-                    addBauvorhaben(domBuilder, map.kundendaten)
+                    addBauvorhaben(domBuilder, (Map) map.kundendaten)
                     // Angebotsdatum
                     domBuilder.userfield(name: 'Angebotsdatum', germanDate.format(new Date()))
                     // Angebot: Angebotsnummer, Datum, Kürzel des Erstellers, zufällige/lfd. Nummer
                     String datum = shortIsoDate.format(new java.util.Date())
-                    String kuerzel = prefHelper.getPrefValue(PREFS_USER_KEY_NAME).grep { it in ('A'..'Z') }.join()
+                    String kuerzel = prefHelper.getPrefValue(PREFS_USER_KEY_NAME).grep { it in ('A'..'Z') }.join('')
                     String angebotsnrkurz = map.angebotsnummerkurz ?: justTime.format(new Date()) //String.format("%04d", Math.round(Math.random() * 10000))
                     domBuilder.userfield(name: 'Angebotsnummer', "${datum}-${kuerzel}-${angebotsnrkurz}")
                     domBuilder.userfield(name: 'AngebotsnummerKurz', angebotsnrkurz ?: '')
                     // Handelsvertretung
-                    addHandelsvertretung(domBuilder, map.kundendaten.bauvorhabenPlz)
+                    addHandelsvertretung(domBuilder, (String) map.kundendaten.bauvorhabenPlz)
                     // Stückliste
                     def stuckliste
                     if (editedStuckliste) {
@@ -267,7 +267,7 @@ class OdiseeService {
                     double summe = 0.0d
                     int summenZeile = 0
                     stuckliste.eachWithIndex { stuck, i ->
-                        def artikel = stuck.value
+                        Map artikel = (Map) stuck.value
                         double anzahl = (double) artikel.ANZAHL
                         // Menge mit oder ohne Komma anzeigen?
                         String menge
@@ -277,7 +277,7 @@ class OdiseeService {
                             menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
                         }
                         // WAC-223 Kaufmännisch und technische Artikel
-                        if (artikel.ARTIKELNUMMER && !ventplanModelService.isArticleValidToday(artikel.ARTIKELNUMMER) && !artikel.ARTIKELBEZEICHNUNG.startsWith('***')) {
+                        if (artikel.ARTIKELNUMMER && !ventplanModelService.isArticleValidToday((String) artikel.ARTIKELNUMMER) && !artikel.ARTIKELBEZEICHNUNG.startsWith('***')) {
                             artikel.ARTIKELBEZEICHNUNG = '*** ' + artikel.ARTIKELBEZEICHNUNG
                         }
                         // Tabelle
