@@ -183,8 +183,12 @@ class StucklisteService {
         // Raumvolumenströme, Überströmelemente, m=[Überströmelement:Anzahl]
         List uberstromventile = null
         try {
-            uberstromventile = ventplanModelService.countUberstromelemente(map).collect() {
-                ventplanModelService.getArtikel(it.key)
+            // WAC-244
+            Map<String, Integer> ub = ventplanModelService.countUberstromelemente(map)
+            uberstromventile = ub.collect() {
+                Map a = ventplanModelService.getArtikel(it.key)
+                a.ANZAHL = (double) it.value
+                a
             }.flatten()
         } catch (e) {
         }
