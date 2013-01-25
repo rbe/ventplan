@@ -180,7 +180,7 @@ class StucklisteService {
             pakete += zuluftventile
         } catch (e) {
         }
-        // Raumvolumenströme, Überströmelemente, m=[Übertrömelement:Anzahl]
+        // Raumvolumenströme, Überströmelemente, m=[Überströmelement:Anzahl]
         List uberstromventile = null
         try {
             uberstromventile = ventplanModelService.countUberstromelemente(map).collect() {
@@ -214,7 +214,7 @@ class StucklisteService {
             if (r.MENGENEINHEIT && r.LIEFERMENGE) {
                 if (r.LIEFERMENGE > 1.0d) {
                     double richtig = Math.ceil(r.ANZAHL / r.LIEFERMENGE)
-                    println "${artikel} ==> ${r.LIEFERMENGE} x ${r.MENGENEINHEIT}: ${r.ANZAHL} -> ${richtig}"
+//                    println "${artikel} ==> ${r.LIEFERMENGE} x ${r.MENGENEINHEIT}: ${r.ANZAHL} -> ${richtig}"
                     r.ANZAHL = richtig
                 }
             }
