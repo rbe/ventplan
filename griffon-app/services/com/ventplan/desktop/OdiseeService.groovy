@@ -251,9 +251,10 @@ class OdiseeService {
                     // Angebotsdatum
                     domBuilder.userfield(name: 'Angebotsdatum', germanDate.format(new Date()))
                     // Angebot: Angebotsnummer, Datum, Kürzel des Erstellers, zufällige/lfd. Nummer
+                    map.angebotsnummerkurz = prefHelper.getPrefValue(PREFS_USER_KEY_ANGEBOTSNUMMER)
                     String datum = shortIsoDate.format(new java.util.Date())
                     String kuerzel = prefHelper.getPrefValue(PREFS_USER_KEY_NAME).grep { it in ('A'..'Z') }.join('')
-                    String angebotsnrkurz = map.angebotsnummerkurz ?: justTime.format(new Date()) //String.format("%04d", Math.round(Math.random() * 10000))
+                    String angebotsnrkurz = map.angebotsnummerkurz ?: justTime.format(new Date())
                     domBuilder.userfield(name: 'Angebotsnummer', "${datum}-${kuerzel}-${angebotsnrkurz}")
                     domBuilder.userfield(name: 'AngebotsnummerKurz', angebotsnrkurz ?: '')
                     // Handelsvertretung
