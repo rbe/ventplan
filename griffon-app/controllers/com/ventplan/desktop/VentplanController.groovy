@@ -18,6 +18,7 @@ import groovy.io.FileType
 
 import javax.swing.JDialog
 import javax.swing.JFileChooser
+import java.awt.Dimension
 
 /**
  *
@@ -343,7 +344,7 @@ class VentplanController {
      * WAC-246
      * @return
      */
-    File getVentplanDir() {
+    static File getVentplanDir() {
         File vpxDir = new File("${System.getProperty('user.home')}/Ventplan")
         if (!vpxDir.exists()) {
             vpxDir.mkdirs()
@@ -404,7 +405,7 @@ class VentplanController {
     /**
      * WAC-230, WAC-234
      */
-    File makeTemporaryProject(String wizardProjektName = '') {
+    static File makeTemporaryProject(String wizardProjektName = '') {
         Date date = new Date()
         String projektName = wizardProjektName == '' ? "VentplanExpress_${date.format('dd.MM.yyyy HHmmss')}.vpx" : "${wizardProjektName}.vpx"
         File file = new File(getVentplanDir(), projektName)
@@ -686,7 +687,7 @@ class VentplanController {
                         projektAktivieren(mvcId)
                         // resize the frame to validate the components.
                         try {
-                            def dim = ventplanFrame.getSize()
+                            Dimension dim = ventplanFrame.getSize()
                             ventplanFrame.setSize((int) dim.width + 1, (int) dim.height)
                             ventplanFrame.invalidate()
                             ventplanFrame.validate()
