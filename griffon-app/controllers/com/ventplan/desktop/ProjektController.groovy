@@ -62,6 +62,8 @@ class ProjektController {
     void mvcGroupInit(Map args) {
         // Save MVC id
         model.mvcId = args.mvcId
+        // WAC-257
+        ventplanModelService.projectWAC257 = !loadMode
         // Set defaults
         setDefaultValues()
         // Add PropertyChangeListener to our model.meta
@@ -81,8 +83,8 @@ class ProjektController {
                     model.map.dirty = true
                     // VentplanModel über Änderung informieren
                     app.models['MainFrame'].aktivesProjektGeandert =
-                    app.models['MainFrame'].alleProjekteGeandert =
-                        true
+                        app.models['MainFrame'].alleProjekteGeandert =
+                            true
                     // Change tab title (show a star)
                     ////println "popertyChangeListener: calling setTabTitle: ${evt.propertyName}"
                     setTabTitle(view.projektTabGroup.tabCount - 1)
@@ -1094,7 +1096,7 @@ class ProjektController {
         // WAC-165: Bugfix: Werte in der Türen-Tabelle werden erst dann aktualisiert, wenn die Maus über einzelne Zeilen bewegt wird
         try {
             view.raumBearbeitenTurenTabelle.repaint()
-        } catch (e) { }
+        } catch (e) {}
     }
 
     /**
@@ -1117,7 +1119,7 @@ class ProjektController {
             }
             raum.turen[turenIndex] = [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
             model.map.raum.raume[raumPosition] = raum
-        } catch (e) { }
+        } catch (e) {}
         // WAC-174: resyncTableModels ist notwendig, selectedRow wird auf 0 gesetzt, daher selectedRow setzen
         model.resyncRaumTableModels()
         //view.raumTabelle.changeSelection(model.meta.gewahlterRaum.position, 0, false, false) 
@@ -1127,7 +1129,7 @@ class ProjektController {
         if (reload) {
             try {
                 raumBearbeitenTurEntfernen(null, false)
-            } catch (e) { }
+            } catch (e) {}
         }
     }
 
@@ -1523,7 +1525,7 @@ class ProjektController {
         try {
             def url = VentplanResource.getWiderstandURL(wbw.id)
             image = new ImageIcon(url)
-        } catch (NullPointerException e) { }
+        } catch (NullPointerException e) {}
         // Image und Text setzen
         if (image) {
             view.wbwBild.text = ''
