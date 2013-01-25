@@ -976,7 +976,7 @@ class ProjektModel {
           }
           */
         SwingUtilities.invokeLater {
-            synchronized (tableModels) { // TODO Synchronization on non-final field
+            synchronized (tableModels) {
                 // Remember selected row
                 def view = app.views[mvcId]
                 def selected = view.raumTabelle.selectedRow
