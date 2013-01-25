@@ -43,3 +43,5 @@ bind(source: model.map.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsIl", target
 /* WAC-233
 raumVsRaumBearbeiten.actionPerformed = controller.raumBearbeiten
 */
+// WAC-258
+standardAuslassButton.actionPerformed = controller.standardAuslasseSetzen
