@@ -1747,26 +1747,7 @@ class ProjektController {
         try {
             Map map = [:]
             def error = false
-            /*
             // Daten aus dem Dialog holen
-            String firma = view.erstellerFirma.text
-            String name = view.erstellerName.text
-            String anschrift = view.erstellerAnschrift.text
-            String plz = view.erstellerPlz.text
-            String ort = view.erstellerOrt.text
-            String tel = view.erstellerTelefon.text
-            String fax = view.erstellerFax.text
-            String email = view.erstellerEmail.text
-            if (name?.trim() && anschrift?.trim() && plz?.trim() && ort?.trim()) {
-            */
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA, view.erstellerFirma.text.trim())
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_NAME, view.erstellerName.text.trim())
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE, view.erstellerAnschrift.text.trim())
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_PLZ, view.erstellerPlz.text.trim())
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_ORT, view.erstellerOrt.text.trim())
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_TEL, view.erstellerTelefon.text.trim())
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_FAX, view.erstellerFax.text.trim())
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL, view.erstellerEmail.text.trim())
             try {
                 String angebotsnummer = view.erstellerAngebotsnummer.text
                 map.put(AuslegungPrefHelper.PREFS_USER_KEY_ANGEBOTSNUMMER, angebotsnummer)
@@ -1785,18 +1766,6 @@ class ProjektController {
             auslegungPrefs.save(map)
             // Benutzerdaten wurden geändert, bitte fortfahren...
             nutzerdatenGeandert = true
-            /*
-            } else {
-                def errorMsg = 'Auslegung konnte nicht erstellt werden. Es muss mindestens Name, Anschrift, PLZ, Ort angegeben werden.'
-                app.controllers['Dialog'].showErrorDialog(errorMsg as String)
-                // Fix Stückliste Generierung
-                error = true
-            }
-            // Anzeigen, dass Daten geändert wurden
-            // Fix: Prüfen, ob ein Fehler aufgetreten ist und Variable entsprechend ändern, sonst wird die
-            // Stückliste dennoch generiert.
-            nutzerdatenGeandert = !error
-            */
         } catch (e) {
             //println "Error saving ersteller values -> ${e.dump()}"
             e.printStackTrace()
@@ -2615,12 +2584,10 @@ class ProjektController {
     def standardAuslasseSetzen = { evt = null ->
         doLater {
             List geschosse = model.meta.raum.geschoss
-            println "geschosse: ${geschosse}"
             model.map.raum.raume.each { raum ->
                 // Standard Luftauslässe
                 if (raum.raumLuftart == 'ZU') {
                     raum.raumBezeichnungZuluftventile = '100ULC'
-//                    println "${raum.raumBezeichnung}, ${raum.raumTyp} --> ${raum.raumBezeichnungZuluftventile}"
                 } else if (raum.raumLuftart == 'AB') {
                     // Küche, Bad, Dusche und Sauna
                     def n = ['Küche', 'Bad', 'Dusche', 'Sauna']
@@ -2633,13 +2600,11 @@ class ProjektController {
                     if (!raum.raumBezeichnungAbluftventile) {
                         raum.raumBezeichnungAbluftventile = '100URH'
                     }
-//                    println "${raum.raumBezeichnung}, ${raum.raumTyp} --> ${raum.raumBezeichnungZuluftventile}"
                 }
                 // Verteilebene
                 if (raum.raumGeschoss) {
                     try {
                         raum.raumVerteilebene = geschosse[(geschosse.findIndexOf { it == raum.raumGeschoss }) + 1]
-//                        println "${raum.raumBezeichnung}: ${raum.raumGeschoss} -> ${raum.raumVerteilebene}"
                     } catch (e) {
                         // ignore
                     }

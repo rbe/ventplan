@@ -10,7 +10,6 @@
  * rbe, 7/16/12 10:35 AM
  */
 
-
 package com.ventplan.desktop
 
 import com.bensmann.griffon.GriffonHelper as GH
