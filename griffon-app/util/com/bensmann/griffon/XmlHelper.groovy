@@ -11,6 +11,8 @@
  */
 package com.bensmann.griffon
 
+import com.ventplan.desktop.VentplanConstants
+
 class XmlHelper {
 
     /**
@@ -73,6 +75,19 @@ class XmlHelper {
         def std = 0.0d
         try {
             return (closure() as Double) ?: std
+        } catch (e) { /*println e*/ }
+        std
+    }
+
+    /**
+     * XML value as Date
+     */
+    def static vdate = { closure ->
+        def std = null
+        try {
+            String x = closure()
+            Date d = new Date().parse(VentplanConstants.ISO_DATE_FORMAT, x)
+            return d ?: std
         } catch (e) { /*println e*/ }
         std
     }

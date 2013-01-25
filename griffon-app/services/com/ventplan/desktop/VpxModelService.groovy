@@ -31,7 +31,7 @@ import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI
 class VpxModelService {
 
     ZipcodeService zipcodeService
-    
+
     Validator validator
     XmlSlurper xmlSlurper
     DOMBuilder domBuilder
@@ -190,6 +190,7 @@ class VpxModelService {
             def anlage = p.'anlage'
             // Build map; return value
             [
+                    erstellt: X.vdate { p.'erstellt'.text() },
                     kundendaten: [
                             bauvorhaben: X.vs { p.'bauvorhaben'.text() },
                             bauvorhabenAnschrift: X.vs { p.'bauvorhabenAnschrift'.text() },
@@ -562,8 +563,11 @@ class VpxModelService {
                         }
                     }
                 } { ersteller() { person() } }
-                X.tc { erstellt() } { erstellt() }
-                X.tc { bearbeitet() } { bearbeitet() }
+                X.tc {
+                    Date d = null != map.erstellt ? (Date) map.erstellt : new Date()
+                    erstellt(d.format(VentplanConstants.ISO_DATE_FORMAT))
+                } { erstellt() }
+                X.tc { bearbeitet(new Date().format(VentplanConstants.ISO_DATE_FORMAT)) } { bearbeitet() }
                 // TODO Bauvorhaben should be its own type
                 X.tc { bauvorhaben(map.kundendaten.bauvorhaben) } { bauvorhaben() }
                 X.tc { bauvorhabenAnschrift(map.kundendaten.bauvorhabenAnschrift) } { bauvorhabenAnschrift() }
@@ -581,19 +585,21 @@ class VpxModelService {
                 makeFirma('Grosshandel', map.kundendaten.grosshandel)
                 makeFirma('Ausfuhrende', map.kundendaten.ausfuhrendeFirma)
                 // WAC-212
-                Map vertretung = zipcodeService.findVertreter(zipcode)
-                if (vertretung) {
-                    makeFirma('Vertretung', [
-                            firma1: vertretung.name,
-                            firma2: vertretung.name2,
-                            email: vertretung.email,
-                            tel: vertretung.telefon,
-                            fax: vertretung.telefax,
-                            strasse: vertretung.anschrift,
-                            plz: vertretung.plz,
-                            ort: vertretung.ort,
-                            ansprechpartner: null,
-                    ])
+                if (map.kundendaten.bauvorhabenPlz) {
+                    Map vertretung = zipcodeService.findVertreter(map.kundendaten.bauvorhabenPlz)
+                    if (vertretung) {
+                        makeFirma('Vertretung', [
+                                firma1: vertretung.name,
+                                firma2: vertretung.name2,
+                                email: vertretung.email,
+                                tel: vertretung.telefon,
+                                fax: vertretung.telefax,
+                                strasse: vertretung.anschrift,
+                                plz: vertretung.plz,
+                                ort: vertretung.ort,
+                                ansprechpartner: null,
+                        ])
+                    }
                 }
                 // WAC-226: Stuckliste erzeugen und speichern
                 if (stuckliste) {
