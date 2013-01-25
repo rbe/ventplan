@@ -1748,6 +1748,14 @@ class ProjektController {
             Map map = [:]
             def error = false
             // Daten aus dem Dialog holen
+            map.put(PREFS_USER_KEY_FIRMA, view.erstellerFirma.text.trim())
+            map.put(PREFS_USER_KEY_NAME, view.erstellerName.text.trim())
+            map.put(PREFS_USER_KEY_STRASSE, view.erstellerAnschrift.text.trim())
+            map.put(PREFS_USER_KEY_PLZ, view.erstellerPlz.text.trim())
+            map.put(PREFS_USER_KEY_ORT, view.erstellerOrt.text.trim())
+            map.put(PREFS_USER_KEY_TEL, view.erstellerTelefon.text.trim())
+            map.put(PREFS_USER_KEY_FAX, view.erstellerFax.text.trim())
+            map.put(PREFS_USER_KEY_EMAIL, view.erstellerEmail.text.trim())
             try {
                 String angebotsnummer = view.erstellerAngebotsnummer.text
                 map.put(AuslegungPrefHelper.PREFS_USER_KEY_ANGEBOTSNUMMER, angebotsnummer)
