@@ -57,11 +57,6 @@ class VentplanController {
     def static mruFileManager = MRUFileManager.instance
 
     /**
-     *
-     private def wacwsUrl = GH.getWacwsUrl()
-     */
-
-    /**
      * WAC-192 Saving file path of search folder
      */
     def static projektSuchenPrefs = ProjektSuchenPrefHelper.instance
