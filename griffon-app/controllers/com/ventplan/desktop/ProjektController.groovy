@@ -20,6 +20,8 @@ import javax.swing.*
 import java.awt.*
 import java.util.List
 
+import static com.ventplan.desktop.AuslegungPrefHelper.*
+
 /**
  *
  */
@@ -1699,7 +1701,7 @@ class ProjektController {
         String _okButtonText = okButtonText ?: 'Dokument erstellen'
         view.nutzerdatenSpeichernButton.text = _okButtonText
         // Gespeicherte Daten holen und in den Dialog setzen
-        view.erstellerFirma.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA)
+        view.erstellerFirma.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_FIRMA)
         view.erstellerName.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME)
         view.erstellerAnschrift.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE)
         view.erstellerPlz.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_PLZ)
@@ -1758,18 +1760,18 @@ class ProjektController {
             map.put(PREFS_USER_KEY_EMAIL, view.erstellerEmail.text.trim())
             try {
                 String angebotsnummer = view.erstellerAngebotsnummer.text
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_ANGEBOTSNUMMER, angebotsnummer)
+                map.put(PREFS_USER_KEY_ANGEBOTSNUMMER, angebotsnummer)
             } catch (MissingPropertyException e) {
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_ANGEBOTSNUMMER, '')
+                map.put(PREFS_USER_KEY_ANGEBOTSNUMMER, '')
             }
             try {
                 String empfanger = view.dokumentEmpfanger.selectedItem
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_EMPFANGER, empfanger)
+                map.put(PREFS_USER_KEY_EMPFANGER, empfanger)
             } catch (MissingPropertyException e) {
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_EMPFANGER, '')
+                map.put(PREFS_USER_KEY_EMPFANGER, '')
             }
             String dokumenttyp = view.erstellerDokumenttyp.selectedItem
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_DOKUMENTTYP, dokumenttyp)
+            map.put(PREFS_USER_KEY_DOKUMENTTYP, dokumenttyp)
             // Daten via Preferences API speichern
             auslegungPrefs.save(map)
             // Benutzerdaten wurden geändert, bitte fortfahren...
