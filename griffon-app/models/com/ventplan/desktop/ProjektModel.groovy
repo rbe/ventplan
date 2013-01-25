@@ -190,6 +190,7 @@ class ProjektModel {
                             ] as ObservableMap
                     ],
                     messages: [ltm: ''] as ObservableMap,
+                    erstellt: null,
                     dirty: false,
                     kundendaten: [
                             grosshandel: [:] as ObservableMap,
