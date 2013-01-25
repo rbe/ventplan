@@ -2609,4 +2609,45 @@ class ProjektController {
     }
     //</editor-fold>
 
+    /**
+     * WAC-258
+     */
+    def standardAuslasseSetzen = { evt = null ->
+        doLater {
+            List geschosse = model.meta.raum.geschoss
+            println "geschosse: ${geschosse}"
+            model.map.raum.raume.each { raum ->
+                // Standard Luftauslässe
+                if (raum.raumLuftart == 'ZU') {
+                    raum.raumBezeichnungZuluftventile = '100ULC'
+//                    println "${raum.raumBezeichnung}, ${raum.raumTyp} --> ${raum.raumBezeichnungZuluftventile}"
+                } else if (raum.raumLuftart == 'AB') {
+                    // Küche, Bad, Dusche und Sauna
+                    def n = ['Küche', 'Bad', 'Dusche', 'Sauna']
+                    n.each {
+                        if (raum.raumBezeichnung ==~ /${it}.*/) {
+                            raum.raumBezeichnungAbluftventile = '125URH'
+                        }
+                    }
+                    // Ansonsten
+                    if (!raum.raumBezeichnungAbluftventile) {
+                        raum.raumBezeichnungAbluftventile = '100URH'
+                    }
+//                    println "${raum.raumBezeichnung}, ${raum.raumTyp} --> ${raum.raumBezeichnungZuluftventile}"
+                }
+                // Verteilebene
+                if (raum.raumGeschoss) {
+                    try {
+                        raum.raumVerteilebene = geschosse[(geschosse.findIndexOf { it == raum.raumGeschoss }) + 1]
+//                        println "${raum.raumBezeichnung}: ${raum.raumGeschoss} -> ${raum.raumVerteilebene}"
+                    } catch (e) {
+                        // ignore
+                    }
+                }
+            }
+            berechneAussenluftVs()
+            model.resyncRaumTableModels()
+        }
+    }
+    
 }

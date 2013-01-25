@@ -80,6 +80,8 @@ panel(layout: new MigLayout('fill, wrap', '[fill, grow]', '[fill,grow]'), constr
                 label('m³/h')
                 comboBox(id: 'raumVsVolumenstrom', items: model.meta.volumenstromZentralgerat)
             }
+            //
+            button(id: 'standardAuslassButton', text: 'Standard-Auslässe setzen')
         }
         /* WAC-233
         panel(layout: new MigLayout("ins 0 n 0 n", "[fill, grow]", "[] 10 []"), constraints: "wrap") {
