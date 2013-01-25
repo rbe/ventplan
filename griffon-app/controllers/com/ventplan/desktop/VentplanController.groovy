@@ -337,7 +337,7 @@ class VentplanController {
 
     /**
      * WAC-246
-     * @return
+     * @return Ventplan standard directory.
      */
     static File getVentplanDir() {
         File vpxDir = new File("${System.getProperty('user.home')}/Ventplan")
