@@ -534,7 +534,7 @@ class OdiseeService {
         */
         double zuSumme = map.raum.raume.findAll {
             it.raumLuftart.contains('ZU')
-        }?.inject(0.0d, { double o, double n ->
+        }?.inject(0.0d, { double o, Map n ->
             o + volumenstromInfiltration(n)
         }) as double ?: 0.0d
         domBuilder.userfield(name: 'lmeZuSummeWertLabel', GH.toString2Converter(zuSumme))
@@ -547,7 +547,7 @@ class OdiseeService {
         */
         double abSumme = map.raum.raume.findAll {
             it.raumLuftart.contains('AB')
-        }?.inject(0.0d, { double o, double n ->
+        }?.inject(0.0d, { double o, Map n ->
             o + volumenstromInfiltration(n)
         }) as double ?: 0.0d
         domBuilder.userfield(name: 'lmeAbSummeWertLabel', GH.toString2Converter(abSumme))
