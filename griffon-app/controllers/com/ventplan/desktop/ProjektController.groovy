@@ -310,7 +310,7 @@ class ProjektController {
                 false
             }
         } catch (e) {
-            def errorMsg = e.printStackTrace()
+            def errorMsg = e.getLocalizedMessage()
             app.controllers['Dialog'].showErrorDialog(errorMsg as String)
             // Project was not saved
             false
