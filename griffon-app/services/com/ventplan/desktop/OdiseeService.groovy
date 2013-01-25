@@ -233,6 +233,7 @@ class OdiseeService {
      */
     @SuppressWarnings("GrUnresolvedAccess")
     String performAngebot(File vpxFile, Map map, boolean saveOdiseeXml = false, Map editedStuckliste = null) {
+        AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
         // Filename w/o extension
         String vpxFilenameWoExt = odiseeRequestName(vpxFile)
         // Generate Odisee XML
