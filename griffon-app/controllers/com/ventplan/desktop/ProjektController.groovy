@@ -25,6 +25,8 @@ import java.util.List
  */
 class ProjektController {
 
+    private static final boolean DEBUG = false
+
     //<editor-fold desc="Instance fields">
     boolean loadMode = false
 
@@ -1822,7 +1824,7 @@ class ProjektController {
                         auslegungAkustikberechnung: view.auslegungAkustikberechnung.selected,
                         auslegungDruckverlustberechnung: view.auslegungDruckverlustberechnung.selected
                 ]
-                String xmlDoc = odiseeService.performAuslegung(vpxFile, model.map, /*DEBUG*/ false)
+                String xmlDoc = odiseeService.performAuslegung(vpxFile, (Map) model.map, DEBUG)
                 makeDocumentWithOdisee('Auslegung', vpxFile, xmlDoc)
             } catch (e) {
                 String errorMsg = "Die Auslegung konnte leider nicht erstellt werden.\n${e}"
@@ -1869,7 +1871,7 @@ class ProjektController {
                 // Auslegung/Dokument erstellen
                 try {
                     File vpxFile = new File(model.vpxFilename)
-                    String xmlDoc = odiseeService.performAngebot(vpxFile, model.map, /*DEBUG*/ false, newMap)
+                    String xmlDoc = odiseeService.performAngebot(vpxFile, (Map) model.map, DEBUG, newMap)
                     makeDocumentWithOdisee('Angebot', vpxFile, xmlDoc)
                 } catch (e) {
                     String errorMsg = "Das Angebot konnte leider nicht erstellt werden.\n${e}"
@@ -1918,7 +1920,7 @@ class ProjektController {
                 // Stückliste/Dokument erstellen
                 try {
                     File vpxFile = new File(model.vpxFilename)
-                    String xmlDoc = odiseeService.performStueckliste(vpxFile, model.map, /*DEBUG*/ false, newMap)
+                    String xmlDoc = odiseeService.performStueckliste(vpxFile, (Map) model.map, DEBUG, newMap)
                     makeDocumentWithOdisee('Stückliste', vpxFile, xmlDoc)
                 } catch (e) {
                     String errorMsg = "Die Stückliste konnte leider nicht erstellt werden.\n${e}"
