@@ -730,12 +730,24 @@ class VentplanModelService {
      *
      */
     List getDvbVentileinstellung() {
-        def r = withSql { dataSourceName, sql ->
-            sql.rows("SELECT DISTINCT(artikelnummer)"
-                    + " FROM druckverlust"
-                    + " WHERE ausblaswinkel <> 180"
-                    + " ORDER BY artikelnummer")
-        }?.collect {
+        def r
+        if (projectWAC257) {
+            r = withSql { dataSourceName, sql ->
+                sql.rows("SELECT DISTINCT(d.artikelnummer)"
+                        + " FROM druckverlust d INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
+                        + " WHERE d.ausblaswinkel <> 180 AND a.gueltigbis >= ?"
+                        + " ORDER BY d.artikelnummer",
+                        [new Date().format(ISO_DATE)])
+            }
+        } else {
+            r = withSql { dataSourceName, sql ->
+                sql.rows("SELECT DISTINCT(artikelnummer)"
+                        + " FROM druckverlust"
+                        + " WHERE ausblaswinkel <> 180"
+                        + " ORDER BY artikelnummer")
+            }
+        }
+        r = r?.collect {
             it.artikelnummer
         }
         // Add empty item
