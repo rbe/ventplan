@@ -802,8 +802,7 @@ class ProjektController {
                         turenList.add(turenMap)
                     }
                     newMap.put(it.key, turenList)
-                }
-                else {
+                } else {
                     newMap.put(it.key, it.value)
                 }
             }
