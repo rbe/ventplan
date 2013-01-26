@@ -9,6 +9,7 @@
  *
  * rbe, 7/16/12 10:35 AM
  */
+
 package com.ventplan.desktop
 
 import com.bensmann.griffon.GriffonHelper as GH
@@ -314,9 +315,9 @@ class ProjektController {
                 false
             }
         } catch (e) {
-            def errorMsg = e.getLocalizedMessage()
-            app.controllers['Dialog'].showErrorDialog(errorMsg as String)
             // Project was not saved
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            dialog.showError('Fehler beim Speichern', 'Das Projekt konnte nicht gespeichert werden', e)
             false
         }
     }
@@ -326,7 +327,8 @@ class ProjektController {
      */
     private void saveBeforeDocument() {
         if (!model.vpxFilename) {
-            app.controllers['Dialog'].showInformDialog('Sie müssen das Projekt jetzt speichern, damit das Dokument erstellt werden kann!')
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            dialog.showInformation('Projekt speichern', 'Sie müssen das Projekt erst speichern, damit das Dokument erstellt werden kann!')
         }
         app.controllers['MainFrame'].aktivesProjektSpeichern()
     }
@@ -473,8 +475,8 @@ class ProjektController {
                     // TODO Variable mindestaussenluftrate not defined...?
                     mindestaussenluftrate = personenanzahl * aussenluftVsProPerson
                 } catch (e) {
-                    def errorMsg = e.printStackTrace()
-                    app.controllers['Dialog'].showErrorDialog(errorMsg as String)
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showError('Berechnung', 'Berechnung fehlgeschlagen', e)
                     mindestaussenluftrate = 0.0d
                 }
             }
@@ -658,7 +660,8 @@ class ProjektController {
                 berechneAlles()
             }
         } else {
-            app.controllers['Dialog'].showErrorDialog('Die Fläche des Raumes muss größer 0 sein!')
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            dialog.showError('Berechnung', 'Die Fläche des Raumes muss größer 0 sein!', null)
         }
     }
 
@@ -1320,9 +1323,8 @@ class ProjektController {
             // Wurde keine Einstellung gefunden, Benutzer informieren
             model.map.dvb.ventileinstellung.each { ve ->
                 if (ve.einstellung == 0) {
-                    def infoMsg = "Keine Einstellung für Ventil ${ve.ventilbezeichnung} gefunden! Bitte prüfen Sie die Zeile#${ve.position}."
-                    app.controllers['Dialog'].showInformDialog(infoMsg as String)
-                    println infoMsg
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showInformation('Berechnung', "Keine Einstellung für Ventil ${ve.ventilbezeichnung} gefunden!<br/>Bitte prüfen Sie die Zeile#${ve.position}.")
                 }
             }
         }
@@ -1799,20 +1801,21 @@ class ProjektController {
             // Projekt speichern
             saveBeforeDocument()
             // Dokument erstellen
-            try {
-                File vpxFile = new File((String) model.vpxFilename)
-                model.map.odisee.auslegung = [
-                        auslegungAllgemeineDaten: view.auslegungAllgemeineDaten.selected,
-                        auslegungLufmengen: view.auslegungLufmengen.selected,
-                        auslegungAkustikberechnung: view.auslegungAkustikberechnung.selected,
-                        auslegungDruckverlustberechnung: view.auslegungDruckverlustberechnung.selected
-                ]
-                String xmlDoc = odiseeService.performAuslegung(vpxFile, (Map) model.map, DEBUG)
-                makeDocumentWithOdisee('Auslegung', vpxFile, xmlDoc)
-            } catch (e) {
-                String errorMsg = "Die Auslegung konnte leider nicht erstellt werden.\n${e}"
-                app.controllers['Dialog'].showErrorDialog(errorMsg)
-                e.printStackTrace()
+            if (model.vpxFilename) {
+                try {
+                    File vpxFile = new File((String) model.vpxFilename)
+                    model.map.odisee.auslegung = [
+                            auslegungAllgemeineDaten: view.auslegungAllgemeineDaten.selected,
+                            auslegungLufmengen: view.auslegungLufmengen.selected,
+                            auslegungAkustikberechnung: view.auslegungAkustikberechnung.selected,
+                            auslegungDruckverlustberechnung: view.auslegungDruckverlustberechnung.selected
+                    ]
+                    String xmlDoc = odiseeService.performAuslegung(vpxFile, (Map) model.map, DEBUG)
+                    makeDocumentWithOdisee('Auslegung', vpxFile, xmlDoc)
+                } catch (e) {
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showError('Fehler', 'Die Auslegung konnte leider nicht erstellt werden.', e)
+                }
             }
         }
     }
@@ -1857,8 +1860,8 @@ class ProjektController {
                     String xmlDoc = odiseeService.performAngebot(vpxFile, (Map) model.map, DEBUG, newMap)
                     makeDocumentWithOdisee('Angebot', vpxFile, xmlDoc)
                 } catch (e) {
-                    String errorMsg = "Das Angebot konnte leider nicht erstellt werden.\n${e}"
-                    app.controllers['Dialog'].showErrorDialog(errorMsg)
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showError('Fehler', 'Das Angebot konnte leider nicht erstellt werden.', e)
                 }
             }
         }
@@ -1906,8 +1909,8 @@ class ProjektController {
                     String xmlDoc = odiseeService.performStueckliste(vpxFile, (Map) model.map, DEBUG, newMap)
                     makeDocumentWithOdisee('Stückliste', vpxFile, xmlDoc)
                 } catch (e) {
-                    String errorMsg = "Die Stückliste konnte leider nicht erstellt werden.\n${e}"
-                    app.controllers['Dialog'].showErrorDialog(errorMsg)
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showError('Fehler', 'Die Stückliste konnte leider nicht erstellt werden.', e)
                 }
             }
         }
@@ -2031,14 +2034,15 @@ class ProjektController {
                         openDocument(type, odiseeDocument)
                     } else {
                         documentWaitDialog?.dispose()
-                        String errorMsg = "${type} erstellen\nDas Dokument ${odiseeDocument ?: ''} konnte leider nicht geöffnet werden."
-                        app.controllers['Dialog'].showErrorDialog(errorMsg)
+                        DialogController dialog = (DialogController) app.controllers['Dialog']
+                        dialog.showError('Fehler', "${type} erstellen<br/>Das Dokument ${odiseeDocument ?: ''} konnte leider nicht geöffnet werden.", null)
                     }
                 } catch (ConnectException e) {
-                    app.controllers['Dialog'].showErrorDialog('Der Server für die Erstellung der Dokumente kann nicht erreicht werden.\nBitte prüfen Sie die Internet-Verbindung.')
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showError('Fehler', "Der Server für die Erstellung der Dokumente kann nicht erreicht werden.<br/>Bitte prüfen Sie die Internet-Verbindung.", null)
                 } catch (Exception e) {
-                    String errorMsg = "${type} erstellen\nDas Dokument ${odiseeDocument ?: ''} konnte leider nicht geöffnet werden."
-                    app.controllers['Dialog'].showErrorDialog(errorMsg)
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showError('Fehler', "${type} erstellen<br/>Das Dokument ${odiseeDocument ?: ''} konnte leider nicht geöffnet werden.", e)
                 }
             }
             // Dialog: Bitte warten...
@@ -2142,8 +2146,8 @@ class ProjektController {
                 e.printStackTrace()
             }
         } else {
-            def infoMsg = 'Bitte akzeptieren Sie dazu die AGB!'
-            app.controllers['Dialog'].showInformDialog(infoMsg as String)
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            dialog.showInformation('Dokument öffnen', 'Bitte akzeptieren Sie dazu die AGB!')
         }
     }
 
@@ -2229,10 +2233,8 @@ class ProjektController {
         try {
             makePrinzipskizze()
         } catch (Exception e) {
-            // Show dialog
-            String errorMsg = "Leider konnte der Prinzipskizze nicht erstellt werden\n${e}"
-            app.controllers['Dialog'].showErrorDialog(errorMsg)
-            e.printStackTrace()
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            dialog.showError('Fehler', 'Leider konnte der Prinzipskizze nicht erstellt werden', e)
         } finally {
             documentWaitDialog?.dispose()
         }
@@ -2303,17 +2305,17 @@ class ProjektController {
                     } else {
                         documentWaitDialog?.dispose()
                         // Show dialog
-                        String errorMsg = "Leider konnte der Prinzipskizze nicht erstellt werden\nEs wurden keine Daten vom Web Service empfangen...\n${e.message}"
-                        app.controllers['Dialog'].showErrorDialog(errorMsg)
+                        DialogController dialog = (DialogController) app.controllers['Dialog']
+                        dialog.showError('Fehler', 'Leider konnte der Prinzipskizze nicht erstellt werden<br/>Es wurden keine Daten vom Web Service empfangen.', null)
                     }
                 } catch (ConnectException e) {
-                    app.controllers['Dialog'].showErrorDialog('Der Server für die Erstellung der Dokumente kann nicht erreicht werden.\nBitte prüfen Sie die Internet-Verbindung.')
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showError('Fehler', 'Der Server für die Erstellung der Dokumente kann nicht erreicht werden.<br/>Bitte prüfen Sie die Internet-Verbindung.', null)
                 } catch (Exception e) {
                     documentWaitDialog?.dispose()
-                    e.printStackTrace()
                     // Show dialog
-                    String errorMsg = "Leider konnte der Prinzipskizze nicht erstellt werden\nEs wurden keine Daten vom Web Service empfangen..."
-                    app.controllers['Dialog'].showErrorDialog(errorMsg)
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showError('Fehler', 'Leider konnte der Prinzipskizze nicht erstellt werden<br/>Es wurden keine Daten vom Web Service empfangen.', e)
                 }
             }
             // Dialog: Bitte warten...
@@ -2521,9 +2523,9 @@ class ProjektController {
      * Zeige Dialog "lüftungstechnische Maßnahmen erforderlich."
      */
     def ltmErforderlichDialog = {
-        def infoMsg = model.map.messages.ltm
         /* WAC-115
-        app.controllers['Dialog'].showInformDialog(infoMsg as String)
+        DialogController dialog = (DialogController) app.controllers['Dialog']
+        dialog.showInformation('Lüftungstechnische Maßnahme', model.map.messages.ltm)
         */
     }
 
@@ -2538,15 +2540,14 @@ class ProjektController {
             /*
             //if (GriffonApplicationUtils.isWindows) {
             doLater {
-                def msg = "${type} erstellen\n${document ?: 'Das Dokument'} wurde erzeugt." as String
-                app.controllers['Dialog'].showInformDialog(msg)
+                DialogController dialog = (DialogController) app.controllers['Dialog']
+                dialog.showInformation('Dokument öffnen', "${type} erstellen\n${document ?: 'Das Dokument'} wurde erzeugt.")
             }
             //}
             */
         } catch (e) {
-            println "openDocument: ${e}"
-            def msg = "${type} erstellen\n${document ?: 'Das Dokument'} wurde erzeugt." as String
-            app.controllers['Dialog'].showInformDialog(msg)
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            dialog.showInformation('Dokument öffnen', "${type} wurde erfolgreich erstellt<br/>${document ?: 'Das Dokument'} wurde erzeugt.")
         } finally {
             documentWaitDialog?.dispose()
         }
