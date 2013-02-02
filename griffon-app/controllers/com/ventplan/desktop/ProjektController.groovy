@@ -174,7 +174,7 @@ class ProjektController {
         // Dateiname des Projekts oder MVC ID
         tabTitle << " (${model.vpxFilename ?: view.mvcId})"
         // Ungespeicherte Daten?
-        if (model.map.dirty) {
+        if (model.map.dirty && !loadMode) {
             tabTitle << '*'
         }
         //
@@ -659,26 +659,9 @@ class ProjektController {
     def _raumGeandert(Integer raumPosition) {
         doLater {
             if (raumPosition > -1 && raumPosition < model.map.raum.raume.size()) {
-                // Raumdaten prüfen
-//                def raum
-//                def raumIndex
-//                if (!isSelectedRow && !isIndex) {
-//                    model.map.raum.raume.eachWithIndex { item, pos ->
-//                        if (item.position == raumPosition) {
-//                            raum = item
-//                            raumIndex = pos
-//                        }
-//                    }
-//                } else {
-//                    raumIndex = raumPosition
-//                }
                 // Diesen Raum in allen Tabellen anwählen
-                //if (setSelectedIndex > -1) {
-                onRaumInTabelleWahlen(raumPosition)
-                //} else {
-                //    onRaumInTabelleWahlen(raumIndex)
-                //}
-//                println "raumGeandert: raum[${raumPosition}] currentRaum=${raum.dump()}"
+                //onRaumInTabelleWahlen(raumPosition)
+                // Raumdaten prüfen
                 model.prufeRaumdaten(model.map.raum.raume[raumPosition])
                 // Versuchen den Zuluftfaktor neu zu setzen... Behebt den Fehler, dass der Zuluftfaktor sich nur dann
                 // ändert, wenn in der Tabelle ein anderer Raum gewählt wird, um anschließend den ursprünglichen Raum
@@ -753,6 +736,8 @@ class ProjektController {
             model.map.raum.raumVs.ubElementeHinweis = raumeOhneUbElemente.size() > 0 ? "<html><b>Bitte ÜB-Elemente prüfen: ${raumeOhneUbElemente.collect { it.raumBezeichnung }.join(', ')}</b></html>" : ''
             // WAC-223
             findInvalidArticles()
+            //
+            model.resyncRaumTableModels()
         }
     }
 
@@ -856,6 +841,7 @@ class ProjektController {
                 // Raum geändert
                 //raumGeandert(nachUntenPosition)
                 raumGeandert(nachObenPosition)
+                view.raumTabelle.changeSelection(nachObenPosition/*view.raumTabelle.selectedRow - 1*/, 0, false, false)
             }
         }
     }
@@ -890,6 +876,7 @@ class ProjektController {
                 // Raum geändert
                 //raumGeandert(nachObenPosition)
                 raumGeandert(nachUntenPosition)
+                view.raumTabelle.changeSelection(nachUntenPosition, 0, false, false)
             }
         }
     }
@@ -907,12 +894,18 @@ class ProjektController {
             onRaumInTabelleWahlen(selectedRow, table)
         }
         */
+        if (!evt.isAdjusting && evt.firstIndex > -1 && evt.lastIndex > -1) {
+            // Aktuellen Raum in Metadaten setzen
+            def raum = model.map.raum.raume[evt.source.leadSelectionIndex]
+            model.meta.gewahlterRaum.putAll(raum)
+        }
     }
 
     /**
      * Einen bestimmten Raum in allen Raum-Tabellen markieren.
      */
     def onRaumInTabelleWahlen = { row, raumIndex = null, table = null ->
+        /*
         doLater {
             row = GH.checkRow(row, view.raumTabelle)
             if (row > -1) {
@@ -928,7 +921,6 @@ class ProjektController {
                 // Aktuellen Raum in Metadaten setzen
                 def raum = model.map.raum.raume[row]
                 model.meta.gewahlterRaum.putAll(raum)
-                // 
             } else {
                 // Remove selection in all tables
                 withAllRaumTables { t ->
@@ -938,6 +930,7 @@ class ProjektController {
                 model.meta.gewahlterRaum.clear()
             }
         }
+        */
     }
 
     /**

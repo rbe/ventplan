@@ -35,8 +35,8 @@ panel(constraints: 'x', border: compoundBorder(outer: emptyBorder(5), inner: emp
     // Gebäudetyp
     panel(id: 'wizardGebaudeTyp', border: titledBorder(title: 'Gebäudetyp'), constraints: 'a', layout: new MigLayout('ins 0 n 0 n, wrap', '[]', '')) {
         buttonGroup().with {
-            add radioButton(id: 'wizardGebaudeTypMFH', text: 'Mehrfamilienhaus MFH', selected: true)
-            add radioButton(id: 'wizardGebaudeTypEFH', text: 'Einfamilienhaus EFH')
+            add radioButton(id: 'wizardGebaudeTypMFH', text: 'Mehrfamilienhaus MFH')
+            add radioButton(id: 'wizardGebaudeTypEFH', text: 'Einfamilienhaus EFH', selected: true)
             add radioButton(id: 'wizardGebaudeTypMaisonette', text: 'Maisonette')
         }
         //label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
@@ -76,13 +76,13 @@ panel(constraints: 'x', border: compoundBorder(outer: emptyBorder(5), inner: emp
         label('Wohnzimmer', constraints: 'a')
         textField(id: 'wizardRaumTypWohnzimmer', size: [60,15], constraints: 'b', text: '1')
         label('WC', constraints: 'c')
-        textField(id: 'wizardRaumTypWC', size: [60,15], constraints: 'd')
+        textField(id: 'wizardRaumTypWC', size: [60,15], constraints: 'd', text: '1')
 
         zl2.insertTemplate('r')
         label('Kinderzimmer', constraints: 'a')
         textField(id: 'wizardRaumTypKinderzimmer', size: [60,15], constraints: 'b', text: '2')
         label('Küche', constraints: 'c')
-        textField(id: 'wizardRaumTypKuche', size: [60,15], constraints: 'd')
+        textField(id: 'wizardRaumTypKuche', size: [60,15], constraints: 'd', text: '1')
 
         zl2.insertTemplate('r')
         label('Schlafzimmer', constraints: 'a')
@@ -94,7 +94,7 @@ panel(constraints: 'x', border: compoundBorder(outer: emptyBorder(5), inner: emp
         label('Esszimmer', constraints: 'a')
         textField(id: 'wizardRaumTypEsszimmer', size: [60,15], constraints: 'b')
         label('Bad mit/ohne WC', constraints: 'c')
-        textField(id: 'wizardRaumTypBad', size: [60,15], constraints: 'd')
+        textField(id: 'wizardRaumTypBad', size: [60,15], constraints: 'd', text: '1')
 
         zl2.insertTemplate('r')
         label('Arbeitszimmer', constraints: 'a')
@@ -112,7 +112,7 @@ panel(constraints: 'x', border: compoundBorder(outer: emptyBorder(5), inner: emp
         label('Hausarbeitsraum', constraints: 'a')
         textField(id: 'wizardRaumTypHausarbeitsraum', size: [60,15], constraints: 'b')
         label('Flur', constraints: 'c')
-        textField(id: 'wizardRaumTypFlur', size: [60,15], constraints: 'd')
+        textField(id: 'wizardRaumTypFlur', size: [60,15], constraints: 'd', text: '1')
 
         zl2.insertTemplate('r')
         label('Kellerraum', constraints: 'a')

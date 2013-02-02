@@ -348,9 +348,7 @@ class ProjektModel {
      * @return raum
      */
     def prufeRaumdaten = { raum, expressModus = false ->
-        if (null == raum) {
-            println "${this}.prufeRaumdaten(${raum})"
-        } else {
+        if (null != raum) {
             def prufeFaktor = { r ->
                 // Prüfe Toleranzwerte für Zuluftfaktor
                 def eingegebenerZuluftfaktor = r.raumZuluftfaktor.toDouble2()
