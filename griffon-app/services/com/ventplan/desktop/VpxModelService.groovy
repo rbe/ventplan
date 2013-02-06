@@ -11,18 +11,18 @@
  */
 package com.ventplan.desktop
 
+import com.bensmann.griffon.CachedDTD
 import com.bensmann.griffon.XmlHelper as X
 import com.ventplan.desktop.VentplanConstants as WX
-
-import com.bensmann.griffon.CachedDTD
 import groovy.xml.DOMBuilder
 import groovy.xml.XmlUtil
 import groovy.xml.dom.DOMCategory
 
-import javax.xml.XMLConstants
 import javax.xml.transform.stream.StreamSource
 import javax.xml.validation.SchemaFactory
 import javax.xml.validation.Validator
+
+import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI
 
 /**
  * Speichern und Laden von WAC-Projekten im WPX-Format.
@@ -30,14 +30,19 @@ import javax.xml.validation.Validator
 @SuppressWarnings("GroovyAssignabilityCheck")
 class VpxModelService {
 
-    Validator validator
-    def xmlSlurper
-    def domBuilder
+    ZipcodeService zipcodeService
 
-    def VpxModelService() {
+    Validator validator
+    XmlSlurper xmlSlurper
+    DOMBuilder domBuilder
+
+    /**
+     * Public constructor.
+     */
+    public VpxModelService() {
         // Load XSD
-        InputStream xsdStream = VentplanResource.getVPXXSDAsStream()
-        validator = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(new StreamSource(xsdStream)).newValidator()
+        StreamSource xsdStream = new StreamSource(VentplanResource.getVPXXSDAsStream())
+        validator = SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI).newSchema(xsdStream).newValidator()
         // XmlSlurper for reading XML
         xmlSlurper = new XmlSlurper()
         // Read XML using locally cached DTDs
@@ -48,11 +53,11 @@ class VpxModelService {
         X.domBuilder = domBuilder = DOMBuilder.newInstance()
     }
 
-    String filenameWoExtension(String filename) {
+    public static String filenameWoExtension(String filename) {
         filename - '.wpx' - '.vpx'
     }
 
-    String filenameWoExtension(File file) {
+    public static String filenameWoExtension(File file) {
         filenameWoExtension(file.name)
     }
 
@@ -185,8 +190,10 @@ class VpxModelService {
             def anlage = p.'anlage'
             // Build map; return value
             [
+                    erstellt: X.vdate { p.'erstellt'.text() },
                     kundendaten: [
                             bauvorhaben: X.vs { p.'bauvorhaben'.text() },
+                            bauvorhabenEmpfanger: X.vs { p.'bauvorhabenEmpfanger'.text() },
                             bauvorhabenAnschrift: X.vs { p.'bauvorhabenAnschrift'.text() },
                             bauvorhabenPlz: X.vs { p.'bauvorhabenPlz'.text() },
                             bauvorhabenOrt: X.vs { p.'bauvorhabenOrt'.text() },
@@ -326,17 +333,17 @@ class VpxModelService {
             def stuckliste = p?.'stuckliste'
             stuckliste?.'artikel'?.each { article ->
                 artikelMap.put(
-                    article.artikelnummer,
-                    [
-                        REIHENFOLGE: X.vi { article?.'position'.text() },
-                        ANZAHL: X.vd { article?.'anzahl'.text() },
-                        ARTIKEL: X.vs { article?.'artikelnummer'.text() },
-                        ARTIKELBEZEICHNUNG: X.vs { article?.'artikelbezeichnung'.text() },
-                        LUFTART: X.vs { WX[article?.'luftart'.text()] },
-                        LIEFERMENGE: X.vd { article?.'liefermenge'.text() },
-                        PREIS: X.vd { article?.'preis'.text() },
-                        MENGENEINHEIT: X.vs { article?.'mengeneinheit'.text() }
-                    ]
+                        article.artikelnummer,
+                        [
+                                REIHENFOLGE: X.vi { article?.'position'.text() },
+                                ANZAHL: X.vd { article?.'anzahl'.text() },
+                                ARTIKEL: X.vs { article?.'artikelnummer'.text() },
+                                ARTIKELBEZEICHNUNG: X.vs { article?.'artikelbezeichnung'.text() },
+                                LUFTART: X.vs { WX[article?.'luftart'.text()] },
+                                LIEFERMENGE: X.vd { article?.'liefermenge'.text() },
+                                PREIS: X.vd { article?.'preis'.text() },
+                                MENGENEINHEIT: X.vs { article?.'mengeneinheit'.text() }
+                        ]
                 )
             }
         }
@@ -537,11 +544,11 @@ class VpxModelService {
     }
 
     def save = { map, file, stuckliste = null ->
-        def prefHelper = AuslegungPrefHelper.instance
-        //def wpx = domBuilder.'westaflex-wpx' { // TODO Rename root element to 'ventplan'
+        AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
         def wpx = domBuilder.'ventplan-project' {
             projekt() {
                 X.tc {
+                    // WAC-212
                     ersteller() {
                         rolle('Bearbeiter')
                         person() {
@@ -557,7 +564,14 @@ class VpxModelService {
                         }
                     }
                 } { ersteller() { person() } }
+                X.tc {
+                    Date d = null != map.erstellt ? (Date) map.erstellt : new Date()
+                    erstellt(d.format(VentplanConstants.ISO_DATE_FORMAT))
+                } { erstellt() }
+                X.tc { bearbeitet(new Date().format(VentplanConstants.ISO_DATE_FORMAT)) } { bearbeitet() }
+                // TODO Bauvorhaben should be its own type
                 X.tc { bauvorhaben(map.kundendaten.bauvorhaben) } { bauvorhaben() }
+                X.tc { bauvorhabenEmpfanger(map.kundendaten.bauvorhabenEmpfanger) } { bauvorhabenAnschrift() }
                 X.tc { bauvorhabenAnschrift(map.kundendaten.bauvorhabenAnschrift) } { bauvorhabenAnschrift() }
                 X.tc { bauvorhabenPlz(map.kundendaten.bauvorhabenPlz) } { bauvorhabenPlz() }
                 X.tc { bauvorhabenOrt(map.kundendaten.bauvorhabenOrt) } { bauvorhabenOrt() }
@@ -572,6 +586,23 @@ class VpxModelService {
                 }
                 makeFirma('Grosshandel', map.kundendaten.grosshandel)
                 makeFirma('Ausfuhrende', map.kundendaten.ausfuhrendeFirma)
+                // WAC-212
+                if (map.kundendaten.bauvorhabenPlz) {
+                    Map vertretung = zipcodeService.findVertreter(map.kundendaten.bauvorhabenPlz)
+                    if (vertretung) {
+                        makeFirma('Vertretung', [
+                                firma1: vertretung.name,
+                                firma2: vertretung.name2,
+                                email: vertretung.email,
+                                tel: vertretung.telefon,
+                                fax: vertretung.telefax,
+                                strasse: vertretung.anschrift,
+                                plz: vertretung.plz,
+                                ort: vertretung.ort,
+                                ansprechpartner: null,
+                        ])
+                    }
+                }
                 // WAC-226: Stuckliste erzeugen und speichern
                 if (stuckliste) {
                     domBuilder.stuckliste() {
@@ -581,7 +612,7 @@ class VpxModelService {
             }
         }
         if (file) {
-            def fh = file instanceof File ? file : new File(file)
+            File fh = file instanceof File ? file : new File(file)
             fh.withWriter('UTF-8') { writer ->
                 writer.write(XmlUtil.serialize(wpx))
             }

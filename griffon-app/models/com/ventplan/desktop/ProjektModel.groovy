@@ -190,6 +190,7 @@ class ProjektModel {
                             ] as ObservableMap
                     ],
                     messages: [ltm: ''] as ObservableMap,
+                    erstellt: null,
                     dirty: false,
                     kundendaten: [
                             grosshandel: [:] as ObservableMap,
@@ -312,7 +313,7 @@ class ProjektModel {
     def tmPositionComparator = { a, b -> a.position <=> b.position } as Comparator
     def tmNameComparator = { a, b -> a.name <=> b.name } as Comparator
     def tmNothingComparator = { a, b -> 0 } as Comparator
-    def tableModels = [
+    final Map tableModels = [
             raume: GlazedLists.threadSafeList(new SortedList(new BasicEventList(), tmPositionComparator) as EventList),
             raumeTuren: [/* TableModels will be added in addRaum() */],
             raumeVsZuAbluftventile: GlazedLists.threadSafeList(new SortedList(new BasicEventList(), tmPositionComparator) as EventList),
@@ -975,7 +976,7 @@ class ProjektModel {
           }
           */
         SwingUtilities.invokeLater {
-            synchronized (tableModels) { // TODO Synchronization on non-final field
+            synchronized (tableModels) {
                 // Remember selected row
                 def view = app.views[mvcId]
                 def selected = view.raumTabelle.selectedRow
@@ -1259,7 +1260,7 @@ class ProjektModel {
 //        def writable = [false, true, false, false, false, false] as boolean[]
         def columnNames = ['Anzahl', 'Artikelnr.', 'Beschreibung'] as String[]
         def propertyNames = ['anzahl', 'artikelnummer', 'text'] as String[]
-        def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
+//        def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
         def writable = [true, false, false] as boolean[]
         gltmClosure(columnNames, propertyNames, writable, tableModels.stuckliste)
     }
@@ -1275,7 +1276,7 @@ class ProjektModel {
 //        def writable = [false, true, false, false, false, false] as boolean[]
         def columnNames = ['Anzahl', 'Artikelnr.', 'Beschreibung'] as String[]
         def propertyNames = ['anzahl', 'artikelnummer', 'text'] as String[]
-        def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
+//        def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
         def writable = [true, false, false] as boolean[]
         gltmClosure(columnNames, propertyNames, writable, tableModels.stucklisteSuche)
     }

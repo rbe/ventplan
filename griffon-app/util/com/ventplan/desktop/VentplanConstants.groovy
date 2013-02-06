@@ -20,6 +20,8 @@ import com.bensmann.griffon.GriffonHelper as GH
  */
 class VentplanConstants {
 
+    public static final String ISO_DATE_FORMAT = 'yyyy-MM-dd HH:mm:ss'
+
     private static final m = [
             // Gebäudetyp
             efh: 'EFH',

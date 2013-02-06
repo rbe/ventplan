@@ -9,22 +9,26 @@
  *
  * rbe, 7/16/12 10:35 AM
  */
+
 package com.ventplan.desktop
 
 import com.bensmann.griffon.GriffonHelper as GH
-
 import com.ventplan.verlegeplan.PrinzipskizzeClient
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
 
-import java.awt.Desktop
-import javax.swing.ImageIcon
-import javax.swing.JDialog
+import javax.swing.*
+import java.awt.*
+import java.util.List
+
+import static com.ventplan.desktop.AuslegungPrefHelper.*
 
 /**
  *
  */
 class ProjektController {
+
+    private static final boolean DEBUG = false
 
     //<editor-fold desc="Instance fields">
     boolean loadMode = false
@@ -61,6 +65,8 @@ class ProjektController {
     void mvcGroupInit(Map args) {
         // Save MVC id
         model.mvcId = args.mvcId
+        // WAC-257
+        ventplanModelService.projectWAC257 = !loadMode
         // Set defaults
         setDefaultValues()
         // Add PropertyChangeListener to our model.meta
@@ -80,15 +86,14 @@ class ProjektController {
                     model.map.dirty = true
                     // VentplanModel über Änderung informieren
                     app.models['MainFrame'].aktivesProjektGeandert =
-                    app.models['MainFrame'].alleProjekteGeandert =
-                        true
+                        app.models['MainFrame'].alleProjekteGeandert =
+                            true
                     // Change tab title (show a star)
                     ////println "popertyChangeListener: calling setTabTitle: ${evt.propertyName}"
                     setTabTitle(view.projektTabGroup.tabCount - 1)
                 }
             }
         })
-        //}
     }
 
     /**
@@ -310,9 +315,9 @@ class ProjektController {
                 false
             }
         } catch (e) {
-            def errorMsg = e.printStackTrace()
-            app.controllers['Dialog'].showErrorDialog(errorMsg as String)
             // Project was not saved
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            dialog.showError('Fehler beim Speichern', 'Das Projekt konnte nicht gespeichert werden', e)
             false
         }
     }
@@ -322,7 +327,8 @@ class ProjektController {
      */
     private void saveBeforeDocument() {
         if (!model.vpxFilename) {
-            app.controllers['Dialog'].showInformDialog('Sie müssen das Projekt jetzt speichern, damit das Dokument erstellt werden kann!')
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            dialog.showInformation('Projekt speichern', 'Sie müssen das Projekt erst speichern, damit das Dokument erstellt werden kann!')
         }
         app.controllers['MainFrame'].aktivesProjektSpeichern()
     }
@@ -383,11 +389,15 @@ class ProjektController {
      */
     def luftdichtheitKategorieA = {
         doLater {
-            model.map.gebaude.luftdichtheit.with {
-                druckdifferenz = 2.0d
-                luftwechsel = 1.0d
-                druckexponent = 0.666f
+            // Siehe gebaudedatenGeandert
+            def d = model.map.gebaude.luftdichtheit
+            if (model.map.gebaude.lage.windschwach) {
+                d.druckdifferenz = 2.0d
+            } else if (model.map.gebaude.lage.windstark) {
+                d.druckdifferenz = 4.0d
             }
+            d.luftwechsel = 1.0d
+            d.druckexponent = 0.666d
             berechneAussenluftVs()
         }
     }
@@ -397,11 +407,15 @@ class ProjektController {
      */
     def luftdichtheitKategorieB = {
         doLater {
-            model.map.gebaude.luftdichtheit.with {
-                druckdifferenz = 2.0d
-                luftwechsel = 1.5f
-                druckexponent = 0.666f
+            // Siehe gebaudedatenGeandert
+            def d = model.map.gebaude.luftdichtheit
+            if (model.map.gebaude.lage.windschwach) {
+                d.druckdifferenz = 2.0d
+            } else if (model.map.gebaude.lage.windstark) {
+                d.druckdifferenz = 4.0d
             }
+            d.luftwechsel = 1.5f
+            d.druckexponent = 0.666f
             berechneAussenluftVs()
         }
     }
@@ -411,11 +425,15 @@ class ProjektController {
      */
     def luftdichtheitKategorieC = {
         doLater {
-            model.map.gebaude.luftdichtheit.with {
-                druckdifferenz = 2.0d
-                luftwechsel = 2.0d
-                druckexponent = 0.666f
+            // Siehe gebaudedatenGeandert
+            def d = model.map.gebaude.luftdichtheit
+            if (model.map.gebaude.lage.windschwach) {
+                d.druckdifferenz = 2.0d
+            } else if (model.map.gebaude.lage.windstark) {
+                d.druckdifferenz = 4.0d
             }
+            d.luftwechsel = 2.0d
+            d.druckexponent = 0.666f
             berechneAussenluftVs()
         }
     }
@@ -457,8 +475,8 @@ class ProjektController {
                     // TODO Variable mindestaussenluftrate not defined...?
                     mindestaussenluftrate = personenanzahl * aussenluftVsProPerson
                 } catch (e) {
-                    def errorMsg = e.printStackTrace()
-                    app.controllers['Dialog'].showErrorDialog(errorMsg as String)
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showError('Berechnung', 'Berechnung fehlgeschlagen', e)
                     mindestaussenluftrate = 0.0d
                 }
             }
@@ -642,7 +660,8 @@ class ProjektController {
                 berechneAlles()
             }
         } else {
-            app.controllers['Dialog'].showErrorDialog('Die Fläche des Raumes muss größer 0 sein!')
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            dialog.showError('Berechnung', 'Die Fläche des Raumes muss größer 0 sein!', null)
         }
     }
 
@@ -790,8 +809,7 @@ class ProjektController {
                         turenList.add(turenMap)
                     }
                     newMap.put(it.key, turenList)
-                }
-                else {
+                } else {
                     newMap.put(it.key, it.value)
                 }
             }
@@ -1083,7 +1101,7 @@ class ProjektController {
         // WAC-165: Bugfix: Werte in der Türen-Tabelle werden erst dann aktualisiert, wenn die Maus über einzelne Zeilen bewegt wird
         try {
             view.raumBearbeitenTurenTabelle.repaint()
-        } catch (e) { }
+        } catch (e) {}
     }
 
     /**
@@ -1106,7 +1124,7 @@ class ProjektController {
             }
             raum.turen[turenIndex] = [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true]
             model.map.raum.raume[raumPosition] = raum
-        } catch (e) { }
+        } catch (e) {}
         // WAC-174: resyncTableModels ist notwendig, selectedRow wird auf 0 gesetzt, daher selectedRow setzen
         model.resyncRaumTableModels()
         //view.raumTabelle.changeSelection(model.meta.gewahlterRaum.position, 0, false, false) 
@@ -1116,7 +1134,7 @@ class ProjektController {
         if (reload) {
             try {
                 raumBearbeitenTurEntfernen(null, false)
-            } catch (e) { }
+            } catch (e) {}
         }
     }
 
@@ -1305,9 +1323,8 @@ class ProjektController {
             // Wurde keine Einstellung gefunden, Benutzer informieren
             model.map.dvb.ventileinstellung.each { ve ->
                 if (ve.einstellung == 0) {
-                    def infoMsg = "Keine Einstellung für Ventil ${ve.ventilbezeichnung} gefunden! Bitte prüfen Sie die Zeile#${ve.position}."
-                    app.controllers['Dialog'].showInformDialog(infoMsg as String)
-                    println infoMsg
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showInformation('Berechnung', "Keine Einstellung für Ventil ${ve.ventilbezeichnung} gefunden!<br/>Bitte prüfen Sie die Zeile#${ve.position}.")
                 }
             }
         }
@@ -1512,7 +1529,7 @@ class ProjektController {
         try {
             def url = VentplanResource.getWiderstandURL(wbw.id)
             image = new ImageIcon(url)
-        } catch (NullPointerException e) { }
+        } catch (NullPointerException e) {}
         // Image und Text setzen
         if (image) {
             view.wbwBild.text = ''
@@ -1686,7 +1703,7 @@ class ProjektController {
         String _okButtonText = okButtonText ?: 'Dokument erstellen'
         view.nutzerdatenSpeichernButton.text = _okButtonText
         // Gespeicherte Daten holen und in den Dialog setzen
-        view.erstellerFirma.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA)
+        view.erstellerFirma.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_FIRMA)
         view.erstellerName.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME)
         view.erstellerAnschrift.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE)
         view.erstellerPlz.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_PLZ)
@@ -1734,56 +1751,33 @@ class ProjektController {
         try {
             Map map = [:]
             def error = false
-            /*
             // Daten aus dem Dialog holen
-            String firma = view.erstellerFirma.text
-            String name = view.erstellerName.text
-            String anschrift = view.erstellerAnschrift.text
-            String plz = view.erstellerPlz.text
-            String ort = view.erstellerOrt.text
-            String tel = view.erstellerTelefon.text
-            String fax = view.erstellerFax.text
-            String email = view.erstellerEmail.text
-            if (name?.trim() && anschrift?.trim() && plz?.trim() && ort?.trim()) {
-            */
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA, view.erstellerFirma.text.trim())
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_NAME, view.erstellerName.text.trim())
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE, view.erstellerAnschrift.text.trim())
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_PLZ, view.erstellerPlz.text.trim())
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_ORT, view.erstellerOrt.text.trim())
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_TEL, view.erstellerTelefon.text.trim())
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_FAX, view.erstellerFax.text.trim())
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL, view.erstellerEmail.text.trim())
+            map.put(PREFS_USER_KEY_FIRMA, view.erstellerFirma.text.trim())
+            map.put(PREFS_USER_KEY_NAME, view.erstellerName.text.trim())
+            map.put(PREFS_USER_KEY_STRASSE, view.erstellerAnschrift.text.trim())
+            map.put(PREFS_USER_KEY_PLZ, view.erstellerPlz.text.trim())
+            map.put(PREFS_USER_KEY_ORT, view.erstellerOrt.text.trim())
+            map.put(PREFS_USER_KEY_TEL, view.erstellerTelefon.text.trim())
+            map.put(PREFS_USER_KEY_FAX, view.erstellerFax.text.trim())
+            map.put(PREFS_USER_KEY_EMAIL, view.erstellerEmail.text.trim())
             try {
                 String angebotsnummer = view.erstellerAngebotsnummer.text
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_ANGEBOTSNUMMER, angebotsnummer)
+                map.put(PREFS_USER_KEY_ANGEBOTSNUMMER, angebotsnummer)
             } catch (MissingPropertyException e) {
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_ANGEBOTSNUMMER, '')
+                map.put(PREFS_USER_KEY_ANGEBOTSNUMMER, '')
             }
             try {
                 String empfanger = view.dokumentEmpfanger.selectedItem
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_EMPFANGER, empfanger)
+                map.put(PREFS_USER_KEY_EMPFANGER, empfanger)
             } catch (MissingPropertyException e) {
-                map.put(AuslegungPrefHelper.PREFS_USER_KEY_EMPFANGER, '')
+                map.put(PREFS_USER_KEY_EMPFANGER, '')
             }
             String dokumenttyp = view.erstellerDokumenttyp.selectedItem
-            map.put(AuslegungPrefHelper.PREFS_USER_KEY_DOKUMENTTYP, dokumenttyp)
+            map.put(PREFS_USER_KEY_DOKUMENTTYP, dokumenttyp)
             // Daten via Preferences API speichern
             auslegungPrefs.save(map)
             // Benutzerdaten wurden geändert, bitte fortfahren...
             nutzerdatenGeandert = true
-            /*
-            } else {
-                def errorMsg = 'Auslegung konnte nicht erstellt werden. Es muss mindestens Name, Anschrift, PLZ, Ort angegeben werden.'
-                app.controllers['Dialog'].showErrorDialog(errorMsg as String)
-                // Fix Stückliste Generierung
-                error = true
-            }
-            // Anzeigen, dass Daten geändert wurden
-            // Fix: Prüfen, ob ein Fehler aufgetreten ist und Variable entsprechend ändern, sonst wird die
-            // Stückliste dennoch generiert.
-            nutzerdatenGeandert = !error
-            */
         } catch (e) {
             //println "Error saving ersteller values -> ${e.dump()}"
             e.printStackTrace()
@@ -1807,20 +1801,21 @@ class ProjektController {
             // Projekt speichern
             saveBeforeDocument()
             // Dokument erstellen
-            try {
-                File vpxFile = new File(model.vpxFilename)
-                model.map.odisee.auslegung = [
-                        auslegungAllgemeineDaten: view.auslegungAllgemeineDaten.selected,
-                        auslegungLufmengen: view.auslegungLufmengen.selected,
-                        auslegungAkustikberechnung: view.auslegungAkustikberechnung.selected,
-                        auslegungDruckverlustberechnung: view.auslegungDruckverlustberechnung.selected
-                ]
-                String xmlDoc = odiseeService.performAuslegung(vpxFile, model.map, /*DEBUG*/ false)
-                makeDocumentWithOdisee('Auslegung', vpxFile, xmlDoc)
-            } catch (e) {
-                String errorMsg = "Die Auslegung konnte leider nicht erstellt werden.\n${e}"
-                app.controllers['Dialog'].showErrorDialog(errorMsg)
-                e.printStackTrace()
+            if (model.vpxFilename) {
+                try {
+                    File vpxFile = new File((String) model.vpxFilename)
+                    model.map.odisee.auslegung = [
+                            auslegungAllgemeineDaten: view.auslegungAllgemeineDaten.selected,
+                            auslegungLufmengen: view.auslegungLufmengen.selected,
+                            auslegungAkustikberechnung: view.auslegungAkustikberechnung.selected,
+                            auslegungDruckverlustberechnung: view.auslegungDruckverlustberechnung.selected
+                    ]
+                    String xmlDoc = odiseeService.performAuslegung(vpxFile, (Map) model.map, DEBUG)
+                    makeDocumentWithOdisee('Auslegung', vpxFile, xmlDoc)
+                } catch (e) {
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showError('Fehler', 'Die Auslegung konnte leider nicht erstellt werden.', e)
+                }
             }
         }
     }
@@ -1850,7 +1845,7 @@ class ProjektController {
                             a.artikelnummer,
                             [
                                     REIHENFOLGE: a.reihenfolge, LUFTART: a.luftart, ANZAHL: a.anzahl,
-                                    MENGENEINHEIT: a.mengeneinheit, LIEFERMENGE: a.liefermenge,
+                                    MENGENEINHEIT: a.mengeneinheit, VERPACKUNGSEINHEIT: a.verpackungseinheit, LIEFERMENGE: a.liefermenge,
                                     ARTIKEL: a.artikelnummer, ARTIKELNUMMER: a.artikelnummer,
                                     ARTIKELBEZEICHNUNG: a.text, PREIS: a.einzelpreis
                             ]
@@ -1861,12 +1856,12 @@ class ProjektController {
                 vpxModelService.save(model.map, model.vpxFilename, newMap)
                 // Auslegung/Dokument erstellen
                 try {
-                    File vpxFile = new File(model.vpxFilename)
-                    String xmlDoc = odiseeService.performAngebot(vpxFile, model.map, /*DEBUG*/ false, newMap)
+                    File vpxFile = new File((String) model.vpxFilename)
+                    String xmlDoc = odiseeService.performAngebot(vpxFile, (Map) model.map, DEBUG, newMap)
                     makeDocumentWithOdisee('Angebot', vpxFile, xmlDoc)
                 } catch (e) {
-                    String errorMsg = "Das Angebot konnte leider nicht erstellt werden.\n${e}"
-                    app.controllers['Dialog'].showErrorDialog(errorMsg)
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showError('Fehler', 'Das Angebot konnte leider nicht erstellt werden.', e)
                 }
             }
         }
@@ -1898,7 +1893,7 @@ class ProjektController {
                             a.artikelnummer,
                             [
                                     REIHENFOLGE: position, LUFTART: a.luftart, ANZAHL: a.anzahl,
-                                    MENGENEINHEIT: a.mengeneinheit, LIEFERMENGE: a.liefermenge,
+                                    MENGENEINHEIT: a.mengeneinheit, VERPACKUNGSEINHEIT: a.verpackungseinheit, LIEFERMENGE: a.liefermenge,
                                     ARTIKEL: a.artikelnummer, ARTIKELNUMMER: a.artikelnummer,
                                     ARTIKELBEZEICHNUNG: a.text, PREIS: a.einzelpreis
                             ]
@@ -1910,12 +1905,12 @@ class ProjektController {
                 vpxModelService.save(model.map, model.vpxFilename, newMap)
                 // Stückliste/Dokument erstellen
                 try {
-                    File vpxFile = new File(model.vpxFilename)
-                    String xmlDoc = odiseeService.performStueckliste(vpxFile, model.map, /*DEBUG*/ false, newMap)
+                    File vpxFile = new File((String) model.vpxFilename)
+                    String xmlDoc = odiseeService.performStueckliste(vpxFile, (Map) model.map, DEBUG, newMap)
                     makeDocumentWithOdisee('Stückliste', vpxFile, xmlDoc)
                 } catch (e) {
-                    String errorMsg = "Die Stückliste konnte leider nicht erstellt werden.\n${e}"
-                    app.controllers['Dialog'].showErrorDialog(errorMsg)
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showError('Fehler', 'Die Stückliste konnte leider nicht erstellt werden.', e)
                 }
             }
         }
@@ -1947,9 +1942,10 @@ class ProjektController {
                 model.tableModels.stuckliste.addAll(
                         [
                                 reihenfolge: a.REIHENFOLGE, anzahl: a.ANZAHL,
-                                artikelnummer: a.ARTIKEL/*NUMMER*/, text: a.ARTIKELBEZEICHNUNG,
+                                artikelnummer: a.ARTIKEL, text: a.ARTIKELBEZEICHNUNG,
                                 einzelpreis: a.PREIS, gesamtpreis: gesamtpreis,
-                                luftart: a.LUFTART, liefermenge: a.LIEFERMENGE, mengeneinheit: a.MENGENEINHEIT
+                                luftart: a.LUFTART,
+                                liefermenge: a.LIEFERMENGE, mengeneinheit: a.MENGENEINHEIT, verpackungseinheit: a.VERPACKUNGSEINHEIT
                         ]
                 )
             }
@@ -1978,7 +1974,8 @@ class ProjektController {
                                 reihenfolge: position, anzahl: anzahl,
                                 artikelnummer: artikel.ARTIKEL, text: artikel.ARTIKELBEZEICHNUNG,
                                 einzelpreis: artikel.PREIS, gesamtpreis: gesamtpreis,
-                                luftart: artikel.LUFTART, liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT
+                                luftart: artikel.LUFTART,
+                                liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT, verpackungseinheit: artikel.VERPACKUNGSEINHEIT
                         ]
                 )
                 position++
@@ -2039,14 +2036,15 @@ class ProjektController {
                         openDocument(type, odiseeDocument)
                     } else {
                         documentWaitDialog?.dispose()
-                        String errorMsg = "${type} erstellen\nDas Dokument ${odiseeDocument ?: ''} konnte leider nicht geöffnet werden."
-                        app.controllers['Dialog'].showErrorDialog(errorMsg)
+                        DialogController dialog = (DialogController) app.controllers['Dialog']
+                        dialog.showError('Fehler', "${type} erstellen<br/>Das Dokument ${odiseeDocument ?: ''} konnte leider nicht geöffnet werden.", null)
                     }
                 } catch (ConnectException e) {
-                    app.controllers['Dialog'].showErrorDialog('Der Server für die Erstellung der Dokumente kann nicht erreicht werden.\nBitte prüfen Sie die Internet-Verbindung.')
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showError('Fehler', "Der Server für die Erstellung der Dokumente kann nicht erreicht werden.<br/>Bitte prüfen Sie die Internet-Verbindung.", null)
                 } catch (Exception e) {
-                    String errorMsg = "${type} erstellen\nDas Dokument ${odiseeDocument ?: ''} konnte leider nicht geöffnet werden."
-                    app.controllers['Dialog'].showErrorDialog(errorMsg)
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showError('Fehler', "${type} erstellen<br/>Das Dokument ${odiseeDocument ?: ''} konnte leider nicht geöffnet werden.", e)
                 }
             }
             // Dialog: Bitte warten...
@@ -2150,8 +2148,8 @@ class ProjektController {
                 e.printStackTrace()
             }
         } else {
-            def infoMsg = 'Bitte akzeptieren Sie dazu die AGB!'
-            app.controllers['Dialog'].showInformDialog(infoMsg as String)
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            dialog.showInformation('Dokument öffnen', 'Bitte akzeptieren Sie dazu die AGB!')
         }
     }
 
@@ -2237,10 +2235,8 @@ class ProjektController {
         try {
             makePrinzipskizze()
         } catch (Exception e) {
-            // Show dialog
-            String errorMsg = "Leider konnte der Prinzipskizze nicht erstellt werden\n${e}"
-            app.controllers['Dialog'].showErrorDialog(errorMsg)
-            e.printStackTrace()
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            dialog.showError('Fehler', 'Leider konnte der Prinzipskizze nicht erstellt werden', e)
         } finally {
             documentWaitDialog?.dispose()
         }
@@ -2254,7 +2250,7 @@ class ProjektController {
                     String aussenluft = artikelfurAussenluftauslass()
                     String fortluft = artikelFurFortluftauslass()
                     // Zentralgerät
-                    String zentralgerat = model.map.anlage.zentralgerat
+                    String zentralgerat = "${model.map.anlage.zentralgerat} (${model.map.anlage.standort.grep { it.value == true }?.key[0]})"
                     def findRaum = { String luftart, String geschoss ->
                         StringBuilder builder = new StringBuilder()
                         List raume = model.map.raum.raume.findAll { r ->
@@ -2311,17 +2307,17 @@ class ProjektController {
                     } else {
                         documentWaitDialog?.dispose()
                         // Show dialog
-                        String errorMsg = "Leider konnte der Prinzipskizze nicht erstellt werden\nEs wurden keine Daten vom Web Service empfangen...\n${e.message}"
-                        app.controllers['Dialog'].showErrorDialog(errorMsg)
+                        DialogController dialog = (DialogController) app.controllers['Dialog']
+                        dialog.showError('Fehler', 'Leider konnte der Prinzipskizze nicht erstellt werden<br/>Es wurden keine Daten vom Web Service empfangen.', null)
                     }
                 } catch (ConnectException e) {
-                    app.controllers['Dialog'].showErrorDialog('Der Server für die Erstellung der Dokumente kann nicht erreicht werden.\nBitte prüfen Sie die Internet-Verbindung.')
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showError('Fehler', 'Der Server für die Erstellung der Dokumente kann nicht erreicht werden.<br/>Bitte prüfen Sie die Internet-Verbindung.', null)
                 } catch (Exception e) {
                     documentWaitDialog?.dispose()
-                    e.printStackTrace()
                     // Show dialog
-                    String errorMsg = "Leider konnte der Prinzipskizze nicht erstellt werden\nEs wurden keine Daten vom Web Service empfangen..."
-                    app.controllers['Dialog'].showErrorDialog(errorMsg)
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showError('Fehler', 'Leider konnte der Prinzipskizze nicht erstellt werden<br/>Es wurden keine Daten vom Web Service empfangen.', e)
                 }
             }
             // Dialog: Bitte warten...
@@ -2529,9 +2525,9 @@ class ProjektController {
      * Zeige Dialog "lüftungstechnische Maßnahmen erforderlich."
      */
     def ltmErforderlichDialog = {
-        def infoMsg = model.map.messages.ltm
         /* WAC-115
-        app.controllers['Dialog'].showInformDialog(infoMsg as String)
+        DialogController dialog = (DialogController) app.controllers['Dialog']
+        dialog.showInformation('Lüftungstechnische Maßnahme', model.map.messages.ltm)
         */
     }
 
@@ -2546,15 +2542,14 @@ class ProjektController {
             /*
             //if (GriffonApplicationUtils.isWindows) {
             doLater {
-                def msg = "${type} erstellen\n${document ?: 'Das Dokument'} wurde erzeugt." as String
-                app.controllers['Dialog'].showInformDialog(msg)
+                DialogController dialog = (DialogController) app.controllers['Dialog']
+                dialog.showInformation('Dokument öffnen', "${type} erstellen\n${document ?: 'Das Dokument'} wurde erzeugt.")
             }
             //}
             */
         } catch (e) {
-            println "openDocument: ${e}"
-            def msg = "${type} erstellen\n${document ?: 'Das Dokument'} wurde erzeugt." as String
-            app.controllers['Dialog'].showInformDialog(msg)
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            dialog.showInformation('Dokument öffnen', "${type} wurde erfolgreich erstellt<br/>${document ?: 'Das Dokument'} wurde erzeugt.")
         } finally {
             documentWaitDialog?.dispose()
         }
@@ -2596,4 +2591,41 @@ class ProjektController {
     }
     //</editor-fold>
 
+    /**
+     * WAC-258
+     */
+    def standardAuslasseSetzen = { evt = null ->
+        doLater {
+            List geschosse = model.meta.raum.geschoss
+            model.map.raum.raume.each { raum ->
+                // Standard Luftauslässe
+                if (raum.raumLuftart == 'ZU') {
+                    raum.raumBezeichnungZuluftventile = '100ULC'
+                } else if (raum.raumLuftart == 'AB') {
+                    // Küche, Bad, Dusche und Sauna
+                    def n = ['Küche', 'Bad', 'Dusche', 'Sauna']
+                    n.each {
+                        if (raum.raumBezeichnung ==~ /${it}.*/ || raum.raumTyp ==~ /${it}.*/) {
+                            raum.raumBezeichnungAbluftventile = '125URH'
+                        }
+                    }
+                    // Ansonsten
+                    if (!raum.raumBezeichnungAbluftventile) {
+                        raum.raumBezeichnungAbluftventile = '100URH'
+                    }
+                }
+                // Verteilebene
+                if (raum.raumGeschoss) {
+                    try {
+                        raum.raumVerteilebene = geschosse[(geschosse.findIndexOf { it == raum.raumGeschoss }) + 1]
+                    } catch (e) {
+                        // ignore
+                    }
+                }
+            }
+            berechneAussenluftVs()
+            model.resyncRaumTableModels()
+        }
+    }
+    
 }

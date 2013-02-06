@@ -13,11 +13,11 @@
 package com.ventplan.desktop
 
 import com.bensmann.griffon.GriffonHelper as GH
-
 import groovy.io.FileType
 
-import javax.swing.JDialog
-import javax.swing.JFileChooser
+import javax.swing.*
+import java.awt.*
+import java.util.List
 
 /**
  *
@@ -54,11 +54,6 @@ class VentplanController {
      */
 
     def static mruFileManager = MRUFileManager.instance
-
-    /**
-     *
-     private def wacwsUrl = GH.getWacwsUrl()
-     */
 
     /**
      * WAC-192 Saving file path of search folder
@@ -148,28 +143,30 @@ class VentplanController {
         // Ask if we can close
         def canClose = canClose()
         if (canClose) {
-            def choice = app.controllers['Dialog'].showApplicationOnlyCloseDialog()
-            switch (choice) {
-                case 0:
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            DialogAnswer answer = dialog.showApplicationOnlyCloseDialog()
+            switch (answer) {
+                case DialogAnswer.YES:
                     alleProjekteSpeichern(evt)
                     proceed = !abortClosing
                     break
-                case 1: // Cancel: do nothing...
+                case DialogAnswer.NO: // Cancel: do nothing...
                     proceed = false
                     break
             }
         } else {
             // Show dialog: ask user for save all, cancel, quit
-            def choice = app.controllers['Dialog'].showApplicationSaveAndCloseDialog()
-            switch (choice) {
-                case 0:
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            DialogAnswer answer = dialog.showApplicationSaveAndCloseDialog()
+            switch (answer) {
+                case DialogAnswer.SAVE:
                     alleProjekteSpeichern(evt)
                     proceed = !abortClosing
                     break
-                case 1: // Cancel: do nothing...
+                case DialogAnswer.CANCEL: // Cancel: do nothing...
                     proceed = false
                     break
-                case 2:
+                case DialogAnswer.DONT_SAVE:
                     proceed = true
                     break
             }
@@ -283,8 +280,8 @@ class VentplanController {
                     // Fixes WAC-216
                     projektModel.enableDvbButtons()
                 } else {
-                    def errorMsg = 'Konnte Projekt nicht öffnen!'
-                    app.controllers['Dialog'].showErrorDialog(errorMsg)
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showError('Fehler', 'Konnte Projekt nicht öffnen!', null)
                 }
             }
             // do sth. when the task is done.
@@ -341,9 +338,9 @@ class VentplanController {
 
     /**
      * WAC-246
-     * @return
+     * @return Ventplan standard directory.
      */
-    File getVentplanDir() {
+    static File getVentplanDir() {
         File vpxDir = new File("${System.getProperty('user.home')}/Ventplan")
         if (!vpxDir.exists()) {
             vpxDir.mkdirs()
@@ -359,7 +356,7 @@ class VentplanController {
         view.vpxFileChooserWindow.selectedFile = new File("${mvc.model.map.kundendaten.bauvorhaben}.vpx")
         view.vpxFileChooserWindow.currentDirectory = getVentplanDir()
         // Open filechooser
-        def openResult = view.vpxFileChooserWindow.showSaveDialog(app.windowManager.windows.find {it.focused})
+        def openResult = view.vpxFileChooserWindow.showSaveDialog(app.windowManager.windows.find { it.focused })
         if (JFileChooser.APPROVE_OPTION == openResult) {
             def fname = view.vpxFileChooserWindow.selectedFile.toString()
             // Take care of file extension
@@ -370,8 +367,7 @@ class VentplanController {
             mvc.model.vpxFilename = fname
             // Save data
             projektSpeichern(mvc)
-        }
-        else {
+        } else {
             abortClosing = true
         }
     }
@@ -404,7 +400,7 @@ class VentplanController {
     /**
      * WAC-230, WAC-234
      */
-    File makeTemporaryProject(String wizardProjektName = '') {
+    static File makeTemporaryProject(String wizardProjektName = '') {
         Date date = new Date()
         String projektName = wizardProjektName == '' ? "VentplanExpress_${date.format('dd.MM.yyyy HHmmss')}.vpx" : "${wizardProjektName}.vpx"
         File file = new File(getVentplanDir(), projektName)
@@ -686,7 +682,7 @@ class VentplanController {
                         projektAktivieren(mvcId)
                         // resize the frame to validate the components.
                         try {
-                            def dim = ventplanFrame.getSize()
+                            Dimension dim = ventplanFrame.getSize()
                             ventplanFrame.setSize((int) dim.width + 1, (int) dim.height)
                             ventplanFrame.invalidate()
                             ventplanFrame.validate()
@@ -747,15 +743,16 @@ class VentplanController {
         }
         def canClose = mvc.controller.canClose()
         if (!canClose) {
-            def choice = app.controllers['Dialog'].showCloseProjectDialog()
-            switch (choice) {
-                case 0: // Save: save and close project
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            DialogAnswer answer = dialog.showCloseProjectDialog()
+            switch (answer) {
+                case DialogAnswer.SAVE: // Save: save and close project
                     aktivesProjektSpeichern(evt)
                     clacpr(mvc)
                     break
-                case 1: // Cancel: do nothing...
+                case DialogAnswer.CANCEL: // Cancel: do nothing...
                     break
-                case 2: // Close: just close the tab...
+                case DialogAnswer.DONT_SAVE: // Close: just close the tab...
                     clacpr(mvc)
                     break
             }
@@ -925,16 +922,16 @@ class VentplanController {
                     }
                 }
                 if (list.size() == 0) {
-                    def infoMsg = 'Es wurden keine Dateien mit Ihren Suchbegriffen gefunden!'
-                    app.controllers['Dialog'].showInformDialog(infoMsg as String)
+                    DialogController dialog = (DialogController) app.controllers['Dialog']
+                    dialog.showInformation('Suche', 'Es wurden keine Dateien mit Ihren Suchbegriffen gefunden!')
                 } else {
                     // Gefundene Dateien in der Liste anzeigen
                     model.projektSuchenEventList.addAll(list)
                 }
             }
         } else {
-            def infoMsg = 'Bitte wählen Sie erst einen Pfad zum Suchen aus!'
-            app.controllers['Dialog'].showInformDialog(infoMsg as String)
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            dialog.showInformation('Suche', 'Bitte wählen Sie erst einen Pfad zum Suchen aus!')
         }
     }
 
@@ -969,8 +966,8 @@ class VentplanController {
             projektOffnenClosure(file)
             projektSuchenDialog.dispose()
         } else {
-            def infoMsg = 'Sie haben keine Datei zum Öffnen ausgewählt!'
-            app.controllers['Dialog'].showInformDialog(infoMsg as String)
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            dialog.showInformation('Suche', 'Sie haben keine Datei zum Öffnen ausgewählt!')
         }
     }
     //</editor-fold>

@@ -10,7 +10,6 @@
  * rbe, 7/16/12 10:35 AM
  */
 
-
 package com.ventplan.desktop
 
 import com.bensmann.griffon.GriffonHelper as GH
@@ -73,6 +72,8 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("ins 0 n 0 n, wrap 2","
         // Bauvorhaben
         label("Bauvorhaben")
         textField(id: "bauvorhaben", constraints: "growx")
+        label("Empfänger")
+        textField(id: "bauvorhabenEmpfanger", constraints: "growx")
         label("Anschrift")
         textField(id: "bauvorhabenAnschrift", constraints: "growx")
         label("PLZ/Ort")
@@ -83,7 +84,7 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("ins 0 n 0 n, wrap 2","
         // Notizen
         label("Notizen")
         jideScrollPane(constraints: "grow") {
-            textArea(id: "notizen", rows: 13, constraints: "grow")
+            textArea(id: "notizen", rows: 10, constraints: "grow")
         }
     }
 }
@@ -104,6 +105,7 @@ GH.yellowTextField(ausfuhrendeFirmaTelefon)
 GH.yellowTextField(ausfuhrendeFirmaTelefax)
 GH.yellowTextField(ausfuhrendeFirmaAnsprechpartner)
 GH.yellowTextField(bauvorhaben)
+GH.yellowTextField(bauvorhabenEmpfanger)
 GH.yellowTextField(bauvorhabenAnschrift)
 GH.yellowTextField(bauvorhabenPlz)
 GH.yellowTextField(bauvorhabenOrt)
