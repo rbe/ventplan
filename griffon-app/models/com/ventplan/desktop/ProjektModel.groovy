@@ -132,9 +132,9 @@ class ProjektModel {
             meta = [
                     empfanger: [
                             '',
-                            'Grosshandel',
-                            'Ausführende Firma',
-                            'Bauherr/Investor'
+                            'Grosshandel'.intern(),
+                            'Ausführende Firma'.intern(),
+                            'Bauherr/Investor'.intern()
                     ],
                     /* rbe-2012-08-14 AnlagendatenView, derzeit nicht verwendet, ergibt sich über die Pakete
                     anlage: [
@@ -143,11 +143,11 @@ class ProjektModel {
                     ],
                     */
                     raum: [
-                            typ: ['Wohnzimmer', 'Kinderzimmer', 'Schlafzimmer', 'Esszimmer', 'Arbeitszimmer', 'Gästezimmer',
-                                    'Hausarbeitsraum', 'Kellerraum', 'WC', 'Küche', 'Kochnische', 'Bad mit/ohne WC', 'Duschraum',
-                                    'Sauna', 'Flur', 'Diele'],
-                            geschoss: ['KG', 'EG', 'OG', 'DG', 'SB'],
-                            luftart: ['ZU', 'AB', 'ZU/AB', 'ÜB'],
+                            typ: ['Wohnzimmer'.intern(), 'Kinderzimmer'.intern(), 'Schlafzimmer'.intern(), 'Esszimmer'.intern(), 'Arbeitszimmer'.intern(), 'Gästezimmer'.intern(),
+                                    'Hausarbeitsraum'.intern(), 'Kellerraum'.intern(), 'WC'.intern(), 'Küche'.intern(), 'Kochnische'.intern(), 'Bad mit/ohne WC'.intern(), 'Duschraum'.intern(),
+                                    'Sauna'.intern(), 'Flur'.intern(), 'Diele'.intern()],
+                            geschoss: ['KG'.intern(), 'EG'.intern(), 'OG'.intern(), 'DG'.intern(), 'SB'.intern()],
+                            luftart: ['ZU'.intern(), 'AB'.intern(), 'ZU/AB'.intern(), 'ÜB'.intern()],
                             raumVsBezeichnungZuluftventile: [/* initialized in ProjektController.mvcGroupInit */],
                             raumVsBezeichnungAbluftventile: [/* initialized in ProjektController.mvcGroupInit */],
                             raumVsUberstromelemente: [/* initialized in ProjektController.mvcGroupInit */],
@@ -162,7 +162,7 @@ class ProjektModel {
                                     kanalbezeichnung: [/* initialized in ProjektController.mvcGroupInit */]
                             ],
                             ventileinstellung: [
-                                    luftart: ['ZU', 'AB', 'AU', 'FO'],
+                                    luftart: ['ZU', 'AB', 'AU'.intern(), 'FO'.intern()],
                                     ventilbezeichnung: [/* initialized in ProjektController.mvcGroupInit */]
                             ]
                     ],
