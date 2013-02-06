@@ -183,7 +183,7 @@ class VentplanModelService {
         }
         // JOIN pakete -> stuckliste
         StringBuilder statement = new StringBuilder()
-        statement << 'SELECT a.artikelnummer, a.artikelbezeichnung, 1.0 ANZAHL, 900 REIHENFOLGE, a.mengeneinheit, a.liefermenge, a.preis, a.kategorie, a.klasse' <<
+        statement << 'SELECT a.artikelnummer, a.artikelbezeichnung, 1.0 ANZAHL, 900 REIHENFOLGE, a.mengeneinheit, a.verpackungseinheit, a.liefermenge, a.preis, a.kategorie, a.klasse' <<
                 '  FROM artikelstamm a' <<
                 ' WHERE a.artikelnummer = ?.artikelnummer'
         def r = withSql { dataSourceName, sql ->
@@ -483,7 +483,7 @@ class VentplanModelService {
         }
         // JOIN pakete -> stuckliste
         StringBuilder statement = new StringBuilder()
-        statement << 'SELECT s.reihenfolge, s.luftart, SUM(s.anzahl) ANZAHL, a.mengeneinheit, a.liefermenge, s.artikel, a.artikelbezeichnung, a.preis, a.kategorie, a.klasse' <<
+        statement << 'SELECT s.reihenfolge, s.luftart, SUM(s.anzahl) ANZAHL, a.mengeneinheit, a.verpackungseinheit, a.liefermenge, s.artikel, a.artikelbezeichnung, a.preis, a.kategorie, a.klasse' <<
                 '  FROM stueckliste s' <<
                 ' INNER JOIN artikelstamm a ON s.artikel = a.artikelnummer' <<
                 ' WHERE paket IN (' << pakete.join(', ') << ')' <<
@@ -604,15 +604,17 @@ class VentplanModelService {
         def r
         if (projectWAC257) {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT DISTINCT(d.artikelnummer) FROM druckverlust d INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
-                        + " WHERE d.luftart = 'ZU' AND d.ausblaswinkel <> ? AND a.gueltigbis >= ?"
+                sql.rows("SELECT DISTINCT(d.artikelnummer) FROM druckverlust d"
+                        + " INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
+                        + " WHERE a.kategorie = 8 AND d.luftart = 'ZU' AND d.ausblaswinkel <> ? AND a.gueltigbis >= ?"
                         + " ORDER BY d.artikelnummer",
                         [180, new Date().format(ISO_DATE)])
             }
         } else {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust"
-                        + " WHERE luftart = 'ZU' AND ausblaswinkel <> ?"
+                sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust d"
+                        + " INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
+                        + " WHERE a.kategorie = 8 AND d.luftart = 'ZU' AND d.ausblaswinkel <> ?"
                         + " ORDER BY artikelnummer",
                         [180])
             }
@@ -630,15 +632,17 @@ class VentplanModelService {
         def r
         if (projectWAC257) {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT DISTINCT(d.artikelnummer) FROM druckverlust d INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
-                        + " WHERE d.luftart = 'AB' AND d.ausblaswinkel <> ? AND a.gueltigbis >= ?"
+                sql.rows("SELECT DISTINCT(d.artikelnummer) FROM druckverlust d"
+                        + " INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
+                        + " WHERE a.kategorie = 8 AND d.luftart = 'AB' AND d.ausblaswinkel <> ? AND a.gueltigbis >= ?"
                         + " ORDER BY d.artikelnummer",
                         [180, new Date().format(ISO_DATE)])
             }
         } else {
             r = withSql { dataSourceName, sql ->
                 sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust"
-                        + " WHERE luftart = 'AB' AND ausblaswinkel <> ?"
+                        + " INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
+                        + " WHERE a.kategorie = 8 AND d.luftart = 'AB' AND d.ausblaswinkel <> ?"
                         + " ORDER BY artikelnummer",
                         [180])
             }

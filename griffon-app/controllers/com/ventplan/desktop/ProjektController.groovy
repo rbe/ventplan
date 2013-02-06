@@ -1845,7 +1845,7 @@ class ProjektController {
                             a.artikelnummer,
                             [
                                     REIHENFOLGE: a.reihenfolge, LUFTART: a.luftart, ANZAHL: a.anzahl,
-                                    MENGENEINHEIT: a.mengeneinheit, LIEFERMENGE: a.liefermenge,
+                                    MENGENEINHEIT: a.mengeneinheit, VERPACKUNGSEINHEIT: a.verpackungseinheit, LIEFERMENGE: a.liefermenge,
                                     ARTIKEL: a.artikelnummer, ARTIKELNUMMER: a.artikelnummer,
                                     ARTIKELBEZEICHNUNG: a.text, PREIS: a.einzelpreis
                             ]
@@ -1893,7 +1893,7 @@ class ProjektController {
                             a.artikelnummer,
                             [
                                     REIHENFOLGE: position, LUFTART: a.luftart, ANZAHL: a.anzahl,
-                                    MENGENEINHEIT: a.mengeneinheit, LIEFERMENGE: a.liefermenge,
+                                    MENGENEINHEIT: a.mengeneinheit, VERPACKUNGSEINHEIT: a.verpackungseinheit, LIEFERMENGE: a.liefermenge,
                                     ARTIKEL: a.artikelnummer, ARTIKELNUMMER: a.artikelnummer,
                                     ARTIKELBEZEICHNUNG: a.text, PREIS: a.einzelpreis
                             ]
@@ -1942,9 +1942,10 @@ class ProjektController {
                 model.tableModels.stuckliste.addAll(
                         [
                                 reihenfolge: a.REIHENFOLGE, anzahl: a.ANZAHL,
-                                artikelnummer: a.ARTIKEL/*NUMMER*/, text: a.ARTIKELBEZEICHNUNG,
+                                artikelnummer: a.ARTIKEL, text: a.ARTIKELBEZEICHNUNG,
                                 einzelpreis: a.PREIS, gesamtpreis: gesamtpreis,
-                                luftart: a.LUFTART, liefermenge: a.LIEFERMENGE, mengeneinheit: a.MENGENEINHEIT
+                                luftart: a.LUFTART,
+                                liefermenge: a.LIEFERMENGE, mengeneinheit: a.MENGENEINHEIT, verpackungseinheit: a.VERPACKUNGSEINHEIT
                         ]
                 )
             }
@@ -1973,7 +1974,8 @@ class ProjektController {
                                 reihenfolge: position, anzahl: anzahl,
                                 artikelnummer: artikel.ARTIKEL, text: artikel.ARTIKELBEZEICHNUNG,
                                 einzelpreis: artikel.PREIS, gesamtpreis: gesamtpreis,
-                                luftart: artikel.LUFTART, liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT
+                                luftart: artikel.LUFTART,
+                                liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT, verpackungseinheit: artikel.VERPACKUNGSEINHEIT
                         ]
                 )
                 position++
