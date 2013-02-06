@@ -205,9 +205,9 @@ class OdiseeService {
                         // Menge mit oder ohne Komma anzeigen?
                         String menge
                         if (anzahl * 10 > 0) {
-                            menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.MENGENEINHEIT)
+                            menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.VERPACKUNGSEINHEIT)
                         } else {
-                            menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
+                            menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.VERPACKUNGSEINHEIT)
                         }
                         // WAC-223 Kaufmännisch und technische Artikel
                         if (artikel.ARTIKELNUMMER && !ventplanModelService.isArticleValidToday(artikel.ARTIKELNUMMER) && !artikel.ARTIKELBEZEICHNUNG.startsWith('***')) {
@@ -274,9 +274,9 @@ class OdiseeService {
                         // Menge mit oder ohne Komma anzeigen?
                         String menge
                         if (anzahl * 10 > 0) {
-                            menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.MENGENEINHEIT)
+                            menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.VERPACKUNGSEINHEIT)
                         } else {
-                            menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
+                            menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.VERPACKUNGSEINHEIT)
                         }
                         // WAC-223 Kaufmännisch und technische Artikel
                         if (artikel.ARTIKELNUMMER && !ventplanModelService.isArticleValidToday((String) artikel.ARTIKELNUMMER) && !artikel.ARTIKELBEZEICHNUNG.startsWith('***')) {
