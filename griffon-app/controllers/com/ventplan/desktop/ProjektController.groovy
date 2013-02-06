@@ -1639,14 +1639,15 @@ class ProjektController {
         // Konvertiere Wert TextField, ComboBox in Integer, default ist 0
         // Eingabe einer 0 im TextField gibt ''???
         def getInt = { comp ->
-            def x
+            String x = null
             if (comp instanceof javax.swing.JTextField) {
                 x = comp.text
             } else if (comp instanceof javax.swing.JComboBox) {
                 x = comp.selectedItem
             }
-            if (x == '')
+            if (x == '') {
                 x = null
+            }
             x?.toInteger() ?: 0
         }
         // Input parameter map
