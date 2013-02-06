@@ -368,7 +368,8 @@ class OdiseeService {
         AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
         switch (prefHelper.getPrefValue(PREFS_USER_KEY_EMPFANGER)) {
             case 'Grosshandel':
-                domBuilder.userfield(name: 'EmpfFirma', (map.kundendaten.grosshandel.firma1 ?: '') + ' ' + (map.kundendaten.grosshandel.firma2 ?: ''))
+                domBuilder.userfield(name: 'EmpfFirma', map.kundendaten.grosshandel.firma1 ?: '')
+                domBuilder.userfield(name: 'EmpfFirma2', map.kundendaten.grosshandel.firma2 ?: '')
                 domBuilder.userfield(name: 'EmpfName', map.kundendaten.grosshandel.ansprechpartner ?: '')
                 domBuilder.userfield(name: 'EmpfAnschrift', map.kundendaten.grosshandel.strasse ?: '')
                 domBuilder.userfield(name: 'EmpfPLZ', map.kundendaten.grosshandel.plz ?: '')
@@ -377,7 +378,8 @@ class OdiseeService {
                 domBuilder.userfield(name: 'EmpfFon', map.kundendaten.grosshandel.telefax ?: '')
                 break
             case 'Ausführende Firma':
-                domBuilder.userfield(name: 'EmpfFirma', (map.kundendaten.ausfuhrendeFirma.firma1 ?: '') + ' ' + (map.kundendaten.ausfuhrendeFirma.firma2 ?: ''))
+                domBuilder.userfield(name: 'EmpfFirma', map.kundendaten.ausfuhrendeFirma.firma1 ?: '')
+                domBuilder.userfield(name: 'EmpfFirma2', map.kundendaten.ausfuhrendeFirma.firma2 ?: '')
                 domBuilder.userfield(name: 'EmpfName', map.kundendaten.ausfuhrendeFirma.ansprechpartner ?: '')
                 domBuilder.userfield(name: 'EmpfAnschrift', map.kundendaten.ausfuhrendeFirma.strasse ?: '')
                 domBuilder.userfield(name: 'EmpfPLZ', map.kundendaten.ausfuhrendeFirma.plz ?: '')
@@ -387,6 +389,7 @@ class OdiseeService {
                 break
             case 'Bauherr/Investor':
                 domBuilder.userfield(name: 'EmpfFirma', '')
+                domBuilder.userfield(name: 'EmpfFirma2', '')
                 domBuilder.userfield(name: 'EmpfName', map.kundendaten.bauvorhabenEmpfanger ?: '')
                 domBuilder.userfield(name: 'EmpfAnschrift', map.kundendaten.bauvorhabenAnschrift ?: '')
                 domBuilder.userfield(name: 'EmpfPLZ', map.kundendaten.bauvorhabenPlz ?: '')
