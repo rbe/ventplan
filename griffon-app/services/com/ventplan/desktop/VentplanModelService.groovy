@@ -604,15 +604,17 @@ class VentplanModelService {
         def r
         if (projectWAC257) {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT DISTINCT(d.artikelnummer) FROM druckverlust d INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
-                        + " WHERE d.luftart = 'ZU' AND d.ausblaswinkel <> ? AND a.gueltigbis >= ?"
+                sql.rows("SELECT DISTINCT(d.artikelnummer) FROM druckverlust d"
+                        + " INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
+                        + " WHERE a.kategorie = 8 AND d.luftart = 'ZU' AND d.ausblaswinkel <> ? AND a.gueltigbis >= ?"
                         + " ORDER BY d.artikelnummer",
                         [180, new Date().format(ISO_DATE)])
             }
         } else {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust"
-                        + " WHERE luftart = 'ZU' AND ausblaswinkel <> ?"
+                sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust d"
+                        + " INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
+                        + " WHERE a.kategorie = 8 AND d.luftart = 'ZU' AND d.ausblaswinkel <> ?"
                         + " ORDER BY artikelnummer",
                         [180])
             }
@@ -630,15 +632,17 @@ class VentplanModelService {
         def r
         if (projectWAC257) {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT DISTINCT(d.artikelnummer) FROM druckverlust d INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
-                        + " WHERE d.luftart = 'AB' AND d.ausblaswinkel <> ? AND a.gueltigbis >= ?"
+                sql.rows("SELECT DISTINCT(d.artikelnummer) FROM druckverlust d"
+                        + " INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
+                        + " WHERE a.kategorie = 8 AND d.luftart = 'AB' AND d.ausblaswinkel <> ? AND a.gueltigbis >= ?"
                         + " ORDER BY d.artikelnummer",
                         [180, new Date().format(ISO_DATE)])
             }
         } else {
             r = withSql { dataSourceName, sql ->
                 sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust"
-                        + " WHERE luftart = 'AB' AND ausblaswinkel <> ?"
+                        + " INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
+                        + " WHERE a.kategorie = 8 AND d.luftart = 'AB' AND d.ausblaswinkel <> ?"
                         + " ORDER BY artikelnummer",
                         [180])
             }
