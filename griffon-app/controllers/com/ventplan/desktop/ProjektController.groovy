@@ -1673,6 +1673,14 @@ class ProjektController {
                 input.volumenstrom = 50
                 view."akustik${tabname}Pegel".selectedItem = model.meta.volumenstromZentralgerat[0]
             }
+            if (!input.slpErhohungKanalnetz || input.slpErhohungKanalnetz == 0) {
+                input.slpErhohungKanalnetz = 100
+                view."akustik${tabname}Kanalnetz".selectedItem = 100
+            }
+            if (!input.slpErhohungFilter || input.slpErhohungFilter == 0) {
+                input.slpErhohungFilter = 30
+                view."akustik${tabname}Filter".selectedItem = 30
+            }
             // Berechne Akustik
             calculationService.berechneAkustik(tabname, input, model.map)
             // Zentralgerät, Überschrift
