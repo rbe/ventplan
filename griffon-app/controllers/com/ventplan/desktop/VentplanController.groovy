@@ -25,16 +25,15 @@ import java.util.List
 class VentplanController {
 
     //<editor-fold desc="Instance fields">
-    VpxModelService vpxModelService
-
     def model
     def view
     def builder
 
-    def aboutDialog
-    def checkUpdateDialog
-    def projektSuchenDialog
+    VpxModelService vpxModelService
 
+    JDialog aboutDialog
+    JDialog checkUpdateDialog
+    JDialog projektSuchenDialog
     JDialog neuesProjektWizardDialog
 
     /**

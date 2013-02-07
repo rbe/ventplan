@@ -31,11 +31,11 @@ class ProjektController {
     private static final boolean DEBUG = false
 
     //<editor-fold desc="Instance fields">
-    boolean loadMode = false
-
     def builder
     def model
     def view
+
+    boolean loadMode = false
 
     CalculationService calculationService
     VentplanModelService ventplanModelService
@@ -44,17 +44,17 @@ class ProjektController {
     OdiseeService odiseeService
 
     JDialog raumBearbeitenDialog
-    def wbwDialog
-    def teilstreckenDialog
+    JDialog wbwDialog
+    JDialog teilstreckenDialog
 
     static AuslegungPrefHelper auslegungPrefs = AuslegungPrefHelper.instance
     boolean nutzerdatenGeandert
-    def nutzerdatenDialog // org.jdesktop.swingx.JXDialog
+    JDialog nutzerdatenDialog // org.jdesktop.swingx.JXDialog
 
-    def documentWaitDialog
-    def angebotsverfolgungDialog
+    JDialog documentWaitDialog
+    JDialog angebotsverfolgungDialog
 
-    def stucklisteDialog
+    JDialog stucklisteDialog
     boolean stucklisteAbgebrochen
     //</editor-fold>
 
