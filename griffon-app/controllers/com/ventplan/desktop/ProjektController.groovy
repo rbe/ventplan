@@ -1855,13 +1855,15 @@ class ProjektController {
                 model.stucklisteMap = newMap
                 vpxModelService.save(model.map, model.vpxFilename, newMap)
                 // Auslegung/Dokument erstellen
-                try {
-                    File vpxFile = new File((String) model.vpxFilename)
-                    String xmlDoc = odiseeService.performAngebot(vpxFile, (Map) model.map, DEBUG, newMap)
-                    makeDocumentWithOdisee('Angebot', vpxFile, xmlDoc)
-                } catch (e) {
-                    DialogController dialog = (DialogController) app.controllers['Dialog']
-                    dialog.showError('Fehler', 'Das Angebot konnte leider nicht erstellt werden.', e)
+                if (null != model.vpxFilename) {
+                    try {
+                        File vpxFile = new File((String) model.vpxFilename)
+                        String xmlDoc = odiseeService.performAngebot(vpxFile, (Map) model.map, DEBUG, newMap)
+                        makeDocumentWithOdisee('Angebot', vpxFile, xmlDoc)
+                    } catch (e) {
+                        DialogController dialog = (DialogController) app.controllers['Dialog']
+                        dialog.showError('Fehler', 'Das Angebot konnte leider nicht erstellt werden.', e)
+                    }
                 }
             }
         }
@@ -1904,13 +1906,15 @@ class ProjektController {
                 model.stucklisteMap = newMap
                 vpxModelService.save(model.map, model.vpxFilename, newMap)
                 // Stückliste/Dokument erstellen
-                try {
-                    File vpxFile = new File((String) model.vpxFilename)
-                    String xmlDoc = odiseeService.performStueckliste(vpxFile, (Map) model.map, DEBUG, newMap)
-                    makeDocumentWithOdisee('Stückliste', vpxFile, xmlDoc)
-                } catch (e) {
-                    DialogController dialog = (DialogController) app.controllers['Dialog']
-                    dialog.showError('Fehler', 'Die Stückliste konnte leider nicht erstellt werden.', e)
+                if (null != model.vpxFilename) {
+                    try {
+                        File vpxFile = new File((String) model.vpxFilename)
+                        String xmlDoc = odiseeService.performStueckliste(vpxFile, (Map) model.map, DEBUG, newMap)
+                        makeDocumentWithOdisee('Stückliste', vpxFile, xmlDoc)
+                    } catch (e) {
+                        DialogController dialog = (DialogController) app.controllers['Dialog']
+                        dialog.showError('Fehler', 'Die Stückliste konnte leider nicht erstellt werden.', e)
+                    }
                 }
             }
         }
@@ -2628,5 +2632,5 @@ class ProjektController {
             model.resyncRaumTableModels()
         }
     }
-    
+
 }
