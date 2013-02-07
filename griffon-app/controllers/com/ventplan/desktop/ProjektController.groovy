@@ -332,15 +332,6 @@ class ProjektController {
         }
         app.controllers['MainFrame'].aktivesProjektSpeichern()
     }
-
-    /**
-     * Make a filename, take care when project was not saved before.
-     * @return
-     */
-    String getFilenameSafe() {
-        String filename = model.vpxFilename
-        filename ?: "Ventplan-${new Date().format('dd.MM.yyyy-HHmm')}"
-    }
     //</editor-fold>
 
     //<editor-fold desc="Gebäudedaten">
@@ -2094,7 +2085,7 @@ class ProjektController {
                 requestContentType: groovyx.net.http.ContentType.XML,
                 responseContentType: groovyx.net.http.ContentType.BINARY
         )
-        responseFile = new File(vpxModelService.filenameWoExtension(model.vpxFilename) + "_${fileSuffix}.${outputFormat}")
+        responseFile = FilenameHelper.clean("${model.vpxFilename}_${fileSuffix}.${outputFormat}")
         responseFile << byteArrayInputStream
         return responseFile
     }
@@ -2305,7 +2296,8 @@ class ProjektController {
                     PrinzipskizzeClient prinzipskizzeClient = new PrinzipskizzeClient()
                     byte[] b = prinzipskizzeClient.create(prinzipskizzeServiceURL, aussenluft, fortluft, zentralgerat, ab1, ab2, ab3, zu1, zu2, zu3)
                     if (b != null && b.size() > 0) {
-                        prinzipskizzeGrafik = new File(vpxModelService.filenameWoExtension(model.vpxFilename) + "_Prinzipskizze.png")
+                        //new File(vpxModelService.filenameWoExtension(model.vpxFilename) + "_Prinzipskizze.png")
+                        prinzipskizzeGrafik = FilenameHelper.clean("${model.vpxFilename}_Prinzipskizze")
                         FileOutputStream fos = new FileOutputStream(prinzipskizzeGrafik)
                         fos.write(b)
                         fos.close()
