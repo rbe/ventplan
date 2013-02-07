@@ -353,12 +353,21 @@ class VentplanController {
      */
     def projektSpeichernAls = { mvc ->
         // WAC-246 Set selected filename and choose Ventplan directory
-        view.vpxFileChooserWindow.selectedFile = new File("${mvc.model.map.kundendaten.bauvorhaben}.vpx")
+        Map map = mvc.model.map
+        Date date = new Date()
+        String filename
+        if (map.kundendaten.bauvorhaben) {
+            filename = map.kundendaten.bauvorhaben - '/' 
+        } else {
+            filename = "VentplanExpress_${date.format('dd-MM-yyyy HH-mm-ss')}"
+        }
+        File f = FilenameHelper.clean(filename)
+        view.vpxFileChooserWindow.selectedFile = f
         view.vpxFileChooserWindow.currentDirectory = getVentplanDir()
         // Open filechooser
         def openResult = view.vpxFileChooserWindow.showSaveDialog(app.windowManager.windows.find { it.focused })
         if (JFileChooser.APPROVE_OPTION == openResult) {
-            def fname = view.vpxFileChooserWindow.selectedFile.toString()
+            String fname = FilenameHelper.cleanFilename(view.vpxFileChooserWindow.selectedFile.toString())
             // Take care of file extension
             if (!fname.endsWith('.vpx')) {
                 fname -= '.wpx'
@@ -402,7 +411,8 @@ class VentplanController {
      */
     static File makeTemporaryProject(String wizardProjektName = '') {
         Date date = new Date()
-        String projektName = wizardProjektName == '' ? "VentplanExpress_${date.format('dd.MM.yyyy HHmmss')}.vpx" : "${wizardProjektName}.vpx"
+        String filename = wizardProjektName == '' ? "VentplanExpress_${date.format('dd-MM-yyyy HH-mm-ss')}.vpx" : "${wizardProjektName}.vpx"
+        String projektName = FilenameHelper.cleanFilename(filename)
         File file = new File(getVentplanDir(), projektName)
         file.deleteOnExit()
         file
@@ -413,7 +423,7 @@ class VentplanController {
      */
     void openVpxResource(String name) {
         // Temporäre Datei erzeugen
-        def saveFile = makeTemporaryProject()
+        File saveFile = makeTemporaryProject()
         // Write stream from classpath into temporary file
         InputStream stream = this.getClass().getResourceAsStream("/vpx/${name}.vpx")
         if (null != stream) {
@@ -540,9 +550,9 @@ class VentplanController {
         // Dialog schließen
         neuesProjektWizardDialog.dispose()
         // Temporäre Datei erzeugen
-        def saveFile = makeTemporaryProject(view.wizardProjektName.text)
+        File saveFile = makeTemporaryProject(view.wizardProjektName.text)
         // Model speichern und ...
-        vpxModelService.save(model.wizardmap, saveFile)
+        saveFile = vpxModelService.save(model.wizardmap, saveFile)
         // ... anschließend wieder laden
         projektOffnenClosure(saveFile, true)
     }

@@ -118,15 +118,6 @@ class OdiseeService {
     }
 
     /**
-     * Cleanup filename for Odisee, no special characters.
-     * @param vpxFile File object.
-     * @return String with filename w/o extension and special characters.
-     */
-    private static String odiseeRequestName(File vpxFile) {
-        Odisee.odiseeRequestName(vpxFile)
-    }
-
-    /**
      *
      * @param vpxFile
      * @param map
@@ -136,7 +127,7 @@ class OdiseeService {
     @SuppressWarnings("GrUnresolvedAccess")
     String performAuslegung(File vpxFile, Map map, boolean saveOdiseeXml = false) {
         // Filename w/o extension
-        String vpxFilenameWoExt = odiseeRequestName(vpxFile)
+        String vpxFilenameWoExt = FilenameHelper.cleanFilename(vpxFile)
         // Generate Odisee XML
         DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
@@ -177,7 +168,7 @@ class OdiseeService {
     @SuppressWarnings("GrUnresolvedAccess")
     String performStueckliste(File vpxFile, Map map, boolean saveOdiseeXml = false, Map editedStuckliste = null) {
         // Filename w/o extension
-        String vpxFilenameWoExt = odiseeRequestName(vpxFile)
+        String vpxFilenameWoExt = FilenameHelper.cleanFilename(vpxFile)
         // Generate Odisee XML
         DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
@@ -235,7 +226,7 @@ class OdiseeService {
     String performAngebot(File vpxFile, Map map, boolean saveOdiseeXml = false, Map editedStuckliste = null) {
         AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
         // Filename w/o extension
-        String vpxFilenameWoExt = odiseeRequestName(vpxFile)
+        String vpxFilenameWoExt = FilenameHelper.cleanFilename(vpxFile)
         // Generate Odisee XML
         DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
@@ -314,7 +305,7 @@ class OdiseeService {
     @SuppressWarnings("GrUnresolvedAccess")
     private String prepareXml(odisee, File vpxFile, String type, boolean saveOdiseeXml) {
         // Filename w/o extension
-        String vpxFilenameWoExt = odiseeRequestName(vpxFile)
+        String vpxFilenameWoExt = FilenameHelper.cleanFilename(vpxFile)
         // Convert XML to string (StreamingMarkupBuilder will generate XML with correct german umlauts)
         StreamingMarkupBuilder builder = new StreamingMarkupBuilder()
         String xml = builder.bind {
