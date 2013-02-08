@@ -25,16 +25,15 @@ import java.util.List
 class VentplanController {
 
     //<editor-fold desc="Instance fields">
-    VpxModelService vpxModelService
-
     def model
     def view
     def builder
 
-    def aboutDialog
-    def checkUpdateDialog
-    def projektSuchenDialog
+    VpxModelService vpxModelService
 
+    JDialog aboutDialog
+    JDialog checkUpdateDialog
+    JDialog projektSuchenDialog
     JDialog neuesProjektWizardDialog
 
     /**
@@ -192,7 +191,7 @@ class VentplanController {
     def aboutDialogOeffnen = { evt = null ->
         aboutDialog = GH.createDialog(builder, AboutView, [title: 'Über', resizable: false, pack: true])
         aboutDialog = GH.centerDialog(app.views['MainFrame'], aboutDialog)
-        aboutDialog.show()
+        aboutDialog.setVisible(true) //.show()
     }
 
     /**
@@ -201,7 +200,7 @@ class VentplanController {
     def checkUpdateDialogOeffnen = { evt = null ->
         checkUpdateDialog = GH.createDialog(builder, CheckUpdateView, [title: 'Aktualisierung von Ventplan', resizable: false, pack: true])
         checkUpdateDialog = GH.centerDialog(app.views['MainFrame'], checkUpdateDialog)
-        checkUpdateDialog.show()
+        checkUpdateDialog.setVisible(true) //.show()
     }
     //</editor-fold>
 
@@ -353,12 +352,21 @@ class VentplanController {
      */
     def projektSpeichernAls = { mvc ->
         // WAC-246 Set selected filename and choose Ventplan directory
-        view.vpxFileChooserWindow.selectedFile = new File("${mvc.model.map.kundendaten.bauvorhaben}.vpx")
+        Map map = mvc.model.map
+        Date date = new Date()
+        String filename
+        if (map.kundendaten.bauvorhaben) {
+            filename = map.kundendaten.bauvorhaben - '/' 
+        } else {
+            filename = "VentplanExpress_${date.format('dd-MM-yyyy HH-mm-ss')}"
+        }
+        File f = FilenameHelper.clean(filename)
+        view.vpxFileChooserWindow.selectedFile = f
         view.vpxFileChooserWindow.currentDirectory = getVentplanDir()
         // Open filechooser
         def openResult = view.vpxFileChooserWindow.showSaveDialog(app.windowManager.windows.find { it.focused })
         if (JFileChooser.APPROVE_OPTION == openResult) {
-            def fname = view.vpxFileChooserWindow.selectedFile.toString()
+            String fname = FilenameHelper.cleanFilename(view.vpxFileChooserWindow.selectedFile.toString())
             // Take care of file extension
             if (!fname.endsWith('.vpx')) {
                 fname -= '.wpx'
@@ -402,7 +410,8 @@ class VentplanController {
      */
     static File makeTemporaryProject(String wizardProjektName = '') {
         Date date = new Date()
-        String projektName = wizardProjektName == '' ? "VentplanExpress_${date.format('dd.MM.yyyy HHmmss')}.vpx" : "${wizardProjektName}.vpx"
+        String filename = wizardProjektName == '' ? "VentplanExpress_${date.format('dd-MM-yyyy HH-mm-ss')}.vpx" : "${wizardProjektName}.vpx"
+        String projektName = FilenameHelper.cleanFilename(filename)
         File file = new File(getVentplanDir(), projektName)
         file.deleteOnExit()
         file
@@ -413,7 +422,7 @@ class VentplanController {
      */
     void openVpxResource(String name) {
         // Temporäre Datei erzeugen
-        def saveFile = makeTemporaryProject()
+        File saveFile = makeTemporaryProject()
         // Write stream from classpath into temporary file
         InputStream stream = this.getClass().getResourceAsStream("/vpx/${name}.vpx")
         if (null != stream) {
@@ -456,10 +465,10 @@ class VentplanController {
      */
     def neuesProjektWizard = { evt = null ->
         // Show dialog
-        neuesProjektWizardDialog = GH.createDialog(builder, WizardView, [title: "Neues Projekt mit dem Wizard erstellen", size: [850, 652], resizable: true, pack: false])
+        neuesProjektWizardDialog = GH.createDialog(builder, WizardView, [title: 'Neues Projekt mit dem Wizard erstellen', size: [850, 652], resizable: true, pack: false])
         // Modify TableModel for Turen
         neuesProjektWizardDialog = GH.centerDialog(app.views['MainFrame'], neuesProjektWizardDialog)
-        neuesProjektWizardDialog.show()
+        neuesProjektWizardDialog.setVisible(true) //.show()
     }
 
     /**
@@ -540,9 +549,9 @@ class VentplanController {
         // Dialog schließen
         neuesProjektWizardDialog.dispose()
         // Temporäre Datei erzeugen
-        def saveFile = makeTemporaryProject(view.wizardProjektName.text)
+        File saveFile = makeTemporaryProject(view.wizardProjektName.text)
         // Model speichern und ...
-        vpxModelService.save(model.wizardmap, saveFile)
+        saveFile = vpxModelService.save(model.wizardmap, saveFile)
         // ... anschließend wieder laden
         projektOffnenClosure(saveFile, true)
     }
@@ -953,7 +962,7 @@ class VentplanController {
         if (projektSuchenPrefs.getSearchFolder()) {
             view.projektSuchenOrdnerPfad.text = projektSuchenPrefs.getSearchFolder()
         }
-        projektSuchenDialog.show()
+        projektSuchenDialog.setVisible(true) //.show()
     }
 
     /**

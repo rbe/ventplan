@@ -14,6 +14,7 @@ package com.ventplan.desktop
 /**
  *
  */
+@SuppressWarnings("GrMethodMayBeStatic")
 class CalculationService {
 
     /**
