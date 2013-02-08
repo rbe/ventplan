@@ -56,10 +56,11 @@ class CheckUpdate implements Runnable {
 
     boolean update() {
         boolean b = false
-        //def version
         try {
+            String url = String.format(VentplanResource.updateUrl, VentplanResource.ventplanVersion)
+            URI.create(url).toURL().withInputStream {}
+            /*
             // Download ZIP from webserver
-            def u = String.format(VentplanResource.updateUrl, VentplanResource.ventplanVersion)
             //println "update: trying to download ${u}"
             def buf = new byte[512 * 1024]
             // Destination for download
@@ -86,11 +87,14 @@ class CheckUpdate implements Runnable {
             dest2.deleteOnExit()
             dest2.delete()
             //println "update: done"
+            */
             b = true
         } catch (FileNotFoundException e) {
             //println "${this}.update: nothing found for version ${VentplanResource.ventplanVersion}"
         } catch (Exception e) {
-            println "${this}.update: ${e}"
+            //println "${this}.update: ${e}"
+        } finally {
+            //println "${this}.update: b=${b}"
         }
         return b
     }
