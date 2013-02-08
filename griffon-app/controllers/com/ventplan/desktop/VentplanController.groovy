@@ -237,7 +237,7 @@ class VentplanController {
      * Die zu ladende Datei wird in den MRUFileManager als zuletzt geöffnetes Projekt gespeichert.
      * Alle Werte werden neu berechnet.
      */
-    def projektOffnenClosure = { file, resetFilename = false ->
+    def projektOffnenClosure = { file, resetFilename = false, loadMode = true ->
         jxwithWorker(start: true) {
             // initialize the worker
             onInit {
@@ -258,8 +258,7 @@ class VentplanController {
                 if (document) {
                     // Create new Projekt MVC group
                     String mvcId = generateMVCId()
-                    //(projektModel, projektView, projektController) = createMVCGroup('Projekt', mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
-                    (projektModel, _, _) = createMVCGroup('Projekt', mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+                    (projektModel, _, _) = createMVCGroup('Projekt', mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId, loadMode: loadMode])
                     // Set filename in model
                     projektModel.vpxFilename = file
                     // Convert loaded XML into map
@@ -288,7 +287,7 @@ class VentplanController {
                 model.statusBarText = 'Phase 3/3: Berechne Projekt ...'
                 def mvc = getMVCGroupAktivesProjekt()
                 try {
-                    mvc.controller.berechneAlles(true)
+                    mvc.controller.berechneAlles(loadMode)
                     model.statusBarText = 'Bereit.'
                 } catch (e) {
                     model.statusBarText = 'Fehler!'
@@ -428,7 +427,7 @@ class VentplanController {
         if (null != stream) {
             // Save VPX and open file
             saveFile.write(stream.getText('UTF-8'), 'UTF-8')
-            projektOffnenClosure(saveFile, true)
+            projektOffnenClosure(saveFile, true, false)
         }
     }
 
@@ -681,7 +680,7 @@ class VentplanController {
                 view.mainStatusBarText.text = 'Phase 2/3: Initialisiere das Projekt...'
                 try {
                     mvcId = generateMVCId()
-                    def (m, v, c) = createMVCGroup('Projekt', mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId])
+                    def (m, v, c) = createMVCGroup('Projekt', mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId, loadMode: false])
                     view.mainStatusBarText.text = ''
                     view.mainStatusBarText.text = 'Phase 3/3: Erstelle Benutzeroberfläche für das Projekt...'
                     doLater {
