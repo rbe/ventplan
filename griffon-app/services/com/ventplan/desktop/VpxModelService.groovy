@@ -53,14 +53,6 @@ class VpxModelService {
         X.domBuilder = domBuilder = DOMBuilder.newInstance()
     }
 
-    public static String filenameWoExtension(String filename) {
-        filename - '.wpx' - '.vpx'
-    }
-
-    public static String filenameWoExtension(File file) {
-        filenameWoExtension(file.name)
-    }
-
     /**
      * Validate WPX XML file against XSD.
      * @param xml java.lang.String
@@ -544,6 +536,7 @@ class VpxModelService {
     }
 
     def save = { map, file, stuckliste = null ->
+        File fh = null
         AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
         def wpx = domBuilder.'ventplan-project' {
             projekt() {
@@ -612,11 +605,13 @@ class VpxModelService {
             }
         }
         if (file) {
-            File fh = file instanceof File ? file : new File(file)
+            String filename = FilenameHelper.cleanFilename(file instanceof File ? file : new File(file))
+            fh = new File(filename)
             fh.withWriter('UTF-8') { writer ->
                 writer.write(XmlUtil.serialize(wpx))
             }
         }
+        fh
     }
 
     /**

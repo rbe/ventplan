@@ -31,11 +31,11 @@ class ProjektController {
     private static final boolean DEBUG = false
 
     //<editor-fold desc="Instance fields">
-    boolean loadMode = false
-
     def builder
     def model
     def view
+
+    boolean loadMode = false
 
     CalculationService calculationService
     VentplanModelService ventplanModelService
@@ -44,17 +44,17 @@ class ProjektController {
     OdiseeService odiseeService
 
     JDialog raumBearbeitenDialog
-    def wbwDialog
-    def teilstreckenDialog
+    JDialog wbwDialog
+    JDialog teilstreckenDialog
 
     static AuslegungPrefHelper auslegungPrefs = AuslegungPrefHelper.instance
     boolean nutzerdatenGeandert
-    def nutzerdatenDialog // org.jdesktop.swingx.JXDialog
+    JDialog nutzerdatenDialog // org.jdesktop.swingx.JXDialog
 
-    def documentWaitDialog
-    def angebotsverfolgungDialog
+    JDialog documentWaitDialog
+    JDialog angebotsverfolgungDialog
 
-    def stucklisteDialog
+    JDialog stucklisteDialog
     boolean stucklisteAbgebrochen
     //</editor-fold>
 
@@ -331,15 +331,6 @@ class ProjektController {
             dialog.showInformation('Projekt speichern', 'Sie müssen das Projekt erst speichern, damit das Dokument erstellt werden kann!')
         }
         app.controllers['MainFrame'].aktivesProjektSpeichern()
-    }
-
-    /**
-     * Make a filename, take care when project was not saved before.
-     * @return
-     */
-    String getFilenameSafe() {
-        String filename = model.vpxFilename
-        filename ?: "Ventplan-${new Date().format('dd.MM.yyyy-HHmm')}"
     }
     //</editor-fold>
 
@@ -982,7 +973,7 @@ class ProjektController {
                 GH.makeComboboxCellEditor(columnModel.getColumn(1), model.meta.raumTurbreiten)
                 berechneTuren(null, model.meta.gewahlterRaum.position)
                 raumBearbeitenDialog = GH.centerDialog(app.views['MainFrame'], raumBearbeitenDialog)
-                raumBearbeitenDialog.show()
+                raumBearbeitenDialog.setVisible(true) //.show()
             } else {
                 //println "${this}.raumBearbeiten: no row selected"
             }
@@ -1360,7 +1351,7 @@ class ProjektController {
         def listModel = view.teilstreckenVerfugbareListe.model
         model.map.dvb.kanalnetz.each { listModel.addElement(it.teilstrecke) }
         view.teilstreckenVerfugbareListe.setModel(listModel)
-        teilstreckenDialog.show()
+        teilstreckenDialog.setVisible(true) //.show()
     }
 
     /**
@@ -1511,7 +1502,7 @@ class ProjektController {
         // Show dialog
         // Ist zentriert!
         wbwDialog = GH.createDialog(builder, WbwView, [title: "Widerstandsbeiwerte", size: [750, 650], locationRelativeTo: app.windowManager.findWindow('ventplanFrame')])
-        wbwDialog.show()
+        wbwDialog.setVisible(true) //.show()
     }
 
     /**
@@ -1639,14 +1630,15 @@ class ProjektController {
         // Konvertiere Wert TextField, ComboBox in Integer, default ist 0
         // Eingabe einer 0 im TextField gibt ''???
         def getInt = { comp ->
-            def x
+            String x = null
             if (comp instanceof javax.swing.JTextField) {
                 x = comp.text
             } else if (comp instanceof javax.swing.JComboBox) {
                 x = comp.selectedItem
             }
-            if (x == '')
+            if (x == '') {
                 x = null
+            }
             x?.toInteger() ?: 0
         }
         // Input parameter map
@@ -1671,6 +1663,14 @@ class ProjektController {
             if (input.volumenstrom == 0) {
                 input.volumenstrom = 50
                 view."akustik${tabname}Pegel".selectedItem = model.meta.volumenstromZentralgerat[0]
+            }
+            if (!input.slpErhohungKanalnetz || input.slpErhohungKanalnetz == 0) {
+                input.slpErhohungKanalnetz = 100
+                view."akustik${tabname}Kanalnetz".selectedItem = 100
+            }
+            if (!input.slpErhohungFilter || input.slpErhohungFilter == 0) {
+                input.slpErhohungFilter = 30
+                view."akustik${tabname}Filter".selectedItem = 30
             }
             // Berechne Akustik
             calculationService.berechneAkustik(tabname, input, model.map)
@@ -1730,7 +1730,7 @@ class ProjektController {
         }
         // Dialog ausrichten und anzeigen
         nutzerdatenDialog = GH.centerDialog(app.views['MainFrame'], nutzerdatenDialog)
-        nutzerdatenDialog.show()
+        nutzerdatenDialog.setVisible(true) //.show()
     }
 
     /**
@@ -1855,13 +1855,15 @@ class ProjektController {
                 model.stucklisteMap = newMap
                 vpxModelService.save(model.map, model.vpxFilename, newMap)
                 // Auslegung/Dokument erstellen
-                try {
-                    File vpxFile = new File((String) model.vpxFilename)
-                    String xmlDoc = odiseeService.performAngebot(vpxFile, (Map) model.map, DEBUG, newMap)
-                    makeDocumentWithOdisee('Angebot', vpxFile, xmlDoc)
-                } catch (e) {
-                    DialogController dialog = (DialogController) app.controllers['Dialog']
-                    dialog.showError('Fehler', 'Das Angebot konnte leider nicht erstellt werden.', e)
+                if (null != model.vpxFilename) {
+                    try {
+                        File vpxFile = new File((String) model.vpxFilename)
+                        String xmlDoc = odiseeService.performAngebot(vpxFile, (Map) model.map, DEBUG, newMap)
+                        makeDocumentWithOdisee('Angebot', vpxFile, xmlDoc)
+                    } catch (e) {
+                        DialogController dialog = (DialogController) app.controllers['Dialog']
+                        dialog.showError('Fehler', 'Das Angebot konnte leider nicht erstellt werden.', e)
+                    }
                 }
             }
         }
@@ -1904,13 +1906,15 @@ class ProjektController {
                 model.stucklisteMap = newMap
                 vpxModelService.save(model.map, model.vpxFilename, newMap)
                 // Stückliste/Dokument erstellen
-                try {
-                    File vpxFile = new File((String) model.vpxFilename)
-                    String xmlDoc = odiseeService.performStueckliste(vpxFile, (Map) model.map, DEBUG, newMap)
-                    makeDocumentWithOdisee('Stückliste', vpxFile, xmlDoc)
-                } catch (e) {
-                    DialogController dialog = (DialogController) app.controllers['Dialog']
-                    dialog.showError('Fehler', 'Die Stückliste konnte leider nicht erstellt werden.', e)
+                if (null != model.vpxFilename) {
+                    try {
+                        File vpxFile = new File((String) model.vpxFilename)
+                        String xmlDoc = odiseeService.performStueckliste(vpxFile, (Map) model.map, DEBUG, newMap)
+                        makeDocumentWithOdisee('Stückliste', vpxFile, xmlDoc)
+                    } catch (e) {
+                        DialogController dialog = (DialogController) app.controllers['Dialog']
+                        dialog.showError('Fehler', 'Die Stückliste konnte leider nicht erstellt werden.', e)
+                    }
                 }
             }
         }
@@ -2019,7 +2023,7 @@ class ProjektController {
         closure(stucklisteDialog)
         // Dialog ausrichten und anzeigen
         stucklisteDialog = GH.centerDialog(app.views['MainFrame'], stucklisteDialog)
-        stucklisteDialog.show()
+        stucklisteDialog.setVisible(true) //.show()
     }
     //</editor-fold>
 
@@ -2058,7 +2062,7 @@ class ProjektController {
                     ]
             )
             documentWaitDialog = GH.centerDialog(app.views['MainFrame'], documentWaitDialog)
-            documentWaitDialog.show()
+            documentWaitDialog.setVisible(true) //.show()
         }
     }
 
@@ -2085,7 +2089,7 @@ class ProjektController {
                 requestContentType: groovyx.net.http.ContentType.XML,
                 responseContentType: groovyx.net.http.ContentType.BINARY
         )
-        responseFile = new File(vpxModelService.filenameWoExtension(model.vpxFilename) + "_${fileSuffix}.${outputFormat}")
+        responseFile = FilenameHelper.clean("${model.vpxFilename}_${fileSuffix}.${outputFormat}")
         responseFile << byteArrayInputStream
         return responseFile
     }
@@ -2107,7 +2111,7 @@ class ProjektController {
         view.angebotsverfolgungDialogOrt.text = model.map.kundendaten.bauvorhabenOrt
         // Dialog anzeigen
         angebotsverfolgungDialog = GH.centerDialog(app.views['MainFrame'], angebotsverfolgungDialog)
-        angebotsverfolgungDialog.show()
+        angebotsverfolgungDialog.setVisible(true) //.show()
     }
 
     /**
@@ -2296,7 +2300,8 @@ class ProjektController {
                     PrinzipskizzeClient prinzipskizzeClient = new PrinzipskizzeClient()
                     byte[] b = prinzipskizzeClient.create(prinzipskizzeServiceURL, aussenluft, fortluft, zentralgerat, ab1, ab2, ab3, zu1, zu2, zu3)
                     if (b != null && b.size() > 0) {
-                        prinzipskizzeGrafik = new File(vpxModelService.filenameWoExtension(model.vpxFilename) + "_Prinzipskizze.png")
+                        //new File(vpxModelService.filenameWoExtension(model.vpxFilename) + "_Prinzipskizze.png")
+                        prinzipskizzeGrafik = FilenameHelper.clean("${model.vpxFilename}_Prinzipskizze")
                         FileOutputStream fos = new FileOutputStream(prinzipskizzeGrafik)
                         fos.write(b)
                         fos.close()
@@ -2331,7 +2336,7 @@ class ProjektController {
                     ]
             )
             documentWaitDialog = GH.centerDialog(app.views['MainFrame'], documentWaitDialog)
-            documentWaitDialog.show()
+            documentWaitDialog.setVisible(true) //.show()
         }
     }
     //</editor-fold>
@@ -2627,5 +2632,5 @@ class ProjektController {
             model.resyncRaumTableModels()
         }
     }
-    
+
 }

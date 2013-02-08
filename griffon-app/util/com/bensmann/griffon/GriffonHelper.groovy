@@ -13,7 +13,8 @@ package com.bensmann.griffon
 
 import griffon.transform.Threading
 
-import java.awt.Color
+import javax.swing.*
+import java.awt.*
 import java.math.RoundingMode
 
 /**
@@ -325,8 +326,8 @@ class GriffonHelper {
      * @param dialog The dialog to center
      * @return Returns the centered dialog
      */
-    def static centerDialog(view, dialog) {
-        java.awt.Rectangle r = view.ventplanFrame.getBounds();
+    static JDialog centerDialog(view, dialog) {
+        Rectangle r = view.ventplanFrame.getBounds();
         int x = r.x + (r.width - dialog.getSize().width) / 2;
         int y = r.y + (r.height - dialog.getSize().height) / 2;
         dialog.setLocation(x, y);

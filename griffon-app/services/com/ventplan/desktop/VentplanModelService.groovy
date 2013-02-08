@@ -892,7 +892,7 @@ class VentplanModelService {
         def r = withSql { dataSourceName, sql ->
             sql.rows("SELECT s.slp125, s.slp250, s.slp500, s.slp1000, s.slp2000, s.slp4000"
                     + " FROM schalleistungspegel s"
-                    + " WHERE artikelnummer = ? AND ZuAbEx = 2",
+                    + " WHERE s.artikelnummer = ? AND s.ZuAbEx = 2",
                     [artnr])
         }
         r = r[0]
