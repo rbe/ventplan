@@ -2072,13 +2072,12 @@ class ProjektController {
     /**
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      * Post XML document via REST and receive a PDF file.
-     * @param wpxFile WPX-Datei mit Daten.
+     * @param vpxFile WPX-Datei mit Daten.
      * @param fileSuffix
      * @param xmlDoc
      * @return
      */
-    File postToOdisee(File wpxFile, String fileSuffix, String xmlDoc) {
-        File responseFile = null
+    File postToOdisee(File vpxFile, String fileSuffix, String xmlDoc) {
         String restUrl = VentplanResource.getOdiseeServiceRestUrl()
         String restPath = VentplanResource.getOdiseeServiceRestPath()
         def xml = new XmlSlurper().parseText(xmlDoc)
@@ -2092,7 +2091,7 @@ class ProjektController {
                 requestContentType: groovyx.net.http.ContentType.XML,
                 responseContentType: groovyx.net.http.ContentType.BINARY
         )
-        responseFile = FilenameHelper.clean("${model.vpxFilename}_${fileSuffix}.${outputFormat}")
+        File responseFile = new File(vpxFile.getParentFile(), FilenameHelper.cleanFilename("${model.vpxFilename}_${fileSuffix}.${outputFormat}"))
         responseFile << byteArrayInputStream
         return responseFile
     }
