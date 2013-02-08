@@ -510,16 +510,16 @@ class VentplanModelService {
         if (projectWAC257) {
             r = withSql { dataSourceName, sql ->
                 sql.rows("SELECT artikelnummer FROM artikelstamm" //+ " WHERE kategorie = ? AND gesperrt = ? AND maxvolumenstrom <> ?"
-                        + " WHERE kategorie = ? AND maxvolumenstrom <> ? AND gueltigbis >= ?"
+                        + " WHERE kategorie = ? AND maxvolumenstrom <> ?"
                         + " ORDER BY artikelnummer", // [1, false, 0])
-                        [1, 0, new Date().format(ISO_DATE)])
+                        [1, 0])
             }
         } else {
             r = withSql { dataSourceName, sql ->
                 sql.rows("SELECT artikelnummer FROM artikelstamm" //+ " WHERE kategorie = ? AND gesperrt = ? AND maxvolumenstrom <> ?"
-                        + " WHERE kategorie = ? AND maxvolumenstrom <> ?"
+                        + " WHERE kategorie = ? AND maxvolumenstrom <> ? AND gueltigbis >= ?"
                         + " ORDER BY artikelnummer", // [1, false, 0])
-                        [1, 0])
+                        [1, 0, new Date().format(ISO_DATE)])
             }
         }
         r = r?.collect {
@@ -553,17 +553,17 @@ class VentplanModelService {
             r = withSql { dataSourceName, sql ->
                 sql.firstRow("SELECT artikelnummer"
                         + " FROM artikelstamm" //+ " WHERE kategorie = 1 AND gesperrt = ? AND maxvolumenstrom >= ?"
-                        + " WHERE kategorie = 1 AND maxvolumenstrom >= ? AND gueltigbis >= ?"
+                        + " WHERE kategorie = 1 AND maxvolumenstrom >= ?"
                         + " ORDER BY artikelnummer", // [false, luftung])
-                        [luftung, new Date().format(ISO_DATE)])
+                        [luftung])
             }
         } else {
             r = withSql { dataSourceName, sql ->
                 sql.firstRow("SELECT artikelnummer"
                         + " FROM artikelstamm" //+ " WHERE kategorie = 1 AND gesperrt = ? AND maxvolumenstrom >= ?"
-                        + " WHERE kategorie = 1 AND maxvolumenstrom >= ?"
+                        + " WHERE kategorie = 1 AND maxvolumenstrom >= ? AND gueltigbis >= ?"
                         + " ORDER BY artikelnummer", // [false, luftung])
-                        [luftung])
+                        [luftung, new Date().format(ISO_DATE)])
             }
         }
         r ? r.ARTIKELNUMMER : ''
@@ -578,17 +578,17 @@ class VentplanModelService {
             r = withSql { dataSourceName, sql ->
                 sql.rows("SELECT DISTINCT(artikelnummer)"
                         + " FROM druckverlust"
-                        + " WHERE ausblaswinkel <> ? AND gueltigbis >= ?"
+                        + " WHERE ausblaswinkel <> ?"
                         + " ORDER BY artikelnummer",
-                        [180, new Date().format(ISO_DATE)])
+                        [180])
             }
         } else {
             r = withSql { dataSourceName, sql ->
                 sql.rows("SELECT DISTINCT(artikelnummer)"
                         + " FROM druckverlust"
-                        + " WHERE ausblaswinkel <> ?"
+                        + " WHERE ausblaswinkel <> ? AND gueltigbis >= ?"
                         + " ORDER BY artikelnummer",
-                        [180])
+                        [180, new Date().format(ISO_DATE)])
             }
         }
         r = r?.collect {
@@ -606,17 +606,17 @@ class VentplanModelService {
             r = withSql { dataSourceName, sql ->
                 sql.rows("SELECT DISTINCT(d.artikelnummer) FROM druckverlust d"
                         + " INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
-                        + " WHERE a.kategorie = 8 AND d.luftart = 'ZU' AND d.ausblaswinkel <> ? AND a.gueltigbis >= ?"
+                        + " WHERE a.kategorie = 8 AND d.luftart = 'ZU' AND d.ausblaswinkel <> ?"
                         + " ORDER BY d.artikelnummer",
-                        [180, new Date().format(ISO_DATE)])
+                        [180])
             }
         } else {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust d"
+                sql.rows("SELECT DISTINCT(d.artikelnummer) FROM druckverlust d"
                         + " INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
-                        + " WHERE a.kategorie = 8 AND d.luftart = 'ZU' AND d.ausblaswinkel <> ?"
-                        + " ORDER BY artikelnummer",
-                        [180])
+                        + " WHERE a.kategorie = 8 AND d.luftart = 'ZU' AND d.ausblaswinkel <> ? AND a.gueltigbis >= ?"
+                        + " ORDER BY d.artikelnummer",
+                        [180, new Date().format(ISO_DATE)])
             }
         }
         r = r?.collect {
@@ -634,17 +634,17 @@ class VentplanModelService {
             r = withSql { dataSourceName, sql ->
                 sql.rows("SELECT DISTINCT(d.artikelnummer) FROM druckverlust d"
                         + " INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
-                        + " WHERE a.kategorie = 8 AND d.luftart = 'AB' AND d.ausblaswinkel <> ? AND a.gueltigbis >= ?"
+                        + " WHERE a.kategorie = 8 AND d.luftart = 'AB' AND d.ausblaswinkel <> ?"
                         + " ORDER BY d.artikelnummer",
-                        [180, new Date().format(ISO_DATE)])
+                        [180])
             }
         } else {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT DISTINCT(artikelnummer) FROM druckverlust"
+                sql.rows("SELECT DISTINCT(d.artikelnummer) FROM druckverlust d"
                         + " INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
-                        + " WHERE a.kategorie = 8 AND d.luftart = 'AB' AND d.ausblaswinkel <> ?"
-                        + " ORDER BY artikelnummer",
-                        [180])
+                        + " WHERE a.kategorie = 8 AND d.luftart = 'AB' AND d.ausblaswinkel <> ? AND a.gueltigbis >= ?"
+                        + " ORDER BY d.artikelnummer",
+                        [180, new Date().format(ISO_DATE)])
             }
         }
         r = r?.collect {
@@ -661,16 +661,16 @@ class VentplanModelService {
         if (projectWAC257) {
             r = withSql { dataSourceName, sql ->
                 sql.rows("SELECT artikelnummer FROM artikelstamm" +
-                        " WHERE klasse = ? AND gueltigbis >= ?" +
+                        " WHERE klasse = ?" +
                         " ORDER BY artikelnummer",
-                        [14, new Date().format(ISO_DATE)])
+                        [14])
             }
         } else {
             r = withSql { dataSourceName, sql ->
                 sql.rows("SELECT artikelnummer FROM artikelstamm" +
-                        " WHERE klasse = ?" +
+                        " WHERE klasse = ? AND gueltigbis >= ?" +
                         " ORDER BY artikelnummer",
-                        [14])
+                        [14, new Date().format(ISO_DATE)])
             }
         }
         r = r?.collect {
@@ -700,15 +700,15 @@ class VentplanModelService {
         if (projectWAC257) {
             r = withSql { dataSourceName, sql ->
                 sql.rows("SELECT artikelnummer FROM artikelstamm"
-                        + " WHERE klasse BETWEEN 4 AND 8 AND gueltigbis >= ?"
-                        + " ORDER BY artikelnummer",
-                        [new Date().format(ISO_DATE)])
+                        + " WHERE klasse BETWEEN 4 AND 8"
+                        + " ORDER BY artikelnummer")
             }
         } else {
             r = withSql { dataSourceName, sql ->
                 sql.rows("SELECT artikelnummer FROM artikelstamm"
-                        + " WHERE klasse BETWEEN 4 AND 8"
-                        + " ORDER BY artikelnummer")
+                        + " WHERE klasse BETWEEN 4 AND 8 AND gueltigbis >= ?"
+                        + " ORDER BY artikelnummer",
+                        [new Date().format(ISO_DATE)])
             }
         }
         r = r?.collect {
@@ -737,18 +737,18 @@ class VentplanModelService {
         def r
         if (projectWAC257) {
             r = withSql { dataSourceName, sql ->
+                sql.rows("SELECT DISTINCT(artikelnummer)"
+                        + " FROM druckverlust"
+                        + " WHERE ausblaswinkel <> 180"
+                        + " ORDER BY artikelnummer")
+            }
+        } else {
+            r = withSql { dataSourceName, sql ->
                 sql.rows("SELECT DISTINCT(d.artikelnummer)"
                         + " FROM druckverlust d INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
                         + " WHERE d.ausblaswinkel <> 180 AND a.gueltigbis >= ?"
                         + " ORDER BY d.artikelnummer",
                         [new Date().format(ISO_DATE)])
-            }
-        } else {
-            r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT DISTINCT(artikelnummer)"
-                        + " FROM druckverlust"
-                        + " WHERE ausblaswinkel <> 180"
-                        + " ORDER BY artikelnummer")
             }
         }
         r = r?.collect {
@@ -824,15 +824,15 @@ class VentplanModelService {
             r = withSql { dataSourceName, sql ->
                 sql.rows("SELECT artikelnummer"
                         + " FROM artikelstamm" //+ " WHERE klasse = ? AND gesperrt = ?",
-                        + " WHERE klasse = ? AND gueltigbis >= ?", // [2, false])
-                        [2, new Date().format(ISO_DATE)])
+                        + " WHERE klasse = ?", // [2, false])
+                        [2])
             }
         } else {
             r = withSql { dataSourceName, sql ->
                 sql.rows("SELECT artikelnummer"
                         + " FROM artikelstamm" //+ " WHERE klasse = ? AND gesperrt = ?",
-                        + " WHERE klasse = ?", // [2, false])
-                        [2])
+                        + " WHERE klasse = ? AND gueltigbis >= ?", // [2, false])
+                        [2, new Date().format(ISO_DATE)])
             }
         }
         r = r?.collect {
