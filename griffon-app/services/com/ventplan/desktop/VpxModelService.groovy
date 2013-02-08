@@ -605,8 +605,7 @@ class VpxModelService {
             }
         }
         if (file) {
-            String filename = FilenameHelper.cleanFilename(file instanceof File ? file : new File(file))
-            fh = new File(filename)
+            fh = file instanceof File ? file : new File(file)
             fh.withWriter('UTF-8') { writer ->
                 writer.write(XmlUtil.serialize(wpx))
             }
