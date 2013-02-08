@@ -365,13 +365,14 @@ class VentplanController {
         // Open filechooser
         def openResult = view.vpxFileChooserWindow.showSaveDialog(app.windowManager.windows.find { it.focused })
         if (JFileChooser.APPROVE_OPTION == openResult) {
-            String fname = FilenameHelper.cleanFilename(view.vpxFileChooserWindow.selectedFile.toString())
+            File selectedFile = view.vpxFileChooserWindow.selectedFile
+            String fname = FilenameHelper.cleanFilename(selectedFile.getName().toString())
             // Take care of file extension
             if (!fname.endsWith('.vpx')) {
                 fname -= '.wpx'
                 fname += '.vpx'
             }
-            mvc.model.vpxFilename = fname
+            mvc.model.vpxFilename = "${selectedFile.getParent()}/${fname}"
             // Save data
             projektSpeichern(mvc)
         } else {
