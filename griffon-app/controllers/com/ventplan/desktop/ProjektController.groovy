@@ -2546,15 +2546,14 @@ class ProjektController {
      */
     private void openDocument(String type, File document) {
         try {
-            Desktop.desktop.open(document)
-            /*
-            //if (GriffonApplicationUtils.isWindows) {
-            doLater {
-                DialogController dialog = (DialogController) app.controllers['Dialog']
-                dialog.showInformation('Dokument öffnen', "${type} erstellen\n${document ?: 'Das Dokument'} wurde erzeugt.")
+            if (GriffonApplicationUtils.isWindows) {
+                doLater {
+                    //Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler ${document.getAbsolutePath()}");
+                    Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL ${document.getAbsolutePath()}")
+                }
+            } else {
+                Desktop.desktop.open(document)
             }
-            //}
-            */
         } catch (e) {
             DialogController dialog = (DialogController) app.controllers['Dialog']
             dialog.showInformation('Dokument öffnen', "${type} wurde erfolgreich erstellt<br/>${document ?: 'Das Dokument'} wurde erzeugt.")
