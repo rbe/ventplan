@@ -9,9 +9,9 @@
  *
  * rbe, 28.08.12 17:21
  */
+
 package com.ventplan.desktop
 
-import groovy.sql.Sql
 import groovy.sql.GroovyRowResult
 
 /**
@@ -180,11 +180,15 @@ class StucklisteService {
             pakete += zuluftventile
         } catch (e) {
         }
-        // Raumvolumenströme, Überströmelemente, m=[Übertrömelement:Anzahl]
+        // Raumvolumenströme, Überströmelemente, m=[Überströmelement:Anzahl]
         List uberstromventile = null
         try {
-            uberstromventile = ventplanModelService.countUberstromelemente(map).collect() {
-                ventplanModelService.getArtikel(it.key)
+            // WAC-244
+            Map<String, Integer> ub = ventplanModelService.countUberstromelemente(map)
+            uberstromventile = ub.collect() {
+                Map a = ventplanModelService.getArtikel(it.key)
+                a.ANZAHL = (double) it.value
+                a
             }.flatten()
         } catch (e) {
         }
@@ -196,7 +200,7 @@ class StucklisteService {
         println "============================"
         */
         // ArrayList can contain a hole, like element 9 is set, 10 is null, 11 is set
-        pakete?.sort { p -> p?.REIHENFOLGE }.each { p ->
+        pakete?.sort { p -> p?.REIHENFOLGE }?.each { p ->
             if (p) {
                 ventplanModelService.paketeZuStuckliste([p.ID]).each { st ->
                     artikelAufStuckliste(stuckliste, st, p)
@@ -206,25 +210,20 @@ class StucklisteService {
         uberstromventile?.each { st ->
             artikelAufStuckliste(stuckliste, st)
         }
+        // WAC-231 Sprungmengen
         // Rohrlängen, Liefermenge
         stuckliste.each { Map.Entry st ->
             String artikel = st.key
-            GroovyRowResult r = st.value
-            // Bugfix: NullPointer wenn die Mengeneinheit fehlt (Warum fehlt sie? Kann immer gesetzt werden!)
-            if (r.hasProperty('MENGENEINHEIT') && r.hasProperty('KATEGORIE')) {
-                if (r.MENGENEINHEIT == 'Meter' && r.KATEGORIE in [3, 4]) {
-                    double meterZuStueckelung = Math.ceil(r.ANZAHL / r.LIEFERMENGE)
-                    double richtigeAnzahl = meterZuStueckelung * r.LIEFERMENGE
-                    r.ANZAHL = richtigeAnzahl
+            GroovyRowResult r = (GroovyRowResult) st.value
+            if (r.MENGENEINHEIT && r.LIEFERMENGE) {
+                if (r.LIEFERMENGE > 1.0d) {
+                    double richtig = Math.ceil(r.ANZAHL / r.LIEFERMENGE)
+//                    println "${artikel} ==> ${r.LIEFERMENGE} x ${r.MENGENEINHEIT}: ${r.ANZAHL} -> ${richtig}"
+                    r.ANZAHL = richtig
                 }
             }
         }
         return stuckliste
     }
 
-    /*
-    List findArtikel(text) {
-        ventplanModelService.findArtikel(text)
-    }
-    */
 }

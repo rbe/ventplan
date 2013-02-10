@@ -9,10 +9,15 @@
  *
  * rbe, 7/16/12 10:35 AM
  */
+
 package com.ventplan.desktop
 
 import com.ezware.dialog.task.CommandLink
+import com.ezware.dialog.task.TaskDialog
 import com.ezware.dialog.task.TaskDialogs
+
+import javax.swing.*
+import java.awt.*
 
 /**
  * Manage and create dialogs.
@@ -20,82 +25,143 @@ import com.ezware.dialog.task.TaskDialogs
 class DialogController {
 
     /**
+     * Show an error message w/ or w/o stacktrace.
+     * @param throwable Exception w/ stacktrace.
+     * @return {@link TaskDialog.Command}
+     */
+    TaskDialog.Command showError(String title, String message, Throwable throwable) {
+        TaskDialog dlg = new TaskDialog((Window) app.windowManager.windows.find { it.focused }, 'Fehler');
+        dlg.setTitle(title ?: 'Uups...');
+        dlg.setInstruction(title ?: 'Uups...');
+        dlg.setIcon(TaskDialog.StandardIcon.ERROR);
+        dlg.setText(message ?: 'Leider ist ein Fehler aufgetreten. Diese Aktion wurde an den Hersteller berichtet.');
+        if (null != throwable) {
+            throwable.printStackTrace();
+            StringBuilder builder = new StringBuilder();
+            builder.append(String.format('%s: %s<br/>%n', throwable.getClass().getName(), throwable.getLocalizedMessage()));
+            int i = 0;
+            for (StackTraceElement ste : throwable.getStackTrace()) {
+                if (i++ > 5 && !ste.className.startsWith('org.codehaus.') && !ste.className.startsWith('groovy.') && !ste.className.startsWith('sun.') && !ste.className.startsWith('java')) {
+                    builder.append(String.format('  at %s.%s(%s:%d)<br/>%n', ste.getClassName(), ste.getMethodName(), ste.getFileName(), ste.getLineNumber()));
+                }
+            }
+            dlg.getDetails().setExpandableComponent(new JScrollPane(new JLabel(String.format('<html>%s</html>', builder.toString()))));
+        }
+        return dlg.show();
+    }
+
+    /**
+     * Show an informational dialog.
+     * @param title Title.
+     * @param message Information.
+     * @return {@link TaskDialog.Command}
+     */
+    TaskDialog.Command showInformation(String title, String message) {
+        TaskDialog dlg = new TaskDialog((Window) app.windowManager.windows.find { it.focused }, 'Fehler');
+        dlg.setIcon(TaskDialog.StandardIcon.INFO);
+        dlg.setTitle(title);
+        dlg.setInstruction(title);
+        dlg.setText(message);
+        return dlg.show();
+    }
+
+    /**
      * Dialog anzeigen, wenn die Applikation geschlossen werden soll, obwohl
      * noch nicht gespeicherte Projekte vorhanden sind.
      */
-    int showApplicationSaveAndCloseDialog() {
-        def choice = choice(
-                app.windowManager.windows.find { it.focused },
+    DialogAnswer showApplicationSaveAndCloseDialog() {
+        int choice = TaskDialogs.choice((Window) app.windowManager.windows.find { it.focused },
                 'Anwendung schliessen?',
-                'Die Anwendung enthält nicht gespeicherte Projekte.\n\nBitte wählen Sie.',
+                'Die Anwendung enthält ein nicht gespeichertes Projekt.\n\nBitte wählen Sie.',
                 1,
                 [
-                        new CommandLink('Alles speichern und schliessen', ''),
-                        new CommandLink('Abbrechen und nicht schliessen', ''),
-                        new CommandLink('Ohne Speichern schliessen', '')
-                ]
-        )
-        return choice
+                        new CommandLink('Speichern', 'Das Projekt wird gespeichert und Ventplan beendet.'),
+                        new CommandLink('Abbrechen', 'Ventplan bleibt geöffnet.'),
+                        new CommandLink('Nicht speichern', 'Das Projekt wird nicht gespeichert und Ventplan beendet.')
+                ]);
+        DialogAnswer answer = null;
+        switch (choice) {
+            case 0:
+                answer = DialogAnswer.SAVE;
+                break;
+            case 1:
+                answer = DialogAnswer.CANCEL;
+                break;
+            case 2:
+                answer = DialogAnswer.DONT_SAVE;
+                break;
+        }
+        return answer;
     }
 
     /**
      * Dialog anzeigen, wenn die Applikation geschlossen werden soll.
      * Dialog nur für Schliessen bzw. Abbrechen nutzen.
      */
-    int showApplicationOnlyCloseDialog() {
-        def choice = choice(
-                app.windowManager.windows.find { it.focused },
-                'Anwendung schliessen?',
-                'Möchten Sie die Anwendung wirklich schliessen?',
+    DialogAnswer showApplicationOnlyCloseDialog() {
+        int choice = TaskDialogs.choice((Window) app.windowManager.windows.find { it.focused },
+                'Ventplan beenden?',
+                'Soll Ventplan beendet werden?',
                 1,
                 [
-                        new CommandLink('Ja, klar!', ''),
-                        new CommandLink('Nein, doch nicht.', '')
-                ]
-        )
-        return choice
+                        new CommandLink('Ja, klar!', 'Ventplan wird beendet.'),
+                        new CommandLink('Nein, lieber doch nicht.', 'Ventplan bleibt geöffnet.')
+                ]);
+        DialogAnswer answer = null;
+        switch (choice) {
+            case 0:
+                answer = DialogAnswer.YES;
+                break;
+            case 1:
+                answer = DialogAnswer.NO;
+                break;
+        }
+        return answer;
     }
 
     /**
      * Dialog anzeigen, wenn ein nicht gespeichertes Projekt geschlossen werden soll.
      * WAC-185: Schliessen in Ok ändern.
      */
-    int showCloseProjectDialog() {
-        def choice = choice(
-                app.windowManager.windows.find { it.focused },
+    DialogAnswer showCloseProjectDialog() {
+        int choice = TaskDialogs.choice((Window) app.windowManager.windows.find { it.focused },
                 'Projekt schliessen?',
-                'Das Projekt enthält nicht gespeicherte Werte.\n\nBitte wählen Sie.',
+                'Das Projekt enthält <b>nicht</b> gespeicherte Werte.',
                 1,
                 [
-                        new CommandLink('Speichern und das Projekt schliessen', ''),
-                        new CommandLink('Abbrechen und Projekt geöffnet lassen', ''),
-                        new CommandLink('OK, nicht speichern und Projekt schliessen', '')
-                ]
-        )
-        return choice
+                        new CommandLink('Speichern', 'Das Projekt wird gespeichert und geschlossen.'),
+                        new CommandLink('Abbrechen', 'Das Projekt bleibt geöffnet.'),
+                        new CommandLink("Schliessen", 'Das Projekt wird nicht gespeichert und geschlossen.')
+                ]);
+        DialogAnswer answer = null;
+        switch (choice) {
+            case 0:
+                answer = DialogAnswer.SAVE;
+                break;
+            case 1:
+                answer = DialogAnswer.CANCEL;
+                break;
+            case 2:
+                answer = DialogAnswer.DONT_SAVE;
+                break;
+        }
+        return answer;
     }
 
-    /**
-     * Zeige Informationsdialog mit mitgegebener Nachricht an.
-     */
+    /*
     def showInformDialog = { window = null, infoMsg ->
         //window = window ?: Window.windows.find { it.focused }
         inform(window, 'Information', infoMsg)
     }
 
-    /**
-     * Zeige Fehler-Informationsdialog mit mitgegebener Nachricht an.
-     */
     def showErrorDialog = { window = null, errorMsg ->
         //window = window ?: Window.windows.find { it.focused }
         inform(window, 'Fehler', errorMsg)
     }
 
-    /**
-     * Zeige Informationsdialog für Angebotsverfolgung mit mitgegebener Nachricht an.
-     */
     def showCustomInformDialog = { titel, infoMsg ->
         TaskDialogs.inform(app.windowManager.windows.find { it.focused }, titel as String, infoMsg)
     }
+     */
 
 }

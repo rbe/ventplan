@@ -132,9 +132,9 @@ class ProjektModel {
             meta = [
                     empfanger: [
                             '',
-                            'Grosshandel',
-                            'Ausführende Firma',
-                            'Bauherr/Investor'
+                            'Grosshandel'.intern(),
+                            'Ausführende Firma'.intern(),
+                            'Bauherr/Investor'.intern()
                     ],
                     /* rbe-2012-08-14 AnlagendatenView, derzeit nicht verwendet, ergibt sich über die Pakete
                     anlage: [
@@ -143,11 +143,11 @@ class ProjektModel {
                     ],
                     */
                     raum: [
-                            typ: ['Wohnzimmer', 'Kinderzimmer', 'Schlafzimmer', 'Esszimmer', 'Arbeitszimmer', 'Gästezimmer',
-                                    'Hausarbeitsraum', 'Kellerraum', 'WC', 'Küche', 'Kochnische', 'Bad mit/ohne WC', 'Duschraum',
-                                    'Sauna', 'Flur', 'Diele'],
-                            geschoss: ['KG', 'EG', 'OG', 'DG', 'SB'],
-                            luftart: ['ZU', 'AB', 'ZU/AB', 'ÜB'],
+                            typ: ['Wohnzimmer'.intern(), 'Kinderzimmer'.intern(), 'Schlafzimmer'.intern(), 'Esszimmer'.intern(), 'Arbeitszimmer'.intern(), 'Gästezimmer'.intern(),
+                                    'Hausarbeitsraum'.intern(), 'Kellerraum'.intern(), 'WC'.intern(), 'Küche'.intern(), 'Kochnische'.intern(), 'Bad mit/ohne WC'.intern(), 'Duschraum'.intern(),
+                                    'Sauna'.intern(), 'Flur'.intern(), 'Diele'.intern()],
+                            geschoss: ['KG'.intern(), 'EG'.intern(), 'OG'.intern(), 'DG'.intern(), 'SB'.intern()],
+                            luftart: ['ZU'.intern(), 'AB'.intern(), 'ZU/AB'.intern(), 'ÜB'.intern()],
                             raumVsBezeichnungZuluftventile: [/* initialized in ProjektController.mvcGroupInit */],
                             raumVsBezeichnungAbluftventile: [/* initialized in ProjektController.mvcGroupInit */],
                             raumVsUberstromelemente: [/* initialized in ProjektController.mvcGroupInit */],
@@ -162,7 +162,7 @@ class ProjektModel {
                                     kanalbezeichnung: [/* initialized in ProjektController.mvcGroupInit */]
                             ],
                             ventileinstellung: [
-                                    luftart: ['ZU', 'AB', 'AU', 'FO'],
+                                    luftart: ['ZU', 'AB', 'AU'.intern(), 'FO'.intern()],
                                     ventilbezeichnung: [/* initialized in ProjektController.mvcGroupInit */]
                             ]
                     ],
@@ -190,6 +190,7 @@ class ProjektModel {
                             ] as ObservableMap
                     ],
                     messages: [ltm: ''] as ObservableMap,
+                    erstellt: null,
                     dirty: false,
                     kundendaten: [
                             grosshandel: [:] as ObservableMap,
@@ -312,7 +313,7 @@ class ProjektModel {
     def tmPositionComparator = { a, b -> a.position <=> b.position } as Comparator
     def tmNameComparator = { a, b -> a.name <=> b.name } as Comparator
     def tmNothingComparator = { a, b -> 0 } as Comparator
-    def tableModels = [
+    final Map tableModels = [
             raume: GlazedLists.threadSafeList(new SortedList(new BasicEventList(), tmPositionComparator) as EventList),
             raumeTuren: [/* TableModels will be added in addRaum() */],
             raumeVsZuAbluftventile: GlazedLists.threadSafeList(new SortedList(new BasicEventList(), tmPositionComparator) as EventList),
@@ -975,7 +976,7 @@ class ProjektModel {
           }
           */
         SwingUtilities.invokeLater {
-            synchronized (tableModels) { // TODO Synchronization on non-final field
+            synchronized (tableModels) {
                 // Remember selected row
                 def view = app.views[mvcId]
                 def selected = view.raumTabelle.selectedRow
@@ -1259,7 +1260,7 @@ class ProjektModel {
 //        def writable = [false, true, false, false, false, false] as boolean[]
         def columnNames = ['Anzahl', 'Artikelnr.', 'Beschreibung'] as String[]
         def propertyNames = ['anzahl', 'artikelnummer', 'text'] as String[]
-        def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
+//        def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
         def writable = [true, false, false] as boolean[]
         gltmClosure(columnNames, propertyNames, writable, tableModels.stuckliste)
     }
@@ -1275,7 +1276,7 @@ class ProjektModel {
 //        def writable = [false, true, false, false, false, false] as boolean[]
         def columnNames = ['Anzahl', 'Artikelnr.', 'Beschreibung'] as String[]
         def propertyNames = ['anzahl', 'artikelnummer', 'text'] as String[]
-        def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
+//        def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
         def writable = [true, false, false] as boolean[]
         gltmClosure(columnNames, propertyNames, writable, tableModels.stucklisteSuche)
     }

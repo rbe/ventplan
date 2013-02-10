@@ -19,11 +19,13 @@ import javax.swing.filechooser.FileFilter
 vpxFileChooserWindow = fileChooser(
         dialogTitle: 'Bitte wählen Sie eine Ventplan-Datei',
         multiSelectionEnabled: false,
+        acceptAllFileFilterUsed: false,
         fileFilter: [
                 getDescription: {-> 'Ventplan Projekt XML' },
                 accept: { file ->
-                    //println "wpxFileChooser: filtering ${file.dump()} isDirectory=${file.isDirectory()} endsWith(wpx)=${file.name.endsWith(".wpx")}"
-                    return file.isDirectory() || file.name.toLowerCase().endsWith('.vpx') || file.name.toLowerCase().endsWith('.wpx')
+                    def b = file.isDirectory() || file.name.toLowerCase().endsWith('.vpx') || file.name.toLowerCase().endsWith('.wpx')
+                    //println "wpxFileChooser: filtering ${file.name} isDirectory=${file.isDirectory()} endsWith(wpx)=${file.name.endsWith(".wpx")} -> ${b}"
+                    return b
                 }
         ] as FileFilter
 )
