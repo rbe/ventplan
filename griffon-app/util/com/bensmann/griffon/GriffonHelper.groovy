@@ -553,7 +553,7 @@ class GriffonHelper {
             def cellEditor = ca.odell.glazedlists.swing.AutoCompleteSupport.createTableCellEditor(threadEventList)
             // WAC-240: set custom renderer for combobox (label with image).
             if (imagesupport) {
-                cellEditor.getAutoCompleteSupport().getComboBox().setRenderer(new ComboBoxImageRenderer())
+                cellEditor.getAutoCompleteSupport().getComboBox().setRenderer(new com.ventplan.desktop.ComboBoxImageRenderer())
             }
             column.setCellEditor((javax.swing.DefaultCellEditor) cellEditor)
         }

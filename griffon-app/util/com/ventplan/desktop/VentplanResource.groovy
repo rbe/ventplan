@@ -123,4 +123,25 @@ class VentplanResource {
         return properties
     }
 
+    /**
+     * WAC-240
+     * Get image for 'Ventile'.
+     * @param n ID of image below resources/ventile/xxx.jpg
+     * @return URL to image.
+     */
+    static URL getVentileURL(String n) {
+        def r
+        try {
+            // dev
+            r = VentplanResource.class.getResource("../resources/ventile/${n}.jpg")
+            // prod
+            if (!r) {
+                r = VentplanResource.class.getResource("/ventile/${n}.jpg")
+            }
+        } catch (NullPointerException e) {
+            r = null
+        }
+        r
+    }
+
 }
