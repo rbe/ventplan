@@ -11,13 +11,13 @@
  */
 package com.bensmann.griffon
 
+import com.ventplan.desktop.ComboBoxImageRenderer
 import griffon.transform.Threading
 
 import javax.swing.*
 import java.awt.*
-import javax.swing.plaf.basic.BasicComboBoxRenderer
-import java.awt.Color
 import java.math.RoundingMode
+
 
 /**
  * Several helpers for Griffon.
@@ -605,7 +605,7 @@ class GriffonHelper {
                 case { it instanceof javax.swing.JTextArea || it instanceof javax.swing.JTextField }:
                     GriffonHelper.installFocusLostAdapter(component, closure)
                     break
-                case { it instanceof javax.swing.JComboBox || it instanceof javax.swing.JRadioButton}:
+                case { it instanceof javax.swing.JComboBox || it instanceof javax.swing.JRadioButton }:
                     component.addActionListener(
                             [
                                     actionPerformed: { evt ->
