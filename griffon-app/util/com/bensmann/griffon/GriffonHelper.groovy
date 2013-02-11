@@ -13,6 +13,8 @@ package com.bensmann.griffon
 
 import griffon.transform.Threading
 
+import javax.swing.*
+import java.awt.*
 import javax.swing.plaf.basic.BasicComboBoxRenderer
 import java.awt.Color
 import java.math.RoundingMode
