@@ -865,10 +865,10 @@ class ProjektModel {
             // RaumVs Zu- und Abluftventile
             // Combobox RaumVs - Luftart
             GH.makeComboboxCellEditor(view.raumVsZuAbluftventileTabelle.columnModel.getColumn(1), meta.raum.luftart)
-            // Combobox RaumVs - Bezeichnung Abluftmenge
-            GH.makeComboboxCellEditor(view.raumVsZuAbluftventileTabelle.columnModel.getColumn(5), meta.raum.raumVsBezeichnungZuluftventile)
-            // Combobox RaumVs - Bezeichnung Zuluftmenge
-            GH.makeComboboxCellEditor(view.raumVsZuAbluftventileTabelle.columnModel.getColumn(9), meta.raum.raumVsBezeichnungAbluftventile)
+            // Combobox RaumVs - Bezeichnung Abluftmenge, WAC-240
+            GH.makeComboboxCellEditor(view.raumVsZuAbluftventileTabelle.columnModel.getColumn(5), meta.raum.raumVsBezeichnungZuluftventile, true)
+            // Combobox RaumVs - Bezeichnung Zuluftmenge, WAC-240
+            GH.makeComboboxCellEditor(view.raumVsZuAbluftventileTabelle.columnModel.getColumn(9), meta.raum.raumVsBezeichnungAbluftventile, true)
             // Combobox RaumVs - Verteilebene
             GH.makeComboboxCellEditor(view.raumVsZuAbluftventileTabelle.columnModel.getColumn(12), meta.raum.geschoss)
             // RaumVs Überströmventile
@@ -1202,6 +1202,7 @@ class ProjektModel {
     def setDvbVentileinstellungEditors(view) {
         SwingUtilities.invokeLater {
             GH.makeComboboxCellEditor view.dvbVentileinstellungTabelle.columnModel.getColumn(1), meta.druckverlust.ventileinstellung.luftart
+            // WAC-240
             GH.makeComboboxCellEditor view.dvbVentileinstellungTabelle.columnModel.getColumn(3), meta.druckverlust.ventileinstellung.ventilbezeichnung
         }
     }

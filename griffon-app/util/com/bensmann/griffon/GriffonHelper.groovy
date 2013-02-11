@@ -15,6 +15,8 @@ import griffon.transform.Threading
 
 import javax.swing.*
 import java.awt.*
+import javax.swing.plaf.basic.BasicComboBoxRenderer
+import java.awt.Color
 import java.math.RoundingMode
 
 /**
@@ -542,13 +544,18 @@ class GriffonHelper {
 
     /**
      * Make a CellEditor with a ComboBox for GlazedLists.
+     * WAC-240: Abbildungen Ventile. Added imagesupport parameter to set custom combobox renderer.
      */
-    static void makeComboboxCellEditor(column, list) {
+    static void makeComboboxCellEditor(column, list, imagesupport = false) {
         javax.swing.SwingUtilities.invokeLater {
             def eventList = ca.odell.glazedlists.GlazedLists.eventList(list) as ca.odell.glazedlists.EventList
             def threadEventList = ca.odell.glazedlists.GlazedLists.threadSafeList(eventList)
-            javax.swing.DefaultCellEditor cellEditor = ca.odell.glazedlists.swing.AutoCompleteSupport.createTableCellEditor(threadEventList)
-            column.setCellEditor(cellEditor)
+            def cellEditor = ca.odell.glazedlists.swing.AutoCompleteSupport.createTableCellEditor(threadEventList)
+            // WAC-240: set custom renderer for combobox (label with image).
+            if (imagesupport) {
+                cellEditor.getAutoCompleteSupport().getComboBox().setRenderer(new ComboBoxImageRenderer())
+            }
+            column.setCellEditor((javax.swing.DefaultCellEditor) cellEditor)
         }
     }
 
