@@ -9,6 +9,7 @@
  *
  * rbe, 7/16/12 10:35 AM
  */
+
 package com.ventplan.desktop
 
 /**
@@ -76,6 +77,27 @@ class VentplanResource {
     }
 
     /**
+     * WAC-240
+     * Get image for 'Ventile'.
+     * @param n ID of image below resources/ventile/xxx.jpg
+     * @return URL to image.
+     */
+    static URL getVentileURL(String n) {
+        def r
+        try {
+            // dev
+            r = VentplanResource.class.getResource("../resources/ventile/${n}.jpg")
+            // prod
+            if (!r) {
+                r = VentplanResource.class.getResource("/ventile/${n}.jpg")
+            }
+        } catch (NullPointerException e) {
+            r = null
+        }
+        r
+    }
+
+    /**
      * URL for Ventplan updates.
      */
     static String getUpdateUrl() {
@@ -121,27 +143,6 @@ class VentplanResource {
         def p = VentplanResource.getVentplanPropertiesAsStream()
         properties.load(p)
         return properties
-    }
-
-    /**
-     * WAC-240
-     * Get image for 'Ventile'.
-     * @param n ID of image below resources/ventile/xxx.jpg
-     * @return URL to image.
-     */
-    static URL getVentileURL(String n) {
-        def r
-        try {
-            // dev
-            r = VentplanResource.class.getResource("../resources/ventile/${n}.jpg")
-            // prod
-            if (!r) {
-                r = VentplanResource.class.getResource("/ventile/${n}.jpg")
-            }
-        } catch (NullPointerException e) {
-            r = null
-        }
-        r
     }
 
 }
