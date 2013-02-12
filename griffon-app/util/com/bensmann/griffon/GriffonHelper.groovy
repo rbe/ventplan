@@ -328,8 +328,8 @@ class GriffonHelper {
      * @param dialog The dialog to center
      * @return Returns the centered dialog
      */
-    static JDialog centerDialog(view, dialog) {
-        Rectangle r = view.ventplanFrame.getBounds();
+    def static centerDialog(view, dialog) {
+        java.awt.Rectangle r = view.ventplanFrame.getBounds();
         int x = r.x + (r.width - dialog.getSize().width) / 2;
         int y = r.y + (r.height - dialog.getSize().height) / 2;
         dialog.setLocation(x, y);
@@ -553,7 +553,7 @@ class GriffonHelper {
             def cellEditor = ca.odell.glazedlists.swing.AutoCompleteSupport.createTableCellEditor(threadEventList)
             // WAC-240: set custom renderer for combobox (label with image).
             if (imagesupport) {
-                cellEditor.getAutoCompleteSupport().getComboBox().setRenderer(new ComboBoxImageRenderer())
+                cellEditor.getAutoCompleteSupport().getComboBox().setRenderer(new com.ventplan.desktop.ComboBoxImageRenderer())
             }
             column.setCellEditor((javax.swing.DefaultCellEditor) cellEditor)
         }
