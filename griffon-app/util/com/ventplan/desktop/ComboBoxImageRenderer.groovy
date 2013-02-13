@@ -17,17 +17,16 @@ import javax.swing.ImageIcon
 import javax.swing.JLabel
 import javax.swing.JList
 import java.awt.Component
+import java.awt.Image
 import com.ventplan.desktop.VentplanResource
 
-import java.awt.Dimension
-import java.awt.Image
 
 public class ComboBoxImageRenderer extends DefaultListCellRenderer {
 
     /**
      * Max image height to scale.
      */
-    private static final int MAX_IMAGE_HEIGHT = 60
+    private static final int MAX_IMAGE_HEIGHT = 30
 
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {

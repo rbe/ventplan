@@ -14,7 +14,6 @@ package com.ventplan.desktop
 import javax.swing.plaf.basic.BasicComboBoxUI
 import javax.swing.plaf.basic.BasicComboPopup
 import javax.swing.plaf.basic.ComboPopup
-import java.awt.Insets
 import java.awt.Rectangle
 
 class CustomComboBoxUI extends BasicComboBoxUI {
@@ -23,7 +22,12 @@ class CustomComboBoxUI extends BasicComboBoxUI {
         BasicComboPopup popup = new BasicComboPopup(this.comboBox) {
             @Override
             protected Rectangle computePopupBounds(int px, int py, int pw, int ph) {
-                return super.computePopupBounds(px, py, Math.max(200, pw), ph);
+                int cwidth = 220;
+                try {
+                    cwidth = this.comboBox.getPreferredSize().getWidth()
+                } catch (Exception e) {}
+                println "cwidth: ${cwidth}, pw: ${pw}, ph: ${ph}"
+                return super.computePopupBounds(px, py, Math.max(cwidth, pw), ph);
             }
         };
         popup.getAccessibleContext().setAccessibleParent(this.comboBox);

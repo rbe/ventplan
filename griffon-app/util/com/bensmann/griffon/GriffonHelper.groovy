@@ -12,17 +12,10 @@
 package com.bensmann.griffon
 
 import ca.odell.glazedlists.swing.AutoCompleteSupport
-import com.apple.laf.AquaComboBoxUI
 import griffon.transform.Threading
 
 import javax.swing.*
-import javax.swing.plaf.ComboBoxUI
-import javax.swing.plaf.basic.BasicArrowButton
-import javax.swing.plaf.basic.BasicComboBoxUI
-import javax.swing.plaf.synth.SynthComboBoxUI
 import java.awt.*
-import javax.swing.plaf.basic.BasicComboBoxRenderer
-import java.awt.Color
 import java.math.RoundingMode
 
 /**

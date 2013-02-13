@@ -13,8 +13,6 @@ package com.ventplan.desktop
 
 import javax.swing.ComboBoxModel
 import javax.swing.JComboBox
-import java.awt.Dimension
-import java.awt.Toolkit
 
 class ImageComboBox extends JComboBox {
     public ImageComboBox() {
@@ -39,14 +37,6 @@ class ImageComboBox extends JComboBox {
         }finally{
             layingOut = false;
         }
-    }
-
-    public Dimension getSize(){
-        Dimension dim = super.getSize();
-        if(!layingOut) {
-            dim.width = Math.min(dim.width, Toolkit.getDefaultToolkit().getScreenSize().width);
-        }
-        return dim;
     }
 
 }
