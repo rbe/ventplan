@@ -11,9 +11,15 @@
  */
 package com.bensmann.griffon
 
+import ca.odell.glazedlists.swing.AutoCompleteSupport
+import com.apple.laf.AquaComboBoxUI
 import griffon.transform.Threading
 
 import javax.swing.*
+import javax.swing.plaf.ComboBoxUI
+import javax.swing.plaf.basic.BasicArrowButton
+import javax.swing.plaf.basic.BasicComboBoxUI
+import javax.swing.plaf.synth.SynthComboBoxUI
 import java.awt.*
 import javax.swing.plaf.basic.BasicComboBoxRenderer
 import java.awt.Color
@@ -550,10 +556,17 @@ class GriffonHelper {
         javax.swing.SwingUtilities.invokeLater {
             def eventList = ca.odell.glazedlists.GlazedLists.eventList(list) as ca.odell.glazedlists.EventList
             def threadEventList = ca.odell.glazedlists.GlazedLists.threadSafeList(eventList)
-            def cellEditor = ca.odell.glazedlists.swing.AutoCompleteSupport.createTableCellEditor(threadEventList)
+
+            def cellEditor
             // WAC-240: set custom renderer for combobox (label with image).
             if (imagesupport) {
-                cellEditor.getAutoCompleteSupport().getComboBox().setRenderer(new ComboBoxImageRenderer())
+                // add custom JComboBox with custom renderer
+                com.ventplan.desktop.ImageComboBox myComboBox = new com.ventplan.desktop.ImageComboBox()
+                cellEditor = new DefaultCellEditor(myComboBox)
+                AutoCompleteSupport.install(myComboBox, threadEventList)
+                myComboBox.setRenderer(new com.ventplan.desktop.ComboBoxImageRenderer())
+            } else {
+                cellEditor = ca.odell.glazedlists.swing.AutoCompleteSupport.createTableCellEditor(threadEventList)
             }
             column.setCellEditor((javax.swing.DefaultCellEditor) cellEditor)
         }

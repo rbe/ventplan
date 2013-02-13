@@ -19,41 +19,69 @@ import javax.swing.JList
 import java.awt.Component
 import com.ventplan.desktop.VentplanResource
 
+import java.awt.Dimension
 import java.awt.Image
 
 public class ComboBoxImageRenderer extends DefaultListCellRenderer {
+
+    /**
+     * Max image height to scale.
+     */
+    private static final int MAX_IMAGE_HEIGHT = 60
 
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         // Get the renderer component from parent class
         JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         // Get icon to use for the list item value
-        Icon icon
-        def text = value
+        Icon icon = null;
         try {
-            def url = VentplanResource.getWiderstandURL(value)
+            URL url = VentplanResource.getVentileURL(text);
             if (url) {
-                icon = new ImageIcon(url)
-                icon.setImage(icon.getImage().getScaledInstance(30, 30, Image.SCALE_FAST));
+                icon = new ImageIcon(url);
+                Image scaledIcon = icon.getImage(); //getScaledImage(icon);
+                if (scaledIcon) {
+                    icon.setImage(scaledIcon);
+                }
             } else {
-                url = VentplanResource.getWiderstandURL('no_pic')
-                icon = new ImageIcon(url)
-                icon.setImage(icon.getImage().getScaledInstance(30, 30, Image.SCALE_FAST));
+                url = VentplanResource.getVentileURL('no_pic');
+                icon = new ImageIcon(url);
+                //icon.setImage(icon.getImage().getScaledInstance(30, 30, Image.SCALE_FAST));
+                icon.setImage(icon.getImage());
             }
         } catch (e) {
-            println "icon for value ${value} not ${e.cause} found"
+            println "icon for value [${value}] not found. Cause: [${e}]"
         }
         // Set icon to display for value
         if (!icon) {
-            def url = VentplanResource.getWiderstandURL('1')
-            icon = new ImageIcon(url)
-            text = 'Keine Bild vorhanden'
+            URL url = VentplanResource.getVentileURL('no_pic');
+            icon = new ImageIcon(url);
         }
         label.setIcon(icon);
-        label.setText(text)
-        // set height and width
-        //label.setPreferredSize(new Dimension(50, 20))
         return label;
+    }
+
+    /**
+     * Get scaled image dimensions. If original image height is greater than <code>MAX_IMAGE_HEIGHT</code> then return
+     * new scaled image dimension.
+     * @param originalWidth
+     * @param originalHeight
+     * @return
+     */
+    public static Image getScaledImage(ImageIcon icon) {
+        Image scaled;
+        Image image = icon.getImage();
+        int originalHeight = icon.getIconHeight();
+        // then check if we need to scale even with the new height
+        if (originalHeight > MAX_IMAGE_HEIGHT) {
+            //scale width to maintain aspect ratio
+            int newWidth = (MAX_IMAGE_HEIGHT * icon.getIconWidth()) / originalHeight;
+            //scaled = image.getScaledInstance(newWidth, MAX_IMAGE_HEIGHT, Image.SCALE_FAST)
+            scaled = image.getScaledInstance(-1, MAX_IMAGE_HEIGHT, Image.SCALE_FAST)
+        } else {
+            scaled = image.getScaledInstance(-1, originalHeight, Image.SCALE_FAST)
+        }
+        return scaled;
     }
 
 }
