@@ -14,13 +14,21 @@ package com.ventplan.desktop
 
 import javax.swing.*
 import java.awt.*
+import javax.swing.DefaultListCellRenderer
+import javax.swing.Icon
+import javax.swing.ImageIcon
+import javax.swing.JLabel
+import javax.swing.JList
+import java.awt.Component
+import java.awt.Image
+import com.ventplan.desktop.VentplanResource
 
 public class ComboBoxImageRenderer extends DefaultListCellRenderer {
 
     /**
      * Max image height to scale.
      */
-    private static final int MAX_IMAGE_HEIGHT = 60
+    private static final int MAX_IMAGE_HEIGHT = 30
 
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -28,7 +36,6 @@ public class ComboBoxImageRenderer extends DefaultListCellRenderer {
         JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         // Get icon to use for the list item value
         Icon icon = null;
-        String text = (String) value;
         try {
             URL url = VentplanResource.getVentileURL(text);
             if (url) {
@@ -50,10 +57,8 @@ public class ComboBoxImageRenderer extends DefaultListCellRenderer {
         if (!icon) {
             URL url = VentplanResource.getVentileURL('no_pic');
             icon = new ImageIcon(url);
-            text = 'Kein Bild vorhanden';
         }
         label.setIcon(icon);
-        label.setText(text);
         return label;
     }
 
