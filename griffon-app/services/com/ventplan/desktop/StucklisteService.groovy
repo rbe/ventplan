@@ -211,7 +211,6 @@ class StucklisteService {
             artikelAufStuckliste(stuckliste, st)
         }
         // WAC-231 Sprungmengen
-        // Rohrlängen, Liefermenge
         stuckliste.each { Map.Entry st ->
             String artikel = st.key
             GroovyRowResult r = (GroovyRowResult) st.value
