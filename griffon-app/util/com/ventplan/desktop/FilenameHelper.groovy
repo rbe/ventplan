@@ -60,4 +60,16 @@ public class FilenameHelper {
         return cleanFilename(new File(filename));
     }
 
+    /**
+     * WAC-246
+     * @return Ventplan standard directory.
+     */
+    public static File getVentplanDir() {
+        File vpxDir = new File("${System.getProperty('user.home')}/Ventplan");
+        if (!vpxDir.exists()) {
+            vpxDir.mkdirs();
+        }
+        return vpxDir;
+    }
+
 }

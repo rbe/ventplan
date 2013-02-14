@@ -212,7 +212,7 @@ class VentplanController {
      */
     def projektOffnen = { evt = null ->
         // WAC-246 Choose Ventplan directory
-        view.vpxFileChooserWindow.currentDirectory = getVentplanDir()
+        view.vpxFileChooserWindow.currentDirectory = FilenameHelper.getVentplanDir()
         def openResult = view.vpxFileChooserWindow.showOpenDialog(view.ventplanFrame)
         if (JFileChooser.APPROVE_OPTION == openResult) {
             def file = view.vpxFileChooserWindow.selectedFile
@@ -336,18 +336,6 @@ class VentplanController {
     }
 
     /**
-     * WAC-246
-     * @return Ventplan standard directory.
-     */
-    static File getVentplanDir() {
-        File vpxDir = new File("${System.getProperty('user.home')}/Ventplan")
-        if (!vpxDir.exists()) {
-            vpxDir.mkdirs()
-        }
-        vpxDir
-    }
-
-    /**
      * Zeige FileChooser, setze gewählten Dateinamen im ProjektModel und rufe "Projekt speichern".
      */
     def projektSpeichernAls = { mvc ->
@@ -362,7 +350,7 @@ class VentplanController {
         }
         File f = FilenameHelper.clean(filename)
         view.vpxFileChooserWindow.selectedFile = f
-        view.vpxFileChooserWindow.currentDirectory = getVentplanDir()
+        view.vpxFileChooserWindow.currentDirectory = FilenameHelper.getVentplanDir()
         // Open filechooser
         def openResult = view.vpxFileChooserWindow.showSaveDialog(app.windowManager.windows.find { it.focused })
         if (JFileChooser.APPROVE_OPTION == openResult) {
@@ -413,7 +401,7 @@ class VentplanController {
         Date date = new Date()
         String filename = wizardProjektName == '' ? "VentplanExpress_${date.format('dd-MM-yyyy HH-mm-ss')}.vpx" : "${wizardProjektName}.vpx"
         String projektName = FilenameHelper.cleanFilename(filename)
-        File file = new File(getVentplanDir(), projektName)
+        File file = new File(FilenameHelper.getVentplanDir(), projektName)
         file.deleteOnExit()
         file
     }
