@@ -196,9 +196,15 @@ class OdiseeService {
                         // Menge mit oder ohne Komma anzeigen?
                         String menge
                         if (anzahl * 10 > 0) {
-                            menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.VERPACKUNGSEINHEIT)
+                            // WAC-266
+                            // WAC-231 WAC-266 Temporär wieder abgeschaltet, bis Datenbank von Westaflex aktualisiert ist
+                            //menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.VERPACKUNGSEINHEIT)
+                            menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.MENGENEINHEIT)
                         } else {
-                            menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.VERPACKUNGSEINHEIT)
+                            // WAC-266
+                            // WAC-231 WAC-266 Temporär wieder abgeschaltet, bis Datenbank von Westaflex aktualisiert ist
+                            //menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.VERPACKUNGSEINHEIT)
+                            menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
                         }
                         // WAC-223 Kaufmännisch und technische Artikel
                         if (artikel.ARTIKELNUMMER && !ventplanModelService.isArticleValidToday(artikel.ARTIKELNUMMER) && !artikel.ARTIKELBEZEICHNUNG.startsWith('***')) {
@@ -265,9 +271,15 @@ class OdiseeService {
                         // Menge mit oder ohne Komma anzeigen?
                         String menge
                         if (anzahl * 10 > 0) {
-                            menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.VERPACKUNGSEINHEIT)
+                            // WAC-266
+                            // WAC-231 WAC-266 Temporär wieder abgeschaltet, bis Datenbank von Westaflex aktualisiert ist
+                            //menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.VERPACKUNGSEINHEIT)
+                            menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.MENGENEINHEIT)
                         } else {
-                            menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.VERPACKUNGSEINHEIT)
+                            // WAC-266
+                            // WAC-231 WAC-266 Temporär wieder abgeschaltet, bis Datenbank von Westaflex aktualisiert ist
+                            //menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.VERPACKUNGSEINHEIT)
+                            menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
                         }
                         // WAC-223 Kaufmännisch und technische Artikel
                         if (artikel.ARTIKELNUMMER && !ventplanModelService.isArticleValidToday((String) artikel.ARTIKELNUMMER) && !artikel.ARTIKELBEZEICHNUNG.startsWith('***')) {
@@ -521,12 +533,6 @@ class OdiseeService {
         }
         // Zusammenfassung
         // Zuluft
-        /*
-        // TODO volumenstromInfiltration
-        double zuSumme = map.raum.raume.findAll { it.raumLuftart == 'ZU' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
-        double zuSumme2 = map.raum.raume.findAll { it.raumLuftart == 'ZU/AB' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
-        zuSumme += 0.5d * zuSumme2
-        */
         double zuSumme = map.raum.raume.findAll {
             it.raumLuftart.contains('ZU')
         }?.inject(0.0d, { double o, Map n ->
