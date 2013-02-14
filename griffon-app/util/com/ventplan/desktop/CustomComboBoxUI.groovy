@@ -9,14 +9,15 @@
  *
  * mmu, 13.02.13 20:59
  */
+
 package com.ventplan.desktop
 
 import javax.swing.plaf.basic.BasicComboBoxUI
 import javax.swing.plaf.basic.BasicComboPopup
 import javax.swing.plaf.basic.ComboPopup
-import java.awt.Rectangle
+import java.awt.*
 
-class CustomComboBoxUI extends BasicComboBoxUI {
+public class CustomComboBoxUI extends BasicComboBoxUI {
 
     protected ComboPopup createPopup() {
         BasicComboPopup popup = new BasicComboPopup(this.comboBox) {
@@ -25,14 +26,16 @@ class CustomComboBoxUI extends BasicComboBoxUI {
                 int cwidth = 220;
                 try {
                     cwidth = this.comboBox.getPreferredSize().getWidth()
-                } catch (Exception e) {}
-                println "cwidth: ${cwidth}, pw: ${pw}, ph: ${ph}"
+                } catch (Exception e) {
+                    e.printStackTrace()
+                    // ignore
+                }
+                //println "cwidth: ${cwidth}, pw: ${pw}, ph: ${ph}"
                 return super.computePopupBounds(px, py, Math.max(cwidth, pw), ph);
             }
         };
         popup.getAccessibleContext().setAccessibleParent(this.comboBox);
         return popup;
     }
-
 
 }

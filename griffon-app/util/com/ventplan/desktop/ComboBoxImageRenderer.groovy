@@ -14,14 +14,6 @@ package com.ventplan.desktop
 
 import javax.swing.*
 import java.awt.*
-import javax.swing.DefaultListCellRenderer
-import javax.swing.Icon
-import javax.swing.ImageIcon
-import javax.swing.JLabel
-import javax.swing.JList
-import java.awt.Component
-import java.awt.Image
-import com.ventplan.desktop.VentplanResource
 
 public class ComboBoxImageRenderer extends DefaultListCellRenderer {
 
@@ -40,14 +32,13 @@ public class ComboBoxImageRenderer extends DefaultListCellRenderer {
             URL url = VentplanResource.getVentileURL(text);
             if (url) {
                 icon = new ImageIcon(url);
-                Image scaledIcon = icon.getImage(); //getScaledImage(icon);
+                Image scaledIcon = icon.getImage();
                 if (scaledIcon) {
                     icon.setImage(scaledIcon);
                 }
             } else {
                 url = VentplanResource.getVentileURL('no_pic');
                 icon = new ImageIcon(url);
-                //icon.setImage(icon.getImage().getScaledInstance(30, 30, Image.SCALE_FAST));
                 icon.setImage(icon.getImage());
             }
         } catch (e) {

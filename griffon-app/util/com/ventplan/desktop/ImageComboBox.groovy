@@ -9,15 +9,18 @@
  *
  * mmu, 13.02.13 19:09
  */
+
 package com.ventplan.desktop
 
-import javax.swing.ComboBoxModel
-import javax.swing.JComboBox
+import javax.swing.*
 
-class ImageComboBox extends JComboBox {
+public class ImageComboBox extends JComboBox {
+
+    private boolean layingOut = false;
+
     public ImageComboBox() {
         super();
-        setUI(new com.ventplan.desktop.CustomComboBoxUI());
+        setUI(new CustomComboBoxUI());
     }
 
     public ImageComboBox(Vector items) {
@@ -28,13 +31,13 @@ class ImageComboBox extends JComboBox {
         super(aModel);
     }
 
-    private boolean layingOut = false;
-
-    public void doLayout(){
-        try{
+    public void doLayout() {
+        try {
             layingOut = true;
             super.doLayout();
-        }finally{
+        } catch (e) {
+            e.printStackTrace()
+        } finally {
             layingOut = false;
         }
     }
