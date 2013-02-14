@@ -11,6 +11,7 @@
  */
 
 package com.ventplan.desktop
+
 import com.bensmann.griffon.GriffonHelper as GH
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
@@ -20,6 +21,7 @@ import java.awt.*
 import java.util.List
 
 import static com.ventplan.desktop.AuslegungPrefHelper.*
+
 /**
  *
  */
@@ -63,8 +65,8 @@ class ProjektController {
     void mvcGroupInit(Map args) {
         // Save MVC id
         model.mvcId = args.mvcId
-        // WAC-257
         this.loadMode = args.loadMode
+        // WAC-257
         ventplanModelService.projectWAC257 = args.loadMode
         // Set defaults
         setDefaultValues()
