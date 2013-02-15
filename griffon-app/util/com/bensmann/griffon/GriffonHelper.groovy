@@ -566,6 +566,8 @@ class GriffonHelper {
             } else {
                 cellEditor = AutoCompleteSupport.createTableCellEditor(threadEventList)
             }
+            // open combobox with one click!
+            cellEditor.setClickCountToStart(1)
             column.setCellEditor((DefaultCellEditor) cellEditor)
         }
     }
