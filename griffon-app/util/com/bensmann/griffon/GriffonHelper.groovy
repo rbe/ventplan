@@ -9,9 +9,15 @@
  *
  * rbe, 7/16/12 10:35 AM
  */
+
 package com.bensmann.griffon
 
+import ca.odell.glazedlists.EventList
+import ca.odell.glazedlists.GlazedLists
+import ca.odell.glazedlists.TransformedList
 import ca.odell.glazedlists.swing.AutoCompleteSupport
+import com.ventplan.desktop.ComboBoxImageRenderer
+import com.ventplan.desktop.ImageComboBox
 import griffon.transform.Threading
 
 import javax.swing.*
@@ -547,21 +553,20 @@ class GriffonHelper {
      */
     static void makeComboboxCellEditor(column, list, imagesupport = false) {
         javax.swing.SwingUtilities.invokeLater {
-            def eventList = ca.odell.glazedlists.GlazedLists.eventList(list) as ca.odell.glazedlists.EventList
-            def threadEventList = ca.odell.glazedlists.GlazedLists.threadSafeList(eventList)
-
+            EventList eventList = GlazedLists.eventList(list) as EventList
+            TransformedList threadEventList = GlazedLists.threadSafeList(eventList)
             def cellEditor
             // WAC-240: set custom renderer for combobox (label with image).
             if (imagesupport) {
                 // add custom JComboBox with custom renderer
-                com.ventplan.desktop.ImageComboBox myComboBox = new com.ventplan.desktop.ImageComboBox()
+                ImageComboBox myComboBox = new ImageComboBox()
                 cellEditor = new DefaultCellEditor(myComboBox)
                 AutoCompleteSupport.install(myComboBox, threadEventList)
-                myComboBox.setRenderer(new com.ventplan.desktop.ComboBoxImageRenderer())
+                myComboBox.setRenderer(new ComboBoxImageRenderer())
             } else {
-                cellEditor = ca.odell.glazedlists.swing.AutoCompleteSupport.createTableCellEditor(threadEventList)
+                cellEditor = AutoCompleteSupport.createTableCellEditor(threadEventList)
             }
-            column.setCellEditor((javax.swing.DefaultCellEditor) cellEditor)
+            column.setCellEditor((DefaultCellEditor) cellEditor)
         }
     }
 
@@ -611,7 +616,7 @@ class GriffonHelper {
                 case { it instanceof javax.swing.JTextArea || it instanceof javax.swing.JTextField }:
                     GriffonHelper.installFocusLostAdapter(component, closure)
                     break
-                case { it instanceof javax.swing.JComboBox || it instanceof javax.swing.JRadioButton}:
+                case { it instanceof javax.swing.JComboBox || it instanceof javax.swing.JRadioButton }:
                     component.addActionListener(
                             [
                                     actionPerformed: { evt ->

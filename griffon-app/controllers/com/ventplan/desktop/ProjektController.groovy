@@ -13,7 +13,6 @@
 package com.ventplan.desktop
 
 import com.bensmann.griffon.GriffonHelper as GH
-import com.ventplan.verlegeplan.PrinzipskizzeClient
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
 
@@ -31,30 +30,31 @@ class ProjektController {
     private static final boolean DEBUG = false
 
     //<editor-fold desc="Instance fields">
+    boolean loadMode = false
+
     def builder
     def model
     def view
-
-    boolean loadMode = false
 
     CalculationService calculationService
     VentplanModelService ventplanModelService
     VpxModelService vpxModelService
     StucklisteService stucklisteService
     OdiseeService odiseeService
+    PrinzipskizzeService prinzipskizzeService
 
     JDialog raumBearbeitenDialog
-    JDialog wbwDialog
-    JDialog teilstreckenDialog
+    def wbwDialog
+    def teilstreckenDialog
 
     static AuslegungPrefHelper auslegungPrefs = AuslegungPrefHelper.instance
     boolean nutzerdatenGeandert
-    JDialog nutzerdatenDialog // org.jdesktop.swingx.JXDialog
+    def nutzerdatenDialog // org.jdesktop.swingx.JXDialog
 
-    JDialog documentWaitDialog
-    JDialog angebotsverfolgungDialog
+    def documentWaitDialog
+    def angebotsverfolgungDialog
 
-    JDialog stucklisteDialog
+    def stucklisteDialog
     boolean stucklisteAbgebrochen
     //</editor-fold>
 
@@ -65,8 +65,8 @@ class ProjektController {
     void mvcGroupInit(Map args) {
         // Save MVC id
         model.mvcId = args.mvcId
-        // WAC-257
         this.loadMode = args.loadMode
+        // WAC-257
         ventplanModelService.projectWAC257 = args.loadMode
         // Set defaults
         setDefaultValues()
@@ -2239,106 +2239,47 @@ class ProjektController {
         // Projekt speichern
         saveBeforeDocument()
         try {
-            makePrinzipskizze()
+            doLater {
+                doOutside {
+                    try {
+                        File prinzipskizzeGrafik = prinzipskizzeService.makePrinzipskizze((Map) model.map, (String) model.vpxFilename, artikelfurAussenluftauslass(), artikelfurAussenluftauslass())
+                        // Open document
+                        if (prinzipskizzeGrafik?.exists()) {
+                            openDocument('Prinzipskizze', prinzipskizzeGrafik)
+                        } else {
+                            documentWaitDialog?.dispose()
+                            // Show dialog
+                            DialogController dialog = (DialogController) app.controllers['Dialog']
+                            dialog.showError('Fehler', 'Leider konnte der Prinzipskizze nicht erstellt werden<br/>Es wurden keine Daten vom Web Service empfangen.', null)
+                        }
+                    } catch (ConnectException e) {
+                        DialogController dialog = (DialogController) app.controllers['Dialog']
+                        dialog.showError('Fehler', 'Der Server für die Erstellung der Dokumente kann nicht erreicht werden.<br/>Bitte prüfen Sie die Internet-Verbindung.', null)
+                    } catch (Exception e) {
+                        documentWaitDialog?.dispose()
+                        // Show dialog
+                        DialogController dialog = (DialogController) app.controllers['Dialog']
+                        dialog.showError('Fehler', 'Leider konnte der Prinzipskizze nicht erstellt werden<br/>Es wurden keine Daten vom Web Service empfangen.', e)
+                    }
+                }
+                // Dialog: Bitte warten...
+                documentWaitDialog = GH.createDialog(
+                        builder,
+                        WaitingView,
+                        [
+                                title: "Prinzipskizze wird erstellt",
+                                resizable: false,
+                                pack: true
+                        ]
+                )
+                documentWaitDialog = GH.centerDialog(app.views['MainFrame'], documentWaitDialog)
+                documentWaitDialog.setVisible(true) //.show()
+            }
         } catch (Exception e) {
             DialogController dialog = (DialogController) app.controllers['Dialog']
             dialog.showError('Fehler', 'Leider konnte der Prinzipskizze nicht erstellt werden', e)
         } finally {
             documentWaitDialog?.dispose()
-        }
-    }
-
-    private void makePrinzipskizze() {
-        doLater {
-            doOutside {
-                try {
-                    // WAC-245
-                    String aussenluft = artikelfurAussenluftauslass()
-                    String fortluft = artikelFurFortluftauslass()
-                    // Zentralgerät
-                    String zentralgerat = "${model.map.anlage.zentralgerat} (${model.map.anlage.standort.grep { it.value == true }?.key[0]})"
-                    def findRaum = { String luftart, String geschoss ->
-                        StringBuilder builder = new StringBuilder()
-                        List raume = model.map.raum.raume.findAll { r ->
-                            r.raumGeschoss == geschoss
-                        }
-                        List raume2 = raume.collect { raum ->
-                            if (builder.length() > 0)
-                                builder.delete(0, builder.length())
-                            if (raum.raumLuftart.contains(luftart)) {
-                                if (raum.raumAnzahlZuluftventile > 0) {
-                                    builder << raum.raumAnzahlZuluftventile.toString2(0) << ' x ' << raum.raumBezeichnungZuluftventile
-                                }
-                                if (builder.length() > 0) {
-                                    builder << ', '
-                                }
-                                if (raum.raumAnzahlAbluftventile > 0) {
-                                    builder << raum.raumAnzahlAbluftventile.toString2(0) << ' x ' << raum.raumBezeichnungAbluftventile
-                                }
-                                raum.raumGeschoss + ', ' + raum.raumBezeichnung + ': ' + builder.toString()
-                            } else {
-                                null
-                            }
-                        }
-                        raume2?.size() > 0 ? raume2.findAll { null != it } : null
-                    }
-                    // Abluft
-                    List<String> abluft0 = findRaum('AB', 'KG')
-                    List<String> abluft1 = findRaum('AB', 'EG')
-                    List<String> abluft2 = findRaum('AB', 'DG')
-                    List<String> abluft3 = findRaum('AB', 'OG')
-                    List<String> abluft4 = findRaum('AB', 'SB')
-                    def (ab1, ab2, ab3) = [abluft0, abluft1, abluft2, abluft3, abluft4].grep { it }
-                    // Zuluft
-                    List<String> zuluft0 = findRaum('ZU', 'KG')
-                    List<String> zuluft1 = findRaum('ZU', 'EG')
-                    List<String> zuluft2 = findRaum('ZU', 'DG')
-                    List<String> zuluft3 = findRaum('ZU', 'OG')
-                    List<String> zuluft4 = findRaum('ZU', 'SB')
-                    def (zu1, zu2, zu3) = [zuluft0, zuluft1, zuluft2, zuluft3, zuluft4].grep { it }
-                    File prinzipskizzeGrafik = null
-                    // SOAP service URL
-                    URL prinzipskizzeServiceURL = new URL(VentplanResource.prinzipskizzeSoapUrl)
-                    PrinzipskizzeClient prinzipskizzeClient = new PrinzipskizzeClient()
-                    byte[] b = prinzipskizzeClient.create(prinzipskizzeServiceURL, aussenluft, fortluft, zentralgerat, ab1, ab2, ab3, zu1, zu2, zu3)
-                    if (b != null && b.size() > 0) {
-                        //new File(vpxModelService.filenameWoExtension(model.vpxFilename) + "_Prinzipskizze.png")
-                        prinzipskizzeGrafik = FilenameHelper.clean("${model.vpxFilename}_Prinzipskizze")
-                        FileOutputStream fos = new FileOutputStream(prinzipskizzeGrafik)
-                        fos.write(b)
-                        fos.close()
-                    }
-                    // Open document
-                    if (prinzipskizzeGrafik?.exists()) {
-                        openDocument('Prinzipskizze', prinzipskizzeGrafik)
-                    } else {
-                        documentWaitDialog?.dispose()
-                        // Show dialog
-                        DialogController dialog = (DialogController) app.controllers['Dialog']
-                        dialog.showError('Fehler', 'Leider konnte der Prinzipskizze nicht erstellt werden<br/>Es wurden keine Daten vom Web Service empfangen.', null)
-                    }
-                } catch (ConnectException e) {
-                    DialogController dialog = (DialogController) app.controllers['Dialog']
-                    dialog.showError('Fehler', 'Der Server für die Erstellung der Dokumente kann nicht erreicht werden.<br/>Bitte prüfen Sie die Internet-Verbindung.', null)
-                } catch (Exception e) {
-                    documentWaitDialog?.dispose()
-                    // Show dialog
-                    DialogController dialog = (DialogController) app.controllers['Dialog']
-                    dialog.showError('Fehler', 'Leider konnte der Prinzipskizze nicht erstellt werden<br/>Es wurden keine Daten vom Web Service empfangen.', e)
-                }
-            }
-            // Dialog: Bitte warten...
-            documentWaitDialog = GH.createDialog(
-                    builder,
-                    WaitingView,
-                    [
-                            title: "Prinzipskizze wird erstellt",
-                            resizable: false,
-                            pack: true
-                    ]
-            )
-            documentWaitDialog = GH.centerDialog(app.views['MainFrame'], documentWaitDialog)
-            documentWaitDialog.setVisible(true) //.show()
         }
     }
     //</editor-fold>
