@@ -66,8 +66,10 @@ class ProjektController {
         // Save MVC id
         model.mvcId = args.mvcId
         this.loadMode = args.loadMode
+/* Temporär abgeschaltet
         // WAC-257
         ventplanModelService.projectWAC257 = args.loadMode
+*/
         // Set defaults
         setDefaultValues()
         // Add PropertyChangeListener to our model.meta
@@ -220,8 +222,10 @@ class ProjektController {
      */
     def berechneAlles = { loadMode = false ->
         this.loadMode = loadMode
+/* Temporär abgeschaltet
         // WAC-257
         ventplanModelService.projectWAC257 = loadMode
+*/
         // Anlagendaten - Kennzeichen
         berechneEnergieKennzeichen()
         berechneHygieneKennzeichen()
