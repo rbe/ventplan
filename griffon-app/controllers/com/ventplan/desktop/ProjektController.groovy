@@ -2049,14 +2049,26 @@ class ProjektController {
                     } else {
                         documentWaitDialog?.dispose()
                         DialogController dialog = (DialogController) app.controllers['Dialog']
-                        dialog.showError('Fehler', "${type} erstellen<br/>Das Dokument ${odiseeDocument ?: ''} konnte leider nicht geöffnet werden.", null)
+                        dialog.showError(
+                                'Das Dokument kann momentan nicht erstellt werden.',
+                                'Bitte versuchen Sie es später noch einmal oder<br/>kontaktieren Sie uns in dringenden Fällen unter support@ventplan.com.',
+                                null
+                        )
                     }
                 } catch (ConnectException e) {
                     DialogController dialog = (DialogController) app.controllers['Dialog']
-                    dialog.showError('Fehler', "Der Server für die Erstellung der Dokumente kann nicht erreicht werden.<br/>Bitte prüfen Sie die Internet-Verbindung.", null)
+                    dialog.showError(
+                            'Das Dokument kann momentan nicht erstellt werden.',
+                            'Scheinbar ist die Internet-Verbindung nicht verfügbar.<br/>Bitte versuchen Sie es später noch einmal.',
+                            e
+                    )
                 } catch (Exception e) {
                     DialogController dialog = (DialogController) app.controllers['Dialog']
-                    dialog.showError('Fehler', "${type} erstellen<br/>Das Dokument ${odiseeDocument ?: ''} konnte leider nicht geöffnet werden.", e)
+                    dialog.showError(
+                            'Das Dokument kann momentan nicht erstellt werden.',
+                            'Bitte versuchen Sie es später noch einmal oder<br/>kontaktieren Sie uns in dringenden Fällen unter support@ventplan.com.',
+                            e
+                    )
                 }
             }
             // Dialog: Bitte warten...
