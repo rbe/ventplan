@@ -11,8 +11,6 @@
  */
 package com.ventplan.desktop
 
-import com.bensmann.griffon.GriffonHelper as GH
-
 import ca.odell.glazedlists.BasicEventList
 import ca.odell.glazedlists.EventList
 import ca.odell.glazedlists.GlazedLists
@@ -21,9 +19,9 @@ import ca.odell.glazedlists.gui.WritableTableFormat
 import ca.odell.glazedlists.swing.EventTableModel
 import ca.odell.glazedlists.swing.GlazedListsSwing
 import com.bensmann.griffon.AdvancedWritableTableFormat
+import com.bensmann.griffon.GriffonHelper as GH
 
-import javax.swing.DefaultComboBoxModel
-import javax.swing.SwingUtilities
+import javax.swing.*
 
 /**
  *
@@ -429,39 +427,44 @@ class ProjektModel {
      * @param preValueSet Closure to execute before value was set
      */
     def gltmClosure = { columnNames, propertyNames, writable, tableModel, postValueSet = null, preValueSet = null ->
-        new ca.odell.glazedlists.swing.EventTableModel(tableModel, [
-                getColumnCount: { columnNames.size() },
-                getColumnName: { columnIndex -> columnNames[columnIndex] },
-                getColumnValue: { object, columnIndex ->
-                    try {
-                        object?."${propertyNames[columnIndex]}"?.toString2()
-                    } catch (e) {
-                        object?.toString()
+        if (null != tableModel) {
+            EventTableModel etm = new EventTableModel(tableModel, [
+                    getColumnCount: { columnNames.size() },
+                    getColumnName: { columnIndex -> columnNames[columnIndex] },
+                    getColumnValue: { object, columnIndex ->
+                        try {
+                            object?."${propertyNames[columnIndex]}"?.toString2()
+                        } catch (e) {
+                            object?.toString()
+                        }
+                    },
+                    isEditable: { object, columnIndex -> writable[columnIndex] },
+                    setColumnValue: { object, value, columnIndex ->
+                        def property = propertyNames[columnIndex]
+                        // Call pre-value-set closure
+                        if (preValueSet) {
+                            object = preValueSet(object, property, value, columnIndex)
+                        } else {
+                            // Try to save double value; see ticket #60
+                            object[property] = value.toDouble2()
+                        }
+                        // Call post-value-set closure
+                        if (postValueSet) {
+                            postValueSet(object, columnIndex, value)
+                        }
+                        // VERY IMPORTANT: return null value to prevent e.g. returning
+                        // a boolean value. Table would display the wrong value in all
+                        // cells !!!
+                        null
+                    },
+                    getValueAt: { rowIndex, columnIndex ->
+                        //no value to get...
                     }
-                },
-                isEditable: { object, columnIndex -> writable[columnIndex] },
-                setColumnValue: { object, value, columnIndex ->
-                    def property = propertyNames[columnIndex]
-                    // Call pre-value-set closure
-                    if (preValueSet) {
-                        object = preValueSet(object, property, value, columnIndex)
-                    } else {
-                        // Try to save double value; see ticket #60
-                        object[property] = value.toDouble2()
-                    }
-                    // Call post-value-set closure
-                    if (postValueSet) {
-                        postValueSet(object, columnIndex, value)
-                    }
-                    // VERY IMPORTANT: return null value to prevent e.g. returning
-                    // a boolean value. Table would display the wrong value in all
-                    // cells !!!
-                    null
-                },
-                getValueAt: { rowIndex, columnIndex ->
-                    //no value to get...
-                }
-        ] as WritableTableFormat)
+            ] as WritableTableFormat)
+            etm
+        } else {
+            null
+        }
     }
 
     /**
