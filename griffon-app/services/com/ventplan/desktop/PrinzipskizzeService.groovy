@@ -14,6 +14,9 @@ package com.ventplan.desktop
 
 import com.ventplan.verlegeplan.PrinzipskizzeClient
 
+/**
+ * WAC-202 Prinzipskizze
+ */
 @SuppressWarnings("GrMethodMayBeStatic")
 class PrinzipskizzeService {
 
