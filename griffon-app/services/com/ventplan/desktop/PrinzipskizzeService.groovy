@@ -89,22 +89,24 @@ class PrinzipskizzeService {
         def findRaum = { String luftart, String geschoss ->
             StringBuilder builder = new StringBuilder()
             List raume = map.raum.raume.findAll { r ->
-                r.raumGeschoss == geschoss
+                r.raumVerteilebene?.equals(geschoss)
             }
-            List raume2 = raume.collect { raum ->
-                if (builder.length() > 0)
-                    builder.delete(0, builder.length())
+            List raume2 = raume.collect { Map raum ->
                 if (raum.raumLuftart.contains(luftart)) {
-                    if (raum.raumAnzahlZuluftventile > 0) {
-                        builder << raum.raumAnzahlZuluftventile.toString2(0) << ' x ' << raum.raumBezeichnungZuluftventile
-                    }
                     if (builder.length() > 0) {
+                        builder.delete(0, builder.length())
+                    }
+                    builder << raum.raumVerteilebene << ', '
+                    if (raum.raumAnzahlZuluftventile > 0) {
+                        builder << raum.raumBezeichnung << ': ' << raum.raumBezeichnungZuluftventile
+                    }
+                    if (builder.length() - 1 > 0 && raum.raumAnzahlZuluftventile > 0 && raum.raumAnzahlAbluftventile > 0) {
                         builder << ', '
                     }
                     if (raum.raumAnzahlAbluftventile > 0) {
-                        builder << raum.raumAnzahlAbluftventile.toString2(0) << ' x ' << raum.raumBezeichnungAbluftventile
+                        builder << raum.raumBezeichnung << ': ' << raum.raumBezeichnungAbluftventile
                     }
-                    raum.raumGeschoss + ', ' + raum.raumBezeichnung + ': ' + builder.toString()
+                    builder.toString()
                 } else {
                     null
                 }
@@ -112,26 +114,26 @@ class PrinzipskizzeService {
             raume2?.size() > 0 ? raume2.findAll { null != it } : null
         }
         // Abluft
-        List<String> abluft0 = findRaum('AB', 'KG')
-        List<String> abluft1 = findRaum('AB', 'EG')
-        List<String> abluft2 = findRaum('AB', 'DG')
-        List<String> abluft3 = findRaum('AB', 'OG')
-        List<String> abluft4 = findRaum('AB', 'SB')
-        def (ab1, ab2, ab3) = [abluft0, abluft1, abluft2, abluft3, abluft4].grep { it }
+        List<String> abluftKG = findRaum('AB', 'KG')
+        List<String> abluftEG = findRaum('AB', 'EG')
+        List<String> abluftDG = findRaum('AB', 'DG')
+        List<String> abluftOG = findRaum('AB', 'OG')
+        List<String> abluftSB = findRaum('AB', 'SB')
+        def (ab1, ab2, ab3) = [abluftKG, abluftEG, abluftDG, abluftOG, abluftSB].grep { it }
         // Zuluft
-        List<String> zuluft0 = findRaum('ZU', 'KG')
-        List<String> zuluft1 = findRaum('ZU', 'EG')
-        List<String> zuluft2 = findRaum('ZU', 'DG')
-        List<String> zuluft3 = findRaum('ZU', 'OG')
-        List<String> zuluft4 = findRaum('ZU', 'SB')
-        def (zu1, zu2, zu3) = [zuluft0, zuluft1, zuluft2, zuluft3, zuluft4].grep { it }
+        List<String> zuluftKG = findRaum('ZU', 'KG')
+        List<String> zuluftEG = findRaum('ZU', 'EG')
+        List<String> zuluftDG = findRaum('ZU', 'DG')
+        List<String> zuluftOG = findRaum('ZU', 'OG')
+        List<String> zuluftSB = findRaum('ZU', 'SB')
+        def (zu1, zu2, zu3) = [zuluftKG, zuluftEG, zuluftDG, zuluftOG, zuluftSB].grep { it }
         File prinzipskizzeGrafik = null
         // SOAP service URL
         URL prinzipskizzeServiceURL = new URL(VentplanResource.prinzipskizzeSoapUrl)
         PrinzipskizzeClient prinzipskizzeClient = new PrinzipskizzeClient()
         byte[] b = prinzipskizzeClient.create(prinzipskizzeServiceURL, aussenluft, fortluft, zentralgerat, ab1, ab2, ab3, zu1, zu2, zu3)
         if (b != null && b.size() > 0) {
-            prinzipskizzeGrafik = new File(FilenameHelper.getVentplanDir(), FilenameHelper.cleanFilename("${vpxFilename}_Prinzipskizze.png"))
+            prinzipskizzeGrafik = new File(FilenameHelper.getVentplanDir(), FilenameHelper.cleanFilename("${vpxFilename - '.vpx'}_Prinzipskizze.png"))
             FileOutputStream fos = new FileOutputStream(prinzipskizzeGrafik)
             fos.write(b)
             fos.close()
