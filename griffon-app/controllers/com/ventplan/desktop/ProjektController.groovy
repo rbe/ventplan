@@ -1525,9 +1525,10 @@ class ProjektController {
         ImageIcon image = null
         // Neu generierte WBWs haben kein Image. Exception abfangen.
         try {
-            def url = VentplanResource.getWiderstandURL(wbw.id)
+            URL url = VentplanResource.getWiderstandURL(wbw.id)
             image = new ImageIcon(url)
-        } catch (NullPointerException e) {}
+        } catch (NullPointerException e) {
+        }
         // Image und Text setzen
         if (image) {
             view.wbwBild.text = ''

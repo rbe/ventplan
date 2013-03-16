@@ -61,7 +61,7 @@ class VentplanResource {
      * @param n ID of image below resources/widerstand/xxx.jpg
      * @return URL to image.
      */
-    static URL getWiderstandURL(String n) {
+    static URL getWiderstandURL(Integer n) {
         def r
         try {
             // dev
