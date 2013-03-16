@@ -22,7 +22,7 @@ import java.text.SimpleDateFormat
 import static com.ventplan.desktop.AuslegungPrefHelper.*
 
 /**
- *
+ * WAC-108
  */
 class OdiseeService {
 
