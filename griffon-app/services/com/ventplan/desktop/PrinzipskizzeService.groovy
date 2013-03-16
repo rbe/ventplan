@@ -17,12 +17,70 @@ import com.ventplan.verlegeplan.PrinzipskizzeClient
 @SuppressWarnings("GrMethodMayBeStatic")
 class PrinzipskizzeService {
 
-    public File makePrinzipskizze(Map map, String vpxFilename, String aussenluft, String fortluft) {
-        /*
+    //<editor-fold desc="WAC-245 Artikel für Aussenluft- und Fortluftauslässe">
+
+    private String artikelFurAussenluftauslass(Map map) {
+        String aussenluft = 'z.B. 200LG002/004' //model.map.anlage.aussenluft.lufteinlass
+        try {
+            Integer volumenstromZentralgerat = map.anlage.volumenstromZentralgerat
+            String x = map.anlage.aussenluft.grep { it.value == true }?.key[0] // dach, wand, erdwarme
+            switch (x) {
+                case 'dach':
+                    aussenluft = '200DDF003'
+                    break
+                case 'wand':
+                    if (volumenstromZentralgerat <= 210) {
+                        aussenluft = '200LG002'
+                    } else {
+                        aussenluft = '200LG004'
+                    }
+                    break
+                case 'erdwarme':
+                    if (volumenstromZentralgerat <= 210) {
+                        aussenluft = '200LE008'
+                    } else {
+                        aussenluft = '250LE'
+                    }
+                    break
+            }
+        } catch (e) {
+            // ignore
+        }
+        aussenluft
+    }
+
+    private String artikelFurFortluftauslass(Map map) {
+        String fortluft = 'z.B. 200LG002/4'
+        try {
+            Integer volumenstromZentralgerat = map.anlage.volumenstromZentralgerat
+            String x = map.anlage.fortluft.grep { it.value == true }?.key[0]  // dach, wand, bogen135
+            switch (x) {
+                case 'dach':
+                    fortluft = '200DDF003'
+                    break
+                case 'wand':
+                    if (volumenstromZentralgerat <= 210) {
+                        fortluft = '200LG002'
+                    } else {
+                        fortluft = '200LG004'
+                    }
+                    break
+                case 'bogen135':
+                    fortluft = '200LD001'
+                    break
+            }
+        } catch (e) {
+            // ignore
+        }
+        fortluft
+    }
+
+    //</editor-fold>
+
+    public File makePrinzipskizze(Map map, String vpxFilename) {
         // WAC-245
-        String aussenluft = artikelfurAussenluftauslass()
-        String fortluft = artikelFurFortluftauslass()
-        */
+        String aussenluft = artikelFurAussenluftauslass(map)
+        String fortluft = artikelFurFortluftauslass(map)
         // Zentralgerät
         String zentralgerat = "${map.anlage.zentralgerat} (${map.anlage.standort.grep { it.value == true }?.key[0]})"
         def findRaum = { String luftart, String geschoss ->
