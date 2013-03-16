@@ -537,8 +537,7 @@ class ProjektModel {
                         if (isInt || isInt == true) {
                             object."${propertyNames[columnIndex]}"?.toString()
                             //object."${propertyNames[columnIndex]}"?.toInteger().toString()
-                        }
-                        else {
+                        } else {
                             object."${propertyNames[columnIndex]}"?.toString2()
                         }
                     } catch (e) {
@@ -570,8 +569,7 @@ class ProjektModel {
                         */
                         if (preValueSet) {
                             object = preValueSet(object, property, value, columnIndex)
-                        }
-                        else {
+                        } else {
                             // Try to save double value; see ticket #60
                             object[property] = value.toDouble2()
                         }
