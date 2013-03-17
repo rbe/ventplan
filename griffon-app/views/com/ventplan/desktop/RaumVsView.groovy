@@ -23,6 +23,9 @@ panel(layout: new MigLayout('fill, wrap', '[fill, grow]', '[fill,grow]'), constr
         label(id: 'raumVsUbElementeHinweis', foreground: Color.RED)
         // WAC-223
         label(id: 'kaufmannischeArtikelHinweis', foreground: Color.RED, constraints: 'width ::800')
+        // WAC-254
+        label(id: 'zuluftmengeVerteilebeneHinweis', foreground: Color.RED, constraints: 'width ::800')
+        label(id: 'abluftmengeVerteilebeneHinweis', foreground: Color.RED, constraints: 'width ::800')
         //
         jideTabbedPane(id: 'raumVsVentileTabGroup', constraints: 'height ::280, grow, span') {
             // Raumvolumenströme - Zu-/Abluftventile

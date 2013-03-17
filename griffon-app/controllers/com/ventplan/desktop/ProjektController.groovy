@@ -753,6 +753,35 @@ class ProjektController {
             model.map.raum.raumVs.ubElementeHinweis = raumeOhneUbElemente.size() > 0 ? "<html><b>Bitte ÜB-Elemente prüfen: ${raumeOhneUbElemente.collect { it.raumBezeichnung }.join(', ')}</b></html>" : ''
             // WAC-223
             findInvalidArticles()
+            // WAC-254
+            Map lvsAbluftPerVerteilebene = [:]
+            Map lvsZuluftPerVerteilebene = [:]
+            model.map.raum.raume.each { raum ->
+                if (null != raum.raumVerteilebene) {
+                    String k = "${raum.raumVerteilebene}"
+                    if (raum.raumLuftart.contains('ZU')) {
+                        if (lvsZuluftPerVerteilebene.containsKey(k)) {
+                            double d = (Double) lvsZuluftPerVerteilebene[k]
+                            d += raum.raumZuluftVolumenstromInfiltration
+                            lvsZuluftPerVerteilebene[k] = d
+                        } else {
+                            lvsZuluftPerVerteilebene[k] = raum.raumZuluftVolumenstromInfiltration
+                        }
+                    } else if (raum.raumLuftart.contains('AB')) {
+                        if (lvsAbluftPerVerteilebene.containsKey(k)) {
+                            double d = (Double) lvsAbluftPerVerteilebene[k]
+                            d += raum.raumAbluftVolumenstromInfiltration
+                            lvsAbluftPerVerteilebene[k] = d
+                        } else {
+                            lvsAbluftPerVerteilebene[k] = raum.raumAbluftVolumenstromInfiltration
+                        }
+                    }
+                }
+            }
+            List zuluftVerteilebeneHinweis = lvsZuluftPerVerteilebene.collect { if (it.value > 150.0d) "${it.key} (${it.value.toString2()} m3)" }.grep { it != null }
+            model.map.raum.raumVs.zuluftmengeVerteilebeneHinweis = zuluftVerteilebeneHinweis.size() > 0 ? "<html><b>Bitte Zuluftmenge in folgenden Verteilebenen prüfen: ${zuluftVerteilebeneHinweis.join(', ')}</b></html>" : ''
+            List abluftVerteilebeneHinweis = lvsAbluftPerVerteilebene.collect { if (it.value > 150.0d) "${it.key} (${it.value.toString2()} m3)" }.grep { it != null }
+            model.map.raum.raumVs.abluftmengeVerteilebeneHinweis = abluftVerteilebeneHinweis.size() > 0 ? "<html><b>Bitte Abluftmenge in folgenden Verteilebenen prüfen: ${abluftVerteilebeneHinweis.join(', ')}</b></html>" : ''
             //
             model.resyncRaumTableModels()
         }

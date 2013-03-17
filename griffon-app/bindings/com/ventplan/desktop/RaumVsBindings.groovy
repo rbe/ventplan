@@ -16,9 +16,11 @@ import javax.swing.event.ListSelectionListener
 
 // Raumvolumenströme
 // WAC-171: Hinweis für Türen und ÜB-Elemente
-bind(source: model.map.raum.raumVs, sourceProperty: "turenHinweis",                target: raumVsTurenHinweis,          targetProperty: "text")
-bind(source: model.map.raum.raumVs, sourceProperty: "ubElementeHinweis",           target: raumVsUbElementeHinweis,     targetProperty: "text")
-bind(source: model.map.raum.raumVs, sourceProperty: "kaufmannischeArtikelHinweis", target: kaufmannischeArtikelHinweis, targetProperty: "text")
+bind(source: model.map.raum.raumVs, sourceProperty: "turenHinweis",                   target: raumVsTurenHinweis,             targetProperty: "text")
+bind(source: model.map.raum.raumVs, sourceProperty: "ubElementeHinweis",              target: raumVsUbElementeHinweis,        targetProperty: "text")
+bind(source: model.map.raum.raumVs, sourceProperty: "kaufmannischeArtikelHinweis",    target: kaufmannischeArtikelHinweis,    targetProperty: "text")
+bind(source: model.map.raum.raumVs, sourceProperty: "zuluftmengeVerteilebeneHinweis", target: zuluftmengeVerteilebeneHinweis, targetProperty: "text")
+bind(source: model.map.raum.raumVs, sourceProperty: "abluftmengeVerteilebeneHinweis", target: abluftmengeVerteilebeneHinweis, targetProperty: "text")
 // Add list selection listener to synchronize every table's selection and model.meta.gewahlterRaum
 [raumVsZuAbluftventileTabelle, raumVsUberstromelementeTabelle].each {
     it.selectionModel.addListSelectionListener([
