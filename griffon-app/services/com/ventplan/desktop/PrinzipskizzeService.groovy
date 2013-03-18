@@ -12,7 +12,9 @@
 
 package com.ventplan.desktop
 
-import com.ventplan.verlegeplan.PrinzipskizzeClient
+import com.ventplan.prinzipskizze.PrinzipskizzeClient
+
+import static com.ventplan.desktop.AuslegungPrefHelper.PREFS_USER_KEY_NAME
 
 /**
  * WAC-202 Prinzipskizze
@@ -87,31 +89,30 @@ class PrinzipskizzeService {
         // Zentralgerät
         String zentralgerat = "${map.anlage.zentralgerat} (${map.anlage.standort.grep { it.value == true }?.key[0]})"
         def findRaum = { String luftart, String geschoss ->
-            StringBuilder builder = new StringBuilder()
+            StringBuilder builder = new StringBuilder(20)
             List raume = map.raum.raume.findAll { r ->
                 r.raumVerteilebene?.equals(geschoss)
             }
-            List raume2 = raume.collect { Map raum ->
+            List raume2 = []
+            raume.each { Map raum ->
+                builder.delete(0, builder.length())
                 if (raum.raumLuftart.contains(luftart)) {
-                    if (builder.length() > 0) {
-                        builder.delete(0, builder.length())
-                    }
-                    builder << raum.raumVerteilebene << ', '
                     if (raum.raumAnzahlZuluftventile > 0) {
-                        builder << raum.raumBezeichnung << ': ' << raum.raumBezeichnungZuluftventile
+                        double d = (double) raum.raumAnzahlZuluftventile
+                        builder << raum.raumVerteilebene << ', ' << raum.raumBezeichnung << ': ' << raum.raumBezeichnungZuluftventile
+                        1.upto d, {
+                            raume2 << builder.toString()
+                        }
+                    } else if (raum.raumAnzahlAbluftventile > 0) {
+                        double d = (double) raum.raumAnzahlAbluftventile
+                        builder << raum.raumVerteilebene << ', ' << raum.raumBezeichnung << ': ' << raum.raumBezeichnungAbluftventile
+                        1.upto d, {
+                            raume2 << builder.toString()
+                        }
                     }
-                    if (builder.length() - 1 > 0 && raum.raumAnzahlZuluftventile > 0 && raum.raumAnzahlAbluftventile > 0) {
-                        builder << ', '
-                    }
-                    if (raum.raumAnzahlAbluftventile > 0) {
-                        builder << raum.raumBezeichnung << ': ' << raum.raumBezeichnungAbluftventile
-                    }
-                    builder.toString()
-                } else {
-                    null
                 }
             }
-            raume2?.size() > 0 ? raume2.findAll { null != it } : null
+            raume2.size() > 0 ? raume2.findAll { null != it } : null
         }
         // Abluft
         List<String> abluftKG = findRaum('AB', 'KG')
@@ -128,10 +129,19 @@ class PrinzipskizzeService {
         List<String> zuluftSB = findRaum('ZU', 'SB')
         def (zu1, zu2, zu3) = [zuluftKG, zuluftEG, zuluftDG, zuluftOG, zuluftSB].grep { it }
         File prinzipskizzeGrafik = null
+        //
+        AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
         // SOAP service URL
         URL prinzipskizzeServiceURL = new URL(VentplanResource.prinzipskizzeSoapUrl)
+        /*
         PrinzipskizzeClient prinzipskizzeClient = new PrinzipskizzeClient()
         byte[] b = prinzipskizzeClient.create(prinzipskizzeServiceURL, aussenluft, fortluft, zentralgerat, ab1, ab2, ab3, zu1, zu2, zu3)
+        */
+        String empty = ''
+        String bauvorhaben = (String) map.kundendaten.bauvorhaben
+        String ersteller = (String) prefHelper.getPrefValue(PREFS_USER_KEY_NAME) ?: ''
+        String datum = new Date().format('dd.MM.yyyy')
+        byte[] b = PrinzipskizzeClient.createWAC237(prinzipskizzeServiceURL, bauvorhaben, empty, ersteller, datum, aussenluft, fortluft, zentralgerat, ab1, ab2, ab3, zu1, zu2, zu3);
         if (b != null && b.size() > 0) {
             prinzipskizzeGrafik = new File(FilenameHelper.getVentplanDir(), FilenameHelper.cleanFilename("${vpxFilename - '.vpx'}_Prinzipskizze.png"))
             FileOutputStream fos = new FileOutputStream(prinzipskizzeGrafik)
