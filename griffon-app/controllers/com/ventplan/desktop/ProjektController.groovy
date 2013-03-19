@@ -23,7 +23,7 @@ import java.util.List
 import static com.ventplan.desktop.DocumentPrefHelper.*
 
 /**
- *
+ * Ein Ventplan Projekt.
  */
 class ProjektController {
 
@@ -1814,8 +1814,8 @@ class ProjektController {
                 map.put(PREFS_USER_KEY_EMPFANGER, '')
             }
             try {
-            String dokumenttyp = view.erstellerDokumenttyp.selectedItem
-            map.put(PREFS_USER_KEY_DOKUMENTTYP, dokumenttyp)
+                String dokumenttyp = view.erstellerDokumenttyp.selectedItem
+                map.put(PREFS_USER_KEY_DOKUMENTTYP, dokumenttyp)
             } catch (e) {}
             try {
                 String grafikformat = view.prinzipskizzeGrafikformat.selectedItem
@@ -1846,7 +1846,6 @@ class ProjektController {
     def auslegungErstellen() {
         // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
         showNutzerdatenDialog(AuslegungNutzerdatenView, 'Auslegung erstellen', 'Auslegung erstellen')
-        //
         if (nutzerdatenGeandert) {
             // Projekt speichern
             saveBeforeDocument()
@@ -2248,41 +2247,45 @@ class ProjektController {
         // Projekt speichern
         saveBeforeDocument()
         try {
-            doLater {
-                doOutside {
-                    try {
-                        File prinzipskizzeGrafik = prinzipskizzeService.makePrinzipskizze((Map) model.map, (String) model.vpxFilename)
-                        // Open document
-                        if (prinzipskizzeGrafik?.exists()) {
-                            openDocument('Prinzipskizze', prinzipskizzeGrafik)
-                        } else {
+            // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
+            showNutzerdatenDialog(PrinzipskizzeNutzerdatenView, 'Prinzipskizze erstellen', 'Prinzipskizze erstellen')
+            if (nutzerdatenGeandert) {
+                doLater {
+                    doOutside {
+                        try {
+                            File prinzipskizzeGrafik = prinzipskizzeService.makePrinzipskizze((Map) model.map, (String) model.vpxFilename)
+                            // Open document
+                            if (prinzipskizzeGrafik?.exists()) {
+                                openDocument('Prinzipskizze', prinzipskizzeGrafik)
+                            } else {
+                                documentWaitDialog?.dispose()
+                                // Show dialog
+                                DialogController dialog = (DialogController) app.controllers['Dialog']
+                                dialog.showError('Fehler', 'Leider konnte der Prinzipskizze nicht erstellt werden<br/>Es wurden keine Daten vom Web Service empfangen.', null)
+                            }
+                        } catch (ConnectException e) {
+                            DialogController dialog = (DialogController) app.controllers['Dialog']
+                            dialog.showError('Fehler', 'Der Server für die Erstellung der Dokumente kann nicht erreicht werden.<br/>Bitte prüfen Sie die Internet-Verbindung.', e)
+                        } catch (Exception e) {
                             documentWaitDialog?.dispose()
                             // Show dialog
                             DialogController dialog = (DialogController) app.controllers['Dialog']
-                            dialog.showError('Fehler', 'Leider konnte der Prinzipskizze nicht erstellt werden<br/>Es wurden keine Daten vom Web Service empfangen.', null)
+                            dialog.showError('Fehler', 'Leider konnte die Prinzipskizze nicht erstellt werden<br/>Es wurden keine Daten vom Web Service empfangen.', e)
                         }
-                    } catch (ConnectException e) {
-                        DialogController dialog = (DialogController) app.controllers['Dialog']
-                            dialog.showError('Fehler', 'Der Server für die Erstellung der Dokumente kann nicht erreicht werden.<br/>Bitte prüfen Sie die Internet-Verbindung.', e)
-                    } catch (Exception e) {
-                        documentWaitDialog?.dispose()
-                        // Show dialog
-                        DialogController dialog = (DialogController) app.controllers['Dialog']
-                        dialog.showError('Fehler', 'Leider konnte der Prinzipskizze nicht erstellt werden<br/>Es wurden keine Daten vom Web Service empfangen.', e)
                     }
+                    // Dialog: Bitte warten...
+                    documentWaitDialog = GH.createDialog(
+                            builder,
+                            WaitingView,
+                            [
+                                    title: "Prinzipskizze wird erstellt",
+                                    resizable: false,
+                                    pack: true
+                            ]
+                    )
+                    documentWaitDialog = GH.centerDialog(app.views['MainFrame'], documentWaitDialog)
+                    documentWaitDialog.setVisible(true) //.show()
                 }
-                // Dialog: Bitte warten...
-                documentWaitDialog = GH.createDialog(
-                        builder,
-                        WaitingView,
-                        [
-                                title: "Prinzipskizze wird erstellt",
-                                resizable: false,
-                                pack: true
-                        ]
-                )
-                documentWaitDialog = GH.centerDialog(app.views['MainFrame'], documentWaitDialog)
-                documentWaitDialog.setVisible(true) //.show()
             }
         } catch (Exception e) {
             DialogController dialog = (DialogController) app.controllers['Dialog']

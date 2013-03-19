@@ -134,15 +134,11 @@ class PrinzipskizzeService {
         DocumentPrefHelper prefHelper = DocumentPrefHelper.instance
         // SOAP service URL
         URL prinzipskizzeServiceURL = new URL(VentplanResource.prinzipskizzeSoapUrl)
-        /*
-        PrinzipskizzeClient prinzipskizzeClient = new PrinzipskizzeClient()
-        byte[] b = prinzipskizzeClient.create(prinzipskizzeServiceURL, aussenluft, fortluft, zentralgerat, ab1, ab2, ab3, zu1, zu2, zu3)
-        */
-        String empty = ''
+        String plan = (String) prefHelper.getPrefValue(PREFS_USER_KEY_PRINZIPSKIZZE_PLAN) ?: ''
         String bauvorhaben = (String) map.kundendaten.bauvorhaben
         String ersteller = (String) prefHelper.getPrefValue(PREFS_USER_KEY_NAME) ?: ''
         String datum = new Date().format('dd.MM.yyyy')
-        byte[] b = PrinzipskizzeClient.createWAC237(prinzipskizzeServiceURL, bauvorhaben, empty, ersteller, datum, aussenluft, fortluft, zentralgerat, ab1, ab2, ab3, zu1, zu2, zu3);
+        byte[] b = PrinzipskizzeClient.createWAC237(prinzipskizzeServiceURL, bauvorhaben, plan, ersteller, datum, aussenluft, fortluft, zentralgerat, ab1, ab2, ab3, zu1, zu2, zu3);
         if (b != null && b.size() > 0) {
             prinzipskizzeGrafik = new File(FilenameHelper.getVentplanDir(), FilenameHelper.cleanFilename("${vpxFilename - '.vpx'}_Prinzipskizze.png"))
             FileOutputStream fos = new FileOutputStream(prinzipskizzeGrafik)
