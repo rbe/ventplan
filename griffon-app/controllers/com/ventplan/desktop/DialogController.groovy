@@ -47,6 +47,7 @@ class DialogController {
             }
             dlg.getDetails().setExpandableComponent(new JScrollPane(new JLabel(String.format('<html>%s</html>', builder.toString()))));
         }
+        dlg.setCommands(TaskDialog.StandardCommand.OK.derive("Ja, ich habe das gelesen!"));
         return dlg.show();
     }
 

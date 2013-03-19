@@ -2068,6 +2068,11 @@ class ProjektController {
 
     //<editor-fold desc="WAC-108 Odisee">
     private void makeDocumentWithOdisee(String type, File vpxFile, String xmlDoc) {
+        /**
+
+         "Ist Ihre Internet-Verbindung aktiv?" oder " Prüfen Sie bitte Ihre Internet-Verbindung!"
+         Button: Ja, ich habe das gelesen!
+         */
         doLater {
             doOutside {
                 try {
@@ -2080,22 +2085,30 @@ class ProjektController {
                         DialogController dialog = (DialogController) app.controllers['Dialog']
                         dialog.showError(
                                 'Das Dokument kann momentan nicht erstellt werden.',
-                                'Bitte versuchen Sie es später noch einmal oder<br/>kontaktieren Sie uns in dringenden Fällen unter support@ventplan.com.',
+                                'Bitte versuchen Sie es später noch einmal oder<br/>' +
+                                'kontaktieren Sie uns in dringenden Fällen unter support@ventplan.com.<br/><br/>' +
+                                'Tipp: Ist Ihre Internet-Verbindung aktiv?',
                                 null
                         )
                     }
                 } catch (ConnectException e) {
+                    documentWaitDialog?.dispose()
                     DialogController dialog = (DialogController) app.controllers['Dialog']
                     dialog.showError(
                             'Das Dokument kann momentan nicht erstellt werden.',
-                            'Scheinbar ist die Internet-Verbindung nicht verfügbar.<br/>Bitte versuchen Sie es später noch einmal.',
+                            'Scheinbar ist die Internet-Verbindung nicht verfügbar.<br/>' +
+                            'Bitte versuchen Sie es später noch einmal.<br/><br/>' +
+                            'Tipp: Ist Ihre Internet-Verbindung aktiv?',
                             e
                     )
                 } catch (Exception e) {
+                    documentWaitDialog?.dispose()
                     DialogController dialog = (DialogController) app.controllers['Dialog']
                     dialog.showError(
                             'Das Dokument kann momentan nicht erstellt werden.',
-                            'Bitte versuchen Sie es später noch einmal oder<br/>kontaktieren Sie uns in dringenden Fällen unter support@ventplan.com.',
+                            'Bitte versuchen Sie es später noch einmal oder<br/>' +
+                            'kontaktieren Sie uns in dringenden Fällen unter support@ventplan.com.<br/><br/>' +
+                            'Tipp: Ist Ihre Internet-Verbindung aktiv?',
                             e
                     )
                 }
@@ -2137,7 +2150,7 @@ class ProjektController {
                 requestContentType: groovyx.net.http.ContentType.XML,
                 responseContentType: groovyx.net.http.ContentType.BINARY
         )
-        File responseFile = new File(vpxFile.getParentFile(), FilenameHelper.cleanFilename("${model.vpxFilename}_${fileSuffix}.${outputFormat}"))
+        File responseFile = new File(vpxFile.getParentFile(), FilenameHelper.cleanFilename("${model.vpxFilename - '.vpx'}_${fileSuffix}.${outputFormat}"))
         responseFile << byteArrayInputStream
         return responseFile
     }
