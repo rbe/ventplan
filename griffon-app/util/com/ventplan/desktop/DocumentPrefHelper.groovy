@@ -11,15 +11,18 @@
  */
 package com.ventplan.desktop
 
+import java.util.prefs.Preferences
+
 /**
  * WAC-161: Zuletzt geöffnete Projekte
  * Save and load preferences for a Most Recently Used (MRU) list.
  */
 @Singleton
-class AuslegungPrefHelper {
+class DocumentPrefHelper {
 
-    private static java.util.prefs.Preferences prefs = java.util.prefs.Preferences.userNodeForPackage(this)
+    private static Preferences prefs = Preferences.userNodeForPackage(this)
     private static final String PREFS_USER_NODE = "/ventplanauslegung"
+
     public static final String PREFS_USER_KEY_FIRMA = "erstellerFirma"
     public static final String PREFS_USER_KEY_NAME = "erstellerName"
     public static final String PREFS_USER_KEY_STRASSE = "erstellerStrasse"
@@ -31,19 +34,14 @@ class AuslegungPrefHelper {
     public static final String PREFS_USER_KEY_ANGEBOTSNUMMER = "erstellerAngebotsnummer"
     public static final String PREFS_USER_KEY_EMPFANGER = "erstellerEmpfanger"
     public static final String PREFS_USER_KEY_DOKUMENTTYP = "erstellerDokumenttyp"
+    public static final String PREFS_USER_KEY_PRINZIPSKIZZE_PLAN = "prinzipskizzePlan"
+    public static final String PREFS_USER_KEY_PRINZIPSKIZZE_GRAFIKFORMAT = "prinzipskizzeGrafikformat"
 
-    /**
-     *
-     */
-    private AuslegungPrefHelper() {
+    private DocumentPrefHelper() {
         // WAC-108 Angebotsnummer soll jedesmal eingegeben werden und wird nur temporär gespeichert
         prefs.put(PREFS_USER_KEY_ANGEBOTSNUMMER, '')
     }
 
-    /**
-     *
-     * @return
-     */
     public boolean hasSavedValues() {
         try {
             def value = getPrefValue(PREFS_USER_KEY_NAME)
@@ -61,15 +59,18 @@ class AuslegungPrefHelper {
     /**
      * Saves a map of user information into the Preferences.
      */
-    public void save(map) {
+    public void save(Map<String, String> map) {
         try {
             [
                     PREFS_USER_KEY_FIRMA, PREFS_USER_KEY_NAME, PREFS_USER_KEY_STRASSE, PREFS_USER_KEY_PLZ, PREFS_USER_KEY_ORT,
                     PREFS_USER_KEY_TEL, PREFS_USER_KEY_FAX, PREFS_USER_KEY_EMAIL,
-                    PREFS_USER_KEY_ANGEBOTSNUMMER, PREFS_USER_KEY_EMPFANGER, PREFS_USER_KEY_DOKUMENTTYP
+                    PREFS_USER_KEY_ANGEBOTSNUMMER, PREFS_USER_KEY_EMPFANGER, PREFS_USER_KEY_DOKUMENTTYP,
+                    PREFS_USER_KEY_PRINZIPSKIZZE_PLAN, PREFS_USER_KEY_PRINZIPSKIZZE_GRAFIKFORMAT
             ].each {
                 // Remove node - should not exist - and save user information...
-                prefs.put(it, map[it])
+                if (map.containsKey(it)) {
+                    prefs.put(it, map[it])
+                }
             }
             prefs.flush();
         } catch (Exception e) {

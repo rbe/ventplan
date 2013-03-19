@@ -19,7 +19,7 @@ import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 
-import static com.ventplan.desktop.AuslegungPrefHelper.*
+import static DocumentPrefHelper.*
 
 /**
  * WAC-108
@@ -102,7 +102,7 @@ class OdiseeService {
      */
     private static String getOutputFormat() {
         String outputFormat = 'pdf'
-        AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
+        DocumentPrefHelper prefHelper = DocumentPrefHelper.instance
         if (prefHelper.getPrefValue(PREFS_USER_KEY_DOKUMENTTYP).contains('ODF')) {
             outputFormat = 'odt'
         }
@@ -230,7 +230,7 @@ class OdiseeService {
      */
     @SuppressWarnings("GrUnresolvedAccess")
     String performAngebot(File vpxFile, Map map, boolean saveOdiseeXml = false, Map editedStuckliste = null) {
-        AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
+        DocumentPrefHelper prefHelper = DocumentPrefHelper.instance
         // Filename w/o extension
         String vpxFilenameWoExt = FilenameHelper.cleanFilename(vpxFile)
         // Generate Odisee XML
@@ -340,16 +340,16 @@ class OdiseeService {
      */
     @SuppressWarnings("GrUnresolvedAccess")
     private static void addErsteller(DOMBuilder domBuilder) {
-        AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
+        DocumentPrefHelper prefHelper = DocumentPrefHelper.instance
         // Ersteller
         domBuilder.userfield(name: 'ErstellerFirma', prefHelper.getPrefValue(PREFS_USER_KEY_FIRMA))
         domBuilder.userfield(name: 'ErstellerName', prefHelper.getPrefValue(PREFS_USER_KEY_NAME))
-        domBuilder.userfield(name: 'ErstellerAnschrift', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE))
-        domBuilder.userfield(name: 'ErstellerPLZ', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_PLZ))
-        domBuilder.userfield(name: 'ErstellerOrt', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_ORT))
-        domBuilder.userfield(name: 'ErstellerTelefon', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_TEL))
-        domBuilder.userfield(name: 'ErstellerFax', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FAX))
-        domBuilder.userfield(name: 'ErstellerEmail', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL))
+        domBuilder.userfield(name: 'ErstellerAnschrift', prefHelper.getPrefValue(DocumentPrefHelper.PREFS_USER_KEY_STRASSE))
+        domBuilder.userfield(name: 'ErstellerPLZ', prefHelper.getPrefValue(DocumentPrefHelper.PREFS_USER_KEY_PLZ))
+        domBuilder.userfield(name: 'ErstellerOrt', prefHelper.getPrefValue(DocumentPrefHelper.PREFS_USER_KEY_ORT))
+        domBuilder.userfield(name: 'ErstellerTelefon', prefHelper.getPrefValue(DocumentPrefHelper.PREFS_USER_KEY_TEL))
+        domBuilder.userfield(name: 'ErstellerFax', prefHelper.getPrefValue(DocumentPrefHelper.PREFS_USER_KEY_FAX))
+        domBuilder.userfield(name: 'ErstellerEmail', prefHelper.getPrefValue(DocumentPrefHelper.PREFS_USER_KEY_EMAIL))
         /* Möglicherweise Ersteller und Absender unterschiedlich?
         // Absender
         domBuilder.userfield(name: 'AbsenderFirma', prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FIRMA))
@@ -368,7 +368,7 @@ class OdiseeService {
      */
     @SuppressWarnings("GrUnresolvedAccess")
     private static void addEmpfanger(DOMBuilder domBuilder, Map map) {
-        AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
+        DocumentPrefHelper prefHelper = DocumentPrefHelper.instance
         switch (prefHelper.getPrefValue(PREFS_USER_KEY_EMPFANGER)) {
             case 'Grosshandel':
                 domBuilder.userfield(name: 'EmpfFirma', map.kundendaten.grosshandel.firma1 ?: '')

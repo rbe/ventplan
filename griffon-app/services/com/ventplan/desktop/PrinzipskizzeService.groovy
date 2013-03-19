@@ -14,7 +14,8 @@ package com.ventplan.desktop
 
 import com.ventplan.prinzipskizze.PrinzipskizzeClient
 
-import static com.ventplan.desktop.AuslegungPrefHelper.PREFS_USER_KEY_NAME
+import static DocumentPrefHelper.PREFS_USER_KEY_NAME
+import static DocumentPrefHelper.PREFS_USER_KEY_PRINZIPSKIZZE_PLAN
 
 /**
  * WAC-202 Prinzipskizze
@@ -130,7 +131,7 @@ class PrinzipskizzeService {
         def (zu1, zu2, zu3) = [zuluftKG, zuluftEG, zuluftDG, zuluftOG, zuluftSB].grep { it }
         File prinzipskizzeGrafik = null
         //
-        AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
+        DocumentPrefHelper prefHelper = DocumentPrefHelper.instance
         // SOAP service URL
         URL prinzipskizzeServiceURL = new URL(VentplanResource.prinzipskizzeSoapUrl)
         /*

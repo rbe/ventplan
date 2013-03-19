@@ -22,6 +22,7 @@ import javax.xml.transform.stream.StreamSource
 import javax.xml.validation.SchemaFactory
 import javax.xml.validation.Validator
 
+import static com.ventplan.desktop.DocumentPrefHelper.*
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI
 
 /**
@@ -537,7 +538,7 @@ class VpxModelService {
 
     def save = { map, file, stuckliste = null ->
         File fh = null
-        AuslegungPrefHelper prefHelper = AuslegungPrefHelper.instance
+        DocumentPrefHelper prefHelper = DocumentPrefHelper.instance
         def wpx = domBuilder.'ventplan-project' {
             projekt() {
                 X.tc {
@@ -545,14 +546,14 @@ class VpxModelService {
                     ersteller() {
                         rolle('Bearbeiter')
                         person() {
-                            X.tc { name(prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME)) }
-                            X.tc { email(prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL)) }
-                            X.tc { tel(prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_TEL)) }
-                            X.tc { fax(prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FAX)) }
+                            X.tc { name(prefHelper.getPrefValue(PREFS_USER_KEY_NAME)) }
+                            X.tc { email(prefHelper.getPrefValue(PREFS_USER_KEY_EMAIL)) }
+                            X.tc { tel(prefHelper.getPrefValue(PREFS_USER_KEY_TEL)) }
+                            X.tc { fax(prefHelper.getPrefValue(PREFS_USER_KEY_FAX)) }
                             adresse() {
-                                X.tc { strasse(prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE)) }
-                                X.tc { ort(prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_ORT)) }
-                                X.tc { postleitzahl(prefHelper.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_PLZ)) }
+                                X.tc { strasse(prefHelper.getPrefValue(PREFS_USER_KEY_STRASSE)) }
+                                X.tc { ort(prefHelper.getPrefValue(PREFS_USER_KEY_ORT)) }
+                                X.tc { postleitzahl(prefHelper.getPrefValue(PREFS_USER_KEY_PLZ)) }
                             }
                         }
                     }

@@ -20,7 +20,7 @@ import javax.swing.*
 import java.awt.*
 import java.util.List
 
-import static com.ventplan.desktop.AuslegungPrefHelper.*
+import static com.ventplan.desktop.DocumentPrefHelper.*
 
 /**
  *
@@ -47,7 +47,7 @@ class ProjektController {
     def wbwDialog
     def teilstreckenDialog
 
-    static AuslegungPrefHelper auslegungPrefs = AuslegungPrefHelper.instance
+    static DocumentPrefHelper auslegungPrefs = DocumentPrefHelper.instance
     boolean nutzerdatenGeandert
     def nutzerdatenDialog // org.jdesktop.swingx.JXDialog
 
@@ -1741,15 +1741,15 @@ class ProjektController {
         view.nutzerdatenSpeichernButton.text = _okButtonText
         // Gespeicherte Daten holen und in den Dialog setzen
         view.erstellerFirma.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_FIRMA)
-        view.erstellerName.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_NAME)
-        view.erstellerAnschrift.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_STRASSE)
-        view.erstellerPlz.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_PLZ)
-        view.erstellerOrt.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_ORT)
-        view.erstellerTelefon.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_TEL)
-        view.erstellerFax.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_FAX)
-        view.erstellerEmail.text = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMAIL)
+        view.erstellerName.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_NAME)
+        view.erstellerAnschrift.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_STRASSE)
+        view.erstellerPlz.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_PLZ)
+        view.erstellerOrt.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_ORT)
+        view.erstellerTelefon.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_TEL)
+        view.erstellerFax.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_FAX)
+        view.erstellerEmail.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_EMAIL)
         try {
-            view.dokumentEmpfanger.selectedItem = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_EMPFANGER)
+            view.dokumentEmpfanger.selectedItem = auslegungPrefs.getPrefValue(PREFS_USER_KEY_EMPFANGER)
         } catch (MissingPropertyException e) {
             // maybe... ok to ignore.
         }
@@ -1760,7 +1760,11 @@ class ProjektController {
             view.auslegungAkustikberechnung.selected = model.map.odisee.auslegung.auslegungAkustikberechnung = false
             view.auslegungDruckverlustberechnung.selected = model.map.odisee.auslegung.auslegungDruckverlustberechnung = false
         }
-        view.erstellerDokumenttyp.selectedItem = auslegungPrefs.getPrefValue(AuslegungPrefHelper.PREFS_USER_KEY_DOKUMENTTYP)
+        if (dialogClass == PrinzipskizzeNutzerdatenView) {
+            // ignore
+        } else {
+            view.erstellerDokumenttyp.selectedItem = auslegungPrefs.getPrefValue(PREFS_USER_KEY_DOKUMENTTYP)
+        }
         // Closure ausführen
         if (closure) {
             closure(nutzerdatenDialog)
@@ -1786,7 +1790,7 @@ class ProjektController {
      */
     def nutzerdatenSpeichern = {
         try {
-            Map map = [:]
+            Map<String, String> map = [:]
             def error = false
             // Daten aus dem Dialog holen
             map.put(PREFS_USER_KEY_FIRMA, view.erstellerFirma.text.trim())
@@ -1809,15 +1813,24 @@ class ProjektController {
             } catch (MissingPropertyException e) {
                 map.put(PREFS_USER_KEY_EMPFANGER, '')
             }
+            try {
             String dokumenttyp = view.erstellerDokumenttyp.selectedItem
             map.put(PREFS_USER_KEY_DOKUMENTTYP, dokumenttyp)
+            } catch (e) {}
+            try {
+                String grafikformat = view.prinzipskizzeGrafikformat.selectedItem
+                map.put(PREFS_USER_KEY_PRINZIPSKIZZE_GRAFIKFORMAT, grafikformat)
+            } catch (e) {}
+            try {
+                String plan = view.prinzipskizzePlan.text
+                map.put(PREFS_USER_KEY_PRINZIPSKIZZE_PLAN, plan)
+            } catch (e) {}
             // Daten via Preferences API speichern
             auslegungPrefs.save(map)
             // Benutzerdaten wurden geändert, bitte fortfahren...
             nutzerdatenGeandert = true
         } catch (e) {
-            //println "Error saving ersteller values -> ${e.dump()}"
-            e.printStackTrace()
+            // ignore
         } finally {
             nutzerdatenDialog.dispose()
         }
