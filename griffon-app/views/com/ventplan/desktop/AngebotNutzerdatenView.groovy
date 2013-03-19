@@ -81,4 +81,4 @@ panel(id: 'erstellerPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]pa
 ].each {
     GH.yellowTextField(it)
 }
-build(NutzerdatenBindings)
+build(AngebotNutzerdatenBindings)
