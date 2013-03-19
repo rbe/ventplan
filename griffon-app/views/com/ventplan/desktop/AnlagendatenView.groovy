@@ -89,7 +89,7 @@ panel(constraints: 'a', border: compoundBorder(outer: emptyBorder(5), inner: emp
         checkBox(id: "anlageEnergieZuAbluftWarme", text: "Zu-/Abluftgeräte mit Wärmerückgewinnung")
         checkBox(id: "anlageEnergieBemessung",     text: "Bemessung und Ausführung des Lüftungssystems")
         checkBox(id: "anlageEnergieRuckgewinnung", text: "Rückgewinnung von Abluftwärme")
-        checkBox(id: "anlageEnergieRegelung",      text: "Zweckmäßige Relegung")
+        checkBox(id: "anlageEnergieRegelung",      text: "Zweckmäßige Regelung")
         label(id: "anlageEnergieNachricht", foreground: java.awt.Color.RED, text: " ")
         label("<html><p style='font-size: 9px;'>* Mehrfachauswahl möglich</p></html>", foreground: java.awt.Color.BLUE)
     }
