@@ -2068,11 +2068,6 @@ class ProjektController {
 
     //<editor-fold desc="WAC-108 Odisee">
     private void makeDocumentWithOdisee(String type, File vpxFile, String xmlDoc) {
-        /**
-
-         "Ist Ihre Internet-Verbindung aktiv?" oder " Prüfen Sie bitte Ihre Internet-Verbindung!"
-         Button: Ja, ich habe das gelesen!
-         */
         doLater {
             doOutside {
                 try {
@@ -2255,7 +2250,7 @@ class ProjektController {
                         }
                     } catch (ConnectException e) {
                         DialogController dialog = (DialogController) app.controllers['Dialog']
-                        dialog.showError('Fehler', 'Der Server für die Erstellung der Dokumente kann nicht erreicht werden.<br/>Bitte prüfen Sie die Internet-Verbindung.', null)
+                            dialog.showError('Fehler', 'Der Server für die Erstellung der Dokumente kann nicht erreicht werden.<br/>Bitte prüfen Sie die Internet-Verbindung.', e)
                     } catch (Exception e) {
                         documentWaitDialog?.dispose()
                         // Show dialog
@@ -2278,7 +2273,7 @@ class ProjektController {
             }
         } catch (Exception e) {
             DialogController dialog = (DialogController) app.controllers['Dialog']
-            dialog.showError('Fehler', 'Leider konnte der Prinzipskizze nicht erstellt werden', e)
+            dialog.showError('Unbekannter Fehler', 'Leider konnte der Prinzipskizze nicht erstellt werden', e)
         } finally {
             documentWaitDialog?.dispose()
         }
