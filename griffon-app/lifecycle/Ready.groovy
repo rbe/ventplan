@@ -2,12 +2,12 @@
  * Ventplan
  * ventplan, ventplan
  * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
- * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
+ * Copyright (C) 2011-2013 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
  *
- * rbe, 7/18/12 2:41 PM
+ * rbe, 19.03.13 17:23
  */
 
 /*
@@ -15,13 +15,15 @@
  * long running code in another thread.
  *
  * You have the following options
- * - execOutside { // your code }
+ * - execOutsideUI { // your code }
  * - execFuture { // your code }
  * - Thread.start { // your code }
  *
  * You have the following options to run code again inside the UI thread
- * - execAsync { // your code }
- * - execSync { // your code }
+ * - execInsideUIAsync { // your code }
+ * - execInsideUISync { // your code }
  */
 
-new Thread(new com.ventplan.desktop.CheckUpdate(app: app)).start()
+import eu.artofcoding.ventplan.desktop.CheckUpdate
+
+new Thread(new CheckUpdate(app: app)).start()

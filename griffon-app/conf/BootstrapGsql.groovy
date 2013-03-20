@@ -11,27 +11,16 @@
  */
 
 import groovy.sql.Sql
-import com.ventplan.desktop.VentplanSplash
+import eu.artofcoding.ventplan.desktop.VentplanSplash
 
-/**
- *
- */
 class BootstrapGsql {
 
-    /**
-     *
-     */
     def init = { String dataSourceName = 'default', Sql sql ->
         // Set splash screen status text
         VentplanSplash.instance.connectingDatabase()
-        //println "BootstrapGsql.init: ${sql}"
     }
 
-    /**
-     *
-     */
     def destroy = { String dataSourceName = 'default', Sql sql ->
-        //println "BootstrapGsql.destroy: ${sql}"
     }
 
 }

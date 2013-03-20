@@ -2,76 +2,26 @@
  * Ventplan
  * ventplan, ventplan
  * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
- * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
+ * Copyright (C) 2011-2013 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
  *
- * rbe, 7/7/12 3:42 PM
+ * rbe, 19.03.13 16:56
  */
 
-// log4j configuration
 log4j = {
-    /*
-    appender.stdout = 'org.apache.log4j.ConsoleAppender'
-    appender.'stdout.layout' = 'org.apache.log4j.PatternLayout'
-    appender.'stdout.layout.ConversionPattern' = '[%r] %c{2} %m%n'
-    */
-    appender.errors = 'org.apache.log4j.FileAppender'
-    appender.'errors.layout' = 'org.apache.log4j.PatternLayout'
-    appender.'errors.layout.ConversionPattern' = '[%r] %c{2} %m%n'
-    appender.'errors.File' = 'stacktrace.log'
-    rootLogger = 'errors,stdout'
-    griffon = 'errors'
-    StackTrace = 'errors'
-    /*
-    logger {
-        griffon = 'error'
-        StackTrace = 'error,errors'
-        //org {
-        //      codehaus.griffon.commons='info' // core / classloading
-        //  }
+    appenders {
+        console name: 'stdout', layout: pattern(conversionPattern: '%d [%t] %-5p %c - %m%n')
     }
-    */
-    additivity.StackTrace = false
-    info 'org.apache.http', 'org.apache.http.headers', 'org.apache.http.wire', 'org.codehaus.griffon', 'spring'
+    error  'org.codehaus.griffon'
+    info   'griffon.util',
+           'griffon.core',
+           'griffon.swing',
+           'griffon.app',
+           'griffon.plugins.datasource',
+           'org.apache.http', 'org.apache.http.headers', 'org.apache.http.wire', 'groovyx.net.http'
+           'spring'
 }
 
-// Injection
-griffon.basic_injection.disable = true
-griffon.gsql.injectInto = ['service']
-// The following properties have been added by the Upgrade process...
-griffon.jars.pack = false // jars were not automatically packed in Griffon 0.0
-griffon.jars.sign = false // jars were automatically signed in Griffon 0.0
-griffon.extensions.jarUrls = [] // remote jars were not possible in Griffon 0.1
-griffon.extensions.jnlpUrls = [] // remote jars were not possible in Griffon 0.1
-// may safely be removed, but calling upgrade will restore it
-def env = griffon.util.Environment.current.name
-/*
-signingkey.params.sigfile='GRIFFON' + env
-signingkey.params.keystore = "${basedir}/griffon-app/conf/keys/${env}Keystore"
-signingkey.params.alias = env
-// signingkey.params.storepass = 'BadStorePassword'
-// signingkey.params.keyPass = 'BadKeyPassword'
-signingkey.params.lazy = true // only sign when unsigned
-*/
-// you may now tweak memory parameters
-griffon.memory.min = '64m'
-griffon.memory.max = '256m'
-griffon.memory.maxPermSize = '64m'
-//
-griffon.datasource.injectInto = ["controller", "service"]
-griffon.wsclient.injectInto = ["controller"]
-griffon.ws.injectInto = ['controller']
-//
-swing {
-    windowManager {
-        frame1 = [
-                hide: { w, app ->
-                    //println "Config.swing.windowManager: w=${w.dump()}"
-                    if (app.config.shutdown.proceed)
-                        w.dispose()
-                }
-        ]
-    }
-}
+griffon.datasource.injectInto = ['service']
