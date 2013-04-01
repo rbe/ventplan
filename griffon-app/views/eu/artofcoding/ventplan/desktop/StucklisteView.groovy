@@ -17,9 +17,9 @@ import javax.swing.table.JTableHeader
 import java.awt.*
 
 // Stuckliste view
-panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]', '[]para[]'), constraints: 'grow') {
+panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]', '[]1[]'), constraints: 'grow') {
 
-    panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]para[fill]para[fill]', ''), constraints: 'grow') {
+    panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]para[fill]para[fill]', '[]1[]'), constraints: 'grow') {
         label('Bitte prüfen: Möglicherweise wurde die Stückliste nach der automatischen Berechnung', constraints: 'span 3')
         label('manuell verändert und gespeichert.', constraints: 'span 3')
         label('', constraints: 'span 3')
@@ -33,20 +33,21 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
         //textField(id: 'stucklisteSucheArtikelanzahl')
         button(id: 'stucklisteSucheStarten', text: 'Suchen')
     }
-    panel(id: 'stucklisteErgebnisPanel', layout: new MigLayout('fillx, wrap', '[fill]', ''), constraints: 'grow') {
+    panel(id: 'stucklisteErgebnisPanel', layout: new MigLayout('fillx, wrap', '[fill]', '[]1[]'), constraints: 'grow') {
         scrollPane() {
             table(id: 'stucklisteErgebnisTabelle', model: model.createStucklisteErgebnisTableModel()) {
 //                current.setSortable(false)
                 current.getTableHeader().setDefaultRenderer(new JTableHeader().defaultRenderer)
                 current.setAutoCreateRowSorter(false)
                 current.setRowSorter(null)
-                current.setFillsViewportHeight(true)
+                current.setFillsViewportHeight(false)
+                current.setPreferredScrollableViewportSize(new Dimension(400,100));
             }
         }
         button(id: 'stucklisteSucheHinzufugen', text: 'Ausgewählten Artikel zur Stückliste hinzufügen')
     }
 
-    panel(id: 'stucklisteUbersichtPanel', layout: new MigLayout('fillx, wrap', '[fill]', ''), constraints: 'grow') {
+    panel(id: 'stucklisteUbersichtPanel', layout: new MigLayout('fillx, wrap', '[fill]', '[]1[]'), constraints: 'grow') {
         zoneLayout {
             zoneRow('y+*y')
         }
@@ -56,7 +57,7 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
                 zoneRow('.........1c^<.c')
                 zoneRow('.........1d^<.d')
                 zoneRow('........a1e^<.e')
-                zoneRow('........2......')
+                zoneRow('........1......')
                 zoneRow('f-............f')
             }
 
@@ -66,7 +67,8 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
                     current.getTableHeader().setDefaultRenderer(new JTableHeader().getDefaultRenderer())
                     current.setAutoCreateRowSorter(false)
                     current.setRowSorter(null)
-                    current.setFillsViewportHeight(true)
+                    current.setFillsViewportHeight(false)
+                    current.setPreferredScrollableViewportSize(new Dimension(400,100));
                 }
             }
 
@@ -79,7 +81,7 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
             button(id: 'stucklisteUbersichtLoescheArtikel', text: 'Ausgewählten Artikel aus Liste löschen', constraints: 'f')
         }
     }
-    panel(id: 'stucklisteBottomButtonPanel', layout: new MigLayout('fill, wrap', '[]para[]', ''), constraints: 'grow') {
+    panel(id: 'stucklisteBottomButtonPanel', layout: new MigLayout('fill, wrap', '[]para[]', '[]1[]'), constraints: 'grow') {
         button(id: 'stucklisteAbbrechen', text: 'Vorgang abbrechen')
         button(id: 'stucklisteWeiter', text: 'Weiter')
     }
