@@ -296,6 +296,8 @@ class ProjektController {
         setTabTitle(view.projektTabGroup.selectedIndex)
         // 
         this.loadMode = false
+        // Fix table header height
+        model.refreshTableHeaderHeight(view)
     }
 
     /**

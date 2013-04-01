@@ -12,6 +12,11 @@
 
 dataSource {
     driverClassName = 'org.sqlite.JDBC'
+    pool {
+        maxWait = 5000
+        maxIdle = 5
+        maxActive = 1
+    }
 }
 
 environments {

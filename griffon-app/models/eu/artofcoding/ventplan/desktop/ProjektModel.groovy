@@ -22,6 +22,9 @@ import eu.artofcoding.griffon.helper.AdvancedWritableTableFormat
 import eu.artofcoding.griffon.helper.GriffonHelper
 
 import javax.swing.*
+import javax.swing.table.JTableHeader
+import javax.swing.table.TableCellRenderer
+import java.awt.Dimension
 
 /**
  *
@@ -912,27 +915,7 @@ class ProjektModel {
             // Buttons aktivieren / deaktivieren
             enableDisableRaumButtons(true)
             // TODO mmu Sortierung funktioniert aber!?
-            // Disables sorting in raumTabelle
-            try {
-                view.raumTabelle.setSortable(false);
-                view.raumTabelle.getTableHeader().setDefaultRenderer(new javax.swing.table.JTableHeader().getDefaultRenderer());
-            } catch (e) {
-                println "ProjektModel: addRaum: Error while modifying raumTabelle: ${e}"
-            }
-            // Disables sorting in raumVsUberstromelementeTabelle
-            try {
-                view.raumVsUberstromelementeTabelle.setSortable(false);
-                view.raumVsUberstromelementeTabelle.getTableHeader().setDefaultRenderer(new javax.swing.table.JTableHeader().getDefaultRenderer());
-            } catch (e) {
-                println "ProjektModel: addRaum: Error while modifying raumVsUberstromelementeTabelle: ${e}"
-            }
-            // Disables sorting in raumVsZuAbluftventileTabelle
-            try {
-                view.raumVsZuAbluftventileTabelle.setSortable(false);
-                view.raumVsZuAbluftventileTabelle.getTableHeader().setDefaultRenderer(new javax.swing.table.JTableHeader().getDefaultRenderer());
-            } catch (e) {
-                println "ProjektModel: addRaum: Error while modifying raumVsZuAbluftventileTabelle: ${e}"
-            }
+            refreshTableHeaderHeight(view)
             // Türen
             addRaumTurenModel()
             // Sync table models
@@ -1281,6 +1264,53 @@ class ProjektModel {
 //        def propertyTypes = [Integer.class.getName(), Double.class.getName(), String.class.getName()]
         def writable = [true, false, false] as boolean[]
         gltmClosure(columnNames, propertyNames, writable, tableModels.stucklisteSuche)
+    }
+
+    /**
+     * Update table header height for all relevant tables.
+     */
+    def refreshTableHeaderHeight(view) {
+        // raumTabelle
+        try {
+            //view.raumTabelle.setSortable(false);
+            view.raumTabelle.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+            view.raumTabelle.getTableHeader().getDefaultRenderer().setPreferredSize(new Dimension(0, 40))
+            view.raumTabelle.repaint()
+        } catch (e) {
+            println "ProjektModel: refreshTableHeaderHeight: Error while modifying raumTabelle: ${e}"
+        }
+        // raumVsUberstromelementeTabelle
+        try {
+            view.raumVsUberstromelementeTabelle.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+            view.raumVsUberstromelementeTabelle.getTableHeader().setPreferredSize(new Dimension(0, 40));
+            view.raumVsUberstromelementeTabelle.repaint()
+        } catch (e) {
+            println "ProjektModel: refreshTableHeaderHeight: Error while modifying raumVsUberstromelementeTabelle: ${e}"
+        }
+        // raumVsZuAbluftventileTabelle
+        try {
+            view.raumVsZuAbluftventileTabelle.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+            view.raumVsZuAbluftventileTabelle.getTableHeader().setPreferredSize(new Dimension(0, 40));
+            view.raumVsZuAbluftventileTabelle.repaint()
+        } catch (e) {
+            println "ProjektModel: refreshTableHeaderHeight: Error while modifying raumVsZuAbluftventileTabelle: ${e}"
+        }
+        // dvbKanalnetzTabelle
+        try {
+            view.dvbKanalnetzTabelle.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+            view.dvbKanalnetzTabelle.getTableHeader().setPreferredSize(new Dimension(0, 40));
+            view.dvbKanalnetzTabelle.repaint()
+        } catch (e) {
+            println "ProjektModel: refreshTableHeaderHeight: Error while modifying dvbKanalnetzTabelle: ${e}"
+        }
+        // dvbVentileinstellungTabelle
+        try {
+            view.dvbVentileinstellungTabelle.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+            view.dvbVentileinstellungTabelle.getTableHeader().setPreferredSize(new Dimension(0, 40));
+            view.dvbVentileinstellungTabelle.repaint()
+        } catch (e) {
+            println "ProjektModel: refreshTableHeaderHeight: Error while modifying dvbVentileinstellungTabelle: ${e}"
+        }
     }
 
 }
