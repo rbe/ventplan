@@ -34,7 +34,7 @@ jideTabbedPane(id: 'akustikTabGroup', constraints: 'grow, span') {
                 zoneRow('e<-.e2f^-fg^>.g2.........1q^<.q')
                 zoneRow('j<-.j2k^.-....k2...............', template: 'row1')
                 zoneRow('l<-.l2m^-mn^>-n2...............', template: 'row2')
-                zoneRow('7x<-..........x2...............', template: 'row3')
+                zoneRow('8x>...........x2...............', template: 'row3')
                 // Tabelle o wird hier geschlossen
                 zoneRow('r<-.r..........2........o......')
                 zoneRow('...............6...............')
@@ -166,7 +166,7 @@ Possible solutions: setFocusable(boolean), setEnabled(boolean), setLocale(java.u
                 zoneRow('e<-.e2f^-fg^>.g2.........1q^<.q')
                 zoneRow('j<-.j2k^.-....k2...............', template: 'row1')
                 zoneRow('l<-.l2m^-mn^>-n2...............', template: 'row2')
-                zoneRow('7x<-..........x2...............', template: 'row3')
+                zoneRow('8x>...........x2...............', template: 'row3')
                 // Tabelle o wird hier geschlossen
                 zoneRow('r<-.r..........2........o......')
                 zoneRow('...............6...............')
