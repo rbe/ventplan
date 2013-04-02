@@ -984,7 +984,7 @@ class ProjektModel {
                         m.clear()
                         m.addAll(it.turen)
                     } catch (e) {
-                        // e.printStackTrace()
+                        // ignore
                     }
                 }
                 // Raumvolumentströme - Zu-/Abluftventile
@@ -1166,7 +1166,7 @@ class ProjektModel {
                     view.akustikAbluftTabelle.setRowHeight(rowh + 1)
                     view.akustikAbluftTabelle.setRowMargin(3)
                 } catch (NullPointerException e) {
-                    e.printStackTrace()
+                    // ignore
                 }
             }
         }
