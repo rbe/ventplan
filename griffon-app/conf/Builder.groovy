@@ -15,12 +15,14 @@ root {
         controller = ['Threading']
         view = '*'
     }
+    'griffon.builder.jide.JideBuilder' {
+        view = '*'
+    }
+    'OxbowGriffonAddon' {
+        addon = true
+        controller = ['ask', 'confirm', 'choice', 'error', 'inform', 'input', 'showException', 'radioChoice', 'warn']
+    }
 }
-
-root.'OxbowGriffonAddon'.addon=true
-root.'OxbowGriffonAddon'.controller=['ask','confirm','choice','error','inform','input','showException','radioChoice','warn']
-
-root.'griffon.builder.jide.JideBuilder'.view = '*'
 
 jx {
     'groovy.swing.SwingXBuilder' {
