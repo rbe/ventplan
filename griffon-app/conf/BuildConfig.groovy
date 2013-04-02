@@ -19,8 +19,8 @@ environments {
                 // keystore = "${basedir}/griffon-app/conf/keys/devKeystore"
                 // alias = 'development'
                 storepass = 'BadStorePassword'
-                keypass   = 'BadKeyPassword'
-                lazy      = true // only sign when unsigned
+                keypass = 'BadKeyPassword'
+                lazy = true // only sign when unsigned
             }
         }
     }
@@ -53,6 +53,10 @@ environments {
         }
     }
 }
+
+griffon.source.encoding = 'UTF-8'
+griffon.project.source.level = '1.7'
+griffon.project.target.level = '1.7'
 
 griffon {
     memory {
@@ -104,7 +108,7 @@ signingkey {
         alias = env
         // storepass = 'BadStorePassword'
         // keypass   = 'BadKeyPassword'
-        lazy      = true // only sign when unsigned
+        lazy = true // only sign when unsigned
     }
 }
 
@@ -123,19 +127,19 @@ deploy {
         homepage = "http://www.ventplan.com"
         description {
             complete = "${appName} ${appVersion}"
-            oneline  = "${appName} ${appVersion}"
-            minimal  = "${appName} ${appVersion}"
-            tooltip  = "${appName} ${appVersion}"
+            oneline = "${appName} ${appVersion}"
+            minimal = "${appName} ${appVersion}"
+            tooltip = "${appName} ${appVersion}"
         }
         icon {
             'default' {
-                name   = 'image/ventplan_signet_64x64.png'
-                width  = '64'
+                name = 'image/ventplan_signet_64x64.png'
+                width = '64'
                 height = '64'
             }
             splash {
-                name   = 'image/ventplan_logo.png'
-                width  = '406'
+                name = 'image/ventplan_logo.png'
+                width = '406'
                 height = '77'
                 /*
                 width  = '391'
@@ -143,23 +147,23 @@ deploy {
                 */
             }
             selected {
-                name   = 'image/ventplan_signet_64x64.png'
-                width  = '64'
+                name = 'image/ventplan_signet_64x64.png'
+                width = '64'
                 height = '64'
             }
             disabled {
-                name   = 'image/ventplan_signet_64x64.png'
-                width  = '64'
+                name = 'image/ventplan_signet_64x64.png'
+                width = '64'
                 height = '64'
             }
             rollover {
-                name   = 'image/ventplan_signet_64x64.png'
-                width  = '64'
+                name = 'image/ventplan_signet_64x64.png'
+                width = '64'
                 height = '64'
             }
             shortcut {
-                name   = 'image/ventplan_signet_64x64.png'
-                width  = '64'
+                name = 'image/ventplan_signet_64x64.png'
+                width = '64'
                 height = '64'
             }
         }
@@ -193,10 +197,10 @@ log4j = {
         console name: 'stdout', layout: pattern(conversionPattern: '%d [%t] %-5p %c - %m%n')
     }
     error 'org.codehaus.griffon',
-          'org.springframework',
-          'org.apache.karaf',
-          'groovyx.net'
-    warn  'griffon'
+            'org.springframework',
+            'org.apache.karaf',
+            'groovyx.net'
+    warn 'griffon'
 }
 
 app.fileType = '.groovy'
@@ -209,10 +213,10 @@ compiler {
     threading {
         eu {
             artofcoding {
-            ventplan {
-                desktop = false
+                ventplan {
+                    desktop = false
+                }
             }
         }
     }
-}
 }
