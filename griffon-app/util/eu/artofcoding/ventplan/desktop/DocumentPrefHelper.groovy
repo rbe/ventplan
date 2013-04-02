@@ -9,9 +9,8 @@
  *
  * rbe, 19.03.13 17:23
  */
-package eu.artofcoding.ventplan.desktop
 
-import java.util.prefs.Preferences
+package eu.artofcoding.ventplan.desktop
 
 /**
  * WAC-161: Zuletzt geöffnete Projekte
@@ -19,9 +18,6 @@ import java.util.prefs.Preferences
  */
 @Singleton
 class DocumentPrefHelper {
-
-    private static Preferences prefs = Preferences.userNodeForPackage(this)
-    private static final String PREFS_USER_NODE = "/ventplanauslegung"
 
     public static final String PREFS_USER_KEY_FIRMA = "erstellerFirma"
     public static final String PREFS_USER_KEY_NAME = "erstellerName"
@@ -39,27 +35,17 @@ class DocumentPrefHelper {
 
     private DocumentPrefHelper() {
         // WAC-108 Angebotsnummer soll jedesmal eingegeben werden und wird nur temporär gespeichert
-        prefs.put(PREFS_USER_KEY_ANGEBOTSNUMMER, '')
+        PrefHelper.setPrefValue(PREFS_USER_KEY_ANGEBOTSNUMMER, '')
     }
 
-    public boolean hasSavedValues() {
-        try {
-            def value = getPrefValue(PREFS_USER_KEY_NAME)
-            if (value) {
-                return true
-            } else {
-                return false
-            }
-        } catch (e) {
-            println "${this}.hasSavedValues: EXCEPTION=${e}"
-        }
-        return false
+    public static String getPrefValue(String key) {
+        return PrefHelper.getPrefValue(key)
     }
 
     /**
      * Saves a map of user information into the Preferences.
      */
-    public void save(Map<String, String> map) {
+    public static void save(Map<String, String> map) {
         try {
             [
                     PREFS_USER_KEY_FIRMA, PREFS_USER_KEY_NAME, PREFS_USER_KEY_STRASSE, PREFS_USER_KEY_PLZ, PREFS_USER_KEY_ORT,
@@ -69,45 +55,12 @@ class DocumentPrefHelper {
             ].each {
                 // Remove node - should not exist - and save user information...
                 if (map.containsKey(it)) {
-                    prefs.put(it, map[it])
+                    PrefHelper.setPrefValue(it, map[it])
                 }
             }
-            prefs.flush();
         } catch (Exception e) {
-            e.printStackTrace()
+            // ignore
         }
-    }
-
-    /**
-     * Get a value from the preferences by its preferences key.
-     */
-    public getPrefValue = { String prefKey ->
-        String value = null
-        try {
-            value = prefs.get(prefKey, '')
-        } catch (Exception e) {
-            println "${this}.getPrefValue: EXCEPTION=${e}"
-        }
-        return value
-    }
-
-    /**
-     * Get all pref values as a formatted string.
-     */
-    public String getAllPrefValuesAsString() {
-        String value = null
-        try {
-            value = prefs.get(PREFS_USER_KEY_FIRMA) + '\n' +
-                    prefs.get(PREFS_USER_KEY_NAME) + '\n' +
-                    prefs.get(PREFS_USER_KEY_STRASSE) + '\n' +
-                    prefs.get(PREFS_USER_KEY_PLZ) + ' ' + prefs.get(PREFS_USER_KEY_ORT) + '\n' +
-                    'Tel: ' + prefs.get(PREFS_USER_KEY_TEL) + '\n' +
-                    'Fax: ' + prefs.get(PREFS_USER_KEY_FAX) + '\n' +
-                    'Email: ' + prefs.get(PREFS_USER_KEY_EMAIL) + '\n'
-        } catch (Exception e) {
-            println "${this}.getAllPrefValuesAsString: EXCEPTION=${e}"
-        }
-        return value
     }
 
 }

@@ -9,77 +9,38 @@
  *
  * rbe, 19.03.13 17:23
  */
+
 package eu.artofcoding.ventplan.desktop
 
-import java.util.prefs.Preferences
-
-/**
- * WAC-161: Zuletzt geöffnete Projekte
- * Save and load preferences for a Most Recently Used (MRU) list.
- */
 @Singleton
 class ProjektSuchenPrefHelper {
-
-    private static Preferences prefs = java.util.prefs.Preferences.userNodeForPackage(this)
-
-    private static final String PREFS_USER_NODE = "/ventplanprojektsuchen"
 
     public static final String PREFS_USER_KEY_SUCH_ORDNER = "suchordner"
 
     private ProjektSuchenPrefHelper() {
-        // WAC-108 Angebotsnummer soll jedesmal eingegeben werden und wird nur temporär gespeichert
-    }
-
-    public boolean hasSavedValues() {
-        try {
-            def value = getPrefValue(PREFS_USER_KEY_NAME)
-            if (value) {
-                return true
-            } else {
-                return false
-            }
-        } catch (e) {
-            println "${this}.hasSavedValues: EXCEPTION=${e}"
-        }
-        return false
     }
 
     /**
      * Saves the file path search folder into the Preferences.
      */
-    public void save(filepath) {
+    public static void save(String filepath) {
         try {
             // Remove node - should not exist - and save user information...
-            prefs.put(PREFS_USER_KEY_SUCH_ORDNER, filepath)
-            prefs.flush();
+            PrefHelper.setPrefValue(PREFS_USER_KEY_SUCH_ORDNER, filepath)
         } catch (Exception e) {
-            // do nothing
-            println "${this}.save: EXCEPTION=${e}"
+            // ignore
         }
     }
 
     /**
      * Get a value from the preferences by its preferences key.
      */
-    public getSearchFolder = {
+    public static String getSearchFolder() {
         String value = null;
         try {
-            value = prefs.get(PREFS_USER_KEY_SUCH_ORDNER, '')
+            value = PrefHelper.getPrefValue(PREFS_USER_KEY_SUCH_ORDNER)
         } catch (Exception e) {
-            println "${this}.getPrefValue: EXCEPTION=${e}"
-        }
-        return value
-    }
-
-    /**
-     * Get all pref values as a formatted string.
-     */
-    public String getAllPrefValuesAsString() {
-        String value = null
-        try {
-            value = prefs.get(PREFS_USER_KEY_SUCH_ORDNER)
-        } catch (Exception e) {
-            println "${this}.getAllPrefValuesAsString: EXCEPTION=${e}"
+            // ignore
         }
         return value
     }

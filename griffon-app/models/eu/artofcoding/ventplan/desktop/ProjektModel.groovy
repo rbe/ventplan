@@ -9,6 +9,7 @@
  *
  * rbe, 19.03.13 17:23
  */
+
 package eu.artofcoding.ventplan.desktop
 
 import ca.odell.glazedlists.BasicEventList
@@ -607,21 +608,21 @@ class ProjektModel {
      * @param preValueSet Closure to execute before value was set
      */
     def gltmClosureCheckbox = { columnNames, propertyNames, writable, tableModel, postValueSet = null, preValueSet = null ->
-        new EventTableModel(tableModel, [
+        EventTableModel etm = new EventTableModel(tableModel, [
                 getColumnCount: { columnNames.size() },
                 getColumnName: { columnIndex -> columnNames[columnIndex] },
                 getColumnValue: { object, columnIndex ->
                     if (columnIndex == 4) {
                         def tempValue = object."${propertyNames[columnIndex]}"
-                        //println "tempValue ${tempValue}"
-                        if (tempValue == "0,00" || tempValue == "0.00") {
+                        if (tempValue == '0,00' || tempValue == '0.00') {
                             true
                         } else {
                             tempValue
                         }
                     } else {
                         try {
-                            object."${propertyNames[columnIndex]}"?.toString2()
+                            def var = object."${propertyNames[columnIndex]}"
+                            var?.toString2()
                         } catch (e) {
                             // WAC-174
                             object?.toString()
@@ -655,14 +656,17 @@ class ProjektModel {
                     // No value to get...
                 },
                 getColumnClass: { columnIndex ->
+                    Class x = String.class
                     if (columnIndex == 4) {
-                        java.lang.Boolean.class
+                        x = Boolean.class
                     }
+                    x
                 },
                 getColumnComparator: { columnIndex ->
                     null
                 }
         ] as AdvancedWritableTableFormat)
+        return etm
     }
 
     /**
@@ -734,7 +738,8 @@ class ProjektModel {
             // Call ProjektController
             app.controllers[mvcId].berechneTuren(null, meta.gewahlterRaum.position)
         }
-        gltmClosureCheckbox(columnNames, propertyNames, writable, tableModels.raumeTuren[index], postValueSet)
+        def x = gltmClosureCheckbox(columnNames, propertyNames, writable, tableModels.raumeTuren[index], postValueSet)
+        x
     }
 
     /**
@@ -960,12 +965,10 @@ class ProjektModel {
           }
           */
         SwingUtilities.invokeLater {
-            synchronized (tableModels) {
+//            synchronized (tableModels) {
                 // Remember selected row
                 def view = app.views[mvcId]
                 def selected = view.raumTabelle.selectedRow
-                //println "-" * 80
-                //println "resyncRaumTableModels"
                 // Raumdaten
                 def newRaume = GlazedListsSwing.swingThreadProxyList(tableModels.raume)
                 //tableModels.raume.clear()
@@ -981,7 +984,7 @@ class ProjektModel {
                         m.clear()
                         m.addAll(it.turen)
                     } catch (e) {
-                        // e.printStackTrace()
+                        // ignore
                     }
                 }
                 // Raumvolumentströme - Zu-/Abluftventile
@@ -1000,13 +1003,12 @@ class ProjektModel {
                 // when RaumBearbeitenDialog was not opened before
                 // Quickfix: added null-safe-operator
                 tableModels.raumeBearbeiten?.addAll(map.raum.raume)
-                //println "-" * 80
                 // Select previously selected row
                 if (selected && selected > -1) {
                     view.raumTabelle.changeSelection(selected, 0, false, false)
                 }
             }
-        }
+//        }
     }
 
     /**
@@ -1164,7 +1166,7 @@ class ProjektModel {
                     view.akustikAbluftTabelle.setRowHeight(rowh + 1)
                     view.akustikAbluftTabelle.setRowMargin(3)
                 } catch (NullPointerException e) {
-                    e.printStackTrace()
+                    // ignore
                 }
             }
         }
@@ -1277,7 +1279,7 @@ class ProjektModel {
             view.raumTabelle.getTableHeader().getDefaultRenderer().setPreferredSize(new Dimension(0, 40))
             view.raumTabelle.repaint()
         } catch (e) {
-            println "ProjektModel: refreshTableHeaderHeight: Error while modifying raumTabelle: ${e}"
+            //println "ProjektModel: refreshTableHeaderHeight: Error while modifying raumTabelle: ${e}"
         }
         // raumVsUberstromelementeTabelle
         try {
@@ -1285,7 +1287,7 @@ class ProjektModel {
             view.raumVsUberstromelementeTabelle.getTableHeader().setPreferredSize(new Dimension(0, 40));
             view.raumVsUberstromelementeTabelle.repaint()
         } catch (e) {
-            println "ProjektModel: refreshTableHeaderHeight: Error while modifying raumVsUberstromelementeTabelle: ${e}"
+            //println "ProjektModel: refreshTableHeaderHeight: Error while modifying raumVsUberstromelementeTabelle: ${e}"
         }
         // raumVsZuAbluftventileTabelle
         try {
@@ -1293,7 +1295,7 @@ class ProjektModel {
             view.raumVsZuAbluftventileTabelle.getTableHeader().setPreferredSize(new Dimension(0, 40));
             view.raumVsZuAbluftventileTabelle.repaint()
         } catch (e) {
-            println "ProjektModel: refreshTableHeaderHeight: Error while modifying raumVsZuAbluftventileTabelle: ${e}"
+            //println "ProjektModel: refreshTableHeaderHeight: Error while modifying raumVsZuAbluftventileTabelle: ${e}"
         }
         // dvbKanalnetzTabelle
         try {
@@ -1301,7 +1303,7 @@ class ProjektModel {
             view.dvbKanalnetzTabelle.getTableHeader().setPreferredSize(new Dimension(0, 40));
             view.dvbKanalnetzTabelle.repaint()
         } catch (e) {
-            println "ProjektModel: refreshTableHeaderHeight: Error while modifying dvbKanalnetzTabelle: ${e}"
+            //println "ProjektModel: refreshTableHeaderHeight: Error while modifying dvbKanalnetzTabelle: ${e}"
         }
         // dvbVentileinstellungTabelle
         try {
@@ -1309,7 +1311,7 @@ class ProjektModel {
             view.dvbVentileinstellungTabelle.getTableHeader().setPreferredSize(new Dimension(0, 40));
             view.dvbVentileinstellungTabelle.repaint()
         } catch (e) {
-            println "ProjektModel: refreshTableHeaderHeight: Error while modifying dvbVentileinstellungTabelle: ${e}"
+            //println "ProjektModel: refreshTableHeaderHeight: Error while modifying dvbVentileinstellungTabelle: ${e}"
         }
     }
 

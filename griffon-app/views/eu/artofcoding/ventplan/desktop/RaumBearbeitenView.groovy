@@ -9,10 +9,14 @@
  *
  * rbe, 19.03.13 17:23
  */
+
 package eu.artofcoding.ventplan.desktop
 
 import eu.artofcoding.griffon.helper.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
+
+import javax.swing.*
+import java.awt.*
 
 // RaumdatenDialogView
 jideScrollPane(id: "raumBearbeitenScrollPane") {
@@ -51,7 +55,7 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
                 button(id: "raumBearbeitenDetailsTurentfernen", text: "Tür entfernen", constraints: "wrap")
 
                 jideScrollPane(constraints: "height 150px, span") {
-                    table(id: "raumBearbeitenTurenTabelle", model: model.createRaumTurenTableModel(), selectionMode: javax.swing.ListSelectionModel.SINGLE_SELECTION) {
+                    table(id: "raumBearbeitenTurenTabelle", model: model.createRaumTurenTableModel(), selectionMode: ListSelectionModel.SINGLE_SELECTION) {
                     }
                 }
                 
@@ -133,6 +137,7 @@ GH.autoformatDoubleTextField(raumBearbeitenOptionalRaumbreite)
 GH.autoformatDoubleTextField(raumBearbeitenOptionalRaumhohe)
 GH.autoformatDoubleTextField(raumBearbeitenOptionalRaumflache)
 GH.autoformatDoubleTextField(raumBearbeitenOptionalRaumvolumen)
+
 // Bindings
 build(RaumBearbeitenBindings)
 

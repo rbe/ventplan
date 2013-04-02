@@ -15,7 +15,7 @@ package eu.artofcoding.ventplan.desktop
 import groovy.sql.GroovyRowResult
 
 /**
- *
+ * Stückliste.
  */
 class StucklisteService {
 

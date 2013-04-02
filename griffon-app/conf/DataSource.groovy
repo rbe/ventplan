@@ -34,25 +34,6 @@ environments {
         dataSource {
             // install4j
             url = 'jdbc:sqlite:lib/ventplan.db'
-            //
-            // Windows
-            //
-            // griffon prod prepare-windows
-            // griffon prod create-windows
-            //url = 'jdbc:sqlite:../lib/ventplan.db'
-            //
-            // OS X
-            //
-            // griffon prod prepare-mac
-            // griffon prod create-mac
-            // url = 'jdbc:sqlite:Ventplan.app/Contents/Resources/Java/ventplan.db'
-            //
-            // Package
-            //
-            // griffon prod package zip
-            // url = 'jdbc:sqlite:lib/ventplan.db'
-            // griffon prod package jar
-            // url = 'jdbc:sqlite:ventplan.db'
         }
     }
 }

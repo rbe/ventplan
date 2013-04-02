@@ -45,11 +45,10 @@ class ProjektController {
     OdiseeService odiseeService
     PrinzipskizzeService prinzipskizzeService
 
-    JDialog raumBearbeitenDialog
+    def raumBearbeitenDialog
     def wbwDialog
     def teilstreckenDialog
 
-    static DocumentPrefHelper auslegungPrefs = DocumentPrefHelper.instance
     boolean nutzerdatenGeandert
     def nutzerdatenDialog // org.jdesktop.swingx.JXDialog
 
@@ -262,16 +261,14 @@ class ProjektController {
         try {
             model.resyncRaumTableModels()
         } catch (e) {
-            //println "berechneAlles: resyncRaumTableModels: ${e}"
-            e.printStackTrace()
+            // ignore
         }
         //
         model.map.raum.raume.each { raum ->
             try {
                 raumGeandert(raum.position)
             } catch (e) {
-                //println "berechneAlles: ${raum.raumBezeichnung} ${e}"
-                e.printStackTrace()
+                // ignore
             }
         }
         model.resyncRaumTableModels()
@@ -503,7 +500,7 @@ class ProjektController {
                 view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition = personenanzahlCaretPos
                 view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition = aussenluftVsProPersonCaretPos
             } catch (e) {
-                e.printStackTrace()
+                // ignore
             }
             // Berechnen
             berechneAussenluftVs()
@@ -1036,7 +1033,7 @@ class ProjektController {
             def row = view.raumTabelle.selectedRow
             if (row > -1) {
                 // Show dialog
-                raumBearbeitenDialog = GH.createDialog(builder, RaumBearbeitenView, [title: "Raum bearbeiten", pack: true])
+                raumBearbeitenDialog = GH.createDialog(builder, RaumBearbeitenView, [title: 'Raum bearbeiten', pack: true])
                 // Modify TableModel for Turen
                 def columnModel = view.raumBearbeitenTurenTabelle.columnModel
                 GH.makeComboboxCellEditor(columnModel.getColumn(0), model.meta.raumTurTyp)
@@ -1045,7 +1042,7 @@ class ProjektController {
                 raumBearbeitenDialog = GH.centerDialog(app.views['MainFrame'], raumBearbeitenDialog)
                 raumBearbeitenDialog.setVisible(true) //.show()
             } else {
-                //println "${this}.raumBearbeiten: no row selected"
+                // ignore
             }
         }
     }
@@ -1249,17 +1246,7 @@ class ProjektController {
                 model.meta.volumenstromZentralgerat = []
                 def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
                 try {
-                    // TODO java.util.NoSuchElementException
-                    /*
-                       2012-07-09 12:54:27,463 ERROR  GriffonExceptionHandler - Uncaught Exception
-                       java.util.NoSuchElementException: Cannot access last() element from an empty List
-                           at org.codehaus.groovy.runtime.DefaultGroovyMethods.last(DefaultGroovyMethods.java:7465)
-                           at org.codehaus.groovy.runtime.dgm$432.invoke(Unknown Source)
-                           at org.codehaus.groovy.runtime.callsite.PojoMetaMethodSite$PojoMetaMethodSiteNoUnwrapNoCoerce.invoke(PojoMetaMethodSite.java:271)
-                           at org.codehaus.groovy.runtime.callsite.PojoMetaMethodSite.call(PojoMetaMethodSite.java:53)
-                           at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:112)
-                           at com.ventplan.desktop.ProjektController$_zentralgeratAktualisieren_closure90_closure184.doCall(ProjektController.groovy:1613)
-                    */
+                    // TODO java.util.NoSuchElementException .last() when no data available
                     def maxVsZentralgerat = volumenstromZentralgerat.toList().last() as Integer
                     (minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
                     // Füge Volumenströme in Comboboxen hinzu
@@ -1287,7 +1274,7 @@ class ProjektController {
                     view.akustikZuluftPegel.selectedItem = foundVs
                     view.akustikAbluftPegel.selectedItem = foundVs
                 } catch (NoSuchElementException e) {
-                    e.printStackTrace()
+                    // ignore
                 }
             }
             // WAC-223
@@ -1784,16 +1771,16 @@ class ProjektController {
         String _okButtonText = okButtonText ?: 'Dokument erstellen'
         view.nutzerdatenSpeichernButton.text = _okButtonText
         // Gespeicherte Daten holen und in den Dialog setzen
-        view.erstellerFirma.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_FIRMA)
-        view.erstellerName.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_NAME)
-        view.erstellerAnschrift.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_STRASSE)
-        view.erstellerPlz.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_PLZ)
-        view.erstellerOrt.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_ORT)
-        view.erstellerTelefon.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_TEL)
-        view.erstellerFax.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_FAX)
-        view.erstellerEmail.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_EMAIL)
+        view.erstellerFirma.text =     DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_FIRMA)
+        view.erstellerName.text =      DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_NAME)
+        view.erstellerAnschrift.text = DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_STRASSE)
+        view.erstellerPlz.text =       DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_PLZ)
+        view.erstellerOrt.text =       DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_ORT)
+        view.erstellerTelefon.text =   DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_TEL)
+        view.erstellerFax.text =       DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_FAX)
+        view.erstellerEmail.text =     DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_EMAIL)
         try {
-            view.dokumentEmpfanger.selectedItem = auslegungPrefs.getPrefValue(PREFS_USER_KEY_EMPFANGER)
+            view.dokumentEmpfanger.selectedItem = DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_EMPFANGER)
         } catch (MissingPropertyException e) {
             // maybe... ok to ignore.
         }
@@ -1807,7 +1794,7 @@ class ProjektController {
         if (dialogClass == PrinzipskizzeNutzerdatenView) {
             // ignore
         } else {
-            view.erstellerDokumenttyp.selectedItem = auslegungPrefs.getPrefValue(PREFS_USER_KEY_DOKUMENTTYP)
+            view.erstellerDokumenttyp.selectedItem = DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_DOKUMENTTYP)
         }
         // Closure ausführen
         if (closure) {
@@ -1870,7 +1857,7 @@ class ProjektController {
                 map.put(PREFS_USER_KEY_PRINZIPSKIZZE_PLAN, plan)
             } catch (e) {}
             // Daten via Preferences API speichern
-            auslegungPrefs.save(map)
+            DocumentPrefHelper.save(map)
             // Benutzerdaten wurden geändert, bitte fortfahren...
             nutzerdatenGeandert = true
         } catch (e) {
@@ -2151,7 +2138,6 @@ class ProjektController {
                             e
                     )
                 } catch (Exception e) {
-                    e.printStackTrace()
                     documentWaitDialog?.dispose()
                     DialogController dialog = (DialogController) app.controllers['Dialog']
                     dialog.showError(
@@ -2260,8 +2246,7 @@ class ProjektController {
                     //println "ProjektController.angebotsverfolgungErstellen resp=${resp?.dump()}"
                 }
             } catch (e) {
-                //println "ProjektController.angebotsverfolgungErstellen exception -> ${e.dump()}"
-                e.printStackTrace()
+                // ignore
             }
         } else {
             DialogController dialog = (DialogController) app.controllers['Dialog']

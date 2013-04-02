@@ -49,6 +49,9 @@ class VentplanController {
      */
     static int projektCounter = 1
 
+    /**
+     * WAC-161: Zuletzt geöffnete Projekte
+     */
     static MRUFileManager mruFileManager = MRUFileManager.instance
 
     /**
@@ -105,7 +108,7 @@ class VentplanController {
                 def mvcGroup = getMVCGroup(mvcId)
                 model.aktivesProjektGeandert = mvcGroup.model?.map?.dirty
             } catch (e) {
-                e.printStackTrace()
+                // ignore
             }
         }
     }
@@ -176,6 +179,7 @@ class VentplanController {
                     break
             }
         }
+        // WAC-161: Zuletzt geöffnete Projekte
         mruFileManager.save()
         return proceed
     }
@@ -257,13 +261,13 @@ class VentplanController {
                             ventplanFrame.invalidate()
                             ventplanFrame.validate()
                         } catch (e) {
-                            e.printStackTrace()
+                            // ignore
                         }
                     }
                     model.statusBarText = ''
                     view.mainStatusBarText.text = ''
                 } catch (Exception e) {
-                    e.printStackTrace()
+                    // ignore
                 }
             }
             // do sth. when the task is done.
@@ -418,7 +422,7 @@ class VentplanController {
                     model.statusBarText = 'Bereit.'
                 } catch (e) {
                     model.statusBarText = 'Fehler!'
-                    e.printStackTrace()
+                    // ignore
                 } finally {
                     if (resetFilename) {
                         mvc.model.vpxFilename = null

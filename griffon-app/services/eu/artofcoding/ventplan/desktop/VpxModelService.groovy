@@ -78,7 +78,7 @@ class VpxModelService {
             // Return document
             xmlSlurper.parseText(xml)
         } catch (e) {
-            e.printStackTrace()
+            // ignore
         }
     }
 

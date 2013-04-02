@@ -28,8 +28,7 @@ vpxFileChooserWindow = fileChooser(
         fileFilter: [
                 getDescription: {-> 'Ventplan Projekt XML' },
                 accept: { file ->
-                    def b = file.isDirectory() || file.name.toLowerCase().endsWith('.vpx') || file.name.toLowerCase().endsWith('.wpx')
-                    //println "wpxFileChooser: filtering ${file.name} isDirectory=${file.isDirectory()} endsWith(wpx)=${file.name.endsWith(".wpx")} -> ${b}"
+                    def b = file.isDirectory() || file.name.toLowerCase().endsWith('.vpx')
                     return b
                 }
         ] as FileFilter

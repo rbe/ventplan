@@ -36,7 +36,7 @@ public class ImageComboBox extends JComboBox {
             layingOut = true;
             super.doLayout();
         } catch (e) {
-            e.printStackTrace()
+            // ignore
         } finally {
             layingOut = false;
         }
