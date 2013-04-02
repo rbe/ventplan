@@ -21,7 +21,7 @@ class CachedDTD {
                 try {
                     new InputSource(CachedDTD.class.getResourceAsStream("dtd/${systemId.split('/').last()}"))
                 } catch (e) {
-                    e.printStackTrace()
+                    // ignore
                     null
                 }
             }

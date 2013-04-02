@@ -58,7 +58,6 @@ class MRUFileManager {
             }
         } catch (Exception e) {
             // ignore
-            e.printStackTrace();
         }
     }
 
@@ -145,7 +144,6 @@ class MRUFileManager {
                     setMRU(value);
                 }
             } catch (Exception e) {
-                e.printStackTrace()
                 // key is not in prefs...
                 break
             }

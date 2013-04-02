@@ -105,7 +105,7 @@ class VentplanController {
                 def mvcGroup = getMVCGroup(mvcId)
                 model.aktivesProjektGeandert = mvcGroup.model?.map?.dirty
             } catch (e) {
-                e.printStackTrace()
+                // ignore
             }
         }
     }
@@ -257,13 +257,13 @@ class VentplanController {
                             ventplanFrame.invalidate()
                             ventplanFrame.validate()
                         } catch (e) {
-                            e.printStackTrace()
+                            // ignore
                         }
                     }
                     model.statusBarText = ''
                     view.mainStatusBarText.text = ''
                 } catch (Exception e) {
-                    e.printStackTrace()
+                    // ignore
                 }
             }
             // do sth. when the task is done.
@@ -418,7 +418,7 @@ class VentplanController {
                     model.statusBarText = 'Bereit.'
                 } catch (e) {
                     model.statusBarText = 'Fehler!'
-                    e.printStackTrace()
+                    // ignore
                 } finally {
                     if (resetFilename) {
                         mvc.model.vpxFilename = null

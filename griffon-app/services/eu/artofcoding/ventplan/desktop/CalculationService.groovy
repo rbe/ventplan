@@ -98,7 +98,6 @@ class CalculationService {
             // Gelüftetes Volumen = Luftvolumen, wenn kein gelüftetes Volumen berechnet
             g.geluftetesVolumen = g.luftvolumen && !g.geluftetesVolumen ? g.luftvolumen : 0.0d
         } catch (e) {
-            e.printStackTrace()
             g.luftvolumen = g.geluftetesVolumen = 'E'
         }
         // Set calculated values in model
@@ -652,7 +651,6 @@ class CalculationService {
                 // 6
                 map.raumAnzahlUberstromVentile = Math.ceil(usRechenwert / maxVolumenstrom)
             } catch (e) {
-                e.printStackTrace()
                 map.raumAnzahlUberstromVentile = 0.0d
             }
         }
@@ -842,8 +840,7 @@ class CalculationService {
                         it.turSpalthohe = tsqf / summeTurBreiten
                         it.turQuerschnitt = tsqf * it.turBreite / summeTurBreiten
                     } catch (e) {
-                        e.printStackTrace()
-                        //println 'berechneTurspalt: EXCEPTION=${e}'
+                        // ignore
                     }
                 }
                 // WAC-165: Hinweis: Türspalt > max. Türspalthöhe?

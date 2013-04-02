@@ -36,7 +36,6 @@ class DialogController {
         dlg.setIcon(TaskDialog.StandardIcon.ERROR);
         dlg.setText(message ?: 'Leider ist ein Fehler aufgetreten. Diese Aktion wurde an den Hersteller berichtet.');
         if (null != throwable) {
-            throwable.printStackTrace();
             StringBuilder builder = new StringBuilder();
             builder.append(String.format('%s: %s<br/>%n', throwable.getClass().getName(), throwable.getLocalizedMessage()));
             int i = 0;

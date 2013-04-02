@@ -167,7 +167,6 @@ class GriffonHelper {
                 r = nf.parse(d) as Double
             } catch (e) {
                 println "toDouble2: Exception while converting string ${d?.dump()} to double: d=${delegate} digits=${digits} e=${e}"
-                //e.printStackTrace()
                 return d
             }
         }
@@ -424,7 +423,6 @@ class GriffonHelper {
                 closure(component)
             } catch (e) {
                 println "recurse(${component.class}): EXCEPTION=${e}"
-                e.printStackTrace()
             }
         } else if (component instanceof javax.swing.JPanel || component instanceof javax.swing.JTabbedPane) { /*java.awt.Container*/
             component.components.each { GriffonHelper.recurse(it, closure) }

@@ -261,16 +261,14 @@ class ProjektController {
         try {
             model.resyncRaumTableModels()
         } catch (e) {
-            //println "berechneAlles: resyncRaumTableModels: ${e}"
-            e.printStackTrace()
+            // ignore
         }
         //
         model.map.raum.raume.each { raum ->
             try {
                 raumGeandert(raum.position)
             } catch (e) {
-                //println "berechneAlles: ${raum.raumBezeichnung} ${e}"
-                e.printStackTrace()
+                // ignore
             }
         }
         model.resyncRaumTableModels()
@@ -502,7 +500,7 @@ class ProjektController {
                 view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition = personenanzahlCaretPos
                 view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition = aussenluftVsProPersonCaretPos
             } catch (e) {
-                e.printStackTrace()
+                // ignore
             }
             // Berechnen
             berechneAussenluftVs()
@@ -1286,7 +1284,7 @@ class ProjektController {
                     view.akustikZuluftPegel.selectedItem = foundVs
                     view.akustikAbluftPegel.selectedItem = foundVs
                 } catch (NoSuchElementException e) {
-                    e.printStackTrace()
+                    // ignore
                 }
             }
             // WAC-223
@@ -2150,7 +2148,6 @@ class ProjektController {
                             e
                     )
                 } catch (Exception e) {
-                    e.printStackTrace()
                     documentWaitDialog?.dispose()
                     DialogController dialog = (DialogController) app.controllers['Dialog']
                     dialog.showError(
@@ -2259,8 +2256,7 @@ class ProjektController {
                     //println "ProjektController.angebotsverfolgungErstellen resp=${resp?.dump()}"
                 }
             } catch (e) {
-                //println "ProjektController.angebotsverfolgungErstellen exception -> ${e.dump()}"
-                e.printStackTrace()
+                // ignore
             }
         } else {
             DialogController dialog = (DialogController) app.controllers['Dialog']

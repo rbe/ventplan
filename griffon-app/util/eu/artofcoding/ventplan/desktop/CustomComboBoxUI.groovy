@@ -27,7 +27,6 @@ public class CustomComboBoxUI extends BasicComboBoxUI {
                 try {
                     cwidth = this.comboBox.getPreferredSize().getWidth()
                 } catch (Exception e) {
-                    e.printStackTrace()
                     // ignore
                 }
                 //println "cwidth: ${cwidth}, pw: ${pw}, ph: ${ph}"
