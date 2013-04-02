@@ -1246,17 +1246,7 @@ class ProjektController {
                 model.meta.volumenstromZentralgerat = []
                 def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
                 try {
-                    // TODO java.util.NoSuchElementException
-                    /*
-                       2012-07-09 12:54:27,463 ERROR  GriffonExceptionHandler - Uncaught Exception
-                       java.util.NoSuchElementException: Cannot access last() element from an empty List
-                           at org.codehaus.groovy.runtime.DefaultGroovyMethods.last(DefaultGroovyMethods.java:7465)
-                           at org.codehaus.groovy.runtime.dgm$432.invoke(Unknown Source)
-                           at org.codehaus.groovy.runtime.callsite.PojoMetaMethodSite$PojoMetaMethodSiteNoUnwrapNoCoerce.invoke(PojoMetaMethodSite.java:271)
-                           at org.codehaus.groovy.runtime.callsite.PojoMetaMethodSite.call(PojoMetaMethodSite.java:53)
-                           at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:112)
-                           at com.ventplan.desktop.ProjektController$_zentralgeratAktualisieren_closure90_closure184.doCall(ProjektController.groovy:1613)
-                    */
+                    // TODO java.util.NoSuchElementException .last() when no data available
                     def maxVsZentralgerat = volumenstromZentralgerat.toList().last() as Integer
                     (minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
                     // Füge Volumenströme in Comboboxen hinzu

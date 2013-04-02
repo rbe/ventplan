@@ -49,6 +49,9 @@ class VentplanController {
      */
     static int projektCounter = 1
 
+    /**
+     * WAC-161: Zuletzt geöffnete Projekte
+     */
     static MRUFileManager mruFileManager = MRUFileManager.instance
 
     /**
@@ -176,6 +179,7 @@ class VentplanController {
                     break
             }
         }
+        // WAC-161: Zuletzt geöffnete Projekte
         mruFileManager.save()
         return proceed
     }
