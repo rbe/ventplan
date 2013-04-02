@@ -9,6 +9,7 @@
  *
  * rbe, 19.03.13 17:23
  */
+
 package eu.artofcoding.ventplan.desktop
 
 import groovy.sql.Sql
@@ -56,13 +57,6 @@ class VentplanModelService {
     //
     // Stückliste
     //
-
-    /*
-    def sql
-    def withSql(closure) {
-        closure('default', sql)
-    }
-    */
 
     /**
      * Get value from JDBC result, e.g. take care of CLOB.
