@@ -9,15 +9,11 @@
  *
  * rbe, 19.03.13 17:23
  */
+
 package eu.artofcoding.ventplan.desktop
 
 class ZipcodeService {
 
-    /**
-     *
-     * @param zipcode
-     * @return
-     */
     Map findVertreter(String zipcode) {
         def r = withSql { dataSourceName, sql ->
             sql.rows('SELECT * FROM handelsvertretung'

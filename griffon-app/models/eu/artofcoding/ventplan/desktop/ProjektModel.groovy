@@ -9,6 +9,7 @@
  *
  * rbe, 19.03.13 17:23
  */
+
 package eu.artofcoding.ventplan.desktop
 
 import ca.odell.glazedlists.BasicEventList
@@ -968,8 +969,6 @@ class ProjektModel {
                 // Remember selected row
                 def view = app.views[mvcId]
                 def selected = view.raumTabelle.selectedRow
-                //println "-" * 80
-                //println "resyncRaumTableModels"
                 // Raumdaten
                 def newRaume = GlazedListsSwing.swingThreadProxyList(tableModels.raume)
                 //tableModels.raume.clear()
@@ -1004,7 +1003,6 @@ class ProjektModel {
                 // when RaumBearbeitenDialog was not opened before
                 // Quickfix: added null-safe-operator
                 tableModels.raumeBearbeiten?.addAll(map.raum.raume)
-                //println "-" * 80
                 // Select previously selected row
                 if (selected && selected > -1) {
                     view.raumTabelle.changeSelection(selected, 0, false, false)
@@ -1281,7 +1279,7 @@ class ProjektModel {
             view.raumTabelle.getTableHeader().getDefaultRenderer().setPreferredSize(new Dimension(0, 40))
             view.raumTabelle.repaint()
         } catch (e) {
-            println "ProjektModel: refreshTableHeaderHeight: Error while modifying raumTabelle: ${e}"
+            //println "ProjektModel: refreshTableHeaderHeight: Error while modifying raumTabelle: ${e}"
         }
         // raumVsUberstromelementeTabelle
         try {
@@ -1289,7 +1287,7 @@ class ProjektModel {
             view.raumVsUberstromelementeTabelle.getTableHeader().setPreferredSize(new Dimension(0, 40));
             view.raumVsUberstromelementeTabelle.repaint()
         } catch (e) {
-            println "ProjektModel: refreshTableHeaderHeight: Error while modifying raumVsUberstromelementeTabelle: ${e}"
+            //println "ProjektModel: refreshTableHeaderHeight: Error while modifying raumVsUberstromelementeTabelle: ${e}"
         }
         // raumVsZuAbluftventileTabelle
         try {
@@ -1297,7 +1295,7 @@ class ProjektModel {
             view.raumVsZuAbluftventileTabelle.getTableHeader().setPreferredSize(new Dimension(0, 40));
             view.raumVsZuAbluftventileTabelle.repaint()
         } catch (e) {
-            println "ProjektModel: refreshTableHeaderHeight: Error while modifying raumVsZuAbluftventileTabelle: ${e}"
+            //println "ProjektModel: refreshTableHeaderHeight: Error while modifying raumVsZuAbluftventileTabelle: ${e}"
         }
         // dvbKanalnetzTabelle
         try {
@@ -1305,7 +1303,7 @@ class ProjektModel {
             view.dvbKanalnetzTabelle.getTableHeader().setPreferredSize(new Dimension(0, 40));
             view.dvbKanalnetzTabelle.repaint()
         } catch (e) {
-            println "ProjektModel: refreshTableHeaderHeight: Error while modifying dvbKanalnetzTabelle: ${e}"
+            //println "ProjektModel: refreshTableHeaderHeight: Error while modifying dvbKanalnetzTabelle: ${e}"
         }
         // dvbVentileinstellungTabelle
         try {
@@ -1313,7 +1311,7 @@ class ProjektModel {
             view.dvbVentileinstellungTabelle.getTableHeader().setPreferredSize(new Dimension(0, 40));
             view.dvbVentileinstellungTabelle.repaint()
         } catch (e) {
-            println "ProjektModel: refreshTableHeaderHeight: Error while modifying dvbVentileinstellungTabelle: ${e}"
+            //println "ProjektModel: refreshTableHeaderHeight: Error while modifying dvbVentileinstellungTabelle: ${e}"
         }
     }
 
