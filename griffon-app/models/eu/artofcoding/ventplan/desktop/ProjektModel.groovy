@@ -607,21 +607,21 @@ class ProjektModel {
      * @param preValueSet Closure to execute before value was set
      */
     def gltmClosureCheckbox = { columnNames, propertyNames, writable, tableModel, postValueSet = null, preValueSet = null ->
-        new EventTableModel(tableModel, [
+        EventTableModel etm = new EventTableModel(tableModel, [
                 getColumnCount: { columnNames.size() },
                 getColumnName: { columnIndex -> columnNames[columnIndex] },
                 getColumnValue: { object, columnIndex ->
                     if (columnIndex == 4) {
                         def tempValue = object."${propertyNames[columnIndex]}"
-                        //println "tempValue ${tempValue}"
-                        if (tempValue == "0,00" || tempValue == "0.00") {
+                        if (tempValue == '0,00' || tempValue == '0.00') {
                             true
                         } else {
                             tempValue
                         }
                     } else {
                         try {
-                            object."${propertyNames[columnIndex]}"?.toString2()
+                            def var = object."${propertyNames[columnIndex]}"
+                            var?.toString2()
                         } catch (e) {
                             // WAC-174
                             object?.toString()
@@ -655,14 +655,17 @@ class ProjektModel {
                     // No value to get...
                 },
                 getColumnClass: { columnIndex ->
+                    Class x = String.class
                     if (columnIndex == 4) {
-                        java.lang.Boolean.class
+                        x = Boolean.class
                     }
+                    x
                 },
                 getColumnComparator: { columnIndex ->
                     null
                 }
         ] as AdvancedWritableTableFormat)
+        return etm
     }
 
     /**
@@ -734,7 +737,8 @@ class ProjektModel {
             // Call ProjektController
             app.controllers[mvcId].berechneTuren(null, meta.gewahlterRaum.position)
         }
-        gltmClosureCheckbox(columnNames, propertyNames, writable, tableModels.raumeTuren[index], postValueSet)
+        def x = gltmClosureCheckbox(columnNames, propertyNames, writable, tableModels.raumeTuren[index], postValueSet)
+        x
     }
 
     /**

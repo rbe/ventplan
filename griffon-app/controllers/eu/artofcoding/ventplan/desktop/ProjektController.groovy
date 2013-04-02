@@ -45,7 +45,7 @@ class ProjektController {
     OdiseeService odiseeService
     PrinzipskizzeService prinzipskizzeService
 
-    JDialog raumBearbeitenDialog
+    def raumBearbeitenDialog
     def wbwDialog
     def teilstreckenDialog
 
@@ -1035,7 +1035,7 @@ class ProjektController {
             def row = view.raumTabelle.selectedRow
             if (row > -1) {
                 // Show dialog
-                raumBearbeitenDialog = GH.createDialog(builder, RaumBearbeitenView, [title: "Raum bearbeiten", pack: true])
+                raumBearbeitenDialog = GH.createDialog(builder, RaumBearbeitenView, [title: 'Raum bearbeiten', pack: true])
                 // Modify TableModel for Turen
                 def columnModel = view.raumBearbeitenTurenTabelle.columnModel
                 GH.makeComboboxCellEditor(columnModel.getColumn(0), model.meta.raumTurTyp)
@@ -1044,7 +1044,7 @@ class ProjektController {
                 raumBearbeitenDialog = GH.centerDialog(app.views['MainFrame'], raumBearbeitenDialog)
                 raumBearbeitenDialog.setVisible(true) //.show()
             } else {
-                //println "${this}.raumBearbeiten: no row selected"
+                // ignore
             }
         }
     }
