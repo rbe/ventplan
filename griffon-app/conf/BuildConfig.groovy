@@ -208,10 +208,12 @@ application.icon = '/griffon-app/resources/Ventplan.icns'
 // -Dgriffon.disable.threading.injection=true
 compiler {
     threading {
-        com {
+        eu {
+            artofcoding {
             ventplan {
                 desktop = false
             }
         }
     }
+}
 }
