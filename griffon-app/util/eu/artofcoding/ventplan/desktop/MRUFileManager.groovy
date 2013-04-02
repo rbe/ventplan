@@ -9,6 +9,7 @@
  *
  * rbe, 19.03.13 17:23
  */
+
 package eu.artofcoding.ventplan.desktop
 
 /**
@@ -17,27 +18,25 @@ package eu.artofcoding.ventplan.desktop
  */
 class MRUFileManager {
 
-    private static final String LAST_TEN_OPEN_PROJECTS = "LastTenProjects"
-    private static final String PREFS_USER_NODE = "/ventplanprojects";
-    public static final int DEFAULT_MAX_SIZE = 10;
+    public static final String DEFAULT_NODE = "/com/ventplan/desktop/mru"
 
+    public static final int DEFAULT_MAX_SIZE = 10;
     private int currentMaxSize = 0;
     private LinkedList mruFileList;
 
-    private static MRUFileManager INSTANCE = null;
+    private static MRUFileManager INSTANCE = new MRUFileManager();
 
     public static MRUFileManager getInstance() {
-        if (null == INSTANCE) {
-            return new MRUFileManager();
-        }
-        else {
-            return INSTANCE;
-        }
+        return INSTANCE;
     }
 
     private MRUFileManager() {
         load();
         setMaxSize(DEFAULT_MAX_SIZE);
+    }
+
+    public static String getPrefValue(int i) {
+        return PrefHelper.getPrefValue(DEFAULT_NODE, '' + i)
     }
 
     /**
@@ -46,21 +45,19 @@ class MRUFileManager {
     public void save() {
         try {
             // Remove node and save the new list...
-            getPrefs().removeNode();
+            PrefHelper.getPrefs(DEFAULT_NODE).removeNode();
             for (int i = 0; i < mruFileList.size(); i++) {
                 if (i < DEFAULT_MAX_SIZE) {
                     def f = mruFileList.get(i)
                     if (f instanceof java.io.File) {
-                        getPrefs().put('' + i, f.getAbsolutePath());
-                    }
-                    else {
-                        getPrefs().put('' + i, f);
+                        PrefHelper.setPrefValue(DEFAULT_NODE, '' + i, f.getAbsolutePath());
+                    } else {
+                        PrefHelper.setPrefValue(DEFAULT_NODE, '' + i, (String) f);
                     }
                 }
             }
-            getPrefs().flush();
         } catch (Exception e) {
-            // do nothing
+            // ignore
             e.printStackTrace();
         }
     }
@@ -79,30 +76,29 @@ class MRUFileManager {
         if (size() == 0) {
             return null;
         }
-
         String[] ss = new String[size()];
-
         for (int i = 0; i < size(); i++) {
             String s = getPrefValue(i);
             if (null != s) {
                 ss[i] = s;
             }
         }
-
         return ss;
     }
 
     /**
      * Moves the the index to the top of the MRU List
-     *
      * @param index The index to be first in the mru list
      */
     public void moveToTop(int index) {
-        //def o = mruFileList.get(index)
         def o = mruFileList.remove(index);
         mruFileList.addFirst(o);
     }
 
+    /**
+     * Adds an object to the mru.
+     * @param f
+     */
     protected void setMRU(File f) {
         if (null != f) { // java.lang.NullPointerException: Cannot invoke method getAbsolutePath() on null object
             setMRU(f.getAbsolutePath())
@@ -111,6 +107,7 @@ class MRUFileManager {
 
     /**
      * Adds an object to the mru.
+     * @param s
      */
     protected void setMRU(String s) {
         def file = new java.io.File(s.toString())
@@ -129,19 +126,8 @@ class MRUFileManager {
                 moveToTop(index);
             }
         } else {
-            //println "setMRU: file does not exists. Could not add. ${file?.dump()}"
+            // ignore
         }
-    }
-
-    public String getPrefValue(int i) {
-        String value = null;
-        try {
-            value = getPrefs().get('' + i, '');
-        } catch (Exception e) {
-            //println "getPrefValue -> ${e}"
-            e.printStackTrace()
-        }
-        return value;
     }
 
     /**
@@ -165,10 +151,6 @@ class MRUFileManager {
             }
         }
 
-    }
-
-    protected java.util.prefs.Preferences getPrefs() {
-        return java.util.prefs.Preferences.userRoot().node(PREFS_USER_NODE);
     }
 
     /**

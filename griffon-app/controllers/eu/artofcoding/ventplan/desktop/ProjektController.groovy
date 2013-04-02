@@ -49,7 +49,6 @@ class ProjektController {
     def wbwDialog
     def teilstreckenDialog
 
-    static DocumentPrefHelper auslegungPrefs = DocumentPrefHelper.instance
     boolean nutzerdatenGeandert
     def nutzerdatenDialog // org.jdesktop.swingx.JXDialog
 
@@ -1784,16 +1783,16 @@ class ProjektController {
         String _okButtonText = okButtonText ?: 'Dokument erstellen'
         view.nutzerdatenSpeichernButton.text = _okButtonText
         // Gespeicherte Daten holen und in den Dialog setzen
-        view.erstellerFirma.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_FIRMA)
-        view.erstellerName.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_NAME)
-        view.erstellerAnschrift.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_STRASSE)
-        view.erstellerPlz.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_PLZ)
-        view.erstellerOrt.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_ORT)
-        view.erstellerTelefon.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_TEL)
-        view.erstellerFax.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_FAX)
-        view.erstellerEmail.text = auslegungPrefs.getPrefValue(PREFS_USER_KEY_EMAIL)
+        view.erstellerFirma.text =     DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_FIRMA)
+        view.erstellerName.text =      DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_NAME)
+        view.erstellerAnschrift.text = DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_STRASSE)
+        view.erstellerPlz.text =       DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_PLZ)
+        view.erstellerOrt.text =       DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_ORT)
+        view.erstellerTelefon.text =   DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_TEL)
+        view.erstellerFax.text =       DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_FAX)
+        view.erstellerEmail.text =     DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_EMAIL)
         try {
-            view.dokumentEmpfanger.selectedItem = auslegungPrefs.getPrefValue(PREFS_USER_KEY_EMPFANGER)
+            view.dokumentEmpfanger.selectedItem = DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_EMPFANGER)
         } catch (MissingPropertyException e) {
             // maybe... ok to ignore.
         }
@@ -1807,7 +1806,7 @@ class ProjektController {
         if (dialogClass == PrinzipskizzeNutzerdatenView) {
             // ignore
         } else {
-            view.erstellerDokumenttyp.selectedItem = auslegungPrefs.getPrefValue(PREFS_USER_KEY_DOKUMENTTYP)
+            view.erstellerDokumenttyp.selectedItem = DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_DOKUMENTTYP)
         }
         // Closure ausführen
         if (closure) {
@@ -1870,7 +1869,7 @@ class ProjektController {
                 map.put(PREFS_USER_KEY_PRINZIPSKIZZE_PLAN, plan)
             } catch (e) {}
             // Daten via Preferences API speichern
-            auslegungPrefs.save(map)
+            DocumentPrefHelper.save(map)
             // Benutzerdaten wurden geändert, bitte fortfahren...
             nutzerdatenGeandert = true
         } catch (e) {
