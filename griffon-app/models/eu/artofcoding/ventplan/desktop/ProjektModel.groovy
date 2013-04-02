@@ -965,7 +965,7 @@ class ProjektModel {
           }
           */
         SwingUtilities.invokeLater {
-            synchronized (tableModels) {
+//            synchronized (tableModels) {
                 // Remember selected row
                 def view = app.views[mvcId]
                 def selected = view.raumTabelle.selectedRow
@@ -1008,7 +1008,7 @@ class ProjektModel {
                     view.raumTabelle.changeSelection(selected, 0, false, false)
                 }
             }
-        }
+//        }
     }
 
     /**
