@@ -26,9 +26,9 @@ vpxFileChooserWindow = fileChooser(
         multiSelectionEnabled: false,
         acceptAllFileFilterUsed: false,
         fileFilter: [
-                getDescription: {-> 'Ventplan Projekt XML' },
+                getDescription: { -> 'Ventplan Projekt XML' },
                 accept: { file ->
-                    def b = file.isDirectory() || file.name.toLowerCase().endsWith('.vpx')
+                    def b = file?.isDirectory() || file?.name?.toLowerCase()?.endsWith('.vpx')
                     return b
                 }
         ] as FileFilter
@@ -39,9 +39,9 @@ projektSuchenFolderChooserWindow = fileChooser(
         multiSelectionEnabled: false,
         fileSelectionMode: JFileChooser.DIRECTORIES_ONLY,
         fileFilter: [
-                getDescription: {-> 'Ordner' },
+                getDescription: { -> 'Ordner' },
                 accept: { file ->
-                    return file.isDirectory()
+                    return file?.isDirectory()
                 }
         ] as FileFilter
 )
