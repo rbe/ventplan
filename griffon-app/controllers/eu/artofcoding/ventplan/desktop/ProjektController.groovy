@@ -1557,9 +1557,7 @@ class ProjektController {
         // Setze Index des gewählten Kanalnetzes in Metadaten
         model.meta.dvbKanalnetzGewahlt = index
         // TableModel für WBW hinzufügen, wenn noch nicht vorhanden
-        doLater {
-            model.addWbwTableModel(index)
-        }
+        model.addWbwTableModel(index)
         // WBW summieren, damit das Label im Dialog (bind model.meta.summeAktuelleWBW) den richtigen Wert anzeigt
         wbwSummieren()
         // Show dialog
