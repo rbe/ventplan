@@ -754,7 +754,6 @@ class VentplanModelService {
      */
     List getWbw() {
         def r = withSql { dataSourceName, sql ->
-            // H2 sql.rows("SELECT id, bezeichnung, wert, CONCAT(id, '.png') bild FROM widerstandsbeiwerte ORDER BY bezeichnung")
             sql.rows("SELECT id, bezeichnung, wert, id || '.png' bild FROM widerstandsbeiwerte ORDER BY bezeichnung")
         }
         r
@@ -784,18 +783,15 @@ class VentplanModelService {
                     + ' ORDER BY luftmenge ASC, einstellung ASC',
                     [ventilbezeichnung, luftart, luftmenge, 360, 0])
         }
-        //println "getEinstellung: r=${r}"
         if (r.size() == 0)
             return
         // Suche die nächst höhere zum Parameter 'luftmenge' passende Luftmenge aus den Datenbankergebnissen
         // Dies funktioniert nur mit einem in aufsteigender Reihenfolge sortierten Luftmengen!
         def nahe = r.find {
-            //println "${it.luftmenge} >= ${luftmenge}?"
             it.luftmenge >= luftmenge
         }.luftmenge
         // Nehme nur diese Einträge und errechne min(|(abgleich - r.druckverlust)|)
         def m = r.findAll {
-            //println "${it.luftmenge} == ${nahe}?"
             it.luftmenge == nahe
         }.inject([druckverlust: Double.MAX_VALUE], { o, n ->
             int v1 = Math.abs(abgleich - o.druckverlust ?: 0) // Ternary operator used to prevent NullPointer
