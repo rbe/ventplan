@@ -12,6 +12,8 @@
 
 package eu.artofcoding.ventplan.desktop
 
+import eu.artofcoding.griffon.helper.AWTHelper
+import eu.artofcoding.griffon.helper.AWTRateCountObserver
 import eu.artofcoding.griffon.helper.GriffonHelper as GH
 import groovy.io.FileType
 
@@ -35,8 +37,7 @@ class VentplanController {
     def aboutDialog
     def checkUpdateDialog
     def projektSuchenDialog
-
-    JDialog neuesProjektWizardDialog
+    def neuesProjektWizardDialog
 
     /**
      * Flag zum Abbrechen des Schliessen-Vorgangs
@@ -225,27 +226,40 @@ class VentplanController {
      * Ein neues Projekt erstellen.
      */
     def neuesProjekt = { evt = null ->
+        // Show wait dialog
+        Object waitDialog = null
+        waitDialog = GH.createDialog(
+                builder,
+                ProjectOpenWaitingView,
+                [
+                        title: 'Neues Projekt wird erstellt',
+                        resizable: false,
+                        pack: true
+                ]
+        )
+        doLater {
+            waitDialog = GH.centerDialog(app.views['MainFrame'], waitDialog)
+            waitDialog.setVisible(true)
+        }
+        // Do work
         // Progress bar in VentplanView.
         jxwithWorker(start: true) {
             //
             String mvcId = ''
             // initialize the worker
             onInit {
-                model.statusProgressBarIndeterminate = true
-                view.mainStatusBarText.text = 'Phase 1/3: Erstelle ein neues Projekt...'
+                model.statusBarText = 'Arbeite...'
+                view.projectOpenDetailLabel.text = 'Phase 1/2: Erstelle ein neues Projekt...'
             }
             // do the task
             work {
                 // Die hier vergebene MVC ID wird immer genutzt, selbst wenn das Projekt anders benannt wird!
                 // (durch Bauvorhaben, Speichern)
                 // Es wird also immer 'Projekt 1', 'Projekt 2' etc. genutzt, nach Reihenfolge der Erstellung
-                view.mainStatusBarText.text = ''
-                view.mainStatusBarText.text = 'Phase 2/3: Initialisiere das Projekt...'
                 try {
                     mvcId = generateMVCId()
                     def (m, v, c) = createMVCGroup('Projekt', mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId, loadMode: false])
-                    view.mainStatusBarText.text = ''
-                    view.mainStatusBarText.text = 'Phase 3/3: Erstelle Benutzeroberfläche für das Projekt...'
+                    view.projectOpenDetailLabel.text = 'Phase 2/2: Initialisiere das Projekt...'
                     doLater {
                         // MVC ID zur Liste der Projekte hinzufügen
                         model.projekte << mvcId
@@ -264,20 +278,26 @@ class VentplanController {
                             // ignore
                         }
                     }
-                    model.statusBarText = ''
-                    view.mainStatusBarText.text = ''
+                    model.statusBarText = 'Bereit.'
                 } catch (Exception e) {
                     // ignore
                 }
             }
             // do sth. when the task is done.
             onDone {
-                view.mainStatusBarText.text = ''
-                //model.statusBarText = ''
-                model.statusProgressBarIndeterminate = false
-                //model.statusBarText = 'Bereit.'
-                view.mainStatusBarText.text = 'Bereit.'
-                model.statusBarText = 'Bereit.'
+                AWTHelper.registerDropsBelowObserver(new AWTRateCountObserver() {
+                    @Override
+                    void rateEvent(int rate) {
+                        AWTHelper.unregister(this)
+                        //model.statusProgressBarIndeterminate = false
+                        model.statusBarText = 'Bereit.'
+                        waitDialog?.dispose()
+                        // Dirty flag
+                        mvc.model.map.dirty = false
+                        mvc.controller.setTabTitle(0)
+                    }
+                }, 10)
+                AWTHelper.startAWTEventListener()
             }
         }
     }
@@ -354,12 +374,14 @@ class VentplanController {
      * Öffnet das zuletzt geladene Projekt aus MRUFileManager.
      */
     def zuletztGeoffnetesProjekt = { evt = null ->
+        def file = null
         try {
-            def file = evt.getActionCommand()
+            file = evt.getActionCommand()
             projektOffnenClosure(file)
-        }
-        catch (Exception e) {
-            println "VentplanController#zuletztGeoffnetesProjekt: ERROR: Could not load file ${file} caused by: ${e.dump()}"
+        } catch (Exception e) {
+            e.printStackTrace()
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            dialog.showError('Oops...', '', e)
         }
     }
 
@@ -369,11 +391,27 @@ class VentplanController {
      * Alle Werte werden neu berechnet.
      */
     def projektOffnenClosure = { file, resetFilename = false, loadMode = true ->
+        // Show wait dialog
+        Object waitDialog = null
+        waitDialog = GH.createDialog(
+                builder,
+                ProjectOpenWaitingView,
+                [
+                        title: 'Projekt wird geöffnet',
+                        resizable: false,
+                        pack: true
+                ]
+        )
+        doLater {
+            waitDialog = GH.centerDialog(app.views['MainFrame'], waitDialog)
+            waitDialog.setVisible(true)
+        }
+        // Do work
         jxwithWorker(start: true) {
             // initialize the worker
             onInit {
-                model.statusProgressBarIndeterminate = true
-                model.statusBarText = 'Phase 1/3: Projektdatei wählen ...'
+                model.statusBarText = 'Arbeite...'
+                view.projectOpenDetailLabel.text = 'Phase 1/3: Projektdatei öffnen ...'
             }
             // do the task
             work {
@@ -382,11 +420,11 @@ class VentplanController {
                 // ... and reset it in FileChooser
                 view.vpxFileChooserWindow.selectedFile = null
                 // Load data; start thread
-                model.statusBarText = 'Phase 2/3: Lade Daten ...'
                 def projektModel //, projektView, projektController
                 // May return null due to org.xml.sax.SAXParseException while validating against XSD
                 def document = vpxModelService.load(file)
                 if (document) {
+                    view.projectOpenDetailLabel.text = 'Phase 2/3: Initialisiere das Projekt ...'
                     // Create new Projekt MVC group
                     String mvcId = generateMVCId()
                     (projektModel, _, _) = createMVCGroup('Projekt', mvcId, [projektTabGroup: view.projektTabGroup, tabName: mvcId, mvcId: mvcId, loadMode: loadMode])
@@ -408,27 +446,37 @@ class VentplanController {
                     projektModel.enableDisableRaumButtons(true)
                     // Fixes WAC-216
                     projektModel.enableDvbButtons()
+                    //
+                    view.projectOpenDetailLabel.text = 'Phase 3/3: Berechne das Projekt ...'
+                    def mvc = getMVCGroupAktivesProjekt()
+                    try {
+                        mvc.controller.berechneAlles(loadMode)
+                    } catch (e) {
+                        // ignore
+                    }
                 } else {
                     DialogController dialog = (DialogController) app.controllers['Dialog']
-                    dialog.showError('Fehler', 'Konnte Projekt nicht öffnen!', null)
+                    dialog.showError('Fehler', 'Konnte das Projekt leider nicht öffnen!', null)
                 }
             }
             // do sth. when the task is done.
             onDone {
-                model.statusBarText = 'Phase 3/3: Berechne Projekt ...'
-                def mvc = getMVCGroupAktivesProjekt()
-                try {
-                    mvc.controller.berechneAlles(loadMode)
-                    model.statusBarText = 'Bereit.'
-                } catch (e) {
-                    model.statusBarText = 'Fehler!'
-                    // ignore
-                } finally {
-                    if (resetFilename) {
-                        mvc.model.vpxFilename = null
+                AWTHelper.registerDropsBelowObserver(new AWTRateCountObserver() {
+                    @Override
+                    void rateEvent(int rate) {
+                        AWTHelper.unregister(this)
+                        //model.statusProgressBarIndeterminate = false
+                        model.statusBarText = 'Bereit.'
+                        waitDialog?.dispose()
+                        if (resetFilename) {
+                            mvc.model.vpxFilename = null
+                        }
+                        // Dirty flag
+                        mvc.model.map.dirty = false
+                        mvc.controller.setTabTitle(0)
                     }
-                    model.statusProgressBarIndeterminate = false
-                }
+                }, 10)
+                AWTHelper.startAWTEventListener()
             }
         }
     }

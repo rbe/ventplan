@@ -288,9 +288,11 @@ class ProjektController {
         // Akustik
         berechneAkustik('Zuluft')
         berechneAkustik('Abluft')
+/*
         // Dirty flag
         model.map.dirty = false
         setTabTitle(view.projektTabGroup.selectedIndex)
+*/
         // 
         this.loadMode = false
         // Fix table header height

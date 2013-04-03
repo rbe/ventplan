@@ -9,6 +9,7 @@
  *
  * rbe, 19.03.13 17:23
  */
+
 package eu.artofcoding.ventplan.desktop
 
 import net.miginfocom.swing.MigLayout
@@ -27,7 +28,7 @@ panel(constraints: 'x', border: compoundBorder(outer: emptyBorder(5), inner: emp
     }
 
     zl.insertTemplate('valueRow3')
-    panel(id: 'wizardExpressProjekt', border: titledBorder(title: 'Anzahl der Raumtypen festlegen'), constraints: 'e', layout: new MigLayout('ins 0 n 0 n', '[]', '')) {
+    panel(id: 'wizardExpressProjekt', border: titledBorder(title: 'Express-Projekt erstellen'), constraints: 'e', layout: new MigLayout('ins 0 n 0 n', '[]', '')) {
         label('Projektname')
         textField(id: 'wizardProjektName', constraints: 'width 200px!')
     }
