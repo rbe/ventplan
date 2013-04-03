@@ -447,6 +447,7 @@ class VentplanModelService {
      * @param map Eine Map wie im Model: map.raum
      * @return
      */
+    /*
     Map<String, Integer> getLuftauslasspakete(Map map) {
         // SQL statement
         StringBuilder statement = new StringBuilder()
@@ -458,6 +459,7 @@ class VentplanModelService {
             sql.firstRow(statement.toString(), [bedingung: luftauslass, kategorie: 76])
         }//.ID
     }
+    */
 
     /**
      * Hole alle Artikel zu einer Menge an Paketen.
@@ -783,8 +785,9 @@ class VentplanModelService {
                     + ' ORDER BY luftmenge ASC, einstellung ASC',
                     [ventilbezeichnung, luftart, luftmenge, 360, 0])
         }
-        if (r.size() == 0)
+        if (r.size() == 0) {
             return
+        }
         // Suche die nächst höhere zum Parameter 'luftmenge' passende Luftmenge aus den Datenbankergebnissen
         // Dies funktioniert nur mit einem in aufsteigender Reihenfolge sortierten Luftmengen!
         def nahe = r.find {
