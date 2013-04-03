@@ -44,7 +44,7 @@ environments {
         griffon {
             jars {
                 sign = false
-                pack = true
+                pack = false
                 destDir = "${basedir}/staging"
             }
             webstart {
