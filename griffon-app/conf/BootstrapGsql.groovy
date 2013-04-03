@@ -10,28 +10,41 @@
  * rbe, 7/7/12 3:42 PM
  */
 
+import eu.artofcoding.griffon.helper.HttpHelper
+import eu.artofcoding.ventplan.desktop.VentplanSplash
 import groovy.sql.Sql
-import com.ventplan.desktop.VentplanSplash
 
-/**
- *
- */
 class BootstrapGsql {
 
-    /**
-     *
-     */
     def init = { String dataSourceName = 'default', Sql sql ->
-        // Set splash screen status text
+        // Set splash screen status text: connecting database
         VentplanSplash.instance.connectingDatabase()
-        //println "BootstrapGsql.init: ${sql}"
+        // Set splash screen status text: updating database
+        VentplanSplash.instance.updatingDatabase()
+        try {
+            String baseurl = "http://files.ventplan.com/database"
+            int me = sql.firstRow('SELECT dbrev FROM ventplan WHERE id = 1')[0] as int
+            int head = HttpHelper.download("${baseurl}/head").toInteger()
+            if (me + 1 < head) {
+                (me + 1).upto head, {
+                    String content = HttpHelper.download("${baseurl}/${it}.sql")
+                    content.eachLine {
+                        //print "rev#${me} -> rev#${it}: ${it}"
+                        sql.executeUpdate(it)
+                    }
+                }
+            } else {
+                //println "rev#${me} == rev#${head}"
+            }
+            sql.executeUpdate("UPDATE ventplan SET DBREV = ${head} WHERE ID = 1")
+        } catch (e) {
+            // ignore
+        } finally {
+            // ignore
+        }
     }
 
-    /**
-     *
-     */
     def destroy = { String dataSourceName = 'default', Sql sql ->
-        //println "BootstrapGsql.destroy: ${sql}"
     }
 
 }
