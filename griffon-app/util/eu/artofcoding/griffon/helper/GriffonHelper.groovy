@@ -274,30 +274,22 @@ class GriffonHelper {
      */
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def static createDialog = { builder, dialogClass, dialogProp = [:] ->
-        //javax.swing.SwingUtilities.invokeLater {
-        def dialog// = dialogCache[dialogClass]
-        //if (!dialog) {
         // Properties for dialog
         def prop = [
-                title: "Ein Dialog",
+                title: 'Ein Dialog',
                 visible: false,
                 modal: true,
                 pack: false
         ] + dialogProp
         // Create dialog instance
-        //println "createDialog -> builder=${builder?.dump()}"
-
-        dialog = builder.dialog(prop) {
+        //def dialog = dialogCache[dialogClass]
+        def dialog = builder.dialog(prop) {
             jideScrollPane() {
                 build(dialogClass)
             }
         }
-        // Cache dialog instance
-        //dialogCache[dialogClass] = dialog
-        //}
         // Return dialog instance
         dialog
-        //}
     }
 
     /**

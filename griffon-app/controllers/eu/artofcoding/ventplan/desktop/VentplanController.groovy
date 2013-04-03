@@ -205,7 +205,7 @@ class VentplanController {
     def aboutDialogOeffnen = { evt = null ->
         aboutDialog = GH.createDialog(builder, AboutView.class, [title: 'Über', resizable: false, pack: true])
         aboutDialog = GH.centerDialog(app.views['MainFrame'], aboutDialog)
-        aboutDialog.setVisible(true) //.show()
+        aboutDialog.setVisible(true)
     }
 
     /**
@@ -214,7 +214,7 @@ class VentplanController {
     def checkUpdateDialogOeffnen = { evt = null ->
         checkUpdateDialog = GH.createDialog(builder, CheckUpdateView, [title: 'Aktualisierung von Ventplan', resizable: false, pack: true])
         checkUpdateDialog = GH.centerDialog(app.views['MainFrame'], checkUpdateDialog)
-        checkUpdateDialog.setVisible(true) //.show()
+        checkUpdateDialog.setVisible(true)
     }
 
     //</editor-fold>
@@ -594,7 +594,7 @@ class VentplanController {
         neuesProjektWizardDialog = GH.createDialog(builder, WizardView, [title: 'Neues Projekt mit dem Wizard erstellen', size: [850, 652], resizable: true, pack: false])
         // Modify TableModel for Turen
         neuesProjektWizardDialog = GH.centerDialog(app.views['MainFrame'], neuesProjektWizardDialog)
-        neuesProjektWizardDialog.setVisible(true) //.show()
+        neuesProjektWizardDialog.setVisible(true)
     }
 
     /**
@@ -994,7 +994,7 @@ class VentplanController {
         if (projektSuchenPrefs.getSearchFolder()) {
             view.projektSuchenOrdnerPfad.text = projektSuchenPrefs.getSearchFolder()
         }
-        projektSuchenDialog.setVisible(true) //.show()
+        projektSuchenDialog.setVisible(true)
     }
 
     /**

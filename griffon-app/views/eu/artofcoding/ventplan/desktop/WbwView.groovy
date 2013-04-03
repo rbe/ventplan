@@ -9,13 +9,13 @@
  *
  * rbe, 19.03.13 17:47
  */
+
 package eu.artofcoding.ventplan.desktop
 
 import eu.artofcoding.griffon.helper.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
-import javax.swing.ListSelectionModel
-import javax.swing.JTable
+import javax.swing.*
 import java.awt.*
 
 panel(id: 'wbwPanel', layout: new MigLayout('fillx, wrap 2', '[fill]', '[fill]0[fill]')) {
@@ -34,7 +34,7 @@ panel(id: 'wbwPanel', layout: new MigLayout('fillx, wrap 2', '[fill]', '[fill]0[
                 current.columnModel.getColumn(3).setMaxWidth(0)
                 current.columnModel.getColumn(3).setPreferredWidth(0)
                 current.setFillsViewportHeight(true)
-                current.setPreferredScrollableViewportSize(new Dimension(390,480));
+                current.setPreferredScrollableViewportSize(new Dimension(390, 480));
             }
         }
     }

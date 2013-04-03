@@ -431,44 +431,40 @@ class ProjektModel {
      * @param preValueSet Closure to execute before value was set
      */
     def gltmClosure = { columnNames, propertyNames, writable, tableModel, postValueSet = null, preValueSet = null ->
-        if (null != tableModel) {
-            EventTableModel etm = new EventTableModel(tableModel, [
-                    getColumnCount: { columnNames.size() },
-                    getColumnName: { columnIndex -> columnNames[columnIndex] },
-                    getColumnValue: { object, columnIndex ->
-                        try {
-                            object?."${propertyNames[columnIndex]}"?.toString2()
-                        } catch (e) {
-                            object?.toString()
-                        }
-                    },
-                    isEditable: { object, columnIndex -> writable[columnIndex] },
-                    setColumnValue: { object, value, columnIndex ->
-                        def property = propertyNames[columnIndex]
-                        // Call pre-value-set closure
-                        if (preValueSet) {
-                            object = preValueSet(object, property, value, columnIndex)
-                        } else {
-                            // Try to save double value; see ticket #60
-                            object[property] = value.toDouble2()
-                        }
-                        // Call post-value-set closure
-                        if (postValueSet) {
-                            postValueSet(object, columnIndex, value)
-                        }
-                        // VERY IMPORTANT: return null value to prevent e.g. returning
-                        // a boolean value. Table would display the wrong value in all
-                        // cells !!!
-                        null
-                    },
-                    getValueAt: { rowIndex, columnIndex ->
-                        //no value to get...
+        EventTableModel etm = new EventTableModel(tableModel, [
+                getColumnCount: { columnNames.size() },
+                getColumnName: { columnIndex -> columnNames[columnIndex] },
+                getColumnValue: { object, columnIndex ->
+                    try {
+                        object?."${propertyNames[columnIndex]}"?.toString2()
+                    } catch (e) {
+                        object?.toString()
                     }
-            ] as WritableTableFormat)
-            etm
-        } else {
-            null
-        }
+                },
+                isEditable: { object, columnIndex -> writable[columnIndex] },
+                setColumnValue: { object, value, columnIndex ->
+                    def property = propertyNames[columnIndex]
+                    // Call pre-value-set closure
+                    if (preValueSet) {
+                        object = preValueSet(object, property, value, columnIndex)
+                    } else {
+                        // Try to save double value; see ticket #60
+                        object[property] = value.toDouble2()
+                    }
+                    // Call post-value-set closure
+                    if (postValueSet) {
+                        postValueSet(object, columnIndex, value)
+                    }
+                    // VERY IMPORTANT: return null value to prevent e.g. returning
+                    // a boolean value. Table would display the wrong value in all
+                    // cells !!!
+                    null
+                },
+                getValueAt: { rowIndex, columnIndex ->
+                    //no value to get...
+                }
+        ] as WritableTableFormat)
+        etm
     }
 
     /**
@@ -1274,7 +1270,6 @@ class ProjektModel {
     def refreshTableHeaderHeight(view) {
         // raumTabelle
         try {
-            //view.raumTabelle.setSortable(false);
             view.raumTabelle.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
             view.raumTabelle.getTableHeader().getDefaultRenderer().setPreferredSize(new Dimension(0, 40))
             view.raumTabelle.repaint()

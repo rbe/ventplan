@@ -1040,7 +1040,7 @@ class ProjektController {
                 GH.makeComboboxCellEditor(columnModel.getColumn(1), model.meta.raumTurbreiten)
                 berechneTuren(null, model.meta.gewahlterRaum.position)
                 raumBearbeitenDialog = GH.centerDialog(app.views['MainFrame'], raumBearbeitenDialog)
-                raumBearbeitenDialog.setVisible(true) //.show()
+                raumBearbeitenDialog.setVisible(true)
             } else {
                 // ignore
             }
@@ -1412,7 +1412,7 @@ class ProjektController {
         def listModel = view.teilstreckenVerfugbareListe.model
         model.map.dvb.kanalnetz.each { listModel.addElement(it.teilstrecke) }
         view.teilstreckenVerfugbareListe.setModel(listModel)
-        teilstreckenDialog.setVisible(true) //.show()
+        teilstreckenDialog.setVisible(true)
     }
 
     /**
@@ -1557,15 +1557,13 @@ class ProjektController {
         // Setze Index des gewählten Kanalnetzes in Metadaten
         model.meta.dvbKanalnetzGewahlt = index
         // TableModel für WBW hinzufügen, wenn noch nicht vorhanden
-        doLater {
-            model.addWbwTableModel(index)
-        }
+        model.addWbwTableModel(index)
         // WBW summieren, damit das Label im Dialog (bind model.meta.summeAktuelleWBW) den richtigen Wert anzeigt
         wbwSummieren()
         // Show dialog
         // Ist zentriert!
-        wbwDialog = GH.createDialog(builder, WbwView, [title: "Widerstandsbeiwerte", size: [750, 650], locationRelativeTo: app.windowManager.findWindow('ventplanFrame')])
-        wbwDialog.setVisible(true) //.show()
+        wbwDialog = GH.createDialog(builder, WbwView, [title: 'Widerstandsbeiwerte', size: [760, 670], locationRelativeTo: app.windowManager.findWindow('ventplanFrame')])
+        wbwDialog.setVisible(true)
     }
 
     /**
@@ -1771,14 +1769,14 @@ class ProjektController {
         String _okButtonText = okButtonText ?: 'Dokument erstellen'
         view.nutzerdatenSpeichernButton.text = _okButtonText
         // Gespeicherte Daten holen und in den Dialog setzen
-        view.erstellerFirma.text =     DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_FIRMA)
-        view.erstellerName.text =      DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_NAME)
+        view.erstellerFirma.text = DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_FIRMA)
+        view.erstellerName.text = DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_NAME)
         view.erstellerAnschrift.text = DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_STRASSE)
-        view.erstellerPlz.text =       DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_PLZ)
-        view.erstellerOrt.text =       DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_ORT)
-        view.erstellerTelefon.text =   DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_TEL)
-        view.erstellerFax.text =       DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_FAX)
-        view.erstellerEmail.text =     DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_EMAIL)
+        view.erstellerPlz.text = DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_PLZ)
+        view.erstellerOrt.text = DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_ORT)
+        view.erstellerTelefon.text = DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_TEL)
+        view.erstellerFax.text = DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_FAX)
+        view.erstellerEmail.text = DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_EMAIL)
         try {
             view.dokumentEmpfanger.selectedItem = DocumentPrefHelper.getPrefValue(PREFS_USER_KEY_EMPFANGER)
         } catch (MissingPropertyException e) {
@@ -1802,7 +1800,7 @@ class ProjektController {
         }
         // Dialog ausrichten und anzeigen
         nutzerdatenDialog = GH.centerDialog(app.views['MainFrame'], nutzerdatenDialog)
-        nutzerdatenDialog.setVisible(true) //.show()
+        nutzerdatenDialog.setVisible(true)
     }
 
     /**
@@ -2003,111 +2001,11 @@ class ProjektController {
     }
 
     /**
-     * WAC-221
-     * Helper method to show the stuckliste dialog.
-     * @return Returns true if dialog was aborted.
+     * WAC-108
+     * @param type
+     * @param vpxFile
+     * @param xmlDoc
      */
-    def processStucklisteDialog(String type) {
-        //
-        stucklisteAbgebrochen = false
-        //
-        if (model.tableModels.stucklisteSuche) {
-            model.tableModels.stucklisteSuche.clear()
-        }
-        // WAC-227: Stückliste wird mehrfach erzeugt
-        if (model.tableModels.stuckliste) {
-            model.tableModels.stuckliste.clear()
-        }
-        //
-        def stucklisteTableModel = model.createStucklisteUbersichtTableModel()
-        def stucklisteSucheTableModel = model.createStucklisteErgebnisTableModel()
-        // WAC-226 Geladene Stuckliste bzw. bereits erstellt Stuckliste nehmen, falls vorhanden
-        if (model.stucklisteMap) {
-            model.stucklisteMap.each { key, a ->
-                def gesamtpreis = (a.ANZAHL * a.PREIS.toDouble2()) as double
-                model.tableModels.stuckliste.addAll(
-                        [
-                                reihenfolge: a.REIHENFOLGE, anzahl: a.ANZAHL,
-                                artikelnummer: a.ARTIKEL, text: a.ARTIKELBEZEICHNUNG,
-                                einzelpreis: a.PREIS, gesamtpreis: gesamtpreis,
-                                luftart: a.LUFTART,
-                                liefermenge: a.LIEFERMENGE, mengeneinheit: a.MENGENEINHEIT, verpackungseinheit: a.VERPACKUNGSEINHEIT
-                        ]
-                )
-            }
-        } else {
-            // Keine gespeicherte Stuckliste bzw. erste Stuckliste erstellen
-            // Dialog zum Bearbeiten der Stuckliste aufrufen
-            Map stuckliste = stucklisteService.processData(model.map)
-            int position = 0
-            stuckliste.eachWithIndex { stuck, i ->
-                Map artikel = stuck.value as Map
-                //int reihenfolge = (int) artikel.REIHENFOLGE ?: 900
-                double anzahl = (double) artikel.ANZAHL
-                //println String.format('%2d % 12d % 7.1f %6s %17s - %s', i + 1, reihenfolge, anzahl, artikel.MENGENEINHEIT, stuck.key, artikel.ARTIKELBEZEICHNUNG)
-                /*
-                // Menge mit oder ohne Komma anzeigen?
-                String menge
-                if (anzahl * 10 > 0) {
-                    menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.MENGENEINHEIT)
-                } else {
-                    menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
-                }
-                */
-                def gesamtpreis = (anzahl * artikel.PREIS.toDouble2()) as double
-                model.tableModels.stuckliste.addAll(
-                        [
-                                reihenfolge: position, anzahl: anzahl,
-                                artikelnummer: artikel.ARTIKEL, text: artikel.ARTIKELBEZEICHNUNG,
-                                einzelpreis: artikel.PREIS, gesamtpreis: gesamtpreis,
-                                luftart: artikel.LUFTART,
-                                liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT, verpackungseinheit: artikel.VERPACKUNGSEINHEIT
-                        ]
-                )
-                position++
-            }
-        }
-        showStucklisteDialog(
-                "${type} anpassen",
-                "Eingaben speichern und ${type} erstellen",
-                { dialog ->
-                    // Set new width for columns when adding new model!!!
-                    view.stucklisteUbersichtTabelle.setModel(stucklisteTableModel)
-                    view.stucklisteUbersichtTabelle.getColumnModel().getColumn(0).setWidth(30)
-                    view.stucklisteUbersichtTabelle.getColumnModel().getColumn(0).setPreferredWidth(30)
-                    view.stucklisteUbersichtTabelle.getColumnModel().getColumn(1).setWidth(70)
-                    view.stucklisteUbersichtTabelle.getColumnModel().getColumn(1).setPreferredWidth(70)
-                    view.stucklisteUbersichtTabelle.getColumnModel().getColumn(2).setWidth(400)
-                    view.stucklisteUbersichtTabelle.getColumnModel().getColumn(2).setPreferredWidth(400)
-                    view.stucklisteErgebnisTabelle.setModel(stucklisteSucheTableModel)
-                    view.stucklisteErgebnisTabelle.getColumnModel().getColumn(0).setWidth(30)
-                    view.stucklisteErgebnisTabelle.getColumnModel().getColumn(0).setPreferredWidth(30)
-                    view.stucklisteErgebnisTabelle.getColumnModel().getColumn(1).setWidth(70)
-                    view.stucklisteErgebnisTabelle.getColumnModel().getColumn(1).setPreferredWidth(70)
-                    view.stucklisteErgebnisTabelle.getColumnModel().getColumn(2).setWidth(400)
-                    view.stucklisteErgebnisTabelle.getColumnModel().getColumn(2).setPreferredWidth(400)
-                }
-        )
-    }
-
-    /**
-     * WAC-211
-     * Stuckliste Dialog anzeigen. In einer Art "Warenkorb" können hier die Artikel gesucht und die Anzahl der
-     * Artikel verändert werden, bevor die Stückliste generiert wird.
-     */
-    def showStucklisteDialog(String title = null, String okButtonText = null, Closure closure = null) {
-        // Dialog erzeugen
-        String _title = title ?: 'Stückliste anpassen'
-        String _okButtonText = okButtonText ?: 'Eingaben speichern'
-        stucklisteDialog = GH.createDialog(builder, StucklisteView, [title: _title, size: [800, 600], resizable: true, pack: false])
-        //view.nutzerdatenSpeichernButton.text = _okButtonText
-        // Closure ausführen
-        closure(stucklisteDialog)
-        // Dialog ausrichten und anzeigen
-        stucklisteDialog = GH.centerDialog(app.views['MainFrame'], stucklisteDialog)
-        stucklisteDialog.setVisible(true) //.show()
-    }
-
     private void makeDocumentWithOdisee(String type, File vpxFile, String xmlDoc) {
         doLater {
             doOutside {
@@ -2160,7 +2058,7 @@ class ProjektController {
                     ]
             )
             documentWaitDialog = GH.centerDialog(app.views['MainFrame'], documentWaitDialog)
-            documentWaitDialog.setVisible(true) //.show()
+            documentWaitDialog.setVisible(true)
         }
     }
 
@@ -2209,7 +2107,7 @@ class ProjektController {
         view.angebotsverfolgungDialogOrt.text = model.map.kundendaten.bauvorhabenOrt
         // Dialog anzeigen
         angebotsverfolgungDialog = GH.centerDialog(app.views['MainFrame'], angebotsverfolgungDialog)
-        angebotsverfolgungDialog.setVisible(true) //.show()
+        angebotsverfolgungDialog.setVisible(true)
     }
 
     /**
@@ -2317,7 +2215,7 @@ class ProjektController {
                             ]
                     )
                     documentWaitDialog = GH.centerDialog(app.views['MainFrame'], documentWaitDialog)
-                    documentWaitDialog.setVisible(true) //.show()
+                    documentWaitDialog.setVisible(true)
                 }
             }
         } catch (Exception e) {
@@ -2333,6 +2231,112 @@ class ProjektController {
     int __________________i;
 
     //<editor-fold desc="WAC-221 Dialog zur Bearbeitung der Stückliste">
+
+    /**
+     * WAC-221
+     * Helper method to show the stuckliste dialog.
+     * @return Returns true if dialog was aborted.
+     */
+    def processStucklisteDialog(String type) {
+        //
+        stucklisteAbgebrochen = true
+        //
+        if (model.tableModels.stucklisteSuche) {
+            model.tableModels.stucklisteSuche.clear()
+        }
+        // WAC-227: Stückliste wird mehrfach erzeugt
+        if (model.tableModels.stuckliste) {
+            model.tableModels.stuckliste.clear()
+        }
+        //
+        def stucklisteTableModel = model.createStucklisteUbersichtTableModel()
+        def stucklisteSucheTableModel = model.createStucklisteErgebnisTableModel()
+        // WAC-226 Geladene Stuckliste bzw. bereits erstellt Stuckliste nehmen, falls vorhanden
+        if (model.stucklisteMap) {
+            model.stucklisteMap.each { key, a ->
+                def gesamtpreis = (a.ANZAHL * a.PREIS.toDouble2()) as double
+                model.tableModels.stuckliste.addAll(
+                        [
+                                reihenfolge: a.REIHENFOLGE, anzahl: a.ANZAHL,
+                                artikelnummer: a.ARTIKEL, text: a.ARTIKELBEZEICHNUNG,
+                                einzelpreis: a.PREIS, gesamtpreis: gesamtpreis,
+                                luftart: a.LUFTART,
+                                liefermenge: a.LIEFERMENGE, mengeneinheit: a.MENGENEINHEIT, verpackungseinheit: a.VERPACKUNGSEINHEIT
+                        ]
+                )
+            }
+        } else {
+            // Keine gespeicherte Stuckliste bzw. erste Stuckliste erstellen
+            // Dialog zum Bearbeiten der Stuckliste aufrufen
+            Map stuckliste = stucklisteService.processData(model.map)
+            int position = 0
+            stuckliste.eachWithIndex { stuck, i ->
+                Map artikel = stuck.value as Map
+                //int reihenfolge = (int) artikel.REIHENFOLGE ?: 900
+                double anzahl = (double) artikel.ANZAHL
+                //println String.format('%2d % 12d % 7.1f %6s %17s - %s', i + 1, reihenfolge, anzahl, artikel.MENGENEINHEIT, stuck.key, artikel.ARTIKELBEZEICHNUNG)
+                /*
+                // Menge mit oder ohne Komma anzeigen?
+                String menge
+                if (anzahl * 10 > 0) {
+                    menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.MENGENEINHEIT)
+                } else {
+                    menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
+                }
+                */
+                def gesamtpreis = (anzahl * artikel.PREIS.toDouble2()) as double
+                model.tableModels.stuckliste.addAll(
+                        [
+                                reihenfolge: position, anzahl: anzahl,
+                                artikelnummer: artikel.ARTIKEL, text: artikel.ARTIKELBEZEICHNUNG,
+                                einzelpreis: artikel.PREIS, gesamtpreis: gesamtpreis,
+                                luftart: artikel.LUFTART,
+                                liefermenge: artikel.LIEFERMENGE, mengeneinheit: artikel.MENGENEINHEIT, verpackungseinheit: artikel.VERPACKUNGSEINHEIT
+                        ]
+                )
+                position++
+            }
+        }
+        showStucklisteDialog(
+                "${type} anpassen",
+                "Eingaben speichern und ${type} erstellen",
+                { dialog ->
+                    // Set new width for columns when adding new model!!!
+                    view.stucklisteUbersichtTabelle.setModel(stucklisteTableModel)
+                    view.stucklisteUbersichtTabelle.getColumnModel().getColumn(0).setWidth(30)
+                    view.stucklisteUbersichtTabelle.getColumnModel().getColumn(0).setPreferredWidth(30)
+                    view.stucklisteUbersichtTabelle.getColumnModel().getColumn(1).setWidth(70)
+                    view.stucklisteUbersichtTabelle.getColumnModel().getColumn(1).setPreferredWidth(70)
+                    view.stucklisteUbersichtTabelle.getColumnModel().getColumn(2).setWidth(400)
+                    view.stucklisteUbersichtTabelle.getColumnModel().getColumn(2).setPreferredWidth(400)
+                    view.stucklisteErgebnisTabelle.setModel(stucklisteSucheTableModel)
+                    view.stucklisteErgebnisTabelle.getColumnModel().getColumn(0).setWidth(30)
+                    view.stucklisteErgebnisTabelle.getColumnModel().getColumn(0).setPreferredWidth(30)
+                    view.stucklisteErgebnisTabelle.getColumnModel().getColumn(1).setWidth(70)
+                    view.stucklisteErgebnisTabelle.getColumnModel().getColumn(1).setPreferredWidth(70)
+                    view.stucklisteErgebnisTabelle.getColumnModel().getColumn(2).setWidth(400)
+                    view.stucklisteErgebnisTabelle.getColumnModel().getColumn(2).setPreferredWidth(400)
+                }
+        )
+    }
+
+    /**
+     * WAC-221
+     * Stuckliste Dialog anzeigen. In einer Art "Warenkorb" können hier die Artikel gesucht und die Anzahl der
+     * Artikel verändert werden, bevor die Stückliste generiert wird.
+     */
+    def showStucklisteDialog(String title = null, String okButtonText = null, Closure closure = null) {
+        // Dialog erzeugen
+        String _title = title ?: 'Stückliste anpassen'
+        String _okButtonText = okButtonText ?: 'Eingaben speichern'
+        stucklisteDialog = GH.createDialog(builder, StucklisteView, [title: _title, size: [800, 600], resizable: true, pack: false])
+        //view.nutzerdatenSpeichernButton.text = _okButtonText
+        // Closure ausführen
+        closure(stucklisteDialog)
+        // Dialog ausrichten und anzeigen
+        stucklisteDialog = GH.centerDialog(app.views['MainFrame'], stucklisteDialog)
+        stucklisteDialog.setVisible(true)
+    }
 
     /**
      * WAC-221
@@ -2407,7 +2411,7 @@ class ProjektController {
      * Tablemodel muss nicht weiter abgefragt werden.
      */
     def stucklisteAbbrechen = { evt ->
-        // flag setzen, dass die Generierung abgebrochen werden soll
+        // Flag setzen, dass die Generierung abgebrochen werden soll
         stucklisteAbgebrochen = true
         stucklisteDialog.dispose()
     }
@@ -2418,6 +2422,8 @@ class ProjektController {
      * Hiernach wird die Stückliste generiert.
      */
     def stucklisteWeiter = { evt ->
+        // Flag setzen, dass die Generierung durchgeführt werden soll
+        stucklisteAbgebrochen = false
         stucklisteDialog.dispose()
     }
 

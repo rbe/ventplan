@@ -37,10 +37,10 @@ class VentplanModelService {
         boolean b = false
         if (artikelnummer) {
             def r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT artikelnummer, gueltigvon, gueltigbis"
-                        + " FROM artikelstamm"
-                        + " WHERE artikelnummer = ?"
-                        + " ORDER BY gueltigvon DESC, artikelnummer ASC",
+                sql.rows('SELECT artikelnummer, gueltigvon, gueltigbis'
+                        + ' FROM artikelstamm'
+                        + ' WHERE artikelnummer = ?'
+                        + ' ORDER BY gueltigvon DESC, artikelnummer ASC',
                         [artikelnummer])
             }
             String gueltigvon = r[0]?.gueltigvon
@@ -106,7 +106,6 @@ class VentplanModelService {
         raumUberstromElement:'',
         */
         map.grep { r -> r."raumBezeichnung${luftart}luftventile" }.inject [:], { Map o, Map n ->
-            //println n."raumAnzahl${luftart}luftventile" + ' x ' + n."raumBezeichnung${luftart}luftventile"
             if (o.containsKey(n."raumBezeichnung${luftart}luftventile")) {
                 o[n."raumBezeichnung${luftart}luftventile"] += (int) n."raumAnzahl${luftart}luftventile"
             } else {
@@ -224,16 +223,9 @@ class VentplanModelService {
      * @return String Die Artikelnummer
      */
     String getArtikelnummer(Map artikel) {
-        /*
-        try { // STUECKLISTE
+        if (artikel.containsKey('ARTIKEL')) {
             artikel.ARTIKEL
-        } catch (MissingPropertyException e) { // ARTIKEL
-            artikel.ARTIKELNUMMER
-        }
-        */
-        if (artikel.containsKey("ARTIKEL")) {
-            artikel.ARTIKEL
-        } else if (artikel.containsKey("ARTIKELNUMMER")) {
+        } else if (artikel.containsKey('ARTIKELNUMMER')) {
             artikel.ARTIKELNUMMER
         }
     }
@@ -279,8 +271,10 @@ class VentplanModelService {
                 '  FROM pakete' <<
                 ' WHERE geraet = ?.gerat AND kategorie = ?.kategorie' <<
                 ' ORDER BY reihenfolge'
-        List r73 = withSql { dataSourceName, sql -> sql.rows(statement.toString(), [gerat: zentralgerat, kategorie: 73]) }
-        r73//*.id
+        List r73 = withSql { dataSourceName, sql ->
+            sql.rows(statement.toString(), [gerat: zentralgerat, kategorie: 73])
+        }
+        r73
     }
 
     /**
@@ -306,7 +300,7 @@ class VentplanModelService {
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [gerat: zentralgerat, maxvolumenstrom: maxvs, kategorie: 74])
         }
-        r//*.id
+        r
     }
 
     /**
@@ -331,7 +325,7 @@ class VentplanModelService {
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [gerat: zentralgerat, maxvolumenstrom: maxvs, kategorie: 72])
         }
-        r//*.id
+        r
     }
 
     /**
@@ -358,7 +352,7 @@ class VentplanModelService {
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [gerat: zentralgerat, bedingung: bedingung, kategorie: 70])
         }
-        r//*.id
+        r
     }
 
     /**
@@ -385,7 +379,7 @@ class VentplanModelService {
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [gerat: zentralgerat, bedingung: bedingung, kategorie: 71])
         }
-        r//*.id
+        r
     }
 
     /**
@@ -445,7 +439,7 @@ class VentplanModelService {
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [name: luftauslass, bedingung: bedingung, kategorie: 76])
         }
-        r//*.id
+        r
     }
 
     /**
@@ -453,6 +447,7 @@ class VentplanModelService {
      * @param map Eine Map wie im Model: map.raum
      * @return
      */
+    /*
     Map<String, Integer> getLuftauslasspakete(Map map) {
         // SQL statement
         StringBuilder statement = new StringBuilder()
@@ -464,6 +459,7 @@ class VentplanModelService {
             sql.firstRow(statement.toString(), [bedingung: luftauslass, kategorie: 76])
         }//.ID
     }
+    */
 
     /**
      * Hole alle Artikel zu einer Menge an Paketen.
@@ -503,16 +499,16 @@ class VentplanModelService {
         def r
         if (projectWAC257) {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT artikelnummer FROM artikelstamm" //+ " WHERE kategorie = ? AND gesperrt = ? AND maxvolumenstrom <> ?"
-                        + " WHERE kategorie = ? AND maxvolumenstrom <> ?"
-                        + " ORDER BY artikelnummer", // [1, false, 0])
+                sql.rows('SELECT artikelnummer FROM artikelstamm' //+ ' WHERE kategorie = ? AND gesperrt = ? AND maxvolumenstrom <> ?'
+                        + ' WHERE kategorie = ? AND maxvolumenstrom <> ?'
+                        + ' ORDER BY artikelnummer', // [1, false, 0])
                         [1, 0])
             }
         } else {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT artikelnummer FROM artikelstamm" //+ " WHERE kategorie = ? AND gesperrt = ? AND maxvolumenstrom <> ?"
-                        + " WHERE kategorie = ? AND maxvolumenstrom <> ? AND gueltigbis >= ?"
-                        + " ORDER BY artikelnummer", // [1, false, 0])
+                sql.rows('SELECT artikelnummer FROM artikelstamm' //+ ' WHERE kategorie = ? AND gesperrt = ? AND maxvolumenstrom <> ?'
+                        + ' WHERE kategorie = ? AND maxvolumenstrom <> ? AND gueltigbis >= ?'
+                        + ' ORDER BY artikelnummer', // [1, false, 0])
                         [1, 0, new Date().format(ISO_DATE)])
             }
         }
@@ -527,10 +523,10 @@ class VentplanModelService {
      */
     List getVolumenstromFurZentralgerat(String artikel) {
         def r = withSql { dataSourceName, sql ->
-            sql.rows("SELECT DISTINCT volumenstrom"
-                    + " FROM schalleistungspegel"
-                    + " WHERE artikelnummer = ?"
-                    + " ORDER BY volumenstrom",
+            sql.rows('SELECT DISTINCT volumenstrom'
+                    + ' FROM schalleistungspegel'
+                    + ' WHERE artikelnummer = ?'
+                    + ' ORDER BY volumenstrom',
                     [artikel])
         }?.collect {
             it.volumenstrom
@@ -545,18 +541,18 @@ class VentplanModelService {
         def r
         if (projectWAC257) {
             r = withSql { dataSourceName, sql ->
-                sql.firstRow("SELECT artikelnummer"
-                        + " FROM artikelstamm" //+ " WHERE kategorie = 1 AND gesperrt = ? AND maxvolumenstrom >= ?"
-                        + " WHERE kategorie = 1 AND maxvolumenstrom >= ?"
-                        + " ORDER BY artikelnummer", // [false, luftung])
+                sql.firstRow('SELECT artikelnummer'
+                        + ' FROM artikelstamm' //+ ' WHERE kategorie = 1 AND gesperrt = ? AND maxvolumenstrom >= ?'
+                        + ' WHERE kategorie = 1 AND maxvolumenstrom >= ?'
+                        + ' ORDER BY artikelnummer', // [false, luftung])
                         [luftung])
             }
         } else {
             r = withSql { dataSourceName, sql ->
-                sql.firstRow("SELECT artikelnummer"
-                        + " FROM artikelstamm" //+ " WHERE kategorie = 1 AND gesperrt = ? AND maxvolumenstrom >= ?"
-                        + " WHERE kategorie = 1 AND maxvolumenstrom >= ? AND gueltigbis >= ?"
-                        + " ORDER BY artikelnummer", // [false, luftung])
+                sql.firstRow('SELECT artikelnummer'
+                        + ' FROM artikelstamm' //+ ' WHERE kategorie = 1 AND gesperrt = ? AND maxvolumenstrom >= ?'
+                        + ' WHERE kategorie = 1 AND maxvolumenstrom >= ? AND gueltigbis >= ?'
+                        + ' ORDER BY artikelnummer', // [false, luftung])
                         [luftung, new Date().format(ISO_DATE)])
             }
         }
@@ -570,18 +566,18 @@ class VentplanModelService {
         def r
         if (projectWAC257) {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT DISTINCT(artikelnummer)"
-                        + " FROM druckverlust"
-                        + " WHERE ausblaswinkel <> ?"
-                        + " ORDER BY artikelnummer",
+                sql.rows('SELECT DISTINCT(artikelnummer)'
+                        + ' FROM druckverlust'
+                        + ' WHERE ausblaswinkel <> ?'
+                        + ' ORDER BY artikelnummer',
                         [180])
             }
         } else {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT DISTINCT(artikelnummer)"
-                        + " FROM druckverlust"
-                        + " WHERE ausblaswinkel <> ? AND gueltigbis >= ?"
-                        + " ORDER BY artikelnummer",
+                sql.rows('SELECT DISTINCT(artikelnummer)'
+                        + ' FROM druckverlust'
+                        + ' WHERE ausblaswinkel <> ? AND gueltigbis >= ?'
+                        + ' ORDER BY artikelnummer',
                         [180, new Date().format(ISO_DATE)])
             }
         }
@@ -598,19 +594,19 @@ class VentplanModelService {
         def r
         if (projectWAC257) {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT DISTINCT(d.artikelnummer) FROM druckverlust d"
-                        + " INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
-                        + " WHERE a.kategorie = 8 AND d.luftart = 'ZU' AND d.ausblaswinkel <> ?"
-                        + " ORDER BY d.artikelnummer",
-                        [180])
+                sql.rows('SELECT DISTINCT(d.artikelnummer) FROM druckverlust d'
+                        + ' INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer'
+                        + ' WHERE a.kategorie = ? AND d.luftart = ? AND d.ausblaswinkel <> ?'
+                        + ' ORDER BY d.artikelnummer',
+                        [8, 'ZU', 180])
             }
         } else {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT DISTINCT(d.artikelnummer) FROM druckverlust d"
-                        + " INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
-                        + " WHERE a.kategorie = 8 AND d.luftart = 'ZU' AND d.ausblaswinkel <> ? AND a.gueltigbis >= ?"
-                        + " ORDER BY d.artikelnummer",
-                        [180, new Date().format(ISO_DATE)])
+                sql.rows('SELECT DISTINCT(d.artikelnummer) FROM druckverlust d'
+                        + ' INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer'
+                        + ' WHERE a.kategorie = ? AND d.luftart = ? AND d.ausblaswinkel <> ? AND a.gueltigbis >= ?'
+                        + ' ORDER BY d.artikelnummer',
+                        [8, 'ZU', 180, new Date().format(ISO_DATE)])
             }
         }
         r = r?.collect {
@@ -626,19 +622,19 @@ class VentplanModelService {
         def r
         if (projectWAC257) {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT DISTINCT(d.artikelnummer) FROM druckverlust d"
-                        + " INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
-                        + " WHERE a.kategorie = 8 AND d.luftart = 'AB' AND d.ausblaswinkel <> ?"
-                        + " ORDER BY d.artikelnummer",
-                        [180])
+                sql.rows('SELECT DISTINCT(d.artikelnummer) FROM druckverlust d'
+                        + ' INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer'
+                        + ' WHERE a.kategorie = ? AND d.luftart = ? AND d.ausblaswinkel <> ?'
+                        + ' ORDER BY d.artikelnummer',
+                        [8, 'AB', 180])
             }
         } else {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT DISTINCT(d.artikelnummer) FROM druckverlust d"
-                        + " INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
-                        + " WHERE a.kategorie = 8 AND d.luftart = 'AB' AND d.ausblaswinkel <> ? AND a.gueltigbis >= ?"
-                        + " ORDER BY d.artikelnummer",
-                        [180, new Date().format(ISO_DATE)])
+                sql.rows('SELECT DISTINCT(d.artikelnummer) FROM druckverlust d'
+                        + ' INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer'
+                        + ' WHERE a.kategorie = ? AND d.luftart = ? AND d.ausblaswinkel <> ? AND a.gueltigbis >= ?'
+                        + ' ORDER BY d.artikelnummer',
+                        [8, 'AB', 180, new Date().format(ISO_DATE)])
             }
         }
         r = r?.collect {
@@ -654,16 +650,16 @@ class VentplanModelService {
         def r
         if (projectWAC257) {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT artikelnummer FROM artikelstamm" +
-                        " WHERE klasse = ?" +
-                        " ORDER BY artikelnummer",
+                sql.rows('SELECT artikelnummer FROM artikelstamm' +
+                        ' WHERE klasse = ?' +
+                        ' ORDER BY artikelnummer',
                         [14])
             }
         } else {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT artikelnummer FROM artikelstamm" +
-                        " WHERE klasse = ? AND gueltigbis >= ?" +
-                        " ORDER BY artikelnummer",
+                sql.rows('SELECT artikelnummer FROM artikelstamm' +
+                        ' WHERE klasse = ? AND gueltigbis >= ?' +
+                        ' ORDER BY artikelnummer',
                         [14, new Date().format(ISO_DATE)])
             }
         }
@@ -678,9 +674,9 @@ class VentplanModelService {
      */
     Integer getMaxVolumenstrom(String artikel) {
         def r = withSql { dataSourceName, sql ->
-            sql.firstRow("SELECT maxvolumenstrom FROM artikelstamm"
-                    + " WHERE artikelnummer = ?"
-                    + " ORDER BY maxvolumenstrom",
+            sql.firstRow('SELECT maxvolumenstrom FROM artikelstamm'
+                    + ' WHERE artikelnummer = ?'
+                    + ' ORDER BY maxvolumenstrom',
                     [artikel])
         }
         r ? r.maxvolumenstrom as Integer : 0
@@ -693,16 +689,17 @@ class VentplanModelService {
         def r
         if (projectWAC257) {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT artikelnummer FROM artikelstamm"
-                        + " WHERE klasse BETWEEN 4 AND 8"
-                        + " ORDER BY artikelnummer")
+                sql.rows('SELECT artikelnummer FROM artikelstamm'
+                        + ' WHERE klasse BETWEEN ? AND ?'
+                        + ' ORDER BY artikelnummer',
+                        [4, 8])
             }
         } else {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT artikelnummer FROM artikelstamm"
-                        + " WHERE klasse BETWEEN 4 AND 8 AND gueltigbis >= ?"
-                        + " ORDER BY artikelnummer",
-                        [new Date().format(ISO_DATE)])
+                sql.rows('SELECT artikelnummer FROM artikelstamm'
+                        + ' WHERE klasse BETWEEN ? AND ? AND gueltigbis >= ?'
+                        + ' ORDER BY artikelnummer',
+                        [4, 8, new Date().format(ISO_DATE)])
             }
         }
         r = r?.collect {
@@ -716,9 +713,9 @@ class VentplanModelService {
      */
     def getKanal(String kanalbezeichnung) {
         def r = withSql { dataSourceName, sql ->
-            sql.firstRow("SELECT klasse, durchmesser, flaeche, seitea, seiteb"
-                    + " FROM rohrwerte"
-                    + " WHERE artikelnummer = ?",
+            sql.firstRow('SELECT klasse, durchmesser, flaeche, seitea, seiteb'
+                    + ' FROM rohrwerte'
+                    + ' WHERE artikelnummer = ?',
                     [kanalbezeichnung])
         }
         r
@@ -731,18 +728,19 @@ class VentplanModelService {
         def r
         if (projectWAC257) {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT DISTINCT(artikelnummer)"
-                        + " FROM druckverlust"
-                        + " WHERE ausblaswinkel <> 180"
-                        + " ORDER BY artikelnummer")
+                sql.rows('SELECT DISTINCT(artikelnummer)'
+                        + ' FROM druckverlust'
+                        + ' WHERE ausblaswinkel <> ?'
+                        + ' ORDER BY artikelnummer',
+                        [180])
             }
         } else {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT DISTINCT(d.artikelnummer)"
-                        + " FROM druckverlust d INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer"
-                        + " WHERE d.ausblaswinkel <> 180 AND a.gueltigbis >= ?"
-                        + " ORDER BY d.artikelnummer",
-                        [new Date().format(ISO_DATE)])
+                sql.rows('SELECT DISTINCT(d.artikelnummer)'
+                        + ' FROM druckverlust d INNER JOIN artikelstamm a ON d.artikelnummer = a.artikelnummer'
+                        + ' WHERE d.ausblaswinkel <> ? AND a.gueltigbis >= ?'
+                        + ' ORDER BY d.artikelnummer',
+                        [180, new Date().format(ISO_DATE)])
             }
         }
         r = r?.collect {
@@ -758,7 +756,6 @@ class VentplanModelService {
      */
     List getWbw() {
         def r = withSql { dataSourceName, sql ->
-            // H2 sql.rows("SELECT id, bezeichnung, wert, CONCAT(id, '.png') bild FROM widerstandsbeiwerte ORDER BY bezeichnung")
             sql.rows("SELECT id, bezeichnung, wert, id || '.png' bild FROM widerstandsbeiwerte ORDER BY bezeichnung")
         }
         r
@@ -769,9 +766,9 @@ class VentplanModelService {
      */
     def getMinimalerDruckverlustFurVentil(String ventilbezeichnung, String luftart, Double luftmenge) {
         def r = withSql { dataSourceName, sql ->
-            sql.firstRow("SELECT MIN(druckverlust) druckverlust"
-                    + " FROM druckverlust"
-                    + " WHERE artikelnummer = ? AND luftart = ? AND luftmenge >= ?",
+            sql.firstRow('SELECT MIN(druckverlust) druckverlust'
+                    + ' FROM druckverlust'
+                    + ' WHERE artikelnummer = ? AND luftart = ? AND luftmenge >= ?',
                     [ventilbezeichnung, luftart, luftmenge])
         }
         r?.druckverlust ?: 0.0d
@@ -782,24 +779,22 @@ class VentplanModelService {
      */
     def getEinstellung(String ventilbezeichnung, String luftart, Double luftmenge, Double abgleich) {
         def r = withSql { dataSourceName, sql ->
-            sql.rows("SELECT DISTINCT einstellung, druckverlust, luftmenge"
-                    + " FROM druckverlust"
-                    + " WHERE artikelnummer = ? AND luftart = ? AND luftmenge >= ? AND (ausblaswinkel = 360 OR ausblaswinkel = 0)"
-                    + " ORDER BY luftmenge ASC, einstellung ASC",
-                    [ventilbezeichnung, luftart, luftmenge])
+            sql.rows('SELECT DISTINCT einstellung, druckverlust, luftmenge'
+                    + ' FROM druckverlust'
+                    + ' WHERE artikelnummer = ? AND luftart = ? AND luftmenge >= ? AND (ausblaswinkel = ? OR ausblaswinkel = ?)'
+                    + ' ORDER BY luftmenge ASC, einstellung ASC',
+                    [ventilbezeichnung, luftart, luftmenge, 360, 0])
         }
-        //println "getEinstellung: r=${r}"
-        if (r.size() == 0)
+        if (r.size() == 0) {
             return
+        }
         // Suche die nächst höhere zum Parameter 'luftmenge' passende Luftmenge aus den Datenbankergebnissen
         // Dies funktioniert nur mit einem in aufsteigender Reihenfolge sortierten Luftmengen!
         def nahe = r.find {
-            //println "${it.luftmenge} >= ${luftmenge}?"
             it.luftmenge >= luftmenge
         }.luftmenge
         // Nehme nur diese Einträge und errechne min(|(abgleich - r.druckverlust)|)
         def m = r.findAll {
-            //println "${it.luftmenge} == ${nahe}?"
             it.luftmenge == nahe
         }.inject([druckverlust: Double.MAX_VALUE], { o, n ->
             int v1 = Math.abs(abgleich - o.druckverlust ?: 0) // Ternary operator used to prevent NullPointer
@@ -816,16 +811,16 @@ class VentplanModelService {
         def r
         if (projectWAC257) {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT artikelnummer"
-                        + " FROM artikelstamm" //+ " WHERE klasse = ? AND gesperrt = ?",
-                        + " WHERE klasse = ?", // [2, false])
+                sql.rows('SELECT artikelnummer'
+                        + ' FROM artikelstamm' //+ ' WHERE klasse = ? AND gesperrt = ?',
+                        + ' WHERE klasse = ?', // [2, false])
                         [2])
             }
         } else {
             r = withSql { dataSourceName, sql ->
-                sql.rows("SELECT artikelnummer"
-                        + " FROM artikelstamm" //+ " WHERE klasse = ? AND gesperrt = ?",
-                        + " WHERE klasse = ? AND gueltigbis >= ?", // [2, false])
+                sql.rows('SELECT artikelnummer'
+                        + ' FROM artikelstamm' //+ ' WHERE klasse = ? AND gesperrt = ?',
+                        + ' WHERE klasse = ? AND gueltigbis >= ?', // [2, false])
                         [2, new Date().format(ISO_DATE)])
             }
         }
@@ -842,10 +837,10 @@ class VentplanModelService {
      */
     def getDezibelZentralgerat(artnr, volumenstrom, luftart) {
         def r = withSql { dataSourceName, sql ->
-            sql.rows("SELECT s.dba"
-                    + " FROM schalleistungspegel s"
-                    + " WHERE artikelnummer = ? AND volumenstrom >= ? AND ZuAbEx = ?",
-                    [artnr, volumenstrom, luftart == "Zuluft" ? 0 : 1])
+            sql.rows('SELECT s.dba'
+                    + ' FROM schalleistungspegel s'
+                    + ' WHERE artikelnummer = ? AND volumenstrom >= ? AND ZuAbEx = ?',
+                    [artnr, volumenstrom, luftart == 'Zuluft' ? 0 : 1])
         }
         r = r[0]?.dba
         r
@@ -856,10 +851,10 @@ class VentplanModelService {
      */
     Map getOktavmittenfrequenz(artnr, volumenstrom, luftart) {
         def r = withSql { dataSourceName, sql ->
-            sql.rows("SELECT s.slp125, s.slp250, s.slp500, s.slp1000, s.slp2000, s.slp4000, s.dba"
-                    + " FROM schalleistungspegel s"
-                    + " WHERE artikelnummer = ? AND volumenstrom >= ? AND ZuAbEx = ?",
-                    [artnr, volumenstrom, luftart == "Zuluft" ? 0 : 1])
+            sql.rows('SELECT s.slp125, s.slp250, s.slp500, s.slp1000, s.slp2000, s.slp4000, s.dba'
+                    + ' FROM schalleistungspegel s'
+                    + ' WHERE artikelnummer = ? AND volumenstrom >= ? AND ZuAbEx = ?',
+                    [artnr, volumenstrom, luftart == 'Zuluft' ? 0 : 1])
         }
         r = r[0]
         r
@@ -870,9 +865,9 @@ class VentplanModelService {
      */
     def getSchallleistungspegel(artnr) {
         def r = withSql { dataSourceName, sql ->
-            sql.rows("SELECT s.slp125, s.slp250, s.slp500, s.slp1000, s.slp2000, s.slp4000"
-                    + " FROM schalleistungspegel s"
-                    + " WHERE artikelnummer = ?",
+            sql.rows('SELECT s.slp125, s.slp250, s.slp500, s.slp1000, s.slp2000, s.slp4000'
+                    + ' FROM schalleistungspegel s'
+                    + ' WHERE artikelnummer = ?',
                     [artnr])
         }
         r = r[0]
@@ -884,9 +879,9 @@ class VentplanModelService {
      */
     Map getPegelerhohungExternerDruck(artnr) {
         def r = withSql { dataSourceName, sql ->
-            sql.rows("SELECT s.slp125, s.slp250, s.slp500, s.slp1000, s.slp2000, s.slp4000"
-                    + " FROM schalleistungspegel s"
-                    + " WHERE s.artikelnummer = ? AND s.ZuAbEx = 2",
+            sql.rows('SELECT s.slp125, s.slp250, s.slp500, s.slp1000, s.slp2000, s.slp4000'
+                    + ' FROM schalleistungspegel s'
+                    + ' WHERE s.artikelnummer = ? AND s.ZuAbEx = 2',
                     [artnr])
         }
         r = r[0]
