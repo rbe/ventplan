@@ -23,14 +23,22 @@ class BootstrapGsql {
         VentplanSplash.instance.updatingDatabase()
         try {
             String baseurl = "http://files.ventplan.com/database"
-            int me = 0
+            int me = sql.firstRow('SELECT dbrev FROM ventplan WHERE id = 1')[0] as int
             int head = HttpHelper.download("${baseurl}/head").toInteger()
-            (me + 1).upto head, {
-                String content = HttpHelper.download("${baseurl}/${it}.sql")
-                //print "rev#${me} -> rev#${it}: ${content}"
-                sql.executeUpdate(content)
+            if (me + 1 < head) {
+                (me + 1).upto head, {
+                    String content = HttpHelper.download("${baseurl}/${it}.sql")
+                    content.eachLine {
+                        //print "rev#${me} -> rev#${it}: ${it}"
+                        sql.executeUpdate(it)
+                    }
+                }
+            } else {
+                //println "rev#${me} == rev#${head}"
             }
             sql.executeUpdate("UPDATE ventplan SET DBREV = ${head} WHERE ID = 1")
+        } catch (e) {
+            // ignore
         } finally {
             // ignore
         }
