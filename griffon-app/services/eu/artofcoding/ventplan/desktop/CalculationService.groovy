@@ -663,27 +663,37 @@ class CalculationService {
      */
     def berechneTeilstrecke(map) {
         def kanal = ventplanModelService.getKanal(map.kanalbezeichnung)
-        map.geschwindigkeit = map.luftVs * 1000000 / (kanal.flaeche * 3600)
         double lambda = 1.0d // TODO Set default to prevent NullPointer
-        switch (kanal.klasse?.toInteger()) {
-            case 4:
-                lambda = calcDruckverlustKlasse4(kanal.durchmesser, kanal.seiteA, kanal.seiteB)
-                break
-            case [5, 6, 7, 8]:
-                lambda = "calcDruckverlustKlasse${kanal.klasse}"(map.geschwindigkeit, kanal.durchmesser)
-                break
-            default:
-                println "CalculationService#berechneTeilstrecke(): switch/default. Klasse=${kanal.klasse} not defined ==> lambda not set"
+        if (null != kanal) {
+            map.geschwindigkeit = map.luftVs * 1000000 / (kanal.flaeche * 3600)
+            switch (kanal.klasse?.toInteger()) {
+                case 4:
+                    lambda = calcDruckverlustKlasse4(kanal.durchmesser, kanal.seiteA, kanal.seiteB)
+                    break
+                case [5, 6, 7, 8]:
+                    lambda = "calcDruckverlustKlasse${kanal.klasse}"(map.geschwindigkeit, kanal.durchmesser)
+                    break
+                default:
+                    // Klasse (kanal.klasse) not defined ==> lambda not set
+                    lambda = null
+                    break
+            }
         }
-        //
-        def geschwPow2 = Math.pow(map.geschwindigkeit ?: 1.0d, 2) // TODO Ternary operator added '... cannot be applied to (null, Integer)'
-        // Gesamtwiderstandszahl wurde via ProjektController.wbwOkButton gesetzt
-        // Reibungswiderstand
-        map.reibungswiderstand = lambda * map.lange * 1.2 * geschwPow2 / (2 * (kanal.durchmesser + 0.0d) / 1000)
-        // Einzelwiderstand berechnen
-        map.einzelwiderstand = 0.6d * map.gesamtwiderstandszahl * geschwPow2
-        // Widerstand der Teilstrecke = Reibungswiderstand + Einzelwiderstand
-        map.widerstandTeilstrecke = map.reibungswiderstand + map.einzelwiderstand
+        if (map.geschwindigkeit && lambda > 0.0d) {
+            //
+            def geschwPow2 = Math.pow(map.geschwindigkeit ?: 1.0d, 2) // TODO Ternary operator added '... cannot be applied to (null, Integer)'
+            // Gesamtwiderstandszahl wurde via ProjektController.wbwOkButton gesetzt
+            // Reibungswiderstand
+            map.reibungswiderstand = lambda * map.lange * 1.2 * geschwPow2 / (2 * (kanal.durchmesser + 0.0d) / 1000)
+            // Einzelwiderstand berechnen
+            map.einzelwiderstand = 0.6d * map.gesamtwiderstandszahl * geschwPow2
+            // Widerstand der Teilstrecke = Reibungswiderstand + Einzelwiderstand
+            map.widerstandTeilstrecke = map.reibungswiderstand + map.einzelwiderstand
+        } else {
+            map.reibungswiderstand = 0.0d
+            map.einzelwiderstand = 0.0d
+            map.widerstandTeilstrecke = 0.0d
+        }
         map
     }
 
