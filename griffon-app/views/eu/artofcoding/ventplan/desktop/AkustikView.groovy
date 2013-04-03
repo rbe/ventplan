@@ -64,17 +64,6 @@ jideTabbedPane(id: 'akustikTabGroup', constraints: 'grow, span') {
 
             scrollPane(constraints: 'o') {
                 table(id: 'akustikZuluftTabelle', model: model.createAkustikZuluftTableModel()) {
-                    /*
-                    * groovy.lang.MissingMethodException: No signature of method: javax.swing.JTable.setSortable() is applicable for argument types: (java.lang.Boolean) values: [false]
-Possible solutions: setFocusable(boolean), setEnabled(boolean), setLocale(java.util.Locale), setVisible(boolean), setEnabled(boolean), setVisible(boolean)
-	at org.codehaus.groovy.runtime.ScriptBytecodeAdapter.unwrap(ScriptBytecodeAdapter.java:55)
-	at org.codehaus.groovy.runtime.callsite.PojoMetaClassSite.call(PojoMetaClassSite.java:46)
-	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:45)
-	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:108)
-	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:116)
-	at eu.artofcoding.ventplan.desktop.AkustikView$_run_closure1_closure3_closure6_closure9_closure10.doCall(AkustikView.groovy:65)
-*/
-//                    current.setSortable(false)
                     current.getTableHeader().setDefaultRenderer(new JTableHeader().getDefaultRenderer())
                     current.setAutoCreateRowSorter(false)
                     current.setRowSorter(null)
@@ -197,7 +186,6 @@ Possible solutions: setFocusable(boolean), setEnabled(boolean), setLocale(java.u
             scrollPane(constraints: 'o') {
                 def tm = model.createAkustikAbluftTableModel()
                 table(id: 'akustikAbluftTabelle', model: tm) {
-//                    current.setSortable(false)
                     current.getTableHeader().setDefaultRenderer(new JTableHeader().getDefaultRenderer())
                     current.setAutoCreateRowSorter(false)
                     current.setRowSorter(null)

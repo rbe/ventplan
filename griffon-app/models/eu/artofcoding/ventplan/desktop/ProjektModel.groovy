@@ -1274,7 +1274,6 @@ class ProjektModel {
     def refreshTableHeaderHeight(view) {
         // raumTabelle
         try {
-            //view.raumTabelle.setSortable(false);
             view.raumTabelle.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
             view.raumTabelle.getTableHeader().getDefaultRenderer().setPreferredSize(new Dimension(0, 40))
             view.raumTabelle.repaint()

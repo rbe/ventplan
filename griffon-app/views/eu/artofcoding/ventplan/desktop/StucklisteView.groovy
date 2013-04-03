@@ -9,6 +9,7 @@
  *
  * rbe, 19.03.13 17:23
  */
+
 package eu.artofcoding.ventplan.desktop
 
 import net.miginfocom.swing.MigLayout
@@ -36,7 +37,6 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
     panel(id: 'stucklisteErgebnisPanel', layout: new MigLayout('fillx, wrap', '[fill]', '[]0[]'), constraints: 'grow') {
         scrollPane() {
             table(id: 'stucklisteErgebnisTabelle', model: model.createStucklisteErgebnisTableModel()) {
-//                current.setSortable(false)
                 current.getTableHeader().setDefaultRenderer(new JTableHeader().defaultRenderer)
                 current.setAutoCreateRowSorter(false)
                 current.setRowSorter(null)
@@ -63,7 +63,6 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
 
             scrollPane(constraints: 'a') {
                 table(id: 'stucklisteUbersichtTabelle', model: model.createStucklisteUbersichtTableModel()) {
-//                    current.setSortable(false)
                     current.getTableHeader().setDefaultRenderer(new JTableHeader().getDefaultRenderer())
                     current.setAutoCreateRowSorter(false)
                     current.setRowSorter(null)
