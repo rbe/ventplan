@@ -106,7 +106,6 @@ class VentplanModelService {
         raumUberstromElement:'',
         */
         map.grep { r -> r."raumBezeichnung${luftart}luftventile" }.inject [:], { Map o, Map n ->
-            //println n."raumAnzahl${luftart}luftventile" + ' x ' + n."raumBezeichnung${luftart}luftventile"
             if (o.containsKey(n."raumBezeichnung${luftart}luftventile")) {
                 o[n."raumBezeichnung${luftart}luftventile"] += (int) n."raumAnzahl${luftart}luftventile"
             } else {
@@ -224,13 +223,6 @@ class VentplanModelService {
      * @return String Die Artikelnummer
      */
     String getArtikelnummer(Map artikel) {
-        /*
-        try { // STUECKLISTE
-            artikel.ARTIKEL
-        } catch (MissingPropertyException e) { // ARTIKEL
-            artikel.ARTIKELNUMMER
-        }
-        */
         if (artikel.containsKey("ARTIKEL")) {
             artikel.ARTIKEL
         } else if (artikel.containsKey("ARTIKELNUMMER")) {
@@ -306,7 +298,7 @@ class VentplanModelService {
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [gerat: zentralgerat, maxvolumenstrom: maxvs, kategorie: 74])
         }
-        r//*.id
+        r
     }
 
     /**
@@ -331,7 +323,7 @@ class VentplanModelService {
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [gerat: zentralgerat, maxvolumenstrom: maxvs, kategorie: 72])
         }
-        r//*.id
+        r
     }
 
     /**
@@ -358,7 +350,7 @@ class VentplanModelService {
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [gerat: zentralgerat, bedingung: bedingung, kategorie: 70])
         }
-        r//*.id
+        r
     }
 
     /**
@@ -385,7 +377,7 @@ class VentplanModelService {
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [gerat: zentralgerat, bedingung: bedingung, kategorie: 71])
         }
-        r//*.id
+        r
     }
 
     /**
@@ -445,7 +437,7 @@ class VentplanModelService {
         def r = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [name: luftauslass, bedingung: bedingung, kategorie: 76])
         }
-        r//*.id
+        r
     }
 
     /**
