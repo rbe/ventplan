@@ -1040,7 +1040,7 @@ class ProjektController {
                 GH.makeComboboxCellEditor(columnModel.getColumn(1), model.meta.raumTurbreiten)
                 berechneTuren(null, model.meta.gewahlterRaum.position)
                 raumBearbeitenDialog = GH.centerDialog(app.views['MainFrame'], raumBearbeitenDialog)
-                raumBearbeitenDialog.setVisible(true) //.show()
+                raumBearbeitenDialog.setVisible(true)
             } else {
                 // ignore
             }
@@ -1412,7 +1412,7 @@ class ProjektController {
         def listModel = view.teilstreckenVerfugbareListe.model
         model.map.dvb.kanalnetz.each { listModel.addElement(it.teilstrecke) }
         view.teilstreckenVerfugbareListe.setModel(listModel)
-        teilstreckenDialog.setVisible(true) //.show()
+        teilstreckenDialog.setVisible(true)
     }
 
     /**
@@ -1564,8 +1564,8 @@ class ProjektController {
         wbwSummieren()
         // Show dialog
         // Ist zentriert!
-        wbwDialog = GH.createDialog(builder, WbwView, [title: "Widerstandsbeiwerte", size: [750, 650], locationRelativeTo: app.windowManager.findWindow('ventplanFrame')])
-        wbwDialog.setVisible(true) //.show()
+        wbwDialog = GH.createDialog(builder, WbwView, [title: 'Widerstandsbeiwerte', size: [760, 670], locationRelativeTo: app.windowManager.findWindow('ventplanFrame')])
+        wbwDialog.setVisible(true)
     }
 
     /**
@@ -1802,7 +1802,7 @@ class ProjektController {
         }
         // Dialog ausrichten und anzeigen
         nutzerdatenDialog = GH.centerDialog(app.views['MainFrame'], nutzerdatenDialog)
-        nutzerdatenDialog.setVisible(true) //.show()
+        nutzerdatenDialog.setVisible(true)
     }
 
     /**
@@ -2060,7 +2060,7 @@ class ProjektController {
                     ]
             )
             documentWaitDialog = GH.centerDialog(app.views['MainFrame'], documentWaitDialog)
-            documentWaitDialog.setVisible(true) //.show()
+            documentWaitDialog.setVisible(true)
         }
     }
 
@@ -2109,7 +2109,7 @@ class ProjektController {
         view.angebotsverfolgungDialogOrt.text = model.map.kundendaten.bauvorhabenOrt
         // Dialog anzeigen
         angebotsverfolgungDialog = GH.centerDialog(app.views['MainFrame'], angebotsverfolgungDialog)
-        angebotsverfolgungDialog.setVisible(true) //.show()
+        angebotsverfolgungDialog.setVisible(true)
     }
 
     /**
@@ -2217,7 +2217,7 @@ class ProjektController {
                             ]
                     )
                     documentWaitDialog = GH.centerDialog(app.views['MainFrame'], documentWaitDialog)
-                    documentWaitDialog.setVisible(true) //.show()
+                    documentWaitDialog.setVisible(true)
                 }
             }
         } catch (Exception e) {
@@ -2337,7 +2337,7 @@ class ProjektController {
         closure(stucklisteDialog)
         // Dialog ausrichten und anzeigen
         stucklisteDialog = GH.centerDialog(app.views['MainFrame'], stucklisteDialog)
-        stucklisteDialog.setVisible(true) //.show()
+        stucklisteDialog.setVisible(true)
     }
 
     /**
