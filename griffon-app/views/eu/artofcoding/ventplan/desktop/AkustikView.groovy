@@ -31,7 +31,10 @@ jideTabbedPane(id: 'akustikTabGroup', constraints: 'grow, span') {
                 zoneRow('...............5...............')
                 // 1. Zeile. o = Tabelle
                 zoneRow('...............2o|!......1p^<.p')
+                zoneRow('...............6...............')
                 zoneRow('e<-.e2f^-fg^>.g2.........1q^<.q')
+                zoneRow('...............6...............', template: 'rowspace6')
+                zoneRow('...............7...............', template: 'rowspace7')
                 zoneRow('j<-.j2k^.-....k2...............', template: 'row1')
                 zoneRow('l<-.l2m^-mn^>-n2...............', template: 'row2')
                 zoneRow('8x>...........x2...............', template: 'row3')
@@ -122,14 +125,13 @@ jideTabbedPane(id: 'akustikTabGroup', constraints: 'grow, span') {
             label('Raumabsorption (Annahme)', foreground: GH.MY_GREEN, constraints: 'l')
             comboBox(id: 'akustikZuluftRaumabsorption', constraints: 'n', items: ['BAD', 'WOHNEN'], selectedItem: 'WOHNEN')
 
+            zl.insertTemplate('rowspace6')
             zl.insertTemplate('row1')
             label('Korrektur der A-Bewertung', constraints: 'j')
 
+            zl.insertTemplate('rowspace7')
             zl.insertTemplate('row3')
             label('Bewerteter Schallpegel', constraints: 'x')
-
-            zl.insertTemplate('row3')
-            label(' ', constraints: 'x')
 
             label('', constraints: 's')
             label('Mittlerer Schalldruckpegel* dB(A) =', constraints: 't')
@@ -152,7 +154,10 @@ jideTabbedPane(id: 'akustikTabGroup', constraints: 'grow, span') {
                 zoneRow('...............5...............')
                 // 1. Zeile. o = Tabelle
                 zoneRow('...............2o|!......1p^<.p')
+                zoneRow('...............6...............')
                 zoneRow('e<-.e2f^-fg^>.g2.........1q^<.q')
+                zoneRow('...............6...............', template: 'rowspace6')
+                zoneRow('...............7...............', template: 'rowspace7')
                 zoneRow('j<-.j2k^.-....k2...............', template: 'row1')
                 zoneRow('l<-.l2m^-mn^>-n2...............', template: 'row2')
                 zoneRow('8x>...........x2...............', template: 'row3')
@@ -244,15 +249,13 @@ jideTabbedPane(id: 'akustikTabGroup', constraints: 'grow, span') {
             label('Raumabsorption (Annahme)', foreground: GH.MY_GREEN, constraints: 'l')
             comboBox(id: 'akustikAbluftRaumabsorption', constraints: 'n', items: ['BAD', 'WOHNEN'], selectedItem: 'BAD')
 
+            zl.insertTemplate('rowspace6')
             zl.insertTemplate('row1')
             label('Korrektur der A-Bewertung', constraints: 'j')
 
+            zl.insertTemplate('rowspace7')
             zl.insertTemplate('row3')
             label('Bewerteter Schallpegel', constraints: 'x')
-
-            zl.insertTemplate('row3')
-            label(' ', constraints: 'x')
-
 
             label('', constraints: 's')
             label('Mittlerer Schalldruckpegel* dB(A) =', constraints: 't')
