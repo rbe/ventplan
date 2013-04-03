@@ -358,8 +358,8 @@ class ProjektModel {
                 def (zuluftfaktor, neuerZuluftfaktor) =
                 calculationService.prufeZuluftfaktor(r.raumTyp, eingegebenerZuluftfaktor)
                 if (zuluftfaktor != neuerZuluftfaktor && !expressModus) {
-                    def infoMsg = "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
-                    app.controllers['Dialog'].showInformDialog(infoMsg as String)
+                    String infoMsg = "Der Zuluftfaktor wird von ${zuluftfaktor} auf ${neuerZuluftfaktor} (laut Norm-Tolerenz) geändert!"
+                    app.controllers['Dialog'].showInformDialog('Zuluftfaktor', infoMsg)
                 }
                 r.raumZuluftfaktor = neuerZuluftfaktor
             }
