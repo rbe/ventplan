@@ -2,42 +2,22 @@
  * Ventplan
  * ventplan, ventplan
  * Copyright (C) 2005-2010 Informationssysteme Ralf Bensmann, http://www.bensmann.com/
- * Copyright (C) 2011-2012 art of coding UG, http://www.art-of-coding.eu/
+ * Copyright (C) 2011-2013 art of coding UG, http://www.art-of-coding.eu/
  *
  * Alle Rechte vorbehalten. Nutzung unterliegt Lizenzbedingungen.
  * All rights reserved. Use is subject to license terms.
  *
- * rbe, 7/8/12 3:17 PM
+ * rbe, 19.03.13 19:18
  */
-
-// log4j configuration
-log4j {
-    appender.stdout = 'org.apache.log4j.ConsoleAppender'
-    appender.'stdout.layout' = 'org.apache.log4j.PatternLayout'
-    appender.'stdout.layout.ConversionPattern' = '[%r] %c{2} %m%n'
-    appender.errors = 'org.apache.log4j.FileAppender'
-    appender.'errors.layout' = 'org.apache.log4j.PatternLayout'
-    appender.'errors.layout.ConversionPattern' = '[%r] %c{2} %m%n'
-    appender.'errors.File' = 'stacktrace.log'
-    rootLogger = 'error,stdout'
-    logger {
-        griffon = 'error'
-        StackTrace = 'error,errors'
-        org {
-            codehaus.griffon.commons = 'info' // core / classloading
-        }
-    }
-    additivity.StackTrace = false
-}
 
 // key signing information
 environments {
     development {
         signingkey {
             params {
-                sigfile = 'GRIFFON'
-                keystore = "${basedir}/griffon-app/conf/keys/devKeystore"
-                alias = 'development'
+                // sigfile = 'GRIFFON'
+                // keystore = "${basedir}/griffon-app/conf/keys/devKeystore"
+                // alias = 'development'
                 storepass = 'BadStorePassword'
                 keypass = 'BadKeyPassword'
                 lazy = true // only sign when unsigned
@@ -55,9 +35,6 @@ environments {
     production {
         signingkey {
             params {
-                sigfile = 'GRIFFON'
-                keystore = 'CHANGE ME'
-                alias = 'CHANGE ME'
                 // NOTE: for production keys it is more secure to rely on key prompting
                 // no value means we will prompt //storepass = 'BadStorePassword'
                 // no value means we will prompt //keypass   = 'BadKeyPassword'
@@ -77,10 +54,15 @@ environments {
     }
 }
 
+griffon.source.encoding = 'UTF-8'
+griffon.project.source.level = '1.7'
+griffon.project.target.level = '1.7'
+
 griffon {
     memory {
-        min = '64m'
         max = '128m'
+        min = '64m'
+        //minPermSize = '2m'
         //maxPermSize = '64m'
     }
     jars {
@@ -115,10 +97,76 @@ griffon {
         jnlp = 'applet.jnlp'
         html = 'applet.html'
     }
+}
+
+// required for custom environments
+signingkey {
+    params {
+        def env = griffon.util.Environment.current.name
+        sigfile = 'GRIFFON-' + env
+        keystore = "${basedir}/griffon-app/conf/keys/${env}Keystore"
+        alias = env
+        // storepass = 'BadStorePassword'
+        // keypass   = 'BadKeyPassword'
+        lazy = true // only sign when unsigned
+    }
+}
+
+griffon {
     doc {
-        logo = '<a href="http://griffon.codehaus.org" target="_blank"><img alt="The Griffon Framework" src="../img/griffon.png" border="0"/></a>'
+        logo = '<a href="http://griffon-framework.org" target="_blank"><img alt="The Griffon Framework" src="../img/griffon.png" border="0"/></a>'
         sponsorLogo = "<br/>"
-        footer = "<br/><br/>Made with Griffon (0.9)"
+        footer = "<br/><br/>Made with Griffon (1.2.0)"
+    }
+}
+
+deploy {
+    application {
+        title = "${appName} ${appVersion}"
+        vendor = 'art of coding UG' //System.properties['user.name']
+        homepage = "http://www.ventplan.com"
+        description {
+            complete = "${appName} ${appVersion}"
+            oneline = "${appName} ${appVersion}"
+            minimal = "${appName} ${appVersion}"
+            tooltip = "${appName} ${appVersion}"
+        }
+        icon {
+            'default' {
+                name = 'image/ventplan_signet_64x64.png'
+                width = '64'
+                height = '64'
+            }
+            splash {
+                name = 'image/ventplan_logo.png'
+                width = '406'
+                height = '77'
+                /*
+                width  = '391'
+                height = '123'
+                */
+            }
+            selected {
+                name = 'image/ventplan_signet_64x64.png'
+                width = '64'
+                height = '64'
+            }
+            disabled {
+                name = 'image/ventplan_signet_64x64.png'
+                width = '64'
+                height = '64'
+            }
+            rollover {
+                name = 'image/ventplan_signet_64x64.png'
+                width = '64'
+                height = '64'
+            }
+            shortcut {
+                name = 'image/ventplan_signet_64x64.png'
+                width = '64'
+                height = '64'
+            }
+        }
     }
 }
 
@@ -128,9 +176,7 @@ griffon.project.dependency.resolution = {
     }
     log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     repositories {
-        griffonPlugins()
         griffonHome()
-        griffonCentral()
         // uncomment the below to enable remote dependency resolution
         // from public Maven repositories
         //mavenLocal()
@@ -141,38 +187,35 @@ griffon.project.dependency.resolution = {
         //mavenRepo "http://repository.jboss.com/maven2/"
     }
     dependencies {
-        // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
+        // specify dependencies here under either 'build', 'compile', 'runtime' or 'test' scopes eg.
         // runtime 'mysql:mysql-connector-java:5.1.5'
     }
 }
 
-app.archetype = 'default'
+log4j = {
+    appenders {
+        console name: 'stdout', layout: pattern(conversionPattern: '%d [%t] %-5p %c - %m%n')
+    }
+    error 'org.codehaus.griffon',
+            'org.springframework',
+            'org.apache.karaf',
+            'groovyx.net'
+    warn 'griffon'
+}
+
 app.fileType = '.groovy'
-app.defaultPackageName = 'com.ventplan.desktop'
+app.defaultPackageName = 'eu.artofcoding.ventplan.desktop'
+
 application.icon = '/griffon-app/resources/Ventplan.icns'
 
+// -Dgriffon.disable.threading.injection=true
 compiler {
     threading {
-        com {
-            ventplan {
-                /*
-                desktop {
-                    VentplanController = true
-                    ProjektModel = true
-                    ProjektController = true
-                    AkustikView = true
-                    AkustikBindings = true
-                    //ProjektView = true
-                    //Wac2MainPane = true
-                    //Wac2View = true
-                    RaumVsView
-                    VpxModelService = true
-                    CalculationService = true
-                    VentplanModelService = true
-                    AuslegungView = true
+        eu {
+            artofcoding {
+                ventplan {
+                    desktop = false
                 }
-                */
-                desktop = false
             }
         }
     }
