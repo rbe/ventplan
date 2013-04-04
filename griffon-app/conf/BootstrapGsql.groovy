@@ -26,11 +26,13 @@ class BootstrapGsql {
             int me = sql.firstRow('SELECT dbrev FROM ventplan WHERE id = 1')[0] as int
             int head = HttpHelper.download("${baseurl}/head").toInteger()
             if (me + 1 < head) {
-                (me + 1).upto head, {
-                    String content = HttpHelper.download("${baseurl}/${it}.sql")
-                    content.eachLine {
-                        //print "rev#${me} -> rev#${it}: ${it}"
-                        sql.executeUpdate(it)
+                sql.withTransaction {
+                    (me + 1).upto head, {
+                        String content = HttpHelper.download("${baseurl}/${it}.sql")
+                        content.eachLine {
+                            //print "rev#${me} -> rev#${it}: ${it}"
+                            sql.executeUpdate(it)
+                        }
                     }
                 }
             } else {
