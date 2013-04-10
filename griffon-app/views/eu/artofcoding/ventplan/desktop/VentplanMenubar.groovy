@@ -41,6 +41,7 @@ menuBar = menuBar {
             separator()
             menuItem(exitAction)
         }
+        menuItem(ventidModusAction)
     }
     // Auslegung
     menu(id: 'menuAuslegung', text: 'Auslegung', mnemonic: 'A') {

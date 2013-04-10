@@ -39,6 +39,10 @@ class VentplanController {
     def projektSuchenDialog
     def neuesProjektWizardDialog
 
+    // WAC-272 Vent-ID
+    def ventIdDialog
+    def ventIdRegistrierungDialog
+
     /**
      * Flag zum Abbrechen des Schliessen-Vorgangs
      */
@@ -1075,5 +1079,72 @@ class VentplanController {
     }
 
     //</editor-fold>
+
+    /**
+     * WAC-272
+     * Vent-ID Dialog anzeigen.
+     */
+    def ventIdDialogOeffnen = { evt = null ->
+        ventIdDialog = GH.createDialog(builder, ModusView, [title: 'Ventplan Edition Westaflex', resizable: true, pack: true])
+        ventIdDialog = GH.centerDialog(app.views['MainFrame'], ventIdDialog)
+        ventIdDialog.setVisible(true)
+    }
+
+    /**
+     * WAC-272
+     */
+    def ventIdLogin = { evt = null ->
+        // Cloud login
+        ventIdDialog.dispose()
+    }
+
+    /**
+     * WAC-272 Vent-ID Dialog
+     * Dialog schließen.
+     */
+    def ventIdDialogAbbrechen = { evt = null ->
+        ventIdDialog.dispose()
+    }
+
+    /**
+     * WAC-272 Vent-ID Registrierungsdialog öffnen
+     */
+    def ventIdRegistrierungDialogOeffnen = { evt = null ->
+        ventIdRegistrierungDialog = GH.createDialog(builder, ModusRegistrationView, [title: 'Vent-ID Registrierung', resizable: true, pack: true])
+        ventIdRegistrierungDialog = GH.centerDialog(app.views['MainFrame'], ventIdRegistrierungDialog)
+        ventIdRegistrierungDialog.setVisible(true)
+    }
+
+    /**
+     * WAC-272
+     * Vent-ID Registrierungsdialog schliessen.
+     */
+    def ventIdRegistrierungAbbrechen = { evt ->
+        ventIdRegistrierungDialog.dispose()
+    }
+
+    /**
+     * WAC-272
+     * Vent-ID erstellen.
+     */
+    def ventIdRegistrierungSpeichern = { evt ->
+        try {
+            // Daten aus dem Dialog holen
+            view.ventidRegistrationAnrede.selectedItem.value.trim()
+            view.ventidRegistrationFirma.text.trim()
+            view.ventidRegistrationName.text.trim()
+            view.ventidRegistrationAnschrift.text.trim()
+            view.ventidRegistrationPlz.text.trim()
+            view.ventidRegistrationOrt.text.trim()
+            view.ventidRegistrationTelefon.text.trim()
+            view.ventidRegistrationEmail.text.trim()
+            view.ventidRegistrationPasswort.text.trim()
+            view.ventidRegistrationPasswort2.text.trim()
+        } catch (e) {
+            // ignore
+        } finally {
+            ventIdRegistrierungDialog.dispose()
+        }
+    }
 
 }

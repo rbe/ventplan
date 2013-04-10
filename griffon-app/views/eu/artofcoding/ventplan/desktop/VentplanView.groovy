@@ -247,6 +247,17 @@ actions {
             closure: controller.exitApplication
     )
 
+    // WAC-272 Vent-ID Dialog
+    action(
+            id: 'ventidModusAction',
+            name: 'Modus',
+            mnemonic: 'M',
+            accelerator: shortcut('M'),
+            smallIcon: imageIcon(resource: '/menu/app_info.png'),
+            enabled: true,
+            closure: controller.ventIdDialogOeffnen
+    )
+
 }
 
 //</editor-fold>
