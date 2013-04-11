@@ -14,7 +14,6 @@ package eu.artofcoding.ventplan.desktop
 
 import net.miginfocom.swing.MigLayout
 
-// Auslegung input dialog view
 panel(id: "auslegungErstellerPanel", layout: new MigLayout("fillx, wrap", "[]para[fill]para[fill]", ''), constraints: "grow") {
     
     label("Firma")
@@ -47,4 +46,5 @@ panel(id: "auslegungErstellerPanel", layout: new MigLayout("fillx, wrap", "[]par
     button(id: "nutzerdatenSpeichernButton", text: "Eingaben speichern und Auslegung erstellen")
 }
 
-build(AuslegungBindings)
+// Bindings
+nutzerdatenSpeichernButton.actionPerformed = controller.auslegungErstellen

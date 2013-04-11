@@ -17,8 +17,6 @@ import net.miginfocom.swing.MigLayout
 
 import java.awt.*
 
-// Dierser Dialog wird nun für die Erstellung aller möglichen Dokumente genutzt
-// Auslegung input dialog view
 panel(id: 'erstellerPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]para[fill]', ''), constraints: 'grow') {
     // Informationen über den Ersteller
     label('Informationen über den Ersteller des Dokuments (optional)', foreground: Color.BLUE, constraints: 'grow, span 3')
@@ -88,4 +86,7 @@ panel(id: 'erstellerPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]pa
 ].each {
     GH.yellowTextField(it)
 }
-build(AuslegungNutzerdatenBindings)
+
+// Bindings
+nutzerdatenAbbrechenButton.actionPerformed = controller.nutzerdatenAbbrechen
+nutzerdatenSpeichernButton.actionPerformed = controller.nutzerdatenSpeichern

@@ -10,7 +10,6 @@
  * rbe, 19.03.13 17:23
  */
 
-
 package eu.artofcoding.ventplan.desktop
 
 import net.miginfocom.swing.MigLayout
@@ -55,4 +54,8 @@ panel(id: "projektSuchenPanel", layout: new MigLayout("fillx, wrap", "[]para[fil
     button(id: "projektSuchenDateiOeffnen", text: "Gewählte Datei öffnen")
 }
 
-build(ProjektSuchenBindings)
+// Bindings
+projektSuchenOrdnerOeffnen.actionPerformed = controller.projektSuchenOrdnerOeffnen
+projektSuchenStarteSuche.actionPerformed = controller.projektSuchenStarteSuche
+projektSuchenAbbruch.actionPerformed = controller.projektSuchenAbbrechen
+projektSuchenDateiOeffnen.actionPerformed = controller.projektSuchenDateiOeffnen

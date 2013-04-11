@@ -9,10 +9,13 @@
  *
  * rbe, 19.03.13 17:50
  */
+
 package eu.artofcoding.ventplan.desktop
 
+import eu.artofcoding.griffon.helper.GriffonHelper
 import net.miginfocom.swing.MigLayout
 
+import javax.swing.event.ListSelectionListener
 import java.awt.*
 
 // Raumvolumenströme
@@ -98,30 +101,41 @@ panel(layout: new MigLayout('fill, wrap', '[fill, grow]', '[fill,grow]'), constr
     }
 }
 
-/*
-raumVsZuAbluftventileTabelle.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF)
-//raumVsZuAbluftventileTabelle.packTable(0)
-raumVsZuAbluftventileTabelle.packColumn(0, 10, 60)
-raumVsZuAbluftventileTabelle.packColumn(1, 10, 60)
-raumVsZuAbluftventileTabelle.packColumn(2, 10, 80)
-raumVsZuAbluftventileTabelle.packColumn(3, 10, 80)
-raumVsZuAbluftventileTabelle.packColumn(4, 10, 70)
-raumVsZuAbluftventileTabelle.packColumn(5, 10, 90)
-raumVsZuAbluftventileTabelle.packColumn(6, 10, 90)
-raumVsZuAbluftventileTabelle.packColumn(7, 10, 90)
-raumVsZuAbluftventileTabelle.packColumn(8, 10, 70)
-raumVsZuAbluftventileTabelle.packColumn(9, 10, 90)
-raumVsZuAbluftventileTabelle.packColumn(10, 10, 90)
-raumVsZuAbluftventileTabelle.packColumn(11, 10, 90)
-raumVsZuAbluftventileTabelle.packColumn(12, 10, 80)
-*/
-
 // Bindings
-build(RaumVsBindings)
+// Raumvolumenströme
+// WAC-171: Hinweis für Türen und ÜB-Elemente
+bind(source: model.map.raum.raumVs, sourceProperty: "turenHinweis",                   target: raumVsTurenHinweis,             targetProperty: "text")
+bind(source: model.map.raum.raumVs, sourceProperty: "ubElementeHinweis",              target: raumVsUbElementeHinweis,        targetProperty: "text")
+bind(source: model.map.raum.raumVs, sourceProperty: "kaufmannischeArtikelHinweis",    target: kaufmannischeArtikelHinweis,    targetProperty: "text")
+bind(source: model.map.raum.raumVs, sourceProperty: "zuluftmengeVerteilebeneHinweis", target: zuluftmengeVerteilebeneHinweis, targetProperty: "text")
+bind(source: model.map.raum.raumVs, sourceProperty: "abluftmengeVerteilebeneHinweis", target: abluftmengeVerteilebeneHinweis, targetProperty: "text")
+// Add list selection listener to synchronize every table's selection and model.meta.gewahlterRaum
+[raumVsZuAbluftventileTabelle, raumVsUberstromelementeTabelle].each {
+    it.selectionModel.addListSelectionListener([
+            valueChanged: { evt ->
+                controller.raumInTabelleGewahlt(evt, it)
+            }
+    ] as ListSelectionListener)
+}
+// Comboboxes
+// Binding for items of comboboxes is done in RaumVsiew!
+raumVsZentralgerat.actionPerformed = controller.zentralgeratManuellGewahlt
+raumVsVolumenstrom.actionPerformed = controller.volumenstromZentralgeratManuellGewahlt
+//
+bind(source: model.map.raum.raumVs, sourceProperty: "gesamtVolumenNE",                   target: raumVsGesamtVolumenNE,                   targetProperty: "text", converter: GriffonHelper.toString2Converter)
+bind(source: model.map.raum.raumVs, sourceProperty: "luftwechselNE",                     target: raumVsLuftwechselNE,                     targetProperty: "text", converter: GriffonHelper.toString2Converter)
+bind(source: model.map.raum.raumVs, sourceProperty: "gesamtaussenluftVsMitInfiltration", target: raumVsGesamtaussenluftVsMitInfiltration, targetProperty: "text", converter: GriffonHelper.toString2Round5Converter)
+// Aussenluftvolumenstrom der lüftungstechnsichen Maßnahme
+bind(source: model.map.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsFs", target: raumVsAussenluftVsDerLtmFs, targetProperty: "text", converter: GriffonHelper.toString2Round5Converter)
+bind(source: model.map.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsRl", target: raumVsAussenluftVsDerLtmRl, targetProperty: "text", converter: GriffonHelper.toString2Round5Converter)
+bind(source: model.map.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsNl", target: raumVsAussenluftVsDerLtmNl, targetProperty: "text", converter: GriffonHelper.toString2Round5Converter)
+bind(source: model.map.aussenluftVs, sourceProperty: "gesamtLvsLtmLvsIl", target: raumVsAussenluftVsDerLtmIl, targetProperty: "text", converter: GriffonHelper.toString2Round5Converter)
+/* WAC-233
+raumVsRaumBearbeiten.actionPerformed = controller.raumBearbeiten
+*/
+// WAC-258
+standardAuslassButton.actionPerformed = controller.standardAuslasseSetzen
 
-//
-// JIDE
-//
 // raumVsVentileTabGroup
 raumVsVentileTabGroup.with {
     setTabColorProvider(com.jidesoft.swing.JideTabbedPane.ONENOTE_COLOR_PROVIDER)

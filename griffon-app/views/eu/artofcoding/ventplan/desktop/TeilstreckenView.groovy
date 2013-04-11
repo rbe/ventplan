@@ -9,6 +9,7 @@
  *
  * rbe, 19.03.13 17:23
  */
+
 package eu.artofcoding.ventplan.desktop
 
 import eu.artofcoding.griffon.helper.GriffonHelper as GH
@@ -45,4 +46,8 @@ panel(id: "teilstreckenPanel", layout: new MigLayout("fillx, wrap", "[fill]", "[
 }
 
 // Bindings
-build(TeilstreckenBindings)
+// Buttons
+teilstreckenNachVerfugbare.actionPerformed = controller.teilstreckenNachVerfugbarVerschieben
+teilstreckenNachAusgewahlte.actionPerformed = controller.teilstreckenNachAusgewahlteVerschieben
+teilstreckenOk.actionPerformed = controller.teilstreckenOkButton
+teilstreckenCancel.actionPerformed = controller.teilstreckenCancelButton

@@ -130,4 +130,6 @@ panel(constraints: 'x', border: compoundBorder(outer: emptyBorder(5), inner: emp
 
 }
 
-build(WizardBindings)
+// Bindings
+wizardAbbrechen.actionPerformed = controller.wizardAbbrechen
+wizardProjektErstellen.actionPerformed = controller.wizardProjektErstellen

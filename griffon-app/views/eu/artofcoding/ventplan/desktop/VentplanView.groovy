@@ -16,8 +16,8 @@ import net.miginfocom.swing.MigLayout
 import com.jidesoft.swing.JideScrollPane
 
 import javax.swing.*
+import javax.swing.event.ChangeListener
 import javax.swing.filechooser.FileFilter
-import java.awt.*
 
 //<editor-fold desc="FileChooser">
 
@@ -292,7 +292,10 @@ ventplanFrame = application(
     mainScrollPane.setHorizontalScrollBarPolicy(JideScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     mainScrollPane.setVerticalScrollBarPolicy(JideScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     // Bindings
-    build(VentplanBindings)
+    // ChangeListener for active tab; tell model about its MVC ID
+    projektTabGroup.addChangeListener({ evt ->
+        controller.projektIndexAktivieren(evt.source.selectedIndex)
+    } as ChangeListener)
     // The status bar
     widget(build(VentplanStatusbar), constraints: 'south, grow')
     // WAC-161: Zuletzt geöffnete Projekte in das Menu laden

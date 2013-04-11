@@ -9,6 +9,7 @@
  *
  * rbe, 19.03.13 17:23
  */
+
 package eu.artofcoding.ventplan.desktop
 
 import eu.artofcoding.griffon.helper.GriffonHelper as GH
@@ -77,4 +78,7 @@ panel(id: 'erstellerPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]pa
 ].each {
     GH.yellowTextField(it)
 }
-build(PrinzipskizzeNutzerdatenBindings)
+
+// Bindings
+nutzerdatenAbbrechenButton.actionPerformed = controller.nutzerdatenAbbrechen
+nutzerdatenSpeichernButton.actionPerformed = controller.nutzerdatenSpeichern
