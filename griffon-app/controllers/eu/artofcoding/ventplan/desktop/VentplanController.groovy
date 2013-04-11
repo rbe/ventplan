@@ -1088,7 +1088,7 @@ class VentplanController {
      * WAC-272 Vent-ID Dialog anzeigen.
      */
     def ventIdDialogOeffnen = { evt = null ->
-        ventIdDialog = GH.createDialog(builder, ModusView, [title: 'Ventplan Edition Westaflex', resizable: true, pack: true])
+        ventIdDialog = GH.createDialog(builder, ModusView, [title: 'Ventplan ID', resizable: true, pack: true])
         ventIdDialog = GH.centerDialog(app.views['MainFrame'], ventIdDialog)
         ventIdDialog.setVisible(true)
     }
