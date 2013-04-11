@@ -106,6 +106,11 @@ class VentplanResource {
 
     static String getPrinzipskizzeSoapUrl() {
         return getVentplanProperties().get('service.prinzipskizze.soap.url') as String
+    /**
+     * WAC-19 URL for Ventplan database updates.
+     */
+    static String getDatabaseUpdateUrl() {
+        return getVentplanProperties().get('ventplan.update.database.url') as String
     }
 
     static String getOdiseeServiceRestUrl() {
