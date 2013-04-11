@@ -1085,8 +1085,7 @@ class VentplanController {
     //<editor-fold desc="WAC-272 Vent-ID">
 
     /**
-     * WAC-272
-     * Vent-ID Dialog anzeigen.
+     * WAC-272 Vent-ID Dialog anzeigen.
      */
     def ventIdDialogOeffnen = { evt = null ->
         ventIdDialog = GH.createDialog(builder, ModusView, [title: 'Ventplan Edition Westaflex', resizable: true, pack: true])
@@ -1103,8 +1102,7 @@ class VentplanController {
     }
 
     /**
-     * WAC-272 Vent-ID Dialog
-     * Dialog schließen.
+     * WAC-272 Vent-ID Dialog schließen.
      */
     def ventIdDialogAbbrechen = { evt = null ->
         ventIdDialog.dispose()
@@ -1120,16 +1118,14 @@ class VentplanController {
     }
 
     /**
-     * WAC-272
-     * Vent-ID Registrierungsdialog schliessen.
+     * WAC-272 Vent-ID Registrierungsdialog schliessen.
      */
     def ventIdRegistrierungAbbrechen = { evt ->
         ventIdRegistrierungDialog.dispose()
     }
 
     /**
-     * WAC-272
-     * Vent-ID erstellen.
+     * WAC-272 Vent-ID erstellen.
      */
     def ventIdRegistrierungSpeichern = { evt ->
         try {
