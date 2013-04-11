@@ -54,6 +54,17 @@ int __i;
 
 actions {
 
+    // WAC-272 Ventplan ID
+    action(
+            id: 'ventidModusAction',
+            name: 'Modus',
+            mnemonic: 'M',
+            accelerator: shortcut('M'),
+            smallIcon: imageIcon(resource: '/menu/app_modus.png'),
+            enabled: true,
+            closure: controller.ventIdDialogOeffnen
+    )
+
     // EFH-4ZKB-WC.vpx
     action(
             id: 'neuesProjektAction_EFH4ZKBWC',
@@ -240,17 +251,6 @@ actions {
             smallIcon: imageIcon(resource: '/menu/app_exit.png'),
             enabled: true,
             closure: controller.exitApplication
-    )
-
-    // WAC-272 Ventplan ID Dialog
-    action(
-            id: 'ventidModusAction',
-            name: 'Modus',
-            mnemonic: 'M',
-            accelerator: shortcut('M'),
-            smallIcon: imageIcon(resource: '/menu/app_modus.png'),
-            enabled: true,
-            closure: controller.ventIdDialogOeffnen
     )
 
 }
