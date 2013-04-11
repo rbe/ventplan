@@ -218,6 +218,8 @@ class VentplanController {
 
     int ____i;
 
+    //<editor-fold desc="Projekt erstellen">
+
     /**
      * Ein neues Projekt erstellen.
      */
@@ -347,6 +349,8 @@ class VentplanController {
             clacpr(mvc)
         }
     }
+
+    //</editor-fold>
 
     int _____i;
 
