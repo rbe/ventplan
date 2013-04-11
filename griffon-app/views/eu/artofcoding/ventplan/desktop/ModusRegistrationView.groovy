@@ -21,7 +21,7 @@ import java.awt.Color
 // Dierser Dialog wird nun für die Registrierung einer Vent-ID genutzt
 panel(id: 'ventidRegistrationPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]para[fill]', ''), constraints: 'grow') {
     // Informationen über den Ersteller
-    label('Informationen über den Ersteller des Dokuments (optional)', foreground: Color.BLUE, constraints: 'grow, span 3')
+    label('Informationen über den Nutzer', foreground: Color.BLUE, constraints: 'grow, span 3')
 
     label('')
     comboBox(id: 'ventidRegistrationAnrede', items: ['Frau', 'Herr'], constraints: 'grow, span 2')
@@ -54,7 +54,7 @@ panel(id: 'ventidRegistrationPanel', layout: new MigLayout('fillx, wrap', '[]par
     label('Passwort')
     textField(id: 'ventidRegistrationPasswort2', constraints: 'grow, span 2')
 
-    checkBox(id: 'ventidRegistrationDialogAGB', text: 'Ja, ich habe die AGBs und allg. Geschäftsbedingungen gelesen!', constraints: 'grow, span 3')
+    checkBox(id: 'ventidRegistrationDialogAGB', text: 'Ja, ich habe die AGBs gelesen und akzeptiere sie!', constraints: 'grow, span 3')
     button(id: 'ventidRegistrationDialogAGBOeffnen', text: 'AGBs öffnen')
 
     // Abbrechen
