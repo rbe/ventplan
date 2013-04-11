@@ -40,7 +40,7 @@ panel(id: 'auslegungErstellerPanel', layout: new MigLayout('fillx, wrap', '[]par
     label('Fax')
     textField(id: 'auslegungErstellerFax', constraints: 'grow, span 2')
 
-    label('Email')
+    label('E-Mail')
     textField(id: 'auslegungErstellerEmail', constraints: 'grow, span 2')
     
     // Informationen über das Angebot

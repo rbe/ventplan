@@ -28,7 +28,7 @@ panel(id: 'erstellerPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]pa
     label('Anschrift')
     textField(id: 'erstellerAnschrift', constraints: 'grow, span 2')
 
-    label('PLZ Ort')
+    label('PLZ und Ort')
     textField(id: 'erstellerPlz', constraints: 'width 80px!')
     textField(id: 'erstellerOrt', constraints: 'width 150px!, grow')
 
@@ -38,7 +38,7 @@ panel(id: 'erstellerPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]pa
     label('Fax')
     textField(id: 'erstellerFax', constraints: 'grow, span 2')
 
-    label('Email')
+    label('E-Mail')
     textField(id: 'erstellerEmail', constraints: 'grow, span 2')
 
     // Informationen über die Prinzipskizze

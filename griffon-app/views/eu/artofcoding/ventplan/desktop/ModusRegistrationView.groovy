@@ -34,7 +34,7 @@ panel(id: 'ventidRegistrationPanel', layout: new MigLayout('fillx, wrap', '[]par
     label('Straße ')
     textField(id: 'ventidRegistrationAnschrift', constraints: 'grow, span 2')
 
-    label('Plz/Ort')
+    label('PLZ und Ort')
     textField(id: 'ventidRegistrationPlz', constraints: 'width 80px!')
     textField(id: 'ventidRegistrationOrt', constraints: 'width 150px!, grow')
 
@@ -44,7 +44,7 @@ panel(id: 'ventidRegistrationPanel', layout: new MigLayout('fillx, wrap', '[]par
     //label('Fax')
     //textField(id: 'erstellerFax', constraints: 'grow, span 2')
 
-    label('Email')
+    label('E-Mail')
     textField(id: 'ventidRegistrationEmail', constraints: 'grow, span 2')
 
     label('Passwort')
