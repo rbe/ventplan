@@ -9,6 +9,7 @@
  *
  * mmu, 03.04.13 21:26
  */
+
 package eu.artofcoding.ventplan.desktop
 
 import eu.artofcoding.griffon.helper.GriffonHelper as GH

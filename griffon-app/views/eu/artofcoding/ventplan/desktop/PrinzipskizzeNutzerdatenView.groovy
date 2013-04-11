@@ -14,6 +14,8 @@ package eu.artofcoding.ventplan.desktop
 import eu.artofcoding.griffon.helper.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
+import java.awt.*
+
 // Dierser Dialog wird nun für die Erstellung der Prinzipskizze genutzt
 panel(id: 'erstellerPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]para[fill]', ''), constraints: 'grow') {
     // Informationen über den Ersteller

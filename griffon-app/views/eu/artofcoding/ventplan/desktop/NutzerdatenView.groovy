@@ -11,9 +11,10 @@
  */
 package eu.artofcoding.ventplan.desktop
 
+import eu.artofcoding.griffon.helper.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 
-import eu.artofcoding.griffon.helper.GriffonHelper as GH
+import java.awt.*
 
 // Dierser Dialog wird nun für die Erstellung aller möglichen Dokumente genutzt
 // Auslegung input dialog view
