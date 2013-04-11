@@ -59,12 +59,6 @@ menuBar = menuBar {
         menuItem(stuecklisteErstellenAction)
         // WAC-108 Angebot
         menuItem(angebotErstellenAction)
-        /*
-        // Separator
-        separator()
-        // WAC-177 Angebotsverfolgung
-        menuItem(angebotsverfolgungAction)
-        */
     }
     // Info
     menu(id: 'menuInfo', text: 'Hilfe') {
