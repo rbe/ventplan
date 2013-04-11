@@ -39,7 +39,7 @@ class VentplanController {
     def projektSuchenDialog
     def neuesProjektWizardDialog
 
-    // WAC-272 Vent-ID
+    // WAC-272 Ventplan ID
     def ventIdDialog
     def ventIdRegistrierungDialog
 
@@ -1074,50 +1074,49 @@ class VentplanController {
 
     int ______________i;
 
-    //<editor-fold desc="WAC-272 Vent-ID">
+    //<editor-fold desc="WAC-272 Ventplan ID">
 
     /**
-     * WAC-272 Vent-ID Dialog anzeigen.
+     * WAC-272 Ventplan ID Dialog anzeigen.
      */
     def ventIdDialogOeffnen = { evt = null ->
-        ventIdDialog = GH.createDialog(builder, ModusView, [title: 'Ventplan ID', resizable: true, pack: true])
+        ventIdDialog = GH.createDialog(builder, ModusView, [title: 'Ventplan ID', resizable: false, pack: true])
         ventIdDialog = GH.centerDialog(app.views['MainFrame'], ventIdDialog)
         ventIdDialog.setVisible(true)
     }
 
     /**
-     * WAC-272
+     * WAC-272 Cloud login.
      */
     def ventIdLogin = { evt = null ->
-        // Cloud login
         ventIdDialog.dispose()
     }
 
     /**
-     * WAC-272 Vent-ID Dialog schließen.
+     * WAC-272 Ventplan ID Dialog schließen.
      */
     def ventIdDialogAbbrechen = { evt = null ->
         ventIdDialog.dispose()
     }
 
     /**
-     * WAC-272 Vent-ID Registrierungsdialog öffnen
+     * WAC-272 Ventplan ID Registrierungsdialog öffnen
      */
     def ventIdRegistrierungDialogOeffnen = { evt = null ->
-        ventIdRegistrierungDialog = GH.createDialog(builder, ModusRegistrationView, [title: 'Vent-ID Registrierung', resizable: true, pack: true])
+        ventIdRegistrierungDialog = GH.createDialog(builder, ModusRegistrationView, [title: 'Registrierung Ventplan ID', resizable: false, pack: true])
         ventIdRegistrierungDialog = GH.centerDialog(app.views['MainFrame'], ventIdRegistrierungDialog)
         ventIdRegistrierungDialog.setVisible(true)
     }
 
     /**
-     * WAC-272 Vent-ID Registrierungsdialog schliessen.
+     * WAC-272 Ventplan ID Registrierungsdialog schliessen.
      */
     def ventIdRegistrierungAbbrechen = { evt ->
         ventIdRegistrierungDialog.dispose()
     }
 
     /**
-     * WAC-272 Vent-ID erstellen.
+     * WAC-272 Ventplan ID erstellen.
      */
     def ventIdRegistrierungSpeichern = { evt ->
         try {

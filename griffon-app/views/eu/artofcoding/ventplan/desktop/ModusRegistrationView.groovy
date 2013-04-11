@@ -13,25 +13,27 @@
 package eu.artofcoding.ventplan.desktop
 
 import eu.artofcoding.griffon.helper.GriffonHelper as GH
-
 import net.miginfocom.swing.MigLayout
-import java.awt.Color
 
-// WAC-272 Registrierung einer Vent-ID
-panel(id: 'ventidRegistrationPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]para[fill]', ''), constraints: 'grow') {
-    // Informationen über den Ersteller
+import java.awt.*
+
+// WAC-272 Registrierung einer Ventplan ID
+panel(id: 'ventidRegistrationPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]para[fill]', ''), constraints: 'grow') {    // Informationen über den Ersteller
     label('Informationen über den Nutzer', foreground: Color.BLUE, constraints: 'grow, span 3')
-
-    label('')
-    comboBox(id: 'ventidRegistrationAnrede', items: ['Frau', 'Herr'], constraints: 'grow, span 2')
 
     label('Firma')
     textField(id: 'ventidRegistrationFirma', constraints: 'grow, span 2')
 
-    label('Vor- und Zuname')
-    textField(id: 'ventidRegistrationName', constraints: 'grow, span 2')
+    label('Anrede')
+    comboBox(id: 'ventidRegistrationAnrede', items: ['Bitte wählen', 'Frau', 'Herr'], constraints: 'grow, span 2')
 
-    label('Straße ')
+    label('Vorname')
+    textField(id: 'ventidRegistrationVorname', constraints: 'grow, span 2')
+
+    label('Nachname')
+    textField(id: 'ventidRegistrationNachname', constraints: 'grow, span 2')
+
+    label('Straße')
     textField(id: 'ventidRegistrationAnschrift', constraints: 'grow, span 2')
 
     label('PLZ und Ort')
@@ -44,6 +46,11 @@ panel(id: 'ventidRegistrationPanel', layout: new MigLayout('fillx, wrap', '[]par
     //label('Fax')
     //textField(id: 'erstellerFax', constraints: 'grow, span 2')
 
+    // Login
+
+    label(' ', constraints: 'grow, span 3')
+    label('Meine Ventplan ID', foreground: Color.BLUE, constraints: 'grow, span 3')
+
     label('E-Mail')
     textField(id: 'ventidRegistrationEmail', constraints: 'grow, span 2')
 
@@ -53,23 +60,32 @@ panel(id: 'ventidRegistrationPanel', layout: new MigLayout('fillx, wrap', '[]par
     label('Passwort')
     textField(id: 'ventidRegistrationPasswort2', constraints: 'grow, span 2')
 
+    // AGB
+
+    label(' ', constraints: 'grow, span 3')
+    label('Allgemeine Geschäftsbedingungen zur Nutzung der Ventplan ID', foreground: Color.BLUE, constraints: 'grow, span 3')
+
     checkBox(id: 'ventidRegistrationDialogAGB', text: 'Ja, ich habe die AGBs gelesen und akzeptiere sie!', constraints: 'grow, span 3')
     button(id: 'ventidRegistrationDialogAGBOeffnen', text: 'AGBs öffnen')
 
-    // Abbrechen
+    // Aktion
+
+    label(' ', constraints: 'grow, span 3')
     label(' ', constraints: 'grow, span 3')
     label('Und nun?', foreground: Color.BLUE, constraints: 'grow, span 3')
+
     label(' ')
-    button(id: 'ventidRegistrationAbbrechenButton', text: 'Abbrechen')
-    // Kompletter Text, damit Dimension stimmt, wenn Text nachträglich geändert wird (durch Controller/Action)
-    button(id: 'ventidRegistrationErstellenButton', text: 'Vent-ID erstellen')
+    panel() {
+        button(id: 'ventidRegistrationErstellenButton', text: 'Ventplan ID erstellen')
+        button(id: 'ventidRegistrationAbbrechenButton', text: 'Abbrechen')
+    }
 }
 
 [
-    ventidRegistrationFirma, ventidRegistrationName,
-    ventidRegistrationAnschrift, ventidRegistrationPlz, ventidRegistrationOrt,
-    ventidRegistrationTelefon, ventidRegistrationEmail, ventidRegistrationPasswort,
-    ventidRegistrationPasswort2
+        ventidRegistrationFirma, ventidRegistrationVorname, ventidRegistrationNachname,
+        ventidRegistrationAnschrift, ventidRegistrationPlz, ventidRegistrationOrt,
+        ventidRegistrationTelefon, ventidRegistrationEmail, ventidRegistrationPasswort,
+        ventidRegistrationPasswort2
 ].each {
     GH.yellowTextField(it)
 }

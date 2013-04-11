@@ -13,31 +13,28 @@
 package eu.artofcoding.ventplan.desktop
 
 import eu.artofcoding.griffon.helper.GriffonHelper as GH
-
 import net.miginfocom.swing.MigLayout
-import java.awt.Color
 
-// WAC-272 Registrierung einer Vent-ID
+// WAC-272 Registrierung einer Ventplan ID
 panel(id: 'ventidPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]', ''), constraints: 'grow') {
-    // Informationen über den Ersteller
-    label('Bitte wählen Sie den gewünschten Arbeitsmodus', constraints: 'grow, span 2')
+    label('Bitte wählen Sie den gewünschten Arbeitsmodus:', constraints: 'grow, span 2')
 
     label(' ', constraints: 'span 2')
 
     buttonGroup().with {
-        add radioButton(id: 'ventidBasic', text: 'Basic / Express', constraints: 'wrap')
+        add radioButton(id: 'ventidBasic', text: 'Community (kostenfrei)', constraints: 'wrap', selected: true)
         add radioButton(id: 'ventidProfessional', text: 'Professional', constraints: 'wrap')
-        add radioButton(id: 'ventidExpert', text: 'Expert (Vent-ID notwendig)', selected: true, constraints: 'wrap')
+        add radioButton(id: 'ventidExpert', text: 'Enterprise', constraints: 'wrap')
     }
 
     label(' ', constraints: 'span 2')
 
-    label(id: 'ventidLogin', text: 'Login', constraints: 'grow, span 2')
+    label(id: 'ventidLogin', text: 'Login (Benutzername und Passwort)', constraints: 'grow, span 2')
 
-    textField(id: 'ventidEmail', constraints: 'width 140px!')
-    label('Noch keine Vent-ID?')
+    textField(id: 'ventidEmail', text: 'E-Mail-Adresse', constraints: 'width 200px!')
+    label('Noch keine Ventplan ID?')
 
-    textField(id: 'ventidPasswort', constraints: 'width 140px!')
+    textField(id: 'ventidPasswort', text: 'Passwort', constraints: 'width 200px!')
     button(id: 'ventidRegDialogOeffnenButton', text: 'Jetzt Konto erstellen')
 
     button(id: 'ventidLoginButton', text: 'Einloggen')
@@ -45,7 +42,7 @@ panel(id: 'ventidPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]', ''
 }
 
 [
-    ventidEmail, ventidPasswort
+        ventidEmail, ventidPasswort
 ].each {
     GH.yellowTextField(it)
 }
