@@ -193,14 +193,6 @@ class VentplanController {
 
     int ___i;
 
-    /**
-     * Disable last tab of JTabbedPane 'projektTabGroup'.
-     def disableLastProjektTab = {view.projektTabGroup.setEnabledAt(view.projektTabGroup.tabCount - 1, false)}*/
-
-    /**
-     * Enable last tab of JTabbedPane 'projektTabGroup'.
-     def enableLastProjektTab = {view.projektTabGroup.setEnabledAt(view.projektTabGroup.tabCount - 1, true)}*/
-
     //<editor-fold desc="Sonstige Dialoge">
 
     /**
