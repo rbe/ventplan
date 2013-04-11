@@ -111,14 +111,23 @@ class VentplanResource {
         return getVentplanProperties().get('ventplan.update.database.url') as String
     }
 
+    /**
+     * WAC-108
+     */
     static String getOdiseeServiceRestUrl() {
         return getVentplanProperties().get('service.odisee.rest.url') as String
     }
 
+    /**
+     * WAC-108
+     */
     static String getOdiseeServiceRestPath() {
         return getVentplanProperties().get('service.odisee.rest.path') as String
     }
 
+    /**
+     * Version.
+     */
     static String getVentplanVersion() {
         return getVentplanProperties().get('ventplan.version') as String
     }
