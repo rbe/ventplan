@@ -12,11 +12,19 @@
 
 package eu.artofcoding.ventplan.desktop
 
-import static griffon.util.GriffonApplicationUtils.isMacOSX
+import static griffon.util.GriffonApplicationUtils.getIsMacOSX
 
 menuBar = menuBar {
-    // Datei
+    // Ablage
     menu(id: 'menuDatei', text: 'Datei', mnemonic: 'D') {
+        menuItem(ventidModusAction)
+        if (!isMacOSX) {
+            separator()
+            menuItem(exitAction)
+        }
+    }
+    // Projekt
+    menu(id: 'menuProjekt', text: 'Projekt', mnemonic: 'P') {
         // Neu...
         menu(id: 'menuProjektNeu', text: 'Neu...', icon: imageIcon(resource: '/menu/project_new.png')) {
             menuItem(neuesProjektAction_EFH4ZKBWC)
@@ -28,37 +36,33 @@ menuBar = menuBar {
         // WAC-234 Wizard Dialog
         menuItem(neuesProjektWizardAction)
         //
+        separator()
         menuItem(projektOeffnenAction)
         // WAC-161 Zuletzt geöffnete Projekte
         menu(id: 'recentlyOpenedMenu', text: 'Zuletzt geöffnete Projekte', icon: imageIcon(resource: '/menu/project_recently_opened.png'), enabled: bind { model.aktivesProjekt == null })
         // WAC-192 Suchfunktion für WPX-Dateien
         menuItem(nachProjektSuchenAction)
+        separator()
         menuItem(aktivesProjektSpeichernAction)
         menuItem(aktivesProjektSpeichernAlsAction)
         // WAC-155 menuItem(alleProjekteSpeichernAction)
         menuItem(projektSchliessenAction)
-        if (!isMacOSX) {
-            // Separator
-            separator()
-            menuItem(exitAction)
-        }
-        menuItem(ventidModusAction)
     }
-    // Auslegung
-    menu(id: 'menuAuslegung', text: 'Auslegung', mnemonic: 'A') {
+    // Berechnung
+    menu(id: 'menuBerechnung', text: 'Berechnung', mnemonic: 'A') {
         // WAC-151 Automatische und manuelle Berechnung
         menuItem(automatischeBerechnungAction)
-        // WAC-108 Auslegung
-        menuItem(auslegungErstellenAction)
-        // WAC-202 Prinzipskizze
-        menuItem(prinzipskizzeErstellenAction)
     }
     // Dokumente
     menu(id: 'menuDokumente', text: 'Dokumente', mnemonic: 'O') {
+        // WAC-108 Auslegung
+        menuItem(auslegungErstellenAction)
         // WAC-108 Stückliste
         menuItem(stuecklisteErstellenAction)
         // WAC-108 Angebot
         menuItem(angebotErstellenAction)
+        // WAC-202 Prinzipskizze
+        menuItem(prinzipskizzeErstellenAction)
     }
     // Info
     menu(id: 'menuInfo', text: 'Hilfe') {
