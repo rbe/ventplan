@@ -1080,6 +1080,10 @@ class VentplanController {
 
     //</editor-fold>
 
+    int ______________i;
+
+    //<editor-fold desc="WAC-272 Vent-ID">
+
     /**
      * WAC-272
      * Vent-ID Dialog anzeigen.
@@ -1146,5 +1150,7 @@ class VentplanController {
             ventIdRegistrierungDialog.dispose()
         }
     }
+
+    //</editor-fold>
 
 }
