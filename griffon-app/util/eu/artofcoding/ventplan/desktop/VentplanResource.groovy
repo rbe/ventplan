@@ -104,8 +104,6 @@ class VentplanResource {
         return getVentplanProperties().get('ventplan.update.check.url') as String
     }
 
-    static String getPrinzipskizzeSoapUrl() {
-        return getVentplanProperties().get('service.prinzipskizze.soap.url') as String
     /**
      * WAC-19 URL for Ventplan database updates.
      */
