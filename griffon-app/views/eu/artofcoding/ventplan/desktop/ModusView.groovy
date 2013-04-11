@@ -17,8 +17,7 @@ import eu.artofcoding.griffon.helper.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
 import java.awt.Color
 
-// WAC-272
-// Dierser Dialog wird nun für die Registrierung einer Vent-ID genutzt
+// WAC-272 Registrierung einer Vent-ID
 panel(id: 'ventidPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]', ''), constraints: 'grow') {
     // Informationen über den Ersteller
     label('Bitte wählen Sie den gewünschten Arbeitsmodus', constraints: 'grow, span 2')
