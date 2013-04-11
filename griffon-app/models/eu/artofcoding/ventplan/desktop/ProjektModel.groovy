@@ -27,9 +27,6 @@ import javax.swing.table.JTableHeader
 import javax.swing.table.TableCellRenderer
 import java.awt.Dimension
 
-/**
- *
- */
 class ProjektModel {
 
     /**

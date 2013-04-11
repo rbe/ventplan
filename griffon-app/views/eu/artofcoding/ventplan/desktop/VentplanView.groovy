@@ -58,7 +58,6 @@ actions {
     action(
             id: 'neuesProjektAction_EFH4ZKBWC',
             name: 'EFH, 4 ZKB WC',
-            //smallIcon: imageIcon(resource: '/menu/project_new.png'),
             enabled: bind { model.aktivesProjekt == null },
             closure: controller.neuesProjekt_EFH4ZKBWC
     )
@@ -66,7 +65,6 @@ actions {
     action(
             id: 'neuesProjektAction_EFH5ZKBHWWC',
             name: 'EFH, 5 ZKB WC',
-            //smallIcon: imageIcon(resource: '/menu/project_new.png'),
             enabled: bind { model.aktivesProjekt == null },
             closure: controller.neuesProjekt_EFH5ZKBHWWC
     )
@@ -74,7 +72,6 @@ actions {
     action(
             id: 'neuesProjektAction_EFH5ZKBWC2KRHW',
             name: 'EFH, 5 ZKB WC, HW, 2 Keller',
-            //smallIcon: imageIcon(resource: '/menu/project_new.png'),
             enabled: bind { model.aktivesProjekt == null },
             closure: controller.neuesProjekt_EFH5ZKBWC2KRHW
     )
@@ -82,7 +79,6 @@ actions {
     action(
             id: 'neuesProjektAction_EFH5ZKBWCDG',
             name: 'EFH, 5 ZKB WC, Dachgeschoß',
-            //smallIcon: imageIcon(resource: '/menu/project_new.png'),
             enabled: bind { model.aktivesProjekt == null },
             closure: controller.neuesProjekt_EFH5ZKBWCDG
     )
@@ -102,7 +98,6 @@ actions {
             name: 'Projekt öffnen',
             mnemonic: 'O',
             accelerator: shortcut('O'),
-            //smallIcon: imageIcon(resource: '/menu/project_open.png', class: Console),
             smallIcon: imageIcon('/menu/project_open.png'),
             enabled: bind { model.aktivesProjekt == null },
             closure: controller.projektOffnen
