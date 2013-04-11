@@ -932,7 +932,7 @@ class VentplanController {
 
     int ____________i;
 
-    //<editor-fold desc="WAC-192 Suchfunktion für WPX-Dateien"> 
+    //<editor-fold desc="WAC-192 Suchfunktion für Projekte"> 
 
     /**
      * WAC-192 Suchfunktion für WPX-Dateien
