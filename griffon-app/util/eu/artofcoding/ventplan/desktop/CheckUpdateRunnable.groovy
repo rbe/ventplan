@@ -17,7 +17,7 @@ import griffon.swing.SwingApplication
 /**
  * Check for an update.
  */
-class CheckUpdate implements Runnable {
+class CheckUpdateRunnable implements Runnable {
 
     /**
      * Has user acknowledged? 
