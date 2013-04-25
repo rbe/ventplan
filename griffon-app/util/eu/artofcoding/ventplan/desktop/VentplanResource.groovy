@@ -126,6 +126,13 @@ class VentplanResource {
     }
 
     /**
+     * WAC-237
+     */
+    static String getPrinzipskizzeUrl() {
+        return getVentplanProperties().get('service.prinzipskizze.soap.url') as String
+    }
+
+    /**
      * Version.
      */
     static String getVentplanVersion() {
