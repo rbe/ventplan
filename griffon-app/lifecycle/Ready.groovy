@@ -24,6 +24,6 @@
  * - execInsideUISync { // your code }
  */
 
-import eu.artofcoding.ventplan.desktop.CheckUpdate
+import eu.artofcoding.ventplan.desktop.CheckUpdateRunnable
 
-new Thread(new CheckUpdate(app: app)).start()
+new Thread(new CheckUpdateRunnable(app: app)).start()
