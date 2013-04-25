@@ -2106,6 +2106,8 @@ class ProjektController {
                                 dialog.showError('Fehler', 'Leider konnte der Prinzipskizze nicht erstellt werden<br/>Es wurden keine Daten vom Web Service empfangen.', null)
                             }
                         } catch (ConnectException e) {
+                            documentWaitDialog?.dispose()
+                            // Show dialog
                             DialogController dialog = (DialogController) app.controllers['Dialog']
                             dialog.showError('Fehler', 'Der Server für die Erstellung der Dokumente kann nicht erreicht werden.<br/>Bitte prüfen Sie die Internet-Verbindung.', e)
                         } catch (Exception e) {
