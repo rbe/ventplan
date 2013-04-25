@@ -1787,7 +1787,7 @@ class ProjektController {
         // AuslegungNutzerdatenView
         if (dialogClass == AuslegungNutzerdatenView) {
             view.auslegungAllgemeineDaten.selected = model.map.odisee.auslegung.auslegungAllgemeineDaten = true
-            view.auslegungLufmengen.selected = model.map.odisee.auslegung.auslegungLufmengen = true
+            view.auslegungLuftmengen.selected = model.map.odisee.auslegung.auslegungLuftmengen = true
             view.auslegungAkustikberechnung.selected = model.map.odisee.auslegung.auslegungAkustikberechnung = false
             view.auslegungDruckverlustberechnung.selected = model.map.odisee.auslegung.auslegungDruckverlustberechnung = false
         }
@@ -1888,7 +1888,7 @@ class ProjektController {
                     File vpxFile = new File((String) model.vpxFilename)
                     model.map.odisee.auslegung = [
                             auslegungAllgemeineDaten: view.auslegungAllgemeineDaten.selected,
-                            auslegungLufmengen: view.auslegungLufmengen.selected,
+                            auslegungLuftmengen: view.auslegungLuftmengen.selected,
                             auslegungAkustikberechnung: view.auslegungAkustikberechnung.selected,
                             auslegungDruckverlustberechnung: view.auslegungDruckverlustberechnung.selected
                     ]

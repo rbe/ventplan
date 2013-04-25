@@ -95,7 +95,7 @@ class VentplanModel {
                 odisee: [
                         auslegung: [
                                 auslegungAllgemeineDaten: true,
-                                auslegungLufmengen: true,
+                                auslegungLuftmengen: true,
                                 auslegungAkustikberechnung: false,
                                 auslegungDruckverlustberechnung: false
                         ] as ObservableMap

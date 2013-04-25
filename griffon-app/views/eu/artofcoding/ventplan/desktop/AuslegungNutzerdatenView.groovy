@@ -51,7 +51,7 @@ panel(id: 'erstellerPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]pa
     checkBox(id: 'auslegungAllgemeineDaten', text: 'Allgemeine Daten (Adressen, allg. Informationen, Räume)', constraints: 'grow, span 2')
 
     label(' ')
-    checkBox(id: 'auslegungLufmengen', text: 'Luftmengen (Raumvolumenströme, Überströmelemente)', constraints: 'grow, span 2')
+    checkBox(id: 'auslegungLuftmengen', text: 'Luftmengen (Raumvolumenströme, Überströmelemente)', constraints: 'grow, span 2')
 
     label(' ')
     checkBox(id: 'auslegungAkustikberechnung', text: 'Akustikberechnung', constraints: 'grow, span 2')
