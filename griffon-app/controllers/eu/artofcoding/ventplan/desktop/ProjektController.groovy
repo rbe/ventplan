@@ -252,12 +252,6 @@ class ProjektController {
             // Räume: set cell editors
             model.setRaumEditors(view)
         }
-        /*
-        if (loadMode) {
-            // Räume: set cell editors
-            model.setRaumEditors(view)
-        }
-        */
         try {
             model.resyncRaumTableModels()
         } catch (e) {
@@ -288,11 +282,6 @@ class ProjektController {
         // Akustik
         berechneAkustik('Zuluft')
         berechneAkustik('Abluft')
-/*
-        // Dirty flag
-        model.map.dirty = false
-        setTabTitle(view.projektTabGroup.selectedIndex)
-*/
         // 
         this.loadMode = false
         // Fix table header height
@@ -2093,86 +2082,6 @@ class ProjektController {
     //</editor-fold>
 
     int ________________i;
-
-    //<editor-fold desc="WAC-177 Angebotsverfolgung">
-
-    /**
-     * WAC-177 Angebotsverfolgung
-     */
-    def angebotsverfolgung = {
-        // Dialog erstellen
-        angebotsverfolgungDialog = GH.createDialog(builder, AngebotsverfolgungView, [title: 'Angebotsverfolgung durchführen', resizable: false, pack: true])
-        // Dialog mit Daten füllen
-        view.angebotsverfolgungDialogBauvorhaben.text = model.map.kundendaten.bauvorhaben
-        view.angebotsverfolgungDialogAnschrift.text = model.map.kundendaten.bauvorhabenAnschrift
-        view.angebotsverfolgungDialogPlz.text = model.map.kundendaten.bauvorhabenPlz
-        view.angebotsverfolgungDialogOrt.text = model.map.kundendaten.bauvorhabenOrt
-        // Dialog anzeigen
-        angebotsverfolgungDialog = GH.centerDialog(app.views['MainFrame'], angebotsverfolgungDialog)
-        angebotsverfolgungDialog.setVisible(true)
-    }
-
-    /**
-     * WAC-177 Angebotsverfolgung
-     * Wert auslesen und auswerten...
-     */
-    def angebotsverfolgungAbbrechen = { evt ->
-        angebotsverfolgungDialog.dispose()
-    }
-
-    /**
-     * WAC-177 Angebotsverfolgung
-     * Wert auslesen und auswerten...
-     */
-    def angebotsverfolgungErstellen = { evt ->
-        if (view.angebotsverfolgungDialogAGB.selected) {
-            def bauvorhabenValue = view.angebotsverfolgungDialogBauvorhaben.text
-            def anschriftValue = view.angebotsverfolgungDialogAnschrift.text
-            def plzValue = view.angebotsverfolgungPlz.text
-            def ortValue = view.angebotsverfolgungOrt.text
-            // TODO http://ventplan.service.odisee.de/service/177/bauvorhaben/<bauvorhaben>/anschrift/<anschrift>/plz/<plz>/ort/<ort>
-            def restUrl = GH.getOdiseeWac177RestUrl() as String
-            def restPath = GH.getOdiseeWac177RestPath() as String
-            try {
-                def postBody = [
-                        bauvorhaben: bauvorhabenValue,
-                        anschrift: anschriftValue,
-                        plz: plzValue,
-                        ort: ortValue
-                ]
-                withRest(id: 'wac177', uri: restUrl) {
-                    //auth.basic 'ventplan', 'a-password'
-                    def resp = post(path: restPath, body: postBody, requestContentType: ContentType.URLENC, responseContentType: ContentType.ANY, charset: 'utf-8')
-                    //println "ProjektController.angebotsverfolgungErstellen resp=${resp?.dump()}"
-                }
-            } catch (e) {
-                // ignore
-            }
-        } else {
-            DialogController dialog = (DialogController) app.controllers['Dialog']
-            dialog.showInformation('Dokument öffnen', 'Bitte akzeptieren Sie dazu die AGB!')
-        }
-    }
-
-    /**
-     * WAC-177
-     */
-    def angebotsverfolgungAGB = {
-        view.angebotsverfolgungDialogAbsenden.enabled = !view.angebotsverfolgungDialogAbsenden.enabled
-    }
-
-    /**
-     * WAC-177 Angebotsverfolgung
-     * Öffnet den Link zu den AGBs in dem Default-Browser
-     */
-    def agbOeffnen = {
-        def agbLink = VentplanResource.getVentplanProperties().get('vendor.termsandconditions.link')
-        java.awt.Desktop.getDesktop().browse(java.net.URI.create(agbLink));
-    }
-
-    //</editor-fold>
-
-    int _________________i;
 
     //<editor-fold desc="WAC-202 Prinzipskizze">
 
