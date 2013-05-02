@@ -9,6 +9,7 @@
  *
  * rbe, 19.03.13 17:23
  */
+
 package eu.artofcoding.ventplan.desktop
 
 import net.miginfocom.swing.MigLayout
@@ -34,4 +35,6 @@ panel(id: "bauvorhabenDialogPanel", layout: new MigLayout("fillx, wrap", "[]para
     button(id: "bauvorhabenDialogAbsenden", text: "Eingaben speichern und Dokument erstellen")
 }
 
-build(BauvorhabenBindings)
+// Bindings
+bauvorhabenDialogAbsenden.actionPerformed = controller.angebotsverfolgungErstellen
+bauvorhabenDialogAGBOeffnen.actionPerformed = controller.agbOeffnen

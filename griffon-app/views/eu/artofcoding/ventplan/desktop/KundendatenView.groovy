@@ -87,6 +87,7 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("ins 0 n 0 n, wrap 2","
         }
     }
 }
+
 GH.yellowTextField(grosshandelFirma1)
 GH.yellowTextField(grosshandelFirma2)
 GH.yellowTextField(grosshandelStrasse)

@@ -9,6 +9,7 @@
  *
  * rbe, 19.03.13 17:23
  */
+
 package eu.artofcoding.ventplan.desktop
 
 import ca.odell.glazedlists.BasicEventList
@@ -94,7 +95,7 @@ class VentplanModel {
                 odisee: [
                         auslegung: [
                                 auslegungAllgemeineDaten: true,
-                                auslegungLufmengen: true,
+                                auslegungLuftmengen: true,
                                 auslegungAkustikberechnung: false,
                                 auslegungDruckverlustberechnung: false
                         ] as ObservableMap

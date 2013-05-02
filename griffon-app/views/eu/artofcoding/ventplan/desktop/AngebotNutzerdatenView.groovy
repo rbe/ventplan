@@ -9,11 +9,13 @@
  *
  * rbe, 19.03.13 17:31
  */
+
 package eu.artofcoding.ventplan.desktop
 
 import eu.artofcoding.griffon.helper.GriffonHelper as GH
-
 import net.miginfocom.swing.MigLayout
+
+import java.awt.*
 
 // Dierser Dialog wird nun für die Erstellung aller möglichen Dokumente genutzt
 // Auslegung input dialog view
@@ -40,7 +42,7 @@ panel(id: 'erstellerPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]pa
     label('Fax')
     textField(id: 'erstellerFax', constraints: 'grow, span 2')
 
-    label('Email')
+    label('E-Mail')
     textField(id: 'erstellerEmail', constraints: 'grow, span 2')
 
     // Informationen über das Angebot

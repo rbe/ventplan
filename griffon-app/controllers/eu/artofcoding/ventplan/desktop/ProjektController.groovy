@@ -71,10 +71,8 @@ class ProjektController {
         // Save MVC id
         model.mvcId = args.mvcId
         this.loadMode = args.loadMode
-/* Temporär abgeschaltet
         // WAC-257
         ventplanModelService.projectWAC257 = args.loadMode
-*/
         // Set defaults
         setDefaultValues()
         // Add PropertyChangeListener to our model.meta
@@ -231,10 +229,8 @@ class ProjektController {
      */
     def berechneAlles = { loadMode = false ->
         this.loadMode = loadMode
-/* Temporär abgeschaltet
         // WAC-257
         ventplanModelService.projectWAC257 = loadMode
-*/
         // Anlagendaten - Kennzeichen
         berechneEnergieKennzeichen()
         berechneHygieneKennzeichen()
@@ -252,12 +248,6 @@ class ProjektController {
             // Räume: set cell editors
             model.setRaumEditors(view)
         }
-        /*
-        if (loadMode) {
-            // Räume: set cell editors
-            model.setRaumEditors(view)
-        }
-        */
         try {
             model.resyncRaumTableModels()
         } catch (e) {
@@ -288,11 +278,6 @@ class ProjektController {
         // Akustik
         berechneAkustik('Zuluft')
         berechneAkustik('Abluft')
-/*
-        // Dirty flag
-        model.map.dirty = false
-        setTabTitle(view.projektTabGroup.selectedIndex)
-*/
         // 
         this.loadMode = false
         // Fix table header height
@@ -1787,7 +1772,7 @@ class ProjektController {
         // AuslegungNutzerdatenView
         if (dialogClass == AuslegungNutzerdatenView) {
             view.auslegungAllgemeineDaten.selected = model.map.odisee.auslegung.auslegungAllgemeineDaten = true
-            view.auslegungLufmengen.selected = model.map.odisee.auslegung.auslegungLufmengen = true
+            view.auslegungLuftmengen.selected = model.map.odisee.auslegung.auslegungLuftmengen = true
             view.auslegungAkustikberechnung.selected = model.map.odisee.auslegung.auslegungAkustikberechnung = false
             view.auslegungDruckverlustberechnung.selected = model.map.odisee.auslegung.auslegungDruckverlustberechnung = false
         }
@@ -1888,7 +1873,7 @@ class ProjektController {
                     File vpxFile = new File((String) model.vpxFilename)
                     model.map.odisee.auslegung = [
                             auslegungAllgemeineDaten: view.auslegungAllgemeineDaten.selected,
-                            auslegungLufmengen: view.auslegungLufmengen.selected,
+                            auslegungLuftmengen: view.auslegungLuftmengen.selected,
                             auslegungAkustikberechnung: view.auslegungAkustikberechnung.selected,
                             auslegungDruckverlustberechnung: view.auslegungDruckverlustberechnung.selected
                     ]
@@ -2094,86 +2079,6 @@ class ProjektController {
 
     int ________________i;
 
-    //<editor-fold desc="WAC-177 Angebotsverfolgung">
-
-    /**
-     * WAC-177 Angebotsverfolgung
-     */
-    def angebotsverfolgung = {
-        // Dialog erstellen
-        angebotsverfolgungDialog = GH.createDialog(builder, AngebotsverfolgungView, [title: 'Angebotsverfolgung durchführen', resizable: false, pack: true])
-        // Dialog mit Daten füllen
-        view.angebotsverfolgungDialogBauvorhaben.text = model.map.kundendaten.bauvorhaben
-        view.angebotsverfolgungDialogAnschrift.text = model.map.kundendaten.bauvorhabenAnschrift
-        view.angebotsverfolgungDialogPlz.text = model.map.kundendaten.bauvorhabenPlz
-        view.angebotsverfolgungDialogOrt.text = model.map.kundendaten.bauvorhabenOrt
-        // Dialog anzeigen
-        angebotsverfolgungDialog = GH.centerDialog(app.views['MainFrame'], angebotsverfolgungDialog)
-        angebotsverfolgungDialog.setVisible(true)
-    }
-
-    /**
-     * WAC-177 Angebotsverfolgung
-     * Wert auslesen und auswerten...
-     */
-    def angebotsverfolgungAbbrechen = { evt ->
-        angebotsverfolgungDialog.dispose()
-    }
-
-    /**
-     * WAC-177 Angebotsverfolgung
-     * Wert auslesen und auswerten...
-     */
-    def angebotsverfolgungErstellen = { evt ->
-        if (view.angebotsverfolgungDialogAGB.selected) {
-            def bauvorhabenValue = view.angebotsverfolgungDialogBauvorhaben.text
-            def anschriftValue = view.angebotsverfolgungDialogAnschrift.text
-            def plzValue = view.angebotsverfolgungPlz.text
-            def ortValue = view.angebotsverfolgungOrt.text
-            // TODO http://ventplan.service.odisee.de/service/177/bauvorhaben/<bauvorhaben>/anschrift/<anschrift>/plz/<plz>/ort/<ort>
-            def restUrl = GH.getOdiseeWac177RestUrl() as String
-            def restPath = GH.getOdiseeWac177RestPath() as String
-            try {
-                def postBody = [
-                        bauvorhaben: bauvorhabenValue,
-                        anschrift: anschriftValue,
-                        plz: plzValue,
-                        ort: ortValue
-                ]
-                withRest(id: 'wac177', uri: restUrl) {
-                    //auth.basic 'ventplan', 'a-password'
-                    def resp = post(path: restPath, body: postBody, requestContentType: ContentType.URLENC, responseContentType: ContentType.ANY, charset: 'utf-8')
-                    //println "ProjektController.angebotsverfolgungErstellen resp=${resp?.dump()}"
-                }
-            } catch (e) {
-                // ignore
-            }
-        } else {
-            DialogController dialog = (DialogController) app.controllers['Dialog']
-            dialog.showInformation('Dokument öffnen', 'Bitte akzeptieren Sie dazu die AGB!')
-        }
-    }
-
-    /**
-     * WAC-177
-     */
-    def angebotsverfolgungAGB = {
-        view.angebotsverfolgungDialogAbsenden.enabled = !view.angebotsverfolgungDialogAbsenden.enabled
-    }
-
-    /**
-     * WAC-177 Angebotsverfolgung
-     * Öffnet den Link zu den AGBs in dem Default-Browser
-     */
-    def agbOeffnen = {
-        def agbLink = VentplanResource.getVentplanProperties().get('vendor.termsandconditions.link')
-        java.awt.Desktop.getDesktop().browse(java.net.URI.create(agbLink));
-    }
-
-    //</editor-fold>
-
-    int _________________i;
-
     //<editor-fold desc="WAC-202 Prinzipskizze">
 
     def generierePrinzipskizze() {
@@ -2197,6 +2102,8 @@ class ProjektController {
                                 dialog.showError('Fehler', 'Leider konnte der Prinzipskizze nicht erstellt werden<br/>Es wurden keine Daten vom Web Service empfangen.', null)
                             }
                         } catch (ConnectException e) {
+                            documentWaitDialog?.dispose()
+                            // Show dialog
                             DialogController dialog = (DialogController) app.controllers['Dialog']
                             dialog.showError('Fehler', 'Der Server für die Erstellung der Dokumente kann nicht erreicht werden.<br/>Bitte prüfen Sie die Internet-Verbindung.', e)
                         } catch (Exception e) {

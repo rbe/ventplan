@@ -9,14 +9,14 @@
  *
  * rbe, 19.03.13 17:23
  */
+
 package eu.artofcoding.ventplan.desktop
 
 import eu.artofcoding.griffon.helper.GriffonHelper as GH
-
 import net.miginfocom.swing.MigLayout
 
-// Dierser Dialog wird nun für die Erstellung aller möglichen Dokumente genutzt
-// Auslegung input dialog view
+import java.awt.*
+
 panel(id: 'erstellerPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]para[fill]', ''), constraints: 'grow') {
     // Informationen über den Ersteller
     label('Informationen über den Ersteller des Dokuments (optional)', foreground: Color.BLUE, constraints: 'grow, span 3')
@@ -30,7 +30,7 @@ panel(id: 'erstellerPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]pa
     label('Anschrift')
     textField(id: 'erstellerAnschrift', constraints: 'grow, span 2')
 
-    label('PLZ Ort')
+    label('PLZ und Ort')
     textField(id: 'erstellerPlz', constraints: 'width 80px!')
     textField(id: 'erstellerOrt', constraints: 'width 150px!, grow')
 
@@ -40,7 +40,7 @@ panel(id: 'erstellerPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]pa
     label('Fax')
     textField(id: 'erstellerFax', constraints: 'grow, span 2')
 
-    label('Email')
+    label('E-Mail')
     textField(id: 'erstellerEmail', constraints: 'grow, span 2')
     
     // Informationen über das Angebot
@@ -51,7 +51,7 @@ panel(id: 'erstellerPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]pa
     checkBox(id: 'auslegungAllgemeineDaten', text: 'Allgemeine Daten (Adressen, allg. Informationen, Räume)', constraints: 'grow, span 2')
 
     label(' ')
-    checkBox(id: 'auslegungLufmengen', text: 'Luftmengen (Raumvolumenströme, Überströmelemente)', constraints: 'grow, span 2')
+    checkBox(id: 'auslegungLuftmengen', text: 'Luftmengen (Raumvolumenströme, Überströmelemente)', constraints: 'grow, span 2')
 
     label(' ')
     checkBox(id: 'auslegungAkustikberechnung', text: 'Akustikberechnung', constraints: 'grow, span 2')
@@ -86,4 +86,7 @@ panel(id: 'erstellerPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]pa
 ].each {
     GH.yellowTextField(it)
 }
-build(AuslegungNutzerdatenBindings)
+
+// Bindings
+nutzerdatenAbbrechenButton.actionPerformed = controller.nutzerdatenAbbrechen
+nutzerdatenSpeichernButton.actionPerformed = controller.nutzerdatenSpeichern

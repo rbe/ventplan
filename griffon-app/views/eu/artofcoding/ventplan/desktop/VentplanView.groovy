@@ -16,8 +16,8 @@ import net.miginfocom.swing.MigLayout
 import com.jidesoft.swing.JideScrollPane
 
 import javax.swing.*
+import javax.swing.event.ChangeListener
 import javax.swing.filechooser.FileFilter
-import java.awt.*
 
 //<editor-fold desc="FileChooser">
 
@@ -54,11 +54,21 @@ int __i;
 
 actions {
 
+    // WAC-272 Ventplan ID
+    action(
+            id: 'ventidModusAction',
+            name: 'Modus',
+            mnemonic: 'M',
+            accelerator: shortcut('M'),
+            smallIcon: imageIcon(resource: '/menu/app_modus.png'),
+            enabled: true,
+            closure: controller.ventIdDialogOeffnen
+    )
+
     // EFH-4ZKB-WC.vpx
     action(
             id: 'neuesProjektAction_EFH4ZKBWC',
             name: 'EFH, 4 ZKB WC',
-            //smallIcon: imageIcon(resource: '/menu/project_new.png'),
             enabled: bind { model.aktivesProjekt == null },
             closure: controller.neuesProjekt_EFH4ZKBWC
     )
@@ -66,7 +76,6 @@ actions {
     action(
             id: 'neuesProjektAction_EFH5ZKBHWWC',
             name: 'EFH, 5 ZKB WC',
-            //smallIcon: imageIcon(resource: '/menu/project_new.png'),
             enabled: bind { model.aktivesProjekt == null },
             closure: controller.neuesProjekt_EFH5ZKBHWWC
     )
@@ -74,7 +83,6 @@ actions {
     action(
             id: 'neuesProjektAction_EFH5ZKBWC2KRHW',
             name: 'EFH, 5 ZKB WC, HW, 2 Keller',
-            //smallIcon: imageIcon(resource: '/menu/project_new.png'),
             enabled: bind { model.aktivesProjekt == null },
             closure: controller.neuesProjekt_EFH5ZKBWC2KRHW
     )
@@ -82,7 +90,6 @@ actions {
     action(
             id: 'neuesProjektAction_EFH5ZKBWCDG',
             name: 'EFH, 5 ZKB WC, Dachgeschoß',
-            //smallIcon: imageIcon(resource: '/menu/project_new.png'),
             enabled: bind { model.aktivesProjekt == null },
             closure: controller.neuesProjekt_EFH5ZKBWCDG
     )
@@ -102,7 +109,6 @@ actions {
             name: 'Projekt öffnen',
             mnemonic: 'O',
             accelerator: shortcut('O'),
-            //smallIcon: imageIcon(resource: '/menu/project_open.png', class: Console),
             smallIcon: imageIcon('/menu/project_open.png'),
             enabled: bind { model.aktivesProjekt == null },
             closure: controller.projektOffnen
@@ -247,17 +253,6 @@ actions {
             closure: controller.exitApplication
     )
 
-    // WAC-272 Vent-ID Dialog
-    action(
-            id: 'ventidModusAction',
-            name: 'Modus',
-            mnemonic: 'M',
-            accelerator: shortcut('M'),
-            smallIcon: imageIcon(resource: '/menu/app_info.png'),
-            enabled: true,
-            closure: controller.ventIdDialogOeffnen
-    )
-
 }
 
 //</editor-fold>
@@ -292,7 +287,10 @@ ventplanFrame = application(
     mainScrollPane.setHorizontalScrollBarPolicy(JideScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     mainScrollPane.setVerticalScrollBarPolicy(JideScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     // Bindings
-    build(VentplanBindings)
+    // ChangeListener for active tab; tell model about its MVC ID
+    projektTabGroup.addChangeListener({ evt ->
+        controller.projektIndexAktivieren(evt.source.selectedIndex)
+    } as ChangeListener)
     // The status bar
     widget(build(VentplanStatusbar), constraints: 'south, grow')
     // WAC-161: Zuletzt geöffnete Projekte in das Menu laden

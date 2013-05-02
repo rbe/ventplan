@@ -12,6 +12,8 @@
 
 package eu.artofcoding.ventplan.desktop
 
+import griffon.plugins.splash.SplashScreen
+
 /**
  * Manage a splash screen.
  */
@@ -19,57 +21,39 @@ package eu.artofcoding.ventplan.desktop
 class VentplanSplash {
 
     def setup = {
-        //println "Wac2Splash setup"
         // Set a splash image
         URL url = VentplanResource.getSplashScreenURL()
-        griffon.plugins.splash.SplashScreen.instance.setImage(url)
-        griffon.plugins.splash.SplashScreen.instance.showStatus("...")
+        SplashScreen.instance.setImage(url)
+        SplashScreen.instance.showStatus("...")
         // Show splash screen
-        griffon.plugins.splash.SplashScreen.instance.splash()
-        griffon.plugins.splash.SplashScreen.instance.waitForSplash()
+        SplashScreen.instance.splash()
+        SplashScreen.instance.waitForSplash()
     }
 
     def dispose = {
-        //println "Wac2Splash dispose"
         try {
-            griffon.plugins.splash.SplashScreen.instance?.dispose()
+            SplashScreen.instance?.dispose()
         } catch (e) {}
     }
 
     def initializing = {
-        griffon.plugins.splash.SplashScreen.instance.showStatus("Phase 1/4: Initialisiere...")
+        SplashScreen.instance.showStatus("Phase 1/5: Initialisiere...")
     }
 
     def connectingDatabase = {
-        griffon.plugins.splash.SplashScreen.instance.showStatus("Phase 2/4: Verbinde zur Datenbank...")
+        SplashScreen.instance.showStatus("Phase 2/5: Verbinde zur Datenbank...")
     }
 
-    def updatingDatabase() {
-        griffon.plugins.splash.SplashScreen.instance.showStatus("Phase 2/4: Aktualisiere Datenbank...")
+    def updatingDatabase(String detail = null) {
+        SplashScreen.instance.showStatus("Phase 3/5: Aktualisiere Datenbank...${detail ?: ''}")
     }
 
     def creatingUI = {
-        griffon.plugins.splash.SplashScreen.instance.showStatus("Phase 3/4: Erstelle die Benutzeroberfläche...")
+        SplashScreen.instance.showStatus("Phase 4/5: Erstelle die Benutzeroberfläche...")
     }
 
     def startingUp = {
-        griffon.plugins.splash.SplashScreen.instance.showStatus("Phase 4/4: Starte die Applikation...")
-    }
-
-    def creatingProject = {
-        griffon.plugins.splash.SplashScreen.instance.showStatus("Phase 1/3: Erstelle ein neues Projekt...")
-    }
-
-    def initializingProject = {
-        griffon.plugins.splash.SplashScreen.instance.showStatus("Phase 2/3: Initialisiere das Projekt...")
-    }
-
-    def creatingUiForProject = {
-        griffon.plugins.splash.SplashScreen.instance.showStatus("Phase 3/3: Erstelle Benutzeroberfläche für das Projekt...")
-    }
-
-    def loadingProject = {
-        griffon.plugins.splash.SplashScreen.instance.showStatus("Phase 2/3: Lade Daten aus dem Projekt...")
+        SplashScreen.instance.showStatus("Phase 5/5: Starte die Applikation...")
     }
 
 }

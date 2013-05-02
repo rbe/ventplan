@@ -77,7 +77,18 @@ panel(id: 'wbwPanel', layout: new MigLayout('fillx, wrap 2', '[fill]', '[fill]0[
 GH.autoformatDoubleTextField(wbwWert)
 
 // Bindings
-build(WbwBindings)
+// Add list selection listener to select a Wbw and show its picture
+[wbwTabelle].each {
+    it.selectionModel.addListSelectionListener([
+            valueChanged: { evt ->
+                controller.wbwInTabelleGewahlt(evt)
+            }
+    ] as javax.swing.event.ListSelectionListener)
+}
+// Buttons
+wbwOk.actionPerformed = controller.wbwOkButton
+wbwCancel.actionPerformed = controller.wbwCancelButton
+wbwSaveButton.actionPerformed = controller.wbwSaveButton
 
 // WAC-222 Improvement for showing grid lines.
 wbwTabelle.showGrid = true

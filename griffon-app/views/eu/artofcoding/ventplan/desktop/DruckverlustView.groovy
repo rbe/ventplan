@@ -9,10 +9,13 @@
  *
  * rbe, 19.03.13 17:23
  */
+
 package eu.artofcoding.ventplan.desktop
 
 import eu.artofcoding.griffon.helper.GriffonHelper as GH
 import net.miginfocom.swing.MigLayout
+
+import java.awt.*
 
 // Druckverlustberechnung
 panel(id: "dvbTabPanel", layout: new MigLayout("ins 0 n 0 n, fill, wrap 1", "[fill]", "[fill]"), constraints: "grow") {
@@ -95,17 +98,28 @@ panel(id: "dvbTabPanel", layout: new MigLayout("ins 0 n 0 n, fill, wrap 1", "[fi
         }
     }
 }
+
 // Textfields
 GH.doubleTextField(dvbKanalnetzNrTeilstrecke)
 GH.autoformatDoubleTextField(dvbKanalnetzLuftmenge)
 GH.autoformatDoubleTextField(dvbKanalnetzLange)
+
 // dvbTabGroup
 dvbTabGroup.with {
 	setTabColorProvider(com.jidesoft.swing.JideTabbedPane.ONENOTE_COLOR_PROVIDER)
 	setBoldActiveTab(true)
 }
+
 // Bindings
-build(DruckverlustBindings)
+// Kanalnetz - Buttons
+dvbKanalnetzHinzufugen.actionPerformed = controller.dvbKanalnetzHinzufugen
+dvbKanalnetzWiderstandswerte.actionPerformed = controller.widerstandsbeiwerteBearbeiten
+dvbKanalnetzEntfernen.actionPerformed = controller.dvbKanalnetzEntfernen
+// Ventileinstellung - Buttons
+dvbVentileinstellungHinzufugen.actionPerformed = controller.dvbVentileinstellungHinzufugen
+dvbVentileinstellungEntfernen.actionPerformed = controller.dvbVentileinstellungEntfernen
+dvbVentileinstellungAuswahlen.actionPerformed = controller.dvbVentileinstellungTeilstreckeDialog
+
 // WAC-222 Improvement for showing grid lines.
 dvbKanalnetzTabelle.setShowGrid(true);
 dvbKanalnetzTabelle.setGridColor(Color.GRAY);

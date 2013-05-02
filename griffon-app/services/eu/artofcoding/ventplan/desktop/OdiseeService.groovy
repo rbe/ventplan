@@ -9,6 +9,7 @@
  *
  * rbe, 19.03.13 17:23
  */
+
 package eu.artofcoding.ventplan.desktop
 
 import eu.artofcoding.griffon.helper.GriffonHelper as GH
@@ -148,7 +149,7 @@ class OdiseeService {
                     addDvbKanalnetz(domBuilder, map)
                     addDvbVentileinstellung(domBuilder, map)
                     userfield(name: '_CS_Allgemein', '1' /*map.odisee.auslegung.auslegungAllgemeineDaten ? '1' : '0'*/) // OO 3.2-LO 3.5 bug 53210, we must have at least one region
-                    userfield(name: '_CS_Luftmengen', map.odisee.auslegung.auslegungLufmengen ? '1' : '0')
+                    userfield(name: '_CS_Luftmengen', map.odisee.auslegung.auslegungLuftmengen ? '1' : '0')
                     userfield(name: '_CS_Akustik', map.odisee.auslegung.auslegungAkustikberechnung ? '1' : '0')
                     userfield(name: '_CS_Druckverlust', map.odisee.auslegung.auslegungDruckverlustberechnung ? '1' : '0')
                 }

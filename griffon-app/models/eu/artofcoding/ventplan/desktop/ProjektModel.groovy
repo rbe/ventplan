@@ -27,9 +27,6 @@ import javax.swing.table.JTableHeader
 import javax.swing.table.TableCellRenderer
 import java.awt.Dimension
 
-/**
- *
- */
 class ProjektModel {
 
     /**
@@ -186,7 +183,7 @@ class ProjektModel {
                     odisee: [
                             auslegung: [
                                     auslegungAllgemeineDaten: true,
-                                    auslegungLufmengen: true,
+                                    auslegungLuftmengen: true,
                                     auslegungAkustikberechnung: false,
                                     auslegungDruckverlustberechnung: false
                             ] as ObservableMap

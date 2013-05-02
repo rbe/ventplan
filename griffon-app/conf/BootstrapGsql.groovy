@@ -11,6 +11,7 @@
  */
 
 import eu.artofcoding.griffon.helper.HttpHelper
+import eu.artofcoding.ventplan.desktop.VentplanResource
 import eu.artofcoding.ventplan.desktop.VentplanSplash
 import groovy.sql.Sql
 
@@ -22,23 +23,25 @@ class BootstrapGsql {
         // Set splash screen status text: updating database
         VentplanSplash.instance.updatingDatabase()
         try {
-            String baseurl = "http://files.ventplan.com/database"
+            String baseurl = VentplanResource.getDatabaseUpdateUrl()
             int me = sql.firstRow('SELECT dbrev FROM ventplan WHERE id = 1')[0] as int
             int head = HttpHelper.download("${baseurl}/head").toInteger()
             if (me + 1 < head) {
                 sql.withTransaction {
-                    (me + 1).upto head, {
+                    (me + 1).upto head, { rev ->
+                        // Set splash screen status text: updating database
+                        VentplanSplash.instance.updatingDatabase('Revision #${rev}')
                         String content = HttpHelper.download("${baseurl}/${it}.sql")
-                        content.eachLine {
-                            //print "rev#${me} -> rev#${it}: ${it}"
-                            sql.executeUpdate(it)
+                        content.eachLine { stmt ->
+                            //print "rev#${me} -> rev#${rev}: ${stmt}"
+                            sql.executeUpdate(stmt)
                         }
                     }
+                    sql.executeUpdate("UPDATE ventplan SET DBREV = ${head} WHERE ID = 1")
                 }
             } else {
                 //println "rev#${me} == rev#${head}"
             }
-            sql.executeUpdate("UPDATE ventplan SET DBREV = ${head} WHERE ID = 1")
         } catch (e) {
             // ignore
         } finally {

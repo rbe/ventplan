@@ -88,7 +88,17 @@ panel(id: 'stucklisteSuchePanel', layout: new MigLayout('fillx, wrap', '[fill]',
 }
 
 // Bindings
-build(StucklisteBindings)
+stucklisteSucheHinzufugen.actionPerformed = controller.stucklisteSucheArtikelHinzufugen
+stucklisteSucheStarten.actionPerformed = controller.stucklisteSucheStarten
+stucklisteAbbrechen.actionPerformed = controller.stucklisteAbbrechen
+stucklisteWeiter.actionPerformed = controller.stucklisteWeiter
+
+stucklisteUbersichtLoescheArtikel.actionPerformed = controller.stucklisteArtikelLoeschen
+stucklisteUbersichtSortierNachObenVerschieben.actionPerformed = controller.stucklisteArtikelReihenfolgeNachObenVerschieben
+stucklisteUbersichtSortierNachUntenVerschieben.actionPerformed = controller.stucklisteArtikelReihenfolgeNachUntenVerschieben
+
+stucklisteUbersichtArtikelMengePlusEins.actionPerformed = controller.stucklisteUbersichtArtikelMengePlusEins
+stucklisteUbersichtArtikelMengeMinusEins.actionPerformed = controller.stucklisteUbersichtArtikelMengeMinusEins
 
 // WAC-222 Improvement for showing grid lines.
 stucklisteErgebnisTabelle.showGrid = true
