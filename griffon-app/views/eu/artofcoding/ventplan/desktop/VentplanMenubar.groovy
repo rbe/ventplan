@@ -12,9 +12,8 @@
 
 package eu.artofcoding.ventplan.desktop
 
-import static griffon.util.GriffonApplicationUtils.getIsMacOSX
-
 menuBar = menuBar {
+/*
     // Ablage
     menu(id: 'menuDatei', text: 'Datei', mnemonic: 'D') {
         menuItem(ventidModusAction)
@@ -23,6 +22,7 @@ menuBar = menuBar {
             menuItem(exitAction)
         }
     }
+*/
     // Projekt
     menu(id: 'menuProjekt', text: 'Projekt', mnemonic: 'P') {
         // Neu...

@@ -17,9 +17,11 @@ import javax.swing.SwingConstants
 def vertSep = {-> separator(orientation: SwingConstants.VERTICAL) }
 
 toolBar(id: 'toolbar', rollover: true) {
+/*
     // WAC-272
     button(ventidModusAction, text: null, toolTipText: 'Modus')
     vertSep()
+*/
     button(neuesProjektAction, text: null, toolTipText: 'Ein neues Projekt starten')
     button(projektOeffnenAction, text: null, toolTipText: 'Ein Projekt öffnen')
     // WAC-192 Suchfunktion für WPX-Dateien
