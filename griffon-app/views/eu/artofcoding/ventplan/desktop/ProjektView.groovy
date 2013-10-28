@@ -42,6 +42,7 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount, constra
             panel(id: 'raumVsTab', title: 'Raumvolumenströme', layout: new MigLayout('ins 5 n 0 n, fillx', '[grow]'), constraints: 'grow') {
                 build(RaumVsView)
             }
+            /* WAC-274
             // Druckverlustberechnung
             panel(id: 'dvbTab', title: 'Druckverlustberechnung', layout: new MigLayout('ins 5 n 0 n, fillx', '[grow]'), constraints: 'grow') {
                 build(DruckverlustView)
@@ -50,6 +51,7 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount, constra
             panel(id: 'akustikTab', title: 'Akustikberechnung', layout: new MigLayout('ins 5 n 0 n, fillx', '[grow]'), constraints: 'grow') {
                 build(AkustikView)
             }
+            */
         }
     }
 }

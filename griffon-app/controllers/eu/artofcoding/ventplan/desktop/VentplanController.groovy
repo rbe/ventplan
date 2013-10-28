@@ -390,7 +390,7 @@ class VentplanController {
      * Die zu ladende Datei wird in den MRUFileManager als zuletzt geöffnetes Projekt gespeichert.
      * Alle Werte werden neu berechnet.
      */
-    def projektOffnenClosure = { file, resetFilename = false, loadMode = true ->
+    def projektOffnenClosure = { file, resetFilename = false, loadMode = true, /* WAC-274 */expressMode = false ->
         // Show wait dialog
         Object waitDialog = null
         waitDialog = GH.createDialog(
@@ -451,8 +451,14 @@ class VentplanController {
                     def mvc = getMVCGroupAktivesProjekt()
                     try {
                         mvc.controller.berechneAlles(loadMode)
+                        // WAC-274
+                        if (expressMode) {
+                            mvc.controller.standardAuslasseSetzen()
+                            mvc.controller.stuecklisteErstellen(false, false)
+                        }
                     } catch (e) {
                         // ignore
+                        e.printStackTrace()
                     }
                 } else {
                     DialogController dialog = (DialogController) app.controllers['Dialog']
@@ -465,7 +471,6 @@ class VentplanController {
                     @Override
                     void rateEvent(int rate) {
                         AWTHelper.unregister(this)
-                        //model.statusProgressBarIndeterminate = false
                         model.statusBarText = 'Bereit.'
                         waitDialog?.dispose()
                         if (resetFilename) {
@@ -690,10 +695,10 @@ class VentplanController {
         // Räume validieren
         def wzAnzahl = view.wizardRaumTypWohnzimmer.text == '' ? 0 : view.wizardRaumTypWohnzimmer.text.toInteger()
         addRaume('Wohnzimmer', wzAnzahl)
-        def wcAnzahl = view.wizardRaumTypWC.text == '' ? 0 : view.wizardRaumTypWC.text.toInteger()
-        addRaume('WC', wcAnzahl)
         def kzAnzahl = view.wizardRaumTypKinderzimmer.text == '' ? 0 : view.wizardRaumTypKinderzimmer.text.toInteger()
         addRaume('Kinderzimmer', kzAnzahl)
+        def azAnzahl = view.wizardRaumTypArbeitszimmer.text == '' ? 0 : view.wizardRaumTypArbeitszimmer.text.toInteger()
+        addRaume('Arbeitszimmer', azAnzahl)
         def kAnzahl = view.wizardRaumTypKuche.text == '' ? 0 : view.wizardRaumTypKuche.text.toInteger()
         addRaume('Küche', kAnzahl)
         def szAnzahl = view.wizardRaumTypSchlafzimmer.text == '' ? 0 : view.wizardRaumTypSchlafzimmer.text.toInteger()
@@ -704,8 +709,8 @@ class VentplanController {
         addRaume('Esszimmer', ezAnzahl)
         def bAnzahl = view.wizardRaumTypBad.text == '' ? 0 : view.wizardRaumTypBad.text.toInteger()
         addRaume('Bad mit/ohne WC', bAnzahl)
-        def azAnzahl = view.wizardRaumTypArbeitszimmer.text == '' ? 0 : view.wizardRaumTypArbeitszimmer.text.toInteger()
-        addRaume('Arbeitszimmer', azAnzahl)
+        def wcAnzahl = view.wizardRaumTypWC.text == '' ? 0 : view.wizardRaumTypWC.text.toInteger()
+        addRaume('WC', wcAnzahl)
         def drAnzahl = view.wizardRaumTypDuschraum.text == '' ? 0 : view.wizardRaumTypDuschraum.text.toInteger()
         addRaume('Duschraum', drAnzahl)
         def gzAnzahl = view.wizardRaumTypGastezimmer.text == '' ? 0 : view.wizardRaumTypGastezimmer.text.toInteger()
@@ -727,7 +732,7 @@ class VentplanController {
         // Model speichern und ...
         saveFile = vpxModelService.save(model.wizardmap, saveFile)
         // ... anschließend wieder laden
-        projektOffnenClosure(saveFile, true)
+        projektOffnenClosure(saveFile, true, true, /* WAC-274 */true)
     }
 
     def addRaume(raumTyp, anzahl) {

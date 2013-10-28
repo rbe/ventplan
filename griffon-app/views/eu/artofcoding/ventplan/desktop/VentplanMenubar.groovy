@@ -25,6 +25,7 @@ menuBar = menuBar {
 */
     // Projekt
     menu(id: 'menuProjekt', text: 'Projekt', mnemonic: 'P') {
+        /* WAC-274
         // Neu...
         menu(id: 'menuProjektNeu', text: 'Neu...', icon: imageIcon(resource: '/menu/project_new.png')) {
             menuItem(neuesProjektAction_EFH4ZKBWC)
@@ -32,7 +33,8 @@ menuBar = menuBar {
             menuItem(neuesProjektAction_EFH5ZKBWC2KRHW)
             menuItem(neuesProjektAction_EFH5ZKBWCDG)
         }
-        menuItem(neuesProjektAction)
+        */
+        // WAC-274 menuItem(neuesProjektAction)
         // WAC-234 Wizard Dialog
         menuItem(neuesProjektWizardAction)
         //

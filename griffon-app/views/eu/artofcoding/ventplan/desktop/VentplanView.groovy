@@ -96,6 +96,7 @@ actions {
             closure: controller.neuesProjekt_EFH5ZKBWCDG
     )
 
+    /* WAC-274: Siehe WAC-234 unten
     action(
             id: 'neuesProjektAction',
             name: 'Neues Projekt',
@@ -105,6 +106,7 @@ actions {
             enabled: bind { model.aktivesProjekt == null },
             closure: controller.neuesProjekt
     )
+    */
 
     action(
             id: 'projektOeffnenAction',
@@ -229,8 +231,8 @@ actions {
     action(
             id: 'neuesProjektWizardAction',
             name: 'Express-Modus',
-            mnemonic: 'X',
-            accelerator: shortcut('X'),
+            mnemonic: 'N',
+            accelerator: shortcut('N'),
             smallIcon: imageIcon(resource: '/menu/project_wizard.png'),
             enabled: bind { model.aktivesProjekt == null },
             closure: controller.neuesProjektWizard
@@ -295,6 +297,10 @@ ventplanFrame = application(
     } as ChangeListener)
     // The status bar
     widget(build(VentplanStatusbar), constraints: 'south, grow')
-    // WAC-161: Zuletzt geöffnete Projekte in das Menu laden
-    controller.buildRecentlyOpenedMenuItems()
+    doLater {
+        // WAC-161: Zuletzt geöffnete Projekte in das Menu laden
+        controller.buildRecentlyOpenedMenuItems()
+        // WAC-274
+        controller.neuesProjektWizard()
+    }
 }

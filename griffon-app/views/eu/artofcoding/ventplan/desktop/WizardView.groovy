@@ -62,7 +62,7 @@ panel(constraints: 'x', border: compoundBorder(outer: emptyBorder(5), inner: emp
     // GebäudeGeplanteBelegung
     panel(id: 'wizardGebaudeGeplanteBelegung', border: titledBorder(title: 'Geplante Belegung'), constraints: 'd', layout: new MigLayout('ins 0 n 0 n, fill', '[fill]', '')) {
         label('Personenanzahl')
-        textField(id: 'wizardHausPersonenanzahl', constraints: 'width 60px!, wrap', text: '2')
+        textField(id: 'wizardHausPersonenanzahl', constraints: 'width 60px!, wrap', text: '4')
 
         label('Außenluftvolumenstrom pro Person (m³/h)')
         textField(id: 'wizardHausAussenluftVsProPerson', constraints: 'width 60px!', text: '30')
@@ -113,11 +113,11 @@ panel(constraints: 'x', border: compoundBorder(outer: emptyBorder(5), inner: emp
         label('Hausarbeitsraum', constraints: 'a')
         textField(id: 'wizardRaumTypHausarbeitsraum', size: [60,15], constraints: 'b')
         label('Flur', constraints: 'c')
-        textField(id: 'wizardRaumTypFlur', size: [60,15], constraints: 'd', text: '1')
+        textField(id: 'wizardRaumTypFlur', size: [60,15], constraints: 'd')
 
         zl2.insertTemplate('r')
         label('Kellerraum', constraints: 'a')
-        textField(id: 'wizardRaumTypKellerraum', size: [60,15], constraints: 'b')
+        textField(id: 'wizardRaumTypKellerraum', size: [60,15], constraints: 'b', text: '1')
         label('Diele', constraints: 'c')
         textField(id: 'wizardRaumTypDiele', size: [60,15], constraints: 'd')
     }

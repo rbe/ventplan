@@ -22,6 +22,8 @@ toolBar(id: 'toolbar', rollover: true) {
     button(ventidModusAction, text: null, toolTipText: 'Modus')
     vertSep()
 */
+    // WAC-274: Neues Projekt -> WAC-234 Wizard Dialog
+    button(neuesProjektWizardAction, text: null, toolTipText: 'Express-Modus')
     button(neuesProjektAction, text: null, toolTipText: 'Ein neues Projekt starten')
     button(projektOeffnenAction, text: null, toolTipText: 'Ein Projekt öffnen')
     // WAC-192 Suchfunktion für WPX-Dateien

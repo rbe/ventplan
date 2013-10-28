@@ -266,6 +266,7 @@ class ProjektController {
         model.map.dvb.kanalnetz.each {
             dvbKanalnetzGeandert(it.position)
         }
+/* WAC-274
         // Ventile berechnen
         calculationService.berechneVentileinstellung(model.map)
         // CellEditors, TableModels aktualisieren
@@ -278,6 +279,7 @@ class ProjektController {
         // Akustik
         berechneAkustik('Zuluft')
         berechneAkustik('Abluft')
+*/
         // 
         this.loadMode = false
         // Fix table header height
@@ -1222,8 +1224,10 @@ class ProjektController {
             GH.withDisabledActionListeners view.raumVsZentralgerat, {
                 // Raumvolumenströme
                 model.map.anlage.zentralgerat = view.raumVsZentralgerat.selectedItem = model.map.anlage.zentralgerat
+/* WAC-274
                 // Akustik Zu-/Abluft
                 view.akustikZuluftZuluftstutzenZentralgerat.selectedItem = view.akustikAbluftAbluftstutzenZentralgerat.selectedItem = model.map.anlage.zentralgerat
+*/
             }
             // Aktualisiere Volumenstrom
             GH.withDisabledActionListeners view.raumVsVolumenstrom, {
@@ -1238,15 +1242,19 @@ class ProjektController {
                     (minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
                     // Füge Volumenströme in Comboboxen hinzu
                     view.raumVsVolumenstrom.removeAllItems()
+/* WAC-274
                     // Akustik
                     view.akustikZuluftPegel.removeAllItems()
                     view.akustikAbluftPegel.removeAllItems()
+*/
                     model.meta.volumenstromZentralgerat.each {
                         // Raumvolumenströme
                         view.raumVsVolumenstrom.addItem(it)
+/* WAC-274
                         // Akustikberechnung
                         view.akustikZuluftPegel.addItem(it)
                         view.akustikAbluftPegel.addItem(it)
+*/
                     }
                     // Selektiere errechneten Volumenstrom
                     def roundedVs = calculationService.round5(model.map.anlage.volumenstromZentralgerat)
@@ -1255,11 +1263,12 @@ class ProjektController {
                     if (!foundVs) {
                         foundVs = model.meta.volumenstromZentralgerat[0]
                     }
-                    //println "view.akustikAbluftPegel.selectedItem -> ${view.akustikAbluftPegel.selectedItem}"
                     model.map.anlage.volumenstromZentralgerat = foundVs
                     view.raumVsVolumenstrom.selectedItem = foundVs
+/* WAC-274
                     view.akustikZuluftPegel.selectedItem = foundVs
                     view.akustikAbluftPegel.selectedItem = foundVs
+*/
                 } catch (NoSuchElementException e) {
                     // ignore
                 }
@@ -1677,6 +1686,8 @@ class ProjektController {
      * Akustikberechnung.
      */
     void berechneAkustik(tabname) {
+        // WAC-274
+        return
         def m = model.map.akustik."${tabname.toLowerCase()}"
         // Konvertiere Wert TextField, ComboBox in Integer, default ist 0
         // Eingabe einer 0 im TextField gibt ''???
@@ -1939,12 +1950,12 @@ class ProjektController {
     /**
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      */
-    def stuecklisteErstellen() {
-        processStucklisteDialog('Stückliste')
-        if (!stucklisteAbgebrochen) {
+    def stuecklisteErstellen(showStucklistedialog = true, showNutzerdatendialog = true) {
+        if (showStucklistedialog) processStucklisteDialog('Stückliste')
+        if (!showNutzerdatendialog || !stucklisteAbgebrochen) {
             // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
-            showNutzerdatenDialog(StucklisteNutzerdatenView, 'Stückliste erstellen - Daten eingeben', 'Stückliste erstellen')
-            if (nutzerdatenGeandert) {
+            if (showNutzerdatendialog) showNutzerdatenDialog(StucklisteNutzerdatenView, 'Stückliste erstellen - Daten eingeben', 'Stückliste erstellen')
+            if (!showNutzerdatendialog || nutzerdatenGeandert) {
                 // Projekt speichern
                 saveBeforeDocument()
                 // Dokument erstellen
