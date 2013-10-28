@@ -54,6 +54,7 @@ int __i;
 
 actions {
 
+    /*
     // WAC-272 Ventplan ID
     action(
             id: 'ventidModusAction',
@@ -64,6 +65,7 @@ actions {
             enabled: true,
             closure: controller.ventIdDialogOeffnen
     )
+    */
 
     // EFH-4ZKB-WC.vpx
     action(
