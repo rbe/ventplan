@@ -13,16 +13,14 @@
 package eu.artofcoding.ventplan.desktop
 
 menuBar = menuBar {
-/*
+    /*
     // Ablage
     menu(id: 'menuDatei', text: 'Datei', mnemonic: 'D') {
         menuItem(ventidModusAction)
-        if (!isMacOSX) {
-            separator()
-            menuItem(exitAction)
-        }
+        separator()
+        menuItem(exitAction)
     }
-*/
+    */
     // Projekt
     menu(id: 'menuProjekt', text: 'Projekt', mnemonic: 'P') {
         /* WAC-274
