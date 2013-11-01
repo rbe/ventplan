@@ -138,7 +138,7 @@ class VentplanModel {
                         aussenluft: [] as ObservableMap,
                         zuluft: [:] as ObservableMap,
                         abluft: [:] as ObservableMap,
-                        fortluft: [dach: true] as ObservableMap,
+                        fortluft: [] as ObservableMap,
                         energie: [zuAbluftWarme: true, nachricht: ' '] as ObservableMap,
                         hygiene: [nachricht: ' '] as ObservableMap,
                         kennzeichnungLuftungsanlage: 'ZuAbLS-Z-WE-WÜT-0-0-0-0-0',

@@ -537,7 +537,7 @@ class VpxModelService {
     }
 
     def save = { map, file, stuckliste = null ->
-        File fh = null
+        File vpxFile = null
         DocumentPrefHelper prefHelper = DocumentPrefHelper.instance
         def wpx = domBuilder.'ventplan-project' {
             projekt() {
@@ -606,12 +606,14 @@ class VpxModelService {
             }
         }
         if (file) {
-            fh = file instanceof File ? file : new File(file)
-            fh.withWriter('UTF-8') { writer ->
+            vpxFile = file instanceof File ? file : new File(file)
+            File vpxDir = vpxFile.getParentFile() ?: FilenameHelper.getVentplanDir()
+            vpxFile = new File(vpxDir, vpxFile.getName())
+            vpxFile.withWriter('UTF-8') { writer ->
                 writer.write(XmlUtil.serialize(wpx))
             }
         }
-        fh
+        vpxFile
     }
 
     /**

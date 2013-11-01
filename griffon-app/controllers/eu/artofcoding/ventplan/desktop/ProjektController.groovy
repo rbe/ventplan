@@ -95,7 +95,6 @@ class ProjektController {
                         app.models['MainFrame'].alleProjekteGeandert =
                             true
                     // Change tab title (show a star)
-                    ////println "popertyChangeListener: calling setTabTitle: ${evt.propertyName}"
                     setTabTitle(view.projektTabGroup.tabCount - 1)
                 }
             }
@@ -176,6 +175,9 @@ class ProjektController {
         } else {
             title << model.mvcId
         }
+        if (bauvorhaben && model.vpxFilename && bauvorhaben != model.vpxFilename - '.vpx') {
+            model.vpxFilename = bauvorhaben + '.vpx'
+        }
         title
     }
 
@@ -227,7 +229,7 @@ class ProjektController {
     /**
      * Alles neu berechnen.
      */
-    def berechneAlles = { loadMode = false ->
+    def berechneAlles = { loadMode = false, expressMode = false ->
         this.loadMode = loadMode
         // WAC-257
         ventplanModelService.projectWAC257 = loadMode
@@ -254,19 +256,21 @@ class ProjektController {
             // ignore
         }
         //
-        model.map.raum.raume.each { raum ->
-            try {
-                raumGeandert(raum.position)
-            } catch (e) {
-                // ignore
+        if (!expressMode) {
+            model.map.raum.raume.each { raum ->
+                try {
+                    raumGeandert(raum.position)
+                } catch (e) {
+                    // ignore
+                }
             }
+            model.resyncRaumTableModels()
         }
-        model.resyncRaumTableModels()
+/* WAC-274
         // Druckverlustberechnung, Kanalnetze berechnen
         model.map.dvb.kanalnetz.each {
             dvbKanalnetzGeandert(it.position)
         }
-/* WAC-274
         // Ventile berechnen
         calculationService.berechneVentileinstellung(model.map)
         // CellEditors, TableModels aktualisieren
@@ -311,6 +315,10 @@ class ProjektController {
     boolean save() {
         try {
             if (model.vpxFilename) {
+                File vpxFile = new File(model.vpxFilename)
+                if (!vpxFile.getParentFile()?.isDirectory()) {
+                    model.vpxFilename = FilenameHelper.getVentplanDir().absolutePath + '/' + model.vpxFilename
+                }
                 // Save data
                 vpxModelService.save(model.map, model.vpxFilename, model.stucklisteMap)
                 // Set dirty-flag in project's model to false
@@ -1224,10 +1232,10 @@ class ProjektController {
             GH.withDisabledActionListeners view.raumVsZentralgerat, {
                 // Raumvolumenströme
                 model.map.anlage.zentralgerat = view.raumVsZentralgerat.selectedItem = model.map.anlage.zentralgerat
-/* WAC-274
+                /* WAC-274
                 // Akustik Zu-/Abluft
                 view.akustikZuluftZuluftstutzenZentralgerat.selectedItem = view.akustikAbluftAbluftstutzenZentralgerat.selectedItem = model.map.anlage.zentralgerat
-*/
+                */
             }
             // Aktualisiere Volumenstrom
             GH.withDisabledActionListeners view.raumVsVolumenstrom, {
@@ -1901,12 +1909,12 @@ class ProjektController {
     /**
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      */
-    def angebotErstellen() {
-        processStucklisteDialog('Angebot')
-        if (!stucklisteAbgebrochen) {
+    def angebotErstellen(showStucklistedialog = true, showNutzerdatendialog = true) {
+        if (showStucklistedialog) processStucklisteDialog('Angebot')
+        if (!showNutzerdatendialog || !stucklisteAbgebrochen) {
             // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
-            showNutzerdatenDialog(AngebotNutzerdatenView, 'Angebot erstellen', 'Angebot erstellen')
-            if (nutzerdatenGeandert) {
+            if (showNutzerdatendialog) showNutzerdatenDialog(AngebotNutzerdatenView, 'Angebot erstellen', 'Angebot erstellen')
+            if (!showNutzerdatendialog || nutzerdatenGeandert) {
                 // Projekt speichern
                 saveBeforeDocument()
                 // Dokument erstellen
@@ -2081,7 +2089,8 @@ class ProjektController {
                 body: xmlDoc,
                 requestContentType: ContentType.XML
         )
-        File responseFile = new File(vpxFile.getParentFile(), FilenameHelper.cleanFilename("${model.vpxFilename - '.vpx'}_${fileSuffix}.${outputFormat}"))
+        File vpxDir = vpxFile.getParentFile() ?: FilenameHelper.getVentplanDir()
+        File responseFile = new File(vpxDir, FilenameHelper.cleanFilename("${model.vpxFilename - '.vpx'}_${fileSuffix}.${outputFormat}"))
         responseFile << byteArrayInputStream
         return responseFile
     }
@@ -2519,7 +2528,7 @@ class ProjektController {
     int ____________________i;
 
     /**
-     * WAC-258
+     * WAC-258, WAC-274
      */
     def standardAuslasseSetzen = { evt = null ->
         doLater {
@@ -2527,18 +2536,19 @@ class ProjektController {
             model.map.raum.raume.each { raum ->
                 // Standard Luftauslässe
                 if (raum.raumLuftart == 'ZU') {
-                    raum.raumBezeichnungZuluftventile = '100ULC'
+                    raum.raumBezeichnungZuluftventile = '125ULC'
                 } else if (raum.raumLuftart == 'AB') {
+                    raum.raumBezeichnungAbluftventile = '125URH'
                     // Küche, Bad, Dusche und Sauna
-                    def n = ['Küche', 'Bad', 'Dusche', 'Sauna']
-                    n.each {
-                        if (raum.raumBezeichnung ==~ /${it}.*/ || raum.raumTyp ==~ /${it}.*/) {
-                            raum.raumBezeichnungAbluftventile = '125URH'
-                        }
-                    }
+//                    def n = ['Küche', 'Bad', 'Dusche', 'Sauna']
+//                    n.each {
+//                        if (raum.raumBezeichnung ==~ /${it}. || raum.raumTyp ==~ /${it}.) {
+//                            raum.raumBezeichnungAbluftventile = '125URH'
+//                        }
+//                    }
                     // Ansonsten
                     if (!raum.raumBezeichnungAbluftventile) {
-                        raum.raumBezeichnungAbluftventile = '100URH'
+                        raum.raumBezeichnungAbluftventile = '125URH'
                     }
                 }
                 // Verteilebene

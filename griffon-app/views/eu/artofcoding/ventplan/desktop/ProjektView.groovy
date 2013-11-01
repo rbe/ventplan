@@ -42,7 +42,6 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount, constra
             panel(id: 'raumVsTab', title: 'Raumvolumenströme', layout: new MigLayout('ins 5 n 0 n, fillx', '[grow]'), constraints: 'grow') {
                 build(RaumVsView)
             }
-            /* WAC-274
             // Druckverlustberechnung
             panel(id: 'dvbTab', title: 'Druckverlustberechnung', layout: new MigLayout('ins 5 n 0 n, fillx', '[grow]'), constraints: 'grow') {
                 build(DruckverlustView)
@@ -51,7 +50,6 @@ jideTabbedPane(projektTabGroup, selectedIndex: projektTabGroup.tabCount, constra
             panel(id: 'akustikTab', title: 'Akustikberechnung', layout: new MigLayout('ins 5 n 0 n, fillx', '[grow]'), constraints: 'grow') {
                 build(AkustikView)
             }
-            */
         }
     }
 }
@@ -68,4 +66,16 @@ datenTabGroup.with {
     //setTabColorProvider(com.jidesoft.swing.JideTabbedPane.ONENOTE_COLOR_PROVIDER)
     setBoldActiveTab(true)
     setShowCloseButton(false)
+    // WAC-274 Gebäudedaten
+    setEnabledAt(1, false)
+    // WAC-274 Raumdaten
+    setEnabledAt(3, false)
+    // WAC-274 Außenluftvolumenströme
+    setEnabledAt(4, false)
+    // WAC-274 Raumvolumenströme
+    //setEnabledAt(5, false)
+    // WAC-274 Druckverlustberechnung
+    setEnabledAt(6, false)
+    // WAC-274 Akustikberechnung
+    setEnabledAt(7, false)
 }

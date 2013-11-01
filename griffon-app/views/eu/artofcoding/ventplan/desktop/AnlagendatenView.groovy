@@ -39,7 +39,8 @@ panel(constraints: 'a', border: compoundBorder(outer: emptyBorder(5), inner: emp
     }
 
     // Luftkanalverlegung
-    panel(id: "anlageLuftkanalverlegungPanel", border: titledBorder(title: "Luftkanalverlegung"), constraints: 'b', layout: new MigLayout("ins 0 n 0 n")) {
+    // WAC-274 Panel ausblenden
+    panel(visible: false, id: "anlageLuftkanalverlegungPanel", border: titledBorder(title: "Luftkanalverlegung"), constraints: 'b', layout: new MigLayout("ins 0 n 0 n")) {
         label("Quadroflexsysteme 100 mit nur 60 mm Aufbauhöhe", constraints: "wrap")
         checkBox(id: "anlageLuftkanalverlegungAufputz",     text: "Aufputz (Abkastung)")
         checkBox(id: "anlageLuftkanalverlegungDecke",       text: "Decke (abgehängt)", constraints: "wrap")
@@ -60,7 +61,9 @@ panel(constraints: 'a', border: compoundBorder(outer: emptyBorder(5), inner: emp
     }
 
     zl.insertTemplate('valueRow');
-    panel(id: "anlageZuluftPanel", border: titledBorder(title: "Zuluftdurchlässe"), constraints: 'a', layout: new MigLayout("ins 0 n 0 n, wrap 1")) {
+    // Zuluft
+    // WAC-274 Panel ausblenden
+    panel(visible: false, id: "anlageZuluftPanel", border: titledBorder(title: "Zuluftdurchlässe"), constraints: 'a', layout: new MigLayout("ins 0 n 0 n, wrap 1")) {
         checkBox(id: "anlageZuluftTellerventile",  text: "Tellerventile")
         checkBox(id: "anlageZuluftFussboden",      text: "Fußbodenauslass")
         checkBox(id: "anlageZuluftSchlitzauslass", text: "Schlitzauslass (Weitwurfdüse)")
@@ -69,7 +72,8 @@ panel(constraints: 'a', border: compoundBorder(outer: emptyBorder(5), inner: emp
     }
 
     // Abluftdurchlässe
-    panel(id: "anlageAbluft", border: titledBorder(title: "Abluftdurchlässe"), constraints: 'b', layout: new MigLayout("ins 0 n 0 n, wrap 1")) {
+    // WAC-274 Panel ausblenden
+    panel(visible: false, id: "anlageAbluft", border: titledBorder(title: "Abluftdurchlässe"), constraints: 'b', layout: new MigLayout("ins 0 n 0 n, wrap 1")) {
         checkBox(id: "anlageAbluftTellerventile",  text: "Tellerventile (Standard)")
     }
 
@@ -85,7 +89,9 @@ panel(constraints: 'a', border: compoundBorder(outer: emptyBorder(5), inner: emp
     }
 
     zl.insertTemplate('valueRow2');
-    panel(id: "anlageEnergiePanel", border: titledBorder(title: "Energie-Kennzeichen"), constraints: 'd', layout: new MigLayout("ins 0 n 0 n, wrap 1")) {
+    // Energie-Kennzeichen
+    // WAC-274 Panel ausblenden
+    panel(visible: false, id: "anlageEnergiePanel", border: titledBorder(title: "Energie-Kennzeichen"), constraints: 'd', layout: new MigLayout("ins 0 n 0 n, wrap 1")) {
         checkBox(id: "anlageEnergieZuAbluftWarme", text: "Zu-/Abluftgeräte mit Wärmerückgewinnung")
         checkBox(id: "anlageEnergieBemessung",     text: "Bemessung und Ausführung des Lüftungssystems")
         checkBox(id: "anlageEnergieRuckgewinnung", text: "Rückgewinnung von Abluftwärme")
@@ -95,7 +101,8 @@ panel(constraints: 'a', border: compoundBorder(outer: emptyBorder(5), inner: emp
     }
 
     // Hygiene-Kennzeichen
-    panel(id: "anlageHygienePanel", border: titledBorder(title: "Hygiene-Kennzeichen"), constraints: 'e', layout: new MigLayout("ins 0 n 0 n, wrap 1")) {
+    // WAC-274 Panel ausblenden
+    panel(visible: false, id: "anlageHygienePanel", border: titledBorder(title: "Hygiene-Kennzeichen"), constraints: 'e', layout: new MigLayout("ins 0 n 0 n, wrap 1")) {
         checkBox(id: "anlageHygieneAusfuhrung",         text: "Ausführung und Lage der Außenluftansaugung")
         checkBox(id: "anlageHygieneFilterung",          text: "Filterung der Außenluft und der Abluft")
         checkBox(id: "anlageHygieneKeineVerschmutzung", text: "möglichst keine Verschmutzung des Luftleitungsnetzes")
@@ -105,23 +112,28 @@ panel(constraints: 'a', border: compoundBorder(outer: emptyBorder(5), inner: emp
     }
 
     zl.insertTemplate('valueRow');
-    panel(id: "anlageRuckschlagPanel", border: titledBorder(title: "Rückschlagkappe"), constraints: 'a', layout: new MigLayout("ins 0 n 0 n, wrap 1")) {
+    // Rückschlagkappe
+    // WAC-274 Panel ausblenden
+    panel(visible: false, id: "anlageRuckschlagPanel", border: titledBorder(title: "Rückschlagkappe"), constraints: 'a', layout: new MigLayout("ins 0 n 0 n, wrap 1")) {
         checkBox(id: "anlageruckschlagkappe", text: "Lüftungsanlage mit Rückschlagkappe")
     }
 
     // Schallschutz-Kennzeichnung
-    panel(id: "anlageSchallschutzPanel", border: titledBorder(title: "Schallschutz-Kennzeichnung"), constraints: 'b', layout: new MigLayout("ins 0 n 0 n, wrap 1")) {
+    // WAC-274 Panel ausblenden
+    panel(visible: false, id: "anlageSchallschutzPanel", border: titledBorder(title: "Schallschutz-Kennzeichnung"), constraints: 'b', layout: new MigLayout("ins 0 n 0 n, wrap 1")) {
         checkBox(id: "anlageSchallschutz", text: "Lüftungsanlage mit Schallschutz")
     }
 
     // Feuerstätten-Kennzeichnung
-    panel(id: "anlageFeuerstattePanel", border: titledBorder(title: "Feuerstätten-Kennzeichnung"), constraints: 'c', layout: new MigLayout("ins 0 n 0 n, wrap 1")) {
+    // WAC-274 Panel ausblenden
+    panel(visible: false, id: "anlageFeuerstattePanel", border: titledBorder(title: "Feuerstätten-Kennzeichnung"), constraints: 'c', layout: new MigLayout("ins 0 n 0 n, wrap 1")) {
         checkBox(id: "anlageFeuerstatte", text: "<html>Lüftungsanlage mit <br/>Sicherheitseinrichtung</html>")
     }
 
     zl.insertTemplate('valueRow3');
     // Kennzeichnung der Lüftungsanlage
-    panel(id: "anlageKennzeichnungPanel", border: titledBorder(title: "Kennzeichnung der Lüftungsanlage"), constraints: "f", layout: new MigLayout("ins 0 n 0 n, wrap 1", "[]")) {
+    // WAC-274 Panel ausblenden
+    panel(visible: false, id: "anlageKennzeichnungPanel", border: titledBorder(title: "Kennzeichnung der Lüftungsanlage"), constraints: "f", layout: new MigLayout("ins 0 n 0 n, wrap 1", "[]")) {
         label(id: "anlageKennzeichnungLuftungsanlage", foreground: java.awt.Color.RED)
     }
 }

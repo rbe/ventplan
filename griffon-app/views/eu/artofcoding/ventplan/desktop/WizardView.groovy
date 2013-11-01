@@ -42,6 +42,7 @@ panel(constraints: 'x', border: compoundBorder(outer: emptyBorder(5), inner: emp
         }
         //label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
     }
+    /* WAC-274
     // Gebäudelage
     panel(id: 'wizardGebaudeLage', border: titledBorder(title: 'Gebäudelage'), constraints: 'b', layout: new MigLayout('ins 0 n 0 n, wrap', '[]', '')) {
         buttonGroup().with {
@@ -50,24 +51,27 @@ panel(constraints: 'x', border: compoundBorder(outer: emptyBorder(5), inner: emp
         }
         //label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
     }
-    zl.insertTemplate('valueRow2')
+    */
+    /* WAC-274
     // Wärmeschutz
-    panel(id: 'wizardGbaudewarmeschutz', border: titledBorder(title: 'Wärmeschutz'), constraints: 'c', layout: new MigLayout('ins 0 n 0 n, wrap', '[]', '')) {
+    panel(id: 'wizardGbaudewarmeschutz', border: titledBorder(title: 'Wärmeschutz'), constraints: 'b', layout: new MigLayout('ins 0 n 0 n, wrap', '[]', '')) {
         buttonGroup().with {
             add radioButton(id: 'wizardGebaudeWarmeschutzHoch', text: 'hoch (Neubau / Sanierung mind. WSchV 1995)', selected: true)
             add radioButton(id: 'wizardGebaudeWarmeschutzNiedrig', text: 'niedrig (Gebäude bestand vor 1995)')
         }
         //label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
     }
+    */
     // GebäudeGeplanteBelegung
-    panel(id: 'wizardGebaudeGeplanteBelegung', border: titledBorder(title: 'Geplante Belegung'), constraints: 'd', layout: new MigLayout('ins 0 n 0 n, fill', '[fill]', '')) {
+    panel(id: 'wizardGebaudeGeplanteBelegung', border: titledBorder(title: 'Geplante Belegung'), constraints: 'b', layout: new MigLayout('ins 0 n 0 n, fill', '[fill]', '')) {
         label('Personenanzahl')
         textField(id: 'wizardHausPersonenanzahl', constraints: 'width 60px!, wrap', text: '4')
-
+        /* WAC-274
         label('Außenluftvolumenstrom pro Person (m³/h)')
         textField(id: 'wizardHausAussenluftVsProPerson', constraints: 'width 60px!', text: '30')
+        */
     }
-
+    // WAC-274 zl.insertTemplate('valueRow2')
     zl.insertTemplate('valueRow3')
     panel(id: 'wizardRaumTypen', border: titledBorder(title: 'Anzahl der Raumtypen festlegen'), constraints: 'e', layout: new MigLayout('ins 0 n 0 n, wrap', '[]', '')) {
         zl2 = zoneLayout {
@@ -111,15 +115,15 @@ panel(constraints: 'x', border: compoundBorder(outer: emptyBorder(5), inner: emp
 
         zl2.insertTemplate('r')
         label('Hausarbeitsraum', constraints: 'a')
-        textField(id: 'wizardRaumTypHausarbeitsraum', size: [60,15], constraints: 'b')
+        textField(id: 'wizardRaumTypHausarbeitsraum', size: [60,15], constraints: 'b', text: '1')
         label('Flur', constraints: 'c')
-        textField(id: 'wizardRaumTypFlur', size: [60,15], constraints: 'd')
+        textField(id: 'wizardRaumTypFlur', size: [60,15], constraints: 'd', text: '1')
 
         zl2.insertTemplate('r')
         label('Kellerraum', constraints: 'a')
-        textField(id: 'wizardRaumTypKellerraum', size: [60,15], constraints: 'b', text: '1')
+        textField(id: 'wizardRaumTypKellerraum', size: [60,15], constraints: 'b')
         label('Diele', constraints: 'c')
-        textField(id: 'wizardRaumTypDiele', size: [60,15], constraints: 'd')
+        textField(id: 'wizardRaumTypDiele', size: [60,15], constraints: 'd', text: '1')
     }
 
     zl.insertTemplate('valueRow4')
