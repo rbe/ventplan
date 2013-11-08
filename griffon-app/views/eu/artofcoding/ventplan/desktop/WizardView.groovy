@@ -12,7 +12,10 @@
 
 package eu.artofcoding.ventplan.desktop
 
+import eu.artofcoding.griffon.helper.GriffonHelper
 import net.miginfocom.swing.MigLayout
+
+import javax.swing.*
 
 // WAC-234 Wizard Dialog view
 zoneLayout {
@@ -42,26 +45,6 @@ panel(constraints: 'x', border: compoundBorder(outer: emptyBorder(5), inner: emp
         }
         //label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
     }
-    /* WAC-274
-    // Gebäudelage
-    panel(id: 'wizardGebaudeLage', border: titledBorder(title: 'Gebäudelage'), constraints: 'b', layout: new MigLayout('ins 0 n 0 n, wrap', '[]', '')) {
-        buttonGroup().with {
-            add radioButton(id: 'wizardGebaudeLageWindschwach', text: 'windschwach', selected: true)
-            add radioButton(id: 'wizardGebaudeLageWindstark', text: 'windstark')
-        }
-        //label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
-    }
-    */
-    /* WAC-274
-    // Wärmeschutz
-    panel(id: 'wizardGbaudewarmeschutz', border: titledBorder(title: 'Wärmeschutz'), constraints: 'b', layout: new MigLayout('ins 0 n 0 n, wrap', '[]', '')) {
-        buttonGroup().with {
-            add radioButton(id: 'wizardGebaudeWarmeschutzHoch', text: 'hoch (Neubau / Sanierung mind. WSchV 1995)', selected: true)
-            add radioButton(id: 'wizardGebaudeWarmeschutzNiedrig', text: 'niedrig (Gebäude bestand vor 1995)')
-        }
-        //label("<html><p style='font-size: 9px;'>* Nur eine Auswahlmöglichkeit</p></html>", foreground: java.awt.Color.BLUE)
-    }
-    */
     // GebäudeGeplanteBelegung
     panel(id: 'wizardGebaudeGeplanteBelegung', border: titledBorder(title: 'Geplante Belegung'), constraints: 'b', layout: new MigLayout('ins 0 n 0 n, fill', '[fill]', '')) {
         label('Personenanzahl')
@@ -75,63 +58,140 @@ panel(constraints: 'x', border: compoundBorder(outer: emptyBorder(5), inner: emp
     zl.insertTemplate('valueRow3')
     panel(id: 'wizardRaumTypen', border: titledBorder(title: 'Anzahl der Raumtypen festlegen'), constraints: 'e', layout: new MigLayout('ins 0 n 0 n, wrap', '[]', '')) {
         zl2 = zoneLayout {
-            zoneRow('a-*a1b-*b3c-*c1d-*d', template: 'r')
+            zoneRow('a-*>a1b-*be-*ef>f3c-*>c1d-*dg-*gh>h', template: 'r')
         }
         zl2.insertTemplate('r')
-        label('Wohnzimmer', constraints: 'a')
-        textField(id: 'wizardRaumTypWohnzimmer', size: [60,15], constraints: 'b', text: '1')
-        label('WC', constraints: 'c')
-        textField(id: 'wizardRaumTypWC', size: [60,15], constraints: 'd', text: '1')
+        label('Wohnzimmer ...', constraints: 'a')
+        textField(id: 'wizardRaumTypWohnzimmer', size: [30,15], constraints: 'b', text: '1')
+        textField(id: 'wizardRaumGroesseWohnzimmer', size: [30,15], constraints: 'e', text: '20,00', horizontalAlignment: JTextField.RIGHT)
+        label('m²', constraints: 'f')
+        label('WC ...', constraints: 'c')
+        textField(id: 'wizardRaumTypWC', size: [30,15], constraints: 'd', text: '1')
+        textField(id: 'wizardRaumGroesseWC', size: [30,15], constraints: 'g', text: '20,00', horizontalAlignment: JTextField.RIGHT)
+        label('m²', constraints: 'h')
 
         zl2.insertTemplate('r')
-        label('Kinderzimmer', constraints: 'a')
-        textField(id: 'wizardRaumTypKinderzimmer', size: [60,15], constraints: 'b', text: '2')
-        label('Küche', constraints: 'c')
-        textField(id: 'wizardRaumTypKuche', size: [60,15], constraints: 'd', text: '1')
+        label('Kinderzimmer ...', constraints: 'a')
+        textField(id: 'wizardRaumTypKinderzimmer', size: [30,15], constraints: 'b', text: '2')
+        textField(id: 'wizardRaumGroesseKinderzimmer', size: [30,15], constraints: 'e', text: '20,00', horizontalAlignment: JTextField.RIGHT)
+        label('m²', constraints: 'f')
+        label('Küche ...', constraints: 'c')
+        textField(id: 'wizardRaumTypKuche', size: [30,15], constraints: 'd', text: '1')
+        textField(id: 'wizardRaumGroesseKuche', size: [30,15], constraints: 'g', text: '20,00', horizontalAlignment: JTextField.RIGHT)
+        label('m²', constraints: 'h')
 
         zl2.insertTemplate('r')
-        label('Schlafzimmer', constraints: 'a')
-        textField(id: 'wizardRaumTypSchlafzimmer', size: [60,15], constraints: 'b', text: '1')
-        label('Kochnische', constraints: 'c')
-        textField(id: 'wizardRaumTypKochnische', size: [60,15], constraints: 'd')
+        label('Schlafzimmer ...', constraints: 'a')
+        textField(id: 'wizardRaumTypSchlafzimmer', size: [30,15], constraints: 'b', text: '1')
+        textField(id: 'wizardRaumGroesseSchlafzimmer', size: [30,15], constraints: 'e', text: '20,00', horizontalAlignment: JTextField.RIGHT)
+        label('m²', constraints: 'f')
+        label('Kochnische ...', constraints: 'c')
+        textField(id: 'wizardRaumTypKochnische', size: [30,15], constraints: 'd')
+        textField(id: 'wizardRaumGroesseKochnische', size: [30,15], constraints: 'g', text: '20,00', horizontalAlignment: JTextField.RIGHT)
+        label('m²', constraints: 'h')
 
         zl2.insertTemplate('r')
-        label('Esszimmer', constraints: 'a')
-        textField(id: 'wizardRaumTypEsszimmer', size: [60,15], constraints: 'b')
-        label('Bad mit/ohne WC', constraints: 'c')
-        textField(id: 'wizardRaumTypBad', size: [60,15], constraints: 'd', text: '1')
+        label('Esszimmer ...', constraints: 'a')
+        textField(id: 'wizardRaumTypEsszimmer', size: [30,15], constraints: 'b')
+        textField(id: 'wizardRaumGroesseEsszimmer', size: [30,15], constraints: 'e', text: '20,00', horizontalAlignment: JTextField.RIGHT)
+        label('m²', constraints: 'f')
+        label('Bad mit/ohne WC ...', constraints: 'c')
+        textField(id: 'wizardRaumTypBad', size: [30,15], constraints: 'd', text: '1')
+        textField(id: 'wizardRaumGroesseBad', size: [30,15], constraints: 'g', text: '20,00', horizontalAlignment: JTextField.RIGHT)
+        label('m²', constraints: 'h')
 
         zl2.insertTemplate('r')
-        label('Arbeitszimmer', constraints: 'a')
-        textField(id: 'wizardRaumTypArbeitszimmer', size: [60,15], constraints: 'b')
-        label('Duschraum', constraints: 'c')
-        textField(id: 'wizardRaumTypDuschraum', size: [60,15], constraints: 'd')
+        label('Arbeitszimmer ...', constraints: 'a')
+        textField(id: 'wizardRaumTypArbeitszimmer', size: [30,15], constraints: 'b')
+        textField(id: 'wizardRaumGroesseArbeitszimmer', size: [30,15], constraints: 'e', text: '20,00', horizontalAlignment: JTextField.RIGHT)
+        label('m²', constraints: 'f')
+        label('Duschraum ...', constraints: 'c')
+        textField(id: 'wizardRaumTypDuschraum', size: [30,15], constraints: 'd')
+        textField(id: 'wizardRaumGroesseDuschraum', size: [30,15], constraints: 'g', text: '20,00', horizontalAlignment: JTextField.RIGHT)
+        label('m²', constraints: 'h')
 
         zl2.insertTemplate('r')
-        label('Gästezimmer', constraints: 'a')
-        textField(id: 'wizardRaumTypGastezimmer', size: [60,15], constraints: 'b')
-        label('Sauna', constraints: 'c')
-        textField(id: 'wizardRaumTypSauna', size: [60,15], constraints: 'd')
+        label('Gästezimmer ...', constraints: 'a')
+        textField(id: 'wizardRaumTypGastezimmer', size: [30,15], constraints: 'b')
+        textField(id: 'wizardRaumGroesseGastezimmer', size: [30,15], constraints: 'e', text: '20,00', horizontalAlignment: JTextField.RIGHT)
+        label('m²', constraints: 'f')
+        label('Sauna ...', constraints: 'c')
+        textField(id: 'wizardRaumTypSauna', size: [30,15], constraints: 'd')
+        textField(id: 'wizardRaumGroesseSauna', size: [30,15], constraints: 'g', text: '20,00', horizontalAlignment: JTextField.RIGHT)
+        label('m²', constraints: 'h')
 
         zl2.insertTemplate('r')
-        label('Hausarbeitsraum', constraints: 'a')
-        textField(id: 'wizardRaumTypHausarbeitsraum', size: [60,15], constraints: 'b', text: '1')
-        label('Flur', constraints: 'c')
-        textField(id: 'wizardRaumTypFlur', size: [60,15], constraints: 'd', text: '1')
+        label('Hausarbeitsraum ...', constraints: 'a')
+        textField(id: 'wizardRaumTypHausarbeitsraum', size: [30,15], constraints: 'b', text: '1')
+        textField(id: 'wizardRaumGroesseHausarbeitsraum', size: [30,15], constraints: 'e', text: '20,00', horizontalAlignment: JTextField.RIGHT)
+        label('m²', constraints: 'f')
+        label('Flur ...', constraints: 'c')
+        textField(id: 'wizardRaumTypFlur', size: [30,15], constraints: 'd', text: '1')
+        textField(id: 'wizardRaumGroesseFlur', size: [30,15], constraints: 'g', text: '20,00', horizontalAlignment: JTextField.RIGHT)
+        label('m²', constraints: 'h')
 
         zl2.insertTemplate('r')
-        label('Kellerraum', constraints: 'a')
-        textField(id: 'wizardRaumTypKellerraum', size: [60,15], constraints: 'b')
-        label('Diele', constraints: 'c')
-        textField(id: 'wizardRaumTypDiele', size: [60,15], constraints: 'd', text: '1')
+        label('Kellerraum ...', constraints: 'a')
+        textField(id: 'wizardRaumTypKellerraum', size: [30,15], constraints: 'b')
+        textField(id: 'wizardRaumGroesseKellerraum', size: [30,15], constraints: 'e', text: '20,00', horizontalAlignment: JTextField.RIGHT)
+        label('m²', constraints: 'f')
+        label('Diele ...', constraints: 'c')
+        textField(id: 'wizardRaumTypDiele', size: [30,15], constraints: 'd', text: '1')
+        textField(id: 'wizardRaumGroesseDiele', size: [30,15], constraints: 'g', text: '20,00', horizontalAlignment: JTextField.RIGHT)
+        label('m²', constraints: 'h')
     }
-
+    // Buttons
     zl.insertTemplate('valueRow4')
     panel(id: 'wizardBottomButtonPanel', constraints: 'f', layout: new MigLayout('ins 0 n 0 n, wrap', '[]para[]', '')) {
         button(id: 'wizardAbbrechen', text: 'Vorgang abbrechen')
         button(id: 'wizardProjektErstellen', text: 'Neues Projekt erstellen')
     }
 
+}
+
+GriffonHelper.yellowTextField(wizardProjektName)
+
+[
+        wizardRaumTypWohnzimmer,
+        wizardRaumTypWC,
+        wizardRaumTypKinderzimmer,
+        wizardRaumTypKuche,
+        wizardRaumTypSchlafzimmer,
+        wizardRaumTypKochnische,
+        wizardRaumTypEsszimmer,
+        wizardRaumTypBad,
+        wizardRaumTypArbeitszimmer,
+        wizardRaumTypDuschraum,
+        wizardRaumTypGastezimmer,
+        wizardRaumTypSauna,
+        wizardRaumTypHausarbeitsraum,
+        wizardRaumTypFlur,
+        wizardRaumTypKellerraum,
+        wizardRaumTypDiele
+
+].each {
+    GriffonHelper.yellowTextField(it)
+}
+
+[
+        wizardRaumGroesseWohnzimmer,
+        wizardRaumGroesseWC,
+        wizardRaumGroesseKinderzimmer,
+        wizardRaumGroesseKuche,
+        wizardRaumGroesseSchlafzimmer,
+        wizardRaumGroesseKochnische,
+        wizardRaumGroesseEsszimmer,
+        wizardRaumGroesseBad,
+        wizardRaumGroesseArbeitszimmer,
+        wizardRaumGroesseDuschraum,
+        wizardRaumGroesseGastezimmer,
+        wizardRaumGroesseSauna,
+        wizardRaumGroesseHausarbeitsraum,
+        wizardRaumGroesseFlur,
+        wizardRaumGroesseKellerraum,
+        wizardRaumGroesseDiele
+].each {
+    GriffonHelper.autoformatDoubleTextField(it)    
 }
 
 // Bindings

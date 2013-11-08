@@ -73,7 +73,7 @@ datenTabGroup.with {
     // WAC-274 Außenluftvolumenströme
     setEnabledAt(4, false)
     // WAC-274 Raumvolumenströme
-    //setEnabledAt(5, false)
+    setEnabledAt(5, false)
     // WAC-274 Druckverlustberechnung
     setEnabledAt(6, false)
     // WAC-274 Akustikberechnung

@@ -19,6 +19,7 @@ import groovyx.net.http.HTTPBuilder
 
 import javax.swing.*
 import java.awt.*
+import java.awt.event.KeyEvent
 import java.util.List
 
 import static eu.artofcoding.ventplan.desktop.DocumentPrefHelper.*
@@ -97,6 +98,31 @@ class ProjektController {
                     // Change tab title (show a star)
                     setTabTitle(view.projektTabGroup.tabCount - 1)
                 }
+            }
+        })
+        // WAC-274
+        KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager()
+        manager.addKeyEventDispatcher(new KeyEventDispatcher() {
+            @Override
+            boolean dispatchKeyEvent(KeyEvent e) {
+                if (e.controlDown && e.altDown && e.shiftDown && e.ID == e.KEY_RELEASED) {
+                    if (e.component instanceof org.jdesktop.swingx.JXRootPane && e.getKeyText(e.keyCode) in ['X']) {
+                        // WAC-274 Gebäudedaten
+                        view.datenTabGroup.setEnabledAt(1, !view.datenTabGroup.isEnabledAt(1))
+                        // WAC-274 Raumdaten
+                        view.datenTabGroup.setEnabledAt(3, !view.datenTabGroup.isEnabledAt(3))
+                        // WAC-274 Außenluftvolumenströme
+                        view.datenTabGroup.setEnabledAt(4, !view.datenTabGroup.isEnabledAt(4))
+                        // WAC-274 Raumvolumenströme
+                        view.datenTabGroup.setEnabledAt(5, !view.datenTabGroup.isEnabledAt(5))
+                        // WAC-274 Druckverlustberechnung
+                        view.datenTabGroup.setEnabledAt(6, !view.datenTabGroup.isEnabledAt(6))
+                        // WAC-274 Akustikberechnung
+                        view.datenTabGroup.setEnabledAt(7, !view.datenTabGroup.isEnabledAt(7))
+                        return true
+                    }
+                }
+                return false
             }
         })
     }
