@@ -11,7 +11,6 @@
  */
 
 package eu.artofcoding.ventplan.desktop
-
 import eu.artofcoding.griffon.helper.AWTHelper
 import eu.artofcoding.griffon.helper.AWTRateCountObserver
 import eu.artofcoding.griffon.helper.GriffonHelper as GH
@@ -20,7 +19,6 @@ import groovy.io.FileType
 import javax.swing.*
 import java.awt.*
 import java.util.List
-
 /**
  * Main controller (menu, toolbar).
  */
@@ -687,37 +685,53 @@ class VentplanController {
         model.wizardmap.anlage.energie.zuAbluftWarme = true
         // Räume validieren
         def wzAnzahl = view.wizardRaumTypWohnzimmer.text == '' ? 0 : view.wizardRaumTypWohnzimmer.text.toInteger()
-        addRaume('Wohnzimmer', wzAnzahl, 'EG')
+        def wzGroesse = view.wizardRaumGroesseWohnzimmer.text == '' ? 0.0d : view.wizardRaumGroesseWohnzimmer.text.toDouble2()
+        if (wzAnzahl && wzGroesse) addRaume('Wohnzimmer', wzAnzahl, wzGroesse, 'EG')
         def kzAnzahl = view.wizardRaumTypKinderzimmer.text == '' ? 0 : view.wizardRaumTypKinderzimmer.text.toInteger()
-        addRaume('Kinderzimmer', kzAnzahl, 'OG')
+        def kzGroesse = view.wizardRaumGroesseKinderzimmer.text == '' ? 0.0d : view.wizardRaumGroesseKinderzimmer.text.toDouble2()
+        if (kzAnzahl && kzGroesse) addRaume('Kinderzimmer', kzAnzahl, kzGroesse, 'OG')
         def azAnzahl = view.wizardRaumTypArbeitszimmer.text == '' ? 0 : view.wizardRaumTypArbeitszimmer.text.toInteger()
-        addRaume('Arbeitszimmer', azAnzahl, 'EG')
+        def azGroesse = view.wizardRaumGroesseArbeitszimmer.text == '' ? 0.0d : view.wizardRaumGroesseArbeitszimmer.text.toDouble2()
+        if (azAnzahl && azGroesse) addRaume('Arbeitszimmer', azAnzahl, azGroesse, 'EG')
         def kAnzahl = view.wizardRaumTypKuche.text == '' ? 0 : view.wizardRaumTypKuche.text.toInteger()
-        addRaume('Küche', kAnzahl, 'EG')
+        def kGroesse = view.wizardRaumGroesseKuche.text == '' ? 0.0d : view.wizardRaumGroesseKuche.text.toDouble2()
+        if (kAnzahl && kGroesse) addRaume('Küche', kAnzahl, kGroesse, 'EG')
         def szAnzahl = view.wizardRaumTypSchlafzimmer.text == '' ? 0 : view.wizardRaumTypSchlafzimmer.text.toInteger()
-        addRaume('Schlafzimmer', szAnzahl, 'OG')
+        def szGroesse = view.wizardRaumGroesseSchlafzimmer.text == '' ? 0.0d : view.wizardRaumGroesseSchlafzimmer.text.toDouble2()
+        if (szAnzahl && szGroesse) addRaume('Schlafzimmer', szAnzahl, szGroesse, 'OG')
         def knAnzahl = view.wizardRaumTypKochnische.text == '' ? 0 : view.wizardRaumTypKochnische.text.toInteger()
-        addRaume('Kochnische', knAnzahl, 'DG')
+        def knGroesse = view.wizardRaumGroesseKochnische.text == '' ? 0.0d : view.wizardRaumGroesseKochnische.text.toDouble2()
+        if (knAnzahl && knGroesse) addRaume('Kochnische', knAnzahl, knGroesse, 'DG')
         def ezAnzahl = view.wizardRaumTypEsszimmer.text == '' ? 0 : view.wizardRaumTypEsszimmer.text.toInteger()
-        addRaume('Esszimmer', ezAnzahl, 'EG')
+        def ezGroesse = view.wizardRaumGroesseEsszimmer.text == '' ? 0.0d : view.wizardRaumGroesseEsszimmer.text.toDouble2()
+        if (ezAnzahl && ezGroesse) addRaume('Esszimmer', ezAnzahl, ezGroesse, 'EG')
         def bAnzahl = view.wizardRaumTypBad.text == '' ? 0 : view.wizardRaumTypBad.text.toInteger()
-        addRaume('Bad mit/ohne WC', bAnzahl, 'OG')
+        def bGroesse = view.wizardRaumGroesseBad.text == '' ? 0.0d : view.wizardRaumGroesseBad.text.toDouble2()
+        if (bAnzahl && bGroesse) addRaume('Bad mit/ohne WC', bAnzahl, bGroesse, 'OG')
         def wcAnzahl = view.wizardRaumTypWC.text == '' ? 0 : view.wizardRaumTypWC.text.toInteger()
-        addRaume('WC', wcAnzahl, 'EG')
+        def wcGroesse = view.wizardRaumGroesseWC.text == '' ? 0.0d : view.wizardRaumGroesseWC.text.toDouble2()
+        if (wcAnzahl && wcGroesse) addRaume('WC', wcAnzahl, wcGroesse, 'EG')
         def drAnzahl = view.wizardRaumTypDuschraum.text == '' ? 0 : view.wizardRaumTypDuschraum.text.toInteger()
-        addRaume('Duschraum', drAnzahl, 'OG')
+        def drGroesse = view.wizardRaumGroesseDuschraum.text == '' ? 0.0d : view.wizardRaumGroesseDuschraum.text.toDouble2()
+        if (drAnzahl && drGroesse) addRaume('Duschraum', drAnzahl, drGroesse, 'OG')
         def gzAnzahl = view.wizardRaumTypGastezimmer.text == '' ? 0 : view.wizardRaumTypGastezimmer.text.toInteger()
-        addRaume('Gästezimmer', gzAnzahl, 'OG')
+        def gzGroesse = view.wizardRaumGroesseGastezimmer.text == '' ? 0.0d : view.wizardRaumGroesseGastezimmer.text.toDouble2()
+        if (gzAnzahl && gzGroesse) addRaume('Gästezimmer', gzAnzahl, gzGroesse, 'OG')
         def sAnzahl = view.wizardRaumTypSauna.text == '' ? 0 : view.wizardRaumTypSauna.text.toInteger()
-        addRaume('Sauna', sAnzahl, 'KG')
+        def sGroesse = view.wizardRaumGroesseSauna.text == '' ? 0.0d : view.wizardRaumGroesseSauna.text.toDouble2()
+        if (sAnzahl && sGroesse) addRaume('Sauna', sAnzahl, sGroesse, 'KG')
         def hrAnzahl = view.wizardRaumTypHausarbeitsraum.text == '' ? 0 : view.wizardRaumTypHausarbeitsraum.text.toInteger()
-        addRaume('Hausarbeitsraum', hrAnzahl, 'EG')
+        def hrGroesse = view.wizardRaumGroesseHausarbeitsraum.text == '' ? 0.0d : view.wizardRaumGroesseHausarbeitsraum.text.toDouble2()
+        if (hrAnzahl && hrGroesse) addRaume('Hausarbeitsraum', hrAnzahl, hrGroesse, 'EG')
         def fAnzahl = view.wizardRaumTypFlur.text == '' ? 0 : view.wizardRaumTypFlur.text.toInteger()
-        addRaume('Flur', fAnzahl, 'EG')
+        def fGroesse = view.wizardRaumGroesseFlur.text == '' ? 0.0d : view.wizardRaumGroesseFlur.text.toDouble2()
+        if (fAnzahl && fGroesse) addRaume('Flur', fAnzahl, fGroesse, 'EG')
         def krAnzahl = view.wizardRaumTypKellerraum.text == '' ? 0 : view.wizardRaumTypKellerraum.text.toInteger()
-        addRaume('Kellerraum', krAnzahl, 'KG')
+        def krGroesse = view.wizardRaumGroesseKellerraum.text == '' ? 0.0d : view.wizardRaumGroesseKellerraum.text.toDouble2()
+        if (krAnzahl && krGroesse) addRaume('Kellerraum', krAnzahl, krGroesse, 'KG')
         def dAnzahl = view.wizardRaumTypDiele.text == '' ? 0 : view.wizardRaumTypDiele.text.toInteger()
-        addRaume('Diele', dAnzahl, 'EG')
+        def dGroesse = view.wizardRaumGroesseDiele.text == '' ? 0.0d : view.wizardRaumGroesseDiele.text.toDouble2()
+        if (dAnzahl && dGroesse) addRaume('Diele', dAnzahl, dGroesse, 'EG')
         // Dialog schließen
         neuesProjektWizardDialog.dispose()
         // Bauvorhaben, Dateiname
@@ -731,7 +745,7 @@ class VentplanController {
         projektOffnenClosure(saveFile, true, true, /* WAC-274 */true)
     }
 
-    def addRaume(raumTyp, anzahl, geschoss) {
+    def addRaume(raumTyp, anzahl, raumGroesse, geschoss) {
         String raumName
         for (int i = 1; i <= anzahl; i++) {
             if (i == 1) {
@@ -755,11 +769,8 @@ class VentplanController {
             raum.with {
                 // Übernehme Wert für Bezeichnung vom Typ?
                 raumBezeichnung = raumName
-                // Länge + Breite
-                raumLange = 5.0d
-                raumBreite = 4.0d
                 // Fläche, Höhe, Volumen
-                raumFlache = raumLange * raumBreite
+                raumFlache = raumGroesse
                 raumHohe = 2.5d
                 raumVolumen = raumFlache * raumHohe
                 // Zuluftfaktor
