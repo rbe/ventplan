@@ -108,6 +108,17 @@ actions {
     )
     */
 
+    // WAC-274
+    action(
+            id: 'toggleExpertModeAction',
+            name: 'Experten-Modus',
+            mnemonic: 'E',
+            accelerator: shortcut('E'),
+            smallIcon: imageIcon(resource: '/menu/project_lock.png'), //bind { controller.isExpertMode() ? imageIcon(resource: '/menu/project_lock.png') : imageIcon(resource: '/menu/project_unlock.png') },
+            enabled: bind { model.aktivesProjekt != null },
+            closure: controller.toggleExpertMode
+    )
+
     action(
             id: 'projektOeffnenAction',
             name: 'Projekt öffnen',

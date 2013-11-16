@@ -107,24 +107,32 @@ class ProjektController {
             boolean dispatchKeyEvent(KeyEvent e) {
                 if (e.controlDown && e.altDown && e.shiftDown && e.ID == e.KEY_RELEASED) {
                     if (e.component instanceof org.jdesktop.swingx.JXRootPane && e.getKeyText(e.keyCode) in ['X']) {
-                        // WAC-274 Gebäudedaten
-                        view.datenTabGroup.setEnabledAt(1, !view.datenTabGroup.isEnabledAt(1))
-                        // WAC-274 Raumdaten
-                        view.datenTabGroup.setEnabledAt(3, !view.datenTabGroup.isEnabledAt(3))
-                        // WAC-274 Außenluftvolumenströme
-                        view.datenTabGroup.setEnabledAt(4, !view.datenTabGroup.isEnabledAt(4))
-                        // WAC-274 Raumvolumenströme
-                        view.datenTabGroup.setEnabledAt(5, !view.datenTabGroup.isEnabledAt(5))
-                        // WAC-274 Druckverlustberechnung
-                        view.datenTabGroup.setEnabledAt(6, !view.datenTabGroup.isEnabledAt(6))
-                        // WAC-274 Akustikberechnung
-                        view.datenTabGroup.setEnabledAt(7, !view.datenTabGroup.isEnabledAt(7))
+                        toggleExpertMode()
                         return true
                     }
                 }
                 return false
             }
         })
+    }
+    
+    def isExpertMode() {
+        view.datenTabGroup.getEnabledAt(1)
+    }
+
+    def toggleExpertMode() {
+        // WAC-274 Gebäudedaten
+        view.datenTabGroup.setEnabledAt(1, !view.datenTabGroup.isEnabledAt(1))
+        // WAC-274 Raumdaten
+        view.datenTabGroup.setEnabledAt(3, !view.datenTabGroup.isEnabledAt(3))
+        // WAC-274 Außenluftvolumenströme
+        view.datenTabGroup.setEnabledAt(4, !view.datenTabGroup.isEnabledAt(4))
+        // WAC-274 Raumvolumenströme
+        view.datenTabGroup.setEnabledAt(5, !view.datenTabGroup.isEnabledAt(5))
+        // WAC-274 Druckverlustberechnung
+        view.datenTabGroup.setEnabledAt(6, !view.datenTabGroup.isEnabledAt(6))
+        // WAC-274 Akustikberechnung
+        view.datenTabGroup.setEnabledAt(7, !view.datenTabGroup.isEnabledAt(7))
     }
 
     /**

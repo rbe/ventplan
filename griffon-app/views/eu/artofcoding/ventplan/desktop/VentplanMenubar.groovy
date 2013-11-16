@@ -32,9 +32,10 @@ menuBar = menuBar {
             menuItem(neuesProjektAction_EFH5ZKBWCDG)
         }
         */
-        // WAC-274 menuItem(neuesProjektAction)
         // WAC-234 Wizard Dialog
         menuItem(neuesProjektWizardAction)
+        // WAC-274
+        menuItem(toggleExpertModeAction)
         //
         separator()
         menuItem(projektOeffnenAction)

@@ -143,7 +143,7 @@ panel(constraints: 'x', border: compoundBorder(outer: emptyBorder(5), inner: emp
     // Buttons
     zl.insertTemplate('valueRow4')
     panel(id: 'wizardBottomButtonPanel', constraints: 'f', layout: new MigLayout('ins 0 n 0 n, wrap', '[]para[]', '')) {
-        button(id: 'wizardAbbrechen', text: 'Vorgang abbrechen')
+        button(id: 'wizardAbbrechen', text: 'Abbrechen')
         button(id: 'wizardProjektErstellen', text: 'Neues Projekt erstellen')
     }
 

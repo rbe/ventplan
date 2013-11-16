@@ -732,17 +732,26 @@ class VentplanController {
         def dAnzahl = view.wizardRaumTypDiele.text == '' ? 0 : view.wizardRaumTypDiele.text.toInteger()
         def dGroesse = view.wizardRaumGroesseDiele.text == '' ? 0.0d : view.wizardRaumGroesseDiele.text.toDouble2()
         if (dAnzahl && dGroesse) addRaume('Diele', dAnzahl, dGroesse, 'EG')
-        // Dialog schließen
-        neuesProjektWizardDialog.dispose()
-        // Bauvorhaben, Dateiname
-        String wizardProjektName = view.wizardProjektName.text ?: "VentplanExpress_${new Date().format('yyyy-MM-dd-HH-mm-ss')}"
-        model.wizardmap.kundendaten.bauvorhaben = wizardProjektName
-        // Temporäre Datei erzeugen
-        File saveFile = makeExpressProject(wizardProjektName + '.vpx')
-        // Model speichern und ...
-        saveFile = vpxModelService.save(model.wizardmap, saveFile)
-        // ... anschließend wieder laden
-        projektOffnenClosure(saveFile, true, true, /* WAC-274 */true)
+        // Eingegebene Werte prüfen
+        def x = model.wizardmap.raum.raume.any {
+            it.raumFlache > 0.0d
+        }
+        if (!x) {
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            dialog.showInformation('Wizard', 'Bitte geben Sie eine Fläche pro Raum an!')
+        } else {
+            // Dialog schließen
+            neuesProjektWizardDialog.dispose()
+            // Bauvorhaben, Dateiname
+            String wizardProjektName = view.wizardProjektName.text ?: "VentplanExpress_${new Date().format('yyyy-MM-dd-HH-mm-ss')}"
+            model.wizardmap.kundendaten.bauvorhaben = wizardProjektName
+            // Temporäre Datei erzeugen
+            File saveFile = makeExpressProject(wizardProjektName + '.vpx')
+            // Model speichern und ...
+            saveFile = vpxModelService.save(model.wizardmap, saveFile)
+            // ... anschließend wieder laden
+            projektOffnenClosure(saveFile, true, true, /* WAC-274 */true)
+        }
     }
 
     def addRaume(raumTyp, anzahl, raumGroesse, geschoss) {
@@ -863,6 +872,16 @@ class VentplanController {
                 raum.raumLuftart = 'ÜB'
         }
         return raum
+    }
+
+    def toggleExpertMode = {
+        def mvc = getMVCGroupAktivesProjekt()
+        mvc.controller?.toggleExpertMode()
+    }
+    
+    def isExpertMode = {
+        def mvc = getMVCGroupAktivesProjekt()
+        mvc.controller?.isExpertMode()
     }
 
     //</editor-fold>
