@@ -17,10 +17,15 @@ import javax.swing.SwingConstants
 def vertSep = {-> separator(orientation: SwingConstants.VERTICAL) }
 
 toolBar(id: 'toolbar', rollover: true) {
+    /*
     // WAC-272
     button(ventidModusAction, text: null, toolTipText: 'Modus')
     vertSep()
-    button(neuesProjektAction, text: null, toolTipText: 'Ein neues Projekt starten')
+    */
+    // WAC-274: Neues Projekt -> WAC-234 Wizard Dialog
+    button(neuesProjektWizardAction, text: null, toolTipText: 'Express-Modus')
+    button(toggleExpertModeAction, text: null, toolTipText: 'Experten-Modus')
+    vertSep()
     button(projektOeffnenAction, text: null, toolTipText: 'Ein Projekt öffnen')
     // WAC-192 Suchfunktion für WPX-Dateien
     button(nachProjektSuchenAction, text: null, toolTipText: 'Nach Projekten suchen')

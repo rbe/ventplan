@@ -66,4 +66,16 @@ datenTabGroup.with {
     //setTabColorProvider(com.jidesoft.swing.JideTabbedPane.ONENOTE_COLOR_PROVIDER)
     setBoldActiveTab(true)
     setShowCloseButton(false)
+    // WAC-274 Gebäudedaten
+    setEnabledAt(1, false)
+    // WAC-274 Raumdaten
+    setEnabledAt(3, false)
+    // WAC-274 Außenluftvolumenströme
+    setEnabledAt(4, false)
+    // WAC-274 Raumvolumenströme
+    setEnabledAt(5, false)
+    // WAC-274 Druckverlustberechnung
+    setEnabledAt(6, false)
+    // WAC-274 Akustikberechnung
+    setEnabledAt(7, false)
 }

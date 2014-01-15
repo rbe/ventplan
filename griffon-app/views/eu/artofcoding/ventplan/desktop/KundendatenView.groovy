@@ -83,8 +83,13 @@ panel(id: "kundendatenHauptPanel", layout: new MigLayout("ins 0 n 0 n, wrap 2","
         // Notizen
         label("Notizen")
         jideScrollPane(constraints: "grow") {
-            textArea(id: "notizen", rows: 10, constraints: "grow")
+            textArea(id: "notizen", rows: 5, constraints: "grow")
         }
+    }
+    // Angebot erstellen
+    panel(border: titledBorder(title: 'Express')) {
+        button(id: 'angebotErstellen', text: 'Angebot erstellen')
+        button(id: 'stucklisteErstellen', text: 'Stückliste erstellen')
     }
 }
 
@@ -138,3 +143,6 @@ bind(source: model.map.kundendaten,                  sourceProperty: "bauvorhabe
 bind(source: model.map.kundendaten,                  sourceProperty: "notizen",              target: notizen,                         targetProperty: "text", mutual: true)
 // Kundendaten - Bauvorhaben: Update tab title
 bauvorhaben.addCaretListener({ evt -> controller.setTabTitle() } as javax.swing.event.CaretListener)
+// Angebot erstellen
+angebotErstellen.actionPerformed = { evt -> controller.angebotErstellen(false, false) }
+stucklisteErstellen.actionPerformed = { evt -> controller.stuecklisteErstellen(false, false) }

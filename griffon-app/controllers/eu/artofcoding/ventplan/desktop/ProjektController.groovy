@@ -19,6 +19,7 @@ import groovyx.net.http.HTTPBuilder
 
 import javax.swing.*
 import java.awt.*
+import java.awt.event.KeyEvent
 import java.util.List
 
 import static eu.artofcoding.ventplan.desktop.DocumentPrefHelper.*
@@ -95,11 +96,43 @@ class ProjektController {
                         app.models['MainFrame'].alleProjekteGeandert =
                             true
                     // Change tab title (show a star)
-                    ////println "popertyChangeListener: calling setTabTitle: ${evt.propertyName}"
                     setTabTitle(view.projektTabGroup.tabCount - 1)
                 }
             }
         })
+        // WAC-274
+        KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager()
+        manager.addKeyEventDispatcher(new KeyEventDispatcher() {
+            @Override
+            boolean dispatchKeyEvent(KeyEvent e) {
+                if (e.controlDown && e.altDown && e.shiftDown && e.ID == e.KEY_RELEASED) {
+                    if (e.component instanceof org.jdesktop.swingx.JXRootPane && e.getKeyText(e.keyCode) in ['X']) {
+                        toggleExpertMode()
+                        return true
+                    }
+                }
+                return false
+            }
+        })
+    }
+    
+    def isExpertMode() {
+        view.datenTabGroup.getEnabledAt(1)
+    }
+
+    def toggleExpertMode() {
+        // WAC-274 Gebäudedaten
+        view.datenTabGroup.setEnabledAt(1, !view.datenTabGroup.isEnabledAt(1))
+        // WAC-274 Raumdaten
+        view.datenTabGroup.setEnabledAt(3, !view.datenTabGroup.isEnabledAt(3))
+        // WAC-274 Außenluftvolumenströme
+        view.datenTabGroup.setEnabledAt(4, !view.datenTabGroup.isEnabledAt(4))
+        // WAC-274 Raumvolumenströme
+        view.datenTabGroup.setEnabledAt(5, !view.datenTabGroup.isEnabledAt(5))
+        // WAC-274 Druckverlustberechnung
+        view.datenTabGroup.setEnabledAt(6, !view.datenTabGroup.isEnabledAt(6))
+        // WAC-274 Akustikberechnung
+        view.datenTabGroup.setEnabledAt(7, !view.datenTabGroup.isEnabledAt(7))
     }
 
     /**
@@ -176,6 +209,9 @@ class ProjektController {
         } else {
             title << model.mvcId
         }
+        if (bauvorhaben && model.vpxFilename && bauvorhaben != model.vpxFilename - '.vpx') {
+            model.vpxFilename = bauvorhaben + '.vpx'
+        }
         title
     }
 
@@ -227,7 +263,7 @@ class ProjektController {
     /**
      * Alles neu berechnen.
      */
-    def berechneAlles = { loadMode = false ->
+    def berechneAlles = { loadMode = false, expressMode = false ->
         this.loadMode = loadMode
         // WAC-257
         ventplanModelService.projectWAC257 = loadMode
@@ -254,14 +290,17 @@ class ProjektController {
             // ignore
         }
         //
-        model.map.raum.raume.each { raum ->
-            try {
-                raumGeandert(raum.position)
-            } catch (e) {
-                // ignore
+        if (!expressMode) {
+            model.map.raum.raume.each { raum ->
+                try {
+                    raumGeandert(raum.position)
+                } catch (e) {
+                    // ignore
+                }
             }
+            model.resyncRaumTableModels()
         }
-        model.resyncRaumTableModels()
+/* WAC-274
         // Druckverlustberechnung, Kanalnetze berechnen
         model.map.dvb.kanalnetz.each {
             dvbKanalnetzGeandert(it.position)
@@ -278,6 +317,7 @@ class ProjektController {
         // Akustik
         berechneAkustik('Zuluft')
         berechneAkustik('Abluft')
+*/
         // 
         this.loadMode = false
         // Fix table header height
@@ -309,6 +349,10 @@ class ProjektController {
     boolean save() {
         try {
             if (model.vpxFilename) {
+                File vpxFile = new File(model.vpxFilename)
+                if (!vpxFile.getParentFile()?.isDirectory()) {
+                    model.vpxFilename = FilenameHelper.getVentplanDir().absolutePath + '/' + model.vpxFilename
+                }
                 // Save data
                 vpxModelService.save(model.map, model.vpxFilename, model.stucklisteMap)
                 // Set dirty-flag in project's model to false
@@ -1222,8 +1266,10 @@ class ProjektController {
             GH.withDisabledActionListeners view.raumVsZentralgerat, {
                 // Raumvolumenströme
                 model.map.anlage.zentralgerat = view.raumVsZentralgerat.selectedItem = model.map.anlage.zentralgerat
+                /* WAC-274
                 // Akustik Zu-/Abluft
                 view.akustikZuluftZuluftstutzenZentralgerat.selectedItem = view.akustikAbluftAbluftstutzenZentralgerat.selectedItem = model.map.anlage.zentralgerat
+                */
             }
             // Aktualisiere Volumenstrom
             GH.withDisabledActionListeners view.raumVsVolumenstrom, {
@@ -1238,15 +1284,19 @@ class ProjektController {
                     (minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
                     // Füge Volumenströme in Comboboxen hinzu
                     view.raumVsVolumenstrom.removeAllItems()
+/* WAC-274
                     // Akustik
                     view.akustikZuluftPegel.removeAllItems()
                     view.akustikAbluftPegel.removeAllItems()
+*/
                     model.meta.volumenstromZentralgerat.each {
                         // Raumvolumenströme
                         view.raumVsVolumenstrom.addItem(it)
+/* WAC-274
                         // Akustikberechnung
                         view.akustikZuluftPegel.addItem(it)
                         view.akustikAbluftPegel.addItem(it)
+*/
                     }
                     // Selektiere errechneten Volumenstrom
                     def roundedVs = calculationService.round5(model.map.anlage.volumenstromZentralgerat)
@@ -1255,11 +1305,12 @@ class ProjektController {
                     if (!foundVs) {
                         foundVs = model.meta.volumenstromZentralgerat[0]
                     }
-                    //println "view.akustikAbluftPegel.selectedItem -> ${view.akustikAbluftPegel.selectedItem}"
                     model.map.anlage.volumenstromZentralgerat = foundVs
                     view.raumVsVolumenstrom.selectedItem = foundVs
+/* WAC-274
                     view.akustikZuluftPegel.selectedItem = foundVs
                     view.akustikAbluftPegel.selectedItem = foundVs
+*/
                 } catch (NoSuchElementException e) {
                     // ignore
                 }
@@ -1677,6 +1728,8 @@ class ProjektController {
      * Akustikberechnung.
      */
     void berechneAkustik(tabname) {
+        // WAC-274
+        return
         def m = model.map.akustik."${tabname.toLowerCase()}"
         // Konvertiere Wert TextField, ComboBox in Integer, default ist 0
         // Eingabe einer 0 im TextField gibt ''???
@@ -1890,12 +1943,12 @@ class ProjektController {
     /**
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      */
-    def angebotErstellen() {
-        processStucklisteDialog('Angebot')
-        if (!stucklisteAbgebrochen) {
+    def angebotErstellen(showStucklistedialog = true, showNutzerdatendialog = true) {
+        if (showStucklistedialog) processStucklisteDialog('Angebot')
+        if (!showNutzerdatendialog || !stucklisteAbgebrochen) {
             // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
-            showNutzerdatenDialog(AngebotNutzerdatenView, 'Angebot erstellen', 'Angebot erstellen')
-            if (nutzerdatenGeandert) {
+            if (showNutzerdatendialog) showNutzerdatenDialog(AngebotNutzerdatenView, 'Angebot erstellen', 'Angebot erstellen')
+            if (!showNutzerdatendialog || nutzerdatenGeandert) {
                 // Projekt speichern
                 saveBeforeDocument()
                 // Dokument erstellen
@@ -1939,12 +1992,12 @@ class ProjektController {
     /**
      * WAC-108 Auslegung und Angebot mit Stückliste erstellen.
      */
-    def stuecklisteErstellen() {
-        processStucklisteDialog('Stückliste')
-        if (!stucklisteAbgebrochen) {
+    def stuecklisteErstellen(showStucklistedialog = true, showNutzerdatendialog = true) {
+        if (showStucklistedialog) processStucklisteDialog('Stückliste')
+        if (!showNutzerdatendialog || !stucklisteAbgebrochen) {
             // Dialog immer anzeigen, damit die Nutzer die Daten ändern können.
-            showNutzerdatenDialog(StucklisteNutzerdatenView, 'Stückliste erstellen - Daten eingeben', 'Stückliste erstellen')
-            if (nutzerdatenGeandert) {
+            if (showNutzerdatendialog) showNutzerdatenDialog(StucklisteNutzerdatenView, 'Stückliste erstellen - Daten eingeben', 'Stückliste erstellen')
+            if (!showNutzerdatendialog || nutzerdatenGeandert) {
                 // Projekt speichern
                 saveBeforeDocument()
                 // Dokument erstellen
@@ -2070,7 +2123,8 @@ class ProjektController {
                 body: xmlDoc,
                 requestContentType: ContentType.XML
         )
-        File responseFile = new File(vpxFile.getParentFile(), FilenameHelper.cleanFilename("${model.vpxFilename - '.vpx'}_${fileSuffix}.${outputFormat}"))
+        File vpxDir = vpxFile.getParentFile() ?: FilenameHelper.getVentplanDir()
+        File responseFile = new File(vpxDir, FilenameHelper.cleanFilename("${model.vpxFilename - '.vpx'}_${fileSuffix}.${outputFormat}"))
         responseFile << byteArrayInputStream
         return responseFile
     }
@@ -2508,7 +2562,7 @@ class ProjektController {
     int ____________________i;
 
     /**
-     * WAC-258
+     * WAC-258, WAC-274
      */
     def standardAuslasseSetzen = { evt = null ->
         doLater {
@@ -2516,18 +2570,19 @@ class ProjektController {
             model.map.raum.raume.each { raum ->
                 // Standard Luftauslässe
                 if (raum.raumLuftart == 'ZU') {
-                    raum.raumBezeichnungZuluftventile = '100ULC'
+                    raum.raumBezeichnungZuluftventile = '125ULC'
                 } else if (raum.raumLuftart == 'AB') {
+                    raum.raumBezeichnungAbluftventile = '125URH'
                     // Küche, Bad, Dusche und Sauna
-                    def n = ['Küche', 'Bad', 'Dusche', 'Sauna']
-                    n.each {
-                        if (raum.raumBezeichnung ==~ /${it}.*/ || raum.raumTyp ==~ /${it}.*/) {
-                            raum.raumBezeichnungAbluftventile = '125URH'
-                        }
-                    }
+//                    def n = ['Küche', 'Bad', 'Dusche', 'Sauna']
+//                    n.each {
+//                        if (raum.raumBezeichnung ==~ /${it}. || raum.raumTyp ==~ /${it}.) {
+//                            raum.raumBezeichnungAbluftventile = '125URH'
+//                        }
+//                    }
                     // Ansonsten
                     if (!raum.raumBezeichnungAbluftventile) {
-                        raum.raumBezeichnungAbluftventile = '100URH'
+                        raum.raumBezeichnungAbluftventile = '125URH'
                     }
                 }
                 // Verteilebene

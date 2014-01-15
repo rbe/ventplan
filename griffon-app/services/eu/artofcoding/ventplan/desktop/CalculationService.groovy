@@ -647,7 +647,7 @@ class CalculationService {
             // WAC-129: Gebäudedaten - Geplante Belegung -> map.raumUberstromVolumenstrom ist null!
             // try-catch um map.raumUberstromVolumenstrom und als default Wert 0.00 als Double setzen.
             try {
-                def usRechenwert = map.raumUberstromVolumenstrom - vsMaxTurspalt
+                def usRechenwert = Math.abs(map.raumUberstromVolumenstrom - vsMaxTurspalt)
                 // 6
                 map.raumAnzahlUberstromVentile = Math.ceil(usRechenwert / maxVolumenstrom)
             } catch (e) {

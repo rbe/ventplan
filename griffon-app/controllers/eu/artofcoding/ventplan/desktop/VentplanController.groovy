@@ -11,7 +11,6 @@
  */
 
 package eu.artofcoding.ventplan.desktop
-
 import eu.artofcoding.griffon.helper.AWTHelper
 import eu.artofcoding.griffon.helper.AWTRateCountObserver
 import eu.artofcoding.griffon.helper.GriffonHelper as GH
@@ -20,7 +19,6 @@ import groovy.io.FileType
 import javax.swing.*
 import java.awt.*
 import java.util.List
-
 /**
  * Main controller (menu, toolbar).
  */
@@ -390,7 +388,7 @@ class VentplanController {
      * Die zu ladende Datei wird in den MRUFileManager als zuletzt geöffnetes Projekt gespeichert.
      * Alle Werte werden neu berechnet.
      */
-    def projektOffnenClosure = { file, resetFilename = false, loadMode = true ->
+    def projektOffnenClosure = { file, resetFilename = false, loadMode = true, /* WAC-274 */expressMode = false ->
         // Show wait dialog
         Object waitDialog = null
         waitDialog = GH.createDialog(
@@ -450,9 +448,17 @@ class VentplanController {
                     view.projectOpenDetailLabel.text = 'Phase 3/3: Berechne das Projekt ...'
                     def mvc = getMVCGroupAktivesProjekt()
                     try {
-                        mvc.controller.berechneAlles(loadMode)
+                        mvc.controller.berechneAlles(loadMode, expressMode)
+                        /* WAC-274 Feste Anzahl von Ventilen
+                        if (expressMode) {
+                            mvc.model.map.raum.raume.eachWithIndex { p, i ->
+                                mvc.controller.raumGeandert(i)
+                            }
+                        }
+                        */
                     } catch (e) {
                         // ignore
+                        e.printStackTrace()
                     }
                 } else {
                     DialogController dialog = (DialogController) app.controllers['Dialog']
@@ -465,7 +471,6 @@ class VentplanController {
                     @Override
                     void rateEvent(int rate) {
                         AWTHelper.unregister(this)
-                        //model.statusProgressBarIndeterminate = false
                         model.statusBarText = 'Bereit.'
                         waitDialog?.dispose()
                         if (resetFilename) {
@@ -528,7 +533,7 @@ class VentplanController {
         if (map.kundendaten.bauvorhaben) {
             filename = map.kundendaten.bauvorhaben - '/'
         } else {
-            filename = "VentplanExpress_${date.format('dd-MM-yyyy HH-mm-ss')}"
+            filename = "VentplanExpress_${date.format('yyyy-MM-dd-HH-mm-ss')}"
         }
         File f = FilenameHelper.clean(filename)
         view.vpxFileChooserWindow.selectedFile = f
@@ -582,12 +587,10 @@ class VentplanController {
     /**
      * WAC-230, WAC-234
      */
-    static File makeTemporaryProject(String wizardProjektName = '') {
+    static File makeExpressProject(String wizardProjektName) {
         Date date = new Date()
-        String filename = wizardProjektName == '' ? "VentplanExpress_${date.format('dd-MM-yyyy HH-mm-ss')}.vpx" : "${wizardProjektName}.vpx"
-        String projektName = FilenameHelper.cleanFilename(filename)
+        String projektName = FilenameHelper.cleanFilename(wizardProjektName)
         File file = new File(FilenameHelper.getVentplanDir(), projektName)
-        file.deleteOnExit()
         file
     }
 
@@ -596,7 +599,8 @@ class VentplanController {
      */
     void openVpxResource(String name) {
         // Temporäre Datei erzeugen
-        File saveFile = makeTemporaryProject()
+        String filename = "VentplanExpress_${new Date().format('dd-MM-yyyy-HH-mm-ss')}.vpx"
+        File saveFile = makeExpressProject(filename)
         // Write stream from classpath into temporary file
         InputStream stream = this.getClass().getResourceAsStream("/vpx/${name}.vpx")
         if (null != stream) {
@@ -654,83 +658,103 @@ class VentplanController {
 
     /**
      * WAC-234 Wizard Dialog
+     * WAC-274
      * Neues Projekt erstellen
      */
     def wizardProjektErstellen = { evt = null ->
         model.wizardmap = model.makeWizardMap()
         //
-        def typ = [
-                mfh: view.wizardGebaudeTypMFH.selected,
-                efh: view.wizardGebaudeTypEFH.selected,
-                maisonette: view.wizardGebaudeTypMaisonette.selected
-        ]
-        model.wizardmap.gebaude.typ << typ
+        model.wizardmap.gebaude.typ.mfh = view.wizardGebaudeTypMFH.selected
+        model.wizardmap.gebaude.typ.efh = view.wizardGebaudeTypEFH.selected
+        model.wizardmap.gebaude.typ.maisonette = view.wizardGebaudeTypMaisonette.selected
+        model.wizardmap.gebaude.warmeschutz.hoch = true
+        model.wizardmap.gebaude.warmeschutz.niedrig = false
         //
-        def lage = [
-                windschwach: view.wizardGebaudeLageWindschwach.selected,
-                windstark: view.wizardGebaudeLageWindstark.selected
-        ]
-        model.wizardmap.gebaude.lage << lage
-        //
-        def warmeschutz = [
-                hoch: view.wizardGebaudeWarmeschutzHoch.selected,
-                niedrig: view.wizardGebaudeWarmeschutzNiedrig.selected
-        ]
-        model.wizardmap.gebaude.warmeschutz << warmeschutz
-        //
-        def personenanzahlValue = Integer.valueOf(view.wizardHausPersonenanzahl.text)
-        def aussenluftVsProPersonValue = Double.valueOf(view.wizardHausAussenluftVsProPerson.text)
+        def personenanzahlValue = Integer.valueOf(view.wizardHausPersonenanzahl.text ?: "4")
+        def aussenluftVsProPersonValue = 30.0d // WAC-274 Double.valueOf(view.wizardHausAussenluftVsProPerson.text)
         def minAussenluftRate = personenanzahlValue * aussenluftVsProPersonValue
-        def geplanteBelegung = [
-                personenanzahl: personenanzahlValue,
-                aussenluftVsProPerson: aussenluftVsProPersonValue,
-                mindestaussenluftrate: minAussenluftRate
-        ]
-        model.wizardmap.gebaude.geplanteBelegung << geplanteBelegung
+        model.wizardmap.gebaude.geplanteBelegung.personenanzahl = personenanzahlValue
+        model.wizardmap.gebaude.geplanteBelegung.aussenluftVsProPerson = aussenluftVsProPersonValue
+        model.wizardmap.gebaude.geplanteBelegung.mindestaussenluftrate = minAussenluftRate
+        // WAC-274 Anlagendaten
+        model.wizardmap.anlage.standort.EG = true
+        model.wizardmap.anlage.zuluft.tellerventile = true
+        model.wizardmap.anlage.abluft.tellerventile = true
+        model.wizardmap.anlage.aussenluft.wand = true
+        model.wizardmap.anlage.fortluft.wand = true
+        model.wizardmap.anlage.energie.zuAbluftWarme = true
         // Räume validieren
         def wzAnzahl = view.wizardRaumTypWohnzimmer.text == '' ? 0 : view.wizardRaumTypWohnzimmer.text.toInteger()
-        addRaume('Wohnzimmer', wzAnzahl)
-        def wcAnzahl = view.wizardRaumTypWC.text == '' ? 0 : view.wizardRaumTypWC.text.toInteger()
-        addRaume('WC', wcAnzahl)
+        def wzGroesse = view.wizardRaumGroesseWohnzimmer.text == '' ? 0.0d : view.wizardRaumGroesseWohnzimmer.text.toDouble2()
+        if (wzAnzahl && wzGroesse) addRaume('Wohnzimmer', wzAnzahl, wzGroesse, 'EG')
         def kzAnzahl = view.wizardRaumTypKinderzimmer.text == '' ? 0 : view.wizardRaumTypKinderzimmer.text.toInteger()
-        addRaume('Kinderzimmer', kzAnzahl)
-        def kAnzahl = view.wizardRaumTypKuche.text == '' ? 0 : view.wizardRaumTypKuche.text.toInteger()
-        addRaume('Küche', kAnzahl)
-        def szAnzahl = view.wizardRaumTypSchlafzimmer.text == '' ? 0 : view.wizardRaumTypSchlafzimmer.text.toInteger()
-        addRaume('Schlafzimmer', szAnzahl)
-        def knAnzahl = view.wizardRaumTypKochnische.text == '' ? 0 : view.wizardRaumTypKochnische.text.toInteger()
-        addRaume('Kochnische', knAnzahl)
-        def ezAnzahl = view.wizardRaumTypEsszimmer.text == '' ? 0 : view.wizardRaumTypEsszimmer.text.toInteger()
-        addRaume('Esszimmer', ezAnzahl)
-        def bAnzahl = view.wizardRaumTypBad.text == '' ? 0 : view.wizardRaumTypBad.text.toInteger()
-        addRaume('Bad mit/ohne WC', bAnzahl)
+        def kzGroesse = view.wizardRaumGroesseKinderzimmer.text == '' ? 0.0d : view.wizardRaumGroesseKinderzimmer.text.toDouble2()
+        if (kzAnzahl && kzGroesse) addRaume('Kinderzimmer', kzAnzahl, kzGroesse, 'OG')
         def azAnzahl = view.wizardRaumTypArbeitszimmer.text == '' ? 0 : view.wizardRaumTypArbeitszimmer.text.toInteger()
-        addRaume('Arbeitszimmer', azAnzahl)
+        def azGroesse = view.wizardRaumGroesseArbeitszimmer.text == '' ? 0.0d : view.wizardRaumGroesseArbeitszimmer.text.toDouble2()
+        if (azAnzahl && azGroesse) addRaume('Arbeitszimmer', azAnzahl, azGroesse, 'EG')
+        def kAnzahl = view.wizardRaumTypKuche.text == '' ? 0 : view.wizardRaumTypKuche.text.toInteger()
+        def kGroesse = view.wizardRaumGroesseKuche.text == '' ? 0.0d : view.wizardRaumGroesseKuche.text.toDouble2()
+        if (kAnzahl && kGroesse) addRaume('Küche', kAnzahl, kGroesse, 'EG')
+        def szAnzahl = view.wizardRaumTypSchlafzimmer.text == '' ? 0 : view.wizardRaumTypSchlafzimmer.text.toInteger()
+        def szGroesse = view.wizardRaumGroesseSchlafzimmer.text == '' ? 0.0d : view.wizardRaumGroesseSchlafzimmer.text.toDouble2()
+        if (szAnzahl && szGroesse) addRaume('Schlafzimmer', szAnzahl, szGroesse, 'OG')
+        def knAnzahl = view.wizardRaumTypKochnische.text == '' ? 0 : view.wizardRaumTypKochnische.text.toInteger()
+        def knGroesse = view.wizardRaumGroesseKochnische.text == '' ? 0.0d : view.wizardRaumGroesseKochnische.text.toDouble2()
+        if (knAnzahl && knGroesse) addRaume('Kochnische', knAnzahl, knGroesse, 'DG')
+        def ezAnzahl = view.wizardRaumTypEsszimmer.text == '' ? 0 : view.wizardRaumTypEsszimmer.text.toInteger()
+        def ezGroesse = view.wizardRaumGroesseEsszimmer.text == '' ? 0.0d : view.wizardRaumGroesseEsszimmer.text.toDouble2()
+        if (ezAnzahl && ezGroesse) addRaume('Esszimmer', ezAnzahl, ezGroesse, 'EG')
+        def bAnzahl = view.wizardRaumTypBad.text == '' ? 0 : view.wizardRaumTypBad.text.toInteger()
+        def bGroesse = view.wizardRaumGroesseBad.text == '' ? 0.0d : view.wizardRaumGroesseBad.text.toDouble2()
+        if (bAnzahl && bGroesse) addRaume('Bad mit/ohne WC', bAnzahl, bGroesse, 'OG')
+        def wcAnzahl = view.wizardRaumTypWC.text == '' ? 0 : view.wizardRaumTypWC.text.toInteger()
+        def wcGroesse = view.wizardRaumGroesseWC.text == '' ? 0.0d : view.wizardRaumGroesseWC.text.toDouble2()
+        if (wcAnzahl && wcGroesse) addRaume('WC', wcAnzahl, wcGroesse, 'EG')
         def drAnzahl = view.wizardRaumTypDuschraum.text == '' ? 0 : view.wizardRaumTypDuschraum.text.toInteger()
-        addRaume('Duschraum', drAnzahl)
+        def drGroesse = view.wizardRaumGroesseDuschraum.text == '' ? 0.0d : view.wizardRaumGroesseDuschraum.text.toDouble2()
+        if (drAnzahl && drGroesse) addRaume('Duschraum', drAnzahl, drGroesse, 'OG')
         def gzAnzahl = view.wizardRaumTypGastezimmer.text == '' ? 0 : view.wizardRaumTypGastezimmer.text.toInteger()
-        addRaume('Gästezimmer', gzAnzahl)
+        def gzGroesse = view.wizardRaumGroesseGastezimmer.text == '' ? 0.0d : view.wizardRaumGroesseGastezimmer.text.toDouble2()
+        if (gzAnzahl && gzGroesse) addRaume('Gästezimmer', gzAnzahl, gzGroesse, 'OG')
         def sAnzahl = view.wizardRaumTypSauna.text == '' ? 0 : view.wizardRaumTypSauna.text.toInteger()
-        addRaume('Sauna', sAnzahl)
+        def sGroesse = view.wizardRaumGroesseSauna.text == '' ? 0.0d : view.wizardRaumGroesseSauna.text.toDouble2()
+        if (sAnzahl && sGroesse) addRaume('Sauna', sAnzahl, sGroesse, 'KG')
         def hrAnzahl = view.wizardRaumTypHausarbeitsraum.text == '' ? 0 : view.wizardRaumTypHausarbeitsraum.text.toInteger()
-        addRaume('Hausarbeitsraum', hrAnzahl)
+        def hrGroesse = view.wizardRaumGroesseHausarbeitsraum.text == '' ? 0.0d : view.wizardRaumGroesseHausarbeitsraum.text.toDouble2()
+        if (hrAnzahl && hrGroesse) addRaume('Hausarbeitsraum', hrAnzahl, hrGroesse, 'EG')
         def fAnzahl = view.wizardRaumTypFlur.text == '' ? 0 : view.wizardRaumTypFlur.text.toInteger()
-        addRaume('Flur', fAnzahl)
+        def fGroesse = view.wizardRaumGroesseFlur.text == '' ? 0.0d : view.wizardRaumGroesseFlur.text.toDouble2()
+        if (fAnzahl && fGroesse) addRaume('Flur', fAnzahl, fGroesse, 'EG')
         def krAnzahl = view.wizardRaumTypKellerraum.text == '' ? 0 : view.wizardRaumTypKellerraum.text.toInteger()
-        addRaume('Kellerraum', krAnzahl)
+        def krGroesse = view.wizardRaumGroesseKellerraum.text == '' ? 0.0d : view.wizardRaumGroesseKellerraum.text.toDouble2()
+        if (krAnzahl && krGroesse) addRaume('Kellerraum', krAnzahl, krGroesse, 'KG')
         def dAnzahl = view.wizardRaumTypDiele.text == '' ? 0 : view.wizardRaumTypDiele.text.toInteger()
-        addRaume('Diele', dAnzahl)
-        // Dialog schließen
-        neuesProjektWizardDialog.dispose()
-        // Temporäre Datei erzeugen
-        File saveFile = makeTemporaryProject(view.wizardProjektName.text)
-        // Model speichern und ...
-        saveFile = vpxModelService.save(model.wizardmap, saveFile)
-        // ... anschließend wieder laden
-        projektOffnenClosure(saveFile, true)
+        def dGroesse = view.wizardRaumGroesseDiele.text == '' ? 0.0d : view.wizardRaumGroesseDiele.text.toDouble2()
+        if (dAnzahl && dGroesse) addRaume('Diele', dAnzahl, dGroesse, 'EG')
+        // Eingegebene Werte prüfen
+        def x = model.wizardmap.raum.raume.any {
+            it.raumFlache > 0.0d
+        }
+        if (!x) {
+            DialogController dialog = (DialogController) app.controllers['Dialog']
+            dialog.showInformation('Wizard', 'Bitte geben Sie eine Fläche pro Raum an!')
+        } else {
+            // Dialog schließen
+            neuesProjektWizardDialog.dispose()
+            // Bauvorhaben, Dateiname
+            String wizardProjektName = view.wizardProjektName.text ?: "VentplanExpress_${new Date().format('yyyy-MM-dd-HH-mm-ss')}"
+            model.wizardmap.kundendaten.bauvorhaben = wizardProjektName
+            // Temporäre Datei erzeugen
+            File saveFile = makeExpressProject(wizardProjektName + '.vpx')
+            // Model speichern und ...
+            saveFile = vpxModelService.save(model.wizardmap, saveFile)
+            // ... anschließend wieder laden
+            projektOffnenClosure(saveFile, true, true, /* WAC-274 */true)
+        }
     }
 
-    def addRaume(raumTyp, anzahl) {
+    def addRaume(raumTyp, anzahl, raumGroesse, geschoss) {
         String raumName
         for (int i = 1; i <= anzahl; i++) {
             if (i == 1) {
@@ -740,7 +764,8 @@ class VentplanController {
             }
             def raum = model.raumMapTemplate.clone() as ObservableMap
             def pos = model.wizardmap.raum?.raume?.size()
-            //String raumSize = (model.wizardmap.raum?.raume?.size() + 1).toString()
+            // Geschoss
+            raum.raumGeschoss = geschoss
             // Türen
             raum.turen = [
                     [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
@@ -753,11 +778,8 @@ class VentplanController {
             raum.with {
                 // Übernehme Wert für Bezeichnung vom Typ?
                 raumBezeichnung = raumName
-                // Länge + Breite
-                raumLange = 5.0d
-                raumBreite = 4.0d
                 // Fläche, Höhe, Volumen
-                raumFlache = raumLange * raumBreite
+                raumFlache = raumGroesse
                 raumHohe = 2.5d
                 raumVolumen = raumFlache * raumHohe
                 // Zuluftfaktor
@@ -766,10 +788,31 @@ class VentplanController {
                 raumAbluftVolumenstrom = raumAbluftVolumenstrom?.toDouble2() ?: 0.0d
                 // Standard Türspalthöhe ist 10 mm
                 raumTurspaltHohe = 10.0d
-                raumNummer = '' + raumSize
                 position = pos
             }
+            // Zuluftfaktor, Abluftvolumenstrom anpassen
             raum = raumTypAendern(raum)
+            // Standard Luftauslässe
+            if (raum.raumLuftart == 'ZU') {
+                raum.raumBezeichnungZuluftventile = '125ULC'
+                if (raum.raumBezeichnung == 'Wohnzimmer') {
+                    raum.raumAnzahlZuluftventile = "2".toDouble2()
+                } else {
+                    raum.raumAnzahlZuluftventile = "1".toDouble2()
+                }
+            } else if (raum.raumLuftart == 'AB') {
+                raum.raumBezeichnungAbluftventile = '125URH'
+                raum.raumAnzahlAbluftventile = "1".toDouble2()
+            }
+            // Verteilebene
+            if (raum.raumGeschoss) {
+                try {
+                    List geschosse = ['KG', 'EG', 'OG', 'DG', 'SB']
+                    raum.raumVerteilebene = geschosse[(geschosse.findIndexOf { it == raum.raumGeschoss }) + 1]
+                } catch (e) {
+                    // ignore
+                }
+            }
             //prufeRaumDaten(raum, expressModus)
             model.wizardmap.raum.raume << raum
         }
@@ -829,6 +872,16 @@ class VentplanController {
                 raum.raumLuftart = 'ÜB'
         }
         return raum
+    }
+
+    def toggleExpertMode = {
+        def mvc = getMVCGroupAktivesProjekt()
+        mvc.controller?.toggleExpertMode()
+    }
+    
+    def isExpertMode = {
+        def mvc = getMVCGroupAktivesProjekt()
+        mvc.controller?.isExpertMode()
     }
 
     //</editor-fold>
