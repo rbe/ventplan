@@ -880,7 +880,8 @@ class ProjektModel {
             // Combobox RaumVs - Überströmelemente
             GriffonHelper.makeComboboxCellEditor(view.raumVsUberstromelementeTabelle.columnModel.getColumn(4), meta.raum.raumVsUberstromelemente)
             // WAC-7: Raumtyp für Druckverlustberechnung - Ventileinstellung Combobox.
-            // WAC-274 updateDvbVentileinstellungComboBoxModel(view)
+            // WAC-274 do not... updateDvbVentileinstellungComboBoxModel(view)
+            updateDvbVentileinstellungComboBoxModel(view)
         }
     }
 
