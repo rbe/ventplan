@@ -300,7 +300,7 @@ class ProjektController {
             }
             model.resyncRaumTableModels()
         }
-/* WAC-274
+        // /* WAC-274
         // Druckverlustberechnung, Kanalnetze berechnen
         model.map.dvb.kanalnetz.each {
             dvbKanalnetzGeandert(it.position)
@@ -317,7 +317,7 @@ class ProjektController {
         // Akustik
         berechneAkustik('Zuluft')
         berechneAkustik('Abluft')
-*/
+        // WAC-274 */
         // 
         this.loadMode = false
         // Fix table header height
@@ -1266,10 +1266,10 @@ class ProjektController {
             GH.withDisabledActionListeners view.raumVsZentralgerat, {
                 // Raumvolumenströme
                 model.map.anlage.zentralgerat = view.raumVsZentralgerat.selectedItem = model.map.anlage.zentralgerat
-                /* WAC-274
+                // /* WAC-274
                 // Akustik Zu-/Abluft
                 view.akustikZuluftZuluftstutzenZentralgerat.selectedItem = view.akustikAbluftAbluftstutzenZentralgerat.selectedItem = model.map.anlage.zentralgerat
-                */
+                // */
             }
             // Aktualisiere Volumenstrom
             GH.withDisabledActionListeners view.raumVsVolumenstrom, {
@@ -1284,19 +1284,19 @@ class ProjektController {
                     (minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
                     // Füge Volumenströme in Comboboxen hinzu
                     view.raumVsVolumenstrom.removeAllItems()
-/* WAC-274
+                    // /* WAC-274
                     // Akustik
                     view.akustikZuluftPegel.removeAllItems()
                     view.akustikAbluftPegel.removeAllItems()
-*/
+                    // */
                     model.meta.volumenstromZentralgerat.each {
                         // Raumvolumenströme
                         view.raumVsVolumenstrom.addItem(it)
-/* WAC-274
+                        // /* WAC-274
                         // Akustikberechnung
                         view.akustikZuluftPegel.addItem(it)
                         view.akustikAbluftPegel.addItem(it)
-*/
+                        // */
                     }
                     // Selektiere errechneten Volumenstrom
                     def roundedVs = calculationService.round5(model.map.anlage.volumenstromZentralgerat)
@@ -1307,10 +1307,10 @@ class ProjektController {
                     }
                     model.map.anlage.volumenstromZentralgerat = foundVs
                     view.raumVsVolumenstrom.selectedItem = foundVs
-/* WAC-274
+                    // /* WAC-274
                     view.akustikZuluftPegel.selectedItem = foundVs
                     view.akustikAbluftPegel.selectedItem = foundVs
-*/
+                    // */
                 } catch (NoSuchElementException e) {
                     // ignore
                 }
@@ -1729,7 +1729,7 @@ class ProjektController {
      */
     void berechneAkustik(tabname) {
         // WAC-274
-        return
+        // return
         def m = model.map.akustik."${tabname.toLowerCase()}"
         // Konvertiere Wert TextField, ComboBox in Integer, default ist 0
         // Eingabe einer 0 im TextField gibt ''???

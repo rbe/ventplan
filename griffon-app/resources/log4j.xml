@@ -8,12 +8,11 @@
         </layout>
     </appender>
 
+    <!-- Use DEBUG to see basic request/response info;  
+         Use TRACE to see headers for HttpURLClient. -->
     <category name="groovyx.net.http">
         <priority value="INFO" />
     </category>
-
-    <!-- Use DEBUG to see basic request/response info;  
-         Use TRACE to see headers for HttpURLClient. -->
     <category name="groovyx.net.http.HttpURLClient">
         <priority value="INFO" />
     </category>
