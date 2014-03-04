@@ -1001,6 +1001,9 @@ class ProjektModel {
                 // Select previously selected row
                 if (selected && selected > -1) {
                     view.raumTabelle.changeSelection(selected, 0, false, false)
+                } else { // WAC-275: Wenn selected nicht gesetzt ist, standardmäßig auf 0 setzen.
+                    // Andernfalls tritt der beschriebene Fehler auf.
+                    view.raumTabelle.changeSelection(0, 0, false, false)
                 }
             }
 //        }
