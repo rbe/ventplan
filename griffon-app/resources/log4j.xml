@@ -7,16 +7,13 @@
             <param name="ConversionPattern" value="%d{ISO8601} %-5p  %c{1} - %m%n" />
         </layout>
     </appender>
-
-    <!-- Use DEBUG to see basic request/response info;  
-         Use TRACE to see headers for HttpURLClient. -->
+    <!-- Use DEBUG to see basic request/response info; TRACE to see headers for HttpURLClient. -->
     <category name="groovyx.net.http">
         <priority value="INFO" />
     </category>
     <category name="groovyx.net.http.HttpURLClient">
         <priority value="INFO" />
     </category>
-
     <category name="org.apache.http">
         <priority value="INFO" />
     </category>
@@ -26,7 +23,6 @@
     <category name="org.apache.http.wire">
         <priority value="INFO" />
     </category>
-
     <root>
         <priority value="INFO" />
         <appender-ref ref="console" />
