@@ -1134,10 +1134,11 @@ class ProjektController {
         // Max. Türspalthöhe
         metaRaum.raumMaxTurspaltHohe = raum.raumMaxTurspaltHohe = view.raumBearbeitenDetailsTurspalthohe.text?.toDouble2()
         // Geometrie
-        /*
         metaRaum.raumLange = raum.raumLange = view.raumBearbeitenOptionalRaumlange.text?.toDouble2()
         metaRaum.raumBreite = raum.raumBreite = view.raumBearbeitenOptionalRaumbreite.text?.toDouble2()
-        */
+        if (raum.raumLange > 0 && raum.raumBreite > 0) {
+            metaRaum.raumFlache = raum.raumFlache = raum.raumLange * raum.raumBreite
+        }
         metaRaum.raumHohe = raum.raumHohe = view.raumBearbeitenOptionalRaumhohe.text?.toDouble2()
         // Raum neu berechnen
         raumGeandert(raumPosition)
