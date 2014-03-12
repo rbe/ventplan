@@ -11,6 +11,7 @@
  */
 
 package eu.artofcoding.ventplan.desktop
+
 import eu.artofcoding.griffon.helper.AWTHelper
 import eu.artofcoding.griffon.helper.AWTRateCountObserver
 import eu.artofcoding.griffon.helper.GriffonHelper as GH
@@ -19,6 +20,7 @@ import groovy.io.FileType
 import javax.swing.*
 import java.awt.*
 import java.util.List
+
 /**
  * Main controller (menu, toolbar).
  */
