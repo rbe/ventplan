@@ -54,8 +54,6 @@ class VentplanController {
 
     //</editor-fold>
 
-    int _i;
-
     //<editor-fold desc="MVC">
 
     /**
@@ -117,8 +115,6 @@ class VentplanController {
 
     //</editor-fold>
 
-    int __i;
-
     //<editor-fold desc="Exiting the application">
 
     /**
@@ -179,8 +175,6 @@ class VentplanController {
 
     //</editor-fold>
 
-    int ___i;
-
     //<editor-fold desc="Sonstige Dialoge">
 
     /**
@@ -203,8 +197,6 @@ class VentplanController {
     }
 
     //</editor-fold>
-
-    int ____i;
 
     //<editor-fold desc="Projekt erstellen">
 
@@ -339,8 +331,6 @@ class VentplanController {
     }
 
     //</editor-fold>
-
-    int _____i;
 
     //<editor-fold desc="Projekt öffnen">
 
@@ -478,8 +468,6 @@ class VentplanController {
 
     //</editor-fold>
 
-    int ______i;
-
     //<editor-fold desc="Projekt speichern">
 
     /**
@@ -569,8 +557,6 @@ class VentplanController {
     }
 
     //</editor-fold>
-
-    int _______i;
 
     //<editor-fold desc="WAC-230">
 
@@ -876,8 +862,6 @@ class VentplanController {
 
     //</editor-fold>
 
-    int ________i;
-
     //<editor-fold desc="WAC-108 Odisee">
 
     int _________i;
@@ -905,8 +889,6 @@ class VentplanController {
 
     //</editor-fold>
 
-    int __________i;
-
     //<editor-fold desc="WAC-151 Automatische und manuelle Berechnung">
 
     /**
@@ -932,8 +914,6 @@ class VentplanController {
     }
 
     //</editor-fold>
-
-    int ___________i;
 
     //<editor-fold desc="WAC-161 Zuletzt geöffnete Projekte">
 
@@ -976,8 +956,6 @@ class VentplanController {
     }
 
     //</editor-fold>
-
-    int ____________i;
 
     //<editor-fold desc="WAC-192 Suchfunktion für Projekte"> 
 
@@ -1105,8 +1083,6 @@ class VentplanController {
 
     //</editor-fold>
 
-    int _____________i;
-
     //<editor-fold desc="WAC-202 Prinzipskizze">
 
     /**
@@ -1118,8 +1094,6 @@ class VentplanController {
     }
 
     //</editor-fold>
-
-    int ______________i;
 
     //<editor-fold desc="WAC-272 Ventplan ID">
 

@@ -49,8 +49,6 @@ class ProjektController {
 
     //</editor-fold>
 
-    int _i;
-
     //<editor-fold desc="Initialisation, MVC">
 
     /**
@@ -182,8 +180,6 @@ class ProjektController {
 
     //</editor-fold>
 
-    int __i;
-
     //<editor-fold desc="Tab title">
 
     /**
@@ -243,8 +239,6 @@ class ProjektController {
     }
 
     //</editor-fold>
-
-    int ___i;
 
     //<editor-fold desc="Berechnungen nach Projekt laden, WAC-151 Automatische und manuelle Berechnung">
 
@@ -326,8 +320,6 @@ class ProjektController {
 
     //</editor-fold>
 
-    int ____i;
-
     //<editor-fold desc="Projekt speichern">
 
     /**
@@ -373,8 +365,6 @@ class ProjektController {
     }
 
     //</editor-fold>
-
-    int _____i;
 
     //<editor-fold desc="Gebäudedaten">
 
@@ -528,8 +518,6 @@ class ProjektController {
 
     //</editor-fold>
 
-    int ______i;
-
     //<editor-fold desc="Anlagedaten">
 
     /**
@@ -582,8 +570,6 @@ class ProjektController {
 
     //</editor-fold>
 
-    int _______i;
-
     //<editor-fold desc="Aussenluftvolumenströme">
 
     /**
@@ -597,8 +583,6 @@ class ProjektController {
     }
 
     //</editor-fold>
-
-    int ________i;
 
     //<editor-fold desc="Räume">
 
@@ -1039,8 +1023,6 @@ class ProjektController {
 
     //</editor-fold>
 
-    int _________i;
-
     //<editor-fold desc="Raum bearbeiten">
 
     /**
@@ -1242,8 +1224,6 @@ class ProjektController {
 
     //</editor-fold>
 
-    int __________i;
-
     //<editor-fold desc="Zentralgerät">
 
     /**
@@ -1364,8 +1344,6 @@ class ProjektController {
     }
 
     //</editor-fold>
-
-    int ___________i;
 
     //<editor-fold desc="Druckverlustberechnung">
 
@@ -1571,8 +1549,6 @@ class ProjektController {
 
     //</editor-fold>
 
-    int ____________i;
-
     //<editor-fold desc="Druckverlustberechnung, Kanalnetz, Widerstandsbeiwerte">
 
     /**
@@ -1692,8 +1668,6 @@ class ProjektController {
 
     //</editor-fold>
 
-    int _____________i;
-
     //<editor-fold desc="Akustik">
 
     /**
@@ -1781,8 +1755,6 @@ class ProjektController {
     }
 
     //</editor-fold>
-
-    int ______________i;
 
     //<editor-fold desc="Nutzerdaten">
 
@@ -1895,8 +1867,6 @@ class ProjektController {
     }
 
     //</editor-fold>
-
-    int _______________i;
 
     //<editor-fold desc="WAC-108 Odisee, Dokumente">
 
@@ -2120,8 +2090,6 @@ class ProjektController {
 
     //</editor-fold>
 
-    int ________________i;
-
     //<editor-fold desc="WAC-202 Prinzipskizze">
 
     def generierePrinzipskizze() {
@@ -2179,8 +2147,6 @@ class ProjektController {
     }
 
     //</editor-fold>
-
-    int __________________i;
 
     //<editor-fold desc="WAC-221 Dialog zur Bearbeitung der Stückliste">
 
@@ -2474,8 +2440,6 @@ class ProjektController {
 
     //</editor-fold>
 
-    int ___________________i;
-
     //<editor-fold desc="Helper">
 
     /**
@@ -2547,8 +2511,6 @@ class ProjektController {
     }
 
     //</editor-fold>
-
-    int ____________________i;
 
     /**
      * WAC-258, WAC-274
