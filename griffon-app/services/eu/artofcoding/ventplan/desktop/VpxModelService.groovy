@@ -456,7 +456,6 @@ class VpxModelService {
         domBuilder.zentralgerat() {
             X.tc { name(a.zentralgerat) }
             X.tc { manuell(a.zentralgeratManuell) }
-            // TODO selektieren volumenstrom, nicht liste
             X.tc { volumenstrom(a.volumenstromZentralgerat) }
             X.tc { geratestandort(a.standort.grep { it.value == true }?.key[0]) }
             // Energie
@@ -549,7 +548,6 @@ class VpxModelService {
                     erstellt(d.format(VentplanConstants.ISO_DATE_FORMAT))
                 } { erstellt() }
                 X.tc { bearbeitet(new Date().format(VentplanConstants.ISO_DATE_FORMAT)) } { bearbeitet() }
-                // TODO Bauvorhaben should be its own type
                 X.tc { bauvorhaben(map.kundendaten.bauvorhaben) } { bauvorhaben() }
                 X.tc { bauvorhabenEmpfanger(map.kundendaten.bauvorhabenEmpfanger) } { bauvorhabenAnschrift() }
                 X.tc { bauvorhabenAnschrift(map.kundendaten.bauvorhabenAnschrift) } { bauvorhabenAnschrift() }

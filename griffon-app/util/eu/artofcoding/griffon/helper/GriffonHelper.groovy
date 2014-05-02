@@ -14,7 +14,6 @@ import java.math.RoundingMode
 
 /**
  * Several helpers for Griffon.
- * TODO Migrate to grootils
  */
 class GriffonHelper {
 
@@ -140,7 +139,6 @@ class GriffonHelper {
         def charList = (["a".."z"] + ["A".."Z"]).flatten()
         if (d.any { it in charList })
             return d
-        // TODO HACK: Convert dot into comma (we expect german format, not english)
         d = d.collect { it == "." ? "," : it }.join()
         // Parse number
         if (d in ["NaN", "Inf"]) {
@@ -203,7 +201,6 @@ class GriffonHelper {
     def static deepCopyMap = { m, x ->
         x.each { k, v ->
             if (v instanceof Map) {
-                // TODO Create a nested map if missing? m[k] = [:] as ObservableMap
                 GriffonHelper.deepCopyMap m[k], v
             } else {
                 try {
@@ -225,7 +222,6 @@ class GriffonHelper {
 
     /**
      * Wrap text in HTML and substitute every space character with HTML-breaks.
-     * TODO Rename to wrapInHTML
      */
     def static ws = { t, threshold = 0 ->
         def n = t

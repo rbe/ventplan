@@ -31,10 +31,8 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
                 label('', constraints: "wrap")
 
                 comboBox(id: "raumBearbeitenRaumGeschoss", items: model.meta.raum.geschoss)
-                // TODO mmu
                 button(id: "raumBearbeitenRaumLinks", text: " < ", visible: false)
                 textField(id: "raumBearbeitenRaumnummer", constraints: "width 50px")
-                // TODO mmu
                 button(id: "raumBearbeitenRaumRechts", text: " > ", visible: false)
                 textField(id: "raumBearbeitenBezeichnung", text: '', constraints: "width 100px")
                 comboBox(id: "raumBearbeitenRaumtyp", items: model.meta.raum.typ)
@@ -59,7 +57,7 @@ jideScrollPane(id: "raumBearbeitenScrollPane") {
                     }
                 }
                 
-                // WAC-165 - feste Höhe eingestellt. Unter Mac anpassen? TODO rbe
+                // WAC-165 - feste Höhe eingestellt
                 label(id: "raumBearbeitenTurspaltHinweis", foreground: java.awt.Color.RED, constraints: "height 14px!, span 2")
             }
 

@@ -652,7 +652,7 @@ class CalculationService {
      */
     def berechneTeilstrecke(map) {
         def kanal = ventplanModelService.getKanal(map.kanalbezeichnung)
-        double lambda = 1.0d // TODO Set default to prevent NullPointer
+        double lambda = 1.0d
         if (null != kanal) {
             map.geschwindigkeit = map.luftVs * 1000000 / (kanal.flaeche * 3600)
             switch (kanal.klasse?.toInteger()) {
@@ -670,7 +670,7 @@ class CalculationService {
         }
         if (map.geschwindigkeit && lambda > 0.0d) {
             //
-            def geschwPow2 = Math.pow(map.geschwindigkeit ?: 1.0d, 2) // TODO Ternary operator added '... cannot be applied to (null, Integer)'
+            def geschwPow2 = Math.pow(map.geschwindigkeit ?: 1.0d, 2)
             // Gesamtwiderstandszahl wurde via ProjektController.wbwOkButton gesetzt
             // Reibungswiderstand
             map.reibungswiderstand = lambda * map.lange * 1.2 * geschwPow2 / (2 * (kanal.durchmesser + 0.0d) / 1000)
@@ -821,7 +821,7 @@ class CalculationService {
             // WAC-173: Existiert ein Durchgang? Ja, dann gesamte Berechnung nicht stattfinden, ÜB-Menge = 0 setzen
             def durchgang = map.turen.findAll { it.turBezeichnung ==~ /.*Durchgang.*/ }?.size() ?: 0
             if (durchgang) {
-                // TODO Nicht setzen, wenn Werte manuell geändert wurden (WAC-151)?
+                // WAC-151 Nicht setzen, wenn Werte manuell geändert wurden?
                 map.raumUberstromVolumenstrom = 0
                 // WAC-184/WAC-187: Else-Zweig eingefügt, damit die map zurückgegeben werden kann!
                 // Ansonsten kommt es zu einer NullPointerException und die Türen können
@@ -842,7 +842,6 @@ class CalculationService {
                     }
                 }
                 // WAC-165: Hinweis: Türspalt > max. Türspalthöhe?
-                // TODO Zugriff auf model.meta notwendig! Alternativ Property pro Raum.
             }
         }
         map

@@ -204,7 +204,7 @@ class VentplanModel {
                                 ]
                         ] as ObservableMap,
                 ] as ObservableMap,
-                raumBezeichnung: [] as ObservableList // TODO Wofür genutzt?
+                raumBezeichnung: [] as ObservableList
         ] as ObservableMap
     }
 

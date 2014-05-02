@@ -478,7 +478,6 @@
     <!--
 
         Complex type: Mengeneinheit
-        TODO: mengeneinheit
 
     -->
     <xs:simpleType name="stucklisteMengeneinheit">

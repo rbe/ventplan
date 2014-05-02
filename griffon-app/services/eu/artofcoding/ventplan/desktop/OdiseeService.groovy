@@ -172,7 +172,7 @@ class OdiseeService {
                     addBauvorhaben(domBuilder, (Map) map.kundendaten)
                     // Stückliste
                     def stuckliste
-                    if (editedStuckliste) { // TODO Always true?
+                    if (editedStuckliste) {
                         stuckliste = editedStuckliste
                     } else {
                         stuckliste = stucklisteService.makeResult(stucklisteService.processData(map))

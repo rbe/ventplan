@@ -238,7 +238,6 @@ class VentplanModelService {
         def r_maxvs = withSql { dataSourceName, sql ->
             sql.rows(statement.toString(), [gerat: zentralgerat, maxvolumenstrom: volumenstrom])
         }
-        // TODO MAXVOLUMENSTROM must be != 0
         r_maxvs.size() > 0 ? r_maxvs[0].MAXVOLUMENSTROM : 0
     }
 

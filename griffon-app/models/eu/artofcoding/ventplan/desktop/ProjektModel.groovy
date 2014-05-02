@@ -293,7 +293,7 @@ class ProjektModel {
                                     ]
                             ] as ObservableMap,
                     ] as ObservableMap,
-                    raumBezeichnung: [] as ObservableList // TODO Wofür genutzt?
+                    raumBezeichnung: [] as ObservableList
             ] as ObservableMap
 
     // TableModels
@@ -891,7 +891,7 @@ class ProjektModel {
             }
             // Buttons aktivieren / deaktivieren
             enableDisableRaumButtons(true)
-            // TODO mmu Sortierung funktioniert aber!?
+            //
             refreshTableHeaderHeight(view)
             // Türen
             addRaumTurenModel()
@@ -1066,7 +1066,7 @@ class ProjektModel {
     void resyncDvbKanalnetzTableModels() {
         // Druckverlust - Kanalnetz
         SwingUtilities.invokeLater {
-            synchronized (tableModels) { // TODO Synchronization on non-final field
+            synchronized (tableModels) {
                 tableModels.dvbKanalnetz.clear()
                 tableModels.dvbKanalnetz.addAll(map.dvb.kanalnetz)
             }
@@ -1086,7 +1086,7 @@ class ProjektModel {
     def resyncDvbVentileinstellungTableModels() {
         // Druckverlust - Ventileinstellung
         SwingUtilities.invokeLater {
-            synchronized (tableModels) { // TODO Synchronization on non-final field
+            synchronized (tableModels) {
                 tableModels.dvbVentileinstellung.clear()
                 tableModels.dvbVentileinstellung.addAll(map.dvb.ventileinstellung)
             }
@@ -1098,23 +1098,10 @@ class ProjektModel {
      */
     def resyncAkustikTableModels(view) {
         SwingUtilities.invokeLater {
-            synchronized (tableModels) { // TODO Synchronization on non-final field
+            synchronized (tableModels) {
                 // Akustikberechnung Zuluft
                 tableModels.akustikZuluft.clear()
                 try {
-                    // TODO java.lang.NullPointerException
-                    /*
-                       2012-07-09 12:52:11,485 ERROR  GriffonExceptionHandler - Uncaught Exception
-                       java.lang.NullPointerException
-                           at ca.odell.glazedlists.AbstractEventList.addAll(AbstractEventList.java:331)
-                           at ca.odell.glazedlists.TransformedList.addAll(TransformedList.java:82)
-                           at ca.odell.glazedlists.AbstractEventList.addAll(AbstractEventList.java:295)
-                           at ca.odell.glazedlists.impl.ThreadSafeList.addAll(ThreadSafeList.java:197)
-                           at java_util_List$addAll.call(Unknown Source)
-                           at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:42)
-                           at java_util_List$addAll.call(Unknown Source)
-                           at com.ventplan.desktop.ProjektModel$_resyncAkustikTableModels_closure31_closure73.doCall(ProjektModel.groovy:1119)
-                    */
                     map.akustik.zuluft.tabelle.each { tableModels.akustikZuluft.addAll(it) }
                     map.akustik.zuluft.volumenstromZentralgerat = view.akustikZuluftZuluftstutzenZentralgerat.selectedItem
                     // Zeilenhöhe anpassen

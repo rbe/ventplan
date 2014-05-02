@@ -481,12 +481,10 @@ class ProjektController {
             // Save actual caret position
             def personenanzahlCaretPos = view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition
             def aussenluftVsProPersonCaretPos = view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition
-            // HACK Model is not updated when KeyListener is used on spinner.editor.textfield
             model.map.gebaude.geplanteBelegung.personenanzahl = view.gebaudeGeplantePersonenanzahl.editor.textField.text?.toDouble2(0) ?: 0
             model.map.gebaude.geplanteBelegung.aussenluftVsProPerson = view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.text?.toDouble2() ?: 0.0d
             model.map.gebaude.geplanteBelegung.with {
                 try {
-                    // TODO Variable mindestaussenluftrate not defined...?
                     mindestaussenluftrate = personenanzahl * aussenluftVsProPerson
                 } catch (e) {
                     DialogController dialog = (DialogController) app.controllers['Dialog']
@@ -640,8 +638,6 @@ class ProjektController {
         def raum = model.raumMapTemplate.clone() +
                 GH.getValuesFromView(view, 'raum') +
                 [position: model.map.raum.raume.size()]
-        // TODO rbe Improve cloning of list with maps: use deep, not shallow copy.
-        // raum.turen = model.raumTurenTemplate.clone() as ObservableList
         raum.turen = [
                 [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
                 [turBezeichnung: '', turBreite: 0, turQuerschnitt: 0, turSpalthohe: 0, turDichtung: true],
@@ -667,7 +663,6 @@ class ProjektController {
             // Standard Türspalthöhe ist 10 mm
             raumTurspaltHohe = 10.0d
         }
-        // TODO Regeln zur Prüfung von Räumen (Drools?)
         if (raum.raumFlache > 0) {
             doLater {
                 // Raum im Model hinzufügen
@@ -1072,7 +1067,6 @@ class ProjektController {
         metaRaum.raumNummer = raum.raumNummer = view.raumBearbeitenRaumnummer.text
         // Raumbezeichnung
         metaRaum.raumBezeichnung = raum.raumBezeichnung = view.raumBearbeitenBezeichnung.text
-        // TODO Raumtyp
         // Geschoss
         metaRaum.raumGeschoss = raum.raumGeschoss = view.raumBearbeitenRaumGeschoss.selectedItem
         // Luftart
@@ -1224,11 +1218,9 @@ class ProjektController {
             GH.withDisabledActionListeners view.raumVsVolumenstrom, {
                 // Hole Volumenströme des Zentralgeräts
                 def volumenstromZentralgerat = ventplanModelService.getVolumenstromFurZentralgerat(view.raumVsZentralgerat.selectedItem)
-                // TODO 5er-Schritte ... nach Datenupdate noch notwendig?
                 model.meta.volumenstromZentralgerat = []
                 def minVsZentralgerat = volumenstromZentralgerat[0] as Integer
                 try {
-                    // TODO java.util.NoSuchElementException .last() when no data available
                     def maxVsZentralgerat = volumenstromZentralgerat.toList().last() as Integer
                     (minVsZentralgerat..maxVsZentralgerat).step 5, { model.meta.volumenstromZentralgerat << it }
                     // Füge Volumenströme in Comboboxen hinzu
@@ -1659,7 +1651,6 @@ class ProjektController {
         GH.withDisabledActionListeners p, {
             p.removeAllItems()
             // Hole Volumenströme des Zentralgeräts und füge diese in Combobox hinzu
-            // TODO 5er-Schritte
             ventplanModelService.getVolumenstromFurZentralgerat(zg.selectedItem).each {
                 p.addItem(it)
             }
