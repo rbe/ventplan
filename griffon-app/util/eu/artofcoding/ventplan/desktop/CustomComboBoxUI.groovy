@@ -15,7 +15,7 @@ public class CustomComboBoxUI extends BasicComboBoxUI {
                 try {
                     cwidth = this.comboBox.getPreferredSize().getWidth()
                 } catch (Exception e) {
-                    // ignore
+                    println e
                 }
                 return super.computePopupBounds(px, py, Math.max(cwidth, pw), ph);
             }

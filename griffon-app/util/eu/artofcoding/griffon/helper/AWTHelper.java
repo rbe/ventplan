@@ -49,7 +49,7 @@ public class AWTHelper {
                     }
                     eventCount.set(0);
                 } catch (Exception e) {
-                    // ignore
+                    System.out.println(e.getMessage());
                 }
             }
         }

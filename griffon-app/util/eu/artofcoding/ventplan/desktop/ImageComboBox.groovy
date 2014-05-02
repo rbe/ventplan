@@ -24,7 +24,7 @@ public class ImageComboBox extends JComboBox {
             layingOut = true;
             super.doLayout();
         } catch (e) {
-            // ignore
+            println e
         } finally {
             layingOut = false;
         }

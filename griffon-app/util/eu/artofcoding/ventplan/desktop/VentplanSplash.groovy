@@ -21,7 +21,9 @@ class VentplanSplash {
     def dispose = {
         try {
             SplashScreen.instance?.dispose()
-        } catch (e) {}
+        } catch (e) {
+            println e
+        }
     }
 
     def initializing = {

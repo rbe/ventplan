@@ -838,7 +838,7 @@ class CalculationService {
                         it.turSpalthohe = tsqf / summeTurBreiten
                         it.turQuerschnitt = tsqf * it.turBreite / summeTurBreiten
                     } catch (e) {
-                        // ignore
+                        println e
                     }
                 }
                 // WAC-165: Hinweis: Türspalt > max. Türspalthöhe?

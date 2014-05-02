@@ -87,12 +87,14 @@ class StucklisteService {
             List grundpaket = ventplanModelService.getGrundpaket(zentralgerat)
             pakete += grundpaket
         } catch (e) {
+            println e
         }
         // Gerätepaket
         try {
             List geratepaket = ventplanModelService.getGeratepaket(zentralgerat, volumenstrom)
             pakete += geratepaket
         } catch (e) {
+            println e
         }
         // Erweiterungspaket für alle Ebenen außer die Erste
         try {
@@ -106,6 +108,7 @@ class StucklisteService {
                 }
             }
         } catch (e) {
+            println e
         }
         // Außenluftpaket
         try {
@@ -117,6 +120,7 @@ class StucklisteService {
             List aussenluftpaket = ventplanModelService.getAussenluftpaket(zentralgerat, volumenstrom, aussenluft)
             pakete += aussenluftpaket
         } catch (e) {
+            println e
         }
         // Fortluftpaket
         try {
@@ -125,6 +129,7 @@ class StucklisteService {
             List fortluftpaket = ventplanModelService.getFortluftpaket(zentralgerat, volumenstrom, fortluft)
             pakete += fortluftpaket
         } catch (e) {
+            println e
         }
         // Verteilpakete
         try {
@@ -132,6 +137,7 @@ class StucklisteService {
             def verteilpakete = _verteilpakete*.value['AB']['paket'] + _verteilpakete*.value['ZU']['paket']
             pakete += verteilpakete
         } catch (e) {
+            println e
         }
         // Luftauslässe
         try {
@@ -143,6 +149,7 @@ class StucklisteService {
             }.flatten()
             pakete += abluftventile
         } catch (e) {
+            println e
         }
         // Lufteinlässe
         try {
@@ -154,6 +161,7 @@ class StucklisteService {
             }.flatten()
             pakete += zuluftventile
         } catch (e) {
+            println e
         }
         // Raumvolumenströme, Überströmelemente, m=[Überströmelement:Anzahl]
         List uberstromventile = null
@@ -166,6 +174,7 @@ class StucklisteService {
                 a
             }.flatten()
         } catch (e) {
+            println e
         }
         // ArrayList can contain a hole, like element 9 is set, 10 is null, 11 is set
         pakete?.sort { p -> p?.REIHENFOLGE }?.each { p ->
@@ -187,7 +196,7 @@ class StucklisteService {
 /* WAC-231 WAC-266 Temporär wieder abgeschaltet, bis Datenbank von Westaflex aktualisiert ist
                     double richtig = Math.ceil(r.ANZAHL / r.LIEFERMENGE)
                     r.ANZAHL = richtig
-*/
+                    */
                     double meterZuStueckelung = Math.ceil(r.ANZAHL / r.LIEFERMENGE)
                     double richtig = meterZuStueckelung * r.LIEFERMENGE
                     r.ANZAHL = richtig

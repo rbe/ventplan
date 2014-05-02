@@ -30,7 +30,7 @@ class BootstrapGsql {
                 }
             }
         } catch (e) {
-            // ignore
+            println e
         } finally {
             // ignore
         }

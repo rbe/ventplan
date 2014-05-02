@@ -99,7 +99,7 @@ class VentplanController {
                 def mvcGroup = getMVCGroup(mvcId)
                 model.aktivesProjektGeandert = mvcGroup.model?.map?.dirty
             } catch (e) {
-                // ignore
+                println e
             }
         }
     }
@@ -253,12 +253,12 @@ class VentplanController {
                             ventplanFrame.invalidate()
                             ventplanFrame.validate()
                         } catch (e) {
-                            // ignore
+                            println e
                         }
                     }
                     model.statusBarText = 'Bereit.'
                 } catch (Exception e) {
-                    // ignore
+                    println e
                 }
             }
             // do sth. when the task is done.
@@ -356,7 +356,7 @@ class VentplanController {
             file = evt.getActionCommand()
             projektOffnenClosure(file)
         } catch (Exception e) {
-            e.printStackTrace()
+            println e
             DialogController dialog = (DialogController) app.controllers['Dialog']
             dialog.showError('Oops...', '', e)
         }
@@ -435,8 +435,7 @@ class VentplanController {
                         }
                         */
                     } catch (e) {
-                        // ignore
-                        e.printStackTrace()
+                        println e
                     }
                 } else {
                     DialogController dialog = (DialogController) app.controllers['Dialog']
@@ -784,7 +783,7 @@ class VentplanController {
                     List geschosse = ['KG', 'EG', 'OG', 'DG', 'SB']
                     raum.raumVerteilebene = geschosse[(geschosse.findIndexOf { it == raum.raumGeschoss }) + 1]
                 } catch (e) {
-                    // ignore
+                    println e
                 }
             }
             //prufeRaumDaten(raum, expressModus)
@@ -1144,7 +1143,7 @@ class VentplanController {
             view.ventidRegistrationPasswort.text.trim()
             view.ventidRegistrationPasswort2.text.trim()
         } catch (e) {
-            // ignore
+            println e
         } finally {
             ventIdRegistrierungDialog.dispose()
         }

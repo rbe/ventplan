@@ -38,7 +38,7 @@ class PrinzipskizzeService {
                     break
             }
         } catch (e) {
-            // ignore
+            println e
         }
         aussenluft
     }
@@ -64,7 +64,7 @@ class PrinzipskizzeService {
                     break
             }
         } catch (e) {
-            // ignore
+            println e
         }
         fortluft
     }

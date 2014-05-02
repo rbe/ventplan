@@ -16,7 +16,7 @@ class ProjektSuchenPrefHelper {
             // Remove node - should not exist - and save user information...
             PrefHelper.setPrefValue(PREFS_USER_KEY_SUCH_ORDNER, filepath)
         } catch (Exception e) {
-            // ignore
+            println e
         }
     }
 
@@ -28,7 +28,7 @@ class ProjektSuchenPrefHelper {
         try {
             value = PrefHelper.getPrefValue(PREFS_USER_KEY_SUCH_ORDNER)
         } catch (Exception e) {
-            // ignore
+            println e
         }
         return value
     }

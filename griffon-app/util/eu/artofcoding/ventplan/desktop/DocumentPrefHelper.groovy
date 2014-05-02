@@ -47,7 +47,7 @@ class DocumentPrefHelper {
                 }
             }
         } catch (Exception e) {
-            // ignore
+            println e
         }
     }
 

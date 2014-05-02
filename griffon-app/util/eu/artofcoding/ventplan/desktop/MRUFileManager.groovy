@@ -45,7 +45,7 @@ class MRUFileManager {
                 }
             }
         } catch (Exception e) {
-            // ignore
+            println e
         }
     }
 

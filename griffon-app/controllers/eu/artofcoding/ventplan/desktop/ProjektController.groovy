@@ -225,6 +225,7 @@ class ProjektController {
         try {
             view.projektTabGroup.setTitleAt(tabIndex, tabTitle)
         } catch (ArrayIndexOutOfBoundsException e) {
+            println e
         }
     }
 
@@ -259,7 +260,7 @@ class ProjektController {
         try {
             model.resyncRaumTableModels()
         } catch (e) {
-            // ignore
+            println e
         }
         //
         if (!expressMode) {
@@ -267,7 +268,7 @@ class ProjektController {
                 try {
                     raumGeandert(raum.position)
                 } catch (e) {
-                    // ignore
+                    println e
                 }
             }
             model.resyncRaumTableModels()
@@ -497,7 +498,7 @@ class ProjektController {
                 view.gebaudeGeplantePersonenanzahl.editor.textField.caretPosition = personenanzahlCaretPos
                 view.gebaudeGeplanteAussenluftVsProPerson.editor.textField.caretPosition = aussenluftVsProPersonCaretPos
             } catch (e) {
-                // ignore
+                println e
             }
             // Berechnen
             berechneAussenluftVs()
@@ -710,12 +711,12 @@ class ProjektController {
                             raumFlache = raumBreite * raumLange
                         }
                     } catch (NullPointerException e) {
-                        // ignore
+                        println e
                     }
                     try {
                         raumVolumen = raumFlache * raumHohe
                     } catch (NullPointerException e) {
-                        // ignore
+                        println e
                     }
                     raumLuftwechsel = 0.0d
                     // Abluft
@@ -1073,7 +1074,7 @@ class ProjektController {
         try {
             metaRaum.raumLuftart = raum.raumLuftart = view.raumBearbeitenLuftart.selectedItem
         } catch (e) {
-            // TODO Warum, funktioniert trotzdem? groovy.lang.MissingPropertyException: No such property: text for class: javax.swing.JComboBox
+            println e
         }
         // Zuluftfaktor
         metaRaum.raumZuluftfaktor = raum.raumZuluftfaktor = view.raumBearbeitenLuftartFaktorZuluftverteilung.text?.toDouble2()
@@ -1168,7 +1169,9 @@ class ProjektController {
         if (reload) {
             try {
                 raumBearbeitenTurEntfernen(null, false)
-            } catch (e) {}
+            } catch (e) {
+                println e
+            }
         }
     }
 
@@ -1253,7 +1256,7 @@ class ProjektController {
                     view.akustikAbluftPegel.selectedItem = foundVs
                     // */
                 } catch (NoSuchElementException e) {
-                    // ignore
+                    println e
                 }
             }
             // WAC-223
@@ -1830,7 +1833,7 @@ class ProjektController {
             // Benutzerdaten wurden geändert, bitte fortfahren...
             nutzerdatenGeandert = true
         } catch (e) {
-            // ignore
+            println e
         } finally {
             nutzerdatenDialog.dispose()
         }
@@ -2228,7 +2231,7 @@ class ProjektController {
                 try {
                     model.tableModels.stucklisteSuche.remove(0)
                 } catch (e) {
-                    //println "Cannot remove index ${it}: ${e}"
+                    println e
                 }
             }
         }
@@ -2335,7 +2338,7 @@ class ProjektController {
             }
 
         } catch (e) {
-            // ignore me
+            println e
         }
     }
 
@@ -2360,7 +2363,7 @@ class ProjektController {
             }
 
         } catch (e) {
-            // ignore me
+            println e
         }
     }
 
@@ -2376,7 +2379,7 @@ class ProjektController {
             artikel.anzahl = (double) artikel.anzahl + 1
             model.tableModels.stuckliste.set(rowIndex, artikel)
         } catch (e) {
-            // ignore me
+            println e
         }
     }
 
@@ -2394,7 +2397,7 @@ class ProjektController {
             }
             model.tableModels.stuckliste.set(rowIndex, artikel)
         } catch (e) {
-            // ignore me
+            println e
         }
     }
 
@@ -2501,7 +2504,7 @@ class ProjektController {
                     try {
                         raum.raumVerteilebene = geschosse[(geschosse.findIndexOf { it == raum.raumGeschoss }) + 1]
                     } catch (e) {
-                        // ignore
+                        println e
                     }
                 }
             }

@@ -949,7 +949,7 @@ class ProjektModel {
                         m.clear()
                         m.addAll(it.turen)
                     } catch (e) {
-                        // ignore
+                        println e
                     }
                 }
                 // Raumvolumentströme - Zu-/Abluftventile
@@ -1121,7 +1121,7 @@ class ProjektModel {
                     view.akustikAbluftTabelle.setRowHeight(rowh + 1)
                     view.akustikAbluftTabelle.setRowMargin(3)
                 } catch (NullPointerException e) {
-                    // ignore
+                    println e
                 }
             }
         }
@@ -1237,7 +1237,7 @@ class ProjektModel {
             view.raumTabelle.getTableHeader().getDefaultRenderer().setPreferredSize(new Dimension(0, 40))
             view.raumTabelle.repaint()
         } catch (e) {
-            //println "ProjektModel: refreshTableHeaderHeight: Error while modifying raumTabelle: ${e}"
+            println e
         }
         // raumVsUberstromelementeTabelle
         try {
@@ -1245,7 +1245,7 @@ class ProjektModel {
             view.raumVsUberstromelementeTabelle.getTableHeader().setPreferredSize(new Dimension(0, 40));
             view.raumVsUberstromelementeTabelle.repaint()
         } catch (e) {
-            //println "ProjektModel: refreshTableHeaderHeight: Error while modifying raumVsUberstromelementeTabelle: ${e}"
+            println e
         }
         // raumVsZuAbluftventileTabelle
         try {
@@ -1253,7 +1253,7 @@ class ProjektModel {
             view.raumVsZuAbluftventileTabelle.getTableHeader().setPreferredSize(new Dimension(0, 40));
             view.raumVsZuAbluftventileTabelle.repaint()
         } catch (e) {
-            //println "ProjektModel: refreshTableHeaderHeight: Error while modifying raumVsZuAbluftventileTabelle: ${e}"
+            println e
         }
         // dvbKanalnetzTabelle
         try {
@@ -1261,7 +1261,7 @@ class ProjektModel {
             view.dvbKanalnetzTabelle.getTableHeader().setPreferredSize(new Dimension(0, 40));
             view.dvbKanalnetzTabelle.repaint()
         } catch (e) {
-            //println "ProjektModel: refreshTableHeaderHeight: Error while modifying dvbKanalnetzTabelle: ${e}"
+            println e
         }
         // dvbVentileinstellungTabelle
         try {
@@ -1269,7 +1269,7 @@ class ProjektModel {
             view.dvbVentileinstellungTabelle.getTableHeader().setPreferredSize(new Dimension(0, 40));
             view.dvbVentileinstellungTabelle.repaint()
         } catch (e) {
-            //println "ProjektModel: refreshTableHeaderHeight: Error while modifying dvbVentileinstellungTabelle: ${e}"
+            println e
         }
     }
 

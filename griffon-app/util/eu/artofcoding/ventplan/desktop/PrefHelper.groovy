@@ -31,7 +31,7 @@ public class PrefHelper {
         try {
             value = getPrefs(node).get(key, defaultValue)
         } catch (Exception e) {
-            // ignore
+            println e
         }
         return value
     }
@@ -41,7 +41,7 @@ public class PrefHelper {
         try {
             value = getPrefs(node).get(key, defaultValue)
         } catch (Exception e) {
-            // ignore
+            println e
         }
         return value
     }
@@ -77,7 +77,7 @@ public class PrefHelper {
                 return false
             }
         } catch (e) {
-            // ignore
+            println e
         }
         return false
     }
@@ -91,7 +91,7 @@ public class PrefHelper {
                 return false
             }
         } catch (e) {
-            // ignore
+            println e
         }
         return false
     }
