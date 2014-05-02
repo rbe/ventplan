@@ -2,7 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <!--
 
-        Root element: westaflex-wpx
+        Root element: ventplan-project
 
     -->
     <xs:element name="ventplan-project">

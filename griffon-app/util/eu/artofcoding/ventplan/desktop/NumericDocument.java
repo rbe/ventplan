@@ -10,7 +10,6 @@ public class NumericDocument extends PlainDocument {
         super();
     }
 
-    //Insert string method
     public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
         if (str != null) {
             if (isNumeric(str) == true) {

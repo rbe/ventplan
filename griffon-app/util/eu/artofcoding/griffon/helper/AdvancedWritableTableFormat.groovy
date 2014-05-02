@@ -20,10 +20,8 @@ interface AdvancedWritableTableFormat extends AdvancedTableFormat, WritableTable
 
     public Object getValueAt(int rowIndex, int columnIndex)
 
-    // AdvancedTableFormat
     public Class getColumnClass(int i)
 
-    // AdvancedTableFormat
     public Comparator getColumnComparator(int i)
 
 }
