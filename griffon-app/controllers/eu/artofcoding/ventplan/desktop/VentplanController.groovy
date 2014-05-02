@@ -390,7 +390,7 @@ class VentplanController {
                 model.statusBarText = 'Arbeite...'
                 view.projectOpenDetailLabel.text = 'Phase 1/3: Projektdatei öffnen ...'
             }
-            // do the task
+            // perform task
             work {
                 // Add file to MRU list
                 addRecentlyOpenedFile(file)

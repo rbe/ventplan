@@ -193,7 +193,8 @@ class StucklisteService {
             GroovyRowResult r = (GroovyRowResult) st.value
             if (r.MENGENEINHEIT && r.LIEFERMENGE) {
                 if (r.LIEFERMENGE > 1.0d) {
-/* WAC-231 WAC-266 Temporär wieder abgeschaltet, bis Datenbank von Westaflex aktualisiert ist
+                    // WAC-231 WAC-266 Temporär wieder abgeschaltet, bis Datenbank von Westaflex aktualisiert ist
+                    /*
                     double richtig = Math.ceil(r.ANZAHL / r.LIEFERMENGE)
                     r.ANZAHL = richtig
                     */

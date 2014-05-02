@@ -823,11 +823,7 @@ class CalculationService {
             if (durchgang) {
                 // WAC-151 Nicht setzen, wenn Werte manuell geändert wurden?
                 map.raumUberstromVolumenstrom = 0
-                // WAC-184/WAC-187: Else-Zweig eingefügt, damit die map zurückgegeben werden kann!
-                // Ansonsten kommt es zu einer NullPointerException und die Türen können
-                // nicht gelöscht werden. Die Berechnung schlägt dann auch fehl!
-                //return
-            } else {
+            } else { // WAC-184/WAC-187
                 def anzTurenOhneDichtung = map.turen.findAll { it.turDichtung == false }?.size() ?: 0
                 def abziehenTurenOhneDichtung = 2500 * anzTurenOhneDichtung
                 def summeTurBreiten = map.turen.sum { it.turBreite.toDouble2() }
@@ -841,7 +837,6 @@ class CalculationService {
                         println e
                     }
                 }
-                // WAC-165: Hinweis: Türspalt > max. Türspalthöhe?
             }
         }
         map
