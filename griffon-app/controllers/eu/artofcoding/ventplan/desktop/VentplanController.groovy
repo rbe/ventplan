@@ -307,7 +307,6 @@ class VentplanController {
         // Projekt zur aktiven Tab finden
         def mvc = getMVCGroupAktivesProjekt()
         if (!mvc) {
-            //println 'projektSchliessen: kein aktives Projekt!'
             return
         }
         def canClose = mvc.controller.canClose()
@@ -416,7 +415,6 @@ class VentplanController {
                     // ATTENTION: DOES NOT fire bindings and events asynchronously/in background!
                     // They are fired after leaving this method.
                     GH.deepCopyMap projektModel.map, map
-                    //println "projektOffnen: projektModel.map=${projektModel.map}"
                     // MVC ID zur Liste der Projekte hinzufügen
                     model.projekte << mvcId
                     // Projekt aktivieren
@@ -921,13 +919,6 @@ class VentplanController {
      * WAC-161 Zuletzt geöffnete Projekte
      */
     def addRecentlyOpenedFile = { filename ->
-        /* TODO mmu
-        // Add file to MRU list
-        if (mruFileManager.size() == MRUFileManager.DEFAULT_MAX_SIZE) {
-            //def position = 6 + MRUFileManager.DEFAULT_MAX_SIZE
-            //view.mainMenu.remove(position)
-        }
-        */
         mruFileManager.setMRU(filename)
         mruFileManager.save()
         buildRecentlyOpenedMenuItems()

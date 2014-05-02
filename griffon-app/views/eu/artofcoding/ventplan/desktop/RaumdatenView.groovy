@@ -62,7 +62,6 @@ GH.yellowTextField(raumBezeichnung)
     ] as ListSelectionListener)
 }
 // Binding for items of comboboxes is done in RaumdatenView!
-//raumEingabePanel.inputMap.put(KeyStroke.getKeyStroke("ENTER"), { ActionEvent e -> println "here we go: ${e}" } as AbstractAction)
 // Combobox Raumtyp
 raumTyp.actionPerformed = controller.raumTypGeandert
 // Raum-Buttons unten

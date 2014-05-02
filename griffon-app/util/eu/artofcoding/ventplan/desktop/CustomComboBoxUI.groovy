@@ -17,7 +17,6 @@ public class CustomComboBoxUI extends BasicComboBoxUI {
                 } catch (Exception e) {
                     // ignore
                 }
-                //println "cwidth: ${cwidth}, pw: ${pw}, ph: ${ph}"
                 return super.computePopupBounds(px, py, Math.max(cwidth, pw), ph);
             }
         };

@@ -771,7 +771,6 @@ class CalculationService {
         map.dvb.ventileinstellung.each { ve ->
             // Prüfe, ob die letzte Teilstrecke existiert und ob die Luftart übereinstimmt
             def luftVsLts = luftVsLetzteTeilstrecke(ve)
-            //println 'luftVsLts=${luftVsLts}'
             if (luftVsLts > 0.0d) {
                 // Berechne dP offen
                 ve.dpOffen = ventplanModelService.getMinimalerDruckverlustFurVentil(ve.ventilbezeichnung, ve.luftart, luftVsLts)
@@ -817,7 +816,7 @@ class CalculationService {
     def berechneTurspalt(map) {
         // Gilt nicht für Überström-Räume
         if (map.raumLuftart.contains('ÜB')) {
-            //println 'berechneTurspalt: Keine Berechnung von ÜB-Räumen'
+            // Keine Berechnung von ÜB-Räumen
         } else {
             // WAC-173: Existiert ein Durchgang? Ja, dann gesamte Berechnung nicht stattfinden, ÜB-Menge = 0 setzen
             def durchgang = map.turen.findAll { it.turBezeichnung ==~ /.*Durchgang.*/ }?.size() ?: 0

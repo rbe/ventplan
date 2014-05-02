@@ -225,16 +225,6 @@ class ProjektController {
         try {
             view.projektTabGroup.setTitleAt(tabIndex, tabTitle)
         } catch (ArrayIndexOutOfBoundsException e) {
-            // ignore
-            //println "${this}.setTabTitle(${tabIndex}): EXCEPTION: ${e}"
-            // java.lang.ArrayIndexOutOfBoundsException: -1
-            // at java.util.Vector.elementAt(Vector.java:430)
-            // at javax.swing.JTabbedPane.getTitleAt(JTabbedPane.java:1091)
-            // at com.jidesoft.swing.JideTabbedPane.setTitleAt(JideTabbedPane.java:1057)
-            // at com.jidesoft.swing.JideTabbedPane$setTitleAt.call(Unknown Source)
-            // ...
-            // at com.westaflex.wac.ProjektController$_closure1.doCall(ProjektController.groovy:167)
-            // ...
         }
     }
 
@@ -898,15 +888,12 @@ class ProjektController {
                 def nachUntenPosition
                 def nachObenPosition
                 model.map.raum.raume.eachWithIndex { item, pos ->
-                    //println "raumNachObenVerschieben => item=${item.dump()} + pos=${pos}"
                     if (pos == row - 1) {
                         raumNachUntenSchieben = item
                         nachObenPosition = pos
-                        //println "raumNachObenVerschieben => raumNachUntenSchieben=${raumNachUntenSchieben.dump()} + pos=${pos}"
                     } else if (pos == row) {
                         raumNachObenSchieben = item
                         nachUntenPosition = pos
-                        //println "raumNachObenVerschieben => raumNachObenSchieben=${raumNachObenSchieben.dump()} + pos=${pos}"
                     }
                 }
                 def tempPosition = raumNachObenSchieben.position
@@ -916,7 +903,6 @@ class ProjektController {
                 model.map.raum.raume[nachUntenPosition] = raumNachUntenSchieben
                 model.resyncRaumTableModels()
                 // Raum geändert
-                //raumGeandert(nachUntenPosition)
                 raumGeandert(nachObenPosition)
                 view.raumTabelle.changeSelection(nachObenPosition/*view.raumTabelle.selectedRow - 1*/, 0, false, false)
             }
@@ -1091,11 +1077,9 @@ class ProjektController {
         metaRaum.raumGeschoss = raum.raumGeschoss = view.raumBearbeitenRaumGeschoss.selectedItem
         // Luftart
         try {
-            //println "!!!: ${view.raumBearbeitenLuftart.selectedItem?.dump()}"
             metaRaum.raumLuftart = raum.raumLuftart = view.raumBearbeitenLuftart.selectedItem
         } catch (e) {
             // TODO Warum, funktioniert trotzdem? groovy.lang.MissingPropertyException: No such property: text for class: javax.swing.JComboBox
-            //println "raumBearbeitenGeandert: EXCEPTION: ${e}"
         }
         // Zuluftfaktor
         metaRaum.raumZuluftfaktor = raum.raumZuluftfaktor = view.raumBearbeitenLuftartFaktorZuluftverteilung.text?.toDouble2()
@@ -1116,7 +1100,6 @@ class ProjektController {
         // Zuluft/Abluft
         metaRaum.raumZuluftfaktor = raum.raumZuluftfaktor
         metaRaum.raumAbluftvolumenstrom = raum.raumAbluftvolumenstrom
-        ////if (metaRaum.)
         // Geometrie
         metaRaum.raumFlache = raum.raumFlache
         metaRaum.raumVolumen = raum.raumVolumen
@@ -1170,11 +1153,8 @@ class ProjektController {
     def raumBearbeitenTurEntfernen = { evt = null, reload = true ->
         def turenIndex = view.raumBearbeitenTurenTabelle.selectedRow
         def raumIndex = model.meta.gewahlterRaum.position
-        //println "turenIndex -> ${turenIndex}"
         def raumPosition
         try {
-            //def raum = model.map.raum.raume[raumIndex]
-            //def raum = model.map.raum.raume.find { it.position == raumIndex }
             def raum
             model.map.raum.raume.eachWithIndex { item, pos ->
                 if (item.position == raumIndex) {
@@ -1206,7 +1186,7 @@ class ProjektController {
         if (raumIndex > -1) {
             calculationService.berechneZuAbluftventile(model.map.raum.raume.find { it.position == raumIndex })
         } else {
-            //println "raumZuAbluftventileGeandert: Kein Raum ausgewählt, es wird nichts berechnet"
+            // Kein Raum ausgewählt, es wird nichts berechnet
         }
     }
 
@@ -1218,7 +1198,7 @@ class ProjektController {
         if (raumIndex > -1) {
             calculationService.berechneUberstromelemente(model.map.raum.raume.find { it.position == raumIndex })
         } else {
-            //println "raumUberstromelementeLuftmengeBerechnen: Kein Raum ausgewählt, es wird nichts berechnet"
+            // Kein Raum ausgewählt, es wird nichts berechnet
         }
     }
 
@@ -1480,7 +1460,6 @@ class ProjektController {
         ///publishEvent "DvbKanalnetzEntfernen", [view.dvbKanalnetzTabelle.selectedRow]
         def kanalnetzIndex = view.dvbKanalnetzTabelle.selectedRow
         doLater {
-            //println "onDvbKanalnetzEntfernen: kanalnetzIndex=${kanalnetzIndex}"
             // Zeile aus Model entfernen
             model.removeDvbKanalnetz(kanalnetzIndex)
         }
@@ -2192,16 +2171,6 @@ class ProjektController {
                 Map artikel = stuck.value as Map
                 //int reihenfolge = (int) artikel.REIHENFOLGE ?: 900
                 double anzahl = (double) artikel.ANZAHL
-                //println String.format('%2d % 12d % 7.1f %6s %17s - %s', i + 1, reihenfolge, anzahl, artikel.MENGENEINHEIT, stuck.key, artikel.ARTIKELBEZEICHNUNG)
-                /*
-                // Menge mit oder ohne Komma anzeigen?
-                String menge
-                if (anzahl * 10 > 0) {
-                    menge = String.format(Locale.GERMANY, "%.0f %s", anzahl, artikel.MENGENEINHEIT)
-                } else {
-                    menge = String.format(Locale.GERMANY, "%.2f %s", anzahl, artikel.MENGENEINHEIT)
-                }
-                */
                 def gesamtpreis = (anzahl * artikel.PREIS.toDouble2()) as double
                 model.tableModels.stuckliste.addAll(
                         [

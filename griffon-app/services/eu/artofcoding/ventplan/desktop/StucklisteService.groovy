@@ -20,17 +20,13 @@ class StucklisteService {
      */
     void artikelAufStuckliste(Map stuckliste, artikel, paket = null) {
         if (null == stuckliste || null == artikel) {
-            //throw new IllegalArgumentException('stuckliste or artikel == null?')
             return
         }
         def artikelnummer = ventplanModelService.getArtikelnummer(artikel)
         artikel.ARTIKEL = artikel.ARTIKELNUMMER = artikelnummer
         if (stuckliste.containsKey(artikelnummer)) {
-            //def alt = stuckliste[artikelnummer].ANZAHL
             stuckliste[artikelnummer].ANZAHL += artikel.ANZAHL ?: 1.0
-            //println String.format('+      Artikel hinzu: Paket=%5s Artikel=%17s Anzahl=%4.1f (%4.1f + %4.1f)', paket ?: '', artikelnummer, stuckliste[artikelnummer].ANZAHL, artikel.ANZAHL, alt)
         } else {
-            //println String.format('* Füge Artikel hinzu: Paket=%5s Artikel=%17s Anzahl=%4.1f', paket ?: '', artikelnummer, artikel.ANZAHL)
             stuckliste[artikelnummer] = artikel
             // Prüfe Artikel auf Gültigkeit
             if (!ventplanModelService.isArticleValidToday(artikelnummer)) {
@@ -89,14 +85,12 @@ class StucklisteService {
         // Grundpaket
         try {
             List grundpaket = ventplanModelService.getGrundpaket(zentralgerat)
-            //println String.format("%17s für %8s (Vs=%d) ist %s", 'Grundpaket', zentralgerat, volumenstrom, grundpaket)
             pakete += grundpaket
         } catch (e) {
         }
         // Gerätepaket
         try {
             List geratepaket = ventplanModelService.getGeratepaket(zentralgerat, volumenstrom)
-            //println String.format("%17s für %8s (Vs=%d) ist %s", 'Geraetepaket', zentralgerat, volumenstrom, geratepaket)
             pakete += geratepaket
         } catch (e) {
         }
@@ -107,9 +101,7 @@ class StucklisteService {
             List verteilebenen = ventplanModelService.getVerteilebenen(map)
             int anzahlVerteilebenen = verteilebenen.size() - 1
             if (anzahlVerteilebenen > 0) {
-                //println String.format("%17s für %8s (Vs=%d) sind %s", 'Verteilbenen', zentralgerat, volumenstrom, verteilebenen.join(', '))
                 1.upto anzahlVerteilebenen, {
-                    //println String.format("%17s für %8s (Vs=%d), %s für Ebene(n) %s", 'Erweiterungspaket', zentralgerat, volumenstrom, erwei, verteilebenen[it])
                     pakete += erwei
                 }
             }
@@ -123,7 +115,6 @@ class StucklisteService {
                 aussenluft = 'EWT'
             }
             List aussenluftpaket = ventplanModelService.getAussenluftpaket(zentralgerat, volumenstrom, aussenluft)
-            //println String.format("%17s für %8s (Vs=%d), %s ist %s", 'Aussenluftpaket', zentralgerat, volumenstrom, 'Wand', aussenluftpaket)
             pakete += aussenluftpaket
         } catch (e) {
         }
@@ -132,7 +123,6 @@ class StucklisteService {
             String fortluft = map.anlage.fortluft.grep { it.value == true }?.key[0]
             fortluft = fortluft[0].toUpperCase() + fortluft[1..-1]
             List fortluftpaket = ventplanModelService.getFortluftpaket(zentralgerat, volumenstrom, fortluft)
-            //println String.format("%17s für %8s (Vs=%d), %s ist %s", 'Fortluftpaket', zentralgerat, volumenstrom, 'Dach', fortluftpaket)
             pakete += fortluftpaket
         } catch (e) {
         }
@@ -140,7 +130,6 @@ class StucklisteService {
         try {
             def _verteilpakete = ventplanModelService.getVerteilpakete(map)
             def verteilpakete = _verteilpakete*.value['AB']['paket'] + _verteilpakete*.value['ZU']['paket']
-            //println String.format("%17s für %8s (Vs=%d), sind %s", 'Verteilpakete', zentralgerat, volumenstrom, verteilpakete)
             pakete += verteilpakete
         } catch (e) {
         }
@@ -152,7 +141,6 @@ class StucklisteService {
                     ventplanModelService.getLuftauslasspaket(it.key, 'AB') * it.value
                 }
             }.flatten()
-            //println String.format("%17s für %8s (Vs=%d), %s", 'Abluftventile', zentralgerat, volumenstrom, abluftventile)
             pakete += abluftventile
         } catch (e) {
         }
@@ -164,7 +152,6 @@ class StucklisteService {
                     ventplanModelService.getLuftauslasspaket(it.key, 'ZU') * it.value
                 }
             }.flatten()
-            //println String.format("%17s für %8s (Vs=%d), %s", 'Zuluftventile', zentralgerat, volumenstrom, zuluftventile)
             pakete += zuluftventile
         } catch (e) {
         }
@@ -180,13 +167,6 @@ class StucklisteService {
             }.flatten()
         } catch (e) {
         }
-        //
-        /*
-        println String.format("%17s für %8s (Vs=%d) sind %s", 'Gesamte Pakete', zentralgerat, volumenstrom, pakete)
-        println "${this}"
-        println "HOLE ARTIKEL FÜR JEDES PAKET"
-        println "============================"
-        */
         // ArrayList can contain a hole, like element 9 is set, 10 is null, 11 is set
         pakete?.sort { p -> p?.REIHENFOLGE }?.each { p ->
             if (p) {
@@ -211,7 +191,6 @@ class StucklisteService {
                     double meterZuStueckelung = Math.ceil(r.ANZAHL / r.LIEFERMENGE)
                     double richtig = meterZuStueckelung * r.LIEFERMENGE
                     r.ANZAHL = richtig
-                    //println "${artikel} ==> ${r.LIEFERMENGE} x ${r.MENGENEINHEIT}: ${r.ANZAHL} -> ${richtig}"
                 }
             }
         }

@@ -179,9 +179,7 @@ class OdiseeService {
                     }
                     stuckliste.eachWithIndex { stuck, i ->
                         Map artikel =  (Map) stuck.value //as Map
-                        //int reihenfolge = (int) artikel.REIHENFOLGE
                         double anzahl = (double) artikel.ANZAHL
-                        //println String.format('%2d % 12d % 7.1f %6s %17s - %s', i + 1, reihenfolge, anzahl, artikel.MENGENEINHEIT, stuck.key, artikel.ARTIKELBEZEICHNUNG)
                         // Menge mit oder ohne Komma anzeigen?
                         String menge
                         if (anzahl * 10 > 0) {
@@ -529,12 +527,6 @@ class OdiseeService {
         }) as double ?: 0.0d
         domBuilder.userfield(name: 'lmeZuSummeWertLabel', GH.toString2Converter(zuSumme))
         // Abluft
-        /*
-        // TODO volumenstromInfiltration
-        double abSumme = map.raum.raume.findAll { it.raumLuftart == 'AB' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
-        double abSumme2 = map.raum.raume.findAll { it.raumLuftart == 'ZU/AB' }?.inject(0.0d, { o, n -> o + n.raumVolumen }) ?: 0.0d
-        abSumme += 0.5d * abSumme2
-        */
         double abSumme = map.raum.raume.findAll {
             it.raumLuftart.contains('AB')
         }?.inject(0.0d, { double o, Map n ->

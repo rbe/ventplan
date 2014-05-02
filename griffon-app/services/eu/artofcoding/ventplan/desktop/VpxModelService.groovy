@@ -37,8 +37,6 @@ class VpxModelService {
         xmlSlurper = new XmlSlurper()
         // Read XML using locally cached DTDs
         xmlSlurper.setEntityResolver(CachedDTD.entityResolver)
-        // Turn off loading of external DTDs
-        // xmlSlurper.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
         // Create DOMBuilder and set it in XmlHelper too
         X.domBuilder = domBuilder = DOMBuilder.newInstance()
     }
@@ -52,7 +50,6 @@ class VpxModelService {
             validator.validate(new StreamSource(new StringReader(xml)))
         } catch (e) {
             throw new IllegalStateException('Cannot validate XML file', e)
-            //println "Kann Projekt nicht öffnen: ${e}"
         }
     }
 

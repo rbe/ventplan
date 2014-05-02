@@ -64,7 +64,6 @@ class Today {
         boolean dateAfterBegin = isEqual(date, begin) || isAfter(date, begin)
         boolean dateBeforeEnd = isEqual(date, end) || isBefore(date, end)
         boolean b = dateAfterBegin && dateBeforeEnd
-        //println "isInDateRange(begin=$begin,date=$date,end=$end) -> $b"
         b
     }
 

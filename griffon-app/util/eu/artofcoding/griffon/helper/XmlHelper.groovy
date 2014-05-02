@@ -14,7 +14,6 @@ class XmlHelper {
      */
     def static tc = { valueClosure, defaultClosure = null ->
         try {
-            //println "valueClosure -> ${valueClosure?.dump()}"
             valueClosure()
         } catch (e) {
             // Default?

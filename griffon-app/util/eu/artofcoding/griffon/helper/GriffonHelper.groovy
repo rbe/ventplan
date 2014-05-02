@@ -162,13 +162,6 @@ class GriffonHelper {
     }
 
     /**
-     * Map.flatten
-     def static installMapFlatten = {Map.metaClass.flatten = { String prefix = '' ->
-     delegate.inject([:]) { map, v ->
-     def kstr = "${prefix$ {prefix ? '.' : ''} $v.key}"
-     if (v.value instanceof Map) {map += v.value.flatten(kstr)} else {map[kstr] = v.value}map}}}*/
-
-    /**
      * Invert a map. Taken from http://jira.codehaus.org/browse/GROOVY-4294.
      * http://jira.codehaus.org/secure/attachment/49994/patchfile.txt
      */
@@ -559,9 +552,7 @@ class GriffonHelper {
                 [
                         keyReleased: { evt ->
                             // Calculate if: closure is not null and (if no keycodes given or certain keys are pressed)
-                            //println evt.keyCode
                             if (closure && (!keyCodes || (keyCodes && evt.keyCode in keyCodes))) {
-                                //println "installKeyAdapter: executing"
                                 closure(evt)
                             }
                         }
@@ -578,7 +569,6 @@ class GriffonHelper {
                         focusLost: { evt ->
                             // Calculate if focus lost
                             if (closure) {
-                                //println "installFocusLostAdapter: executing"
                                 closure(evt)
                             }
                         }

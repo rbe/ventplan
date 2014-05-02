@@ -28,8 +28,6 @@ class BootstrapGsql {
                     }
                     sql.executeUpdate("UPDATE ventplan SET DBREV = ${head} WHERE ID = 1")
                 }
-            } else {
-                //println "rev#${me} == rev#${head}"
             }
         } catch (e) {
             // ignore
