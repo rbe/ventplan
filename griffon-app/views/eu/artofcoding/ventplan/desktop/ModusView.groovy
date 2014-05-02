@@ -29,9 +29,7 @@ panel(id: 'ventidPanel', layout: new MigLayout('fillx, wrap', '[]para[fill]', ''
     button(id: 'ventidAbbrechenButton', text: 'Abbrechen')
 }
 
-[
-        ventidEmail, ventidPasswort
-].each {
+[ventidEmail, ventidPasswort].each {
     GH.yellowTextField(it)
 }
 

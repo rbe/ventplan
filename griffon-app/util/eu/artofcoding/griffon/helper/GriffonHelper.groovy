@@ -30,9 +30,9 @@ class GriffonHelper {
     /**
      * Colors.
      */
-    public static final java.awt.Color MY_YELLOW = new Color(255, 255, 180)
-    public static final java.awt.Color MY_RED = new Color(255, 0, 0)
-    public static final java.awt.Color MY_GREEN = new Color(51, 153, 0)
+    public static final Color MY_YELLOW = new Color(255, 255, 180)
+    public static final Color MY_RED = new Color(255, 0, 0)
+    public static final Color MY_GREEN = new Color(51, 153, 0)
 
     /**
      * Key codes: 0 .. 9.
@@ -49,7 +49,7 @@ class GriffonHelper {
      */
     def static toString2 = { digits = 2, roundingMode = null ->
         def d = delegate
-        def r = "0,00"
+        def r = '0,00'
         // Check against NaN, Infinity
         if (d in [Float.NaN, Double.NaN]) {
             //r = "NaN"
@@ -59,7 +59,7 @@ class GriffonHelper {
             def nf = java.text.NumberFormat.getInstance(java.util.Locale.GERMAN)
             // Use fraction digits?
             if (d instanceof Integer) {
-                r = "0"
+                r = '0'
                 nf.minimumFractionDigits = 0
                 nf.maximumFractionDigits = 0
             } else {
@@ -74,7 +74,6 @@ class GriffonHelper {
                 println "toString2(): Exception while converting number ${d?.dump()} to string: ${e}"
             }
         }
-        ////println "toString2: ${d?.dump()} -> ${r?.dump()}"
         r
     }
 
@@ -85,7 +84,7 @@ class GriffonHelper {
         if ((v && v instanceof Number) || (v instanceof String && v.isNumber())) {
             v.toString2(0)
         } else {
-            "0"
+            '0'
         }
     }
 
@@ -96,7 +95,7 @@ class GriffonHelper {
         if (v && v instanceof Number) {
             v.toString2()
         } else {
-            "0,00"
+            '0,00'
         }
     }
 
@@ -107,7 +106,7 @@ class GriffonHelper {
         if (v && v instanceof Number) {
             round5(v).toString2()
         } else {
-            "0,00"
+            '0,00'
         }
     }
 
@@ -118,7 +117,7 @@ class GriffonHelper {
         if (v && v instanceof Number) {
             v.toString2(3)
         } else {
-            "0,000"
+            '0,000'
         }
     }
 
@@ -137,8 +136,7 @@ class GriffonHelper {
         }
         // Does String contain a character?
         def charList = (["a".."z"] + ["A".."Z"]).flatten()
-        if (d.any { it in charList })
-            return d
+        if (d.any { it in charList }) return d
         d = d.collect { it == "." ? "," : it }.join()
         // Parse number
         if (d in ["NaN", "Inf"]) {
