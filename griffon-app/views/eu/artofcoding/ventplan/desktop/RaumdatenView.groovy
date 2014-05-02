@@ -1,10 +1,10 @@
 package eu.artofcoding.ventplan.desktop
 
 import eu.artofcoding.griffon.helper.GriffonHelper as GH
-
 import net.miginfocom.swing.MigLayout
 
 import javax.swing.event.ListSelectionListener
+import java.awt.*
 
 panel(id: 'raumPanel', layout: new MigLayout('fill', '[fill,grow]', '')) {
     borderLayout()

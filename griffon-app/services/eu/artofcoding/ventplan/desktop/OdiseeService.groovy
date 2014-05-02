@@ -159,7 +159,7 @@ class OdiseeService {
         // Filename w/o extension
         String vpxFilenameWoExt = FilenameHelper.cleanFilename(vpxFile)
         // Generate Odisee XML
-        DOMBuilder domBuilder = groovy.xml.DOMBuilder.newInstance()
+        DOMBuilder domBuilder = DOMBuilder.newInstance()
         def odisee = domBuilder.odisee() {
             request(name: vpxFilenameWoExt, id: 1) {
                 ooo(group: 'group0') {}
