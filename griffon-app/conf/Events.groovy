@@ -1,5 +1,5 @@
 
-import eu.artofcoding.griffon.helper.GriffonHelper as GH
+import com.ventplan.desktop.griffon.GriffonHelper as GH
 
 onBootstrapEnd = { app ->
     app.config.shutdown.proceed = false

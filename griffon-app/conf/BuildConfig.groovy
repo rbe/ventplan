@@ -193,7 +193,7 @@ log4j = {
 }
 
 app.fileType = '.groovy'
-app.defaultPackageName = 'eu.artofcoding.ventplan.desktop'
+app.defaultPackageName = 'com.ventplan.desktop'
 
 application.icon = '/griffon-app/resources/Ventplan.icns'
 

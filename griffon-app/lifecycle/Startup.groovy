@@ -12,7 +12,7 @@
  * - execInsideUISync { // your code }
  */
 
-import eu.artofcoding.ventplan.desktop.VentplanSplash
+import com.ventplan.desktop.VentplanSplash
 
 // Set splash screen status text
 VentplanSplash.instance.startingUp()

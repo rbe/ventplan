@@ -5,17 +5,17 @@ application {
 }
 mvcGroups {
     'Dialog' {
-        controller = 'eu.artofcoding.ventplan.desktop.DialogController'
+        controller = 'com.ventplan.desktop.DialogController'
     }
     'Projekt' {
-        model      = 'eu.artofcoding.ventplan.desktop.ProjektModel'
-        controller = 'eu.artofcoding.ventplan.desktop.ProjektController'
-        view       = 'eu.artofcoding.ventplan.desktop.ProjektView'
+        model      = 'com.ventplan.desktop.ProjektModel'
+        controller = 'com.ventplan.desktop.ProjektController'
+        view       = 'com.ventplan.desktop.ProjektView'
     }
     'MainFrame' {
-        model      = 'eu.artofcoding.ventplan.desktop.VentplanModel'
-        view       = 'eu.artofcoding.ventplan.desktop.VentplanView'
-        controller = 'eu.artofcoding.ventplan.desktop.VentplanController'
+        model      = 'com.ventplan.desktop.VentplanModel'
+        view       = 'com.ventplan.desktop.VentplanView'
+        controller = 'com.ventplan.desktop.VentplanController'
     }
 
 }

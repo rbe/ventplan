@@ -1,7 +1,7 @@
 
-import eu.artofcoding.griffon.helper.HttpHelper
-import eu.artofcoding.ventplan.desktop.VentplanResource
-import eu.artofcoding.ventplan.desktop.VentplanSplash
+import com.ventplan.desktop.griffon.HttpHelper
+import com.ventplan.desktop.VentplanResource
+import com.ventplan.desktop.VentplanSplash
 import groovy.sql.Sql
 
 class BootstrapGsql {
